@@ -55,7 +55,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( reader.BaseStream.Position != LayoutOffsets[0] ) {
-                PluginLog.Log( $"Actual: {reader.BaseStream.Position:X8} Expected: {LayoutOffsets[0]:X8}" );
+                Dalamud.Log( $"Actual: {reader.BaseStream.Position:X8} Expected: {LayoutOffsets[0]:X8}" );
                 Modded = true;
             }
         }

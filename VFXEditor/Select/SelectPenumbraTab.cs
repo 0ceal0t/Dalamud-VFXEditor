@@ -59,12 +59,12 @@ namespace VfxEditor.Select {
                         }
                     }
                     catch( Exception e ) {
-                        PluginLog.Error( e, file );
+                        Dalamud.Error( e, file );
                     }
                 }
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error reading Penumbra mods" );
+                Dalamud.Error( e, "Error reading Penumbra mods" );
             }
         }
 

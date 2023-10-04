@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -55,12 +54,12 @@ namespace VfxEditor.FileManager {
 
         protected void LoadLocal( string path, bool verify ) {
             if( !File.Exists( path ) ) {
-                PluginLog.Error( $"Local file: [{path}] does not exist" );
+                Dalamud.Error( $"Local file: [{path}] does not exist" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                PluginLog.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} is the wrong file type" );
                 return;
             }
 
@@ -70,19 +69,19 @@ namespace VfxEditor.FileManager {
                 CurrentFile = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error Reading File", e );
+                Dalamud.Error( e, "Error Reading File" );
                 UiUtils.ErrorNotification( "Error reading file" );
             }
         }
 
         protected void LoadGame( string path, bool verify ) {
             if( !Dalamud.DataManager.FileExists( path ) ) {
-                PluginLog.Error( $"Game file: [{path}] does not exist" );
+                Dalamud.Error( $"Game file: [{path}] does not exist" );
                 return;
             }
 
             if( !path.EndsWith( $".{Extension}" ) ) {
-                PluginLog.Error( $"{path} is the wrong file type" );
+                Dalamud.Error( $"{path} is the wrong file type" );
                 return;
             }
 
@@ -94,7 +93,7 @@ namespace VfxEditor.FileManager {
                 CurrentFile = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error Reading File" );
+                Dalamud.Error( e, "Error Reading File" );
                 UiUtils.ErrorNotification( "Error reading file" );
             }
         }
@@ -128,7 +127,7 @@ namespace VfxEditor.FileManager {
 
         protected void WriteFile( string path ) {
             if( CurrentFile == null ) return;
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "Wrote {1} file to {0}", path, Id );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"Wrote {Id} file to {path}" );
             File.WriteAllBytes( path, CurrentFile.ToBytes() );
         }
 

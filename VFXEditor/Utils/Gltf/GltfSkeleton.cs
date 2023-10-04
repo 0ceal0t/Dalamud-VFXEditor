@@ -120,7 +120,7 @@ namespace VfxEditor.Utils.Gltf {
 
             var model = scene.ToGltf2();
             model.SaveGLTF( path );
-            PluginLog.Log( $"Saved GLTF to: {path}" );
+            Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 
         public static MeshBuilder<VertexPosition, VertexEmpty, VertexJoints4> GetDummyMesh() {

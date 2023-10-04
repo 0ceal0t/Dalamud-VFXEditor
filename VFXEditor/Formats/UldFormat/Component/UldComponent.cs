@@ -75,7 +75,7 @@ namespace VfxEditor.UldFormat.Component {
 
             UpdateData();
             if( Data == null ) {
-                PluginLog.Log( $"Unknown component type {( int )Type.Value} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
+                Dalamud.Log( $"Unknown component type {( int )Type.Value} / {pos + offset - reader.BaseStream.Position} @ {reader.BaseStream.Position:X8}" );
             }
 
             if( Data is BaseComponentData custom ) custom.Read( reader, offset - 16 );

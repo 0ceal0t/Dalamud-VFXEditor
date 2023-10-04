@@ -31,7 +31,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             reader.BaseStream.Seek( parameterOffset + TempStringOffset, SeekOrigin.Begin );
             Value.Read( reader );
 
-            if( TempId != Id ) PluginLog.Error( "Ids do not match" );
+            if( TempId != Id ) Dalamud.Error( "Ids do not match" );
         }
 
         public void Write( BinaryWriter writer, List<(long, string)> stringPositions ) {

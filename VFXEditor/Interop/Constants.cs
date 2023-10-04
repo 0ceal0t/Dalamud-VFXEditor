@@ -33,15 +33,11 @@ namespace VfxEditor.Interop {
 
         // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs
 
-        public const int RenderFlagOffset = 0x114;
-
         public const int GameResourceOffset = 0x38;
 
-        public const int PapIdsOffset = 0xf0;
+        public const int PapIdsOffset = 0xF0;
 
         // https://github.com/imchillin/Anamnesis/blob/master/Anamnesis/Memory/ActorMemory.cs
-
-        public const int AnimationMemoryOffset = 0x0980;
 
         public const int PrepPapOffset = 105;
 

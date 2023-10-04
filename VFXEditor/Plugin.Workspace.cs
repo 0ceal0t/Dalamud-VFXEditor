@@ -76,7 +76,7 @@ namespace VfxEditor {
                     }
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Could not load workspace" );
+                    Dalamud.Error( e, "Could not load workspace" );
                 }
             } );
         }
@@ -104,11 +104,11 @@ namespace VfxEditor {
 
         private static bool OpenWorkspaceFolder( string loadLocation ) {
             WorkspaceFileCount = Directory.GetFiles( loadLocation, "*.*", SearchOption.AllDirectories ).Length;
-            PluginLog.Log( $"Loading {WorkspaceFileCount} files from {loadLocation}" );
+            Dalamud.Log( $"Loading {WorkspaceFileCount} files from {loadLocation}" );
 
             var metaPath = Path.Combine( loadLocation, "vfx_workspace.json" );
             if( !File.Exists( metaPath ) ) {
-                PluginLog.Error( "vfx_workspace.json does not exist" );
+                Dalamud.Error( "vfx_workspace.json does not exist" );
                 return false;
             }
 

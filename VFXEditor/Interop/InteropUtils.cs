@@ -1,5 +1,4 @@
 using Dalamud;
-using Dalamud.Logging;
 using Penumbra.String;
 using System;
 using System.Collections.Generic;
@@ -34,7 +33,7 @@ namespace VfxEditor.Interop {
                 process.WaitForExit();
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, "Error executing" );
+                Dalamud.Error( e, "Error executing" );
             }
         }
 

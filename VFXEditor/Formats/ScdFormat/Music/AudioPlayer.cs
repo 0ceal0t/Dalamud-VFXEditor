@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using NAudio.Wave;
@@ -211,7 +210,7 @@ namespace VfxEditor.ScdFormat {
 
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
                 ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
-                PluginLog.Log( "Looping..." );
+                Dalamud.Log( "Looping..." );
                 Play();
                 if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopStartTime > 0 ) {
                     if( QueueSeek == -1 ) {
@@ -277,7 +276,7 @@ namespace VfxEditor.ScdFormat {
                 CurrentOutput.Play();
             }
             catch( Exception e ) {
-                PluginLog.LogError( e, "Error playing sound" );
+                Dalamud.Error( e, "Error playing sound" );
             }
         }
 

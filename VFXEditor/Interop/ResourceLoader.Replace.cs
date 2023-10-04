@@ -1,5 +1,4 @@
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using Penumbra.String;
 using Penumbra.String.Classes;
 using System;
@@ -87,7 +86,7 @@ namespace VfxEditor.Interop {
             var gamePathString = gamePath.ToString();
 
             if( Plugin.Configuration?.LogAllFiles == true ) {
-                PluginLog.Log( "[GetResourceHandler] {0}", gamePathString );
+                Dalamud.Log( $"[GetResourceHandler] {gamePathString}" );
                 if( SelectDialog.LoggedFiles.Count > 1000 ) SelectDialog.LoggedFiles.Clear();
                 SelectDialog.LoggedFiles.Add( gamePathString );
             }
@@ -96,7 +95,7 @@ namespace VfxEditor.Interop {
 
             if( replacedPath == null || replacedPath.Length >= 260 ) {
                 var unreplaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) PluginLog.Log( "[GetResourceHandler] Original {0} -> {1} -> {2}", gamePathString, replacedPath, new IntPtr( unreplaced ).ToString( "X8" ) );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) Dalamud.Log( $"[GetResourceHandler] Original {gamePathString} -> {replacedPath} -> " + new IntPtr( unreplaced ).ToString( "X8" ) );
                 return unreplaced;
             }
 
@@ -107,7 +106,7 @@ namespace VfxEditor.Interop {
             path = resolvedPath.InternalName.Path;
 
             var replaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[GetResourceHandler] Replace {0} -> {1} -> {2}", gamePathString, replacedPath, new IntPtr( replaced ).ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[GetResourceHandler] Replace {gamePathString} -> {replacedPath} -> " + new IntPtr( replaced ).ToString( "X8" ) );
             return replaced;
         }
 
@@ -119,7 +118,7 @@ namespace VfxEditor.Interop {
             var originalPath = originalGamePath.ToString();
             var isPenumbra = ProcessPenumbraPath( originalPath, out var gameFsPath );
 
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] {0}", gameFsPath );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] {gameFsPath}" );
 
             var isRooted = Path.IsPathRooted( gameFsPath );
 
@@ -135,11 +134,11 @@ namespace VfxEditor.Interop {
 
             // call the original if it's a penumbra path that doesn't need replacement as well
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted || isPenumbra ) {
-                if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Calling Original With {0}", originalPath );
+                if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Calling Original With {originalPath}" );
                 return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
             }
 
-            if( Plugin.Configuration?.LogDebug == true ) PluginLog.Log( "[ReadSqpackHandler] Replaced with {0}", gameFsPath );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Replaced with {gameFsPath}" );
 
             pFileDesc->FileMode = FileMode.LoadUnpackedResource;
 

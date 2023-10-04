@@ -63,7 +63,7 @@ namespace VfxEditor.Tracker {
 
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error reading timeline" );
+                Dalamud.Error( e, "Error reading timeline" );
             }
         }
 

@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
-using Dalamud.Logging;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -525,7 +524,6 @@ namespace ImGuiFileDialog {
                         }
                     }
                     catch( Exception ) {
-                        PluginLog.Log( $"Error previewing image {path}" );
                         PreviewWrap = null;
                     }
                 }

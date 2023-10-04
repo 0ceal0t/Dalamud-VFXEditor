@@ -49,7 +49,7 @@ namespace VfxEditor.Interop {
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.TrackerManager?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
 
-            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Static: {path} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) Dalamud.Log( $"New Static: {path} {vfx:X8}" );
 
             return vfx;
         }
@@ -64,7 +64,7 @@ namespace VfxEditor.Interop {
             var vfx = ActorVfxCreateHook.Original( path, a2, a3, a4, a5, a6, a7 );
             Plugin.TrackerManager?.Vfx.AddActor( ( VfxStruct* )vfx, path );
 
-            if( Plugin.Configuration?.LogVfxDebug == true ) PluginLog.Log( $"New Actor: {path} {vfx:X8}" );
+            if( Plugin.Configuration?.LogVfxDebug == true ) Dalamud.Log( $"New Actor: {path} {vfx:X8}" );
 
             return vfx;
         }
@@ -78,7 +78,7 @@ namespace VfxEditor.Interop {
         private IntPtr VfxUseTriggerHandler( IntPtr vfx, uint triggerId ) {
             var timeline = VfxUseTriggerHook.Original( vfx, triggerId );
 
-            if( Plugin.Configuration?.LogVfxTriggers == true ) PluginLog.Log( $"Trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
+            if( Plugin.Configuration?.LogVfxTriggers == true ) Dalamud.Log( $"Trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
 
             return timeline;
         }

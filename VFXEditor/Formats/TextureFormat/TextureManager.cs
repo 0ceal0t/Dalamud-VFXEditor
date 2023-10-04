@@ -54,7 +54,7 @@ namespace VfxEditor.Formats.TextureFormat {
                     ReplaceTexture( res, result.Path );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "Could not import data" );
                 }
             } );
         }
@@ -80,7 +80,7 @@ namespace VfxEditor.Formats.TextureFormat {
             try {
                 var data = Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
                 if( !data.ValidFormat ) {
-                    PluginLog.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
+                    Dalamud.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
                     return null;
                 }
                 var newPreview = new TexturePreview( data, gamePath );
@@ -88,7 +88,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 return newPreview;
             }
             catch( Exception e ) {
-                PluginLog.Error( e, $"Could not find tex: {gamePath}" );
+                Dalamud.Error( e, $"Could not find tex: {gamePath}" );
                 return null;
             }
         }
@@ -147,27 +147,27 @@ namespace VfxEditor.Formats.TextureFormat {
             var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
             freeImgLib.Resolver.SetOverrideLibraryName32( _32bitPath );
             freeImgLib.Resolver.SetOverrideLibraryName64( _32bitPath );
-            PluginLog.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
-            PluginLog.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
+            Dalamud.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
             freeImgLib.LoadLibrary();
-            PluginLog.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
 
             var nvtLib = TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance;
             var nv_32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "nvtt.dll" );
             var nv_64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "nvtt.dll" );
             nvtLib.Resolver.SetOverrideLibraryName32( nv_32bitPath );
             nvtLib.Resolver.SetOverrideLibraryName64( nv_32bitPath );
-            PluginLog.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
-            PluginLog.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
+            Dalamud.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
             nvtLib.LoadLibrary();
-            PluginLog.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
+            Dalamud.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
         }
 
         public static void FreeLibrary() {
             TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
             TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
-            PluginLog.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
-            PluginLog.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
+            Dalamud.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
+            Dalamud.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
     }
 }

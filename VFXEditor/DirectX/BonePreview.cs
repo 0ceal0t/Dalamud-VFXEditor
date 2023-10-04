@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -41,13 +40,13 @@ namespace VfxEditor.DirectX {
                 GS = new GeometryShader( Device, CompiledGS );
                 Signature = ShaderSignature.GetInputSignature( CompiledVS );
                 Layout = new InputLayout( Device, Signature, new InputElement[] {
-                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
-                    new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
-                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
+                    new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error compiling shaders" );
+                Dalamud.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
         }

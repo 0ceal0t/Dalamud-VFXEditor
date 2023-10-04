@@ -294,7 +294,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( DraggingBone != destination ) {
                 if( destination != null && destination.IsChildOf( DraggingBone ) ) {
-                    PluginLog.Log( "Tried to put bone into itself" );
+                    Dalamud.Log( "Tried to put bone into itself" );
                 }
                 else {
                     CommandManager.Sklb.Add( new SklbBoneParentCommand( DraggingBone, destination ) );
@@ -338,7 +338,7 @@ namespace VfxEditor.SklbFormat.Bones {
                         CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );
                     }
                     catch( Exception e ) {
-                        PluginLog.Error( e, "Could not import data" );
+                        Dalamud.Error( e, "Could not import data" );
                     }
                 }
             } );

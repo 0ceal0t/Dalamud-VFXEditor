@@ -1,6 +1,5 @@
 using Dalamud.Configuration;
 using Dalamud.Interface.Utility;
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -147,7 +146,7 @@ namespace VfxEditor {
             try { Directory.CreateDirectory( WriteLocation ); }
             catch( Exception ) { WriteLocationError = true; }
 
-            PluginLog.Log( "Write location: " + WriteLocation );
+            Dalamud.Log( "Write location: " + WriteLocation );
 
             if( CurveEditorPalette.Count == 0 ) {
                 CurveEditorPalette.AddRange( ImGuiHelpers.DefaultColorPalette( 56 ) );

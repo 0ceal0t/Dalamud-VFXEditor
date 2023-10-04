@@ -14,7 +14,7 @@ namespace VfxEditor.Utils {
             indexesOut = new();
             if( !Dalamud.DataManager.FileExists( localPath ) ) return false;
 
-            PluginLog.Log( "Importing MDL from: " + localPath );
+            Dalamud.Log( "Importing MDL from: " + localPath );
 
             var file = Dalamud.DataManager.GameData.GetFileFromDisk<MdlFile>( localPath );
             var mdl = new Model( file );
@@ -29,7 +29,7 @@ namespace VfxEditor.Utils {
                     var uv = v.UV;
 
                     if( pos == null || normal == null || tangent == null || color == null || uv == null ) {
-                        PluginLog.Error( "Missing model data" );
+                        Dalamud.Error( "Missing model data" );
                         return false;
                     }
 
@@ -43,7 +43,7 @@ namespace VfxEditor.Utils {
                     ) );
                 }
                 if( mesh.Indices.Length % 3 != 0 ) {
-                    PluginLog.Error( "Indices not multiples of 3" );
+                    Dalamud.Error( "Indices not multiples of 3" );
                     return false;
                 }
                 for( var triangleIdx = 0; triangleIdx < ( mesh.Indices.Length / 3 ); triangleIdx++ ) {
@@ -54,7 +54,7 @@ namespace VfxEditor.Utils {
                         idxStart + mesh.Indices[idx + 2]
                    ) );
                 }
-                PluginLog.Log( "Imported MDL mesh" );
+                Dalamud.Log( "Imported MDL mesh" );
             }
             return true;
         }

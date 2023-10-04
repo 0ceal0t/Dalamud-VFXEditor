@@ -34,7 +34,7 @@ namespace VfxEditor.SklbFormat {
                 Data = new SklbOldData( reader );
             }
             else {
-                PluginLog.Error( $"Invalid SKLB version: {Version1:X4} {Version2:X4}" );
+                Dalamud.Error( $"Invalid SKLB version: {Version1:X4} {Version2:X4}" );
                 return;
             }
 

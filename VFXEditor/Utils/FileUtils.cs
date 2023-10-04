@@ -71,16 +71,16 @@ namespace VfxEditor.Utils {
             var original = GetOriginal( originalReader );
 
             if( data.Length != original.Length ) {
-                PluginLog.Error( $"Files have different lengths {data.Length:X8} / {original.Length:X8}" );
+                Dalamud.Error( $"Files have different lengths {data.Length:X8} / {original.Length:X8}" );
                 ret = false; // Don't return yet since we still want to see the diffIdx
             }
 
             for( var idx = 0; idx < Math.Min( data.Length, original.Length ); idx++ ) {
                 if( data[idx] != original[idx] && ( ignore == null || !ignore.Any( x => idx >= x.Item1 && idx < x.Item2 ) ) ) {
-                    PluginLog.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
+                    Dalamud.Error( $"Files do not match at {idx:X8} : {data[idx]:X8} / {original[idx]:X8}" );
 
                     if( ignore != null ) {
-                        foreach( var item in ignore ) PluginLog.Error( $">> Ignored [{item.Item1:X8},{item.Item2:X8})" );
+                        foreach( var item in ignore ) Dalamud.Error( $">> Ignored [{item.Item1:X8},{item.Item2:X8})" );
                     }
 
                     return VerifiedStatus.ERROR;

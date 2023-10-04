@@ -1,4 +1,4 @@
-using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Penumbra.String;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
-        private const uint INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
+        private const int INVIS_FLAG = ( 1 << 1 ) | ( 1 << 11 );
 
         // ====== REDRAW =======
 
@@ -52,23 +52,21 @@ namespace VfxEditor.Interop {
         }
 
         private void OnUpdateEvent( object framework ) {
-            var player = Plugin.PlayerObject;
-            var renderPtr = player.Address + Constants.RenderFlagOffset;
+            if( Plugin.PlayerObject == null ) return;
+            var gameObject = ( GameObject* )Plugin.PlayerObject.Address;
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
-                    *( uint* )renderPtr |= INVIS_FLAG;
+                    gameObject->RenderFlags |= INVIS_FLAG;
                     CurrentRedrawState = RedrawState.Invisible;
                     WaitFrames = 15;
                     break;
                 case RedrawState.Invisible:
                     if( WaitFrames == 0 ) {
-                        *( uint* )renderPtr &= ~INVIS_FLAG;
+                        gameObject->RenderFlags &= ~INVIS_FLAG;
                         CurrentRedrawState = RedrawState.Visible;
                     }
-                    else {
-                        WaitFrames--;
-                    }
+                    else WaitFrames--;
                     break;
                 case RedrawState.Visible:
                 default:
@@ -106,7 +104,7 @@ namespace VfxEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, gameResource.ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} {localPath} -> " + gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( gameResource, papIds, papTypes );
@@ -117,7 +115,7 @@ namespace VfxEditor.Interop {
             if( string.IsNullOrEmpty( localPath ) ) return;
 
             var localGameResource = GetResource( gamePath, false ); // get local path resource
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) PluginLog.Log( "[ReloadPath] {0} {1} -> {1}", gamePath, localPath, localGameResource.ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} {localPath} -> " + localGameResource.ToString( "X8" ) );
 
             if( localGameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( localGameResource, papIds, papTypes );

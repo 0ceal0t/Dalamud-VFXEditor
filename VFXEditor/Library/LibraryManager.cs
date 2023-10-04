@@ -99,7 +99,7 @@ namespace VfxEditor.Library {
             // Move them here
             if( DraggingItem != destination ) {
                 if( DraggingItem is LibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
-                    PluginLog.Log( "Tried to put folder into itself" );
+                    Dalamud.Log( "Tried to put folder into itself" );
                 }
                 else {
                     DraggingItem.Parent?.Remove( DraggingItem );

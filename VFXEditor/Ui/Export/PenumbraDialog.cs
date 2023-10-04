@@ -68,10 +68,10 @@ namespace VfxEditor.Ui.Export {
                 if( File.Exists( saveFile ) ) File.Delete( saveFile );
                 ZipFile.CreateFromDirectory( tempDir, saveFile );
                 Directory.Delete( tempDir, true );
-                PluginLog.Log( $"Exported To: {saveFile}" );
+                Dalamud.Log( $"Exported To: {saveFile}" );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Could not export to Penumbra" );
+                Dalamud.Error( e, "Could not export to Penumbra" );
             }
         }
     }

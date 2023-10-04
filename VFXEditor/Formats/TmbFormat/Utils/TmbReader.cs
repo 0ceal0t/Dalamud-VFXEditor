@@ -46,7 +46,7 @@ namespace VfxEditor.TmbFormat.Utils {
             }
             else {
                 if( !TmbUtils.ItemTypes.TryGetValue( magic, out var value ) ) {
-                    PluginLog.Log( $"Unknown Entry {magic}" );
+                    Dalamud.Log( $"Unknown Entry {magic}" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size ); //  skip
                     return;
@@ -55,7 +55,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 var type = value.Type;
                 var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ), typeof( TmbReader ) } );
                 if( constructor == null ) {
-                    PluginLog.Log( $"TmbReader constructor failed for {magic}" );
+                    Dalamud.Log( $"TmbReader constructor failed for {magic}" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;
@@ -63,7 +63,7 @@ namespace VfxEditor.TmbFormat.Utils {
 
                 var item = constructor.Invoke( new object[] { file, this } );
                 if( item == null ) {
-                    PluginLog.Log( $"Constructor failed for {magic}" );
+                    Dalamud.Log( $"Constructor failed for {magic}" );
                     verified = VerifiedStatus.ERROR;
                     Reader.ReadBytes( size );
                     return;

@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using VfxEditor.Interop;
+using System.Runtime.CompilerServices;
 using VfxEditor.Structs.Animation;
 
 namespace VfxEditor.Spawn {
@@ -66,7 +66,7 @@ namespace VfxEditor.Spawn {
             }
         }
 
-        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )( new IntPtr( memory ) + Constants.AnimationMemoryOffset );
+        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )Unsafe.AsPointer( ref memory->Animation );
 
         private static ActorMemoryStruct* GetActor() => ( ActorMemoryStruct* )Plugin.PlayerObject?.Address;
 

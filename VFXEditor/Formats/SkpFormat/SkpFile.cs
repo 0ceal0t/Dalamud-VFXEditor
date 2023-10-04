@@ -47,7 +47,7 @@ namespace VfxEditor.Formats.SkpFormat {
 
             if( Activated.HasFlag( SkpFlags.Animation ) ) Animation.Read( reader );
             if( Activated.HasFlag( SkpFlags.LookAt ) ) LookAt.Read( reader );
-            if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) PluginLog.Error( "FootIK found, please report this" );
+            if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) Dalamud.Error( "FootIK found, please report this" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
             VerifyIgnore = new();

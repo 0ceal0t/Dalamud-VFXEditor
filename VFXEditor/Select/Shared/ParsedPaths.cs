@@ -35,9 +35,9 @@ namespace VfxEditor.Select.Shared {
                 try {
                     loaded = new ParsedPaths( Dalamud.DataManager.GetFile( path ), regex );
                 }
-                catch( Exception e ) { PluginLog.Error( e, $"Error reading {path}" ); }
+                catch( Exception e ) { Dalamud.Error( e, $"Error reading {path}" ); }
             }
-            else PluginLog.Error( $"{path} does not exist" );
+            else Dalamud.Error( $"{path} does not exist" );
         }
 
         public static void ReadFile( List<string> paths, Regex regex, out ParsedPaths loaded ) {
@@ -49,7 +49,7 @@ namespace VfxEditor.Select.Shared {
                 }
                 loaded = new ParsedPaths( files, regex );
             }
-            catch( Exception e ) { PluginLog.Error( e, "Error reading files" ); }
+            catch( Exception e ) { Dalamud.Error( e, "Error reading files" ); }
         }
 
         public static void ReadFile( List<string> paths, Regex regex, out List<ParsedPaths> loaded ) {
@@ -59,7 +59,7 @@ namespace VfxEditor.Select.Shared {
                     if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( new ParsedPaths( Dalamud.DataManager.GetFile( path ), regex ) );
                 }
             }
-            catch( Exception e ) { PluginLog.Error( e, "Error reading files" ); }
+            catch( Exception e ) { Dalamud.Error( e, "Error reading files" ); }
         }
     }
 }

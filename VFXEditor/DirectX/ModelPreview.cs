@@ -70,7 +70,7 @@ namespace VfxEditor.DirectX {
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error compiling shaders" );
+                Dalamud.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
 
@@ -120,7 +120,7 @@ namespace VfxEditor.DirectX {
                 } );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error compiling shaders" );
+                Dalamud.Error( e, "Error compiling shaders" );
                 ShaderError = true;
             }
         }

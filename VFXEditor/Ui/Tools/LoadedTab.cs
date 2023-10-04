@@ -120,7 +120,7 @@ namespace VfxEditor.Ui.Tools {
                     if( GetResource( resourcePtr, out var fileName ) ) ret.Add( fileName );
                 }
                 catch( Exception ) {
-                    PluginLog.Error( $"{resourcePtr:X8} {resourcePos:X8} {tablePtr:X8} {nextTable:X8}" );
+                    Dalamud.Error( $"{resourcePtr:X8} {resourcePos:X8} {tablePtr:X8} {nextTable:X8}" );
                 }
 
                 resourcePos += 8;

@@ -52,7 +52,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     OnReplace( res );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "Could not import data" );
                 }
             } );
         }

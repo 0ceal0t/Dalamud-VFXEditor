@@ -35,7 +35,7 @@ namespace VfxEditor.Ui.Tools {
                             );
                         }
                         catch( Exception e ) {
-                            PluginLog.Error( e, "Could not read file" );
+                            Dalamud.Error( e, "Could not read file" );
                         }
                     }
                 }

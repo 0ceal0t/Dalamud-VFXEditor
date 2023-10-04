@@ -37,7 +37,7 @@ namespace VfxEditor.Utils.Gltf {
             var scene = new SceneBuilder();
             scene.AddRigidMesh( mesh, Matrix4x4.Identity );
             scene.ToGltf2().SaveGLTF( path );
-            PluginLog.Log( $"Saved GLTF to: {path}" );
+            Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 
         private static GltfVertex GetVertex( AvfxVertex vertex ) {
@@ -82,7 +82,7 @@ namespace VfxEditor.Utils.Gltf {
             vertexesOut = new();
             indexesOut = new();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
-            PluginLog.Log( "Importing GLTF model from: " + localPath );
+            Dalamud.Log( "Importing GLTF model from: " + localPath );
 
             var count = 0;
 
@@ -91,7 +91,7 @@ namespace VfxEditor.Utils.Gltf {
                     var properties = primitive.VertexAccessors;
                     var hasColor = properties.ContainsKey( "COLOR_0" );
                     var hasUv2 = properties.ContainsKey( "TEXCOORD_1" );
-                    PluginLog.Log( $"Color: {hasColor} UV2: {hasUv2}" );
+                    Dalamud.Log( $"Color: {hasColor} UV2: {hasUv2}" );
 
                     var positions = primitive.GetVertices( "POSITION" ).AsVector3Array();
                     var normals = primitive.GetVertices( "NORMAL" ).AsVector3Array();

@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Vfx.Mount {
                 };
             }
             catch( Exception e ) {
-                PluginLog.Error( e, "Error loading IMC file " + imcPath );
+                Dalamud.Error( e, "Error loading IMC file " + imcPath );
             }
         }
 

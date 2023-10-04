@@ -16,7 +16,7 @@ namespace VfxEditor.EidFormat {
                 var d = ( ResourceHandle* )c->EID;
                 var e = Marshal.ReadIntPtr( new IntPtr( d ) + 0xc8 );
 
-                PluginLog.Log( $"{new IntPtr( e ):X8} {d->FileSize} {d->FileSize2} {d->FileSize3}" );
+                Dalamud.Log( $"{new IntPtr( e ):X8} {d->FileSize} {d->FileSize2} {d->FileSize3}" );
 
                 var num = ( int )Math.Floor( ( double )d->FileSize / 64 );
                 var data = new byte[d->FileSize];
@@ -27,7 +27,7 @@ namespace VfxEditor.EidFormat {
 
                 for( var i = 0; i < num; i++ ) {
                     var binder = new EidBindPoint( r );
-                    PluginLog.Log( $"{binder.Name.Value} {binder.Id.Value}" );
+                    Dalamud.Log( $"{binder.Name.Value} {binder.Id.Value}" );
                 }
 
                 // goes to EIDFileResource

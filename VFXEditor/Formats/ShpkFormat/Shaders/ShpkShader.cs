@@ -61,7 +61,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader ) );
             for( var i = 0; i < numRw; i++ ) Resources.Add( new( reader ) );
 
-            if( numUnknown != 0 ) PluginLog.Error( "Unknown data" );
+            if( numUnknown != 0 ) Dalamud.Error( "Unknown data" );
         }
 
         public void Read( BinaryReader reader, uint parameterOffset, uint shaderOffset ) {
@@ -141,7 +141,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                     if( Path.GetExtension( res ) == ".hlsl" ) {
                         var target = Vertex ? "vs_5_0" : "ps_5_0";
                         InteropUtils.Run( "d3d/fxc.exe", $"/T {target} \"{res}\" /Fo \"{TempDxbc}\" /O3", true, out var output );
-                        PluginLog.Log( output );
+                        Dalamud.Log( output );
                         if( !output.Contains( "compilation failed" ) ) {
                             Data = File.ReadAllBytes( TempDxbc );
                             BinLoaded = false;

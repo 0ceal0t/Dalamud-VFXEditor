@@ -86,13 +86,13 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
             var headerOffset = Locate( DecodedData, HeaderPattern, 0, true );
             if( headerOffset == null || headerOffset.Length == 0 ) {
-                PluginLog.Error( "Could not find header" );
+                Dalamud.Error( "Could not find header" );
             }
             var headerSize = headerOffset[0];
 
             var pageOffsets = Locate( DecodedData, PagePattern, headerSize, false );
             if( headerOffset == null || headerOffset.Length == 0 ) {
-                PluginLog.Error( "Could not find pages" );
+                Dalamud.Error( "Could not find pages" );
             }
 
             using var pageMs = new MemoryStream( DecodedData );

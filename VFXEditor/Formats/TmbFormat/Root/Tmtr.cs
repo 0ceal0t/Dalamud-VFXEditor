@@ -215,7 +215,7 @@ namespace VfxEditor.TmbFormat {
                     ImportEntry( System.IO.File.ReadAllBytes( res ) );
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Could not import data" );
+                    Dalamud.Error( e, "Could not import data" );
                 }
             } );
         }

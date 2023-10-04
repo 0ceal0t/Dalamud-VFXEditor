@@ -149,7 +149,7 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             UpdateData();
             if( Data == null && DelayedNodeType > 1 ) {
-                PluginLog.Log( $"Unknown node type {DelayedNodeType} / {DelayedSize} @ {reader.BaseStream.Position:X8}" );
+                Dalamud.Log( $"Unknown node type {DelayedNodeType} / {DelayedSize} @ {reader.BaseStream.Position:X8}" );
             }
             if( Data is BaseNodeData custom ) custom.Read( reader, DelayedSize );
             else Data?.Read( reader );

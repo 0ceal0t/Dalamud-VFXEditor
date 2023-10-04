@@ -61,7 +61,7 @@ namespace VfxEditor.Interop.Havok.Ui {
                 Bones.RemoveReference();
             }
             catch( Exception e ) {
-                PluginLog.Error( e, $"Could not read file: {Selector.Path}" );
+                Dalamud.Error( e, $"Could not read file: {Selector.Path}" );
             }
         }
 

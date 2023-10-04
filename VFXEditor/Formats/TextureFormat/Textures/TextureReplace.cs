@@ -94,7 +94,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), GamePath );
             }
             catch( Exception e ) {
-                PluginLog.Error( e, $"Error importing {importPath} into {GamePath}" );
+                Dalamud.Error( e, $"Error importing {importPath} into {GamePath}" );
             }
         }
 

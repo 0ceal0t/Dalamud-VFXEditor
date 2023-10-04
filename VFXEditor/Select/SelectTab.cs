@@ -253,14 +253,14 @@ namespace VfxEditor.Select {
         public virtual async void Load() {
             if( WaitingForItems || ItemsLoaded ) return;
             State.WaitingForItems = true;
-            PluginLog.Log( "Loading " + StateId );
+            Dalamud.Log( "Loading " + StateId );
 
             await Task.Run( () => {
                 try {
                     LoadData();
                 }
                 catch( Exception e ) {
-                    PluginLog.Error( e, "Error Loading: " + StateId );
+                    Dalamud.Error( e, "Error Loading: " + StateId );
                 }
 
                 State.ItemsLoaded = true;

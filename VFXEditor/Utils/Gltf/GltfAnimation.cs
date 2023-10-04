@@ -86,7 +86,7 @@ namespace VfxEditor.Utils.Gltf {
                     if( skipUnanimated ) {
                         var idx = names.IndexOf( node.Name );
                         if( unanimated.Contains( idx ) ) {
-                            PluginLog.Log( $"Skipping unanimated node {node.Name} in animation {animationName}" );
+                            Dalamud.Log( $"Skipping unanimated node {node.Name} in animation {animationName}" );
                             continue;
                         }
                     }
@@ -99,7 +99,7 @@ namespace VfxEditor.Utils.Gltf {
             }
 
             model.SaveGLTF( path );
-            PluginLog.Log( $"Saved GLTF to: {path}" );
+            Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 
         private static void ExportKeys( Dictionary<string, AnimationKeys> nameToKeys, List<string> names, PapMotion motion, float time ) {
@@ -162,7 +162,7 @@ namespace VfxEditor.Utils.Gltf {
             foreach( var node in nodes ) {
                 if( string.IsNullOrEmpty( node.Name ) ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) {
-                    PluginLog.Log( $"Skipped gLTF node: {node.Name}" );
+                    Dalamud.Log( $"Skipped gLTF node: {node.Name}" );
                     continue;
                 }
 
@@ -172,7 +172,7 @@ namespace VfxEditor.Utils.Gltf {
             // For now, limit to just 1 animation
 
             if( animations.Count == 0 ) {
-                PluginLog.Error( "File has no animations" );
+                Dalamud.Error( "File has no animations" );
                 return;
             }
 
@@ -280,7 +280,7 @@ namespace VfxEditor.Utils.Gltf {
             var finalAnim = ( hkaAnimation* )anim;
 
             if( compress ) {
-                PluginLog.Log( "Compressing animation..." );
+                Dalamud.Log( "Compressing animation..." );
 
                 var spline = ( hkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaSplineCompressedAnimation ) ) );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );

@@ -1,8 +1,10 @@
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AtchFormat.Entry;
@@ -194,10 +196,10 @@ namespace VfxEditor.Formats.AtchFormat {
 
             var weapons = new List<string>();
             // https://github.com/aers/FFXIVClientStructs/blob/2c388216cb52d4b6c4dbdedb735e1b343d56a846/FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs#L78C20-L78C23
-            var dataStart = Plugin.PlayerObject.Address + 0x6F8 + 0x20;
+            var dataStart = ( nint )Unsafe.AsPointer( ref ( ( Character* )Plugin.PlayerObject.Address )->DrawData ) + 0x20;
 
             for( var i = 0; i < 3; i++ ) {
-                var data = dataStart + ( 104 * i );
+                var data = dataStart + ( DrawObjectData.Size * i );
                 if( Marshal.ReadInt64( data + 8 ) == 0 || Marshal.ReadInt64( data + 16 ) == 0 || Marshal.ReadInt32( data + 32 ) == 0 ) continue;
 
                 var nameArr = Marshal.PtrToStringAnsi( data + 32 ).ToCharArray();

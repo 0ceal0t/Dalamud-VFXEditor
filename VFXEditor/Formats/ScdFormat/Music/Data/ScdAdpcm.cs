@@ -30,7 +30,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public static void Import( string path, ScdAudioEntry entry ) {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
-                PluginLog.Log( "Already Adpcm, skipping conversion" );
+                Dalamud.Log( "Already Adpcm, skipping conversion" );
                 File.Copy( path, ScdManager.ConvertWav, true );
             }
             else {
@@ -39,7 +39,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             waveFileCheck.Close();
 
             if( !File.Exists( ScdManager.ConvertWav ) ) {
-                PluginLog.Error( "Could not conver to ADPCM" );
+                Dalamud.Error( "Could not conver to ADPCM" );
                 return;
             }
 

@@ -51,7 +51,7 @@ namespace VfxEditor.Utils {
                     }
                     break;
                 default:
-                    PluginLog.Error( "Invalid path! Could not find DatFile" );
+                    Dalamud.Error( "Invalid path! Could not find DatFile" );
                     break;
             }
             simple.ModPackEntry = null;
