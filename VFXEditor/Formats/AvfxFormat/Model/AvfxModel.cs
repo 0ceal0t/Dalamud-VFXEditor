@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;

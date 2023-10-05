@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using NAudio.Wave;
 using System.IO;
 

@@ -1,5 +1,4 @@
 using Dalamud.Interface.Style;
-using Dalamud.Logging;
 using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;

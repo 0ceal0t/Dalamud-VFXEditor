@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using System;
 using System.Collections.Generic;

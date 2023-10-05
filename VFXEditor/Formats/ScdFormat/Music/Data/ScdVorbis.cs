@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;

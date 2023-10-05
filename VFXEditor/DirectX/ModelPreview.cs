@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.D3DCompiler;

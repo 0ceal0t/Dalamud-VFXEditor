@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using Lumina.Data;
 using System;
 using System.Collections.Generic;

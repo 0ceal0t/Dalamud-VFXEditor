@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Logging;
 using FFXIVClientStructs.Havok;
 using ImGuiFileDialog;
 using ImGuiNET;

@@ -72,6 +72,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool GlobalFogEnabled = new( "Global Fog", "bGFE" );
         public readonly AvfxFloat GlobalFogInfluence = new( "Global Fog Influence", "GFIM" );
         public readonly AvfxBool LTSEnabled = new( "LTS Enabled", "bLTS" );
+        public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
 
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
@@ -144,7 +145,8 @@ namespace VfxEditor.AvfxFormat {
                 FadeOuterZ,
                 GlobalFogEnabled,
                 GlobalFogInfluence,
-                LTSEnabled
+                LTSEnabled,
+                AGSEnabled,
             };
 
             NodeGroupSet = new( this );
@@ -185,7 +187,8 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "Fade Outer", FadeOuterX, FadeOuterY, FadeOuterZ ),
                 GlobalFogEnabled,
                 GlobalFogEnabled,
-                LTSEnabled
+                LTSEnabled,
+                AGSEnabled,
             };
         }
 

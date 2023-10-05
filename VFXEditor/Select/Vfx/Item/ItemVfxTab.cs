@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Data.Files;
 using System;

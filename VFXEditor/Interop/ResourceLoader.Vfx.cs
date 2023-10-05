@@ -1,5 +1,4 @@
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using System;
 using VfxEditor.Spawn;
 using VfxEditor.Structs.Vfx;

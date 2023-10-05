@@ -1,4 +1,3 @@
-using Dalamud.Logging;
 using ImGuiNET;
 using Newtonsoft.Json;
 using OtterGui.Raii;
