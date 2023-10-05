@@ -19,6 +19,7 @@ namespace VfxEditor {
         public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
         public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
+        private static readonly List<string> ModalsToOpen = new();
         public static readonly Dictionary<string, Modal> Modals = new();
 
         public static void Draw() {
@@ -44,6 +45,10 @@ namespace VfxEditor {
                 SaveWorkspace();
             }
 
+            if( ModalsToOpen.Count > 0 ) {
+                foreach( var title in ModalsToOpen ) ImGui.OpenPopup( title );
+                ModalsToOpen.Clear();
+            }
             foreach( var modal in Modals ) modal.Value.Draw();
         }
 
@@ -136,7 +141,7 @@ namespace VfxEditor {
 
         public static void AddModal( Modal modal ) {
             Modals[modal.Title] = modal;
-            ImGui.OpenPopup( modal.Title );
+            ModalsToOpen.Add( modal.Title ); // To eliminate Imgui ID weirdness
         }
     }
 }

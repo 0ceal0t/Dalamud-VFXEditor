@@ -12,7 +12,7 @@ namespace VfxEditor.PapFormat {
 
         private int Index;
 
-        public PapReplaceModal( PapMotion motion, int index, string importPath ) : base( "Animation Index" ) {
+        public PapReplaceModal( PapMotion motion, int index, string importPath ) : base( "Animation Index", true ) {
             Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;

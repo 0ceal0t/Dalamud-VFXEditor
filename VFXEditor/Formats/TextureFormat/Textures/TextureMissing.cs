@@ -1,0 +1,21 @@
+using ImGuiNET;
+using VfxEditor.Utils;
+
+namespace VfxEditor.Formats.TextureFormat.Textures {
+    public class TextureMissing : TextureDrawable {
+        public TextureMissing( string gamePath ) : base( gamePath ) { }
+
+        public override void DrawImage() { }
+
+        public override void DrawImage( uint u, uint v, uint w, uint h ) { }
+
+        protected override void DrawControls() {
+            ImGui.TextColored( UiUtils.RED_COLOR, "Texture is missing" );
+            if( ImGui.Button( "Import" ) ) ImportDialog();
+        }
+
+        protected override TextureDataFile GetRawData() => null;
+
+        protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
+    }
+}

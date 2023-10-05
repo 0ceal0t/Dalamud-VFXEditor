@@ -11,5 +11,7 @@ namespace VfxEditor.AvfxFormat {
             item.Read( reader, size );
             return item;
         }
+
+        protected override bool IsDanger( AvfxTexture item ) => !item.FileExists();
     }
 }

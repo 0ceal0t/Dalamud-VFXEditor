@@ -1,6 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
+using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
@@ -18,10 +19,13 @@ namespace VfxEditor.AvfxFormat {
 
         public abstract T Read( BinaryReader reader, int size );
 
+        protected virtual bool IsDanger( T item ) => false;
+
         protected override void DrawControls() => IUiNodeView<T>.DrawControls( this, File );
 
         protected override bool DrawLeftItem( T item, int idx ) {
             using var _ = ImRaii.PushId( idx );
+            using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR, IsDanger( item ) );
 
             if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
                 Selected = item;

@@ -376,7 +376,7 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected void DisplayFileControls() {
+        protected virtual void DisplayFileControls() {
             if( UiUtils.OkButton( "UPDATE" ) ) Update();
 
             ImGui.SameLine();
@@ -390,14 +390,12 @@ namespace VfxEditor.FileManager {
 
             var warnings = GetWarningText();
             if( !string.IsNullOrEmpty( warnings ) ) {
-                ImGui.SameLine();
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR );
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    ImGui.SameLine();
-                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
-                }
                 ImGui.SameLine();
-                ImGui.Text( warnings );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.Text( FontAwesomeIcon.ExclamationCircle.ToIconString() );
+                }
+                UiUtils.Tooltip( warnings );
             }
         }
 

@@ -10,7 +10,7 @@ namespace VfxEditor.PapFormat {
         private readonly string ImportPath;
         private int Index;
 
-        public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index" ) {
+        public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index", true ) {
             File = file;
             ImportPath = importPath;
         }

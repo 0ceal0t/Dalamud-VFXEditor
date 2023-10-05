@@ -18,7 +18,7 @@ namespace VfxEditor.PapFormat {
         private readonly List<string> AnimationNames = new();
         private readonly List<string> NodeNames = new();
 
-        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "Animation Import" ) {
+        public PapGltfImportModal( PapMotion motion, int index, string importPath ) : base( "Animation Import", true ) {
             Motion = motion;
             HavokIndex = index;
             ImportPath = importPath;

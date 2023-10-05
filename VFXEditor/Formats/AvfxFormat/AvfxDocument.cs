@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.AvfxFormat.Texture;
 using VfxEditor.Select;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
@@ -111,6 +112,22 @@ namespace VfxEditor.AvfxFormat {
             var invalidTimeline = CurrentFile.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
             if( invalidTimeline == null ) return "";
             return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
+        }
+
+        protected override void DisplayFileControls() {
+            base.DisplayFileControls();
+
+            if( CurrentFile.TextureView.Group.Items.Where( x => !x.FileExists() ).Any() ) {
+                ImGui.SameLine();
+                if( UiUtils.RemoveButton( "Import Missing Textures" ) ) {
+                    var paths = CurrentFile.TextureView.Group.Items
+                        .Where( x => !x.FileExists() )
+                        .Select( x => x.Path.Value.Trim( '\0' ) )
+                        .Where( x => !string.IsNullOrEmpty( x ) ).ToList();
+
+                    Plugin.AddModal( new ImportMissingTexturesModal( paths ) );
+                }
+            }
         }
     }
 }

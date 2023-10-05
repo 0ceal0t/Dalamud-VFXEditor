@@ -53,6 +53,8 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndTooltip();
         }
 
+        public bool FileExists() => Plugin.TextureManager.FileExists( Path.Value );
+
         public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.Value );
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";

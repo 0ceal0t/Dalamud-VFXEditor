@@ -43,6 +43,10 @@ namespace ImGuiFileDialog {
             SetDialog( "OpenFileDialog", title, filters, SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback );
         }
 
+        public static void OpenFileModal( string title, string filters, Action<bool, string> callback ) {
+            SetDialog( "OpenFileDialog", title, filters, SavedPath, ".", "", 1, true, ImGuiFileDialogFlags.SelectOnly, callback );
+        }
+
         public static void SaveFileDialog( string title, string filters, string defaultFileName, string defaultExtension, Action<bool, string> callback ) {
             SetDialog( "SaveFileDialog", title, filters, SavedPath, defaultFileName, defaultExtension, 1, false, ImGuiFileDialogFlags.None, callback );
         }

@@ -74,7 +74,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
 
-            if( !Dalamud.DataManager.FileExists( gamePath ) ) return null;
+            if( !Dalamud.DataManager.FileExists( gamePath ) ) return new TextureMissing( gamePath );
 
             try {
                 var data = Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
@@ -91,6 +91,8 @@ namespace VfxEditor.Formats.TextureFormat {
                 return null;
             }
         }
+
+        public bool FileExists( string path ) => Dalamud.DataManager.FileExists( path.Trim( '\0' ) ) || GetReplacePath( path.Trim( '\0' ), out var _ );
 
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 

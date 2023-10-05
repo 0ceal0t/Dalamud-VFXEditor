@@ -13,7 +13,7 @@ namespace VfxEditor.PapFormat {
 
         private bool SkipUnanimated = true;
 
-        public PapGltfExportModal( PapMotion motion, string animationName, string exportPath ) : base( "Animation Export" ) {
+        public PapGltfExportModal( PapMotion motion, string animationName, string exportPath ) : base( "Animation Export", true ) {
             Motion = motion;
             AnimationName = animationName;
             ExportPath = exportPath;
