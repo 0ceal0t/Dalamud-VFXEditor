@@ -34,8 +34,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxFile( BinaryReader reader, bool verify ) : base( new( Plugin.AvfxManager ) ) {
             Main = AvfxMain.FromStream( reader );
 
-            var data = ToBytes();
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), new() { (8, data.Length) } );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             NodeGroupSet = Main.NodeGroupSet;
 

@@ -383,7 +383,7 @@ namespace VfxEditor.FileManager {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
             }
-            UiUtils.Tooltip( "Export as a raw file.\nTo export as a Textools/Penumbra mod, use the \"mod export\" menu item" );
+            UiUtils.Tooltip( "Export as a raw file" );
 
             ImGui.SameLine();
             UiUtils.ShowVerifiedStatus( Verified );

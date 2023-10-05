@@ -22,11 +22,13 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
+            if( size == 0 ) return;
             Parsed.Read( reader );
             if( Pad ) FileUtils.PadTo( reader, 4 );
         }
 
         public override void WriteContents( BinaryWriter writer ) {
+            if( string.IsNullOrEmpty( Parsed.Value ) ) return;
             Parsed.Write( writer );
             if( Pad ) FileUtils.PadTo( writer, 4 );
         }

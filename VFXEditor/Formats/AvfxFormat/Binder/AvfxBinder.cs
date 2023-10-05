@@ -115,6 +115,7 @@ namespace VfxEditor.AvfxFormat {
                 BinderType.Linear => new AvfxBinderDataLinear(),
                 BinderType.Spline => new AvfxBinderDataSpline(),
                 BinderType.Camera => new AvfxBinderDataCamera(),
+                BinderType.Unknown_4 => new AvfxBinderDataUnknown4(),
                 _ => null,
             };
             Data?.SetAssigned( true );

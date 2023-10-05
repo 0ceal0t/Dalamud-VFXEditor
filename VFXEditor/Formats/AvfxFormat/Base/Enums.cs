@@ -241,7 +241,8 @@ namespace VfxEditor.AvfxFormat {
             Point = 0,
             Linear = 1,
             Spline = 2,
-            Camera = 3
+            Camera = 3,
+            Unknown_4 = 4,
         }
         public enum BindPoint {
             Caster = 0,
