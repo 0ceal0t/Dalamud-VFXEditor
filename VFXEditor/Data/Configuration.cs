@@ -128,6 +128,8 @@ namespace VfxEditor {
         public int PngMips = 9;
         public TextureFormat PngFormat = TextureFormat.DXT5;
 
+        public string CustomPathPrefix = "vfx/custom/";
+
         [NonSerialized]
         public bool WriteLocationError = false;
 

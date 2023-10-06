@@ -28,7 +28,7 @@ namespace VfxEditor.AvfxFormat {
                     file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom() );
                 }
             }
-            if( CurrentFile != null && ImGui.MenuItem( "Clean up" ) ) CurrentFile.Cleanup();
+            if( CurrentFile != null && ImGui.MenuItem( "Clean Up" ) ) CurrentFile.Cleanup();
         }
 
         public void Import( string path ) => ActiveDocument.Import( path );

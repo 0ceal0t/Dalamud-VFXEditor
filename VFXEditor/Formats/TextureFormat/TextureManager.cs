@@ -100,13 +100,13 @@ namespace VfxEditor.Formats.TextureFormat {
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
         // Not already converted, file exists and can be converted, not already replaced
-        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && !path.StartsWith( "vfx/custom" ) && Dalamud.DataManager.FileExists( path ) && !GetReplacePath( path, out var _ );
+        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && Dalamud.DataManager.FileExists( path ) && !GetReplacePath( path, out var _ );
 
         public void ConvertToCustom( string path, out string newPath ) {
             newPath = path;
             if( !CanConvertToCustom( path ) ) return;
 
-            newPath = path.Replace( "vfx/", "vfx/custom/" );
+            newPath = string.IsNullOrEmpty( Plugin.Configuration.CustomPathPrefix ) ? path : Plugin.Configuration.CustomPathPrefix + path.Split( "/", 2 )[1];
             Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
             ReplaceTexture( TempAtex, newPath );
             Dalamud.Log( $"Converted {path} to {newPath}" );
