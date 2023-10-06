@@ -17,6 +17,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public abstract void DrawImage();
         public abstract void DrawImage( uint u, uint v, uint w, uint h );
+        public abstract void DrawImage( float height );
 
         protected abstract void DrawControls();
 

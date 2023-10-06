@@ -129,7 +129,7 @@ namespace VfxEditor {
                 var height = 20f;
                 ImGui.Dummy( new( width, height ) );
 
-                var filled = WorkspaceFileCount == 0 ? 0 : ( ( float )count / WorkspaceFileCount ) * width;
+                var filled = Math.Min( width, WorkspaceFileCount == 0 ? 0 : ( ( float )count / WorkspaceFileCount ) * width );
 
                 var drawList = ImGui.GetWindowDrawList();
                 drawList.AddRectFilled( pos, pos + new Vector2( width, height ), ImGui.GetColorU32( ImGuiCol.FrameBg ), 5f );

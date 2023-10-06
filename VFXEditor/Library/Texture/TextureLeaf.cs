@@ -38,7 +38,13 @@ namespace VfxEditor.Library.Texture {
 
         protected override void DrawBody() {
             using var indent = ImRaii.PushIndent( 5f );
-            Plugin.TextureManager.GetTexture( Path )?.DrawImage();
+            Plugin.TextureManager.GetTexture( Path )?.DrawImage( 70 );
+
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+                Plugin.TextureManager.GetTexture( Path )?.DrawImage();
+                ImGui.EndTooltip();
+            }
         }
 
         public bool DrawSelectable() {

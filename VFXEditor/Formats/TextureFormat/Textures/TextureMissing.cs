@@ -9,6 +9,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public override void DrawImage( uint u, uint v, uint w, uint h ) { }
 
+        public override void DrawImage( float height ) { }
+
         protected override void DrawControls() {
             ImGui.TextColored( UiUtils.RED_COLOR, "Texture is missing" );
             if( ImGui.Button( "Import" ) ) ImportDialog();

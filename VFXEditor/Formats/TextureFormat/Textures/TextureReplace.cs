@@ -33,7 +33,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         public void ImportFile( string importPath ) {
-            Preview?.Dispose();
             Preview = null;
 
             try {
@@ -131,6 +130,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public override void DrawImage() => Preview?.DrawImage();
 
         public override void DrawImage( uint u, uint v, uint w, uint h ) => Preview?.DrawImage( u, v, w, h );
+
+        public override void DrawImage( float height ) => Preview?.DrawImage( height );
 
         protected override void DrawControls() {
             Preview?.DrawParams();

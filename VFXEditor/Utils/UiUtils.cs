@@ -180,10 +180,12 @@ namespace VfxEditor.Utils {
 
             if( verified == VerifiedStatus.ERROR ) {
                 ImGui.SameLine();
-                using var _ = ImRaii.PushColor( ImGuiCol.Button, RED_COLOR );
-                if( IconButton( FontAwesomeIcon.Bug, "Report" ) ) {
-                    OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues/new?assignees=&labels=bug&title=%5BPARSING+ISSUE%5D&body=What%20is%20the%20name%20or%20path%20of%20the%20file%20you%20are%20trying%20to%20open%3F%0A%0AWhat%20type%20of%20file%20is%20it%20(VFX%2C%20TMB%2C%20PAP%2C%20etc.)%3F" );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( RemoveButton( FontAwesomeIcon.Bug.ToIconString() ) ) {
+                        OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/issues/new?assignees=&labels=bug&title=%5BPARSING+ISSUE%5D&body=What%20is%20the%20name%20or%20path%20of%20the%20file%20you%20are%20trying%20to%20open%3F%0A%0AWhat%20type%20of%20file%20is%20it%20(VFX%2C%20TMB%2C%20PAP%2C%20etc.)%3F" );
+                    }
                 }
+                Tooltip( "Report issue on Github" );
             }
         }
 

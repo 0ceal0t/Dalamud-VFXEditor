@@ -7,21 +7,19 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public class TexturePreview : TextureDrawable {
-        public readonly ushort Height;
-        public readonly ushort Width;
-        public readonly ushort MipLevels;
-        public readonly ushort Depth;
-        public readonly TextureFormat Format;
-        public readonly IDalamudTextureWrap Wrap;
+        private readonly ushort Height;
+        private readonly ushort Width;
+        private readonly ushort MipLevels;
+        private readonly TextureFormat Format;
+        private readonly IDalamudTextureWrap Wrap;
 
-        public readonly bool Penumbra;
+        private readonly bool Penumbra;
 
         public TexturePreview( TextureDataFile file, bool penumbra, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;
             MipLevels = file.Header.MipLevels;
             Width = file.Header.Width;
             Height = file.Header.Height;
-            Depth = file.Header.Depth;
             Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
             Penumbra = penumbra;
         }
@@ -37,6 +35,16 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             var uv0 = new Vector2( u, v ) / size;
             var uv1 = uv0 + new Vector2( w, h ) / size;
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
+        }
+
+        public override void DrawImage( float height ) {
+            if( Wrap == null ) return;
+            if( Height < height ) {
+                DrawImage();
+                return;
+            }
+
+            ImGui.Image( Wrap.ImGuiHandle, new Vector2( ( ( float )Width / Height ) * height, height ) );
         }
 
         public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} / {Width}x{Height}" );

@@ -379,7 +379,10 @@ namespace VfxEditor.FileManager {
         protected virtual void DisplayFileControls() {
             if( UiUtils.OkButton( "UPDATE" ) ) Update();
 
-            ImGui.SameLine();
+            using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
             }

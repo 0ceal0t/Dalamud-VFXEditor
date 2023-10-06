@@ -119,15 +119,17 @@ namespace VfxEditor.AvfxFormat {
 
             if( CurrentFile.TextureView.Group.Items.Where( x => !x.FileExists() ).Any() ) {
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 10 );
-                if( UiUtils.RemoveButton( "Import Missing Textures" ) ) {
-                    var paths = CurrentFile.TextureView.Group.Items
-                        .Where( x => !x.FileExists() )
-                        .Select( x => x.Path.Value.Trim( '\0' ) )
-                        .Where( x => !string.IsNullOrEmpty( x ) ).ToList();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Images.ToIconString() ) ) {
+                        var paths = CurrentFile.TextureView.Group.Items
+                            .Where( x => !x.FileExists() )
+                            .Select( x => x.Path.Value.Trim( '\0' ) )
+                            .Where( x => !string.IsNullOrEmpty( x ) ).ToList();
 
-                    Plugin.AddModal( new ImportMissingTexturesModal( paths ) );
+                        Plugin.AddModal( new ImportMissingTexturesModal( paths ) );
+                    }
                 }
+                UiUtils.Tooltip( "Import missing textures" );
             }
         }
     }
