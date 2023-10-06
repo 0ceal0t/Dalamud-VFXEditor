@@ -13,6 +13,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxString Path = new( "Path", "Path", false, false );
         public readonly UiNodeGraphView NodeView;
 
+        public string PathTrimmed => Path.Value.Trim( '\0' );
+
         public AvfxTexture() : base( NAME, AvfxNodeGroupSet.TextureColor ) {
             NodeView = new( this );
         }
@@ -53,7 +55,14 @@ namespace VfxEditor.AvfxFormat {
             ImGui.EndTooltip();
         }
 
-        public bool FileExists() => Plugin.TextureManager.FileExists( Path.Value );
+        public bool CanConvertToCustom() => Plugin.TextureManager.CanConvertToCustom( PathTrimmed );
+
+        public void ConvertToCustom() {
+            Plugin.TextureManager.ConvertToCustom( PathTrimmed, out var newPath );
+            Path.Value = newPath;
+        }
+
+        public bool FileExists() => Plugin.TextureManager.GameOrReplaced( PathTrimmed );
 
         public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.Value );
 

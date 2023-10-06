@@ -17,9 +17,9 @@ namespace VfxEditor.Interop {
 
         // ===== FILES =========
 
-        public delegate byte ReadFilePrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+        public delegate byte ReadFilePrototype( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync );
 
-        public delegate byte ReadSqpackPrototype( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync );
+        public delegate byte ReadSqpackPrototype( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync );
 
         public delegate void* GetResourceSyncPrototype( IntPtr resourceManager, uint* categoryId, ResourceType* resourceType,
             int* resourceHash, byte* path, GetResourceParameters* resParams );
@@ -110,9 +110,9 @@ namespace VfxEditor.Interop {
             return replaced;
         }
 
-        private byte ReadSqpackHandler( IntPtr pFileHandler, SeFileDescriptor* pFileDesc, int priority, bool isSync ) {
-            if( !pFileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
-                return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
+        private byte ReadSqpackHandler( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync ) {
+            if( !fileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
+                return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
             }
 
             var originalPath = originalGamePath.ToString();
@@ -135,23 +135,23 @@ namespace VfxEditor.Interop {
             // call the original if it's a penumbra path that doesn't need replacement as well
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted || isPenumbra ) {
                 if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Calling Original With {originalPath}" );
-                return ReadSqpackHook.Original( pFileHandler, pFileDesc, priority, isSync );
+                return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
             }
 
             if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Replaced with {gameFsPath}" );
 
-            pFileDesc->FileMode = FileMode.LoadUnpackedResource;
+            fileDesc->FileMode = FileMode.LoadUnpackedResource;
 
             ByteString.FromString( gameFsPath, out var gamePath );
 
             // note: must be utf16
             var utfPath = Encoding.Unicode.GetBytes( gameFsPath );
-            Marshal.Copy( utfPath, 0, new IntPtr( &pFileDesc->Utf16FileName ), utfPath.Length );
+            Marshal.Copy( utfPath, 0, new IntPtr( &fileDesc->Utf16FileName ), utfPath.Length );
             var fd = stackalloc byte[0x20 + utfPath.Length + 0x16];
             Marshal.Copy( utfPath, 0, new IntPtr( fd + 0x21 ), utfPath.Length );
-            pFileDesc->FileDescriptor = fd;
+            fileDesc->FileDescriptor = fd;
 
-            return ReadFile( pFileHandler, pFileDesc, priority, isSync );
+            return ReadFile( fileHandler, fileDesc, priority, isSync );
         }
     }
 }

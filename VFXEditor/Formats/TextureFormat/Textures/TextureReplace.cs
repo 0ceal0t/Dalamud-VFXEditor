@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -132,6 +133,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public override void DrawImage( uint u, uint v, uint w, uint h ) => Preview?.DrawImage( u, v, w, h );
 
         protected override void DrawControls() {
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
+                }
+                ImGui.SameLine();
+                ImGui.Text( "Replaced" );
+            }
+
             Preview?.DrawParams();
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
@@ -178,6 +187,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( split[0] == "vfx" ) {
                 if( split[1] == "ui" ) return suffix;
                 if( split[1] == "cut" ) return split.Length >= 5 ? $"{split[3]}/{suffix}" : fallback;
+                if( split[1] == "custom" ) return split.Length >= 5 ? $"{split[3]}/{suffix}" : fallback;
                 return split.Length >= 4 ? $"{split[2]}/{suffix}" : fallback;
             }
 

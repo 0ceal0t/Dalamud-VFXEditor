@@ -66,5 +66,11 @@ namespace VfxEditor.Interop {
         public const string PlaySoundSig = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? FE C2 ";
 
         public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 7D 77 85 FF";
+
+        // https://github.com/Ottermandias/Penumbra.GameData/blob/34e3299f28c5e1d2b7d071ba8a3f851f5d1fa057/Offsets.cs#L32
+
+        public const int ResourceHandleGetDataVfunc = 23;
+
+        public const int ResourceHandleGetLengthVfunc = 17;
     }
 }

@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
@@ -21,8 +22,13 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.EndMenu();
             }
 
-            if( CurrentFile == null ) return;
-            if( ImGui.MenuItem( "Clean up" ) ) CurrentFile.Cleanup();
+            if( ImGui.MenuItem( "Convert Textures" ) ) {
+                foreach( var document in Documents.Where( x => x.CurrentFile != null ) ) {
+                    var file = document.CurrentFile;
+                    file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom() );
+                }
+            }
+            if( CurrentFile != null && ImGui.MenuItem( "Clean up" ) ) CurrentFile.Cleanup();
         }
 
         public void Import( string path ) => ActiveDocument.Import( path );

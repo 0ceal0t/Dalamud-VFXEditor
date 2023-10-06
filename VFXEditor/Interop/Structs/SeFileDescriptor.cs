@@ -1,3 +1,4 @@
+using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Structs {
@@ -14,17 +15,5 @@ namespace VfxEditor.Structs {
 
         [FieldOffset( 0x70 )]
         public char Utf16FileName; //
-    }
-
-    [StructLayout( LayoutKind.Explicit )]
-    public struct GetResourceParameters {
-        [FieldOffset( 16 )]
-        public uint SegmentOffset;
-
-        [FieldOffset( 20 )]
-        public uint SegmentLength;
-
-        public readonly bool IsPartialRead
-            => SegmentLength != 0;
     }
 }

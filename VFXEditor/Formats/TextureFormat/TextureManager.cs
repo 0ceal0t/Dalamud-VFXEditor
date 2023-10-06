@@ -16,6 +16,7 @@ namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : GenericDialog, IFileManager {
         private int TEX_ID = 0;
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
+        public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
 
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
@@ -92,11 +93,24 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public bool FileExists( string path ) => Dalamud.DataManager.FileExists( path.Trim( '\0' ) ) || GetReplacePath( path.Trim( '\0' ), out var _ );
+        public bool GameOrReplaced( string path ) => Dalamud.DataManager.FileExists( path ) || GetReplacePath( path, out var _ );
 
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
+
+        // Not already converted, file exists and can be converted, not already replaced
+        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && !path.StartsWith( "vfx/custom" ) && Dalamud.DataManager.FileExists( path ) && !GetReplacePath( path, out var _ );
+
+        public void ConvertToCustom( string path, out string newPath ) {
+            newPath = path;
+            if( !CanConvertToCustom( path ) ) return;
+
+            newPath = path.Replace( "vfx/", "vfx/custom/" );
+            Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
+            ReplaceTexture( TempAtex, newPath );
+            Dalamud.Log( $"Converted {path} to {newPath}" );
+        }
 
         // ===================
 
