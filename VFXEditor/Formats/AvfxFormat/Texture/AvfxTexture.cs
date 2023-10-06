@@ -62,7 +62,7 @@ namespace VfxEditor.AvfxFormat {
             Path.Value = newPath;
         }
 
-        public bool FileExists() => Plugin.TextureManager.GameOrReplaced( PathTrimmed );
+        public bool FileExists() => Plugin.TextureManager.FileExists( PathTrimmed );
 
         public TextureDrawable GetTexture() => Plugin.TextureManager.GetTexture( Path.Value );
 

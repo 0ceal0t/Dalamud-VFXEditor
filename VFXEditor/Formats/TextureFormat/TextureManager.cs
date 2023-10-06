@@ -75,15 +75,24 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
 
-            if( !GameFileExists( gamePath ) ) return new TextureMissing( gamePath );
+            var gameFileExists = GameFileExists( gamePath );
+            var penumbraFileExits = PenumbraFileExists( gamePath, out var penumbraPath );
+
+            if( !gameFileExists && !penumbraFileExits ) return new TextureMissing( gamePath );
 
             try {
-                var data = Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
+                var data = penumbraFileExits ?
+                    ( Path.IsPathRooted( penumbraPath ) ?
+                        TextureDataFile.LoadFromLocal( penumbraPath ) :
+                        Dalamud.DataManager.GetFile<TextureDataFile>( penumbraPath )
+                    ) :
+                    Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
+
                 if( !data.ValidFormat ) {
                     Dalamud.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
                     return null;
                 }
-                var newPreview = new TexturePreview( data, gamePath );
+                var newPreview = new TexturePreview( data, penumbraFileExits, gamePath );
                 Previews[gamePath] = newPreview;
                 return newPreview;
             }
@@ -100,14 +109,21 @@ namespace VfxEditor.Formats.TextureFormat {
             catch( Exception ) { return false; }
         }
 
-        public bool GameOrReplaced( string path ) => GameFileExists( path ) || GetReplacePath( path, out var _ );
+        public static bool PenumbraFileExists( string path, out string localPath ) {
+            localPath = Plugin.PenumbraIpc.ResolveDefaultPath( path );
+            if( path.Equals( localPath ) ) return false;
+            if( !string.IsNullOrEmpty( localPath ) ) return true;
+            return false;
+        }
+
+        public bool FileExists( string path ) => GameFileExists( path ) || PenumbraFileExists( path, out var _ ) || GetReplacePath( path, out var _ );
 
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
         // Not already converted, file exists and can be converted, not already replaced
-        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && GameFileExists( path ) && !GetReplacePath( path, out var _ );
+        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && GameFileExists( path ) && !PenumbraFileExists( path, out var _ ) && !GetReplacePath( path, out var _ );
 
         public void ConvertToCustom( string path, out string newPath ) {
             newPath = path;

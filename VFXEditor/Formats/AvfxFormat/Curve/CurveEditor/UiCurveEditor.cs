@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Interface.Style;
 using ImGuiNET;
 using ImPlotNET;
 using OtterGui.Raii;
@@ -228,7 +227,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
 
-                var color = StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
+                var color = UiUtils.PARSED_GREEN;
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
 
                 ImGui.TextColored( color, "Ctrl+Left Click" );

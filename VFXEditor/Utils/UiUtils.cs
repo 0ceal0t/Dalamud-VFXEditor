@@ -31,6 +31,10 @@ namespace VfxEditor.Utils {
 
         public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
+        public static Vector4 DALAMUD_RED => StyleModel.GetFromCurrent().BuiltInColors.DalamudRed.Value;
+
+        public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
+
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
 
         public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) =>
@@ -90,8 +94,7 @@ namespace VfxEditor.Utils {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             ImGui.TextDisabled( label );
             ImGui.SameLine();
-            var dalamudColors = StyleModel.GetFromCurrent().BuiltInColors;
-            ImGui.TextColored( value ? dalamudColors.ParsedGreen.Value : dalamudColors.DalamudRed.Value, $"{value}" );
+            ImGui.TextColored( value ? PARSED_GREEN : DALAMUD_RED, $"{value}" );
         }
 
         public static void HelpMarker( string text ) {

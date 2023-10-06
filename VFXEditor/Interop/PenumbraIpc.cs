@@ -10,6 +10,7 @@ namespace VfxEditor.Interop {
         private readonly ICallGateSubscriber<(int Breaking, int Features)> ApiVersionsSubscriber;
         private readonly ICallGateSubscriber<string> GetModDirectorySubscriber;
         private readonly ICallGateSubscriber<IList<(string, string)>> GetModsSubscriber;
+        private readonly ICallGateSubscriber<string, string> ResolveDefaultPathSubscriber;
 
         private readonly ICallGateSubscriber<object> InitializedSubscriber;
         private readonly ICallGateSubscriber<object> DisposedSubscriber;
@@ -21,6 +22,8 @@ namespace VfxEditor.Interop {
 
             GetModDirectorySubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string>( "Penumbra.GetModDirectory" );
             GetModsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<IList<(string, string)>>( "Penumbra.GetMods" );
+
+            ResolveDefaultPathSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string, string>( "Penumbra.ResolveDefaultPath" );
 
             InitializedSubscriber.Subscribe( EnablePenumbra );
             DisposedSubscriber.Subscribe( DisablePenumbra );
@@ -34,6 +37,13 @@ namespace VfxEditor.Interop {
             }
 
             PenumbraEnabled = true;
+        }
+
+        public string ResolveDefaultPath( string path ) {
+            try {
+                return ResolveDefaultPathSubscriber.InvokeFunc( path );
+            }
+            catch( Exception ) { return ""; }
         }
 
         public List<string> GetMods() {

@@ -3,6 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public class TexturePreview : TextureDrawable {
@@ -13,13 +14,16 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public readonly TextureFormat Format;
         public readonly IDalamudTextureWrap Wrap;
 
-        public TexturePreview( TextureDataFile file, string gamePath ) : base( gamePath ) {
+        public readonly bool Penumbra;
+
+        public TexturePreview( TextureDataFile file, bool penumbra, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;
             MipLevels = file.Header.MipLevels;
             Width = file.Header.Width;
             Height = file.Header.Height;
             Depth = file.Header.Depth;
             Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
+            Penumbra = penumbra;
         }
 
         public override void DrawImage() {
@@ -40,7 +44,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         protected override void DrawControls() {
             DrawParams();
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            if( Penumbra ) {
+                ImGui.SameLine();
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
+                ImGui.Text( "[Penumbra]" );
+            }
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
             DrawExportReplaceButtons();
         }
 

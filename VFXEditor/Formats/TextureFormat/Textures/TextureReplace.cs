@@ -91,7 +91,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     throw new Exception( $"Invalid extension {importFileExtension}" );
                 }
 
-                Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), GamePath );
+                Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), false, GamePath );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error importing {importPath} into {GamePath}" );
@@ -136,7 +136,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Preview?.DrawParams();
 
             ImGui.SameLine();
-            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN ) ) {
                 ImGui.Text( "[Replaced]" );
             }
 

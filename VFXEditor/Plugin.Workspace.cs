@@ -1,4 +1,3 @@
-using Dalamud.Interface.Style;
 using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;
@@ -135,7 +134,7 @@ namespace VfxEditor {
                 var drawList = ImGui.GetWindowDrawList();
                 drawList.AddRectFilled( pos, pos + new Vector2( width, height ), ImGui.GetColorU32( ImGuiCol.FrameBg ), 5f );
                 if( count > 0 ) {
-                    drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value ), 5f );
+                    drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( UiUtils.PARSED_GREEN ), 5f );
                 }
 
                 ImGui.End();
