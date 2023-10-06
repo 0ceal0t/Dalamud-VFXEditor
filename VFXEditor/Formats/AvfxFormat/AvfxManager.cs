@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Linq;
 using VfxEditor.FileManager;
@@ -22,12 +23,22 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.EndMenu();
             }
 
-            if( ImGui.MenuItem( "Convert Textures" ) ) {
-                foreach( var document in Documents.Where( x => x.CurrentFile != null ) ) {
-                    var file = document.CurrentFile;
-                    file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom() );
+            if( ImGui.BeginMenu( "Convert Textures" ) ) {
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
+                ImGui.SetNextItemWidth( 150 );
+                if( ImGui.InputText( "##Prefix", ref Plugin.Configuration.CustomPathPrefix, 255 ) ) Plugin.Configuration.Save();
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Apply" ) ) {
+                    foreach( var document in Documents.Where( x => x.CurrentFile != null ) ) {
+                        var file = document.CurrentFile;
+                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom() );
+                    }
                 }
+                ImGui.EndMenu();
             }
+
             if( CurrentFile != null && ImGui.MenuItem( "Clean Up" ) ) CurrentFile.Cleanup();
         }
 

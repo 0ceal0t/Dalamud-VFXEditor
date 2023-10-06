@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
@@ -11,15 +10,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxTexture : AvfxNode {
         public const string NAME = "Tex";
 
-        public readonly AvfxString Path = new( "Path", "Path", false, false, new() {
-            new() {
-                Icon = () => FontAwesomeIcon.Cog,
-                Remove = false,
-                Action = ( string path ) => {
-                    ImGui.OpenPopup( "PathCog" );
-                }
-            }
-        } );
+        public readonly AvfxString Path = new( "Path", "Path", false, false );
         public readonly UiNodeGraphView NodeView;
 
         public string PathTrimmed => Path.Value.Trim( '\0' );
@@ -52,13 +43,6 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) ) ) {
                 ImGui.SameLine();
                 Path.Draw( ImGui.GetCursorPosX() - preCombo );
-
-                using var __ = ImRaii.PushId( "Path" );
-                if( ImGui.BeginPopup( "PathCog" ) ) {
-                    ImGui.SetNextItemWidth( 100 );
-                    if( ImGui.InputText( "Custom Prefix", ref Plugin.Configuration.CustomPathPrefix, 255 ) ) Plugin.Configuration.Save();
-                    ImGui.EndPopup();
-                }
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );

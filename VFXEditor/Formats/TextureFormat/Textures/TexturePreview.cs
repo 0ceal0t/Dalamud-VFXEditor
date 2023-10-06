@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
         }
 
-        public void DrawParams() => ImGui.TextDisabled( $"Format: {Format}  Mips: {MipLevels}  Size: {Width}x{Height}" );
+        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} / {Width}x{Height}" );
 
         protected override void DrawControls() {
             DrawParams();

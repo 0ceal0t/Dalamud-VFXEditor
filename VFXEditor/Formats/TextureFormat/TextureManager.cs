@@ -75,7 +75,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
 
-            if( !Dalamud.DataManager.FileExists( gamePath ) ) return new TextureMissing( gamePath );
+            if( !GameFileExists( gamePath ) ) return new TextureMissing( gamePath );
 
             try {
                 var data = Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
@@ -93,14 +93,21 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public bool GameOrReplaced( string path ) => Dalamud.DataManager.FileExists( path ) || GetReplacePath( path, out var _ );
+        public static bool GameFileExists( string path ) {
+            try {
+                return Dalamud.DataManager.FileExists( path );
+            }
+            catch( Exception ) { return false; }
+        }
+
+        public bool GameOrReplaced( string path ) => GameFileExists( path ) || GetReplacePath( path, out var _ );
 
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
         // Not already converted, file exists and can be converted, not already replaced
-        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && Dalamud.DataManager.FileExists( path ) && !GetReplacePath( path, out var _ );
+        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && GameFileExists( path ) && !GetReplacePath( path, out var _ );
 
         public void ConvertToCustom( string path, out string newPath ) {
             newPath = path;

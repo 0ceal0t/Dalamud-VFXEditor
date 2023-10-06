@@ -1,9 +1,9 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
@@ -133,17 +133,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public override void DrawImage( uint u, uint v, uint w, uint h ) => Preview?.DrawImage( u, v, w, h );
 
         protected override void DrawControls() {
-            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
-                }
-                ImGui.SameLine();
-                ImGui.Text( "Replaced" );
-            }
-
             Preview?.DrawParams();
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            ImGui.SameLine();
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
+                ImGui.Text( "[Replaced]" );
+            }
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
 
             DrawExportReplaceButtons();
             ImGui.SameLine();
