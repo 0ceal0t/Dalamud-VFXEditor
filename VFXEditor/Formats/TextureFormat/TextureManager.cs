@@ -131,6 +131,11 @@ namespace VfxEditor.Formats.TextureFormat {
             if( !CanConvertToCustom( path ) ) return;
 
             newPath = string.IsNullOrEmpty( Plugin.Configuration.CustomPathPrefix ) ? path : Plugin.Configuration.CustomPathPrefix + path.Split( "/", 2 )[1];
+            if( FileExists( newPath ) ) {
+                Dalamud.Log( $"{newPath} already converted" );
+                return;
+            }
+
             Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
             ReplaceTexture( TempAtex, newPath );
             Dalamud.Log( $"Converted {path} -> {newPath}" );
