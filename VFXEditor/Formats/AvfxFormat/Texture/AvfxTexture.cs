@@ -57,9 +57,10 @@ namespace VfxEditor.AvfxFormat {
 
         public bool CanConvertToCustom() => Plugin.TextureManager.CanConvertToCustom( PathTrimmed );
 
-        public void ConvertToCustom() {
-            Plugin.TextureManager.ConvertToCustom( PathTrimmed, out var newPath );
-            Path.Value = newPath;
+        public void ConvertToCustom( CompoundCommand command ) {
+            if( Plugin.TextureManager.ConvertToCustom( PathTrimmed, out var newPath ) ) {
+                command.Add( new ParsedSimpleCommand<string>( Path.Parsed, Path.Value, newPath ) );
+            }
         }
 
         public bool FileExists() => Plugin.TextureManager.FileExists( PathTrimmed );

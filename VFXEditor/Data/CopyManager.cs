@@ -80,6 +80,11 @@ namespace VfxEditor.Data {
             if( ImGui.MenuItem( "Paste" ) ) Paste();
         }
 
+        public static void DrawDisabled() {
+            ImGui.MenuItem( "Copy" );
+            ImGui.MenuItem( "Paste" );
+        }
+
         //==================
 
         public static void FinalizeAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.FinalizePaste( x?.GetCommandManager() ) );

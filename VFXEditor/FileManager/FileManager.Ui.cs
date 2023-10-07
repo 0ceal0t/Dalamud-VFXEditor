@@ -2,11 +2,12 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        protected virtual void DrawEditMenuExtra() { }
+        protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
             SourceSelect?.Draw();
@@ -37,14 +38,18 @@ namespace VfxEditor.FileManager {
 
             Plugin.DrawFileMenu();
 
-            if( CurrentFile == null ) {
-                using var disabled = ImRaii.Disabled();
-                ImGui.MenuItem( "Edit" );
-            }
-            else if( ImGui.BeginMenu( "Edit" ) ) {
-                GetCopyManager().Draw();
-                GetCommandManager().Draw();
-                DrawEditMenuExtra();
+            if( ImGui.BeginMenu( "Edit" ) ) {
+                if( CurrentFile == null ) {
+                    using var disabled = ImRaii.Disabled();
+                    CopyManager.DrawDisabled();
+                    CommandManager.DrawDisabled();
+                }
+                else {
+                    GetCopyManager().Draw();
+                    GetCommandManager().Draw();
+                }
+
+                DrawEditMenuItems();
                 ImGui.EndMenu();
             }
 

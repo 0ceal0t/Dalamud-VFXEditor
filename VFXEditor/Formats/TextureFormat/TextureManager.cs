@@ -126,19 +126,20 @@ namespace VfxEditor.Formats.TextureFormat {
         // Not already converted, file exists and can be converted, not already replaced
         public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && GameFileExists( path ) && !PenumbraFileExists( path, out var _ ) && !GetReplacePath( path, out var _ );
 
-        public void ConvertToCustom( string path, out string newPath ) {
+        public bool ConvertToCustom( string path, out string newPath ) {
             newPath = path;
-            if( !CanConvertToCustom( path ) ) return;
+            if( !CanConvertToCustom( path ) ) return false;
 
             newPath = string.IsNullOrEmpty( Plugin.Configuration.CustomPathPrefix ) ? path : Plugin.Configuration.CustomPathPrefix + path.Split( "/", 2 )[1];
             if( FileExists( newPath ) ) {
                 Dalamud.Log( $"{newPath} already converted" );
-                return;
+                return true;
             }
 
             Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
             ReplaceTexture( TempAtex, newPath );
             Dalamud.Log( $"Converted {path} -> {newPath}" );
+            return true;
         }
 
         // ===================

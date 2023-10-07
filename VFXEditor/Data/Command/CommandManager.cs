@@ -72,11 +72,16 @@ namespace VfxEditor {
 
         public unsafe void Draw() {
             using( var dimUndo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanUndo ) ) {
-                if( ImGui.MenuItem( "Undo##Menu" ) ) Undo();
+                if( ImGui.MenuItem( "Undo" ) ) Undo();
             }
 
             using var dimRedo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanRedo );
-            if( ImGui.MenuItem( "Redo##Menu" ) ) Redo();
+            if( ImGui.MenuItem( "Redo" ) ) Redo();
+        }
+
+        public static void DrawDisabled() {
+            ImGui.MenuItem( "Undo" );
+            ImGui.MenuItem( "Redo" );
         }
 
         public void Dispose() {

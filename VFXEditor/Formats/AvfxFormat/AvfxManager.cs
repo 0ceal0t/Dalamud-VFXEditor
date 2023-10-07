@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
 
         protected override AvfxDocument GetWorkspaceDocument( WorkspaceMetaRenamed data, string localPath ) => new( this, NewWriteLocation, localPath, data );
 
-        protected override void DrawEditMenuExtra() {
+        protected override void DrawEditMenuItems() {
             if( ImGui.BeginMenu( "Templates" ) ) {
                 if( ImGui.MenuItem( "Blank" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
                 if( ImGui.MenuItem( "Weapon" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
@@ -31,15 +31,17 @@ namespace VfxEditor.AvfxFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Apply" ) ) {
-                    foreach( var document in Documents.Where( x => x.CurrentFile != null ) ) {
-                        var file = document.CurrentFile;
-                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom() );
+                    foreach( var file in Documents.Where( x => x.CurrentFile != null ).Select( x => x.CurrentFile ) ) {
+                        var command = new CompoundCommand();
+                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( command ) );
+                        file.Command.Add( command );
                     }
                 }
                 ImGui.EndMenu();
             }
 
-            if( CurrentFile != null && ImGui.MenuItem( "Clean Up" ) ) CurrentFile.Cleanup();
+            using var disabled = ImRaii.Disabled( CurrentFile == null );
+            if( ImGui.MenuItem( "Clean Up" ) ) CurrentFile.Cleanup();
         }
 
         public void Import( string path ) => ActiveDocument.Import( path );
