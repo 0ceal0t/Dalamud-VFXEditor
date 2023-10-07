@@ -234,7 +234,7 @@ namespace VfxEditor.Select {
 
         private void SelectGamePath( string path ) {
             var cleanedPath = path.Trim().Replace( "\\", "/" );
-            if( Dalamud.DataManager.FileExists( cleanedPath ) ) {
+            if( !ShowLocal || Dalamud.DataManager.FileExists( cleanedPath ) ) {
                 Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedPath, cleanedPath ) );
                 GamePathInput = "";
             }

@@ -200,18 +200,18 @@ namespace VfxEditor.AvfxFormat {
                 var text = item.GetText().Length < 22 ? item.GetText() : item.GetText()[..19] + "...";
                 var textColor = item == Selected ? Plugin.Configuration.TimelineSelectedColor : new Vector4( 1 ); // Selected text color <-----------------
                 drawList.AddText( itemPos + new Vector2( 25, -1 ), ImGui.GetColorU32( textColor ), text );
-                if( !newItemAdded && overCheck && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsMouseHoveringRect( childFramePos, childFramePosMax ) && focused ) {
+                if( !newItemAdded && overCheck && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     ignoreSelected = true;
                     Toggle( item );
                 }
 
                 var overDelete = AddDeleteButton( drawList, new Vector2( contentMin.X + LegendWidth - ItemHeight + 2 - 10, itemPos.Y ), false );
-                if( !newItemAdded && overDelete && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsMouseHoveringRect( childFramePos, childFramePosMax ) && focused ) {
+                if( !newItemAdded && overDelete && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     ignoreSelected = true;
                     deleteEntry = item;
                 }
 
-                if( !newItemAdded && !ignoreSelected && ImGui.IsMouseHoveringRect( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ) ) && ImGui.IsMouseHoveringRect( childFramePos, childFramePosMax ) && focused ) {
+                if( !newItemAdded && !ignoreSelected && MouseOver( itemPosBase, itemPosBase + new Vector2( 150, ItemHeight ) ) && MouseOver( childFramePos, childFramePosMax ) && focused ) {
                     if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Selected = item; // Select from left side
                     if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) ) OnDoubleClick( item );
                 }
@@ -292,14 +292,14 @@ namespace VfxEditor.AvfxFormat {
                 if( MovingEntry == null ) {
                     for( var j = 2; j >= 0; j-- ) {
                         var rect = rects[j];
-                        if( !ImGui.IsMouseHoveringRect( rect.Min, rect.Max ) ) continue;
+                        if( !MouseOver( rect.Min, rect.Max ) ) continue;
                         drawList.AddRectFilled( rect.Min, rect.Max, quadColor[j], 2 );
                     }
 
                     for( var j = 0; j < 3; j++ ) {
                         var rect = rects[j];
-                        if( !ImGui.IsMouseHoveringRect( rect.Min, rect.Max ) ) continue;
-                        if( !ImGui.IsMouseHoveringRect( childFramePos, childFramePos + childFrameSize ) ) continue;
+                        if( !MouseOver( rect.Min, rect.Max ) ) continue;
+                        if( !MouseOver( childFramePos, childFramePos + childFrameSize ) ) continue;
 
                         // Start dragging an entry
                         if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && !MovingScrollBar && focused ) {
@@ -372,7 +372,7 @@ namespace VfxEditor.AvfxFormat {
             var scrollBarB = new Vector2( scrollBarMin.X + canvasSize.X, scrollBarMax.Y - 1 );
             drawList.AddRectFilled( scrollBarA, scrollBarB, 0xFF222222, 0 );
 
-            var inScrollBar = ImGui.IsMouseHoveringRect( scrollBarA, scrollBarB );
+            var inScrollBar = MouseOver( scrollBarA, scrollBarB );
             drawList.AddRectFilled( scrollBarA, scrollBarB, 0xFF101010, 8 );
 
             var scrollBarC = new Vector2( scrollBarMin.X + LegendWidth + startFrameOffset, scrollBarMin.Y );
@@ -388,8 +388,8 @@ namespace VfxEditor.AvfxFormat {
                 Max = scrollBarD
             };
 
-            var onLeft = ImGui.IsMouseHoveringRect( barHandleLeft.Min, barHandleLeft.Max );
-            var onRight = ImGui.IsMouseHoveringRect( barHandleRight.Min, barHandleRight.Max );
+            var onLeft = MouseOver( barHandleLeft.Min, barHandleLeft.Max );
+            var onRight = MouseOver( barHandleRight.Min, barHandleRight.Max );
 
             drawList.AddRectFilled( barHandleLeft.Min, barHandleLeft.Max, ( onLeft || SizingLeft ) ? 0xFFAAAAAA : 0xFF666666, 6 );
             drawList.AddRectFilled( barHandleRight.Min, barHandleRight.Max, ( onRight || SizingRight ) ? 0xFFAAAAAA : 0xFF666666, 6 );
@@ -440,7 +440,7 @@ namespace VfxEditor.AvfxFormat {
                     }
                 }
                 else {
-                    if( ImGui.IsMouseHoveringRect( scrollBarThumb.Min, scrollBarThumb.Max ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && MovingEntry == null ) {
+                    if( MouseOver( scrollBarThumb.Min, scrollBarThumb.Max ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && MovingEntry == null ) {
                         MovingScrollBar = true;
                         PanningViewSource = io.MousePos;
                         PanningViewFrame = -FirstFrame;
@@ -488,7 +488,7 @@ namespace VfxEditor.AvfxFormat {
         private static bool AddDeleteButton( ImDrawListPtr drawList, Vector2 pos, bool add = true ) {
             var size = new Vector2( 16, 16 );
             var posMax = pos + size;
-            var overDelete = ImGui.IsMouseHoveringRect( pos, posMax );
+            var overDelete = MouseOver( pos, posMax );
             var deleteColor = overDelete ? ImGui.GetColorU32( Plugin.Configuration.TimelineSelectedColor ) : 0xFFBBBBBB;
             var midY = pos.Y + 16 / 2 - 0.5f;
             var midX = pos.X + 16 / 2 - 0.5f;
@@ -501,11 +501,15 @@ namespace VfxEditor.AvfxFormat {
         private static bool CheckBox( ImDrawListPtr drawList, Vector2 pos, bool on ) {
             var size = new Vector2( 16, 16 );
             var posMax = pos + size;
-            var overDelete = ImGui.IsMouseHoveringRect( pos, posMax );
+            var overDelete = MouseOver( pos, posMax );
             var deleteColor = overDelete ? ImGui.GetColorU32( Plugin.Configuration.TimelineSelectedColor ) : 0xFFBBBBBB;
             drawList.AddRect( pos, posMax, deleteColor, 4 );
             if( on ) drawList.AddRectFilled( pos + new Vector2( 2 ), posMax - new Vector2( 2 ), deleteColor, 4 );
             return overDelete;
         }
+
+        private static bool MouseOver( Vector2 start, Vector2 end ) => Contains( start, end, ImGui.GetIO().MousePos );
+
+        private static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
     }
 }
