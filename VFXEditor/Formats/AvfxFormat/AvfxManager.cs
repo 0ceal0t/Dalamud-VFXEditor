@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
             }
 
             using var disabled = ImRaii.Disabled( CurrentFile == null );
-            if( ImGui.MenuItem( "Clean Up" ) ) CurrentFile.Cleanup();
+            if( ImGui.MenuItem( "Clean Up" ) ) CurrentFile?.Cleanup();
         }
 
         public void Import( string path ) => ActiveDocument.Import( path );

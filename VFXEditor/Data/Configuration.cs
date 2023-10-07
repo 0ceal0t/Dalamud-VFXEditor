@@ -198,7 +198,7 @@ namespace VfxEditor {
         // =================
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( "##Settings" );
+            using var _ = ImRaii.PushId( "Settings" );
 
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
@@ -228,61 +228,68 @@ namespace VfxEditor {
         private void DrawConfiguration() {
             using var child = ImRaii.Child( "Config" );
 
-            ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
-            if( ImGui.InputText( "Temp file location", ref WriteLocation, 255 ) ) Save();
-            if( ImGui.Checkbox( "Refresh write location each update", ref UpdateWriteLocation ) ) Save();
-
-            if( ImGui.Checkbox( "Log all files", ref LogAllFiles ) ) Save();
-            if( ImGui.Checkbox( "Log debug information", ref LogDebug ) ) Save();
-            if( ImGui.Checkbox( "Log Vfx debug information", ref LogVfxDebug ) ) Save();
-            if( ImGui.Checkbox( "Log Vfx triggers", ref LogVfxTriggers ) ) Save();
-
-            if( ImGui.Checkbox( "Autosave workspace", ref AutosaveEnabled ) ) Save();
-            using( var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled ) )
-            using( var indent = ImRaii.PushIndent() ) {
-                ImGui.SetNextItemWidth( 120 );
-                if( ImGui.InputInt( "Autosave time (seconds)", ref AutosaveSeconds ) ) Save();
+            if( ImGui.CollapsingHeader( "Saving", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
+                if( ImGui.InputText( "Write Location", ref WriteLocation, 255 ) ) Save();
+                if( ImGui.Checkbox( "Refresh on Update", ref UpdateWriteLocation ) ) Save();
+                if( ImGui.Checkbox( "Autosave Workspace", ref AutosaveEnabled ) ) Save();
+                using( var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled ) )
+                using( var indent = ImRaii.PushIndent() ) {
+                    ImGui.SetNextItemWidth( 120 );
+                    if( ImGui.InputInt( "Autosave Time (seconds)", ref AutosaveSeconds ) ) Save();
+                }
             }
 
-            if( ImGui.Checkbox( "Hide with UI", ref HideWithUI ) ) Save();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( ImGui.Checkbox( "File picker image preview", ref FilepickerImagePreview ) ) {
-                FileDialogManager.ImagePreview = FilepickerImagePreview;
-                Save();
+            if( ImGui.CollapsingHeader( "Logging", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                if( ImGui.Checkbox( "All Files", ref LogAllFiles ) ) Save();
+                if( ImGui.Checkbox( "Debug Information", ref LogDebug ) ) Save();
+                if( ImGui.Checkbox( "Vfx Debug Information", ref LogVfxDebug ) ) Save();
+                if( ImGui.Checkbox( "Vfx Triggers", ref LogVfxTriggers ) ) Save();
             }
 
-            ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( "Recent file limit", ref SaveRecentLimit ) ) {
-                SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
-                Save();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            if( ImGui.CollapsingHeader( "UI", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                if( ImGui.Checkbox( "Hide with Game UI", ref HideWithUI ) ) Save();
+                if( ImGui.Checkbox( "File Picker Image Preview", ref FilepickerImagePreview ) ) {
+                    FileDialogManager.ImagePreview = FilepickerImagePreview;
+                    Save();
+                }
+                if( ImGui.Checkbox( "Show Tab Bar", ref ShowTabBar ) ) Save();
+                ImGui.SetNextItemWidth( 135 );
+                if( ImGui.InputInt( "Recent File Limit", ref SaveRecentLimit ) ) {
+                    SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
+                    Save();
+                }
+                ImGui.SetNextItemWidth( 135 );
+                if( ImGui.InputInt( "Undo History Size", ref MaxUndoSize ) ) Save();
+                ImGui.SetNextItemWidth( 135 );
+                if( ImGui.InputFloat( "Overlay Remove Delay", ref OverlayRemoveDelay ) ) Save();
+                if( ImGui.Checkbox( "Limit Overlay by Distance", ref OverlayLimit ) ) Save();
             }
-
-            ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputFloat( "Live overlay remove delay time", ref OverlayRemoveDelay ) ) Save();
-            if( ImGui.Checkbox( "Live overlay limit by distance", ref OverlayLimit ) ) Save();
-
-            ImGui.SetNextItemWidth( 135 );
-            if( ImGui.InputInt( "Undo history size", ref MaxUndoSize ) ) Save();
-
-            if( ImGui.Checkbox( "Show tab bar", ref ShowTabBar ) ) Save();
         }
 
         private void DrawKeybinds() {
-            if( ImGui.Checkbox( "Block game inputs when VFXEditor is focused##Settings", ref BlockGameInputsWhenFocused ) ) Save();
+            if( ImGui.Checkbox( "Block Game Inputs When VFXEditor is Focused", ref BlockGameInputsWhenFocused ) ) Save();
 
             using var child = ImRaii.Child( "Keybinds", new Vector2( -1 ), false );
 
             if( SaveKeybind.Draw( "Save" ) ) Save();
-            if( SaveAsKeybind.Draw( "Save as" ) ) Save();
+            if( SaveAsKeybind.Draw( "Save As" ) ) Save();
             if( OpenKeybind.Draw( "Open" ) ) Save();
             if( CopyKeybind.Draw( "Copy" ) ) Save();
             if( PasteKeybind.Draw( "Paste" ) ) Save();
             if( UndoKeybind.Draw( "Undo" ) ) Save();
             if( RedoKeybind.Draw( "Redo " ) ) Save();
             if( UpdateKeybind.Draw( "Update" ) ) Save();
-            if( SpawnOnSelfKeybind.Draw( "Spawn on self (Vfx only)" ) ) Save();
-            if( SpawnOnGroundKeybind.Draw( "Spawn on ground (Vfx only)" ) ) Save();
-            if( SpawnOnTargetKeybind.Draw( "Spawn on target (Vfx only)" ) ) Save();
+            if( SpawnOnSelfKeybind.Draw( "Spawn on Self (Vfx only)" ) ) Save();
+            if( SpawnOnGroundKeybind.Draw( "Spawn on Ground (Vfx only)" ) ) Save();
+            if( SpawnOnTargetKeybind.Draw( "Spawn on Target (Vfx only)" ) ) Save();
         }
 
         private void DrawVfx() {
@@ -291,24 +298,24 @@ namespace VfxEditor {
             if( ImGui.CollapsingHeader( "Curve Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
-                if( ImGui.ColorEdit4( "Line color", ref CurveEditorLineColor ) ) Save();
-                if( ImGui.ColorEdit4( "Point color", ref CurveEditorPointColor ) ) Save();
-                if( ImGui.ColorEdit4( "Primary selected color", ref CurveEditorPrimarySelectedColor ) ) Save();
-                if( ImGui.ColorEdit4( "Selected color", ref CurveEditorSelectedColor ) ) Save();
+                if( ImGui.ColorEdit4( "Line Color", ref CurveEditorLineColor ) ) Save();
+                if( ImGui.ColorEdit4( "Point Color", ref CurveEditorPointColor ) ) Save();
+                if( ImGui.ColorEdit4( "Primary Selected Color", ref CurveEditorPrimarySelectedColor ) ) Save();
+                if( ImGui.ColorEdit4( "Selected Color", ref CurveEditorSelectedColor ) ) Save();
 
-                if( ImGui.InputInt( "Line width", ref CurveEditorLineWidth ) ) Save();
-                if( ImGui.InputInt( "Color ring width", ref CurveEditorColorRingSize ) ) Save();
-                if( ImGui.InputInt( "Point size", ref CurveEditorPointSize ) ) Save();
-                if( ImGui.InputInt( "Primary selected size", ref CurveEditorPrimarySelectedSize ) ) Save();
-                if( ImGui.InputInt( "Selected size", ref CurveEditorSelectedSize ) ) Save();
-                if( ImGui.InputInt( "Grab distance", ref CurveEditorGrabbingDistance ) ) Save();
+                if( ImGui.InputInt( "Line Width", ref CurveEditorLineWidth ) ) Save();
+                if( ImGui.InputInt( "Color Ring Width", ref CurveEditorColorRingSize ) ) Save();
+                if( ImGui.InputInt( "Point Size", ref CurveEditorPointSize ) ) Save();
+                if( ImGui.InputInt( "Primary Selected Size", ref CurveEditorPrimarySelectedSize ) ) Save();
+                if( ImGui.InputInt( "Selected Size", ref CurveEditorSelectedSize ) ) Save();
+                if( ImGui.InputInt( "Grab Distance", ref CurveEditorGrabbingDistance ) ) Save();
             }
 
             if( ImGui.CollapsingHeader( "Timeline Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
-                if( ImGui.ColorEdit4( "Selected color", ref TimelineSelectedColor ) ) Save();
-                if( ImGui.ColorEdit4( "Bar color", ref TimelineBarColor ) ) Save();
+                if( ImGui.ColorEdit4( "Selected Color", ref TimelineSelectedColor ) ) Save();
+                if( ImGui.ColorEdit4( "Bar Color", ref TimelineBarColor ) ) Save();
             }
         }
 
@@ -318,10 +325,10 @@ namespace VfxEditor {
             if( ImGui.CollapsingHeader( "Lua", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
 
-                if( ImGui.ColorEdit4( "Parentheses color", ref LuaParensColor ) ) Save();
-                if( ImGui.ColorEdit4( "Function color", ref LuaFunctionColor ) ) Save();
-                if( ImGui.ColorEdit4( "Literal color", ref LuaLiteralColor ) ) Save();
-                if( ImGui.ColorEdit4( "Variable color", ref LuaVariableColor ) ) Save();
+                if( ImGui.ColorEdit4( "Parentheses Color", ref LuaParensColor ) ) Save();
+                if( ImGui.ColorEdit4( "Function Color", ref LuaFunctionColor ) ) Save();
+                if( ImGui.ColorEdit4( "Literal Color", ref LuaLiteralColor ) ) Save();
+                if( ImGui.ColorEdit4( "Variable Color", ref LuaVariableColor ) ) Save();
             }
         }
 
@@ -334,7 +341,7 @@ namespace VfxEditor {
                 if( ImGui.CollapsingHeader( config.Key ) ) {
                     using var indent = ImRaii.PushIndent( 5f );
 
-                    ImGui.Checkbox( "Use custom window color", ref config.Value.UseCustomWindowColor );
+                    ImGui.Checkbox( "Use Custom Window Color", ref config.Value.UseCustomWindowColor );
                     if( config.Value.UseCustomWindowColor ) {
                         if( ImGui.ColorEdit4( "Background", ref config.Value.TitleBg ) ) Save();
                         if( ImGui.ColorEdit4( "Active", ref config.Value.TitleBgActive ) ) Save();
