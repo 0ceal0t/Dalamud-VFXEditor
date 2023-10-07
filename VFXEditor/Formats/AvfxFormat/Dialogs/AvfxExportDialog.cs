@@ -6,21 +6,21 @@ using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
-    public class ExportDialog : GenericDialog {
-        private readonly AvfxFile VfxFile;
-        private readonly List<ExportDialogCategory> Categories;
+    public class AvfxExportDialog : SimpleWindow {
+        private readonly AvfxFile File;
+        private readonly List<AvfxExportCategory> Categories;
         private bool ExportDependencies = true;
 
-        public ExportDialog( AvfxFile vfxFile ) : base( "Export", false, 600, 400 ) {
-            VfxFile = vfxFile;
+        public AvfxExportDialog( AvfxFile file ) : base( "Export", false, new( 600, 400 ) ) {
+            File = file;
             Categories = new() {
-                new ExportDialogCategory<AvfxTimeline>( vfxFile.NodeGroupSet.Timelines, "Timelines" ),
-                new ExportDialogCategory<AvfxEmitter>( vfxFile.NodeGroupSet.Emitters, "Emitters" ),
-                new ExportDialogCategory<AvfxParticle>( vfxFile.NodeGroupSet.Particles, "Particles" ),
-                new ExportDialogCategory<AvfxEffector>( vfxFile.NodeGroupSet.Effectors, "Effectors" ),
-                new ExportDialogCategory<AvfxBinder>( vfxFile.NodeGroupSet.Binders, "Binders" ),
-                new ExportDialogCategory<AvfxTexture>( vfxFile.NodeGroupSet.Textures, "Textures" ),
-                new ExportDialogCategory<AvfxModel>( vfxFile.NodeGroupSet.Models, "Models" )
+                new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "Timelines" ),
+                new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "Emitters" ),
+                new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "Particles" ),
+                new ExportDialogCategory<AvfxEffector>( file.NodeGroupSet.Effectors, "Effectors" ),
+                new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "Binders" ),
+                new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "Textures" ),
+                new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "Models" )
             };
         }
 
@@ -66,8 +66,8 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         public void SaveDialog() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
-                VfxFile.Export( GetSelected(), res, ExportDependencies );
-                Visible = false;
+                File.Export( GetSelected(), res, ExportDependencies );
+                Hide();
             } );
         }
     }

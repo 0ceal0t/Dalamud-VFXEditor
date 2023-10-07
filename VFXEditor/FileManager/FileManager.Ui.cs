@@ -10,16 +10,11 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
-            SourceSelect?.Draw();
-            ReplaceSelect?.Draw();
-
-            Name = WindowTitle
+            WindowName = Title
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
-                + $"###{WindowTitle}";
+                + $"###{Title}";
 
             CheckKeybinds();
-
-            DocumentWindow.Draw();
 
             using var _ = ImRaii.PushId( Id );
             DrawMenu();
@@ -145,14 +140,15 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected override void PreDraw() {
+        public override void PreDraw() {
+            base.PreDraw();
             if( !Configuration.UseCustomWindowColor ) return;
             ImGui.PushStyleColor( ImGuiCol.TitleBg, Configuration.TitleBg );
             ImGui.PushStyleColor( ImGuiCol.TitleBgActive, Configuration.TitleBgActive );
             ImGui.PushStyleColor( ImGuiCol.TitleBgCollapsed, Configuration.TitleBgCollapsed );
         }
 
-        protected override void PostDraw() {
+        public override void PostDraw() {
             if( !Configuration.UseCustomWindowColor ) return;
             ImGui.PopStyleColor( 3 );
         }

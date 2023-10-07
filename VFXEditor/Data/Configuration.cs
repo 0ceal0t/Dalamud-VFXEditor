@@ -25,7 +25,7 @@ namespace VfxEditor {
     }
 
     [Serializable]
-    public class Configuration : GenericDialog, IPluginConfiguration {
+    public class Configuration : DalamudWindow, IPluginConfiguration {
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
@@ -133,7 +133,7 @@ namespace VfxEditor {
         [NonSerialized]
         public bool WriteLocationError = false;
 
-        public Configuration() : base( "Settings", false, 300, 200 ) { }
+        public Configuration() : base( "Settings", false, new( 300, 200 ) ) { }
 
         public void Setup() {
             Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
@@ -234,11 +234,10 @@ namespace VfxEditor {
                 if( ImGui.InputText( "Write Location", ref WriteLocation, 255 ) ) Save();
                 if( ImGui.Checkbox( "Refresh on Update", ref UpdateWriteLocation ) ) Save();
                 if( ImGui.Checkbox( "Autosave Workspace", ref AutosaveEnabled ) ) Save();
-                using( var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled ) )
-                using( var indent = ImRaii.PushIndent() ) {
-                    ImGui.SetNextItemWidth( 120 );
-                    if( ImGui.InputInt( "Autosave Time (seconds)", ref AutosaveSeconds ) ) Save();
-                }
+                using var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled );
+                using var indent = ImRaii.PushIndent();
+                ImGui.SetNextItemWidth( 120 );
+                if( ImGui.InputInt( "Autosave Time (seconds)", ref AutosaveSeconds ) ) Save();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

@@ -12,7 +12,7 @@ namespace VfxEditor.FileManager {
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
-        protected readonly string WindowTitle;
+        protected readonly string Title;
         private readonly string Extension;
         private readonly string WorkspaceKey;
         private readonly string WorkspacePath;
@@ -29,16 +29,16 @@ namespace VfxEditor.FileManager {
         public SelectDialog SourceSelect { get; protected set; }
         public SelectDialog ReplaceSelect { get; protected set; }
 
-        public FileManager( string windowTitle, string id ) : this( windowTitle, id, id.ToLower(), id, id ) { }
+        public FileManager( string title, string id ) : this( title, id, id.ToLower(), id, id ) { }
 
-        public FileManager( string windowTitle, string id, string extension, string workspaceKey, string workspacePath ) : base( windowTitle, id ) {
-            WindowTitle = windowTitle;
+        public FileManager( string title, string id, string extension, string workspaceKey, string workspacePath ) : base( title, id ) {
+            Title = title;
             Extension = extension;
             WorkspaceKey = workspaceKey;
             WorkspacePath = workspacePath;
             Configuration = Plugin.Configuration.GetManagerConfig( Id );
             AddDocument();
-            DocumentWindow = new( windowTitle, this );
+            DocumentWindow = new( title, this );
         }
 
         public override CopyManager GetCopyManager() => Copy;

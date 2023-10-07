@@ -50,7 +50,7 @@ namespace VfxEditor.Select {
         public bool CompareTo( SelectResult other ) => Type == other.Type && DisplayString == other.DisplayString && Path == other.Path;
     }
 
-    public abstract class SelectDialog : GenericDialog {
+    public abstract class SelectDialog : DalamudWindow {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly List<string> LoggedFiles = new();
 
@@ -72,7 +72,7 @@ namespace VfxEditor.Select {
         public SelectDialog( string name, string extension, FileManagerBase manager, bool showLocal ) : this( name, extension, manager, showLocal,
                 showLocal ? ( ( SelectResult result ) => manager.SetSource( result ) ) : ( ( SelectResult result ) => manager.SetReplace( result ) ) ) { }
 
-        public SelectDialog( string name, string extension, IFileManagerSelect manager, bool showLocal, Action<SelectResult> action ) : base( name, false, 800, 500 ) {
+        public SelectDialog( string name, string extension, IFileManagerSelect manager, bool showLocal, Action<SelectResult> action ) : base( name, false, new( 800, 500 ) ) {
             Manager = manager;
             Extension = extension;
             Favorites = manager.GetConfig().Favorites;
@@ -89,7 +89,7 @@ namespace VfxEditor.Select {
         public virtual void Play( string path ) { }
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( $"{Manager.GetId()}/{Name}" );
+            using var _ = ImRaii.PushId( $"{Manager.GetId()}/{WindowName}" );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -100,6 +100,8 @@ namespace VfxEditor.Select {
             RecentTab.Draw();
             FavoritesTab.Draw();
         }
+
+        public override bool DrawConditions() => Manager.IsWindowOpen();
 
         // ============= GAME =================
 

@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
-        public readonly ExportDialog ExportUi;
+        public readonly AvfxExportDialog ExportUi;
 
         private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeGroupSet.Initialize();
 
-            ExportUi = new ExportDialog( this );
+            ExportUi = new AvfxExportDialog( this );
         }
 
         public override void Draw() {

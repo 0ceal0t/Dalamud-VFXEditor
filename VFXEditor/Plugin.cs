@@ -1,4 +1,5 @@
 using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiFileDialog;
@@ -40,6 +41,8 @@ namespace VfxEditor {
 
         public static PenumbraIpc PenumbraIpc { get; private set; }
         public static PenumbraDialog PenumbraDialog { get; private set; }
+
+        public static WindowSystem WindowSystem { get; private set; }
 
         public static List<IFileManager> Managers => new( new IFileManager[]{
             TextureManager,
@@ -83,6 +86,8 @@ namespace VfxEditor {
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
+
+            WindowSystem = new();
 
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
@@ -162,6 +167,7 @@ namespace VfxEditor {
             Managers.ForEach( x => x?.Dispose() );
             DirectXManager?.Dispose();
 
+            WindowSystem.RemoveAllWindows();
             Modals.Clear();
 
             VfxSpawn.Dispose();

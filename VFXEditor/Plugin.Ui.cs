@@ -29,17 +29,9 @@ namespace VfxEditor {
             CheckWorkspaceKeybinds();
 
             TexToolsDialog.Tick();
-            TexToolsDialog.Draw();
-
             PenumbraDialog.Tick();
-            PenumbraDialog.Draw();
 
-            ToolsDialog.Draw();
-            TrackerManager.Draw();
-            Configuration.Draw();
-            LibraryManager.Draw();
-
-            Managers.ForEach( x => x?.Draw() );
+            WindowSystem.Draw();
 
             CopyManager.FinalizeAll();
 

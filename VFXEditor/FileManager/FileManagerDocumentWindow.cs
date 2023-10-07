@@ -6,13 +6,15 @@ using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public class FileManagerDocumentWindow<T, R, S> : GenericDialog where T : FileManagerDocument<R, S> where R : FileManagerFile {
+    public class FileManagerDocumentWindow<T, R, S> : DalamudWindow where T : FileManagerDocument<R, S> where R : FileManagerFile {
         private readonly FileManager<T, R, S> Manager;
         private static bool ShowSourceColumn => Plugin.Configuration.DocumentPopoutShowSource;
 
-        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, 600, 400 ) {
+        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, new( 600, 400 ) ) {
             Manager = manager;
         }
+
+        public override bool DrawConditions() => Manager.IsWindowOpen();
 
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "Documents" );

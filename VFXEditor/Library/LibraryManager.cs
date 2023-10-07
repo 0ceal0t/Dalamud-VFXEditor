@@ -11,7 +11,7 @@ using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library {
-    public class LibraryManager : GenericDialog {
+    public class LibraryManager : DalamudWindow {
         public readonly NodeRoot NodeRoot;
         public readonly TextureRoot TextureRoot;
         private readonly string RootPath;
@@ -22,7 +22,7 @@ namespace VfxEditor.Library {
 
         private string ComboSearchInput = string.Empty;
 
-        public LibraryManager() : base( "Library", false, 500, 750 ) {
+        public LibraryManager() : base( "Library", false, new( 500, 750 ) ) {
             NodeRoot = new( Plugin.Configuration.VFXNodeLibraryItems );
             TextureRoot = new( Plugin.Configuration.VfxTextureLibraryItems );
             RootPath = Plugin.Configuration.WriteLocation;

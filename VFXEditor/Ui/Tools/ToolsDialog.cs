@@ -2,13 +2,13 @@ using ImGuiNET;
 using OtterGui.Raii;
 
 namespace VfxEditor.Ui.Tools {
-    public partial class ToolsDialog : GenericDialog {
+    public partial class ToolsDialog : DalamudWindow {
         private readonly ResourceTab ResourceTab;
         private readonly UtilitiesTab UtilitiesTab;
         private readonly LoadedTab LoadedTab;
         private readonly LuaTab LuaTab;
 
-        public ToolsDialog() : base( "Tools", false, 300, 400 ) {
+        public ToolsDialog() : base( "Tools", false, new( 300, 400 ) ) {
             ResourceTab = new ResourceTab();
             UtilitiesTab = new UtilitiesTab();
             LoadedTab = new LoadedTab();

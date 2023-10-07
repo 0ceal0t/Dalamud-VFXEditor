@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
-    public abstract class ExportDialogCategory {
+    public abstract class AvfxExportCategory {
         public HashSet<AvfxNode> Selected;
         public abstract void Reset();
         public abstract void Draw();
@@ -12,7 +12,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         public abstract void Select( AvfxNode node );
     }
 
-    public class ExportDialogCategory<T> : ExportDialogCategory where T : AvfxNode {
+    public class ExportDialogCategory<T> : AvfxExportCategory where T : AvfxNode {
         public NodeGroup<T> Group;
         public string HeaderText;
 

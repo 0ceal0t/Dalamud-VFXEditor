@@ -34,7 +34,7 @@ namespace VfxEditor.Ui.Export {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
-                Visible = false;
+                Hide();
             } );
         }
 

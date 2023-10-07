@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 
 namespace VfxEditor.Ui.Export {
-    public abstract class ExportDialog : GenericDialog {
+    public abstract class ExportDialog : DalamudWindow {
         protected string ModName = "";
         protected string Author = "";
         protected string Version = "1.0.0";
@@ -13,7 +13,7 @@ namespace VfxEditor.Ui.Export {
 
         protected readonly List<ExportDialogCategory> Categories = new();
 
-        public ExportDialog( string id ) : base( id, false, 600, 500 ) {
+        public ExportDialog( string id ) : base( id, false, new( 600, 500 ) ) {
             foreach( var manager in Plugin.Managers ) {
                 if( manager == null ) continue;
                 ToExport[manager.GetId()] = false;
@@ -23,7 +23,7 @@ namespace VfxEditor.Ui.Export {
         }
 
         public override void DrawBody() {
-            using var _ = ImRaii.PushId( Name );
+            using var _ = ImRaii.PushId( WindowName );
 
             ImGui.InputText( "Mod Name", ref ModName, 255 );
             ImGui.InputText( "Author", ref Author, 255 );

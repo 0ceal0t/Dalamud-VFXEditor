@@ -38,7 +38,7 @@ namespace VfxEditor.Ui.Export {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
-                Visible = false;
+                Hide();
             } );
         }
 

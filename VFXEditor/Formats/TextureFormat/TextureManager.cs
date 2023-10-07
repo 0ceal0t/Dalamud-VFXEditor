@@ -13,7 +13,7 @@ using VfxEditor.Ui;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
-    public class TextureManager : GenericDialog, IFileManager {
+    public class TextureManager : DalamudWindow, IFileManager {
         private int TEX_ID = 0;
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
@@ -25,16 +25,22 @@ namespace VfxEditor.Formats.TextureFormat {
         private readonly TextureView View;
         private readonly ManagerConfiguration Configuration;
 
-        public TextureManager() : base( "Textures", false, 800, 500 ) {
+        public TextureManager() : base( "Textures", false, new( 800, 500 ) ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }
 
         public CopyManager GetCopyManager() => null;
+
         public CommandManager GetCommandManager() => null;
+
         public ManagerConfiguration GetConfig() => Configuration;
+
         public IEnumerable<IFileDocument> GetDocuments() => Textures;
+
         public string GetId() => "Textures";
+
+        public bool IsWindowOpen() => IsOpen;
 
         public void ReplaceTexture( string importPath, string gamePath ) {
             var replace = new TextureReplace( gamePath, NewWriteLocation );

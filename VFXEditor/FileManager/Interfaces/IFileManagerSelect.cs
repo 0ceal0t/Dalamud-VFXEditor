@@ -9,5 +9,7 @@ namespace VfxEditor.FileManager.Interfaces {
         public CommandManager GetCommandManager();
 
         public ManagerConfiguration GetConfig();
+
+        public bool IsWindowOpen();
     }
 }
