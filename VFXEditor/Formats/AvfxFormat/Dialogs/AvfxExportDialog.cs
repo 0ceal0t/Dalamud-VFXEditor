@@ -1,74 +1,11 @@
-using ImGuiFileDialog;
-using ImGuiNET;
-using OtterGui.Raii;
-using System.Collections.Generic;
 using VfxEditor.Ui;
-using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat.Dialogs {
-    public class AvfxExportDialog : SimpleWindow {
-        private readonly AvfxFile File;
-        private readonly List<AvfxExportCategory> Categories;
-        private bool ExportDependencies = true;
+namespace VfxEditor.Formats.AvfxFormat.Dialogs {
+    public class AvfxExportDialog : DalamudWindow {
+        public AvfxExportDialog() : base( "Export", false, new( 600, 400 ) ) { }
 
-        public AvfxExportDialog( AvfxFile file ) : base( "Export", false, new( 600, 400 ) ) {
-            File = file;
-            Categories = new() {
-                new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "Timelines" ),
-                new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "Emitters" ),
-                new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "Particles" ),
-                new ExportDialogCategory<AvfxEffector>( file.NodeGroupSet.Effectors, "Effectors" ),
-                new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "Binders" ),
-                new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "Textures" ),
-                new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "Models" )
-            };
-        }
+        public override bool DrawConditions() => Plugin.AvfxManager?.CurrentFile != null;
 
-        public void Reset() => Categories.ForEach( cat => cat.Reset() );
-
-        public override void DrawBody() {
-            using var _ = ImRaii.PushId( "##ExportDialog" );
-
-            ImGui.Checkbox( "Export Dependencies", ref ExportDependencies );
-
-            ImGui.SameLine();
-            UiUtils.HelpMarker( @"Exports the selected items, as well as any dependencies they have (such as particles depending on textures). It is recommended to leave this selected." );
-
-            ImGui.SameLine();
-            if( ImGui.Button( "Reset#" ) ) Reset();
-
-            ImGui.SameLine();
-            if( ImGui.Button( "Export" ) ) SaveDialog();
-
-            using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );
-            Categories.ForEach( cat => cat.Draw() );
-        }
-
-        public void ShowDialog( AvfxNode node ) {
-            Show();
-            Reset();
-            foreach( var category in Categories ) {
-                if( category.Belongs( node ) ) {
-                    category.Select( node );
-                    break;
-                }
-            }
-        }
-
-        public List<AvfxNode> GetSelected() {
-            var result = new List<AvfxNode>();
-            foreach( var category in Categories ) {
-                result.AddRange( category.Selected );
-            }
-            return result;
-        }
-
-        public void SaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
-                if( !ok ) return;
-                File.Export( GetSelected(), res, ExportDependencies );
-                Hide();
-            } );
-        }
+        public override void DrawBody() => Plugin.AvfxManager?.CurrentFile?.ExportUi.Draw();
     }
 }

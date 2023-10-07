@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
-        public readonly AvfxExportDialog ExportUi;
+        public readonly AvfxExport ExportUi;
 
         private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeGroupSet.Initialize();
 
-            ExportUi = new AvfxExportDialog( this );
+            ExportUi = new AvfxExport( this );
         }
 
         public override void Draw() {
@@ -67,8 +67,6 @@ namespace VfxEditor.AvfxFormat {
             DrawView( BinderView, "Binders" );
             DrawView( TextureView, "Textures" );
             DrawView( ModelView, "Models" );
-
-            ExportUi.Draw();
         }
 
         private unsafe void DrawView( IUiItem view, string label ) {
@@ -163,7 +161,7 @@ namespace VfxEditor.AvfxFormat {
 
         // =======================
 
-        public void ShowExportDialog( AvfxNode node ) => ExportUi.ShowDialog( node );
+        public void ShowExportDialog( AvfxNode node ) => ExportUi.Show( node );
 
         public void ShowImportDialog() {
             FileDialogManager.OpenFileDialog( "Select a File", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {

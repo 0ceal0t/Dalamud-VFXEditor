@@ -33,7 +33,5 @@ namespace VfxEditor.Ui {
                 ExpandNextFrame = false;
             }
         }
-
-        public void Dispose() => Plugin.WindowSystem.RemoveWindow( this );
     }
 }

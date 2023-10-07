@@ -3,6 +3,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Export {
     public class ExportDialogCategory {
@@ -24,9 +25,13 @@ namespace VfxEditor.Ui.Export {
             }
 
             ImGui.SameLine();
+            var selectedCount = GetItemsToExport().Count();
+            var totalCount = Manager.GetDocuments().Where( x => x.CanExport() ).Count();
+            using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.YELLOW_COLOR, selectedCount > 0 );
+            if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]###{id}" ) ) {
+                color.Pop();
 
-            if( ImGui.CollapsingHeader( $"{id} ({GetItemsToExport().Count()}/{Manager.GetDocuments().Where( x => x.CanExport() ).Count()})###{id}" ) ) {
-                using var indent = ImRaii.PushIndent( 10f );
+                using var indent = ImRaii.PushIndent();
 
                 var items = Manager.GetDocuments();
                 if( !items.Any() ) return;

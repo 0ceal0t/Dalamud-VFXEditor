@@ -2,14 +2,18 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Linq;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.AvfxFormat.Dialogs;
 using VfxEditor.Select.Vfx;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxManager : FileManager<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
+        public readonly AvfxExportDialog ExportDialog;
+
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
             SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
             ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );
+            ExportDialog = new();
         }
 
         protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );
