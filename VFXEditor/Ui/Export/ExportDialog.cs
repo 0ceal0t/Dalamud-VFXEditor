@@ -2,7 +2,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.FileManager.Interfaces;
 
 namespace VfxEditor.Ui.Export {
     public abstract class ExportDialog : GenericDialog {
@@ -41,6 +40,6 @@ namespace VfxEditor.Ui.Export {
 
         protected abstract void OnExport();
 
-        public void RemoveDocument( IFileDocument document ) => Categories.ForEach( x => x.RemoveDocument( document ) );
+        public void Tick() => Categories.ForEach( x => x.Tick() );
     }
 }

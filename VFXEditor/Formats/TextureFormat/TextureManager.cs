@@ -1,9 +1,9 @@
+using Dalamud.Interface.Internal;
 using ImGuiFileDialog;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -17,6 +17,8 @@ namespace VfxEditor.Formats.TextureFormat {
         private int TEX_ID = 0;
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
+
+        public readonly List<IDalamudTextureWrap> Wraps = new();
 
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
@@ -35,13 +37,12 @@ namespace VfxEditor.Formats.TextureFormat {
         public string GetId() => "Textures";
 
         public void ReplaceTexture( string importPath, string gamePath ) {
-            var newReplace = new TextureReplace( gamePath, NewWriteLocation );
-            newReplace.ImportFile( importPath );
-            Textures.Add( newReplace );
+            var replace = new TextureReplace( gamePath, NewWriteLocation );
+            replace.ImportFile( importPath );
+            Textures.Add( replace );
         }
 
         public void RemoveReplace( TextureReplace replace ) {
-            replace.Dispose();
             Textures.Remove( replace );
             View.ClearSelected();
         }
@@ -132,7 +133,7 @@ namespace VfxEditor.Formats.TextureFormat {
             newPath = string.IsNullOrEmpty( Plugin.Configuration.CustomPathPrefix ) ? path : Plugin.Configuration.CustomPathPrefix + path.Split( "/", 2 )[1];
             Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
             ReplaceTexture( TempAtex, newPath );
-            Dalamud.Log( $"Converted {path} to {newPath}" );
+            Dalamud.Log( $"Converted {path} -> {newPath}" );
         }
 
         // ===================
@@ -163,14 +164,26 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // ================
 
-        public void ToDefault() => Dispose();
+        public void Default() => Dispose();
 
         public void Dispose() {
-            Textures.ForEach( x => x.Dispose() );
-            Previews.Values.ToList().ForEach( x => x.Dispose() );
             Textures.Clear();
             Previews.Clear();
+
+            if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += CleanupWraps;
+            else CleanupWraps();
+
             TEX_ID = 0;
+        }
+
+        public void CleanupWraps() {
+            foreach( var wrap in Wraps ) {
+                try {
+                    wrap?.Dispose();
+                }
+                catch( Exception ) { }
+            }
+            Wraps.Clear();
         }
 
         // =======================

@@ -9,7 +9,7 @@ namespace VfxEditor.Ui.Export {
         public readonly IFileManager Manager;
 
         private bool ExportAll = false;
-        private readonly Dictionary<IFileDocument, bool> ToExport = new();
+        private Dictionary<IFileDocument, bool> ToExport = new();
 
         public ExportDialogCategory( IFileManager manager ) {
             Manager = manager;
@@ -68,8 +68,12 @@ namespace VfxEditor.Ui.Export {
 
         public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetDocuments().Where( DoExport );
 
-        private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
+        public void Tick() {
+            var items = Manager.GetDocuments();
+            // Remove items there are no longer there
+            ToExport = ToExport.Where( x => items.Contains( x.Key ) ).ToDictionary( x => x.Key, x => x.Value );
+        }
 
-        public void RemoveDocument( IFileDocument document ) => ToExport.Remove( document );
+        private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
     }
 }

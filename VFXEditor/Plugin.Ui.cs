@@ -28,8 +28,12 @@ namespace VfxEditor {
             CopyManager.ResetAll();
             CheckWorkspaceKeybinds();
 
+            TexToolsDialog.Tick();
             TexToolsDialog.Draw();
+
+            PenumbraDialog.Tick();
             PenumbraDialog.Draw();
+
             ToolsDialog.Draw();
             TrackerManager.Draw();
             Configuration.Draw();

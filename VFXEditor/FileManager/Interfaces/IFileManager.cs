@@ -16,7 +16,7 @@ namespace VfxEditor.FileManager.Interfaces {
         public void Show();
         public void Draw();
 
-        public void ToDefault();
+        public void Default();
         public void Dispose();
 
         public static bool GetReplacePath( IFileManager manager, string path, out string replacePath ) {

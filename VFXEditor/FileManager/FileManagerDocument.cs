@@ -425,7 +425,6 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
-            Plugin.CleanupExport( this );
             CurrentFile?.Dispose();
             CurrentFile = null;
             File.Delete( WriteLocation );

@@ -9,7 +9,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -54,7 +53,7 @@ namespace VfxEditor {
             await Task.Run( async () => {
                 await Task.Delay( 100 );
                 WorkspaceFileCount = Managers.Count - 1;
-                foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
+                foreach( var manager in Managers.Where( x => x != null ) ) { manager.Default(); }
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
@@ -178,11 +177,6 @@ namespace VfxEditor {
 
                 UiUtils.OkNotification( "Saved workspace" );
             } );
-        }
-
-        public static void CleanupExport( IFileDocument document ) {
-            TexToolsDialog.RemoveDocument( document );
-            PenumbraDialog.RemoveDocument( document );
         }
     }
 }

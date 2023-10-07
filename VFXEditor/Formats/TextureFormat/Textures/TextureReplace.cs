@@ -226,15 +226,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         // ===========================
 
-        public void Dispose() {
-            Preview?.Dispose();
-            Preview = null;
-            File.Delete( WriteLocation );
-            Plugin.CleanupExport( this );
-        }
-
-        // ===========================
-
         private static void DdsToAtex( TextureFormat format, byte[] dds, BinaryWriter writer, PostConversion post = PostConversion.None ) {
             // Get DDS info
             using var ddsMs = new MemoryStream( dds );

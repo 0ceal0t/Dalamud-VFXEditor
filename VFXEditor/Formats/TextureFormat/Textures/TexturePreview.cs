@@ -1,7 +1,6 @@
 using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -22,6 +21,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Height = file.Header.Height;
             Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
             Penumbra = penumbra;
+
+            if( Wrap != null ) Plugin.TextureManager.Wraps.Add( Wrap );
         }
 
         public override void DrawImage() {
@@ -65,19 +66,5 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
 
         protected override TextureDataFile GetRawData() => Dalamud.DataManager.GetFile<TextureDataFile>( GamePath );
-
-        public void Dispose() {
-            if( Wrap?.ImGuiHandle == null ) return;
-
-            if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += Cleanup;
-            else Cleanup();
-        }
-
-        public void Cleanup() {
-            try {
-                Wrap?.Dispose();
-            }
-            catch( Exception ) { }
-        }
     }
 }

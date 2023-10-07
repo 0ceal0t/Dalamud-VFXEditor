@@ -88,7 +88,6 @@ namespace VfxEditor.FileManager {
         public bool RemoveDocument( T document ) {
             var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
-            Plugin.CleanupExport( document );
 
             if( switchDoc ) {
                 ActiveDocument = Documents[0];
@@ -140,7 +139,7 @@ namespace VfxEditor.FileManager {
 
         public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
 
-        public void ToDefault() {
+        public void Default() {
             Dispose();
             AddDocument();
         }
@@ -151,6 +150,7 @@ namespace VfxEditor.FileManager {
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
             ActiveDocument = null;
+
             DOC_ID = 0;
         }
     }

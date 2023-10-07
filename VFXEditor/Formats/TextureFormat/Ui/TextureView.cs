@@ -115,6 +115,8 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
+            if( !Textures.Contains( Selected ) ) ClearSelected();
+
             base.Draw();
         }
 
