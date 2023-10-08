@@ -2,11 +2,13 @@ using Dalamud.Interface;
 using FFXIVClientStructs.Havok;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok;
@@ -15,6 +17,7 @@ using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
+using static FFXIVClientStructs.Havok.hkRootLevelContainer;
 
 namespace VfxEditor.SklbFormat.Bones {
     public enum BoneDisplay {
@@ -39,10 +42,6 @@ namespace VfxEditor.SklbFormat.Bones {
 
         public SklbBones( SklbFile file, string loadPath, bool init ) : base( loadPath, init ) {
             File = file;
-        }
-
-        public override void Init() {
-            base.Init();
             MappingView = new( File, Mappings );
         }
 
@@ -56,11 +55,75 @@ namespace VfxEditor.SklbFormat.Bones {
                     var mapper = ( SkeletonMapper* )variant.Variant.ptr;
                     // Mapper->SkeletonA is the same as HavokBones->Skeleton
                     Mappings.Add( new( this, mapper, variant.Name.String ) );
-
-                    // var a = mapper->hkReferencedObject;
-                    // Dalamud.Log( $"{a.MemSizeAndRefCount} {( nint )a.hkBaseObject.vfptr:X8}" );
                 }
             }
+        }
+
+        public void Write( HashSet<nint> handles ) {
+            var bones = new List<hkaBone>();
+            var poses = new List<hkQsTransformf>();
+            var parents = new List<short>();
+
+            foreach( var bone in Bones ) {
+                var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
+                parents.Add( parent );
+
+                bone.ToHavok( handles, out var hkBone, out var hkPose );
+                bones.Add( hkBone );
+                poses.Add( hkPose );
+            }
+
+            Skeleton->Bones = CreateArray( handles, Skeleton->Bones, bones );
+            Skeleton->ReferencePose = CreateArray( handles, Skeleton->ReferencePose, poses );
+            Skeleton->ParentIndices = CreateArray( handles, Skeleton->ParentIndices, parents );
+
+
+            var variants = new List<NamedVariant>();
+
+            // Set up animation container variant
+            var animClassName = Marshal.StringToHGlobalAnsi( "hkaAnimationContainer" );
+            var aninName = Marshal.StringToHGlobalAnsi( "hkaAnimationContainer" );
+            handles.Add( animClassName );
+            handles.Add( aninName );
+
+            variants.Add( new NamedVariant() {
+                ClassName = new() {
+                    StringAndFlag = ( byte* )animClassName
+                },
+                Name = new() {
+                    StringAndFlag = ( byte* )aninName
+                },
+                Variant = new() {
+                    ptr = ( hkReferencedObject* )AnimationContainer
+                }
+            } );
+
+            // Set up mapping variants
+            foreach( var (mapping, idx) in Mappings.WithIndex() ) {
+                mapping.Write( handles );
+
+                var mappingClassName = Marshal.StringToHGlobalAnsi( "hkaSkeletonMapper" );
+                var mappingName = Marshal.StringToHGlobalAnsi( mapping.Name.Value );
+                handles.Add( mappingClassName );
+                handles.Add( mappingName );
+
+                variants.Add( new NamedVariant() {
+                    ClassName = new() {
+                        StringAndFlag = ( byte* )mappingClassName
+                    },
+                    Name = new() {
+                        StringAndFlag = ( byte* )mappingName
+                    },
+                    Variant = new() {
+                        ptr = ( hkReferencedObject* )mapping.Mapper
+                    }
+                } );
+            }
+
+            // Update variants
+            Container->NamedVariants = CreateArray( handles, Container->NamedVariants, variants );
+
+            WriteHavok();
         }
 
         // ========== DRAWING ============
@@ -347,31 +410,6 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         // ======= UPDATING ==========
-
-        public void Write( HashSet<nint> handles ) {
-            Mappings.ForEach( x => x.Write( handles ) );
-
-            var bones = new List<hkaBone>();
-            var poses = new List<hkQsTransformf>();
-            var parents = new List<short>();
-
-            foreach( var bone in Bones ) {
-                var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
-                parents.Add( parent );
-
-                bone.ToHavok( handles, out var hkBone, out var hkPose );
-                bones.Add( hkBone );
-                poses.Add( hkPose );
-            }
-
-            Skeleton->Bones = CreateArray( handles, Skeleton->Bones, bones );
-
-            Skeleton->ReferencePose = CreateArray( handles, Skeleton->ReferencePose, poses );
-
-            Skeleton->ParentIndices = CreateArray( handles, Skeleton->ParentIndices, parents );
-
-            WriteHavok();
-        }
 
         private void UpdatePreview() {
             if( BoneList?.Count == 0 ) {

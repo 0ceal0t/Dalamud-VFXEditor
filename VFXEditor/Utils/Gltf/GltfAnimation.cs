@@ -275,9 +275,9 @@ namespace VfxEditor.Utils.Gltf {
             anim->Animation.NumberOfTransformTracks = tracks.Count;
             anim->Animation.NumberOfFloatTracks = 0;
             anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
-            anim->Animation.AnnotationTracks = HavokData.CreateArray( handles, flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ) );
-            anim->Floats = HavokData.CreateArray( handles, flags, new List<float>(), sizeof( float ) );
-            anim->Transforms = HavokData.CreateArray( handles, flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ) );
+            anim->Animation.AnnotationTracks = HavokData.CreateArray( handles, ( uint )flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ) );
+            anim->Floats = HavokData.CreateArray( handles, ( uint )flags, new List<float>(), sizeof( float ) );
+            anim->Transforms = HavokData.CreateArray( handles, ( uint )flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ) );
 
             var finalAnim = ( hkaAnimation* )anim;
 
@@ -300,8 +300,8 @@ namespace VfxEditor.Utils.Gltf {
             anims[havokIndex] = animPtr;
             bindings[havokIndex] = bindingPtr;
 
-            container->Animations = HavokData.CreateArray( handles, container->Animations.Flags, anims, sizeof( nint ) );
-            container->Bindings = HavokData.CreateArray( handles, container->Bindings.Flags, bindings, sizeof( nint ) );
+            container->Animations = HavokData.CreateArray( handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
+            container->Bindings = HavokData.CreateArray( handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
 
             container->Animations[havokIndex] = animPtr;
         }

@@ -54,6 +54,10 @@ namespace VfxEditor.Interop {
             var interleavedVtblOffset = Marshal.ReadInt32( interleavedVtbl );
             HavokInterleavedAnimationVtbl = interleavedVtbl + 4 + interleavedVtblOffset;
 
+            var mappedVtbl = Dalamud.SigScanner.ScanText( Constants.HavokMapperVtblSig ) + 18;
+            var mappedVtblOffset = Marshal.ReadInt32( mappedVtbl );
+            HavokMapperVtbl = mappedVtbl + 4 + mappedVtblOffset;
+
             HavokSplineCtor = Marshal.GetDelegateForFunctionPointer<HavokSplineCtorDelegate>( Dalamud.SigScanner.ScanText( Constants.HavokSplineCtorSig ) );
 
             PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );

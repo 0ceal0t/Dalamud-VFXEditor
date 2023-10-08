@@ -2,6 +2,7 @@ using FFXIVClientStructs.Havok;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop.Structs.Animation {
+    // https://github.com/aers/FFXIVClientStructs/blob/edc749986000d056169791916fa5462a3dff3d53/FFXIVClientStructs/Havok/Animation/Mapper/hkaSkeletonMapperData.cs#L5
     public enum MappingType {
         Ragdoll = 0x0,
         Retargeting = 0x1,

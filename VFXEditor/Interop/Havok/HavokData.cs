@@ -104,24 +104,30 @@ namespace VfxEditor.Interop.Havok {
 
         // ====================
 
+        public static hkArray<T> CreateArray<T>( HashSet<nint> handles, List<T> data ) where T : unmanaged =>
+            CreateArray( handles, 0x80000000, data, Marshal.SizeOf( typeof( T ) ) );
+
         public static hkArray<T> CreateArray<T>( HashSet<nint> handles, hkArray<T> currentArray, List<T> data ) where T : unmanaged =>
-            CreateArray( handles, currentArray.Flags, data, Marshal.SizeOf( typeof( T ) ) );
+            CreateArray( handles, ( uint )currentArray.Flags, data, Marshal.SizeOf( typeof( T ) ) );
 
-        public static hkArray<T> CreateArray<T>( HashSet<nint> handles, int f, List<T> data, int size ) where T : unmanaged {
-            var flags = f | data.Count;
+        public static hkArray<T> CreateArray<T>( HashSet<nint> handles, uint f, List<T> data, int size ) where T : unmanaged {
+            var count = data == null ? 0 : data.Count;
+            var flags = f | ( uint )count;
 
-            var arr = Marshal.AllocHGlobal( size * data.Count + 1 );
-            handles.Add( arr );
-            var _arr = ( T* )arr;
+            nint arr = 0;
 
-            for( var i = 0; i < data.Count; i++ ) {
-                _arr[i] = data[i];
+            if( data != null ) {
+                arr = Marshal.AllocHGlobal( size * data.Count + 1 );
+                handles.Add( arr );
+                var _arr = ( T* )arr;
+
+                for( var i = 0; i < data.Count; i++ ) _arr[i] = data[i];
             }
 
             var ret = new hkArray<T>() {
-                CapacityAndFlags = flags,
-                Length = data.Count,
-                Data = _arr
+                CapacityAndFlags = ( int )flags,
+                Length = count,
+                Data = ( T* )arr
             };
             return ret;
         }

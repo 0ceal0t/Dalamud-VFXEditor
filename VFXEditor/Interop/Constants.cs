@@ -59,6 +59,8 @@ namespace VfxEditor.Interop {
 
         public const string HavokInterleavedVtblSig = "48 89 07 48 8B CD 48 89 77 38";
 
+        public const string HavokMapperVtblSig = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 48 8D 05 ?? ?? ?? ?? C7 41 ?? ?? ?? ?? ?? 48 89 01 48 8B F1 48 83 C1 10 48 8B FA";
+
         public const string HavokSplineCtorSig = "48 89 5C 24 ?? 57 48 83 EC 40 48 8B DA 48 8B F9 E8 ?? ?? ?? ?? 48 8D 05 ?? ?? ?? ??";
 
         // https://github.com/lmcintyre/Dalamud.FindAnything/blob/a093b2f9e0c20e7d0479c091125ccca5ea09d683/Dalamud.FindAnything/Game/GameWindow.cs#L250
