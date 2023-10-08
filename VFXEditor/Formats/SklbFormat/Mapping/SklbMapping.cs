@@ -55,7 +55,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                     if( !ok ) return;
 
                     var hkxPath = res;
-                    if( res.Contains( ".sklb" ) ) {
+                    if( res.EndsWith( ".sklb" ) ) {
                         SimpleSklb.LoadFromLocal( res ).SaveHavokData( TempMappingHkx );
                         hkxPath = TempMappingHkx;
                     }

@@ -73,6 +73,7 @@ namespace VfxEditor.PapFormat.Motion {
         }
 
         public void DrawExportAll() {
+            Selector.Init();
             if( ImGui.Button( "Export All Motions" ) ) {
                 FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                     if( !ok ) return;
@@ -88,10 +89,12 @@ namespace VfxEditor.PapFormat.Motion {
         }
 
         public void DrawHavok( int havokIndex ) {
+            Selector.Init();
             Motions[havokIndex].DrawHavok();
         }
 
         public void Write( HashSet<nint> handles ) {
+            Selector.Init();
             Motions.ForEach( x => x.UpdateHavok( handles ) );
             WriteHavok();
         }

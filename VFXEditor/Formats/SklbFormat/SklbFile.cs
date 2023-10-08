@@ -137,6 +137,7 @@ namespace VfxEditor.SklbFormat {
         public void Updated() {
             Bones?.Updated();
         }
+
         public override void Dispose() {
             Bones?.Dispose();
 

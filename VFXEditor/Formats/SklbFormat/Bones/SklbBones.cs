@@ -43,7 +43,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
         public override void Init() {
             base.Init();
-            MappingView = new( Mappings );
+            MappingView = new( File, Mappings );
         }
 
         protected override void OnHavokLoad() {
@@ -56,6 +56,9 @@ namespace VfxEditor.SklbFormat.Bones {
                     var mapper = ( SkeletonMapper* )variant.Variant.ptr;
                     // Mapper->SkeletonA is the same as HavokBones->Skeleton
                     Mappings.Add( new( this, mapper, variant.Name.String ) );
+
+                    // var a = mapper->hkReferencedObject;
+                    // Dalamud.Log( $"{a.MemSizeAndRefCount} {( nint )a.hkBaseObject.vfptr:X8}" );
                 }
             }
         }

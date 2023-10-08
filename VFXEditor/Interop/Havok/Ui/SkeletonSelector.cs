@@ -20,7 +20,8 @@ namespace VfxEditor.Interop.Havok.Ui {
             if( !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
         }
 
-        private void Init() {
+        public void Init() {
+            if( Initialized ) return;
             Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
             SklbReplaced = replaced;
             OnUpdate.Invoke( simple );
@@ -28,7 +29,7 @@ namespace VfxEditor.Interop.Havok.Ui {
         }
 
         public void Draw() {
-            if( !Initialized ) Init();
+            Init();
 
             using var _ = ImRaii.PushId( "Selector" );
 
