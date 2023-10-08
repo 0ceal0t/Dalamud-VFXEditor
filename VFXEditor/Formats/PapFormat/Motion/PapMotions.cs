@@ -11,7 +11,7 @@ namespace VfxEditor.PapFormat.Motion {
     public unsafe class PapMotions : HavokData {
         public readonly PapFile File;
         public readonly string SklbTempPath;
-        public readonly List<PapMotion> Motions = new();
+        private readonly List<PapMotion> Motions = new();
 
         public HavokData Bones;
         public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
