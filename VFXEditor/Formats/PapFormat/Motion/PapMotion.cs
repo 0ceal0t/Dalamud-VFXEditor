@@ -144,9 +144,8 @@ namespace VfxEditor.PapFormat.Motion {
             BlendHint.Draw( CommandManager.Pap );
         }
 
-        public void UpdateHavok( List<nint> handles ) {
+        public void UpdateHavok() {
             var nameHandle = Marshal.StringToHGlobalAnsi( OriginalSkeletonName.Value );
-            handles.Add( nameHandle );
             var namePtr = new hkStringPtr {
                 StringAndFlag = ( byte* )nameHandle
             };
@@ -256,7 +255,6 @@ namespace VfxEditor.PapFormat.Motion {
 
         public void Dispose() {
             AnimatedSkeleton->removeAnimationControl( AnimationControl );
-            // if( Data != null ) Skeleton->Dtor(); // Sometimes causes crashes. idk
             Marshal.FreeHGlobal( ( nint )AnimatedSkeleton );
             Marshal.FreeHGlobal( ( nint )AnimationControl );
             if( PapPreview.CurrentMotion == this ) PapPreview.ClearAnimation();

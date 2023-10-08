@@ -5,7 +5,7 @@ namespace VfxEditor.SklbFormat.Mapping {
     public class SklbMappingDropdown : Dropdown<SklbMapping> {
         public SklbMappingDropdown( List<SklbMapping> items ) : base( "Mappings", items, false, false ) { }
 
-        protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}";
+        protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
         protected override void OnDelete( SklbMapping item ) { }
 

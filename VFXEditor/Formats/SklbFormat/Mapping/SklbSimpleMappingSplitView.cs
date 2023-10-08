@@ -16,7 +16,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         protected override bool DrawLeftItem( SklbSimpleMapping item, int idx ) {
             using var _ = ImRaii.PushId( idx );
 
-            if( ImGui.Selectable( item.BoneA.GetText( Mapping.SkeletonA ), item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) {
+            if( ImGui.Selectable( item.BoneA.GetText( Mapping.Bones.Bones ), item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) {
                 Selected = item;
             }
 
@@ -26,7 +26,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             }
 
             ImGui.SameLine();
-            ImGui.Text( item.BoneB.GetText( Mapping.SkeletonB ) );
+            ImGui.Text( item.BoneB.GetText( Mapping.MappedSkeleton ) );
 
             return false;
         }

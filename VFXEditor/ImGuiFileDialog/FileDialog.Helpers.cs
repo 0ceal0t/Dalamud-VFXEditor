@@ -7,7 +7,7 @@ namespace ImGuiFileDialog {
         }
 
         private static string BytesToString( long byteCount ) {
-            string[] suffix = new string[] { " B", " KB", " MB", " GB", " TB" };
+            var suffix = new string[] { " B", " KB", " MB", " GB", " TB" };
             if( byteCount == 0 )
                 return "0" + suffix[0];
             var bytes = Math.Abs( byteCount );

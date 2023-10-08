@@ -115,6 +115,7 @@ namespace VfxEditor {
         public bool ShowBoneNames = true;
 
         public BoneDisplay SklbBoneDisplay = BoneDisplay.Blender_Style_Perpendicular;
+        public bool SklbMappingIndexDisplay = false;
 
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;

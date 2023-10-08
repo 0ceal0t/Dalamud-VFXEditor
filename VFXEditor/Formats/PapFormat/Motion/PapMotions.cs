@@ -3,7 +3,6 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Utils.Gltf;
@@ -93,10 +92,8 @@ namespace VfxEditor.PapFormat.Motion {
         }
 
         public void Write() {
-            var handles = new List<nint>();
-            Motions.ForEach( x => x.UpdateHavok( handles ) );
+            Motions.ForEach( x => x.UpdateHavok() );
             WriteHavok();
-            handles.ForEach( Marshal.FreeHGlobal );
         }
 
         public void Dispose() {

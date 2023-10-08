@@ -1,4 +1,5 @@
 using FFXIVClientStructs.Havok;
+using ImGuiNET;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;
 using VfxEditor.SklbFormat.Bones;
@@ -8,8 +9,8 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbSimpleMapping : IUiItem {
         public readonly SklbMapping Mapping;
 
-        public readonly ParsedBoneIndex BoneA = new( "Mapped Skeleton Bone", -1 );
-        public readonly ParsedBoneIndex BoneB = new( "This Skeleton Bone", -1 );
+        public readonly ParsedBoneIndex BoneA = new( "This Skeleton Bone", -1 );
+        public readonly ParsedBoneIndex BoneB = new( "Mapped Skeleton Bone", -1 );
         public readonly ParsedInt Unk1 = new( "Unknown 1" );
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
         public readonly ParsedInt Unk3 = new( "Unknown 3" );
@@ -38,11 +39,17 @@ namespace VfxEditor.SklbFormat.Mapping {
             Scale.Value = new( scale.X, scale.Y, scale.Z, scale.W );
         }
 
-        public string GetText() => $"{BoneA.GetText( Mapping.SkeletonA )} => {BoneB.GetText( Mapping.Bones.Bones )}";
-
         public void Draw() {
-            BoneA.Draw( Mapping.SkeletonA );
-            BoneB.Draw( Mapping.Bones.Bones );
+            if( ImGui.Checkbox( "Display Raw Indexes", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
+
+            if( Plugin.Configuration.SklbMappingIndexDisplay ) {
+                BoneA.Draw( CommandManager.Sklb );
+                BoneB.Draw( CommandManager.Sklb );
+            }
+            else {
+                BoneA.Draw( Mapping.Bones.Bones );
+                BoneB.Draw( Mapping.MappedSkeleton );
+            }
 
             Unk1.Draw( CommandManager.Sklb );
             Unk2.Draw( CommandManager.Sklb );

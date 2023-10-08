@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok;
@@ -55,7 +54,8 @@ namespace VfxEditor.SklbFormat.Bones {
                 var variant = variants[i];
                 if( variant.ClassName.String == "hkaSkeletonMapper" ) {
                     var mapper = ( SkeletonMapper* )variant.Variant.ptr;
-                    Mappings.Add( new( this, mapper ) );
+                    // Mapper->SkeletonA is the same as HavokBones->Skeleton
+                    Mappings.Add( new( this, mapper, variant.Name.String ) );
                 }
             }
         }
@@ -346,9 +346,7 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= UPDATING ==========
 
         public void Write() {
-            var handles = new List<nint>();
-
-            Mappings.ForEach( x => x.Write( handles ) );
+            Mappings.ForEach( x => x.Write() );
 
             var bones = new List<hkaBone>();
             var poses = new List<hkQsTransformf>();
@@ -358,23 +356,18 @@ namespace VfxEditor.SklbFormat.Bones {
                 var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
                 parents.Add( parent );
 
-                bone.ToHavok( out var hkBone, out var hkPose, out var handle );
+                bone.ToHavok( out var hkBone, out var hkPose, out var _ );
                 bones.Add( hkBone );
                 poses.Add( hkPose );
-                handles.Add( handle );
             }
 
-            Skeleton->Bones = CreateArray( Skeleton->Bones, bones, out var boneHandle );
-            handles.Add( boneHandle );
+            Skeleton->Bones = CreateArray( Skeleton->Bones, bones, out var _ );
 
-            Skeleton->ReferencePose = CreateArray( Skeleton->ReferencePose, poses, out var poseHandle );
-            handles.Add( poseHandle );
+            Skeleton->ReferencePose = CreateArray( Skeleton->ReferencePose, poses, out var _ );
 
-            Skeleton->ParentIndices = CreateArray( Skeleton->ParentIndices, parents, out var parentHandle );
-            handles.Add( parentHandle );
+            Skeleton->ParentIndices = CreateArray( Skeleton->ParentIndices, parents, out var _ );
 
             WriteHavok();
-            handles.ForEach( Marshal.FreeHGlobal );
         }
 
         private void UpdatePreview() {

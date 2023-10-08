@@ -42,7 +42,7 @@ namespace ImGuiFileDialog {
                 var match = m.Value;
                 FilterStruct filter = new();
 
-                if( match.Contains( "{" ) ) {
+                if( match.Contains( '{' ) ) {
                     var exts = m.Groups[2].Value;
                     filter = new FilterStruct {
                         Filter = match.Split( '{' )[0],
