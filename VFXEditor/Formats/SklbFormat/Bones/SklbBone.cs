@@ -1,7 +1,7 @@
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.Parsing;
@@ -50,8 +50,9 @@ namespace VfxEditor.SklbFormat.Bones {
             LockTranslation.Draw( CommandManager.Sklb );
         }
 
-        public void ToHavok( out hkaBone bone, out hkQsTransformf pose, out IntPtr nameHandle ) {
-            nameHandle = Marshal.StringToHGlobalAnsi( Name.Value );
+        public void ToHavok( HashSet<nint> handles, out hkaBone bone, out hkQsTransformf pose ) {
+            var nameHandle = Marshal.StringToHGlobalAnsi( Name.Value );
+            handles.Add( nameHandle );
 
             var namePtr = new hkStringPtr {
                 StringAndFlag = ( byte* )nameHandle

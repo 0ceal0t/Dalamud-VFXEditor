@@ -144,8 +144,9 @@ namespace VfxEditor.PapFormat.Motion {
             BlendHint.Draw( CommandManager.Pap );
         }
 
-        public void UpdateHavok() {
+        public void UpdateHavok( HashSet<nint> handles ) {
             var nameHandle = Marshal.StringToHGlobalAnsi( OriginalSkeletonName.Value );
+            handles.Add( nameHandle );
             var namePtr = new hkStringPtr {
                 StringAndFlag = ( byte* )nameHandle
             };

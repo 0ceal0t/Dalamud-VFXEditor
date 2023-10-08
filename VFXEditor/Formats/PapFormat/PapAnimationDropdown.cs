@@ -27,8 +27,8 @@ namespace VfxEditor.PapFormat {
                 anims.RemoveAt( index );
                 bindings.RemoveAt( index );
 
-                container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
-                container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
+                container->Animations = HavokData.CreateArray( File.Handles, container->Animations.Flags, anims, sizeof( nint ) );
+                container->Bindings = HavokData.CreateArray( File.Handles, container->Bindings.Flags, bindings, sizeof( nint ) );
             } ) );
             File.Command.Add( command );
 

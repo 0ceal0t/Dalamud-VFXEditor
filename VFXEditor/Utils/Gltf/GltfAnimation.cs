@@ -135,6 +135,7 @@ namespace VfxEditor.Utils.Gltf {
         // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L13
 
         public static void ImportAnimation(
+            HashSet<nint> handles,
             hkaSkeleton* skeleton,
             PapMotion motion,
             int havokIndex,
@@ -250,9 +251,11 @@ namespace VfxEditor.Utils.Gltf {
             var currentAnim = currentBinding.ptr->Animation;
 
             var anim = ( hkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaInterleavedUncompressedAnimation ) ) );
+            handles.Add( ( nint )anim );
             anim->Animation.hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObject.hkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
 
             var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
+            handles.Add( ( nint )binding );
             binding->hkReferencedObject.hkBaseObject.vfptr = currentBinding.ptr->hkReferencedObject.hkBaseObject.vfptr;
 
             // Set up binding
@@ -262,9 +265,9 @@ namespace VfxEditor.Utils.Gltf {
 
             var flags = currentBinding.ptr->TransformTrackToBoneIndices.Flags;
 
-            binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( currentBinding.ptr->FloatTrackToFloatSlotIndices, new List<short>(), out var _ );
+            binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( handles, currentBinding.ptr->FloatTrackToFloatSlotIndices, new List<short>() );
             binding->TransformTrackToBoneIndices = HavokData.CreateArray(
-                currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList(), out var _ );
+                handles, currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList() );
 
             // Set up animation
             anim->Animation.Type = hkaAnimation.AnimationType.InterleavedAnimation;
@@ -272,9 +275,9 @@ namespace VfxEditor.Utils.Gltf {
             anim->Animation.NumberOfTransformTracks = tracks.Count;
             anim->Animation.NumberOfFloatTracks = 0;
             anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
-            anim->Animation.AnnotationTracks = HavokData.CreateArray( flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ), out var _ );
-            anim->Floats = HavokData.CreateArray( flags, new List<float>(), sizeof( float ), out var _ );
-            anim->Transforms = HavokData.CreateArray( flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ), out var _ );
+            anim->Animation.AnnotationTracks = HavokData.CreateArray( handles, flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ) );
+            anim->Floats = HavokData.CreateArray( handles, flags, new List<float>(), sizeof( float ) );
+            anim->Transforms = HavokData.CreateArray( handles, flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ) );
 
             var finalAnim = ( hkaAnimation* )anim;
 
@@ -282,6 +285,7 @@ namespace VfxEditor.Utils.Gltf {
                 Dalamud.Log( "Compressing animation..." );
 
                 var spline = ( hkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaSplineCompressedAnimation ) ) );
+                handles.Add( ( nint )spline );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
                 finalAnim = ( hkaAnimation* )spline;
             }
@@ -296,8 +300,8 @@ namespace VfxEditor.Utils.Gltf {
             anims[havokIndex] = animPtr;
             bindings[havokIndex] = bindingPtr;
 
-            container->Animations = HavokData.CreateArray( container->Animations.Flags, anims, sizeof( nint ), out var _ );
-            container->Bindings = HavokData.CreateArray( container->Bindings.Flags, bindings, sizeof( nint ), out var _ );
+            container->Animations = HavokData.CreateArray( handles, container->Animations.Flags, anims, sizeof( nint ) );
+            container->Bindings = HavokData.CreateArray( handles, container->Bindings.Flags, bindings, sizeof( nint ) );
 
             container->Animations[havokIndex] = animPtr;
         }

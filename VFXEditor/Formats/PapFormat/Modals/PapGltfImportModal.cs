@@ -71,6 +71,7 @@ namespace VfxEditor.PapFormat {
         protected override void OnOk() {
             CommandManager.Pap.Add( new PapHavokCommand( Motion.File, () => {
                 GltfAnimation.ImportAnimation(
+                    Motion.File.Handles,
                     Motion.File.MotionData.Skeleton,
                     Motion,
                     HavokIndex,

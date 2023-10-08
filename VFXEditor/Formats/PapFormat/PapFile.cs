@@ -4,6 +4,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
@@ -34,6 +35,8 @@ namespace VfxEditor.PapFormat {
         private readonly int ModdedPapMod4 = 0;
 
         private readonly bool EmptyHavok = false;
+
+        public readonly HashSet<nint> Handles = new();
 
         public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base( new( Plugin.PapManager ) ) {
             SourcePath = sourcePath;
@@ -82,7 +85,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Update() {
-            MotionData?.Write();
+            MotionData?.Write( Handles );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -194,6 +197,9 @@ namespace VfxEditor.PapFormat {
                 Plugin.DirectXManager.PapPreview.ClearFile();
                 Plugin.DirectXManager.PapPreview.ClearAnimation();
             }
+
+            foreach( var item in Handles ) Marshal.FreeHGlobal( item );
+            Handles.Clear();
         }
     }
 }

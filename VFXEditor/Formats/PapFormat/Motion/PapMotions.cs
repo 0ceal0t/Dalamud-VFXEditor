@@ -91,8 +91,8 @@ namespace VfxEditor.PapFormat.Motion {
             Motions[havokIndex].DrawHavok();
         }
 
-        public void Write() {
-            Motions.ForEach( x => x.UpdateHavok() );
+        public void Write( HashSet<nint> handles ) {
+            Motions.ForEach( x => x.UpdateHavok( handles ) );
             WriteHavok();
         }
 

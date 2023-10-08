@@ -345,8 +345,8 @@ namespace VfxEditor.SklbFormat.Bones {
 
         // ======= UPDATING ==========
 
-        public void Write() {
-            Mappings.ForEach( x => x.Write() );
+        public void Write( HashSet<nint> handles ) {
+            Mappings.ForEach( x => x.Write( handles ) );
 
             var bones = new List<hkaBone>();
             var poses = new List<hkQsTransformf>();
@@ -356,16 +356,16 @@ namespace VfxEditor.SklbFormat.Bones {
                 var parent = ( short )( bone.Parent == null ? -1 : Bones.IndexOf( bone.Parent ) );
                 parents.Add( parent );
 
-                bone.ToHavok( out var hkBone, out var hkPose, out var _ );
+                bone.ToHavok( handles, out var hkBone, out var hkPose );
                 bones.Add( hkBone );
                 poses.Add( hkPose );
             }
 
-            Skeleton->Bones = CreateArray( Skeleton->Bones, bones, out var _ );
+            Skeleton->Bones = CreateArray( handles, Skeleton->Bones, bones );
 
-            Skeleton->ReferencePose = CreateArray( Skeleton->ReferencePose, poses, out var _ );
+            Skeleton->ReferencePose = CreateArray( handles, Skeleton->ReferencePose, poses );
 
-            Skeleton->ParentIndices = CreateArray( Skeleton->ParentIndices, parents, out var _ );
+            Skeleton->ParentIndices = CreateArray( handles, Skeleton->ParentIndices, parents );
 
             WriteHavok();
         }

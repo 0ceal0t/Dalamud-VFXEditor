@@ -1,6 +1,8 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.SklbFormat.Bones;
 using VfxEditor.SklbFormat.Data;
@@ -18,6 +20,8 @@ namespace VfxEditor.SklbFormat {
         private readonly int Padding;
 
         public readonly SklbBones Bones;
+
+        public readonly HashSet<nint> Handles = new();
 
         public SklbFile( BinaryReader reader, string hkxTemp, bool init, bool verify ) : base( new( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) ) {
             HkxTempLocation = hkxTemp;
@@ -51,7 +55,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         public override void Update() {
-            Bones.Write();
+            Bones.Write( Handles );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -133,9 +137,11 @@ namespace VfxEditor.SklbFormat {
         public void Updated() {
             Bones?.Updated();
         }
-
         public override void Dispose() {
             Bones?.Dispose();
+
+            foreach( var item in Handles ) Marshal.FreeHGlobal( item );
+            Handles.Clear();
         }
     }
 }

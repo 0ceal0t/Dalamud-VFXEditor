@@ -29,6 +29,8 @@ namespace VfxEditor.Interop {
 
             OverridenSound = IntPtr.Zero;
             OverridenSoundIdx = -1;
+
+            Marshal.FreeHGlobal( ptr );
         }
 
         // ====== INIT SOUND =========

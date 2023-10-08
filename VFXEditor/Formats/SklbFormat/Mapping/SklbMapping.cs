@@ -40,11 +40,11 @@ namespace VfxEditor.SklbFormat.Mapping {
             SimpleMappingView = new( this, SimpleMappings );
         }
 
-        public void Write() {
+        public void Write( HashSet<nint> handles ) {
             var data = Mapper->Mapping;
 
             var simpleMappings = SimpleMappings.Select( x => x.ToHavok() ).ToList();
-            data.SimpleMappings = HavokData.CreateArray( data.SimpleMappings, simpleMappings, out var _ );
+            data.SimpleMappings = HavokData.CreateArray( handles, data.SimpleMappings, simpleMappings );
             Mapper->Mapping = data;
         }
 
