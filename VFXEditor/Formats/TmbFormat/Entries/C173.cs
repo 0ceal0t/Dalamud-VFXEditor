@@ -25,7 +25,7 @@ namespace VfxEditor.TmbFormat.Entries {
                     else VfxSpawn.OnSelf( path, false );
                 }
             }
-        } );
+        }, false );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );

@@ -17,8 +17,9 @@ namespace VfxEditor.Parsing {
     }
 
     public class ParsedString : ParsedSimpleBase<string, string> {
-        public readonly List<ParsedStringIcon> Icons = new();
+        public readonly List<ParsedStringIcon> Icons;
         public bool HasIcons => Icons?.Count > 0;
+        private readonly bool ForceLowerCase;
 
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
@@ -28,12 +29,10 @@ namespace VfxEditor.Parsing {
             Value = value;
         }
 
-        public ParsedString( string name, List<ParsedStringIcon> icons ) : this( name ) {
-            Icons = icons;
-        }
-
-        public ParsedString( string name ) : base( name ) {
+        public ParsedString( string name, List<ParsedStringIcon> icons = null, bool forceLower = false ) : base( name ) {
             Value = "";
+            Icons = icons ?? new();
+            ForceLowerCase = forceLower;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -71,7 +70,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedSimpleCommand<string>( this, StateBeforeEdit, Value ) );
+                manager.Add( new ParsedSimpleCommand<string>( this, StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value ) );
             }
         }
 

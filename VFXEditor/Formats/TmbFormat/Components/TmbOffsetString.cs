@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat {
     public class TmbOffsetString : ParsedString {
-        public TmbOffsetString( string name, List<ParsedStringIcon> icons ) : base( name, icons ) { }
+        public TmbOffsetString( string name, List<ParsedStringIcon> icons, bool forceLower ) : base( name, icons, forceLower ) { }
 
         public TmbOffsetString( string name ) : base( name ) { }
 

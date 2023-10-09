@@ -11,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEmitter : AvfxNode {
         public const string NAME = "Emit";
 
-        public readonly AvfxString Sound = new( "Sound", "SdNm", true, false );
+        public readonly AvfxString Sound = new( "Sound", "SdNm", true, false, null, true );
         public readonly AvfxInt SoundNumber = new( "Sound Index", "SdNo" );
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );

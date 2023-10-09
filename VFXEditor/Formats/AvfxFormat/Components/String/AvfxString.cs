@@ -10,8 +10,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxString : AvfxLiteral<ParsedString, string> {
         private readonly bool Pad;
 
-        public AvfxString( string name, string avfxName, bool showUnassigned, bool pad, List<ParsedStringIcon> icons = null ) : base( avfxName, new( name, icons ?? new() ) ) {
-            if( showUnassigned ) {
+        public AvfxString( string name, string avfxName, bool remove, bool pad, List<ParsedStringIcon> icons = null, bool forceLower = false ) : base( avfxName, new( name, icons, forceLower ) ) {
+            if( remove ) {
                 Parsed.Icons.Add( new() {
                     Icon = () => FontAwesomeIcon.Trash,
                     Remove = true,
