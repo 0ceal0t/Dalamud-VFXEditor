@@ -21,6 +21,9 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 | `.atex` | Texture files for VFXs |
 | `.tex` | Texture files for UI elements and game models |
 | `.atch` | Attachment points for weapons and other accessories (like the Machinist bag and Astrologian deck) |
+| `.sklb` | Skeleton and bone definitions |
+| `.skp` | Skeleton paramters, such as IK |
+| `.shpk` | Bundled packages of vertex and pixel shaders |
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run

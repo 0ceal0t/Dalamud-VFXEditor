@@ -32,6 +32,7 @@ namespace VfxEditor {
             PenumbraDialog.Tick();
 
             WindowSystem.Draw();
+            TrackerManager.Draw();
 
             CopyManager.FinalizeAll();
 

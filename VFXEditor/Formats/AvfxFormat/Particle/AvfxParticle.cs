@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<CullingType> CullingTypeType = new( "Culling Type", "CulT" );
         public readonly AvfxEnum<EnvLight> EnvLightType = new( "Enviornmental Light", "EnvT" );
         public readonly AvfxEnum<DirLight> DirLightType = new( "Directional Light", "DirT" );
-        public readonly AvfxEnum<UVPrecision> UvPrecisionType = new( "UV Precision", "UVPT" );
+        public readonly AvfxEnum<UvPrecision> UvPrecisionType = new( "UV Precision", "UVPT" );
         public readonly AvfxInt DrawPriority = new( "Draw Priority", "DwPr" );
         public readonly AvfxBool IsDepthTest = new( "Depth Test", "DsDt" );
         public readonly AvfxBool IsDepthWrite = new( "Depth Write", "DsDw" );
@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat ClipFarStart = new( "Clip Far Start", "FaSt" ); // float2
         public readonly AvfxFloat ClipFarEnd = new( "Clip Far End", "FaEd" );
         public readonly AvfxEnum<ClipBasePoint> ClipBasePointType = new( "Clip Base Point", "FaBP" );
-        public readonly AvfxInt UVSetCount = new( "UV Set Count", "UvSN" );
+        public readonly AvfxInt UvSetCount = new( "UV Set Count", "UvSN" );
         public readonly AvfxInt ApplyRateEnvironment = new( "Apply Rate Environment", "EvAR" );
         public readonly AvfxInt ApplyRateDirectional = new( "Apply Rate Directional", "DlAR" );
         public readonly AvfxInt ApplyRateLightBuffer = new( "Apply Rate Light Buffer", "LBAR" );
@@ -127,7 +127,7 @@ namespace VfxEditor.AvfxFormat {
                 ClipFarStart,
                 ClipFarEnd,
                 ClipBasePointType,
-                UVSetCount,
+                UvSetCount,
                 ApplyRateEnvironment,
                 ApplyRateDirectional,
                 ApplyRateLightBuffer,
@@ -262,7 +262,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void WriteContents( BinaryWriter writer ) {
-            UVSetCount.Value = UvSets.Count;
+            UvSetCount.Value = UvSets.Count;
             WriteNested( writer, Parsed );
 
             foreach( var uvSet in UvSets ) uvSet.Write( writer );

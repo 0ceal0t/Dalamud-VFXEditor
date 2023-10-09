@@ -113,7 +113,7 @@ namespace VfxEditor.AvfxFormat {
             EnvSet = 1,
             Max = 2
         }
-        public enum UVPrecision {
+        public enum UvPrecision {
             High = 0,
             Medium = 1,
             Low = 2,
