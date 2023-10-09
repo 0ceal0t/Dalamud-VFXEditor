@@ -2,11 +2,11 @@
 
 **[Wiki](https://xiv.dev/game-data/visual-effects)** | **[Guides](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki)** | Icon by [PAPACHIN](https://www.xivmodarchive.com/user/192152)
 
-VFX, animation, sound, and physics editing plugin for Dalamud
+_VFX, animation, sound, and physics editing plugin for Dalamud_
+
+![](https://github.com/0ceal0t/Dalamud-VFXEditor/assets/18051158/83273164-d216-4758-9249-a2f38c03d6c2)
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
-
-![](https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/preview2.png)
 
 ### Supported File Types
 
@@ -28,12 +28,15 @@ VFX, animation, sound, and physics editing plugin for Dalamud
 3. Once installed, open with `/vfxedit`
 
 ## Usage
-1. Select a "Loaded VFX" (the new effect you want to use)
-2. Select a "VFX Being Replaced" (the effect which is being overriden. This can be the same as the source)
+1. Select a _"Loaded Vfx"_ (the new effect you want to use)
+2. Select a _"Vfx Being Replaced"_ (the effect which is being overriden. This can be the same as the source)
 3. Make any modifications you want, then press `UPDATE`
 
-## Help
-Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting) or a [basic guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide). If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues) or ask in the [QuickLauncher discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
+## Support
+Having problems? Check [troubleshooting tips](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Troubleshooting) or a [basic guide](https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Basic-Guide). If you have other questions, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues)
+
+- [QuickLauncher Discord](https://github.com/goatcorp/FFXIVQuickLauncher#need-any-help)
+- [Students of Baldesion](https://discord.gg/33jxhxH8)
 
 ## Contributing
 If a VFX is behaving unexpectedly, or you are getting log messages indicating that it is not being parsed properly, please open an [Issue](https://github.com/0ceal0t/Dalamud-VFXEditor/issues).
@@ -99,7 +102,6 @@ chara/xls/animation/animation_work_table-human.awt
 chara/xls/animation/MotionLineTable.mlt
 chara/xls/animation/animation_work_table-monster.awt
 chara/xls/animation/animation_work_table-weapon.awt
-```
 
 - https://github.com/goaaats/ffxiv-explorer-fork/blob/a89a8af15e3ca5d73b7f75f756d3c1058a188744/src/main/java/com/fragmenterworks/ffxivextract/models/SHPK_File.java#L50
 - https://github.com/goaaats/ffxiv-explorer-fork/blob/a89a8af15e3ca5d73b7f75f756d3c1058a188744/src/main/java/com/fragmenterworks/ffxivextract/models/SHCD_File.java
@@ -109,3 +111,4 @@ chara/xls/animation/animation_work_table-weapon.awt
 - https://github.com/AndresTraks/HlslDecompiler
 - https://github.com/tgjones/slimshader
 - https://github.com/GameTechDev/IntelShaderAnalyzer
+```
