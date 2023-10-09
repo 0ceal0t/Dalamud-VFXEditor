@@ -15,7 +15,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
         public readonly ParsedInt Unk3 = new( "Unknown 3" );
         public readonly ParsedFloat4 Translation = new( "Translation" );
-        public readonly ParsedFloat4 Rotation = new( "Rotation", new( 0, 0, 0, 1 ) );
+        public readonly ParsedQuat Rotation = new( "Rotation", new( 0, 0, 0 ) );
         public readonly ParsedFloat4 Scale = new( "Scale", new( 1, 1, 1, 1 ) );
 
         public SklbSimpleMapping( SklbMapping mapping ) {
@@ -35,7 +35,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             var scale = transform.Scale;
 
             Translation.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.Value = new( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Value = ParsedQuat.ToEuler( new( rot.X, rot.Y, rot.Z, rot.W ) );
             Scale.Value = new( scale.X, scale.Y, scale.Z, scale.W );
         }
 
@@ -70,11 +70,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             };
             transform.Translation = pos;
 
+            var rotation = Rotation.Quat;
             var rot = new hkQuaternionf {
-                X = Rotation.Value.X,
-                Y = Rotation.Value.Y,
-                Z = Rotation.Value.Z,
-                W = Rotation.Value.W
+                X = rotation.X,
+                Y = rotation.Y,
+                Z = rotation.Z,
+                W = rotation.W
             };
             transform.Rotation = rot;
 

@@ -6,7 +6,7 @@ namespace VfxEditor.Ui {
     public abstract class DalamudWindow : Window {
         private bool ExpandNextFrame = false;
 
-        public DalamudWindow( string name, bool menuBar, Vector2 size ) : base( name, ( menuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking, true ) {
+        public DalamudWindow( string name, bool menuBar, Vector2 size ) : base( name, ( menuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) {
             Size = size;
             SizeCondition = ImGuiCond.FirstUseEver;
             Plugin.WindowSystem.AddWindow( this );

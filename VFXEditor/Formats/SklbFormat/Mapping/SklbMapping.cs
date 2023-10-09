@@ -16,9 +16,9 @@ namespace VfxEditor.SklbFormat.Mapping {
         public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
 
         public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedFloat3 Position = new( "Translation" );
+        public readonly ParsedFloat4 Position = new( "Translation" );
         public readonly ParsedQuat Rotation = new( "Rotation" );
-        public readonly ParsedFloat3 Scale = new( "Scale" );
+        public readonly ParsedFloat4 Scale = new( "Scale" );
 
         public readonly SklbBones Bones;
         public readonly SkeletonMapper* Mapper;
@@ -36,9 +36,9 @@ namespace VfxEditor.SklbFormat.Mapping {
             Name.Value = name;
 
             var transform = mapper->Mapping.ExtractedMotionMapping;
-            Position.Value = new( transform.Translation.X, transform.Translation.Y, transform.Translation.Z );
+            Position.Value = new( transform.Translation.X, transform.Translation.Y, transform.Translation.Z, transform.Translation.W );
             Rotation.Value = ParsedQuat.ToEuler( new( transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W ) );
-            Scale.Value = new( transform.Scale.X, transform.Scale.Y, transform.Scale.Z );
+            Scale.Value = new( transform.Scale.X, transform.Scale.Y, transform.Scale.Z, transform.Scale.W );
 
             var data = Mapper->Mapping;
             var simpleMappings = data.SimpleMappings;
@@ -57,6 +57,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                     X = Position.Value.X,
                     Y = Position.Value.Y,
                     Z = Position.Value.Z,
+                    W = Position.Value.W
                 },
                 Rotation = new() {
                     X = rotation.X,
@@ -68,6 +69,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                     X = Scale.Value.X,
                     Y = Scale.Value.Y,
                     Z = Scale.Value.Z,
+                    W = Scale.Value.W
                 }
             };
 
