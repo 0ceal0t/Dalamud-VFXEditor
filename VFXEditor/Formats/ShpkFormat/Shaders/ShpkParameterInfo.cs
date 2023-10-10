@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly int TempStringOffset;
 
         public readonly ParsedShort Slot = new( "Slot" );
-        public readonly ParsedShort Size = new( "Size (bytes)" );
+        public readonly ParsedShort Size = new( "Registers" );
 
         public ShpkParameterInfo() { }
 
@@ -23,7 +23,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             TempStringOffset = reader.ReadInt32();
             reader.ReadInt32(); // string size
             Slot.Read( reader );
-            Size.Value = reader.ReadUInt16() * 16;
+            Size.Read( reader );
         }
 
         public void Read( BinaryReader reader, uint parameterOffset ) {
@@ -39,7 +39,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             writer.Write( 0 ); // placeholder
             writer.Write( Value.Value.Length );
             Slot.Write( writer );
-            writer.Write( ( short )( Size.Value / 16 ) );
+            Size.Write( writer );
         }
 
         public void Draw() {

@@ -19,6 +19,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
 
         public readonly List<IDalamudTextureWrap> Wraps = new();
+        public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
 
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
@@ -182,6 +183,11 @@ namespace VfxEditor.Formats.TextureFormat {
             Textures.Clear();
             Previews.Clear();
 
+            // Weird async stuff, otherwise cleanup happens to the textures after they've been loaded
+            WrapsToCleanup.Clear();
+            WrapsToCleanup.AddRange( Wraps );
+            Wraps.Clear();
+
             if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += CleanupWraps;
             else CleanupWraps();
 
@@ -189,13 +195,13 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void CleanupWraps() {
-            foreach( var wrap in Wraps ) {
+            foreach( var wrap in WrapsToCleanup ) {
                 try {
                     wrap?.Dispose();
                 }
                 catch( Exception ) { }
             }
-            Wraps.Clear();
+            WrapsToCleanup.Clear();
         }
 
         // =======================

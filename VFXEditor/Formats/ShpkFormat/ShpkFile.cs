@@ -1,9 +1,11 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.ShpkFormat.Keys;
 using VfxEditor.Formats.ShpkFormat.Materials;
@@ -125,7 +127,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             VertexView = new( "Vertex Shader", VertexShaders, null, () => new( true, DxVersion ), () => CommandManager.Shpk );
             PixelView = new( "Pixel Shader", PixelShaders, null, () => new( false, DxVersion ), () => CommandManager.Shpk );
 
-            MaterialParameterView = new( "Material Parameter", MaterialParameters, false, null, () => new(), () => CommandManager.Shpk );
+            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new(), () => CommandManager.Shpk );
 
             ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
             SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
@@ -242,7 +244,11 @@ namespace VfxEditor.Formats.ShpkFormat {
             }
 
             using( var tab = ImRaii.TabItem( "Material Parameters" ) ) {
-                if( tab ) MaterialParameterView.Draw();
+                if( tab ) {
+                    DrawMaterialTable();
+                    ImGui.Separator();
+                    MaterialParameterView.Draw();
+                }
             }
 
             using( var tab = ImRaii.TabItem( "Constants" ) ) {
@@ -292,6 +298,50 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             using( var tab = ImRaii.TabItem( "Sub-View" ) ) {
                 if( tab ) SubViewKeyView.Draw();
+            }
+        }
+
+        private void DrawMaterialTable() {
+            using var _ = ImRaii.PushId( "MaterialParameters" );
+
+            ImGui.Dummy( Vector2.One );
+            using var table = ImRaii.Table( "Table", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY, new( ImGui.GetContentRegionAvail().X, 200 ) );
+            if( !table ) return;
+
+            ImGui.TableSetupScrollFreeze( 0, 1 );
+            ImGui.TableSetupColumn( string.Empty, ImGuiTableColumnFlags.WidthFixed, 50 );
+            ImGui.TableSetupColumn( "x", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "y", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "z", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "w", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableHeadersRow();
+
+            var rows = MaterialParameters.Count == 0 ? 0 : ( int )MaterialParameters.Select( x => Math.Ceiling( ( float )x.EndSlot / 4 ) ).Max();
+
+            for( var i = 0; i < rows; i++ ) {
+                ImGui.TableNextColumn();
+
+                using( var font = ImRaii.PushFont( UiBuilder.MonoFont ) ) {
+                    ImGui.TableHeader( $" [{i}]" );
+                    UiUtils.Tooltip( $"g_MaterialParameter[{i}]" );
+                }
+
+                for( var j = 0; j < 4; j++ ) {
+                    var slot = ( 4 * i ) + j;
+                    var parameters = MaterialParameters.FindAll( x => slot >= x.StartSlot && slot < x.EndSlot );
+                    var parameter = parameters.FirstOrDefault();
+
+                    ImGui.TableNextColumn();
+
+                    using var disabled = ImRaii.Disabled( parameter == null || slot != parameter.StartSlot );
+                    using var none = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR, parameter == null );
+                    using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
+                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, parameters.Count() > 1 );
+
+                    if( ImGui.Selectable( parameter == null ? "[NONE]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
+                        MaterialParameterView.SetSelected( parameter );
+                    }
+                }
             }
         }
     }

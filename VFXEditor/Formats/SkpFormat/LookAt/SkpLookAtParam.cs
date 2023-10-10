@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -30,7 +31,11 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
             FileUtils.Pad( writer, 3 );
         }
 
-        public void Draw() => DrawParsed( CommandManager.Skp );
+        public void Draw() {
+            // Draw the index first
+            Index.Draw( CommandManager.Skp );
+            foreach( var item in Parsed.Where( x => x != Index ) ) item.Draw( CommandManager.Skp );
+        }
 
         public string GetText() => $"Parameters {Index.Value}";
     }

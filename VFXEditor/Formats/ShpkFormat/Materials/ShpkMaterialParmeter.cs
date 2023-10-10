@@ -9,6 +9,9 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
         public readonly ParsedShort Offset = new( "Offset" );
         public readonly ParsedShort Size = new( "Size" );
 
+        public int StartSlot => Offset.Value / 4;
+        public int EndSlot => ( Offset.Value + Size.Value ) / 4;
+
         public ShpkMaterialParmeter() { }
 
         public ShpkMaterialParmeter( BinaryReader reader ) {
