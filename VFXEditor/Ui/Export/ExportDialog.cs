@@ -13,7 +13,7 @@ namespace VfxEditor.Ui.Export {
 
         protected readonly List<ExportDialogCategory> Categories = new();
 
-        public ExportDialog( string id ) : base( id, false, new( 600, 500 ) ) {
+        public ExportDialog( string id ) : base( id, false, new( 600, 500 ), Plugin.WindowSystem ) {
             foreach( var manager in Plugin.Managers ) {
                 if( manager == null ) continue;
                 ToExport[manager.GetId()] = false;

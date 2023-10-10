@@ -10,6 +10,8 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
+            WindowSystem.Draw();
+
             WindowName = Title
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
                 + $"###{Title}";

@@ -77,7 +77,6 @@ namespace VfxEditor.SklbFormat.Bones {
             Skeleton->ReferencePose = CreateArray( handles, Skeleton->ReferencePose, poses );
             Skeleton->ParentIndices = CreateArray( handles, Skeleton->ParentIndices, parents );
 
-
             var variants = new List<NamedVariant>();
 
             // Set up animation container variant

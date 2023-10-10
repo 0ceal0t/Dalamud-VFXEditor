@@ -1,3 +1,4 @@
+using Dalamud.Interface.Windowing;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
@@ -6,10 +7,11 @@ using VfxEditor.Ui;
 namespace VfxEditor.FileManager {
     public abstract class FileManagerBase : DalamudWindow, IFileManagerSelect {
         public readonly string Id;
+        public readonly WindowSystem WindowSystem = new();
 
         public abstract string NewWriteLocation { get; }
 
-        protected FileManagerBase( string name, string id ) : base( name, true, new( 800, 1000 ) ) {
+        protected FileManagerBase( string name, string id ) : base( name, true, new( 800, 1000 ), Plugin.WindowSystem ) {
             Id = id;
         }
 
@@ -31,6 +33,6 @@ namespace VfxEditor.FileManager {
 
         public string GetId() => Id;
 
-        public bool IsWindowOpen() => IsOpen;
+        public WindowSystem GetWindowSystem() => WindowSystem;
     }
 }

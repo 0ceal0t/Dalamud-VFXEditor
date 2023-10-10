@@ -10,11 +10,9 @@ namespace VfxEditor.FileManager {
         private readonly FileManager<T, R, S> Manager;
         private static bool ShowSourceColumn => Plugin.Configuration.DocumentPopoutShowSource;
 
-        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, new( 600, 400 ) ) {
+        public FileManagerDocumentWindow( string name, FileManager<T, R, S> manager ) : base( $"{name} [DOCUMENTS]", false, new( 600, 400 ), manager.WindowSystem ) {
             Manager = manager;
         }
-
-        public override bool DrawConditions() => Manager.IsWindowOpen();
 
         public override void DrawBody() {
             using var _ = ImRaii.PushId( "Documents" );

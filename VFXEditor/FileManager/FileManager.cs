@@ -152,6 +152,8 @@ namespace VfxEditor.FileManager {
             ActiveDocument = null;
 
             DOC_ID = 0;
+
+            WindowSystem.RemoveAllWindows();
         }
     }
 }

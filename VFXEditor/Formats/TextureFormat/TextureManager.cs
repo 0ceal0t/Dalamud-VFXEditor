@@ -1,4 +1,5 @@
 using Dalamud.Interface.Internal;
+using Dalamud.Interface.Windowing;
 using ImGuiFileDialog;
 using Newtonsoft.Json.Linq;
 using System;
@@ -18,6 +19,8 @@ namespace VfxEditor.Formats.TextureFormat {
         public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
 
+        public readonly WindowSystem WindowSystem = new();
+
         public readonly List<IDalamudTextureWrap> Wraps = new();
         public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
 
@@ -26,7 +29,7 @@ namespace VfxEditor.Formats.TextureFormat {
         private readonly TextureView View;
         private readonly ManagerConfiguration Configuration;
 
-        public TextureManager() : base( "Textures", false, new( 800, 500 ) ) {
+        public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }
@@ -69,7 +72,10 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public void AddRecent( SelectResult result ) => Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
 
-        public override void DrawBody() => View.Draw();
+        public override void DrawBody() {
+            View.Draw();
+            WindowSystem.Draw();
+        }
 
         // ====================
 
@@ -192,6 +198,8 @@ namespace VfxEditor.Formats.TextureFormat {
             else CleanupWraps();
 
             TEX_ID = 0;
+
+            WindowSystem.RemoveAllWindows();
         }
 
         public void CleanupWraps() {
@@ -238,5 +246,7 @@ namespace VfxEditor.Formats.TextureFormat {
             Dalamud.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
             Dalamud.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
+
+        public WindowSystem GetWindowSystem() => WindowSystem;
     }
 }

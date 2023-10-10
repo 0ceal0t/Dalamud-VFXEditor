@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxManager() : base( "VFXEditor", "Vfx", "avfx", "Docs", "VFX" ) {
             SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );
             ReplaceSelect = new VfxSelectDialog( "File Select [REPLACED]", this, false );
-            ExportDialog = new();
+            ExportDialog = new( WindowSystem );
         }
 
         protected override AvfxDocument GetNewDocument() => new( this, NewWriteLocation );

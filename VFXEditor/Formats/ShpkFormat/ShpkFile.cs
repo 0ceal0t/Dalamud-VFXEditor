@@ -308,13 +308,15 @@ namespace VfxEditor.Formats.ShpkFormat {
             using var table = ImRaii.Table( "Table", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY, new( ImGui.GetContentRegionAvail().X, 200 ) );
             if( !table ) return;
 
-            ImGui.TableSetupScrollFreeze( 0, 1 );
-            ImGui.TableSetupColumn( string.Empty, ImGuiTableColumnFlags.WidthFixed, 50 );
-            ImGui.TableSetupColumn( "x", ImGuiTableColumnFlags.WidthStretch );
-            ImGui.TableSetupColumn( "y", ImGuiTableColumnFlags.WidthStretch );
-            ImGui.TableSetupColumn( "z", ImGuiTableColumnFlags.WidthStretch );
-            ImGui.TableSetupColumn( "w", ImGuiTableColumnFlags.WidthStretch );
-            ImGui.TableHeadersRow();
+            using( var font = ImRaii.PushFont( UiBuilder.MonoFont ) ) {
+                ImGui.TableSetupScrollFreeze( 0, 1 );
+                ImGui.TableSetupColumn( string.Empty, ImGuiTableColumnFlags.WidthFixed, 50 );
+                ImGui.TableSetupColumn( "x", ImGuiTableColumnFlags.WidthStretch );
+                ImGui.TableSetupColumn( "y", ImGuiTableColumnFlags.WidthStretch );
+                ImGui.TableSetupColumn( "z", ImGuiTableColumnFlags.WidthStretch );
+                ImGui.TableSetupColumn( "w", ImGuiTableColumnFlags.WidthStretch );
+                ImGui.TableHeadersRow();
+            }
 
             var rows = MaterialParameters.Count == 0 ? 0 : ( int )MaterialParameters.Select( x => Math.Ceiling( ( float )x.EndSlot / 4 ) ).Max();
 

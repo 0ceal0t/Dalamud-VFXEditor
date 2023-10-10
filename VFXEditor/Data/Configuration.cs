@@ -134,7 +134,7 @@ namespace VfxEditor {
         [NonSerialized]
         public bool WriteLocationError = false;
 
-        public Configuration() : base( "Settings", false, new( 300, 200 ) ) { }
+        public Configuration() : base( "Settings", false, new( 300, 200 ), Plugin.WindowSystem ) { }
 
         public void Setup() {
             Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;

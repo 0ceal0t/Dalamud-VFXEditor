@@ -1,3 +1,4 @@
+using Dalamud.Interface.Windowing;
 using VfxEditor.Data;
 
 namespace VfxEditor.FileManager.Interfaces {
@@ -10,6 +11,6 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public ManagerConfiguration GetConfig();
 
-        public bool IsWindowOpen();
+        public WindowSystem GetWindowSystem();
     }
 }
