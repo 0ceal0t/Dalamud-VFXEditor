@@ -89,8 +89,8 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( Previews.TryGetValue( gamePath, out var preview ) ) return preview;
 
-            var gameFileExists = GameFileExists( gamePath );
-            var penumbraFileExits = PenumbraFileExists( gamePath, out var penumbraPath );
+            var gameFileExists = Dalamud.GameFileExists( gamePath );
+            var penumbraFileExits = Plugin.PenumbraIpc.PenumbraFileExists( gamePath, out var penumbraPath );
 
             if( !gameFileExists && !penumbraFileExits ) return new TextureMissing( gamePath );
 
@@ -116,28 +116,15 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public static bool GameFileExists( string path ) {
-            try {
-                return Dalamud.DataManager.FileExists( path );
-            }
-            catch( Exception ) { return false; }
-        }
-
-        public static bool PenumbraFileExists( string path, out string localPath ) {
-            localPath = Plugin.PenumbraIpc.ResolveDefaultPath( path );
-            if( path.Equals( localPath ) ) return false;
-            if( !string.IsNullOrEmpty( localPath ) ) return true;
-            return false;
-        }
-
-        public bool FileExists( string path ) => GameFileExists( path ) || PenumbraFileExists( path, out var _ ) || GetReplacePath( path, out var _ );
+        public bool FileExists( string path ) => IFileManager.FileExist( this, path );
 
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( ".atex" ) || path.Contains( ".tex" );
 
         // Not already converted, file exists and can be converted, not already replaced
-        public bool CanConvertToCustom( string path ) => !string.IsNullOrEmpty( path ) && GameFileExists( path ) && !PenumbraFileExists( path, out var _ ) && !GetReplacePath( path, out var _ );
+        public bool CanConvertToCustom( string path ) =>
+            !string.IsNullOrEmpty( path ) && Dalamud.GameFileExists( path ) && !Plugin.PenumbraIpc.PenumbraFileExists( path, out var _ ) && !GetReplacePath( path, out var _ );
 
         public bool ConvertToCustom( string path, out string newPath ) {
             newPath = path;
@@ -198,8 +185,6 @@ namespace VfxEditor.Formats.TextureFormat {
             else CleanupWraps();
 
             TEX_ID = 0;
-
-            WindowSystem.RemoveAllWindows();
         }
 
         public void CleanupWraps() {

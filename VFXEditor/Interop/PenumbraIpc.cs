@@ -69,6 +69,13 @@ namespace VfxEditor.Interop {
             }
         }
 
+        public bool PenumbraFileExists( string path, out string localPath ) {
+            localPath = ResolveDefaultPath( path );
+            if( path.Equals( localPath ) ) return false;
+            if( !string.IsNullOrEmpty( localPath ) ) return true;
+            return false;
+        }
+
         private void EnablePenumbra() {
             PenumbraEnabled = true;
         }

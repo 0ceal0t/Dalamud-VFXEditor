@@ -26,5 +26,12 @@ namespace VfxEditor {
         public static void Error( string message ) => PluginLog.Error( message );
 
         public static void Log( string messages ) => PluginLog.Info( messages );
+
+        public static bool GameFileExists( string path ) {
+            try {
+                return DataManager.FileExists( path );
+            }
+            catch( Exception ) { return false; }
+        }
     }
 }

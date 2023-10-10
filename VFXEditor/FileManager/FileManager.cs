@@ -135,6 +135,8 @@ namespace VfxEditor.FileManager {
 
         // ====================
 
+        public bool FileExists( string path ) => IFileManager.FileExist( this, path );
+
         public bool GetReplacePath( string path, out string replacePath ) => IFileManager.GetReplacePath( this, path, out replacePath );
 
         public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
@@ -152,8 +154,6 @@ namespace VfxEditor.FileManager {
             ActiveDocument = null;
 
             DOC_ID = 0;
-
-            WindowSystem.RemoveAllWindows();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public bool DoDebug( string path );
         public bool GetReplacePath( string gamePath, out string replacePath );
+        public bool FileExists( string path );
 
         public void WorkspaceImport( JObject meta, string loadLocation );
         public void WorkspaceExport( Dictionary<string, string> meta, string saveLocation );
@@ -18,6 +19,9 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public void Default();
         public void Dispose();
+
+        public static bool FileExist( IFileManager manager, string path ) =>
+            Dalamud.GameFileExists( path ) || Plugin.PenumbraIpc.PenumbraFileExists( path, out var _ ) || manager.GetReplacePath( path, out var _ );
 
         public static bool GetReplacePath( IFileManager manager, string path, out string replacePath ) {
             replacePath = null;
