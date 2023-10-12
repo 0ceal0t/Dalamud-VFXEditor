@@ -165,6 +165,6 @@ namespace VfxEditor.Interop {
             return resource;
         }
 
-        private static bool DoDebug( string path ) => Plugin.State != WorkspaceState.None ? false : Plugin.Managers.Where( x => x != null && x.DoDebug( path ) ).Any();
+        private static bool DoDebug( string path ) => Plugin.State == WorkspaceState.None && Plugin.Managers.Where( x => x != null && x.DoDebug( path ) ).Any();
     }
 }

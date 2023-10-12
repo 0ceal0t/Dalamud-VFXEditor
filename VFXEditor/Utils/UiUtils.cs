@@ -31,6 +31,8 @@ namespace VfxEditor.Utils {
 
         public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
 
+        public static readonly Vector4 DARK_GRAY = new( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 );
+
         public static Vector4 DALAMUD_RED => StyleModel.GetFromCurrent().BuiltInColors.DalamudRed.Value;
 
         public static Vector4 DALAMUD_YELLOW => StyleModel.GetFromCurrent().BuiltInColors.DalamudYellow.Value;

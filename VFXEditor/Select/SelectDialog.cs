@@ -81,7 +81,7 @@ namespace VfxEditor.Select {
 
             RecentTab = new( this, "Recent", manager.GetConfig().RecentItems );
             FavoritesTab = new( this, "Favorites", manager.GetConfig().Favorites );
-            if( showLocal ) PenumbraTab = new( this );
+            PenumbraTab = new( this );
         }
 
         public void Invoke( SelectResult result ) => Action?.Invoke( result );
@@ -96,7 +96,7 @@ namespace VfxEditor.Select {
 
             DrawGameTabs();
             DrawPaths();
-            if( ShowLocal ) PenumbraTab.Draw();
+            PenumbraTab.Draw();
             RecentTab.Draw();
             FavoritesTab.Draw();
         }

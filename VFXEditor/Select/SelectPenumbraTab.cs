@@ -1,5 +1,6 @@
 using ImGuiNET;
 using Newtonsoft.Json;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -79,25 +80,19 @@ namespace VfxEditor.Select {
         }
 
         protected override void DrawSelected() {
-            var idx = 0;
-            foreach( var group in Loaded ) {
+            foreach( var (group, idx) in Loaded.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
 
                 if( ImGui.CollapsingHeader( group.Key, ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
 
-                    var fileIdx = 0;
-                    foreach( var file in group.Value ) {
+                    foreach( var (file, fileIdx) in group.Value.WithIndex() ) {
                         var (gamePath, localPath) = file;
                         if( !Path.Exists( localPath ) ) continue;
 
-                        DrawPath( $"File {fileIdx}", localPath, gamePath, $"{Selected} {group.Key} {fileIdx}", false );
-
-                        fileIdx++;
+                        DrawPath( $"File {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}", false );
                     }
                 }
-
-                idx++;
             }
         }
 

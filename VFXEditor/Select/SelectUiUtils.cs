@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui.Raii;
@@ -35,8 +36,10 @@ namespace VfxEditor.Select {
         }
 
         public static void Copy( string path ) {
-            using var style = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0.15f, 0.15f, 0.15f, 1 ) );
-            if( ImGui.Button( "Copy" ) ) ImGui.SetClipboardText( path );
+            using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.DARK_GRAY );
+            using var text = ImRaii.PushColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( FontAwesomeIcon.ClipboardList.ToIconString() ) ) ImGui.SetClipboardText( path );
         }
 
         public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {

@@ -102,7 +102,7 @@ namespace VfxEditor.Select {
             }
 
             using var indent = ImRaii.PushIndent( 25f );
-
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             if( ImGui.Button( "SELECT" ) ) Dialog.Invoke( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
             ImGui.SameLine();
             SelectUiUtils.Copy( path );

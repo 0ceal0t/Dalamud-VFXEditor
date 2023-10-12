@@ -1,6 +1,8 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using VfxEditor.Structs.Vfx;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Spawn {
     public static unsafe class VfxSpawn {
@@ -20,13 +22,42 @@ namespace VfxEditor.Spawn {
         private static bool Removed = false;
         private static DateTime RemoveTime;
 
-        public static void DrawPopup( string path, bool canLoop ) {
-            if( ImGui.BeginPopup( "SpawnPopup" ) ) {
-                if( ImGui.Selectable( "On Ground" ) ) OnGround( path, canLoop );
-                if( ImGui.Selectable( "On Self" ) ) OnSelf( path, canLoop );
-                if( ImGui.Selectable( "On Target" ) ) OnTarget( path, canLoop );
-                ImGui.EndPopup();
+        public static void DrawButton( string path, bool loop ) {
+            using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.DARK_GRAY );
+
+            if( Active ) {
+                if( ImGui.Button( "Remove" ) ) Remove();
+                return;
             }
+
+            if( !Plugin.Configuration.VfxSpawnSplit ) {
+                if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
+
+                DrawPopup( path, false );
+            }
+            else {
+                if( ImGui.Button( "Self" ) ) OnSelf( path, loop );
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Ground" ) ) OnGround( path, loop );
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
+            }
+        }
+
+        private static void ToggleSplit() {
+            Plugin.Configuration.VfxSpawnSplit = !Plugin.Configuration.VfxSpawnSplit;
+            Plugin.Configuration.Save();
+        }
+
+        public static void DrawPopup( string path, bool loop ) {
+            using var popup = ImRaii.Popup( "SpawnPopup" );
+            if( !popup ) return;
+
+            if( ImGui.Selectable( "Self" ) ) OnSelf( path, loop );
+            if( ImGui.Selectable( "Ground" ) ) OnGround( path, loop );
+            if( ImGui.Selectable( "Target" ) ) OnTarget( path, loop );
         }
 
         public static void OnGround( string path, bool canLoop ) {

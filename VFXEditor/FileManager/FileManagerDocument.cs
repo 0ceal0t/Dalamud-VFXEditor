@@ -193,11 +193,11 @@ namespace VfxEditor.FileManager {
 
         public abstract S GetWorkspaceMeta( string newPath );
 
-        public void WorkspaceExport( List<S> tmbMeta, string rootPath, string newPath ) {
+        public void WorkspaceExport( List<S> meta, string rootPath, string newPath ) {
             if( CurrentFile != null ) {
                 var newFullPath = Path.Combine( rootPath, newPath );
                 File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
-                tmbMeta.Add( GetWorkspaceMeta( newPath ) );
+                meta.Add( GetWorkspaceMeta( newPath ) );
             }
         }
 

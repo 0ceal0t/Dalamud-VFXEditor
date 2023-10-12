@@ -39,13 +39,7 @@ namespace VfxEditor.Select.Vfx {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();
-            if( VfxSpawn.Active ) {
-                if( ImGui.Button( "Remove" ) ) VfxSpawn.Remove();
-            }
-            else {
-                if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
-                VfxSpawn.DrawPopup( path, false );
-            }
+            VfxSpawn.DrawButton( path, false );
         }
     }
 }

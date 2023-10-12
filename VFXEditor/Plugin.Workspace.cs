@@ -143,6 +143,8 @@ namespace VfxEditor {
         // =================================
 
         private static void SaveWorkspace() {
+            Dalamud.Log( "Saving workspace..." );
+
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
                 SaveAsWorkspace();
             }

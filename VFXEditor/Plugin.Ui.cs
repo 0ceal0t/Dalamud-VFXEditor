@@ -39,6 +39,7 @@ namespace VfxEditor {
             if( Configuration.AutosaveEnabled && Configuration.AutosaveSeconds > 10 && !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
                 ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds ) {
                 LastAutoSave = DateTime.Now;
+                Dalamud.Log( "Autosaving workspace..." );
                 SaveWorkspace();
             }
 
