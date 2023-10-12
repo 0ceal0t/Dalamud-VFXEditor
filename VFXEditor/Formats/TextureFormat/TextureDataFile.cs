@@ -11,6 +11,31 @@ using TeximpNet.DDS;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
+    public enum Attribute : uint {
+        DiscardPerFrame = 0x1,
+        DiscardPerMap = 0x2,
+        Managed = 0x4,
+        UserManaged = 0x8,
+        CpuRead = 0x10,
+        LocationMain = 0x20,
+        NoGpuRead = 0x40,
+        AlignedSize = 0x80,
+        EdgeCulling = 0x100,
+        LocationOnion = 0x200,
+        ReadWrite = 0x400,
+        Immutable = 0x800,
+        TextureRenderTarget = 0x100000,
+        TextureDepthStencil = 0x200000,
+        TextureType1D = 0x400000,
+        TextureType2D = 0x800000,
+        TextureType3D = 0x1000000,
+        TextureTypeCube = 0x2000000,
+        TextureTypeMask = 0x3C00000,
+        TextureSwizzle = 0x4000000,
+        TextureNoTiled = 0x8000000,
+        TextureNoSwizzle = 0x80000000,
+    }
+
     public enum TextureFormat {
         TypeShift = 0xC,
         TypeMask = 0xF000,
@@ -86,7 +111,9 @@ namespace VfxEditor.Formats.TextureFormat {
             Header = br.ReadStructure<TexHeader>();
             DdsData = br.ReadBytes( size - HeaderLength );
             ImageData = BgraToRgba( Convert( new Span<byte>( DdsData ), Header.Format, Header.Width, Header.Height ) );
-            ValidFormat = ( ImageData.Length > 0 );
+            ValidFormat = ImageData.Length > 0;
+
+            Dalamud.Log( $"{HeaderLength:X8} {Header.Format}" );
         }
 
         public static TextureDataFile LoadFromLocal( string path ) {
@@ -116,8 +143,11 @@ namespace VfxEditor.Formats.TextureFormat {
                     dst = new byte[src.Length];
                     src.CopyTo( dst );
                     break;
-                case TextureFormat.R4G4B4A4: // ui/uld/TargetInfo.tex
+                case TextureFormat.R4G4B4A4:
                     Read4444( src.ToArray(), dst, width, height );
+                    break;
+                case TextureFormat.R5G5B5A1:
+                    Read5551( src.ToArray(), dst, width, height );
                     break;
                 case TextureFormat.A8:
                     DecompressA8( src, dst, width, height );
@@ -191,10 +221,33 @@ namespace VfxEditor.Formats.TextureFormat {
             for( var y = 0; y < height; y++ ) {
                 for( var x = 0; x < width; x++ ) {
                     var pixel = reader.ReadUInt16() & 0xFFFF;
-                    var blue = ( ( pixel & 0xF ) ) * 16;
+                    var blue = ( pixel & 0xF ) * 16;
                     var green = ( ( pixel & 0xF0 ) >> 4 ) * 16;
                     var red = ( ( pixel & 0xF00 ) >> 8 ) * 16;
                     var alpha = ( ( pixel & 0xF000 ) >> 12 ) * 16;
+
+                    dst[idx * 4 + 0] = ( byte )blue;
+                    dst[idx * 4 + 1] = ( byte )green;
+                    dst[idx * 4 + 2] = ( byte )red;
+                    dst[idx * 4 + 3] = ( byte )alpha;
+
+                    idx++;
+                }
+            }
+        }
+
+        public static void Read5551( byte[] src, byte[] dst, int width, int height ) {
+            using var ms = new MemoryStream( src );
+            using var reader = new BinaryReader( ms );
+
+            var idx = 0;
+            for( var y = 0; y < height; y++ ) {
+                for( var x = 0; x < width; x++ ) {
+                    var pixel = reader.ReadUInt16() & 0xFFFF;
+                    var blue = ( pixel & 0x001F ) * 8;
+                    var green = ( ( pixel & 0x03E0 ) >> 5 ) * 8;
+                    var red = ( ( pixel & 0x7C00 ) >> 10 ) * 8;
+                    var alpha = ( ( pixel & 0x8000 ) >> 15 ) * 255;
 
                     dst[idx * 4 + 0] = ( byte )blue;
                     dst[idx * 4 + 1] = ( byte )green;
@@ -216,31 +269,6 @@ namespace VfxEditor.Formats.TextureFormat {
                 ret[idx + 3] = data[idx + 3];
             }
             return ret;
-        }
-
-        public enum Attribute : uint {
-            DiscardPerFrame = 0x1,
-            DiscardPerMap = 0x2,
-            Managed = 0x4,
-            UserManaged = 0x8,
-            CpuRead = 0x10,
-            LocationMain = 0x20,
-            NoGpuRead = 0x40,
-            AlignedSize = 0x80,
-            EdgeCulling = 0x100,
-            LocationOnion = 0x200,
-            ReadWrite = 0x400,
-            Immutable = 0x800,
-            TextureRenderTarget = 0x100000,
-            TextureDepthStencil = 0x200000,
-            TextureType1D = 0x400000,
-            TextureType2D = 0x800000,
-            TextureType3D = 0x1000000,
-            TextureTypeCube = 0x2000000,
-            TextureTypeMask = 0x3C00000,
-            TextureSwizzle = 0x4000000,
-            TextureNoTiled = 0x8000000,
-            TextureNoSwizzle = 0x80000000,
         }
 
         // ==================
