@@ -209,11 +209,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
 
             using var file = File.Open( WriteLocation, FileMode.Open );
-            using var texReader = new BinaryReader( file );
-            using var texMs = new MemoryStream();
-            using var texWriter = new BinaryWriter( texMs );
-            texWriter.Write( TexToolsUtils.CreateType2Data( texReader.ReadBytes( ( int )file.Length ) ) );
-            var modData = texMs.ToArray();
+            using var reader = new BinaryReader( file );
+
+            var modData = TexToolsUtils.CreateType2Data( reader.ReadBytes( ( int )file.Length ) );
             simplePartsOut.Add( TexToolsUtils.CreateModResource( GamePath, modOffset, modData.Length ) );
             writer.Write( modData );
             modOffset += modData.Length;

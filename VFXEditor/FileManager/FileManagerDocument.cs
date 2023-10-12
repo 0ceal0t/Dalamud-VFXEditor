@@ -185,6 +185,7 @@ namespace VfxEditor.FileManager {
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
+
             var modData = TexToolsUtils.CreateType2Data( CurrentFile.ToBytes() );
             simplePartsOut.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
             writer.Write( modData );
