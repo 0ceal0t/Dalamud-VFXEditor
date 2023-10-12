@@ -16,7 +16,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
     public enum PostConversion {
         None,
         A8,
-        R4444
+        R4444,
+        R5551,
     }
 
     public class TextureReplace : TextureDrawable, IFileDocument {
@@ -79,6 +80,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                         var postConversion = Plugin.Configuration.PngFormat switch {
                             TextureFormat.A8 => PostConversion.A8,
                             TextureFormat.R4G4B4A4 => PostConversion.R4444,
+                            TextureFormat.R5G5B5A1 => PostConversion.R5551,
                             _ => PostConversion.None
                         };
 
@@ -219,36 +221,36 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected override void OnReplace( string importPath ) { // since already replaced, need to refresh it
             if( Plugin.Configuration.UpdateWriteLocation ) {
-                WriteLocation = Plugin.TextureManager.NewWriteLocation;
+                WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
             }
             ImportFile( importPath );
         }
 
         // ===========================
 
-        private static void DdsToAtex( TextureFormat format, byte[] dds, BinaryWriter writer, PostConversion post = PostConversion.None ) {
+        private static void DdsToAtex( TextureFormat format, byte[] ddsData, BinaryWriter writer, PostConversion post = PostConversion.None ) {
             // Get DDS info
-            using var ddsMs = new MemoryStream( dds );
-            using var ddsReader = new BinaryReader( ddsMs );
-            ddsReader.BaseStream.Seek( 12, SeekOrigin.Begin );
-            var height = ddsReader.ReadInt32();
-            var width = ddsReader.ReadInt32();
-            var pitch = ddsReader.ReadInt32();
-            var depth = ddsReader.ReadInt32();
-            var mipLevels = ddsReader.ReadInt32();
+            using var ms = new MemoryStream( ddsData );
+            using var reader = new BinaryReader( ms );
+            reader.BaseStream.Seek( 12, SeekOrigin.Begin );
+            var height = reader.ReadInt32();
+            var width = reader.ReadInt32();
+            var pitch = reader.ReadInt32();
+            var depth = reader.ReadInt32();
+            var mipLevels = reader.ReadInt32();
 
-            writer.Write( TextureUtils.CreateTextureHeader( format, width, height, mipLevels ).ToArray() );
+            writer.Write( TextureUtils.CreateTextureHeader( format, width, height, mipLevels ) );
 
             // Add DDS data
-            ddsReader.BaseStream.Seek( 128, SeekOrigin.Begin );
-            var uncompressedLength = ddsMs.Length - 128;
-            var ddsData = new byte[uncompressedLength];
-            ddsReader.Read( ddsData, 0, ( int )uncompressedLength );
-            // scuffed way to handle png -> A8. Just load is as BGRA, then only keep the A channel
-            // Not currently used
-            if( post == PostConversion.A8 ) ddsData = TextureDataFile.CompressA8( ddsData );
+            reader.BaseStream.Seek( 128, SeekOrigin.Begin );
+            var uncompressedLength = ms.Length - 128;
+            var imageData = new byte[uncompressedLength];
+            reader.Read( imageData, 0, ( int )uncompressedLength );
 
-            writer.Write( ddsData );
+            // Need to convert from R8G8B8A8
+            if( post == PostConversion.A8 ) imageData = TextureDataFile.CompressA8( imageData );
+
+            writer.Write( imageData );
         }
     }
 }

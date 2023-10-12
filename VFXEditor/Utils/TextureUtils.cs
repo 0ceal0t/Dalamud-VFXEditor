@@ -1,131 +1,97 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
-    // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
     public static class TextureUtils {
-        public static List<byte> CreateTextureHeader( TextureFormat format, int newWidth, int newHeight, int newMipCount ) {
-            var headerData = new List<byte>();
+        public static byte[] CreateTextureHeader( TextureFormat format, int width, int height, int mipLevels ) {
+            var header = new TextureDataFile.TexHeader() {
+                Type = Formats.TextureFormat.Attribute.TextureType2D,
+                Format = format,
+                Width = ( ushort )width,
+                Height = ( ushort )height,
+                Depth = 1,
+                MipLevels = ( ushort )mipLevels,
+                LodOffset = new uint[] { 0, 1, 2 },
+                OffsetToSurface = new uint[13]
+            };
+            Array.Clear( header.OffsetToSurface, 0, 13 );
 
-            short texFormatCode = 0;
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    texFormatCode = 13344;
-                    break;
-                case TextureFormat.DXT3:
-                    texFormatCode = 13360;
-                    break;
-                case TextureFormat.DXT5:
-                    texFormatCode = 13361;
-                    break;
-                case TextureFormat.A8:
-                    texFormatCode = 4401;
-                    break;
-                case TextureFormat.A8R8G8B8:
-                    texFormatCode = 5200;
-                    break;
-                case TextureFormat.R4G4B4A4:
-                    texFormatCode = 5184;
-                    break;
-            }
-
-            headerData.AddRange( BitConverter.GetBytes( ( short )0 ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )128 ) );
-            headerData.AddRange( BitConverter.GetBytes( texFormatCode ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )0 ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )newWidth ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )newHeight ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )1 ) );
-            headerData.AddRange( BitConverter.GetBytes( ( short )newMipCount ) );
-            headerData.AddRange( BitConverter.GetBytes( 0 ) );
-            headerData.AddRange( BitConverter.GetBytes( 1 ) );
-            headerData.AddRange( BitConverter.GetBytes( 2 ) );
-            var mipLength = format switch {
-                TextureFormat.R4G4B4A4 => ( newWidth * newHeight ) * 2,
-                TextureFormat.DXT1 => ( newWidth * newHeight ) / 2,
-                TextureFormat.DXT5 or TextureFormat.A8 => newWidth * newHeight,
-                _ => ( newWidth * newHeight ) * 4,
+            var mipSize = format switch {
+                TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => ( width * height ) * 2,
+                TextureFormat.DXT1 => ( width * height ) / 2,
+                TextureFormat.DXT5 or TextureFormat.A8 => width * height,
+                _ => ( width * height ) * 4,
             };
 
             var combinedLength = 80;
-            for( var i = 0; i < newMipCount; i++ ) {
-                headerData.AddRange( BitConverter.GetBytes( combinedLength ) );
-                combinedLength += mipLength;
-                if( mipLength > 16 ) {
-                    mipLength /= 4;
-                }
-                else {
-                    mipLength = 16;
-                }
+            for( var i = 0; i < mipLevels; i++ ) {
+                header.OffsetToSurface[i] = ( uint )combinedLength;
+                combinedLength += mipSize;
+                if( mipSize > 16 ) mipSize /= 4;
+                else mipSize = 16;
             }
 
-            var padding = 80 - headerData.Count;
-            headerData.AddRange( new byte[padding] );
-            return headerData;
+            // Struct to bytes
+            var size = Marshal.SizeOf( header );
+            var buffer = new byte[size];
+            var handle = Marshal.AllocHGlobal( size );
+            Marshal.StructureToPtr( header, handle, true );
+            Marshal.Copy( handle, buffer, 0, size );
+            Marshal.FreeHGlobal( handle );
+
+            return buffer;
         }
 
-        public static byte[] CreateDdsHeader( ushort width, ushort height, TextureFormat format, ushort depth, ushort mipLevels ) {
-            uint dwPitchOrLinearSize, dwFourCC;
-            var header = new List<byte>();
+        // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
 
-            header.AddRange( BitConverter.GetBytes( ( uint )0x20534444 ) );
-            header.AddRange( BitConverter.GetBytes( ( uint )124 ) );
+        public static byte[] CreateDdsHeader( uint width, uint height, TextureFormat format, uint depth, uint mipLevels ) {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
 
-            uint dwFlags = 528391;
-            if( depth > 1 ) {
-                dwFlags = 0x00000004;
-            }
-            header.AddRange( BitConverter.GetBytes( dwFlags ) );
+            writer.Write( 0x20534444u ); // Magic
+            writer.Write( 124u ); // Header size
+            writer.Write( depth > 1 ? 0x00000004u : 528391u ); // flags
+            writer.Write( height );
+            writer.Write( width );
 
-            var dwHeight = ( uint )height;
-            header.AddRange( BitConverter.GetBytes( dwHeight ) );
-            var dwWidth = ( uint )width;
-            header.AddRange( BitConverter.GetBytes( dwWidth ) );
+            var mipSize = format switch {
+                TextureFormat.A8R8G8B8 => ( height * width ) * 4,
+                TextureFormat.DXT1 => ( height * width ) / 2,
+                TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => ( height * width ) * 2,
+                _ => height * width
+            };
+            writer.Write( mipSize );
+            writer.Write( 0u );
+            writer.Write( mipLevels );
+            writer.Write( new byte[44] );
+            writer.Write( 32u );
 
-            if( format == TextureFormat.A8R8G8B8 ) {
-                dwPitchOrLinearSize = ( dwHeight * dwWidth ) * 4;
-            }
-            else if( format == TextureFormat.DXT1 ) {
-                dwPitchOrLinearSize = ( dwHeight * dwWidth ) / 2;
-            }
-            else if( format == TextureFormat.R4G4B4A4 ) {
-                dwPitchOrLinearSize = ( dwHeight * dwWidth ) * 2;
-            }
-            else {
-                dwPitchOrLinearSize = dwHeight * dwWidth;
-            }
-            header.AddRange( BitConverter.GetBytes( dwPitchOrLinearSize ) );
-
-            header.AddRange( BitConverter.GetBytes( ( uint )0 ) );
-            header.AddRange( BitConverter.GetBytes( ( uint )mipLevels ) );
-            var dwReserved1 = new byte[44];
-            Array.Clear( dwReserved1, 0, 44 );
-            header.AddRange( dwReserved1 );
-
-            header.AddRange( BitConverter.GetBytes( ( uint )32 ) );
             var pfFlags = format switch {
-                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 => 65,
+                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => 65,
                 TextureFormat.A8 => 2,
                 _ => 4,
             };
-            header.AddRange( BitConverter.GetBytes( pfFlags ) );
+            writer.Write( pfFlags );
 
+            uint magic;
             switch( format ) {
                 case TextureFormat.DXT1:
-                    dwFourCC = 0x31545844;
+                    magic = 0x31545844;
                     break;
                 case TextureFormat.DXT3:
-                    dwFourCC = 0x33545844;
+                    magic = 0x33545844;
                     break;
                 case TextureFormat.DXT5:
-                    dwFourCC = 0x35545844;
+                    magic = 0x35545844;
                     break;
                 case TextureFormat.A8R8G8B8:
                 case TextureFormat.R4G4B4A4:
+                case TextureFormat.R5G5B5A1:
                 case TextureFormat.A8:
-                    dwFourCC = 0;
+                    magic = 0;
                     break;
                 default:
                     return null;
@@ -133,95 +99,77 @@ namespace VfxEditor.Utils {
 
             if( depth > 1 ) {
                 var bytes = Encoding.UTF8.GetBytes( "DX10" );
-                dwFourCC = BitConverter.ToUInt32( bytes, 0 );
+                magic = BitConverter.ToUInt32( bytes, 0 );
             }
 
-            header.AddRange( BitConverter.GetBytes( dwFourCC ) );
+            writer.Write( magic );
 
             switch( format ) {
                 case TextureFormat.A8R8G8B8: {
-                        const uint dwRGBBitCount = 32;
-                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
-                        const uint dwRBitMask = 16711680;
-                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
-                        const uint dwGBitMask = 65280;
-                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
-                        const uint dwBBitMask = 255;
-                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
-                        const uint dwABitMask = 4278190080;
-                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
-                        const uint dwCaps = 4096;
-                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                        var blank1 = new byte[16];
-                        header.AddRange( blank1 );
-
+                        writer.Write( 32u ); // Number of rbg (+a) bits
+                        writer.Write( 16711680u ); // Red mask
+                        writer.Write( 65280u ); // Green mask
+                        writer.Write( 255u ); // Blue mask
+                        writer.Write( 4278190080u ); // Alpha mask
+                        writer.Write( 4096u ); // Complexity
+                        writer.Write( new byte[16] );
                         break;
                     }
                 case TextureFormat.R4G4B4A4: {
-                        const uint dwRGBBitCount = 16;
-                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
-                        const uint dwRBitMask = 3840;
-                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
-                        const uint dwGBitMask = 240;
-                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
-                        const uint dwBBitMask = 15;
-                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
-                        const uint dwABitMask = 61440;
-                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
-                        const uint dwCaps = 4096;
-                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                        var blank1 = new byte[16];
-                        header.AddRange( blank1 );
+                        writer.Write( 16u );
+                        writer.Write( 3840u );
+                        writer.Write( 240u );
+                        writer.Write( 15u );
+                        writer.Write( 61440u );
+                        writer.Write( 4096u );
+                        writer.Write( new byte[16] );
+                        break;
+                    }
+                case TextureFormat.R5G5B5A1: {
+                        writer.Write( 16u );
+                        writer.Write( 31744u );
+                        writer.Write( 992u );
+                        writer.Write( 31u );
+                        writer.Write( 32768u );
+                        writer.Write( 4096u );
+                        writer.Write( new byte[16] );
                         break;
                     }
                 case TextureFormat.A8: {
-                        const uint dwRGBBitCount = 8;
-                        header.AddRange( BitConverter.GetBytes( dwRGBBitCount ) );
-                        const uint dwRBitMask = 0;
-                        header.AddRange( BitConverter.GetBytes( dwRBitMask ) );
-                        const uint dwGBitMask = 0;
-                        header.AddRange( BitConverter.GetBytes( dwGBitMask ) );
-                        const uint dwBBitMask = 0;
-                        header.AddRange( BitConverter.GetBytes( dwBBitMask ) );
-                        const uint dwABitMask = 255;
-                        header.AddRange( BitConverter.GetBytes( dwABitMask ) );
-                        const uint dwCaps = 4096;
-                        header.AddRange( BitConverter.GetBytes( dwCaps ) );
-                        var blank1 = new byte[16];
-                        header.AddRange( blank1 );
+                        writer.Write( 8u );
+                        writer.Write( 0u );
+                        writer.Write( 0u );
+                        writer.Write( 0u );
+                        writer.Write( 255u );
+                        writer.Write( 4096u );
+                        writer.Write( new byte[16] );
                         break;
                     }
                 default: {
-                        var blank1 = new byte[40];
-                        header.AddRange( blank1 );
+                        writer.Write( new byte[40] );
                         break;
                     }
             }
 
             if( depth > 1 ) {
-                uint dxgiFormat;
-                if( format == TextureFormat.DXT1 ) {
-                    dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM;
-                }
-                else if( format == TextureFormat.DXT5 ) {
-                    dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM;
-                }
-                else {
-                    dxgiFormat = ( uint )DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-                }
-                header.AddRange( BitConverter.GetBytes( dxgiFormat ) );
+                var dxgiFormat = format switch {
+                    TextureFormat.DXT1 => DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM,
+                    TextureFormat.DXT5 => DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM,
+                    _ => DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM
+                };
+                writer.Write( ( uint )dxgiFormat );
 
                 // D3D10_RESOURCE_DIMENSION resourceDimension
-                header.AddRange( BitConverter.GetBytes( 3 ) );
+                writer.Write( 3 );
                 // UINT miscFlag
-                header.AddRange( BitConverter.GetBytes( 0 ) );
+                writer.Write( 0 );
                 // UINT arraySize
-                header.AddRange( BitConverter.GetBytes( depth ) );
+                writer.Write( depth );
                 // UINT miscFlags2
-                header.AddRange( BitConverter.GetBytes( 0 ) );
+                writer.Write( 0 );
             }
 
-            return header.ToArray();
+            return ms.ToArray();
         }
 
         public enum DXGI_FORMAT : uint {

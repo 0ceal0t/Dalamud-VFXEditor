@@ -1,9 +1,7 @@
 using ImGuiFileDialog;
 using Lumina.Data.Parsing.Tex;
-using Lumina.Extensions;
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
@@ -72,7 +70,7 @@ namespace VfxEditor.Formats.TextureFormat {
     }
 
     public class TextureDataFile : Lumina.Data.FileResource {
-        [StructLayout( LayoutKind.Sequential )]
+        [StructLayout( LayoutKind.Sequential, Pack = 4 )]
         public unsafe struct TexHeader {
             public Attribute Type;
             public TextureFormat Format;
@@ -80,15 +78,17 @@ namespace VfxEditor.Formats.TextureFormat {
             public ushort Height;
             public ushort Depth;
             public ushort MipLevels;
-            public fixed uint LodOffset[3];
-            public fixed uint OffsetToSurface[13];
+            [MarshalAs( UnmanagedType.ByValArray, SizeConst = 3 )]
+            public uint[] LodOffset;
+            [MarshalAs( UnmanagedType.ByValArray, SizeConst = 13 )]
+            public uint[] OffsetToSurface;
         };
 
         public bool ValidFormat { get; private set; } = false;
         public byte[] ImageData { get; private set; } // decompressed into ARGB or whatever. used for image previews
         public TexHeader Header { get; private set; }
 
-        private static int HeaderLength => Unsafe.SizeOf<TexHeader>();
+        private static int HeaderLength => Marshal.SizeOf( typeof( TexHeader ) );
         private byte[] DdsData;
 
         public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
@@ -96,33 +96,39 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
-            Header = Reader.ReadStructure<TexHeader>();
+
+            var buffer = Reader.ReadBytes( HeaderLength );
+            var handle = Marshal.AllocHGlobal( HeaderLength );
+            Marshal.Copy( buffer, 0, handle, HeaderLength );
+            Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
+            Marshal.FreeHGlobal( handle );
+
             ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ImageData.Length > 0;
         }
 
-        public void LoadFile( BinaryReader reader, int size ) {
-            LocalData = reader.ReadBytes( size );
+        public void LoadFile( byte[] localData ) {
+            LocalData = localData;
             using var ms = new MemoryStream( LocalData );
             using var br = new BinaryReader( ms );
 
             Local = true;
             br.BaseStream.Position = 0;
-            Header = br.ReadStructure<TexHeader>();
-            DdsData = br.ReadBytes( size - HeaderLength );
+
+            var buffer = br.ReadBytes( HeaderLength );
+            var handle = Marshal.AllocHGlobal( HeaderLength );
+            Marshal.Copy( buffer, 0, handle, HeaderLength );
+            Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
+            Marshal.FreeHGlobal( handle );
+
+            DdsData = br.ReadBytes( localData.Length - HeaderLength );
             ImageData = BgraToRgba( Convert( new Span<byte>( DdsData ), Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ImageData.Length > 0;
-
-            Dalamud.Log( $"{HeaderLength:X8} {Header.Format}" );
         }
 
         public static TextureDataFile LoadFromLocal( string path ) {
             var tex = new TextureDataFile();
-            var file = File.Open( path, FileMode.Open );
-            using( var reader = new BinaryReader( file ) ) {
-                tex.LoadFile( reader, ( int )file.Length );
-            }
-            file.Close();
+            tex.LoadFile( File.ReadAllBytes( path ) );
             return tex;
         }
 
@@ -166,6 +172,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 DXGIFormat.BC3_UNorm => TextureFormat.DXT5,
                 DXGIFormat.B8G8R8A8_UNorm => TextureFormat.A8R8G8B8,
                 DXGIFormat.B4G4R4A4_UNorm => TextureFormat.R4G4B4A4,
+                DXGIFormat.B5G5R5A1_UNorm => TextureFormat.R5G5B5A1,
                 _ => TextureFormat.Null,
             };
         }
@@ -175,12 +182,13 @@ namespace VfxEditor.Formats.TextureFormat {
                 TextureFormat.DXT1 => CompressionFormat.BC1a,
                 TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
-                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 => CompressionFormat.BGRA,
+                TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 or TextureFormat.R5G5B5A1 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
             };
         }
 
         public static byte[] CompressA8( byte[] data ) {
+            // r g b A r g b A, ... only take the A part
             var ret = new byte[data.Length / 4];
             for( var i = 0; i < ret.Length; i++ ) {
                 ret[i] = data[i * 4 + 3];
@@ -189,7 +197,7 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public static void DecompressA8( Span<byte> src, byte[] dst, int width, int height ) {
-            for( var i = 0; i < width * height; i += 1 ) {
+            for( var i = 0; i < width * height; i++ ) {
                 var idx = i * 4;
                 dst[idx + 0] = 0xFF;
                 dst[idx + 1] = 0xFF;
@@ -281,9 +289,8 @@ namespace VfxEditor.Formats.TextureFormat {
             var data = new RGBAQuad[Header.Height * Header.Width];
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
-                    var dataIdx = ( i * Header.Width + j );
-                    var imageDataIdx = dataIdx * 4;
-                    data[dataIdx] = new RGBAQuad( ImageData[imageDataIdx], ImageData[imageDataIdx + 1], ImageData[imageDataIdx + 2], ImageData[imageDataIdx + 3] );
+                    var idx = ( i * Header.Width + j );
+                    data[idx] = new RGBAQuad( ImageData[idx * 4], ImageData[idx * 4 + 1], ImageData[idx * 4 + 2], ImageData[idx * 4 + 3] );
                 }
             }
             var ptr = MemoryHelper.PinObject( data );

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace VfxEditor.FileManager.Interfaces {
     public interface IFileManager : IFileManagerSelect {
-        public string NewWriteLocation { get; }
-
         public bool DoDebug( string path );
         public bool GetReplacePath( string gamePath, out string replacePath );
         public bool FileExists( string path );

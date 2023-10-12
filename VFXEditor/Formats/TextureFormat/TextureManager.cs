@@ -16,7 +16,6 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : DalamudWindow, IFileManager {
         private int TEX_ID = 0;
-        public string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}.atex" ).Replace( '\\', '/' );
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
 
         public readonly WindowSystem WindowSystem = new();
@@ -47,7 +46,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public bool IsWindowOpen() => IsOpen;
 
         public void ReplaceTexture( string importPath, string gamePath ) {
-            var replace = new TextureReplace( gamePath, NewWriteLocation );
+            var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
             replace.ImportFile( importPath );
             Textures.Add( replace );
         }
@@ -76,6 +75,8 @@ namespace VfxEditor.Formats.TextureFormat {
             View.Draw();
             WindowSystem.Draw();
         }
+
+        public string GetNewWriteLocation( string path ) => Path.Combine( Plugin.Configuration.WriteLocation, $"TexTemp{TEX_ID++}." + path.Split( '.' )[^1] ).Replace( '\\', '/' );
 
         // ====================
 
@@ -149,7 +150,7 @@ namespace VfxEditor.Formats.TextureFormat {
             if( items == null ) return;
             foreach( var item in items ) {
                 var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
-                var newReplace = new TextureReplace( Plugin.TextureManager.NewWriteLocation, item );
+                var newReplace = new TextureReplace( GetNewWriteLocation( item.ReplacePath ), item );
                 newReplace.ImportFile( fullPath );
                 Textures.Add( newReplace );
             }
