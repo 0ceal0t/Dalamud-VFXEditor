@@ -21,7 +21,7 @@ namespace VfxEditor.Parsing.Sheets {
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             DrawCombo( manager );
             ImGui.SameLine();

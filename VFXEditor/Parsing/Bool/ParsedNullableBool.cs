@@ -40,7 +40,7 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) {

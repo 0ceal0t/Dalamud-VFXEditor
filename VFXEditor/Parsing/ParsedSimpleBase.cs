@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
 
         protected abstract T FromCopy( C val );
 
-        protected void Copy( CommandManager manager ) {
+        protected void CopyPaste( CommandManager manager ) {
             var copy = manager.Copy;
             var copyMap = GetCopyMap( copy );
 

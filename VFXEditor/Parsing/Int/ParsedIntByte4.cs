@@ -10,7 +10,7 @@ namespace VfxEditor.Parsing.Int {
         public ParsedIntByte4( string name ) : base( name ) { }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var bytes = BitConverter.GetBytes( Value );
             var value = bytes.Select( x => ( int )x ).ToArray();

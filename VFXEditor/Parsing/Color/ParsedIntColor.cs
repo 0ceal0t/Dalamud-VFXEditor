@@ -34,7 +34,7 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {

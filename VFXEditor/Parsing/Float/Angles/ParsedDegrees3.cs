@@ -10,7 +10,7 @@ namespace VfxEditor.Parsing {
 
         public override void Draw( CommandManager manager ) {
             using var _ = ImRaii.PushId( Name );
-            Copy( manager );
+            CopyPaste( manager );
 
             if( UiUtils.DrawDegrees3( Name, Value, out var newValue ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector3>( this, newValue ) );

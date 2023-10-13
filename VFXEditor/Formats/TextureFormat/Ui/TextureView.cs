@@ -18,7 +18,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
         private TextureReplace DraggingItem;
         private string SearchText = "";
-        private ExtractFileType ExtractType = ExtractFileType.Atex_Tex;
+        private ExtractFileType ExtractType = ExtractFileType.ATEX_TEX;
 
         private static readonly TextureFormat[] ValidPngFormat = new TextureFormat[] {
             TextureFormat.DXT5,
@@ -28,15 +28,15 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         };
 
         private enum ExtractFileType {
-            Atex_Tex,
-            Png,
-            Dds,
+            ATEX_TEX,
+            PNG,
+            DDS,
         }
 
         private static readonly ExtractFileType[] ExtractTypes = new ExtractFileType[] {
-            ExtractFileType.Atex_Tex,
-            ExtractFileType.Png,
-            ExtractFileType.Dds
+            ExtractFileType.ATEX_TEX,
+            ExtractFileType.PNG,
+            ExtractFileType.DDS
         };
 
         public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures" ) {
@@ -69,20 +69,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                 if( popup ) {
                     using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
 
-                    if( ImGui.InputInt( "Mips", ref Plugin.Configuration.PngMips ) ) Plugin.Configuration.Save();
-                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                        ImGui.SameLine();
-                    }
-                    ImGui.TextDisabled( "(.png)" );
-
-                    if( UiUtils.EnumComboBox( "Format", ValidPngFormat, Plugin.Configuration.PngFormat, out var newPngFormat ) ) {
-                        Plugin.Configuration.PngFormat = newPngFormat;
-                        Plugin.Configuration.Save();
-                    }
-                    using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                        ImGui.SameLine();
-                    }
-                    ImGui.TextDisabled( "(.png)" );
+                    DrawPngSettings();
 
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
                     ImGui.Separator();
@@ -98,6 +85,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                 if( popup ) {
                     using var child = ImRaii.Child( "Child", new Vector2( 500, 500 ) );
 
+                    ImGui.SetNextItemWidth( 150 );
                     if( UiUtils.EnumComboBox( "Format", ExtractTypes, ExtractType, out var newExtractType ) ) {
                         ExtractType = newExtractType;
                     }
@@ -173,12 +161,31 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             var ext = result.Path.Split( '.' )[^1].ToLower();
             var file = Dalamud.DataManager.GetFile<TextureDataFile>( result.Path );
 
-            if( ExtractType == ExtractFileType.Dds ) file.SaveDdsDialog();
-            else if( ExtractType == ExtractFileType.Png ) file.SavePngDialog();
+            if( ExtractType == ExtractFileType.DDS ) file.SaveDdsDialog();
+            else if( ExtractType == ExtractFileType.PNG ) file.SavePngDialog();
             else file.SaveTexDialog( ext );
         }
 
         public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result );
+
+        public static void DrawPngSettings() {
+            ImGui.SetNextItemWidth( 150 );
+            if( ImGui.InputInt( "Mips", ref Plugin.Configuration.PngMips ) ) Plugin.Configuration.Save();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+            ImGui.TextDisabled( "(.png)" );
+
+            ImGui.SetNextItemWidth( 150 );
+            if( UiUtils.EnumComboBox( "Format", ValidPngFormat, Plugin.Configuration.PngFormat, out var newPngFormat ) ) {
+                Plugin.Configuration.PngFormat = newPngFormat;
+                Plugin.Configuration.Save();
+            }
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+            ImGui.TextDisabled( "(.png)" );
+        }
 
         // ===== DRAG/DROP =======
 

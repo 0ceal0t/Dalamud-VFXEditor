@@ -1,6 +1,10 @@
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiFileDialog;
 using ImGuiNET;
 using System;
+using System.Numerics;
+using VfxEditor.Formats.TextureFormat.Ui;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public abstract class TextureDrawable {
@@ -36,6 +40,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) ImportDialog();
+            DrawSettingsCog();
 
             if( ImGui.BeginPopup( "TexExport" ) ) {
                 if( ImGui.Selectable( ".png" ) ) GetRawData()?.SavePngDialog();
@@ -43,6 +48,20 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 if( ImGui.Selectable( $".{GameExtension}" ) ) GetRawData()?.SaveTexDialog( GameExtension );
                 ImGui.EndPopup();
             }
+        }
+
+        protected void DrawSettingsCog() {
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            using var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 1 ) );
+            ImGui.SameLine();
+            if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "ReplaceSettings" );
+        }
+
+        protected void DrawSettingsPopup() {
+            using var popup = ImRaii.Popup( "ReplaceSettings" );
+            if( !popup ) return;
+
+            TextureView.DrawPngSettings();
         }
 
         protected void ImportDialog() {

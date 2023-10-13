@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
         public ParsedCrc( string name, uint value ) : base( name, value, 4 ) { }
 
         public void Draw( CommandManager manager, Dictionary<uint, string> crcMap ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
             using var _ = ImRaii.PushId( Name );

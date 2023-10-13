@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var value = Value;
             if( ImGui.InputFloat( Name, ref value ) ) {

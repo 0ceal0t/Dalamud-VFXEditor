@@ -15,7 +15,7 @@ namespace VfxEditor.Parsing.Int {
         public ParsedUIntHex( string name, uint value ) : base( name, value ) { }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             using var _ = ImRaii.PushId( Name );
 

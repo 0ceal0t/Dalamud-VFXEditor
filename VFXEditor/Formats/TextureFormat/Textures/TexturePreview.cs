@@ -59,8 +59,10 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.Text( "[Penumbra]" );
             }
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
-            DrawExportReplaceButtons();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) ) ) {
+                DrawExportReplaceButtons();
+            }
+            DrawSettingsPopup();
         }
 
         protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );

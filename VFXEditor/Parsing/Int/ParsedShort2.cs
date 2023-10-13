@@ -23,7 +23,7 @@ namespace VfxEditor.Parsing.Int {
         }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var value = Value.ToArray();
             if( ImGui.InputInt2( Name, ref value[0] ) ) {

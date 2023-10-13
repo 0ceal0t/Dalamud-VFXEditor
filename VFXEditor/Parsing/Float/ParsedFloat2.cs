@@ -25,7 +25,7 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var value = Value;
             if( ImGui.InputFloat2( Name, ref value ) ) {

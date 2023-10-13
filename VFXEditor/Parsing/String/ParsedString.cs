@@ -51,7 +51,7 @@ namespace VfxEditor.Parsing {
         }
 
         public void DrawInput( CommandManager manager, uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
-            Copy( manager );
+            CopyPaste( manager );
             using var _ = ImRaii.PushId( Name );
 
             if( HasIcons || offset > 0 ) {

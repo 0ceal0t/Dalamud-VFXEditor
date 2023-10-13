@@ -21,7 +21,7 @@ namespace VfxEditor.Parsing.Int {
         }
 
         public override void Draw( CommandManager manager ) {
-            Copy( manager );
+            CopyPaste( manager );
 
             var selected = ItemToValue == null ?
                 ( ( Value < 0 || Value >= Items.Count ) ? null : Items[Value] ) :
