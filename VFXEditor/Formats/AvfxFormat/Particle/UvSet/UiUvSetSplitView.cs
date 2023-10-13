@@ -9,10 +9,6 @@ namespace VfxEditor.AvfxFormat {
             base.DrawControls();
         }
 
-        public override void Disable( AvfxParticleUvSet item ) { }
-
-        public override void Enable( AvfxParticleUvSet item ) { }
-
         public override AvfxParticleUvSet CreateNewAvfx() => new();
     }
 }

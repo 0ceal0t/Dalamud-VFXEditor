@@ -27,6 +27,7 @@ namespace VfxEditor.AvfxFormat {
             View.Disable( Item );
             View.UpdateIdx();
             View.ClearSelected();
+            View.OnChange();
         }
 
         private void Add() {
@@ -34,6 +35,7 @@ namespace VfxEditor.AvfxFormat {
             Group.Insert( Idx, Item );
             View.Enable( Item );
             View.UpdateIdx();
+            View.OnChange();
         }
     }
 }

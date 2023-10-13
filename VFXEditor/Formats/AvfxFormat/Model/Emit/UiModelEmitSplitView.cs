@@ -2,12 +2,14 @@ using System.Collections.Generic;
 
 namespace VfxEditor.AvfxFormat {
     public class UiModelEmitSplitView : AvfxItemSplitView<UiEmitVertex> {
-        public UiModelEmitSplitView( List<UiEmitVertex> items ) : base( "EmitVertex", items ) { }
+        private readonly AvfxModel Model;
 
-        public override void Disable( UiEmitVertex item ) { }
+        public UiModelEmitSplitView( AvfxModel model, List<UiEmitVertex> items ) : base( "EmitVertex", items ) {
+            Model = model;
+        }
 
-        public override void Enable( UiEmitVertex item ) { }
+        public override void OnChange() => Model.RefreshModelPreview();
 
-        public override UiEmitVertex CreateNewAvfx() => new( new AvfxEmitVertex(), new AvfxVertexNumber() );
+        public override UiEmitVertex CreateNewAvfx() => new( Model, new AvfxEmitVertex(), new AvfxVertexNumber() );
     }
 }

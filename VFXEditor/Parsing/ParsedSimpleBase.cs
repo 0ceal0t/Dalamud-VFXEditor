@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
 
         protected abstract T FromCopy( C val );
 
-        protected void CopyPaste( CommandManager manager ) {
+        protected bool CopyPaste( CommandManager manager ) {
             var copy = manager.Copy;
             var copyMap = GetCopyMap( copy );
 
@@ -29,7 +29,10 @@ namespace VfxEditor.Parsing {
             }
             else if( copy.IsPasting && copyMap.TryGetValue( Name, out var val ) ) {
                 copy.PasteCommand.Add( new ParsedSimpleCommand<T>( this, FromCopy( val ) ) );
+                return true;
             }
+
+            return false;
         }
     }
 }

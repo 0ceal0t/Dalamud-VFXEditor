@@ -26,12 +26,15 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Z );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
+        public override void Draw( CommandManager manager ) => Draw( manager, out var _ );
+
+        public void Draw( CommandManager manager, out bool edited ) {
+            edited = CopyPaste( manager );
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
                 manager.Add( new ParsedSimpleCommand<Vector3>( this, value ) );
+                edited = true;
             }
         }
 

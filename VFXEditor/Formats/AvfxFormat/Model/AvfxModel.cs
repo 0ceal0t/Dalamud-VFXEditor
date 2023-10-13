@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView = new( this );
             UvView = new UiModelUvView();
-            EmitSplitDisplay = new( CombinedEmitVertexes );
+            EmitSplitDisplay = new( this, CombinedEmitVertexes );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
                 Dalamud.Error( $"Mismatched emit vertex counts {EmitVertexes.EmitVertexes.Count} {EmitVertexNumbers.VertexNumbers.Count}" );
             }
             for( var i = 0; i < Math.Min( EmitVertexes.EmitVertexes.Count, EmitVertexNumbers.VertexNumbers.Count ); i++ ) {
-                CombinedEmitVertexes.Add( new UiEmitVertex( EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
+                CombinedEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
             }
             EmitSplitDisplay.UpdateIdx();
         }

@@ -24,12 +24,14 @@ namespace VfxEditor.AvfxFormat {
             View.Disable( Item );
             View.UpdateIdx();
             View.ClearSelected();
+            View.OnChange();
         }
 
         public void Undo() {
             Group.Insert( Idx, Item );
             View.Enable( Item );
             View.UpdateIdx();
+            View.OnChange();
         }
     }
 }

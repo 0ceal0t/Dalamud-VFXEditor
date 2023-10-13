@@ -11,13 +11,15 @@ namespace VfxEditor.AvfxFormat {
             UpdateIdx();
         }
 
-        public virtual void OnSelect( T item ) { }
+        public virtual void OnChange() { }
 
         public abstract T CreateNewAvfx();
 
-        public abstract void Enable( T item );
+        public virtual void OnSelect( T item ) { }
 
-        public abstract void Disable( T item );
+        public virtual void Enable( T item ) { }
+
+        public virtual void Disable( T item ) { }
 
         protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
