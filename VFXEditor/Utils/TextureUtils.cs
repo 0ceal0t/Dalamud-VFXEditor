@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -63,6 +64,7 @@ namespace VfxEditor.Utils {
                 TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => ( height * width ) * 2,
                 _ => height * width
             };
+
             writer.Write( mipSize );
             writer.Write( 0u );
             writer.Write( mipLevels );
@@ -98,8 +100,7 @@ namespace VfxEditor.Utils {
             }
 
             if( depth > 1 ) {
-                var bytes = Encoding.UTF8.GetBytes( "DX10" );
-                magic = BitConverter.ToUInt32( bytes, 0 );
+                magic = BitConverter.ToUInt32( Encoding.UTF8.GetBytes( "DX10" ), 0 );
             }
 
             writer.Write( magic );
@@ -168,6 +169,115 @@ namespace VfxEditor.Utils {
                 // UINT miscFlags2
                 writer.Write( 0 );
             }
+
+            return ms.ToArray();
+        }
+
+        public static int GetMipSize( TextureFormat format, int width, int height ) => format switch {
+            TextureFormat.DXT1 => ( width * height ) / 2,
+            TextureFormat.DXT5 or TextureFormat.A8 => width * height,
+            TextureFormat.R5G5B5A1 or TextureFormat.R4G4B4A4 => width * height * 2,
+            _ => width * height * 4
+        };
+
+        public static void GetDdsInfo( byte[] data, TextureFormat format, int width, int height, int mipCount, out byte[] compressedOut, out List<short> mipPartOffsets, out List<short> mipPartCounts ) {
+            using var dataMs = new MemoryStream( data );
+            using var reader = new BinaryReader( dataMs );
+            using var compressedMs = new MemoryStream();
+            using var writer = new BinaryWriter( compressedMs );
+
+            mipPartOffsets = new();
+            mipPartCounts = new();
+
+            var mipLength = GetMipSize( format, width, height );
+
+            // already skipped the DDS header
+
+            for( var i = 0; i < mipCount; i++ ) {
+                var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
+                mipPartCounts.Add( ( short )mipParts );
+
+                if( mipParts > 1 ) {
+                    for( var j = 0; j < mipParts; j++ ) {
+                        GetMipPartOffset( writer, reader, mipPartOffsets, mipLength, j == mipParts - 1 );
+                    }
+                }
+                else {
+                    GetMipPartOffset( writer, reader, mipPartOffsets, mipLength, mipLength != 16000 );
+                }
+
+                if( mipLength > 32 ) {
+                    mipLength /= 4;
+                }
+                else {
+                    mipLength = 8;
+                }
+            }
+
+            compressedOut = compressedMs.ToArray();
+        }
+
+        private static void GetMipPartOffset( BinaryWriter writer, BinaryReader reader, List<short> mipPartOffsets, int mipLength, bool i ) {
+            var uncompLength = i ? mipLength % 16000 : 16000;
+            var uncompBytes = reader.ReadBytes( uncompLength );
+            var compressed = TexToolsUtils.Compressor( uncompBytes );
+
+            var comp = compressed.Length <= uncompLength;
+            compressed = comp ? compressed : uncompBytes;
+
+            writer.Write( 16 );
+            writer.Write( 0 );
+            writer.Write( !comp ? 32000 : compressed.Length );
+            writer.Write( uncompLength );
+            writer.Write( compressed );
+
+            var padding = 128 - ( compressed.Length % 128 );
+
+            writer.Write( new byte[padding] );
+
+            mipPartOffsets.Add( ( short )( compressed.Length + padding + 16 ) );
+        }
+
+        public static byte[] CreateType4Data( TextureFormat format, List<short> mipPartOffsets, List<short> mipPartCount, int uncompressedLength, int mipCount, int width, int height ) {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            var headerSize = 24 + ( mipCount * 20 ) + ( mipPartOffsets.Count * 2 );
+            var headerPadding = 128 - ( headerSize % 128 );
+
+            writer.Write( headerSize + headerPadding );
+            writer.Write( 4 );
+            writer.Write( uncompressedLength + 80 );
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( mipCount );
+
+            var uncompMipSize = GetMipSize( format, width, height );
+            var partIndex = 0;
+            var mipOffsetIndex = 80;
+
+            for( var i = 0; i < mipCount; i++ ) {
+                writer.Write( mipOffsetIndex );
+
+                var paddedSize = 0;
+                for( var j = 0; j < mipPartCount[i]; j++ ) {
+                    paddedSize += mipPartOffsets[j + partIndex];
+                }
+
+                writer.Write( paddedSize );
+                writer.Write( uncompMipSize > 16 ? uncompMipSize : 16 );
+
+                uncompMipSize /= 4;
+
+                writer.Write( partIndex );
+                writer.Write( ( int )mipPartCount[i] );
+
+                partIndex += mipPartCount[i];
+                mipOffsetIndex += paddedSize;
+            }
+
+            foreach( var part in mipPartOffsets ) writer.Write( part );
+            writer.Write( new byte[headerPadding] );
 
             return ms.ToArray();
         }

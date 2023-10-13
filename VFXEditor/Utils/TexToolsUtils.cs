@@ -79,6 +79,9 @@ namespace VfxEditor.Utils {
             header.Write( 2 );
             header.Write( fileData.Length );
 
+            header.Write( 0 ); // placeholders
+            header.Write( 0 );
+
             var dataOffset = 0;
             var totalCompSize = 0;
             var uncompressedLength = fileData.Length;
@@ -86,11 +89,11 @@ namespace VfxEditor.Utils {
             header.Write( partCount );
 
             var remainder = uncompressedLength;
-            using( var binaryReader = new BinaryReader( new MemoryStream( fileData ) ) ) {
-                binaryReader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            using( var reader = new BinaryReader( new MemoryStream( fileData ) ) ) {
+                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
                 for( var i = 1; i <= partCount; i++ ) {
                     if( i == partCount ) {
-                        var compressedData = Compressor( binaryReader.ReadBytes( remainder ) );
+                        var compressedData = Compressor( reader.ReadBytes( remainder ) );
                         var padding = 128 - ( ( compressedData.Length + 16 ) % 128 );
                         data.Write( 16 );
                         data.Write( 0 );
@@ -98,13 +101,14 @@ namespace VfxEditor.Utils {
                         data.Write( remainder );
                         data.Write( compressedData );
                         data.Write( new byte[padding] );
-                        data.Write( dataOffset );
-                        data.Write( ( short )( ( compressedData.Length + 16 ) + padding ) );
-                        data.Write( ( short )remainder );
+
+                        header.Write( dataOffset );
+                        header.Write( ( short )( ( compressedData.Length + 16 ) + padding ) );
+                        header.Write( ( short )remainder );
                         totalCompSize = dataOffset + ( ( compressedData.Length + 16 ) + padding );
                     }
                     else {
-                        var compressedData = Compressor( binaryReader.ReadBytes( 16000 ) );
+                        var compressedData = Compressor( reader.ReadBytes( 16000 ) );
                         var padding = 128 - ( ( compressedData.Length + 16 ) % 128 );
                         data.Write( 16 );
                         data.Write( 0 );
@@ -112,10 +116,11 @@ namespace VfxEditor.Utils {
                         data.Write( 16000 );
                         data.Write( compressedData );
                         data.Write( new byte[padding] );
-                        data.Write( dataOffset );
-                        data.Write( ( short )( ( compressedData.Length + 16 ) + padding ) );
-                        data.Write( ( short )16000 );
-                        dataOffset += ( ( compressedData.Length + 16 ) + padding );
+
+                        header.Write( dataOffset );
+                        header.Write( ( short )( ( compressedData.Length + 16 ) + padding ) );
+                        header.Write( ( short )16000 );
+                        dataOffset += ( compressedData.Length + 16 ) + padding;
                         remainder -= 16000;
                     }
                 }
@@ -128,9 +133,9 @@ namespace VfxEditor.Utils {
             header.Write( totalCompSize / 128 );
             header.Write( totalCompSize / 128 );
 
-            var headerSize = header.BaseStream.Length;
+            var headerSize = ( int )header.BaseStream.Length;
             var rem = headerSize % 128;
-            if( rem != 0 ) headerSize += ( 128 - rem );
+            if( rem != 0 ) headerSize += 128 - rem;
 
             // Update header size
             header.BaseStream.Seek( 0, SeekOrigin.Begin );

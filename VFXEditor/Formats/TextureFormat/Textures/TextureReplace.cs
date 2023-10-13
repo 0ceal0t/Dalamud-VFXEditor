@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
@@ -208,10 +209,41 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
 
-            using var file = File.Open( WriteLocation, FileMode.Open );
-            using var reader = new BinaryReader( file );
+            byte[] modData;
+            if( GamePath.EndsWith( ".atex" ) ) {
+                // Makes Type 2 Data from .atex header + DDS data
+                modData = TexToolsUtils.CreateType2Data( File.ReadAllBytes( WriteLocation ) );
+            }
+            else {
+                var file = TextureDataFile.LoadFromLocal( WriteLocation );
+                var header = file.Header;
 
-            var modData = TexToolsUtils.CreateType2Data( reader.ReadBytes( ( int )file.Length ) );
+                TextureUtils.GetDdsInfo(
+                    file.GetDdsData(), header.Format, header.Width, header.Height, header.MipLevels,
+                    out var compressed, out var mipPartOffset, out var mipPartCount );
+
+                using var ms = new MemoryStream();
+                using var texWriter = new BinaryWriter( ms );
+
+                // Write Type 4 Data
+                texWriter.Write( TextureUtils.CreateType4Data( header.Format, mipPartOffset, mipPartCount, file.GetDdsData().Length,
+                        header.MipLevels, header.Width, header.Height ) );
+
+                // Write .atex/.tex header
+                var size = Marshal.SizeOf( header );
+                var buffer = new byte[size];
+                var handle = Marshal.AllocHGlobal( size );
+                Marshal.StructureToPtr( header, handle, true );
+                Marshal.Copy( handle, buffer, 0, size );
+                Marshal.FreeHGlobal( handle );
+                texWriter.Write( buffer );
+
+                // Write compressed data
+                texWriter.Write( compressed );
+
+                modData = ms.ToArray();
+            }
+
             simplePartsOut.Add( TexToolsUtils.CreateModResource( GamePath, modOffset, modData.Length ) );
             writer.Write( modData );
             modOffset += modData.Length;

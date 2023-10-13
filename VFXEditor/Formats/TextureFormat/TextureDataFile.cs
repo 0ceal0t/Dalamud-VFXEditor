@@ -103,7 +103,7 @@ namespace VfxEditor.Formats.TextureFormat {
             Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
             Marshal.FreeHGlobal( handle );
 
-            ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..], Header.Format, Header.Width, Header.Height ) );
+            ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..].ToArray(), Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -122,7 +122,7 @@ namespace VfxEditor.Formats.TextureFormat {
             Marshal.FreeHGlobal( handle );
 
             DdsData = br.ReadBytes( localData.Length - HeaderLength );
-            ImageData = BgraToRgba( Convert( new Span<byte>( DdsData ), Header.Format, Header.Width, Header.Height ) );
+            ImageData = BgraToRgba( Convert( DdsData, Header.Format, Header.Width, Header.Height ) );
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -133,35 +133,41 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         // converts various formats to A8R8G8B8
-        public static byte[] Convert( Span<byte> src, TextureFormat format, int width, int height ) {
-            var dst = new byte[width * height * 4];
+        public static byte[] Convert( byte[] data, TextureFormat format, int width, int height ) {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
             switch( format ) {
                 case TextureFormat.DXT1:
-                    DecompressDxt1( src, dst, width, height );
+                    DecompressDxt1( data, writer, width, height );
                     break;
                 case TextureFormat.DXT3:
-                    DecompressDxt3( src, dst, width, height );
+                    DecompressDxt3( data, writer, width, height );
                     break;
                 case TextureFormat.DXT5:
-                    DecompressDxt5( src, dst, width, height );
+                    DecompressDxt5( data, writer, width, height );
                     break;
                 case TextureFormat.A8R8G8B8:
-                    dst = new byte[src.Length];
-                    src.CopyTo( dst );
+                    writer.Write( data ); // already ok
                     break;
                 case TextureFormat.R4G4B4A4:
-                    Read4444( src.ToArray(), dst, width, height );
+                    Read4444( data, writer, width, height );
                     break;
                 case TextureFormat.R5G5B5A1:
-                    Read5551( src.ToArray(), dst, width, height );
+                    Read5551( data, writer, width, height );
                     break;
                 case TextureFormat.A8:
-                    DecompressA8( src, dst, width, height );
+                    DecompressA8( data, writer, width, height );
                     break;
                 default:
                     return Array.Empty<byte>(); // ???
             }
-            return dst;
+
+            var output = ms.ToArray();
+            var result = new byte[width * height * 4];
+            Array.Copy( output, result, Math.Min( output.Length, result.Length ) );
+
+            return result;
         }
 
         public static TextureFormat DXGItoTextureFormat( DXGIFormat format ) {
@@ -196,36 +202,31 @@ namespace VfxEditor.Formats.TextureFormat {
             return ret;
         }
 
-        public static void DecompressA8( Span<byte> src, byte[] dst, int width, int height ) {
+        public static void DecompressA8( byte[] data, BinaryWriter writer, int width, int height ) {
             for( var i = 0; i < width * height; i++ ) {
-                var idx = i * 4;
-                dst[idx + 0] = 0xFF;
-                dst[idx + 1] = 0xFF;
-                dst[idx + 2] = 0xFF;
-                dst[idx + 3] = src[i];
+                writer.Write( ( byte )0xFF );
+                writer.Write( ( byte )0xFF );
+                writer.Write( ( byte )0xFF );
+                writer.Write( data[i] );
             }
         }
 
-        public static void DecompressDxt1( Span<byte> src, byte[] dst, int width, int height ) {
-            var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT1 );
-            Array.Copy( dec, dst, dst.Length );
+        public static void DecompressDxt1( byte[] data, BinaryWriter writer, int width, int height ) {
+            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT1 ) );
         }
 
-        public static void DecompressDxt3( Span<byte> src, byte[] dst, int width, int height ) {
-            var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT3 );
-            Array.Copy( dec, dst, dst.Length );
+        public static void DecompressDxt3( byte[] data, BinaryWriter writer, int width, int height ) {
+            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT3 ) );
         }
 
-        public static void DecompressDxt5( Span<byte> src, byte[] dst, int width, int height ) {
-            var dec = Squish.DecompressImage( src.ToArray(), width, height, SquishOptions.DXT5 );
-            Array.Copy( dec, dst, dst.Length );
+        public static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
+            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
         }
 
-        public static void Read4444( byte[] src, byte[] dst, int width, int height ) {
+        public static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
             using var ms = new MemoryStream( src );
             using var reader = new BinaryReader( ms );
 
-            var idx = 0;
             for( var y = 0; y < height; y++ ) {
                 for( var x = 0; x < width; x++ ) {
                     var pixel = reader.ReadUInt16() & 0xFFFF;
@@ -234,21 +235,18 @@ namespace VfxEditor.Formats.TextureFormat {
                     var red = ( ( pixel & 0xF00 ) >> 8 ) * 16;
                     var alpha = ( ( pixel & 0xF000 ) >> 12 ) * 16;
 
-                    dst[idx * 4 + 0] = ( byte )blue;
-                    dst[idx * 4 + 1] = ( byte )green;
-                    dst[idx * 4 + 2] = ( byte )red;
-                    dst[idx * 4 + 3] = ( byte )alpha;
-
-                    idx++;
+                    writer.Write( ( byte )blue );
+                    writer.Write( ( byte )green );
+                    writer.Write( ( byte )red );
+                    writer.Write( ( byte )alpha );
                 }
             }
         }
 
-        public static void Read5551( byte[] src, byte[] dst, int width, int height ) {
+        public static void Read5551( byte[] src, BinaryWriter writer, int width, int height ) {
             using var ms = new MemoryStream( src );
             using var reader = new BinaryReader( ms );
 
-            var idx = 0;
             for( var y = 0; y < height; y++ ) {
                 for( var x = 0; x < width; x++ ) {
                     var pixel = reader.ReadUInt16() & 0xFFFF;
@@ -257,12 +255,10 @@ namespace VfxEditor.Formats.TextureFormat {
                     var red = ( ( pixel & 0x7C00 ) >> 10 ) * 8;
                     var alpha = ( ( pixel & 0x8000 ) >> 15 ) * 255;
 
-                    dst[idx * 4 + 0] = ( byte )blue;
-                    dst[idx * 4 + 1] = ( byte )green;
-                    dst[idx * 4 + 2] = ( byte )red;
-                    dst[idx * 4 + 3] = ( byte )alpha;
-
-                    idx++;
+                    writer.Write( ( byte )blue );
+                    writer.Write( ( byte )green );
+                    writer.Write( ( byte )red );
+                    writer.Write( ( byte )alpha );
                 }
             }
         }
@@ -289,7 +285,7 @@ namespace VfxEditor.Formats.TextureFormat {
             var data = new RGBAQuad[Header.Height * Header.Width];
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
-                    var idx = ( i * Header.Width + j );
+                    var idx = i * Header.Width + j;
                     data[idx] = new RGBAQuad( ImageData[idx * 4], ImageData[idx * 4 + 1], ImageData[idx * 4 + 2], ImageData[idx * 4 + 3] );
                 }
             }

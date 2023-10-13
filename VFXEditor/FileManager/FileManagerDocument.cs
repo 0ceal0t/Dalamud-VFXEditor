@@ -195,11 +195,11 @@ namespace VfxEditor.FileManager {
         public abstract S GetWorkspaceMeta( string newPath );
 
         public void WorkspaceExport( List<S> meta, string rootPath, string newPath ) {
-            if( CurrentFile != null ) {
-                var newFullPath = Path.Combine( rootPath, newPath );
-                File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
-                meta.Add( GetWorkspaceMeta( newPath ) );
-            }
+            if( CurrentFile == null ) return;
+
+            var newFullPath = Path.Combine( rootPath, newPath );
+            File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
+            meta.Add( GetWorkspaceMeta( newPath ) );
         }
 
         // ====== DRAWING ==========
