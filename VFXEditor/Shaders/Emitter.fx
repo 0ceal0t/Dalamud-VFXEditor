@@ -18,6 +18,8 @@ cbuffer VSConstants : register(b0)
 {
     float4x4 World;
     float4x4 ViewProjection;
+    float4x4 CubeMatrix;
+    float4 Size;
 }
 
 cbuffer PSConstants : register(b0)
@@ -33,7 +35,7 @@ PS_IN VS(VS_IN input)
     PS_IN output = (PS_IN) 0;
 
     float4x4 instanceMatrix = float4x4(input.ir0, input.ir1, input.ir2, input.ir3);
-    float4x4 finalMatrix = mul(instanceMatrix, mul(ViewProjection, World));
+    float4x4 finalMatrix = mul(instanceMatrix, mul(World, ViewProjection));
 
     output.pos = mul(input.pos, finalMatrix);
     output.norm = input.norm;

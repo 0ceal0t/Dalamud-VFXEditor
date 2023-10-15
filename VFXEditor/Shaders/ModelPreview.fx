@@ -28,6 +28,8 @@ cbuffer VSConstants : register(b0)
 {
     float4x4 World;
     float4x4 ViewProjection;
+    float4x4 CubeMatrix;
+    float4 Size;
 }
 
 cbuffer PSConstants : register(b0)

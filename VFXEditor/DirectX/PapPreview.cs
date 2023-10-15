@@ -20,8 +20,7 @@ namespace VfxEditor.DirectX {
         public void LoadEmpty( PapFile file, PapMotion animation ) {
             CurrentFile = file;
             CurrentMotion = animation;
-            NumVertices = 0;
-            Vertices?.Dispose();
+            Model.ClearVertexes();
             UpdateDraw();
         }
 

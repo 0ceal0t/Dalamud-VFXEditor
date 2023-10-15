@@ -1,76 +1,50 @@
 using SharpDX;
-using SharpDX.D3DCompiler;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
-using Buffer = SharpDX.Direct3D11.Buffer;
+using VfxEditor.DirectX.Drawable;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class GradientView : Renderer {
         public AvfxCurve CurrentCurve { get; private set; }
-        public IntPtr Output => RenderShad.NativePointer;
+        public IntPtr Output => ShaderView.NativePointer;
 
         private readonly int Width = 500;
         private readonly int Height = 50;
 
-        private RasterizerState RState;
-        private Texture2D DepthTex;
+        private RasterizerState State;
+        private Texture2D DepthTexture;
         private DepthStencilView DepthView;
-        private Texture2D RenderTex;
-        private ShaderResourceView RenderShad;
+        private Texture2D RenderTexture;
+        private ShaderResourceView ShaderView;
         private RenderTargetView RenderView;
 
-        private static readonly int ModelSpan = 2; // position, color
-        private int NumVerts;
-        private Buffer Vertices;
-        private readonly CompilationResult VertexShaderByteCode;
-        private readonly CompilationResult PixelShaderByteCode;
-        private readonly PixelShader PShader;
-        private readonly VertexShader VShader;
-        private readonly ShaderSignature Signature;
-        private readonly InputLayout Layout;
-
-        public readonly bool ShaderError = false;
+        private readonly DirectXDrawable Gradient;
 
         public GradientView( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             RefreshRasterizeState();
             ResizeResources();
 
-            NumVerts = 0;
-            Vertices = null;
-
-            try {
-                var shaderFile = Path.Combine( shaderPath, "Gradient.fx" );
-                VertexShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "VS", "vs_4_0" );
-                PixelShaderByteCode = ShaderBytecode.CompileFromFile( shaderFile, "PS", "ps_4_0" );
-                VShader = new VertexShader( Device, VertexShaderByteCode );
-                PShader = new PixelShader( Device, PixelShaderByteCode );
-                Signature = ShaderSignature.GetInputSignature( VertexShaderByteCode );
-                Layout = new InputLayout( Device, Signature, new InputElement[] {
+            Gradient = new( device, Path.Combine( shaderPath, "Gradient.fx" ), 2, false, false,
+                new InputElement[] {
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                 } );
-            }
-            catch( Exception e ) {
-                Dalamud.Error( e, "Error compiling shaders" );
-                ShaderError = true;
-            }
         }
 
         public void SetGradient( AvfxCurve curve ) {
             CurrentCurve = curve;
             var numPoints = curve.Keys.Keys.Count;
             if( numPoints < 2 ) {
-                NumVerts = 0;
-                Vertices?.Dispose();
+                Gradient.ClearVertexes();
             }
             else {
-                // each set of 2 keys needs 6 points
-                var data = new Vector4[( numPoints - 1 ) * 6 * ModelSpan];
+                var data = new List<Vector4>();
+
                 float startTime = curve.Keys.Keys[0].Time;
                 float endTime = curve.Keys.Keys[numPoints - 1].Time;
                 var timeDiff = ( endTime - startTime );
@@ -84,40 +58,38 @@ namespace VfxEditor.DirectX {
                     var leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
                     var rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
 
-                    var topLeft = new Vector4( leftPosition, 1, 0, 1 );
-                    var topRight = new Vector4( rightPosition, 1, 0, 1 );
-                    var bottomLeft = new Vector4( leftPosition, -1, 0, 1 );
-                    var bottomRight = new Vector4( rightPosition, -1, 0, 1 );
+                    var topLeftPos = new Vector4( leftPosition, 1, 0, 1 );
+                    var topRightPos = new Vector4( rightPosition, 1, 0, 1 );
+                    var bottomLeftPos = new Vector4( leftPosition, -1, 0, 1 );
+                    var bottomRightPos = new Vector4( rightPosition, -1, 0, 1 );
 
-                    var idx = i * 6 * ModelSpan;
-                    data[idx + 0] = topLeft;
-                    data[idx + 1] = leftColor;
+                    data.Add( topLeftPos );
+                    data.Add( leftColor );
 
-                    data[idx + 2] = topRight;
-                    data[idx + 3] = rightColor;
+                    data.Add( topRightPos );
+                    data.Add( rightColor );
 
-                    data[idx + 4] = bottomRight;
-                    data[idx + 5] = rightColor;
+                    data.Add( bottomRightPos );
+                    data.Add( rightColor );
 
-                    data[idx + 6] = topLeft;
-                    data[idx + 7] = leftColor;
+                    data.Add( topLeftPos );
+                    data.Add( leftColor );
 
-                    data[idx + 8] = bottomRight;
-                    data[idx + 9] = rightColor;
+                    data.Add( bottomRightPos );
+                    data.Add( rightColor );
 
-                    data[idx + 10] = bottomLeft;
-                    data[idx + 11] = leftColor;
+                    data.Add( bottomLeftPos );
+                    data.Add( leftColor );
                 }
-                Vertices?.Dispose();
-                Vertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
-                NumVerts = ( numPoints - 1 ) * 6;
+
+                Gradient.SetVertexes( Device, data.ToArray(), ( numPoints - 1 ) * 6 );
             }
             Draw();
         }
 
         private void RefreshRasterizeState() {
-            RState?.Dispose();
-            RState = new RasterizerState( Device, new RasterizerStateDescription {
+            State?.Dispose();
+            State = new RasterizerState( Device, new RasterizerStateDescription {
                 CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0,
@@ -132,8 +104,8 @@ namespace VfxEditor.DirectX {
         }
 
         private void ResizeResources() {
-            RenderTex?.Dispose();
-            RenderTex = new Texture2D( Device, new Texture2DDescription() {
+            RenderTexture?.Dispose();
+            RenderTexture = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.B8G8R8A8_UNorm,
                 ArraySize = 1,
                 MipLevels = 1,
@@ -145,13 +117,13 @@ namespace VfxEditor.DirectX {
                 CpuAccessFlags = CpuAccessFlags.None,
                 OptionFlags = ResourceOptionFlags.None
             } );
-            RenderShad?.Dispose();
-            RenderShad = new ShaderResourceView( Device, RenderTex );
+            ShaderView?.Dispose();
+            ShaderView = new ShaderResourceView( Device, RenderTexture );
             RenderView?.Dispose();
-            RenderView = new RenderTargetView( Device, RenderTex );
+            RenderView = new RenderTargetView( Device, RenderTexture );
 
-            DepthTex?.Dispose();
-            DepthTex = new Texture2D( Device, new Texture2DDescription() {
+            DepthTexture?.Dispose();
+            DepthTexture = new Texture2D( Device, new Texture2DDescription() {
                 Format = Format.D32_Float_S8X24_UInt,
                 ArraySize = 1,
                 MipLevels = 1,
@@ -164,50 +136,33 @@ namespace VfxEditor.DirectX {
                 OptionFlags = ResourceOptionFlags.None,
             } );
             DepthView?.Dispose();
-            DepthView = new DepthStencilView( Device, DepthTex );
+            DepthView = new DepthStencilView( Device, DepthTexture );
         }
 
         public void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
-            if( !ShaderError ) {
-                Ctx.OutputMerger.SetTargets( DepthView, RenderView );
-                Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
-                Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+            Ctx.OutputMerger.SetTargets( DepthView, RenderView );
+            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
+            Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+            Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
+            Ctx.Rasterizer.State = State;
 
-                Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
-                Ctx.Rasterizer.State = RState;
-
-                if( NumVerts > 0 ) {
-                    Ctx.PixelShader.Set( PShader );
-                    Ctx.VertexShader.Set( VShader );
-                    Ctx.InputAssembler.InputLayout = Layout;
-                    Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-                    Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
-                    Ctx.Draw( NumVerts, 0 );
-                }
-
-                Ctx.Flush();
-            }
+            Gradient.Draw( Ctx, null, null );
+            Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
         public void Dispose() {
-            RState?.Dispose();
-            RenderTex?.Dispose();
-            RenderShad?.Dispose();
+            State?.Dispose();
+            RenderTexture?.Dispose();
+            ShaderView?.Dispose();
             RenderView?.Dispose();
-            DepthTex?.Dispose();
+            DepthTexture?.Dispose();
             DepthView?.Dispose();
 
-            Vertices?.Dispose();
-            Layout?.Dispose();
-            Signature?.Dispose();
-            PShader?.Dispose();
-            VShader?.Dispose();
-            VertexShaderByteCode?.Dispose();
-            PixelShaderByteCode?.Dispose();
+            Gradient?.Dispose();
         }
     }
 }

@@ -3,7 +3,6 @@ using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,35 +54,32 @@ namespace VfxEditor.DirectX {
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
             UpdateDraw();
+
+            Dalamud.Log( $"Loaded wireframe {NumWireframe}" );
         }
 
         public void LoadEmpty( FileManagerFile file ) {
             CurrentFile = file;
-            NumVertices = 0;
             NumWireframe = 0;
             BoneList = new();
-            Vertices?.Dispose();
             WireframeVertices?.Dispose();
+            Model.ClearVertexes();
             UpdateDraw();
         }
 
         public override void OnDraw() {
-            if( ShaderError ) return;
-            if( NumVertices == 0 && NumWireframe == 0 ) return;
+            if( Model.ShaderError ) return;
+            if( Model.Count == 0 && NumWireframe == 0 ) return;
 
-            Ctx.PixelShader.Set( PS );
-            Ctx.GeometryShader.Set( GS );
-            Ctx.VertexShader.Set( VS );
-            Ctx.InputAssembler.InputLayout = Layout;
-            Ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-            Ctx.VertexShader.SetConstantBuffer( 0, VSBuffer );
-            Ctx.PixelShader.SetConstantBuffer( 0, PSBuffer );
+            Model.SetupCtx( Ctx, VertexShaderBuffer, PixelShaderBuffer );
 
-            if( NumVertices > 0 ) {
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Vertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
-                Ctx.Draw( NumVertices, 0 );
+            if( Model.Count > 0 ) {
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Model.Data, Utilities.SizeOf<Vector4>() * Model.Span, 0 ) );
+                Ctx.Draw( Model.Count, 0 );
                 Ctx.Flush();
             }
+
+            Ctx.Flush();
 
             if( NumWireframe > 0 ) {
                 // Kind of jank, but oh well
@@ -102,7 +98,7 @@ namespace VfxEditor.DirectX {
 
                 Ctx.Rasterizer.State = wireframe;
 
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( WireframeVertices, Utilities.SizeOf<Vector4>() * ModelSpan, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( WireframeVertices, Utilities.SizeOf<Vector4>() * 3, 0 ) );
                 Ctx.Draw( NumWireframe, 0 );
                 Ctx.Flush();
 

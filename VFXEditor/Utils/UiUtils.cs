@@ -332,5 +332,9 @@ namespace VfxEditor.Utils {
         public static Vector3 ToDegrees( Vector3 value ) => new( ToDegrees( value.X ), ToDegrees( value.Y ), ToDegrees( value.Z ) );
 
         public static float ToDegrees( float value ) => ( float )( ( 180 / Math.PI ) * value );
+
+        public static bool MouseOver( Vector2 start, Vector2 end ) => Contains( start, end, ImGui.GetIO().MousePos );
+
+        public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
     }
 }

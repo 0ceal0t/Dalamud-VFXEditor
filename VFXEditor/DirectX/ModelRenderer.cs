@@ -1,10 +1,15 @@
+using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
 using OtterGui.Raii;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using VfxEditor.DirectX.Drawable;
+using VfxEditor.Utils;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
@@ -14,6 +19,8 @@ namespace VfxEditor.DirectX {
     public struct VSBufferStruct {
         public Matrix World;
         public Matrix ViewProjection;
+        public Matrix CubeMatrix;
+        public Vector4 Size;
     }
 
     [StructLayout( LayoutKind.Sequential )]
@@ -37,30 +44,51 @@ namespace VfxEditor.DirectX {
 
         protected int Width = 300;
         protected int Height = 300;
-        protected Matrix ViewMatrix;
         protected bool FirstModel = false;
 
-        protected RasterizerState RasterizeState;
-        protected Buffer VSBuffer;
-        protected Buffer PSBuffer;
+        protected Matrix ViewMatrix;
         protected Matrix ProjMatrix;
+        protected Matrix CubeMatrix;
 
+        protected RasterizerState RasterizeState;
+        protected Buffer VertexShaderBuffer;
+        protected Buffer PixelShaderBuffer;
         protected Texture2D RenderTex;
         protected ShaderResourceView RenderShad;
         protected RenderTargetView RenderView;
-
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
 
         public Vec2 LastSize = new( 100, 100 );
         public Vec2 LastMid = new( 50, 50 );
 
-        public ModelRenderer( Device device, DeviceContext ctx ) : base( device, ctx ) {
-            VSBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            PSBuffer = new Buffer( Device, Utilities.SizeOf<PSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+        protected readonly DirectXDrawable Cube;
+
+        public ModelRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
+            VertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            PixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), Position, Vector3.UnitY );
             RefreshRasterizeState();
             ResizeResources();
+
+            // ======= CUBE ==========
+
+            Cube = new( Device, Path.Combine( shaderPath, "Cube.fx" ), 3, false, false,
+                new InputElement[] {
+                    new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
+                    new InputElement( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
+                } );
+
+            var builder = new MeshBuilder( true, false );
+            builder.AddBox( new( 0 ), 0.7071065f, 0.7071065f, 0.7071065f ); // 24 points total (6 faces * 4 corners)
+
+            var colors = new List<Vector4>();
+            for( var i = 0; i < 24; i++ ) {
+                colors.Add( new( 1, 0, 0, 1 ) ); // TODO: just for testing
+            }
+            var data = FromMeshBuilder( builder, colors, out var cubeCount );
+            Cube.SetVertexes( Device, data, cubeCount );
         }
 
         protected virtual bool Wireframe() => Plugin.Configuration.ModelWireframe;
@@ -91,8 +119,6 @@ namespace VfxEditor.DirectX {
                 if( FirstModel ) Draw();
             }
         }
-
-        protected static int GetIdx( int faceIdx, int pointIdx, int span, int pointsPer ) => span * ( faceIdx * pointsPer + pointIdx );
 
         protected void ResizeResources() {
             ProjMatrix = Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, Width / ( float )Height, 0.1f, 100.0f );
@@ -164,7 +190,9 @@ namespace VfxEditor.DirectX {
         public void UpdateViewMatrix() {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             var lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
+
             ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
+            CubeMatrix = Matrix.LookAtLH( new Vector3( 0 ) - 1 * lookDirection, new Vector3( 0 ), Vector3.UnitY );
             Draw();
         }
 
@@ -186,14 +214,18 @@ namespace VfxEditor.DirectX {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
+            var cubeProj = Matrix.Multiply( CubeMatrix, ProjMatrix );
             var world = LocalMatrix;
 
-            world.Transpose();
             viewProj.Transpose();
+            cubeProj.Transpose();
+            world.Transpose();
 
             var vsBuffer = new VSBufferStruct {
                 World = world,
-                ViewProjection = viewProj
+                ViewProjection = viewProj,
+                CubeMatrix = cubeProj,
+                Size = new( Width, Height, 0, 0 )
             };
 
             var psBuffer = new PSBufferStruct {
@@ -202,8 +234,8 @@ namespace VfxEditor.DirectX {
                 ShowEdges = ShowEdges() ? 1 : 0,
             };
 
-            Ctx.UpdateSubresource( ref vsBuffer, VSBuffer );
-            Ctx.UpdateSubresource( ref psBuffer, PSBuffer );
+            Ctx.UpdateSubresource( ref vsBuffer, VertexShaderBuffer );
+            Ctx.UpdateSubresource( ref psBuffer, PixelShaderBuffer );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
@@ -213,6 +245,7 @@ namespace VfxEditor.DirectX {
             Ctx.Rasterizer.State = RasterizeState;
 
             OnDraw();
+            //Cube.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
 
             Ctx.Flush();
 
@@ -231,10 +264,29 @@ namespace VfxEditor.DirectX {
             var size = ImGui.GetContentRegionAvail();
             Resize( size );
 
+            var pos = ImGui.GetCursorScreenPos();
             ImGui.ImageButton( Output, size, new Vec2( 0, 0 ), new Vec2( 1, 1 ), 0 );
 
             var topLeft = ImGui.GetItemRectMin();
             var bottomRight = ImGui.GetItemRectMax();
+            LastSize = bottomRight - topLeft;
+            LastMid = topLeft + ( LastSize / 2f );
+
+            // ==== RESET =====
+            var drawList = ImGui.GetWindowDrawList();
+            var resetSize = new Vec2( 43, 25 );
+            var resetPos = pos + new Vec2( LastSize.X - resetSize.X - 10, 10 );
+            var resetHovered = UiUtils.MouseOver( resetPos, resetPos + resetSize );
+            drawList.AddRectFilled( resetPos, resetPos + resetSize, ImGui.GetColorU32( resetHovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
+            drawList.AddText( resetPos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), "Reset" );
+            if( resetHovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
+                LastMousePos = default;
+                Yaw = default;
+                Pitch = default;
+                Position = new( 0, 0, 0 );
+                Distance = 5;
+                UpdateViewMatrix();
+            }
 
             if( CanDrag() && ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
                 var delta = ImGui.GetMouseDragDelta();
@@ -248,12 +300,10 @@ namespace VfxEditor.DirectX {
             }
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
-
-            LastSize = bottomRight - topLeft;
-            LastMid = topLeft + ( LastSize / 2f );
         }
 
         public abstract void OnDispose();
+
         public void Dispose() {
             RasterizeState?.Dispose();
             RenderTex?.Dispose();
@@ -261,10 +311,41 @@ namespace VfxEditor.DirectX {
             RenderView?.Dispose();
             DepthTex?.Dispose();
             DepthView?.Dispose();
-            VSBuffer?.Dispose();
-            PSBuffer?.Dispose();
+            VertexShaderBuffer?.Dispose();
+            PixelShaderBuffer?.Dispose();
 
+            Cube?.Dispose();
             OnDispose();
+        }
+
+        public static Vector4[] FromMeshBuilder( MeshBuilder builder, List<Vector4> colors, out int indexCount ) {
+            var useColors = colors != null;
+
+            var mesh = builder.ToMesh();
+            mesh.Normals = mesh.CalculateNormals();
+            var normals = mesh.Normals;
+            var positions = mesh.Positions;
+            var indexes = mesh.Indices;
+
+            var data = new List<Vector4>();
+
+            for( var idx = 0; idx < indexes.Count; idx++ ) {
+                var pointIdx = indexes[idx];
+                var position = positions[pointIdx];
+                var normal = normals[pointIdx];
+
+                data.Add( new( position.X, position.Y, position.Z, 1 ) ); // POSITION
+
+                if( useColors ) {
+                    var color = colors[pointIdx];
+                    data.Add( new( color.X, color.Y, color.Z, color.W ) ); // COLOR
+                }
+
+                data.Add( new( normal.X, normal.Y, normal.Z, 0 ) ); // NORMAL
+            }
+
+            indexCount = indexes.Count;
+            return data.ToArray();
         }
     }
 }

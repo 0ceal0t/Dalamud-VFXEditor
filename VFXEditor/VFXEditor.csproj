@@ -180,6 +180,9 @@
         <None Update="Files\vorbis_header.bin">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Shaders\Cube.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Shaders\Emitter.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
