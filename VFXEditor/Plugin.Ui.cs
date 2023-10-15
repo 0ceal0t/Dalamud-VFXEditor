@@ -36,12 +36,7 @@ namespace VfxEditor {
 
             CopyManager.FinalizeAll();
 
-            if( Configuration.AutosaveEnabled && Configuration.AutosaveSeconds > 10 && !string.IsNullOrEmpty( CurrentWorkspaceLocation ) &&
-                ( DateTime.Now - LastAutoSave ).TotalSeconds > Configuration.AutosaveSeconds ) {
-                LastAutoSave = DateTime.Now;
-                Dalamud.Log( "Autosaving workspace..." );
-                SaveWorkspace();
-            }
+            CheckAutoSave();
 
             if( ModalsToOpen.Count > 0 ) {
                 foreach( var title in ModalsToOpen ) ImGui.OpenPopup( title );

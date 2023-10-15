@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
 using System.Threading.Tasks;
 using VfxEditor.Utils;
 
@@ -22,6 +23,8 @@ namespace VfxEditor {
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
+        public static bool Saving { get; private set; } = false;
+        private static SemaphoreSlim SavingLock = new( 1, 1 );
 
         // Havok init and texture wrap dispose
         public static Action OnMainThread;
@@ -46,6 +49,20 @@ namespace VfxEditor {
             }
 
             return false;
+        }
+
+        private static void CheckAutoSave() {
+            if( !Configuration.AutosaveEnabled || Configuration.AutosaveSeconds < 10 ) return;
+            if( ( DateTime.Now - LastAutoSave ).TotalSeconds <= Configuration.AutosaveSeconds ) return;
+
+            LastAutoSave = DateTime.Now;
+
+            // Try the next time
+            if( Saving ) return;
+            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) return;
+
+            Dalamud.Log( "Autosaving workspace..." );
+            SaveWorkspace();
         }
 
         private static async void NewWorkspace() {
@@ -80,9 +97,9 @@ namespace VfxEditor {
 
         private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_TEMP" ), true );
 
-        private static async void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
+        private static void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
             State = WorkspaceState.Loading;
-            await Task.Run( async () => {
+            Task.Run( async () => {
                 await Task.Delay( 100 );
                 if( unzip ) ZipFile.ExtractToDirectory( loadLocation, tempDir, true );
 
@@ -143,41 +160,52 @@ namespace VfxEditor {
         // =================================
 
         private static void SaveWorkspace() {
-            Dalamud.Log( "Saving workspace..." );
-
-            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) {
-                SaveAsWorkspace();
-            }
-            else {
-                ExportWorkspace();
-            }
+            if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) SaveAsWorkspace();
+            else ExportWorkspace();
         }
 
         private static void SaveAsWorkspace() {
             FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
-                CurrentWorkspaceLocation = res;
-                ExportWorkspace();
+                ExportWorkspace( res );
+                Configuration.AddRecentWorkspace( res );
             } );
         }
 
-        private static async void ExportWorkspace() {
-            await Task.Run( () => {
-                var saveLocation = Path.Combine( Path.GetDirectoryName( CurrentWorkspaceLocation ), "VFX_WORKSPACE_TEMP" );
-                Directory.CreateDirectory( saveLocation );
+        private static void ExportWorkspace( string newLocation = null ) {
+            Task.Run( async () => {
+                if( !await SavingLock.WaitAsync( 1000 ) ) {
+                    Dalamud.Error( "Could not get saving lock" );
+                    return;
+                }
+                Saving = true;
 
-                var meta = new Dictionary<string, string>();
-                Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
+                try {
+                    var workspaceLocation = string.IsNullOrEmpty( newLocation ) ? CurrentWorkspaceLocation : newLocation;
 
-                var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
-                var metaString = JsonConvert.SerializeObject( meta );
-                File.WriteAllText( metaPath, metaString );
+                    var saveLocation = Path.Combine( Path.GetDirectoryName( workspaceLocation ), "VFX_WORKSPACE_TEMP" );
+                    Directory.CreateDirectory( saveLocation );
 
-                if( File.Exists( CurrentWorkspaceLocation ) ) File.Delete( CurrentWorkspaceLocation );
-                ZipFile.CreateFromDirectory( saveLocation, CurrentWorkspaceLocation );
-                Directory.Delete( saveLocation, true );
+                    var meta = new Dictionary<string, string>();
+                    Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
 
-                UiUtils.OkNotification( "Saved workspace" );
+                    var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
+                    var metaString = JsonConvert.SerializeObject( meta );
+                    File.WriteAllText( metaPath, metaString );
+
+                    if( File.Exists( workspaceLocation ) ) File.Delete( workspaceLocation );
+                    ZipFile.CreateFromDirectory( saveLocation, workspaceLocation );
+                    Dalamud.Log( $"Saved to {saveLocation}" );
+                    Directory.Delete( saveLocation, true );
+
+                    CurrentWorkspaceLocation = workspaceLocation;
+                }
+                catch( Exception ex ) {
+                    Dalamud.Error( ex, "Error saving workspace" );
+                }
+
+                SavingLock.Release(); // Make sure to release!
+                Saving = false;
             } );
         }
     }
