@@ -20,7 +20,6 @@ namespace VfxEditor.DirectX {
         public Matrix World;
         public Matrix ViewProjection;
         public Matrix CubeMatrix;
-        public Vector4 Size;
     }
 
     [StructLayout( LayoutKind.Sequential )]
@@ -81,12 +80,13 @@ namespace VfxEditor.DirectX {
                 } );
 
             var builder = new MeshBuilder( true, false );
-            builder.AddBox( new( 0 ), 0.7071065f, 0.7071065f, 0.7071065f ); // 24 points total (6 faces * 4 corners)
+            builder.AddBox( new( 0 ), 0.44f, 0.44f, 0.44f ); // 24 points total (6 faces * 4 corners)
 
             var colors = new List<Vector4>();
-            for( var i = 0; i < 24; i++ ) {
-                colors.Add( new( 1, 0, 0, 1 ) ); // TODO: just for testing
-            }
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 1, 0, 0, 1 ) );
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 1, 0, 1 ) );
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 0, 1, 1 ) );
+
             var data = FromMeshBuilder( builder, colors, out var cubeCount );
             Cube.SetVertexes( Device, data, cubeCount );
         }
@@ -225,7 +225,6 @@ namespace VfxEditor.DirectX {
                 World = world,
                 ViewProjection = viewProj,
                 CubeMatrix = cubeProj,
-                Size = new( Width, Height, 0, 0 )
             };
 
             var psBuffer = new PSBufferStruct {
@@ -245,8 +244,10 @@ namespace VfxEditor.DirectX {
             Ctx.Rasterizer.State = RasterizeState;
 
             OnDraw();
-            //Cube.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
+            Ctx.Flush();
 
+            Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, 80, 80, 0.0f, 1.0f ) );
+            Cube.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
             Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
@@ -275,7 +276,7 @@ namespace VfxEditor.DirectX {
             // ==== RESET =====
             var drawList = ImGui.GetWindowDrawList();
             var resetSize = new Vec2( 43, 25 );
-            var resetPos = pos + new Vec2( LastSize.X - resetSize.X - 10, 10 );
+            var resetPos = pos + new Vec2( LastSize.X - resetSize.X - 5, 5 );
             var resetHovered = UiUtils.MouseOver( resetPos, resetPos + resetSize );
             drawList.AddRectFilled( resetPos, resetPos + resetSize, ImGui.GetColorU32( resetHovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
             drawList.AddText( resetPos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), "Reset" );

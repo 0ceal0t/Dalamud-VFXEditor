@@ -195,7 +195,7 @@ namespace VfxEditor {
 
                     if( File.Exists( workspaceLocation ) ) File.Delete( workspaceLocation );
                     ZipFile.CreateFromDirectory( saveLocation, workspaceLocation );
-                    Dalamud.Log( $"Saved to {saveLocation}" );
+                    Dalamud.Log( $"Saved to {workspaceLocation}" );
                     Directory.Delete( saveLocation, true );
 
                     CurrentWorkspaceLocation = workspaceLocation;
