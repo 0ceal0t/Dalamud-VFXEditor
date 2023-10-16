@@ -24,7 +24,7 @@ namespace VfxEditor {
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
         public static bool Saving { get; private set; } = false;
-        private static SemaphoreSlim SavingLock = new( 1, 1 );
+        private static readonly SemaphoreSlim SavingLock = new( 1, 1 );
 
         // Havok init and texture wrap dispose
         public static Action OnMainThread;
@@ -95,7 +95,7 @@ namespace VfxEditor {
             } );
         }
 
-        private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_TEMP" ), true );
+        private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_IN" ), true );
 
         private static void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
             State = WorkspaceState.Loading;
@@ -175,7 +175,7 @@ namespace VfxEditor {
         private static void ExportWorkspace( string newLocation = null ) {
             Task.Run( async () => {
                 if( !await SavingLock.WaitAsync( 1000 ) ) {
-                    Dalamud.Error( "Could not get saving lock" );
+                    Dalamud.Error( "Could not get lock" );
                     return;
                 }
                 Saving = true;
@@ -183,7 +183,7 @@ namespace VfxEditor {
                 try {
                     var workspaceLocation = string.IsNullOrEmpty( newLocation ) ? CurrentWorkspaceLocation : newLocation;
 
-                    var saveLocation = Path.Combine( Path.GetDirectoryName( workspaceLocation ), "VFX_WORKSPACE_TEMP" );
+                    var saveLocation = Path.Combine( Path.GetDirectoryName( workspaceLocation ), "VFX_WORKSPACE_OUT" );
                     Directory.CreateDirectory( saveLocation );
 
                     var meta = new Dictionary<string, string>();

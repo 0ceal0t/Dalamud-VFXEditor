@@ -80,7 +80,7 @@ namespace VfxEditor.DirectX {
                 } );
 
             var builder = new MeshBuilder( true, false );
-            builder.AddBox( new( 0 ), 0.44f, 0.44f, 0.44f ); // 24 points total (6 faces * 4 corners)
+            builder.AddBox( new( 0 ), 0.42f, 0.42f, 0.42f ); // 24 points total (6 faces * 4 corners)
 
             var colors = new List<Vector4>();
             for( var i = 0; i < 8; i++ ) colors.Add( new( 1, 0, 0, 1 ) );
