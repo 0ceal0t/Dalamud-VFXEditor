@@ -6,6 +6,7 @@ using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
@@ -60,7 +61,12 @@ namespace VfxEditor {
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
-                            OpenWorkspaceAsync( recent.Item2 );
+                            if( File.Exists( recent.Item2 ) ) {
+                                OpenWorkspaceAsync( recent.Item2 );
+                            }
+                            else {
+                                Dalamud.Error( $"{recent.Item2} does not exist" );
+                            }
                             break;
                         }
                     }

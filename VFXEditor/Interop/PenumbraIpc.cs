@@ -40,6 +40,8 @@ namespace VfxEditor.Interop {
         }
 
         public string ResolveDefaultPath( string path ) {
+            if( !PenumbraEnabled ) return "";
+
             try {
                 return ResolveDefaultPathSubscriber.InvokeFunc( path );
             }
@@ -48,6 +50,8 @@ namespace VfxEditor.Interop {
 
         public List<string> GetMods() {
             var ret = new List<string>();
+            if( !PenumbraEnabled ) return ret;
+
             try {
                 var mods = GetModsSubscriber.InvokeFunc();
                 foreach( var m in mods ) {
@@ -60,16 +64,23 @@ namespace VfxEditor.Interop {
         }
 
         public string GetModDirectory() {
+            if( !PenumbraEnabled ) return "";
+
             try {
                 return GetModDirectorySubscriber.InvokeFunc();
 
             }
             catch( Exception ) {
-                return null;
+                return "";
             }
         }
 
         public bool PenumbraFileExists( string path, out string localPath ) {
+            if( !PenumbraEnabled ) {
+                localPath = path;
+                return false;
+            }
+
             localPath = ResolveDefaultPath( path );
             if( path.Equals( localPath ) ) return false;
             if( !string.IsNullOrEmpty( localPath ) ) return true;

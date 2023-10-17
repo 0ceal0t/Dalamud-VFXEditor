@@ -1,11 +1,15 @@
 import sqlite3
 import pandas as pd
 import json
+import re
 
 npc_output = {}
 
+pattern = re.compile("^[md]([0-9]){4}$")
+
 # csv comes from https://rl2.perchbird.dev/Downloads
 # bnpc.json comes from https://gubal.hasura.app/api/rest/bnpc
+# or https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
 # ======= RESLOGGER =========
 
@@ -15,6 +19,9 @@ with open("CurrentPathList") as f:
 
         _id = ""
         _type = ""
+
+        if (not path.startswith('vfx/')) and (not path.startswith('chara/')):
+            continue
 
         if ('vfx/monster' in path or 'vfx/demihuman' in path) and '.avfx' in path:
             _id = path.split("/")[2]
@@ -28,7 +35,7 @@ with open("CurrentPathList") as f:
         else:
             continue
 
-        if 'gimmick' in _id:
+        if not pattern.match(_id):
             continue
 
         if _id not in npc_output:
@@ -74,7 +81,6 @@ for fullpath in fullpaths:
         f = ""
         if b'/' in filedict[_f2]:
             f = filedict[_f2] # already has a path for some reason
-            #print(f)
         else:
             f = folderdict[_f1] + b'/' + filedict[_f2]
         _fullPaths.append(f)
@@ -85,20 +91,25 @@ for fullpath in _fullPaths:
     _id = "" # d1024 or something
     _type = "" # vfx, tmp, pap
 
-    if (b'monster' in fullpath or b'demihuman' in fullpath) and b'.avfx' in fullpath:
-        _id = fullpath.split(b"/")[2].decode("utf-8") # vfx/monster/d1024/eff/d1024sp_13c1s.avfx
+    path = fullpath.decode("ascii")
+
+    if (not path.startswith('vfx/')) and (not path.startswith('chara/')):
+        continue
+
+    if ('monster' in path or 'demihuman' in path) and '.avfx' in path:
+        _id = path.split("/")[2]
         _type = "vfx"
-    elif (b'monster' in fullpath or b'demihuman' in fullpath) and b'.pap' in fullpath:
-        _id = fullpath.split(b"/")[2].decode("utf-8") # chara/demihuman/d1025/animation/a0001/bt_common/mon_sp/d1025/mon_sp001.pap
+    elif ('monster' in path or 'demihuman' in path) and '.pap' in path:
+        _id = path.split("/")[2]
         _type = "pap"
-    elif b'mon_sp' in fullpath and b'.tmb' in fullpath:
-        _id = fullpath.split(b"/")[3].decode("utf-8") # chara/action/mon_sp/c0101/show/mon_sp001.tmb
+    elif 'mon_sp' in path and '.tmb' in path:
+        _id = path.split("/")[3]
         _type = "tmb"
     else:
         continue
 
-    if 'gimmick' in _id:
-            continue
+    if not pattern.match(_id):
+        continue
 
     if _id not in npc_output:
         npc_output[_id] = { # default for row
@@ -107,10 +118,9 @@ for fullpath in _fullPaths:
             "pap": []
         }
 
-    finalpath = fullpath.decode("utf-8")
-    if finalpath not in npc_output[_id][_type]:
-        delta.append(finalpath + "\n")
-        npc_output[_id][_type].append(finalpath)
+    if path not in npc_output[_id][_type]:
+        delta.append(path + "\n")
+        npc_output[_id][_type].append(path)
 
 cursor.close()
 db.close()

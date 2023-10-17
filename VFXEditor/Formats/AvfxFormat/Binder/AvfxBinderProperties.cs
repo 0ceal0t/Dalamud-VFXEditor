@@ -1,6 +1,7 @@
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Binder;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -10,7 +11,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxEnum<BindPoint> BindPointType = new( "Bind Point Type", "BPT" );
         public readonly AvfxEnum<BindTargetPoint> BindTargetPointType = new( "Bind Target Point Type", "BPTP", value: BindTargetPoint.ByName );
-        public readonly AvfxString BinderName = new( "Name", "Name", true, true );
+        public readonly AvfxBinderPropertiesName BinderName = new();
         public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID", value: 3 );
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
         public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF", value: -1 );

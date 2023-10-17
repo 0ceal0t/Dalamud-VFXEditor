@@ -48,6 +48,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
 
         public readonly AvfxCurve VelocityRandomX = new( "Velocity Random X", "VRX" );
+        public readonly AvfxCurve VelocityRandomY = new( "Velocity Random Y", "VRY" );
         public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
         public AvfxData Data;
 
@@ -104,6 +105,7 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngleZ,
                 InjectionAngleRandomZ,
                 VelocityRandomX,
+                VelocityRandomY,
                 VelocityRandomZ
             };
             Sound.SetAssigned( false );
@@ -128,6 +130,8 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngleRandomY,
                 InjectionAngleZ,
                 InjectionAngleRandomZ,
+                VelocityRandomX,
+                VelocityRandomY,
                 VelocityRandomZ
             } );
 
