@@ -7,7 +7,7 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public CopyManager GetCopyManager();
 
-        public CommandManager GetCommandManager();
+        public CommandManager GetCurrentCommandManager();
 
         public ManagerConfiguration GetConfig();
 

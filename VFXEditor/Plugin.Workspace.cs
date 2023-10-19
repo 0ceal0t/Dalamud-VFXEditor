@@ -70,7 +70,7 @@ namespace VfxEditor {
             await Task.Run( async () => {
                 await Task.Delay( 100 );
                 WorkspaceFileCount = Managers.Count - 1;
-                foreach( var manager in Managers.Where( x => x != null ) ) { manager.Default(); }
+                foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
@@ -128,7 +128,7 @@ namespace VfxEditor {
 
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
             foreach( var manager in Managers.Where( x => x != null ) ) {
-                manager.Dispose();
+                manager.Reset();
                 manager.WorkspaceImport( meta, loadLocation );
             }
 

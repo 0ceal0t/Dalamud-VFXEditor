@@ -14,6 +14,7 @@ namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<R, S> : IFileDocument where R : FileManagerFile {
         public R CurrentFile { get; protected set; }
         protected VerifiedStatus Verified => CurrentFile == null ? VerifiedStatus.UNKNOWN : CurrentFile.Verified;
+        public bool Unsaved => CurrentFile != null && CurrentFile.Unsaved;
 
         public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
         protected string Name = "";
@@ -34,7 +35,6 @@ namespace VfxEditor.FileManager {
 
         protected readonly FileManagerBase Manager;
 
-        public bool Unsaved = false;
         protected DateTime LastUpdate = DateTime.Now;
 
         public FileManagerDocument( FileManagerBase manager, string writeLocation ) {
@@ -116,7 +116,6 @@ namespace VfxEditor.FileManager {
             CurrentFile?.Dispose();
             CurrentFile = null;
             Source = null;
-            Unsaved = false;
         }
 
         public void SetReplace( SelectResult result ) { Replace = result; }
@@ -136,7 +135,6 @@ namespace VfxEditor.FileManager {
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
             LastUpdate = DateTime.Now;
-            Unsaved = false;
 
             CurrentFile?.Update();
 
@@ -207,8 +205,8 @@ namespace VfxEditor.FileManager {
         public virtual void CheckKeybinds() {
             if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
             if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
-            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Undo();
-            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCommandManager()?.Redo();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) Manager.GetCurrentCommandManager()?.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCurrentCommandManager()?.Redo();
         }
 
         public void Draw() {

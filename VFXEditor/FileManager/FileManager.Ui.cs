@@ -43,7 +43,7 @@ namespace VfxEditor.FileManager {
                 }
                 else {
                     GetCopyManager().Draw();
-                    GetCommandManager().Draw();
+                    GetCurrentCommandManager().Draw();
                 }
 
                 DrawEditMenuItems();

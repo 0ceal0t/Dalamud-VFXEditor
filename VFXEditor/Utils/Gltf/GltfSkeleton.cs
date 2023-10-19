@@ -1,3 +1,4 @@
+using OtterGui;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
@@ -17,7 +18,7 @@ namespace VfxEditor.Utils.Gltf {
             var nodes = model.LogicalNodes;
 
             var newNames = new Dictionary<string, SklbBone>();
-            var currentNames = currentBones.Select( x => x.Name.Value ).ToList();
+            var currentNames = currentBones.WithIndex().ToDictionary( x => x.Value.Name.Value, x => x.Index );
 
             var boneToNode = new Dictionary<SklbBone, Node>();
             var nodeToBone = new Dictionary<Node, SklbBone>();
@@ -39,7 +40,6 @@ namespace VfxEditor.Utils.Gltf {
                 bone.Scale.Value = new( scl.X, scl.Y, scl.Z, 0 );
                 bone.Name.Value = name;
 
-                newNames[name] = bone;
                 newBones.Add( bone );
 
                 boneToNode[bone] = node;
@@ -54,32 +54,33 @@ namespace VfxEditor.Utils.Gltf {
                 }
             }
 
-            // Try to match imported bone indexes to the current ones as much as possible
-            // Otherwise the indexes can be mismatched and break the preview, so this just makes it nicer
             var unusedBones = new List<SklbBone>();
-            unusedBones.AddRange( newBones );
             var finalBones = new List<SklbBone>();
+            for( var i = 0; i < currentBones.Count; i++ ) finalBones.Add( null );
 
-            for( var i = 0; i < newBones.Count; i++ ) {
-                if( i >= currentNames.Count ) {
-                    finalBones.Add( null );
+            // Fill slots with bones with the same name
+            foreach( var bone in newBones ) {
+                if( !currentNames.TryGetValue( bone.Name.Value, out var idx ) ) {
+                    // Could not find index to replace
+                    unusedBones.Add( bone );
                     continue;
                 }
-
-                var bone = newNames.TryGetValue( currentNames[i], out var newBone ) ? newBone : null;
-                if( bone != null ) unusedBones.Remove( bone ); // Found a bone with the same name, use the same index
-                finalBones.Add( bone );
+                finalBones[idx] = bone;
             }
 
-            // Fill in the remaining slots
+            // Fill missing slots as best as possible
             for( var i = 0; i < finalBones.Count; i++ ) {
                 if( finalBones[i] != null ) continue;
-                var bone = unusedBones[0];
-                finalBones[i] = bone;
-                unusedBones.Remove( bone );
+                if( unusedBones.Count == 0 ) break;
+
+                finalBones[i] = unusedBones[0];
+                unusedBones.RemoveAt( 0 );
             }
 
-            return finalBones;
+            // Add the remaining ones that couldn't be placed
+            finalBones.AddRange( unusedBones );
+
+            return finalBones.Where( x => x != null ).ToList();
         }
 
         public static void ExportSkeleton( List<SklbBone> skeletonBones, string path ) {

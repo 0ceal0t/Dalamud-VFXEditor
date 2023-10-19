@@ -27,7 +27,7 @@ namespace VfxEditor.EidFormat {
         public bool BindPointsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base( new CommandManager( Plugin.EidManager, () => Plugin.EidManager.CurrentFile?.Updated() ) ) {
+        public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base( Plugin.EidManager, () => Plugin.EidManager.CurrentFile?.Updated() ) {
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
             Version2 = reader.ReadInt16();

@@ -33,7 +33,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base( new( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) ) {
+        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) {
             Version.Read( reader );
 
             if( Version.Value > 0 ) {

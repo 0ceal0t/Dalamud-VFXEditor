@@ -27,7 +27,7 @@ namespace VfxEditor.PapFormat {
 
         protected override void OnOk() {
             var animation = new PapAnimation( File, File.HkxTempLocation );
-            animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ), File.Command );
+            animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
 
             var command = new CompoundCommand();
             command.Add( new PapAnimationAddCommand( File, File.Animations, animation ) );

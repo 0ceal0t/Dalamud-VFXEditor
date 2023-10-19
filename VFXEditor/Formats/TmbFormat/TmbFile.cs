@@ -32,9 +32,9 @@ namespace VfxEditor.TmbFormat {
         private readonly List<Tmtr> UnusedTracks;
         private readonly UiSplitView<Tmtr> UnusedTrackView;
 
-        public TmbFile( BinaryReader binaryReader, bool verify ) : this( binaryReader, new( Plugin.TmbManager ), verify ) { }
+        public TmbFile( BinaryReader binaryReader, bool verify ) : this( binaryReader, null, verify ) { }
 
-        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool verify ) : base( manager ) {
+        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool verify ) : base( Plugin.TmbManager, manager ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 

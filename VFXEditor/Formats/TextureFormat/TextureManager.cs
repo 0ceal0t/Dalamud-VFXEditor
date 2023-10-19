@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public CopyManager GetCopyManager() => null;
 
-        public CommandManager GetCommandManager() => null;
+        public CommandManager GetCurrentCommandManager() => null;
 
         public ManagerConfiguration GetConfig() => Configuration;
 
@@ -171,9 +171,9 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // ================
 
-        public void Default() => Dispose();
+        public void ToDefault() => Reset();
 
-        public void Dispose() {
+        public void Reset() {
             Textures.Clear();
             Previews.Clear();
 

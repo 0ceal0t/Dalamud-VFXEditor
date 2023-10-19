@@ -28,7 +28,7 @@ namespace VfxEditor.ScdFormat {
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
-        public ScdFile( BinaryReader reader, bool verify ) : base( new( Plugin.ScdManager ) ) {
+        public ScdFile( BinaryReader reader, bool verify ) : base( Plugin.ScdManager ) {
             Header = new( reader );
             OffsetsHeader = new( reader );
 

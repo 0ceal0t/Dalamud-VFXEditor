@@ -42,7 +42,7 @@ namespace VfxEditor.UldFormat {
         public readonly CommandDropdown<UldTimeline> TimelineDropdown;
         public readonly CommandDropdown<UldWidget> WidgetDropdown;
 
-        public UldFile( BinaryReader reader, bool verify ) : base( new CommandManager( Plugin.UldManager ) ) {
+        public UldFile( BinaryReader reader, bool verify ) : base( Plugin.UldManager ) {
             var pos = reader.BaseStream.Position;
             Header = new( reader ); // uldh 0100
 

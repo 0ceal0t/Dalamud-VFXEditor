@@ -2,7 +2,6 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Utils;
@@ -12,38 +11,20 @@ namespace VfxEditor.FileManager {
         public T ActiveDocument { get; protected set; } = null;
         public R CurrentFile => ActiveDocument?.CurrentFile;
 
-        protected readonly string Title;
-        private readonly string Extension;
-        private readonly string WorkspaceKey;
-        private readonly string WorkspacePath;
-
-        public readonly ManagerConfiguration Configuration;
-        public readonly CopyManager Copy = new();
-
         private int DOC_ID = 0;
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
 
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
         public readonly List<T> Documents = new();
 
-        public SelectDialog SourceSelect { get; protected set; }
-        public SelectDialog ReplaceSelect { get; protected set; }
-
         public FileManager( string title, string id ) : this( title, id, id.ToLower(), id, id ) { }
 
-        public FileManager( string title, string id, string extension, string workspaceKey, string workspacePath ) : base( title, id ) {
-            Title = title;
-            Extension = extension;
-            WorkspaceKey = workspaceKey;
-            WorkspacePath = workspacePath;
-            Configuration = Plugin.Configuration.GetManagerConfig( Id );
+        public FileManager( string title, string id, string extension, string workspaceKey, string workspacePath ) : base( title, id, extension, workspaceKey, workspacePath ) {
             AddDocument();
             DocumentWindow = new( title, this );
         }
 
-        public override CopyManager GetCopyManager() => Copy;
-        public override CommandManager GetCommandManager() => CurrentFile?.Command;
-        public override ManagerConfiguration GetConfig() => Configuration;
+        public override CommandManager GetCurrentCommandManager() => CurrentFile?.Command;
 
         // ===================
 
@@ -52,14 +33,10 @@ namespace VfxEditor.FileManager {
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
-        public override void ShowSource() => SourceSelect?.Show();
-
         public override void SetReplace( SelectResult result ) {
             ActiveDocument?.SetReplace( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
-
-        public override void ShowReplace() => ReplaceSelect?.Show();
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
@@ -68,10 +45,6 @@ namespace VfxEditor.FileManager {
         }
 
         // ====================
-
-        public override void Unsaved() {
-            if( ActiveDocument != null ) ActiveDocument.Unsaved = true;
-        }
 
         protected abstract T GetNewDocument();
 
@@ -141,12 +114,12 @@ namespace VfxEditor.FileManager {
 
         public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
 
-        public void Default() {
-            Dispose();
+        public void ToDefault() {
+            Reset();
             AddDocument();
         }
 
-        public virtual void Dispose() {
+        public virtual void Reset() {
             Documents.ForEach( x => x.Dispose() );
             Documents.Clear();
             SourceSelect?.Hide();

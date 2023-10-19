@@ -164,7 +164,7 @@ namespace VfxEditor {
             CommandManager.DisposeAll();
 
             TextureManager.FreeLibrary();
-            Managers.ForEach( x => x?.Dispose() );
+            Managers.ForEach( x => x?.Reset() );
             DirectXManager?.Dispose();
 
             WindowSystem.RemoveAllWindows();

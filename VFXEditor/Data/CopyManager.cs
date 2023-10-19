@@ -87,7 +87,7 @@ namespace VfxEditor.Data {
 
         //==================
 
-        public static void FinalizeAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.FinalizePaste( x?.GetCommandManager() ) );
+        public static void FinalizeAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.FinalizePaste( x?.GetCurrentCommandManager() ) );
 
         public static void ResetAll() => Plugin.Managers.ForEach( x => x?.GetCopyManager()?.Reset() );
 

@@ -69,7 +69,7 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandDropdown<ShpkNode> NodeView;
         private readonly CommandSplitView<ShpkAlias> AliasView;
 
-        public ShpkFile( BinaryReader reader, bool verify ) : base( new( Plugin.ShpkManager ) ) {
+        public ShpkFile( BinaryReader reader, bool verify ) : base( Plugin.ShpkManager ) {
             reader.ReadInt32(); // Magic
             Version = reader.ReadUInt32();
             DxMagic = reader.ReadUInt32();
@@ -338,7 +338,7 @@ namespace VfxEditor.Formats.ShpkFormat {
                     using var disabled = ImRaii.Disabled( parameter == null || slot != parameter.StartSlot );
                     using var none = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR, parameter == null );
                     using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
-                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, parameters.Count() > 1 );
+                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, parameters.Count > 1 );
 
                     if( ImGui.Selectable( parameter == null ? "[NONE]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
                         MaterialParameterView.SetSelected( parameter );

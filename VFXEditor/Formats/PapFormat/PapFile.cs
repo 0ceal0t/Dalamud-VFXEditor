@@ -38,7 +38,7 @@ namespace VfxEditor.PapFormat {
 
         public readonly HashSet<nint> Handles = new();
 
-        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base( new( Plugin.PapManager ) ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base( Plugin.PapManager ) {
             SourcePath = sourcePath;
             HkxTempLocation = hkxTemp;
             AnimationsDropdown = new( this, Animations );
@@ -70,7 +70,7 @@ namespace VfxEditor.PapFormat {
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
 
             for( var i = 0; i < numAnimations; i++ ) {
-                Animations[i].ReadTmb( reader, Command );
+                Animations[i].ReadTmb( reader );
                 reader.ReadBytes( Padding( reader.BaseStream.Position, i, numAnimations, ModdedTmbOffset4 ) );
             }
 
@@ -85,6 +85,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Update() {
+            base.Update();
             MotionData?.Write( Handles );
         }
 

@@ -32,7 +32,7 @@ namespace VfxEditor.Formats.SkpFormat {
         private readonly SkpLookAt LookAt = new();
         private readonly SkpSlope Slope = new();
 
-        public SkpFile( BinaryReader reader, bool verify ) : base( new( Plugin.SkpManager ) ) {
+        public SkpFile( BinaryReader reader, bool verify ) : base( Plugin.SkpManager ) {
             reader.ReadInt32(); // Magic
             Version = int.Parse( FileUtils.Reverse( Encoding.ASCII.GetString( reader.ReadBytes( 4 ) ) ) );
             Activated.Read( reader );

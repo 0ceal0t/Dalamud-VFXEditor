@@ -11,29 +11,29 @@ namespace VfxEditor {
         public static readonly List<CommandManager> CommandManagers = new();
         public static readonly List<string> FilesToCleanup = new();
 
-        public static CommandManager Avfx => Plugin.AvfxManager?.GetCommandManager();
-        public static CommandManager Pap => Plugin.PapManager?.GetCommandManager();
-        public static CommandManager Scd => Plugin.ScdManager?.GetCommandManager();
-        public static CommandManager Eid => Plugin.EidManager?.GetCommandManager();
-        public static CommandManager Uld => Plugin.UldManager?.GetCommandManager();
-        public static CommandManager Phyb => Plugin.PhybManager?.GetCommandManager();
-        public static CommandManager Sklb => Plugin.SklbManager?.GetCommandManager();
-        public static CommandManager Atch => Plugin.AtchManager?.GetCommandManager();
-        public static CommandManager Skp => Plugin.SkpManager?.GetCommandManager();
-        public static CommandManager Shpk => Plugin.ShpkManager?.GetCommandManager();
+        public static CommandManager Avfx => Plugin.AvfxManager?.GetCurrentCommandManager();
+        public static CommandManager Pap => Plugin.PapManager?.GetCurrentCommandManager();
+        public static CommandManager Scd => Plugin.ScdManager?.GetCurrentCommandManager();
+        public static CommandManager Eid => Plugin.EidManager?.GetCurrentCommandManager();
+        public static CommandManager Uld => Plugin.UldManager?.GetCurrentCommandManager();
+        public static CommandManager Phyb => Plugin.PhybManager?.GetCurrentCommandManager();
+        public static CommandManager Sklb => Plugin.SklbManager?.GetCurrentCommandManager();
+        public static CommandManager Atch => Plugin.AtchManager?.GetCurrentCommandManager();
+        public static CommandManager Skp => Plugin.SkpManager?.GetCurrentCommandManager();
+        public static CommandManager Shpk => Plugin.ShpkManager?.GetCurrentCommandManager();
 
-        public static int Max => Plugin.Configuration.MaxUndoSize;
+        private static int Max => Plugin.Configuration.MaxUndoSize;
         private readonly List<ICommand> CommandBuffer = new();
         private int CommandIndex;
 
         public readonly CopyManager Copy;
-        public readonly FileManagerBase Manager;
+        public readonly FileManagerFile Data;
 
         private readonly Action OnChangeAction;
 
-        public CommandManager( FileManagerBase manager, Action onChangeAction = null ) {
+        public CommandManager( FileManagerFile data, FileManagerBase manager, Action onChangeAction ) {
             CommandManagers.Add( this );
-            Manager = manager;
+            Data = data;
             Copy = manager.GetCopyManager();
             OnChangeAction = onChangeAction;
         }
@@ -46,7 +46,7 @@ namespace VfxEditor {
             while( CommandBuffer.Count > Max ) CommandBuffer.RemoveAt( 0 );
             CommandIndex = CommandBuffer.Count - 1;
             command.Execute();
-            Manager.Unsaved();
+            Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
 
@@ -58,7 +58,7 @@ namespace VfxEditor {
             if( !CanUndo ) return;
             CommandBuffer[CommandIndex].Undo();
             CommandIndex--;
-            Manager.Unsaved();
+            Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
 
@@ -66,7 +66,7 @@ namespace VfxEditor {
             if( !CanRedo ) return;
             CommandIndex++;
             CommandBuffer[CommandIndex].Redo();
-            Manager.Unsaved();
+            Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
 

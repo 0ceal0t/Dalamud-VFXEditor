@@ -43,12 +43,12 @@ namespace VfxEditor.PapFormat {
             Face.Write( writer );
         }
 
-        public void ReadTmb( BinaryReader reader, CommandManager manager ) {
-            Tmb = new TmbFile( reader, manager, false );
+        public void ReadTmb( BinaryReader reader ) {
+            Tmb = new TmbFile( reader, File.Command, false );
         }
 
-        public void ReadTmb( string path, CommandManager manager ) {
-            Tmb = TmbFile.FromPapEmbedded( path, manager );
+        public void ReadTmb( string path ) {
+            Tmb = TmbFile.FromPapEmbedded( path, File.Command );
         }
 
         public byte[] GetTmbBytes() => Tmb.ToBytes();
