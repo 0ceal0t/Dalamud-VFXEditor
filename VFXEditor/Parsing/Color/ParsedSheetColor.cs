@@ -1,12 +1,11 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Color {
-    public class ParsedSheetColor : ParsedSimpleBase<uint, int> {
+    public class ParsedSheetColor : ParsedSimpleBase<uint> {
         private Vector4 CurrentColor => SheetData.UiColors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
 
         public ParsedSheetColor( string name ) : base( name ) {
@@ -47,11 +46,5 @@ namespace VfxEditor.Parsing.Color {
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
         }
-
-        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
-
-        protected override int ToCopy() => ( int )Value;
-
-        protected override uint FromCopy( int val ) => ( uint )val;
     }
 }

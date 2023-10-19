@@ -1,11 +1,9 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.Parsing {
-    public class ParsedInt4 : ParsedSimpleBase<Int4, Int4> {
+    public class ParsedInt4 : ParsedSimpleBase<Int4> {
         public ParsedInt4( string name, Int4 value ) : this( name ) {
             Value = value;
         }
@@ -36,11 +34,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<Int4>( this, value ) );
             }
         }
-
-        protected override Dictionary<string, Int4> GetCopyMap( CopyManager manager ) => manager.Int4s;
-
-        protected override Int4 ToCopy() => Value;
-
-        protected override Int4 FromCopy( Int4 val ) => val;
     }
 }

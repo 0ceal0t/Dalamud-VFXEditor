@@ -1,10 +1,8 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat : ParsedSimpleBase<float, float> {
+    public class ParsedFloat : ParsedSimpleBase<float> {
         public ParsedFloat( string name, float value ) : this( name ) {
             Value = value;
         }
@@ -27,11 +25,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<float>( this, value ) );
             }
         }
-
-        protected override Dictionary<string, float> GetCopyMap( CopyManager manager ) => manager.Floats;
-
-        protected override float ToCopy() => Value;
-
-        protected override float FromCopy( float val ) => val;
     }
 }

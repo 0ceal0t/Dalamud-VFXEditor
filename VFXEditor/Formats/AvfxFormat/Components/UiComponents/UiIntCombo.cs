@@ -25,10 +25,10 @@ namespace VfxEditor.AvfxFormat {
             if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
-            var manager = CopyManager.Avfx;
-            if( manager.IsCopying ) manager.Ints[Name] = Literal.Value;
-            if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) {
-                manager.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
+            var copy = CopyManager.Avfx;
+            if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
+            if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
             }
 
             var value = Literal.Value;

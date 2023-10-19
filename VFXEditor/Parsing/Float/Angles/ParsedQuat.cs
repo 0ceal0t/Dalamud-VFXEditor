@@ -1,13 +1,11 @@
 using OtterGui.Raii;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedQuat : ParsedSimpleBase<Vector3, Vector3> {
+    public class ParsedQuat : ParsedSimpleBase<Vector3> {
         public Quaternion Quat {
             get => ToQuaternion( Value );
             set {
@@ -117,11 +115,5 @@ namespace VfxEditor.Parsing {
 
             return angle;
         }
-
-        protected override Dictionary<string, Vector3> GetCopyMap( CopyManager manager ) => manager.Vector3s;
-
-        protected override Vector3 ToCopy() => Value;
-
-        protected override Vector3 FromCopy( Vector3 val ) => val;
     }
 }

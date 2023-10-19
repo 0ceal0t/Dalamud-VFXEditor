@@ -170,8 +170,8 @@ namespace VfxEditor.AvfxFormat {
 
             // Copy/Paste
             var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) copy.Ints[Name] = Literal.Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
+            if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
+            if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                 copy.PasteCommand.Add( new AvfxNodeSelectCommand<T>( this, newSelected ) );
             }

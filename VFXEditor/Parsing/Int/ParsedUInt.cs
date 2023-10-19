@@ -1,10 +1,8 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedUInt : ParsedSimpleBase<uint, int> {
+    public class ParsedUInt : ParsedSimpleBase<uint> {
         private int Size;
 
         public ParsedUInt( string name, uint value, int size = 4 ) : this( name, size ) {
@@ -41,11 +39,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<uint>( this, ( uint )value ) );
             }
         }
-
-        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
-
-        protected override int ToCopy() => ( int )Value;
-
-        protected override uint FromCopy( int val ) => ( uint )val;
     }
 }

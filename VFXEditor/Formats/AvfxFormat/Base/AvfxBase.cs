@@ -254,10 +254,10 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void AssignedCopyPaste<T>( T assignable, string name ) where T : AvfxBase {
-            var copyManager = CopyManager.Avfx;
-            if( copyManager.IsCopying ) copyManager.Assigned[name] = assignable.IsAssigned();
-            if( copyManager.IsPasting ) {
-                if( copyManager.Assigned.TryGetValue( name, out var a ) ) copyManager.PasteCommand.Add( new AvfxAssignCommand( assignable, a ) );
+            var copy = CopyManager.Avfx;
+            if( copy.IsCopying ) copy.AvfxAssigned[(typeof( T ), name)] = assignable.IsAssigned();
+            if( copy.IsPasting && copy.AvfxAssigned.TryGetValue( (typeof( T ), name), out var val ) ) {
+                copy.PasteCommand.Add( new AvfxAssignCommand( assignable, val ) );
             }
         }
 

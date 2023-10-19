@@ -1,12 +1,10 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Int {
-    public class ParsedIntByte4 : ParsedSimpleBase<int, int> {
+    public class ParsedIntByte4 : ParsedSimpleBase<int> {
         public ParsedIntByte4( string name ) : base( name ) { }
 
         public override void Draw( CommandManager manager ) {
@@ -28,11 +26,5 @@ namespace VfxEditor.Parsing.Int {
         }
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
-
-        protected override int FromCopy( int val ) => val;
-
-        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
-
-        protected override int ToCopy() => Value;
     }
 }

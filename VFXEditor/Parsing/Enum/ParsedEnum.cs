@@ -40,9 +40,9 @@ namespace VfxEditor.Parsing {
         public override void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Ints[Name] = ( int )( object )Value;
-            if( copy.IsPasting && copy.Ints.TryGetValue( Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, ( T )( object )val, ExtraCommand?.Invoke() ) );
+            if( copy.IsCopying ) copy.SetValue( this, Name, Value );
+            if( copy.IsPasting && copy.GetValue<T>( this, Name, out var val ) ) {
+                copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, val, ExtraCommand?.Invoke() ) );
             }
 
             var options = ( T[] )Enum.GetValues( typeof( T ) );

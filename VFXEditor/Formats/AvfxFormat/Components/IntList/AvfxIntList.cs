@@ -64,9 +64,9 @@ namespace VfxEditor.AvfxFormat {
             if( DrawAddButton( this, Name ) ) return;
 
             // Copy/Paste
-            var manager = CopyManager.Avfx;
-            if( manager.IsCopying ) manager.Ints[Name] = Items[0];
-            if( manager.IsPasting && manager.Ints.TryGetValue( Name, out var val ) ) manager.PasteCommand.Add( new AvfxIntListCommand( this, val ) );
+            var copy = CopyManager.Avfx;
+            if( copy.IsCopying ) copy.SetValue( this, Name, Items[0] );
+            if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) copy.PasteCommand.Add( new AvfxIntListCommand( this, val ) );
 
             var value = Items[0];
             if( ImGui.InputInt( Name, ref value ) ) {

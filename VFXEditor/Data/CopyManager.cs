@@ -1,8 +1,7 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Int3 = SharpDX.Int3;
-using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.Data {
     public class CopyManager {
@@ -10,22 +9,33 @@ namespace VfxEditor.Data {
 
         public bool IsCopying { get; private set; }
         public bool IsPasting { get; private set; }
-
-        public readonly Dictionary<string, bool> Assigned = new();
-        public readonly Dictionary<string, bool> Bools = new();
-        public readonly Dictionary<string, int> Ints = new();
-        public readonly Dictionary<string, Int3> Int3s = new();
-        public readonly Dictionary<string, Int4> Int4s = new();
-        public readonly Dictionary<string, float> Floats = new();
-        public readonly Dictionary<string, Vector2> Vector2s = new();
-        public readonly Dictionary<string, Vector3> Vector3s = new();
-        public readonly Dictionary<string, Vector4> Vector4s = new();
-        public readonly Dictionary<string, string> Strings = new();
-        public readonly Dictionary<string, string> Enums = new();
-        public readonly List<Vector4> CurveKeys = new();
         public CompoundCommand PasteCommand { get; private set; } = new();
 
+        public readonly Dictionary<(Type, string), bool> AvfxAssigned = new();
+        public readonly Dictionary<(Type, string), object> Data = new();
+        public readonly List<Vector4> CurveKeys = new();
+
         public CopyManager() { }
+
+        public void ClearCurveKeys() => CurveKeys.Clear();
+
+        public void AddCurveKey( float time, float x, float y, float z ) => CurveKeys.Add( new Vector4( time, x, y, z ) );
+
+        public bool HasCurveKeys() => CurveKeys.Count > 0;
+
+        public void SetValue<R>( object item, string name, R value ) {
+            Data[(item.GetType(), name)] = value;
+        }
+
+        public bool GetValue<R>( object item, string name, out R value ) {
+            value = default;
+            if( !Data.TryGetValue( (item.GetType(), name), out var val ) ) return false;
+            if( val is R valR ) {
+                value = valR;
+                return true;
+            }
+            return false;
+        }
 
         public void Reset() {
             IsCopying = false;
@@ -49,24 +59,9 @@ namespace VfxEditor.Data {
             PasteCommand = new(); // reset
         }
 
-        public void ClearCurveKeys() => CurveKeys.Clear();
-
-        public void AddCurveKey( float time, float x, float y, float z ) => CurveKeys.Add( new Vector4( time, x, y, z ) );
-
-        public bool HasCurveKeys() => CurveKeys.Count > 0;
-
         private void Clear() {
-            Assigned.Clear();
-            Bools.Clear();
-            Ints.Clear();
-            Int3s.Clear();
-            Int4s.Clear();
-            Floats.Clear();
-            Vector2s.Clear();
-            Vector3s.Clear();
-            Vector4s.Clear();
-            Strings.Clear();
-            Enums.Clear();
+            AvfxAssigned.Clear();
+            Data.Clear();
         }
 
         public void Dispose() {

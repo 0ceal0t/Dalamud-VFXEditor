@@ -1,10 +1,8 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedSByte : ParsedSimpleBase<sbyte, int> {
+    public class ParsedSByte : ParsedSimpleBase<sbyte> {
         public ParsedSByte( string name, sbyte value ) : this( name ) {
             Value = value;
         }
@@ -29,12 +27,6 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<sbyte>( this, ( sbyte )value ) );
             }
         }
-
-        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
-
-        protected override int ToCopy() => Value;
-
-        protected override sbyte FromCopy( int val ) => ( sbyte )val;
     }
 }
 

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
@@ -16,7 +15,7 @@ namespace VfxEditor.Parsing {
         public Action<string> Action;
     }
 
-    public class ParsedString : ParsedSimpleBase<string, string> {
+    public class ParsedString : ParsedSimpleBase<string> {
         public readonly List<ParsedStringIcon> Icons;
         public bool HasIcons => Icons?.Count > 0;
         private readonly bool ForceLowerCase;
@@ -91,11 +90,5 @@ namespace VfxEditor.Parsing {
             ImGui.SameLine();
             ImGui.Text( Name );
         }
-
-        protected override Dictionary<string, string> GetCopyMap( CopyManager manager ) => manager.Strings;
-
-        protected override string ToCopy() => Value;
-
-        protected override string FromCopy( string val ) => val;
     }
 }

@@ -1,11 +1,10 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
 
 namespace VfxEditor.Parsing.Sheets {
-    public class ParsedWeaponTimeline : ParsedSimpleBase<ushort, int> {
+    public class ParsedWeaponTimeline : ParsedSimpleBase<ushort> {
         private string CurrentTimeline => SheetData.WeaponTimelines.TryGetValue( Value, out var timeline ) ? timeline : "";
 
         public ParsedWeaponTimeline( string name ) : base( name ) {
@@ -42,11 +41,5 @@ namespace VfxEditor.Parsing.Sheets {
                 if( selected ) ImGui.SetItemDefaultFocus();
             }
         }
-
-        protected override Dictionary<string, int> GetCopyMap( CopyManager manager ) => manager.Ints;
-
-        protected override int ToCopy() => Value;
-
-        protected override ushort FromCopy( int val ) => ( ushort )val;
     }
 }

@@ -1,11 +1,9 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat2 : ParsedSimpleBase<Vector2, Vector2> {
+    public class ParsedFloat2 : ParsedSimpleBase<Vector2> {
         public ParsedFloat2( string name, Vector2 value ) : this( name ) {
             Value = value;
         }
@@ -32,11 +30,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<Vector2>( this, value ) );
             }
         }
-
-        protected override Dictionary<string, Vector2> GetCopyMap( CopyManager manager ) => manager.Vector2s;
-
-        protected override Vector2 ToCopy() => Value;
-
-        protected override Vector2 FromCopy( Vector2 val ) => val;
     }
 }

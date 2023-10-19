@@ -22,8 +22,8 @@ namespace VfxEditor.Parsing {
         public void Draw( CommandManager manager ) {
             // Copy/Paste
             var copy = manager.Copy;
-            if( copy.IsCopying ) copy.Vector4s[Name] = Value;
-            if( copy.IsPasting && copy.Vector4s.TryGetValue( Name, out var val ) ) {
+            if( copy.IsCopying ) copy.SetValue( this, Name, Value );
+            if( copy.IsPasting && copy.GetValue<Vector4>( this, Name, out var val ) ) {
                 var command = new CompoundCommand();
                 command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );

@@ -1,12 +1,10 @@
 using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedIntColor : ParsedSimpleBase<Vector4, Vector4> {
+    public class ParsedIntColor : ParsedSimpleBase<Vector4> {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
         private Vector4 StateBeforeEdit;
@@ -49,11 +47,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<Vector4>( this, StateBeforeEdit, Value ) );
             }
         }
-
-        protected override Dictionary<string, Vector4> GetCopyMap( CopyManager manager ) => manager.Vector4s;
-
-        protected override Vector4 ToCopy() => Value;
-
-        protected override Vector4 FromCopy( Vector4 val ) => val;
     }
 }

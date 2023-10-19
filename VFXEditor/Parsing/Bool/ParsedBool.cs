@@ -1,10 +1,8 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedBool : ParsedSimpleBase<bool, bool> {
+    public class ParsedBool : ParsedSimpleBase<bool> {
         private int Size;
         private int IntValue => Value ? 1 : 0;
 
@@ -42,11 +40,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
             }
         }
-
-        protected override Dictionary<string, bool> GetCopyMap( CopyManager manager ) => manager.Bools;
-
-        protected override bool ToCopy() => Value;
-
-        protected override bool FromCopy( bool val ) => val;
     }
 }

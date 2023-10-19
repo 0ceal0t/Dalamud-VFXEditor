@@ -1,11 +1,9 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
-using VfxEditor.Data;
 
 namespace VfxEditor.Parsing {
-    public class ParsedNullableBool : ParsedSimpleBase<bool?, bool> {
+    public class ParsedNullableBool : ParsedSimpleBase<bool?> {
         private int Size;
 
         public ParsedNullableBool( string name, bool defaultValue, int size = 4 ) : this( name, size ) {
@@ -47,11 +45,5 @@ namespace VfxEditor.Parsing {
                 manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
             }
         }
-
-        protected override Dictionary<string, bool> GetCopyMap( CopyManager manager ) => manager.Bools;
-
-        protected override bool ToCopy() => Value == true;
-
-        protected override bool? FromCopy( bool val ) => val;
     }
 }

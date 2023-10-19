@@ -136,11 +136,11 @@ namespace VfxEditor.AvfxFormat {
             // Copy/Paste
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) {
-                for( var idx = 0; idx < Selected.Count; idx++ ) copy.Ints[$"{Name}_{idx}"] = Literal.GetItems()[idx];
+                for( var idx = 0; idx < Selected.Count; idx++ ) copy.SetValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
             }
             if( copy.IsPasting ) {
                 for( var idx = 0; idx < Selected.Count; idx++ ) {
-                    if( copy.Ints.TryGetValue( "", out var val ) ) {
+                    if( copy.GetValue<int>( this, $"{Name}_{idx}", out var val ) ) {
                         var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                         copy.PasteCommand.Add( new AvfxNodeSelectListCommand<T>( this, newSelected, idx ) );
                     }
