@@ -20,9 +20,7 @@ namespace VfxEditor.Parsing.Color {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             DrawCombo( manager );
             ImGui.SameLine();
             ImGui.Text( Name );
@@ -40,7 +38,7 @@ namespace VfxEditor.Parsing.Color {
 
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );
                 if( ImGui.Selectable( $"----{option.Key}----", selected ) ) {
-                    manager.Add( new ParsedSimpleCommand<uint>( this, option.Key ) );
+                    SetValue( manager, option.Key );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();

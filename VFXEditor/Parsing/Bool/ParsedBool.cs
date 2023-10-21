@@ -6,8 +6,8 @@ namespace VfxEditor.Parsing {
         private int Size;
         private int IntValue => Value ? 1 : 0;
 
-        public ParsedBool( string name, bool value, int size = 4 ) : this( name, size ) {
-            Value = value;
+        public ParsedBool( string name, bool value, int size = 4 ) : base( name, value ) {
+            Size = size;
         }
 
         public ParsedBool( string name, int size = 4 ) : base( name ) {
@@ -32,12 +32,10 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )IntValue );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = Value;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<bool>( this, value ) );
+                SetValue( manager, value );
             }
         }
     }

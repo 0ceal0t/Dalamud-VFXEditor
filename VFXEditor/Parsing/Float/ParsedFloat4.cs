@@ -4,9 +4,7 @@ using System.Numerics;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat4 : ParsedSimpleBase<Vector4> {
-        public ParsedFloat4( string name, Vector4 value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedFloat4( string name, Vector4 value ) : base( name, value ) { }
 
         public ParsedFloat4( string name ) : base( name ) { }
 
@@ -26,12 +24,10 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.W );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = Value;
             if( ImGui.InputFloat4( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<Vector4>( this, value ) );
+                SetValue( manager, value );
             }
         }
     }

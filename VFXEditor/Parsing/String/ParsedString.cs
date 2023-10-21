@@ -24,9 +24,7 @@ namespace VfxEditor.Parsing {
         private DateTime LastEditTime = DateTime.Now;
         private string StateBeforeEdit = "";
 
-        public ParsedString( string name, string value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedString( string name, string value ) : base( name, value ) { }
 
         public ParsedString( string name, List<ParsedStringIcon> icons = null, bool forceLower = false ) : base( name ) {
             Value = "";
@@ -49,6 +47,8 @@ namespace VfxEditor.Parsing {
             DrawIcons();
         }
 
+        protected override void DrawBody( CommandManager manager ) { }
+
         public void DrawInput( CommandManager manager, uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
             CopyPaste( manager );
             using var _ = ImRaii.PushId( Name );
@@ -69,7 +69,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedSimpleCommand<string>( this, StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value ) );
+                SetValue( manager, StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
             }
         }
 

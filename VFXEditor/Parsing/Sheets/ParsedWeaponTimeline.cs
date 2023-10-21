@@ -19,9 +19,7 @@ namespace VfxEditor.Parsing.Sheets {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             DrawCombo( manager );
             ImGui.SameLine();
             ImGui.Text( Name );
@@ -35,7 +33,7 @@ namespace VfxEditor.Parsing.Sheets {
                 var selected = option.Key == Value;
 
                 if( ImGui.Selectable( $"[{option.Key}] {option.Value}", selected ) ) {
-                    manager.Add( new ParsedSimpleCommand<ushort>( this, option.Key ) );
+                    SetValue( manager, option.Key );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();

@@ -3,9 +3,7 @@ using System.IO;
 
 namespace VfxEditor.Parsing {
     public class ParsedSByte : ParsedSimpleBase<sbyte> {
-        public ParsedSByte( string name, sbyte value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedSByte( string name, sbyte value ) : base( name, value ) { }
 
         public ParsedSByte( string name ) : base( name ) { }
 
@@ -19,12 +17,10 @@ namespace VfxEditor.Parsing {
             writer.Write( Value );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<sbyte>( this, ( sbyte )value ) );
+                SetValue( manager, ( sbyte )value );
             }
         }
     }

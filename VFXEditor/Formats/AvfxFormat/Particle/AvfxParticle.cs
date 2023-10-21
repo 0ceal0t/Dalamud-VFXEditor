@@ -230,7 +230,7 @@ namespace VfxEditor.AvfxFormat {
                 TP
             } );
 
-            ParticleVariety.Command = () => {
+            ParticleVariety.Extra = () => {
                 return new AvfxParticleDataCommand( this );
             };
         }

@@ -6,15 +6,13 @@ using VfxEditor.Utils;
 namespace VfxEditor.Parsing {
     public class ParsedEnum<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
-        public Func<ICommand> ExtraCommand; // can be changed later
 
-        public ParsedEnum( string name, T value, Func<ICommand> extraCommand = null, int size = 4 ) : this( name, extraCommand, size ) {
-            Value = value;
+        public ParsedEnum( string name, T value, int size = 4 ) : base( name, value ) {
+            Size = size;
         }
 
-        public ParsedEnum( string name, Func<ICommand> extraCommand = null, int size = 4 ) : base( name ) {
+        public ParsedEnum( string name, int size = 4 ) : base( name ) {
             Size = size;
-            ExtraCommand = extraCommand;
             Value = ( T )( object )0;
         }
 
@@ -37,18 +35,11 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.SetValue( this, Name, Value );
-            if( copy.IsPasting && copy.GetValue<T>( this, Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedEnumCommand<T>( this, val, ExtraCommand?.Invoke() ) );
-            }
-
+        protected override void DrawBody( CommandManager manager ) {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[UNKNOWN]";
-            if( UiUtils.EnumComboBox( Name, text, options, Value, out var newValue ) ) {
-                manager.Add( new ParsedEnumCommand<T>( this, newValue, ExtraCommand?.Invoke() ) );
+            if( UiUtils.EnumComboBox( Name, text, options, Value, out var value ) ) {
+                SetValue( manager, value );
             }
         }
     }

@@ -1,4 +1,3 @@
-using OtterGui.Raii;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
@@ -7,12 +6,9 @@ namespace VfxEditor.Parsing {
 
         public ParsedRadians( string name, float value ) : base( name, value ) { }
 
-        public override void Draw( CommandManager manager ) {
-            using var _ = ImRaii.PushId( Name );
-            CopyPaste( manager );
-
-            if( UiUtils.DrawRadians( Name, Value, out var newValue ) ) {
-                manager.Add( new ParsedSimpleCommand<float>( this, newValue ) );
+        protected override void DrawBody( CommandManager manager ) {
+            if( UiUtils.DrawRadians( Name, Value, out var value ) ) {
+                SetValue( manager, value );
             }
         }
     }

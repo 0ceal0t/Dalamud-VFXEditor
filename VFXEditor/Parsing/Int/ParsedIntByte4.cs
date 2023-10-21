@@ -5,19 +5,9 @@ using System.Linq;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedIntByte4 : ParsedSimpleBase<int> {
+        public ParsedIntByte4( string name, int value ) : base( name, value ) { }
+
         public ParsedIntByte4( string name ) : base( name ) { }
-
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
-            var bytes = BitConverter.GetBytes( Value );
-            var value = bytes.Select( x => ( int )x ).ToArray();
-
-            if( ImGui.InputInt4( Name, ref value[0] ) ) {
-                var newValue = BitConverter.ToInt32( value.Select( x => ( byte )x ).ToArray() );
-                manager.Add( new ParsedSimpleCommand<int>( this, newValue ) );
-            }
-        }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
@@ -26,5 +16,15 @@ namespace VfxEditor.Parsing.Int {
         }
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
+
+        protected override void DrawBody( CommandManager manager ) {
+            var bytes = BitConverter.GetBytes( Value );
+            var value = bytes.Select( x => ( int )x ).ToArray();
+
+            if( ImGui.InputInt4( Name, ref value[0] ) ) {
+                var newValue = BitConverter.ToInt32( value.Select( x => ( byte )x ).ToArray() );
+                SetValue( manager, newValue );
+            }
+        }
     }
 }

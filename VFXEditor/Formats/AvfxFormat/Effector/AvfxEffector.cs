@@ -32,7 +32,7 @@ namespace VfxEditor.AvfxFormat {
                 LoopPointEnd
             };
 
-            EffectorVariety.Command = () => {
+            EffectorVariety.Extra = () => {
                 return new AvfxEffectorDataCommand( this );
             };
 

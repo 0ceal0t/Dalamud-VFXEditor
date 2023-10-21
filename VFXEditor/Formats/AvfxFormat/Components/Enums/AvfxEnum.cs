@@ -5,18 +5,17 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEnum<T> : AvfxLiteral<ParsedEnum<T>, T> where T : Enum {
-        public Func<ICommand> Command {
-            get => Parsed.ExtraCommand;
+        public Func<ICommand> Extra {
+            get => Parsed.Extra;
             set {
-                Parsed.ExtraCommand = value;
+                Parsed.Extra = value;
             }
         }
 
-        public AvfxEnum( string name, string avfxName, T value, Func<ICommand> command = null ) : base( avfxName, new( name, value, command ) ) { }
+        public AvfxEnum( string name, string avfxName, T value ) : base( avfxName, new( name, value ) ) { }
 
-        public AvfxEnum( string name, string avfxName, Func<ICommand> command = null ) : base( avfxName, new( name, command ) ) { }
+        public AvfxEnum( string name, string avfxName ) : base( avfxName, new( name ) ) { }
 
-        // Ignore size here
-        public override void ReadContents( BinaryReader reader, int _ ) => Parsed.Read( reader );
+        public override void ReadContents( BinaryReader reader, int _ ) => Parsed.Read( reader ); // Ignore size here
     }
 }

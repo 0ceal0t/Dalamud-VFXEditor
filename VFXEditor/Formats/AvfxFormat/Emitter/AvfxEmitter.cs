@@ -140,7 +140,7 @@ namespace VfxEditor.AvfxFormat {
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
             ParticleSplit = new( "Create Particles", Particles, this, true );
 
-            EmitterVariety.Command = () => {
+            EmitterVariety.Extra = () => {
                 return new AvfxEmitterDataCommand( this );
             };
 

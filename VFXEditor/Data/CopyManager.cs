@@ -17,11 +17,11 @@ namespace VfxEditor.Data {
 
         public CopyManager() { }
 
-        public void ClearCurveKeys() => CurveKeys.Clear();
+        public bool HasCurveKeys() => CurveKeys.Count > 0;
 
         public void AddCurveKey( float time, float x, float y, float z ) => CurveKeys.Add( new Vector4( time, x, y, z ) );
 
-        public bool HasCurveKeys() => CurveKeys.Count > 0;
+        public void ClearCurveKeys() => CurveKeys.Clear();
 
         public void SetValue<R>( object item, string name, R value ) {
             Data[(item.GetType(), name)] = value;
@@ -30,8 +30,8 @@ namespace VfxEditor.Data {
         public bool GetValue<R>( object item, string name, out R value ) {
             value = default;
             if( !Data.TryGetValue( (item.GetType(), name), out var val ) ) return false;
-            if( val is R valR ) {
-                value = valR;
+            if( val is R v ) {
+                value = v;
                 return true;
             }
             return false;
@@ -54,9 +54,10 @@ namespace VfxEditor.Data {
         public void FinalizePaste( CommandManager manager ) {
             if( manager == null ) return;
             if( !IsPasting ) return;
+
             Clear();
-            manager.Add( PasteCommand ); // execute
-            PasteCommand = new(); // reset
+            manager.Add( PasteCommand );
+            PasteCommand = new();
         }
 
         private void Clear() {

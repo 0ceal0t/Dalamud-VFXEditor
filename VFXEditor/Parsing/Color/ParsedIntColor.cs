@@ -9,9 +9,7 @@ namespace VfxEditor.Parsing {
         private DateTime LastEditTime = DateTime.Now;
         private Vector4 StateBeforeEdit;
 
-        public ParsedIntColor( string name, Vector4 value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedIntColor( string name, Vector4 value ) : base( name, value ) { }
 
         public ParsedIntColor( string name ) : base( name ) { }
 
@@ -31,9 +29,7 @@ namespace VfxEditor.Parsing {
             writer.Write( ( byte )( int )( Value.W * 255f ) );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                 if( !Editing ) {
@@ -44,7 +40,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                manager.Add( new ParsedSimpleCommand<Vector4>( this, StateBeforeEdit, Value ) );
+                SetValue( manager, StateBeforeEdit, Value );
             }
         }
     }

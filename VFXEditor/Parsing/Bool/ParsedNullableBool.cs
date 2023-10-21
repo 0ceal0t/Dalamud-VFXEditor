@@ -6,8 +6,8 @@ namespace VfxEditor.Parsing {
     public class ParsedNullableBool : ParsedSimpleBase<bool?> {
         private int Size;
 
-        public ParsedNullableBool( string name, bool defaultValue, int size = 4 ) : this( name, size ) {
-            Value = defaultValue;
+        public ParsedNullableBool( string name, bool value, int size = 4 ) : base( name, value ) {
+            Size = size;
         }
 
         public ParsedNullableBool( string name, int size = 4 ) : base( name ) {
@@ -17,8 +17,8 @@ namespace VfxEditor.Parsing {
         public override void Read( BinaryReader reader ) => Read( reader, Size );
 
         public override void Read( BinaryReader reader, int size ) {
-            var b = reader.ReadByte();
-            Value = b switch {
+            var value = reader.ReadByte();
+            Value = value switch {
                 0x00 => false,
                 0x01 => true,
                 0xff => null,
@@ -37,12 +37,10 @@ namespace VfxEditor.Parsing {
             AvfxBase.WritePad( writer, Size - 1 );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<bool?>( this, value ) );
+                SetValue( manager, value );
             }
         }
     }

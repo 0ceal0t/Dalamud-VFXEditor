@@ -1,12 +1,11 @@
 using ImGuiNET;
+using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat3 : ParsedSimpleBase<Vector3> {
-        public ParsedFloat3( string name, Vector3 value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedFloat3( string name, Vector3 value ) : base( name, value ) { }
 
         public ParsedFloat3( string name ) : base( name ) { }
 
@@ -27,13 +26,16 @@ namespace VfxEditor.Parsing {
         public override void Draw( CommandManager manager ) => Draw( manager, out var _ );
 
         public void Draw( CommandManager manager, out bool edited ) {
+            using var _ = ImRaii.PushId( Name );
             edited = CopyPaste( manager );
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<Vector3>( this, value ) );
                 edited = true;
+                SetValue( manager, value );
             }
         }
+
+        protected override void DrawBody( CommandManager manager ) { }
     }
 }

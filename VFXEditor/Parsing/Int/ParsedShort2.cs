@@ -4,9 +4,7 @@ using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedShort2 : ParsedInt4 {
-        public ParsedShort2( string name, Int4 value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedShort2( string name, Int4 value ) : base( name, value ) { }
 
         public ParsedShort2( string name ) : base( name ) { }
 
@@ -22,12 +20,10 @@ namespace VfxEditor.Parsing.Int {
             writer.Write( ( short )Value.Y );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = Value.ToArray();
             if( ImGui.InputInt2( Name, ref value[0] ) ) {
-                manager.Add( new ParsedSimpleCommand<Int4>( this, value ) );
+                SetValue( manager, value );
             }
         }
     }

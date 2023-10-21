@@ -57,7 +57,7 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly List<UldKeyframe> Keyframes = new();
 
         public UldKeyGroup() {
-            Type.ExtraCommand = () => {
+            Type.Extra = () => {
                 return new UldKeyGroupDataCommand( this );
             };
         }

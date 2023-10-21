@@ -1,4 +1,3 @@
-using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
@@ -14,9 +13,7 @@ namespace VfxEditor.Parsing {
         }
 
         // Value is XYZ angles in radians
-        public ParsedQuat( string name, Vector3 value ) : this( name ) {
-            Value = value;
-        }
+        public ParsedQuat( string name, Vector3 value ) : base( name, value ) { }
 
         public ParsedQuat( string name ) : base( name ) { }
 
@@ -38,12 +35,9 @@ namespace VfxEditor.Parsing {
             writer.Write( q.W );
         }
 
-        public override void Draw( CommandManager manager ) {
-            using var _ = ImRaii.PushId( Name );
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             if( UiUtils.DrawRadians3( Name, Value, out var newValue ) ) {
-                manager.Add( new ParsedSimpleCommand<Vector3>( this, newValue ) );
+                SetValue( manager, newValue );
             }
         }
 

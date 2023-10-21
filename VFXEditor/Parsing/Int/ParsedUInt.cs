@@ -5,8 +5,8 @@ namespace VfxEditor.Parsing {
     public class ParsedUInt : ParsedSimpleBase<uint> {
         private int Size;
 
-        public ParsedUInt( string name, uint value, int size = 4 ) : this( name, size ) {
-            Value = value;
+        public ParsedUInt( string name, uint value, int size = 4 ) : base( name, value ) {
+            Size = size;
         }
 
         public ParsedUInt( string name, int size = 4 ) : base( name ) {
@@ -31,12 +31,10 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )Value );
         }
 
-        public override void Draw( CommandManager manager ) {
-            CopyPaste( manager );
-
+        protected override void DrawBody( CommandManager manager ) {
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                manager.Add( new ParsedSimpleCommand<uint>( this, ( uint )value ) );
+                SetValue( manager, ( uint )value );
             }
         }
     }

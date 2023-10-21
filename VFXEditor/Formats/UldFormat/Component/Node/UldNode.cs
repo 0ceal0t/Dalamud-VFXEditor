@@ -79,7 +79,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
             Parent = parent;
             Components = components;
-            Type.ExtraCommand = () => {
+            Type.Extra = () => {
                 return new UldNodeDataCommand( this );
             };
 

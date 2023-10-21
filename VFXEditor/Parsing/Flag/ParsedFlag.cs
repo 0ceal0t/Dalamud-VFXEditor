@@ -3,21 +3,15 @@ using System;
 using System.IO;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFlag<T> : ParsedBase where T : Enum {
-        public readonly string Name;
+    public class ParsedFlag<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
-        public Func<ICommand> ExtraCommand; // can be changed later
 
-        public T Value = ( T )( object )0;
-
-        public ParsedFlag( string name, T value, Func<ICommand> extraCommand = null, int size = 4 ) : this( name, extraCommand, size ) {
-            Value = value;
+        public ParsedFlag( string name, T value, int size = 4 ) : base( name, value ) {
+            Size = size;
         }
 
-        public ParsedFlag( string name, Func<ICommand> extraCommand = null, int size = 4 ) {
-            Name = name;
+        public ParsedFlag( string name, int size = 4 ) : base( name ) {
             Size = size;
-            ExtraCommand = extraCommand;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -39,26 +33,19 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        public override void Draw( CommandManager manager ) {
-            // Copy/Paste
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.SetValue( this, Name, Value );
-            if( copy.IsPasting && copy.GetValue<T>( this, Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedFlagCommand<T>( this, val, ExtraCommand?.Invoke() ) );
-            }
-
+        protected override void DrawBody( CommandManager manager ) {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             foreach( var option in options ) {
-                var intFlagValue = ( int )( object )option;
-                if( intFlagValue == 0 ) continue;
+                var intOption = ( int )( object )option;
+                if( intOption == 0 ) continue;
+
                 var hasFlag = HasFlag( option );
                 if( ImGui.Checkbox( $"{option}", ref hasFlag ) ) {
                     var intValue = ( int )( object )Value;
-                    if( hasFlag ) intValue |= intFlagValue;
-                    else intValue &= ~intFlagValue;
+                    if( hasFlag ) intValue |= intOption;
+                    else intValue &= ~intOption;
 
-                    var newValue = ( T )( object )intValue;
-                    manager.Add( new ParsedFlagCommand<T>( this, newValue, ExtraCommand?.Invoke() ) );
+                    SetValue( manager, ( T )( object )intValue );
                 }
             }
         }

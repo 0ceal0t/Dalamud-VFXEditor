@@ -76,7 +76,7 @@ namespace VfxEditor.ScdFormat {
         public ScdTrackData Data = null;
 
         public ScdTrackItem() {
-            Type.ExtraCommand = () => {
+            Type.Extra = () => {
                 return new ScdTrackDataCommand( this );
             };
         }
