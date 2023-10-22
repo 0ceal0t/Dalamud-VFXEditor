@@ -114,6 +114,7 @@ namespace VfxEditor {
                 EidManager,
                 AtchManager,
                 ShpkManager,
+                ShcdManager,
             };
 
             var dropdown = false;

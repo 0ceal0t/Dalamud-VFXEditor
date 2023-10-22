@@ -76,10 +76,7 @@ namespace VfxEditor.Parsing {
         public void DrawIcons() {
             if( !HasIcons ) return;
             using var _ = ImRaii.PushId( Name );
-
-            var imguiStyle = ImGui.GetStyle();
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
-
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 foreach( var icon in Icons ) {
                     ImGui.SameLine();

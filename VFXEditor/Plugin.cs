@@ -13,6 +13,7 @@ using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;
 using VfxEditor.Formats.TextureFormat;
@@ -57,6 +58,7 @@ namespace VfxEditor {
             AtchManager,
             SkpManager,
             ShpkManager,
+            ShcdManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -71,6 +73,7 @@ namespace VfxEditor {
         public static AtchManager AtchManager { get; private set; }
         public static SkpManager SkpManager { get; private set; }
         public static ShpkManager ShpkManager { get; private set; }
+        public static ShcdManager ShcdManager { get; private set; }
 
         public static string RootLocation { get; private set; }
         private const string CommandName = "/vfxedit";
@@ -105,6 +108,7 @@ namespace VfxEditor {
             AtchManager = new();
             SkpManager = new();
             ShpkManager = new();
+            ShcdManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();

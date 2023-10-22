@@ -11,14 +11,30 @@ using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
+    public enum ShaderStage {
+        Vertex = 0,
+        Pixel = 1,
+        Geometry = 2,
+        Compute = 3,
+        Hull = 4,
+        Domain = 5,
+    }
+
     public class ShpkShader : IUiItem {
         public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_cso.cso" ).Replace( '\\', '/' );
         public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxbc.dxbc" ).Replace( '\\', '/' );
 
+        public readonly ShaderStage Stage;
         public readonly DX DxVersion;
         public string Extension => DxVersion == DX.DX11 ? "dxbc" : "cso";
+        public readonly bool HasResources;
 
-        public readonly bool Vertex;
+        public readonly ShaderFileType Type;
+        private CommandManager Command => Type switch {
+            ShaderFileType.Shpk => CommandManager.Shpk,
+            ShaderFileType.Shcd => CommandManager.Shcd,
+            _ => null
+        };
 
         private readonly int TempOffset;
         private readonly int TempSize;
@@ -33,34 +49,51 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
         private byte[] ExtraData = Array.Empty<byte>();
         private byte[] Data = Array.Empty<byte>();
-        private int ExtraSize => Vertex ? ( DxVersion == DX.DX9 ? 4 : 8 ) : 0;
+
+        private int ExtraSize => Stage switch {
+            ShaderStage.Vertex => ( DxVersion == DX.DX9 ? 4 : 8 ),
+            _ => 0
+        };
+
+        private string Prefix => Stage switch {
+            ShaderStage.Vertex => "vs",
+            ShaderStage.Pixel => "ps",
+            _ => ""
+        };
 
         private bool BinLoaded = false;
         private string BinDump = "";
 
-        public ShpkShader( bool vertex, DX dxVersion ) {
-            Vertex = vertex;
+        public ShpkShader( ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type ) {
+            Stage = stage;
+            HasResources = hasResources;
             DxVersion = dxVersion;
+            Type = type;
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
+            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
+            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
+            if( HasResources ) {
+                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
+            }
         }
 
-        public ShpkShader( BinaryReader reader, bool vertex, DX dxVersion ) : this( vertex, dxVersion ) {
+        public ShpkShader( BinaryReader reader, ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type ) : this( stage, dxVersion, hasResources, type ) {
             TempOffset = reader.ReadInt32();
             TempSize = reader.ReadInt32();
 
             var numConstants = reader.ReadInt16();
             var numSamplers = reader.ReadInt16();
-            var numRw = reader.ReadInt16();
-            var numUnknown = reader.ReadInt16();
+            var numRw = 0;
+            if( HasResources ) {
+                numRw = reader.ReadInt16();
+                reader.ReadInt16(); // Padding
+            }
 
-            for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader ) );
-            for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader ) );
-            for( var i = 0; i < numRw; i++ ) Resources.Add( new( reader ) );
-
-            if( numUnknown != 0 ) Dalamud.Error( "Unknown data" );
+            for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, Type ) );
+            for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, Type ) );
+            if( HasResources ) {
+                for( var i = 0; i < numRw; i++ ) Resources.Add( new( reader, Type ) );
+            }
         }
 
         public void Read( BinaryReader reader, uint parameterOffset, uint shaderOffset ) {
@@ -80,11 +113,16 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             writer.Write( ( short )Constants.Count );
             writer.Write( ( short )Samplers.Count );
-            writer.Write( ( short )Resources.Count );
-            writer.Write( ( short )0 );
+            if( HasResources ) {
+                writer.Write( ( short )Resources.Count );
+                writer.Write( ( short )0 );
+            }
+
             Constants.ForEach( x => x.Write( writer, stringPositions ) );
             Samplers.ForEach( x => x.Write( writer, stringPositions ) );
-            Resources.ForEach( x => x.Write( writer, stringPositions ) );
+            if( HasResources ) {
+                Resources.ForEach( x => x.Write( writer, stringPositions ) );
+            }
         }
 
         public void WriteByteCode( BinaryWriter writer, long shaderOffset, long placeholderPosition ) {
@@ -117,7 +155,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 if( tab ) SamplerView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Resources" ) ) {
+            if( HasResources ) {
+                using var tab = ImRaii.TabItem( "Resources" );
                 if( tab ) ResourceView.Draw();
             }
         }
@@ -126,7 +165,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             if( ImGui.Button( "Export" ) ) {
-                FileDialogManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + ( Vertex ? "vs" : "ps" ), Extension, ( bool ok, string res ) => {
+                FileDialogManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
                     if( !ok ) return;
                     File.WriteAllBytes( res, Data );
                 } );
@@ -138,8 +177,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                     if( !ok ) return;
 
                     if( Path.GetExtension( res ) == ".hlsl" ) {
-                        var target = Vertex ? "vs_5_0" : "ps_5_0";
-                        InteropUtils.Run( "d3d/fxc.exe", $"/T {target} \"{res}\" /Fo \"{TempDxbc}\" /O3", true, out var output );
+                        InteropUtils.Run( "d3d/fxc.exe", $"/T {Prefix}_5_0 \"{res}\" /Fo \"{TempDxbc}\" /O3", true, out var output );
                         Dalamud.Log( output );
                         if( !output.Contains( "compilation failed" ) ) {
                             Data = File.ReadAllBytes( TempDxbc );

@@ -19,6 +19,7 @@ namespace VfxEditor {
         public static CommandManager Atch => Plugin.AtchManager?.GetCurrentCommandManager();
         public static CommandManager Skp => Plugin.SkpManager?.GetCurrentCommandManager();
         public static CommandManager Shpk => Plugin.ShpkManager?.GetCurrentCommandManager();
+        public static CommandManager Shcd => Plugin.ShcdManager?.GetCurrentCommandManager();
 
         private readonly List<ICommand> CommandBuffer = new();
         private int CommandIndex;

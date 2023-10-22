@@ -6,6 +6,13 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkParameterInfo : IUiItem, ITextItem {
+        public readonly ShaderFileType Type;
+        private CommandManager Command => Type switch {
+            ShaderFileType.Shpk => CommandManager.Shpk,
+            ShaderFileType.Shcd => CommandManager.Shcd,
+            _ => null
+        };
+
         public uint Id => Crc32.Get( Value.Value, 0xFFFFFFFFu );
         public uint DataSize => ( uint )Size.Value;
 
@@ -16,9 +23,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public readonly ParsedShort Slot = new( "Slot" );
         public readonly ParsedShort Size = new( "Registers" );
 
-        public ShpkParameterInfo() { }
+        public ShpkParameterInfo( ShaderFileType type ) {
+            Type = type;
+        }
 
-        public ShpkParameterInfo( BinaryReader reader ) : this() {
+        public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
             TempId = reader.ReadUInt32(); // Id
             TempStringOffset = reader.ReadInt32();
             reader.ReadInt32(); // string size
@@ -43,9 +52,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public void Draw() {
-            Value.Draw( CommandManager.Shpk );
-            Slot.Draw( CommandManager.Shpk );
-            Size.Draw( CommandManager.Shpk );
+            Value.Draw( Command );
+            Slot.Draw( Command );
+            Size.Draw( Command );
         }
 
         public string GetText() => Value.Value;

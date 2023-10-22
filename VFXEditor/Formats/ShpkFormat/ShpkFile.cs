@@ -19,6 +19,11 @@ namespace VfxEditor.Formats.ShpkFormat {
     // Based on https://github.com/Ottermandias/Penumbra.GameData/blob/15ae65921468a2407ecdd068ca79947e596e24be/Files/ShpkFile.cs#L6
     // And other work by Ny
 
+    public enum ShaderFileType {
+        Shpk,
+        Shcd
+    }
+
     public enum DX {
         DX9,
         DX11,
@@ -95,14 +100,14 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numNode = reader.ReadUInt32();
             var numAlias = reader.ReadUInt32();
 
-            for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, true, DxVersion ) );
-            for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, false, DxVersion ) );
+            for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
+            for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk ) );
 
             for( var i = 0; i < numMaterialParams; i++ ) MaterialParameters.Add( new( reader ) );
 
-            for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader ) );
-            for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader ) );
-            for( var i = 0; i < numResources; i++ ) Resources.Add( new( reader ) );
+            for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, ShaderFileType.Shpk ) );
+            for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, ShaderFileType.Shpk ) );
+            for( var i = 0; i < numResources; i++ ) Resources.Add( new( reader, ShaderFileType.Shpk ) );
 
             for( var i = 0; i < numSystemKey; i++ ) SystemKeys.Add( new( reader ) );
             for( var i = 0; i < numSceneKey; i++ ) SceneKeys.Add( new( reader ) );
@@ -124,14 +129,14 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             // ====== CONSTRUCT VIEWS ==========
 
-            VertexView = new( "Vertex Shader", VertexShaders, null, () => new( true, DxVersion ), () => CommandManager.Shpk );
-            PixelView = new( "Pixel Shader", PixelShaders, null, () => new( false, DxVersion ), () => CommandManager.Shpk );
+            VertexView = new( "Vertex Shader", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ), () => CommandManager.Shpk );
+            PixelView = new( "Pixel Shader", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ), () => CommandManager.Shpk );
 
             MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new(), () => CommandManager.Shpk );
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new(), () => CommandManager.Shpk );
+            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
+            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
+            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
 
             SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
             SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
@@ -200,36 +205,11 @@ namespace VfxEditor.Formats.ShpkFormat {
             Nodes.ForEach( x => x.Write( writer ) );
             Aliases.ForEach( x => x.Write( writer ) );
 
-            var shaderOffset = writer.BaseStream.Position;
-
-            shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
-
-            var parameterOffset = writer.BaseStream.Position;
-
-            var stringOffsets = new Dictionary<string, uint>();
-            foreach( var item in stringPositions ) {
-                var value = item.Item2;
-                if( stringOffsets.ContainsKey( value ) ) continue;
-
-                stringOffsets[value] = ( uint )( writer.BaseStream.Position - parameterOffset );
-                FileUtils.WriteString( writer, value, true );
-            }
-
-            foreach( var item in stringPositions ) {
-                var offset = stringOffsets[item.Item2];
-                writer.BaseStream.Seek( item.Item1, SeekOrigin.Begin );
-                writer.Write( offset );
-            }
-
-            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
-            writer.Write( ( uint )writer.BaseStream.Length );
-            writer.Write( ( uint )shaderOffset );
-            writer.Write( ( uint )parameterOffset );
+            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {
             ImGui.Separator();
-
             ImGui.TextDisabled( $"Version: {Version} DirectX: {DxVersion}" );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -345,6 +325,34 @@ namespace VfxEditor.Formats.ShpkFormat {
                     }
                 }
             }
+        }
+
+        public static void WriteOffsets( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions ) {
+            var shaderOffset = writer.BaseStream.Position;
+
+            shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
+
+            var parameterOffset = writer.BaseStream.Position;
+
+            var stringOffsets = new Dictionary<string, uint>();
+            foreach( var item in stringPositions ) {
+                var value = item.Item2;
+                if( stringOffsets.ContainsKey( value ) ) continue;
+
+                stringOffsets[value] = ( uint )( writer.BaseStream.Position - parameterOffset );
+                FileUtils.WriteString( writer, value, true );
+            }
+
+            foreach( var item in stringPositions ) {
+                var offset = stringOffsets[item.Item2];
+                writer.BaseStream.Seek( item.Item1, SeekOrigin.Begin );
+                writer.Write( offset );
+            }
+
+            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.Write( ( uint )writer.BaseStream.Length );
+            writer.Write( ( uint )shaderOffset );
+            writer.Write( ( uint )parameterOffset );
         }
     }
 }
