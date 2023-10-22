@@ -33,7 +33,7 @@ namespace VfxEditor.Select.Vfx.Common {
             foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location}.avfx", item.Location.ToString(), 0 ) );
 
             var lineIdx = 0;
-            foreach( var line in File.ReadLines( SelectDataUtils.MiscVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
+            foreach( var line in File.ReadLines( SelectDataUtils.CommonVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
                 Items.Add( new CommonRow( lineIdx, line, line.Replace( ".avfx", "" ), 0 ) );
                 lineIdx++;
             }

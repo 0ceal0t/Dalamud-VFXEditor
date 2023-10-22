@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Uld.Common {
 
         public override void LoadData() {
             var lineIdx = 0;
-            foreach( var line in File.ReadLines( SelectDataUtils.MiscUldPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
+            foreach( var line in File.ReadLines( SelectDataUtils.CommonUldPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
                 Items.Add( new CommonRow( lineIdx, line, line.Replace( ".uld", "" ).Replace( "ui/uld/", "" ), 0 ) );
                 lineIdx++;
             }

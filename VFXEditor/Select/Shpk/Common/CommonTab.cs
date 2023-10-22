@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Shpk.Common {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var (line, idx) in File.ReadLines( SelectDataUtils.MiscShpkPath ).Where( x => !string.IsNullOrEmpty( x ) ).WithIndex() ) {
+            foreach( var (line, idx) in File.ReadLines( SelectDataUtils.CommonShpkPath ).Where( x => !string.IsNullOrEmpty( x ) ).WithIndex() ) {
                 Items.Add( new CommonRow( idx, line, line.Replace( ".shpk", "" ).Replace( "shader/", "" ), 0 ) );
             }
         }

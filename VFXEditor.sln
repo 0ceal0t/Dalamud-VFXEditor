@@ -5,11 +5,11 @@ VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F89C9EAE-25C8-43BE-8108-5921E5A93502}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\extract_vfx_misc.py = scripts\extract_vfx_misc.py
 		README.md = README.md
 		.github\workflows\release.yml = .github\workflows\release.yml
 		repo.json = repo.json
 		scripts\reslog_process.py = scripts\reslog_process.py
+		scripts\reslog_common_files.py = scripts\reslog_common_files.py
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VFXEditor", "VFXEditor\VFXEditor.csproj", "{F6806E83-137E-47D8-AD35-5E89501570B3}"

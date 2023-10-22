@@ -19,11 +19,12 @@ namespace VfxEditor.Select {
     public partial class SelectDataUtils {
         public static string BnpcPath => Path.Combine( Plugin.RootLocation, "Files", "bnpc.json" );
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
-        public static string MiscVfxPath => Path.Combine( Plugin.RootLocation, "Files", "vfx_misc.txt" );
-        public static string MiscTmbPath => Path.Combine( Plugin.RootLocation, "Files", "tmb_misc.txt" );
-        public static string MiscUldPath => Path.Combine( Plugin.RootLocation, "Files", "uld_misc.txt" );
-        public static string MiscShpkPath => Path.Combine( Plugin.RootLocation, "Files", "shpk_misc.txt" );
-        public static string SklbFacesPath => Path.Combine( Plugin.RootLocation, "Files", "sklb_faces.txt" );
+        public static string CommonVfxPath => Path.Combine( Plugin.RootLocation, "Files", "common_vfx" );
+        public static string CommonTmbPath => Path.Combine( Plugin.RootLocation, "Files", "common_tmb" );
+        public static string CommonUldPath => Path.Combine( Plugin.RootLocation, "Files", "common_uld" );
+        public static string CommonShpkPath => Path.Combine( Plugin.RootLocation, "Files", "common_shpk" );
+        public static string CommonShcdPath => Path.Combine( Plugin.RootLocation, "Files", "common_shcd" );
+        public static string CommonFacesPath => Path.Combine( Plugin.RootLocation, "Files", "common_faces" );
 
         [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
         private static partial Regex AvfxRegexPattern();
@@ -48,7 +49,7 @@ namespace VfxEditor.Select {
             if( _FaceMapInternal != null ) return;
             _FaceMapInternal = new();
 
-            var sklbFiles = File.ReadAllLines( SklbFacesPath );
+            var sklbFiles = File.ReadAllLines( CommonFacesPath );
             // chara/human/c0101/skeleton/face/f0222/skl_c0101f0222.sklb
             foreach( var line in sklbFiles ) {
                 var modelFace = line.Split( "skl_" )[1].Replace( ".sklb", "" ).Split( "f" );

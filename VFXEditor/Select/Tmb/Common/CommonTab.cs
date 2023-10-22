@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Tmb.Common {
 
         public override void LoadData() {
             var lineIdx = 0;
-            foreach( var line in File.ReadLines( SelectDataUtils.MiscTmbPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
+            foreach( var line in File.ReadLines( SelectDataUtils.CommonTmbPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
                 Items.Add( new CommonRow( lineIdx, line, line.Replace( "chara/action/", "" ).Replace( ".tmb", "" ), 0 ) );
                 lineIdx++;
             }
