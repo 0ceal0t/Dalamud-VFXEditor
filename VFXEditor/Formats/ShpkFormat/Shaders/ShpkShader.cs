@@ -9,17 +9,9 @@ using System.Numerics;
 using VfxEditor.Interop;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
+using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
-    public enum ShaderStage {
-        Vertex = 0,
-        Pixel = 1,
-        Geometry = 2,
-        Compute = 3,
-        Hull = 4,
-        Domain = 5,
-    }
-
     public class ShpkShader : IUiItem {
         public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_cso.cso" ).Replace( '\\', '/' );
         public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxbc.dxbc" ).Replace( '\\', '/' );
@@ -30,11 +22,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public readonly bool HasResources;
 
         public readonly ShaderFileType Type;
-        private CommandManager Command => Type switch {
-            ShaderFileType.Shpk => CommandManager.Shpk,
-            ShaderFileType.Shcd => CommandManager.Shcd,
-            _ => null
-        };
+        private CommandManager Command => GetCommand( Type );
 
         private readonly int TempOffset;
         private readonly int TempSize;

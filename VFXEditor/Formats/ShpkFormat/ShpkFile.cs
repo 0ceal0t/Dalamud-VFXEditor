@@ -14,21 +14,11 @@ using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
+using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShpkFormat {
     // Based on https://github.com/Ottermandias/Penumbra.GameData/blob/15ae65921468a2407ecdd068ca79947e596e24be/Files/ShpkFile.cs#L6
     // And other work by Ny
-
-    public enum ShaderFileType {
-        Shpk,
-        Shcd
-    }
-
-    public enum DX {
-        DX9,
-        DX11,
-        UNKNOWN
-    }
 
     public class ShpkFile : FileManagerFile {
         public const uint MaterialParamsConstantId = 0x64D12851u;
@@ -36,11 +26,7 @@ namespace VfxEditor.Formats.ShpkFormat {
 
         private readonly uint Version;
         private readonly uint DxMagic;
-        public DX DxVersion => DxMagic switch {
-            0x00395844u => DX.DX9,
-            0x31315844u => DX.DX11,
-            _ => DX.UNKNOWN
-        };
+        public DX DxVersion => GetDxVersion( DxMagic );
 
         private readonly List<ShpkShader> VertexShaders = new();
         private readonly List<ShpkShader> PixelShaders = new();
@@ -325,34 +311,6 @@ namespace VfxEditor.Formats.ShpkFormat {
                     }
                 }
             }
-        }
-
-        public static void WriteOffsets( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions ) {
-            var shaderOffset = writer.BaseStream.Position;
-
-            shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
-
-            var parameterOffset = writer.BaseStream.Position;
-
-            var stringOffsets = new Dictionary<string, uint>();
-            foreach( var item in stringPositions ) {
-                var value = item.Item2;
-                if( stringOffsets.ContainsKey( value ) ) continue;
-
-                stringOffsets[value] = ( uint )( writer.BaseStream.Position - parameterOffset );
-                FileUtils.WriteString( writer, value, true );
-            }
-
-            foreach( var item in stringPositions ) {
-                var offset = stringOffsets[item.Item2];
-                writer.BaseStream.Seek( item.Item1, SeekOrigin.Begin );
-                writer.Write( offset );
-            }
-
-            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
-            writer.Write( ( uint )writer.BaseStream.Length );
-            writer.Write( ( uint )shaderOffset );
-            writer.Write( ( uint )parameterOffset );
         }
     }
 }

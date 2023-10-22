@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
+using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkParameterInfo : IUiItem, ITextItem {
         public readonly ShaderFileType Type;
-        private CommandManager Command => Type switch {
-            ShaderFileType.Shpk => CommandManager.Shpk,
-            ShaderFileType.Shcd => CommandManager.Shcd,
-            _ => null
-        };
+        private CommandManager Command => GetCommand( Type );
 
         public uint Id => Crc32.Get( Value.Value, 0xFFFFFFFFu );
         public uint DataSize => ( uint )Size.Value;

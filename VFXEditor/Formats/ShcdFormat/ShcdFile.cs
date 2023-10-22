@@ -2,20 +2,16 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
+using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShcdFormat {
     public class ShcdFile : FileManagerFile {
         private readonly byte[] Version;
         private readonly uint DxMagic;
-        public DX DxVersion => DxMagic switch {
-            0x00395844u => DX.DX9,
-            0x31315844u => DX.DX11,
-            _ => DX.UNKNOWN
-        };
+        public DX DxVersion => GetDxVersion( DxMagic );
         public bool Shcd3 => Version[1] == 3;
 
         public readonly ParsedEnum<ShaderStage> Stage = new( "Stage", 1 );
@@ -53,7 +49,7 @@ namespace VfxEditor.Formats.ShcdFormat {
 
             Shader.Write( writer, stringPositions, shaderPositions );
 
-            ShpkFile.WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {
