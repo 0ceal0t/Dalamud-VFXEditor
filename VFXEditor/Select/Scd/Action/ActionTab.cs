@@ -38,11 +38,8 @@ namespace VfxEditor.Select.Scd.Action {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPaths( "Sound", Loaded.Paths, Selected.Name, true );
         }
 

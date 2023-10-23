@@ -1,10 +1,10 @@
-using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 using VfxEditor.Select.Scd.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
@@ -142,7 +142,6 @@ namespace VfxEditor.Select {
         protected T Selected = default;
         protected string SearchInput = "";
         protected List<T> Searched;
-        protected IDalamudTextureWrap Icon; // Not used by every tab
 
         protected SelectTab( SelectDialog dialog, string name, string stateId, SelectResultType resultType ) : base( dialog, name, resultType ) {
             StateId = stateId;
@@ -163,8 +162,6 @@ namespace VfxEditor.Select {
         protected abstract void DrawSelected();
 
         protected virtual void DrawExtra() { }
-
-        protected virtual void OnSelect() { }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( Name );
@@ -234,16 +231,15 @@ namespace VfxEditor.Select {
 
         protected virtual void Select( T item ) {
             Selected = item;
-            OnSelect();
         }
 
-        protected void LoadIcon( uint iconId ) {
-            Icon = null;
-            try {
-                Icon = Dalamud.TextureProvider.GetIcon( iconId < 0 ? 0 : iconId, IconFlags.None );
-            }
-            catch( Exception ) {
-                Icon = Dalamud.TextureProvider.GetIcon( 0, IconFlags.None );
+        protected void DrawIcon( uint iconId ) {
+            if( iconId <= 0 ) return;
+
+            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             }
         }
 

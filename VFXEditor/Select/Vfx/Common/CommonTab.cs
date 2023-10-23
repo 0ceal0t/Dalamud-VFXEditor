@@ -41,11 +41,8 @@ namespace VfxEditor.Select.Vfx.Common {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPath( "Path", Selected.Path, Selected.Name, true );
         }
 

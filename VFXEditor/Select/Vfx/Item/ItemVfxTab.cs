@@ -36,11 +36,8 @@ namespace VfxEditor.Select.Vfx.Item {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             ImGui.Text( "Variant: " + Selected.GetVariant() );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();

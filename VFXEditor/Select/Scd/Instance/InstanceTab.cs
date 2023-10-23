@@ -26,11 +26,8 @@ namespace VfxEditor.Select.Scd.Instance {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Image );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Image );
             DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 

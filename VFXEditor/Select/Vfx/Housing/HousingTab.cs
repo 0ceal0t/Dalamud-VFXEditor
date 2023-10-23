@@ -21,10 +21,8 @@ namespace VfxEditor.Select.Vfx.Housing {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
+            DrawIcon( Selected.Icon );
             ImGui.Text( "SGB:" );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );

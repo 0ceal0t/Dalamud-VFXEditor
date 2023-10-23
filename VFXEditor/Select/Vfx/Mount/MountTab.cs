@@ -44,11 +44,8 @@ namespace VfxEditor.Select.Vfx.Mount {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             ImGui.Text( "Variant: " + Selected.Variant );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();

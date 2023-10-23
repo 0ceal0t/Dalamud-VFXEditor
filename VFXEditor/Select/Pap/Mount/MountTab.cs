@@ -16,8 +16,6 @@ namespace VfxEditor.Select.Pap.Mount {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         public override void LoadSelection( MountRow item, out Dictionary<string, Dictionary<string, string>> loaded ) {
             loaded = new();
 
@@ -28,8 +26,7 @@ namespace VfxEditor.Select.Pap.Mount {
         }
 
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPath( "Mount", Selected.GetMountPap(), $"{Selected.Name} Mount", false );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             DrawPapsWithHeader( Loaded, Selected.Name );

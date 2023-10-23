@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using Dalamud.Interface.Internal;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -47,13 +46,6 @@ namespace VfxEditor.Select {
             preItems = ( int )Math.Floor( ImGui.GetScrollY() / itemHeight );
             showItems = ( int )Math.Ceiling( ( ImGui.GetWindowSize().Y - ImGui.GetCursorPosY() ) / itemHeight );
             postItems = count - showItems - preItems;
-        }
-
-        public static void DrawIcon( IDalamudTextureWrap icon ) {
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            }
         }
 
         public static void NpcThankYou() {

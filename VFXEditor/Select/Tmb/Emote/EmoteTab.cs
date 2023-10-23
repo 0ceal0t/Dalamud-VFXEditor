@@ -13,11 +13,8 @@ namespace VfxEditor.Select.Tmb.Emote {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPaths( "Path", Selected.TmbFiles, Selected.Name, true );
         }
 

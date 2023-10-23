@@ -16,11 +16,8 @@ namespace VfxEditor.Select.Vfx.Status {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPath( "Hit", Selected.HitVfxPath, $"{Selected.Name} Hit", true );
             DrawPath( "Loop 1", Selected.LoopVfxPath1, $"{Selected.Name} Loop 1", true );
             DrawPath( "Loop 2", Selected.LoopVfxPath2, $"{Selected.Name} Loop 2", true );

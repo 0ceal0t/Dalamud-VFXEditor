@@ -13,8 +13,6 @@ namespace VfxEditor.Select.Shared.Mount {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override string GetName( MountRow item ) => item.Name;
     }
 }

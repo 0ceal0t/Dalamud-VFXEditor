@@ -32,11 +32,8 @@ namespace VfxEditor.Select.Vfx.Action {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
                     SelectUiUtils.Copy( Loaded.OriginalPath );

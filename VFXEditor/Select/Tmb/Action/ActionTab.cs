@@ -19,11 +19,8 @@ namespace VfxEditor.Select.Tmb.Action {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             DrawPath( "Start", Selected.StartPath, $"{Selected.Name} Start", true );
             DrawMovementCancel( Selected.StartMotion );
 

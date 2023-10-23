@@ -15,11 +15,8 @@ namespace VfxEditor.Select.Tex.Status {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
-
+            DrawIcon( Selected.Icon );
             var path = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
             var hdPath = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
 

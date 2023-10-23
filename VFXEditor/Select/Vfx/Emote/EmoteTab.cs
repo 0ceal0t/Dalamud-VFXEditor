@@ -20,10 +20,8 @@ namespace VfxEditor.Select.Vfx.Emote {
 
         // ===== DRAWING ======
 
-        protected override void OnSelect() => LoadIcon( Selected.Icon );
-
         protected override void DrawSelected() {
-            SelectUiUtils.DrawIcon( Icon );
+            DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
             DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
