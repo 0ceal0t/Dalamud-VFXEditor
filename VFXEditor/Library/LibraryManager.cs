@@ -101,17 +101,15 @@ namespace VfxEditor.Library {
                     Dalamud.Log( "Tried to put folder into itself" );
                 }
                 else {
-                    DraggingItem.Parent?.Remove( DraggingItem );
-
                     if( destination is LibraryFolder folder && !overridePosition ) { // Just add it at the end
+                        DraggingItem.Parent?.Remove( DraggingItem );
                         folder.Add( DraggingItem );
                     }
                     else {
                         var idx = destination.Parent.Children.IndexOf( destination );
-                        if( idx != -1 ) {
-                            DraggingItem.Parent = destination.Parent;
-                            destination.Parent.Children.Insert( idx, DraggingItem );
-                        }
+                        DraggingItem.Parent?.Remove( DraggingItem );
+                        DraggingItem.Parent = destination.Parent;
+                        destination.Parent.Children.Insert( idx, DraggingItem );
                     }
                     Save();
                 }

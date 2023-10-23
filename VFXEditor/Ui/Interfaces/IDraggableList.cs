@@ -1,6 +1,7 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using VfxEditor.FileManager;
 
 namespace VfxEditor.Ui.Interfaces {
     public interface IDraggableList<T> where T : class {
@@ -12,7 +13,7 @@ namespace VfxEditor.Ui.Interfaces {
 
         public string GetDraggingText( T item );
 
-        public static bool DrawDragDrop<S>( IDraggableList<S> view, S item, string id ) where S : class {
+        public static bool DrawDragDrop<S>( IDraggableList<S> view, S item, string id, CommandManager manager = null ) where S : class {
             var listModified = false;
 
             if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
@@ -22,14 +23,14 @@ namespace VfxEditor.Ui.Interfaces {
                 ImGui.EndDragDropSource();
             }
             if( ImGui.BeginDragDropTarget() ) {
-                if( StopDragging( view, item, id ) ) listModified = true;
+                if( StopDragging( view, item, id, manager ) ) listModified = true;
                 ImGui.EndDragDropTarget();
             }
 
             return listModified;
         }
 
-        private static unsafe bool StopDragging<S>( IDraggableList<S> view, S destination, string id ) where S : class {
+        private static unsafe bool StopDragging<S>( IDraggableList<S> view, S destination, string id, CommandManager manager ) where S : class {
             var draggingItem = view.GetDraggingItem();
             if( draggingItem == null ) return false;
 
@@ -37,18 +38,12 @@ namespace VfxEditor.Ui.Interfaces {
             if( payload.NativePtr == null ) return false;
 
             if( draggingItem != destination ) {
-                var items = view.GetItems();
-                var destIdx = items.IndexOf( destination );
-                var sourceIdx = items.IndexOf( draggingItem );
-
-                if( destIdx == ( sourceIdx + 1 ) ) { // weird case, just swap them
-                    items[destIdx] = draggingItem;
-                    items[sourceIdx] = destination;
+                var command = new GenericMoveCommand<S>( view.GetItems(), draggingItem, destination );
+                if( manager == null ) {
+                    command.Execute();
                 }
                 else {
-                    items.Remove( draggingItem );
-                    var idx = items.IndexOf( destination );
-                    if( idx != -1 ) items.Insert( idx, draggingItem );
+                    manager.Add( command );
                 }
             }
             view.SetDraggingItem( null );

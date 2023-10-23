@@ -13,8 +13,8 @@ using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkShader : IUiItem {
-        public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_cso.cso" ).Replace( '\\', '/' );
-        public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_dxbc.dxbc" ).Replace( '\\', '/' );
+        public static string TempCso => Path.Combine( Plugin.Configuration.WriteLocation, "temp_cso.cso" ).Replace( '\\', '/' );
+        public static string TempDxbc => Path.Combine( Plugin.Configuration.WriteLocation, "temp_dxbc.dxbc" ).Replace( '\\', '/' );
 
         public readonly ShaderStage Stage;
         public readonly DX DxVersion;
@@ -39,7 +39,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private byte[] Data = Array.Empty<byte>();
 
         private int ExtraSize => Stage switch {
-            ShaderStage.Vertex => ( DxVersion == DX.DX9 ? 4 : 8 ),
+            ShaderStage.Vertex => DxVersion == DX.DX9 ? 4 : 8,
             _ => 0
         };
 

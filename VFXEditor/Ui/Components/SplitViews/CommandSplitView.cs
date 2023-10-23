@@ -1,3 +1,5 @@
+using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
@@ -17,6 +19,15 @@ namespace VfxEditor.Ui.Components.SplitViews {
             NewAction = newAction;
             CommandAction = commandAction;
             OnChangeAction = onChangeAction;
+        }
+
+        protected override bool DrawLeftItem( T item, int idx ) {
+            using( var _ = ImRaii.PushId( idx ) ) {
+                if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
+            }
+
+            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{Id}-SPLIT", CommandAction.Invoke() ) ) return true;
+            return false;
         }
 
         protected override void OnNew() {
