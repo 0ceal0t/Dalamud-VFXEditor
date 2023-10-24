@@ -2,19 +2,20 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Lists {
-    public class SelectFavoriteTab : SelectListTab, IDraggableList<SelectResult> {
+    public class SelectFavoriteTab : SelectListTab {
         private SelectResult DraggingItem;
 
         public SelectFavoriteTab( SelectDialog dialog, string name, List<SelectResult> items ) : base( dialog, name, items ) { }
 
         protected override bool PostRow( SelectResult item, int idx ) {
-            if( IDraggableList<SelectResult>.DrawDragDrop( this, item, $"{Name}-FAVORITE" ) ) {
+            if( UiUtils.DrawDragDrop( Items, item, item?.DisplayString ?? string.Empty, ref DraggingItem, $"{Name}-FAVORITE", null ) ) {
                 Plugin.Configuration.Save();
                 return true;
             }
+
             if( base.PostRow( item, idx ) ) return true;
 
             using var _ = ImRaii.PushId( idx );
@@ -29,15 +30,5 @@ namespace VfxEditor.Select.Lists {
 
             return false;
         }
-
-        // For drag+drop
-
-        public SelectResult GetDraggingItem() => DraggingItem;
-
-        public void SetDraggingItem( SelectResult item ) => DraggingItem = item;
-
-        public List<SelectResult> GetItems() => Items;
-
-        public string GetDraggingText( SelectResult item ) => item?.DisplayString ?? string.Empty;
     }
 }

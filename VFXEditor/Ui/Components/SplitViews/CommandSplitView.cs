@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components.SplitViews {
     public class CommandSplitView<T> : UiSplitView<T> where T : class, IUiItem {
@@ -26,7 +27,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
                 if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
             }
 
-            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{Id}-SPLIT", CommandAction.Invoke() ) ) return true;
+            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", CommandAction.Invoke() ) ) return true;
             return false;
         }
 

@@ -6,7 +6,7 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components.SplitViews {
-    public class UiSplitView<T> : ItemSplitView<T>, IDraggableList<T> where T : class, IUiItem {
+    public class UiSplitView<T> : ItemSplitView<T> where T : class, IUiItem {
         protected readonly bool AllowReorder;
         protected T DraggingItem;
 
@@ -37,7 +37,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
                 if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
             }
 
-            if( AllowReorder && IDraggableList<T>.DrawDragDrop( this, item, $"{Id}-SPLIT" ) ) return true;
+            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", null ) ) return true;
             return false;
         }
 
@@ -47,16 +47,5 @@ namespace VfxEditor.Ui.Components.SplitViews {
             using var _ = ImRaii.PushId( Items.IndexOf( Selected ) );
             Selected.Draw();
         }
-
-
-        // ===== DRAG/DROP =========
-
-        public T GetDraggingItem() => DraggingItem;
-
-        public void SetDraggingItem( T item ) => DraggingItem = item;
-
-        public List<T> GetItems() => Items;
-
-        public string GetDraggingText( T item ) => GetText( item, Items.IndexOf( item ) );
     }
 }

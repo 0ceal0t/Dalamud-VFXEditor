@@ -214,7 +214,8 @@ namespace VfxEditor.DirectX {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
-            var cubeProj = Matrix.Multiply( CubeMatrix, ProjMatrix );
+
+            var cubeProj = Matrix.Multiply( CubeMatrix, Matrix.PerspectiveFovLH( ( float )Math.PI / 4.0f, 1.0f, 0.1f, 100.0f ) );
             var world = LocalMatrix;
 
             viewProj.Transpose();

@@ -95,6 +95,7 @@ namespace VfxEditor.SklbFormat {
             DrawData();
             DrawLayers();
             DrawBones();
+            DrawBoneList();
             DrawMappings();
         }
 
@@ -124,6 +125,15 @@ namespace VfxEditor.SklbFormat {
             using var _ = ImRaii.PushId( "Bones" );
 
             Bones?.Draw();
+        }
+
+        private void DrawBoneList() {
+            using var tabItem = ImRaii.TabItem( "Bone List" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "BoneList" );
+
+            Bones?.ListView.Draw();
         }
 
         private void DrawMappings() {

@@ -7,11 +7,10 @@ using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Select;
 using VfxEditor.Select.Tex;
 using VfxEditor.Ui.Components.SplitViews;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Ui {
-    public class TextureView : SplitView<TextureReplace>, IDraggableList<TextureReplace> {
+    public class TextureView : SplitView<TextureReplace> {
         public readonly List<TextureReplace> Textures;
         private readonly TexSelectDialog ExtractSelect;
         private readonly TexSelectDialog ImportSelect;
@@ -127,7 +126,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                     if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
                 }
 
-                if( IDraggableList<TextureReplace>.DrawDragDrop( this, item, $"TEXTUREVIEW-SPLIT" ) ) break;
+                if( UiUtils.DrawDragDrop( Textures, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", null ) ) break;
 
                 using( var _ = ImRaii.PushId( idx ) ) {
                     ImGui.SameLine();
@@ -186,15 +185,5 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             }
             ImGui.TextDisabled( "(.png)" );
         }
-
-        // ===== DRAG/DROP =======
-
-        TextureReplace IDraggableList<TextureReplace>.GetDraggingItem() => DraggingItem;
-
-        void IDraggableList<TextureReplace>.SetDraggingItem( TextureReplace item ) => DraggingItem = item;
-
-        List<TextureReplace> IDraggableList<TextureReplace>.GetItems() => Textures;
-
-        string IDraggableList<TextureReplace>.GetDraggingText( TextureReplace item ) => item.GetExportReplace();
     }
 }

@@ -26,6 +26,7 @@ namespace VfxEditor.Utils.Gltf {
             // Transformations
             var boneId = 0;
             foreach( var node in nodes ) {
+                if( node == null || node.Name == null ) continue;
                 var name = node.Name;
                 if( name.ToLower().Contains( "armature" ) || name.ToLower().Contains( "mesh" ) ) continue;
 

@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Interop.Structs.Animation;
@@ -38,11 +39,13 @@ namespace VfxEditor.SklbFormat.Bones {
         private string SearchText = "";
 
         public readonly List<SklbMapping> Mappings = new();
-        public SklbMappingDropdown MappingView { get; private set; }
+        public readonly SklbMappingDropdown MappingView;
+        public readonly SklbBoneListView ListView;
 
         public SklbBones( SklbFile file, string loadPath, bool init ) : base( loadPath, init ) {
             File = file;
             MappingView = new( File, Mappings );
+            ListView = new( Bones );
         }
 
         protected override void OnHavokLoad() {

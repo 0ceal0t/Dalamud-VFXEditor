@@ -4,10 +4,12 @@ using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.FileManager;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
@@ -336,5 +338,41 @@ namespace VfxEditor.Utils {
         public static bool MouseOver( Vector2 start, Vector2 end ) => Contains( start, end, ImGui.GetIO().MousePos );
 
         public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
+
+        public static bool DrawDragDrop<T>( List<T> items, T item, string text, ref T draggingItem, string id, CommandManager manager ) where T : class {
+            var listModified = false;
+
+            if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
+                ImGui.SetDragDropPayload( id, IntPtr.Zero, 0 );
+                draggingItem = item;
+                ImGui.Text( text );
+                ImGui.EndDragDropSource();
+            }
+            if( ImGui.BeginDragDropTarget() ) {
+                if( StopDragging( items, item, ref draggingItem, id, manager ) ) listModified = true;
+                ImGui.EndDragDropTarget();
+            }
+
+            return listModified;
+        }
+
+        private static unsafe bool StopDragging<T>( List<T> items, T destination, ref T draggingItem, string id, CommandManager manager ) where T : class {
+            if( draggingItem == null ) return false;
+
+            var payload = ImGui.AcceptDragDropPayload( id );
+            if( payload.NativePtr == null ) return false;
+
+            if( draggingItem != destination ) {
+                var command = new GenericMoveCommand<T>( items, draggingItem, destination );
+                if( manager == null ) {
+                    command.Execute();
+                }
+                else {
+                    manager.Add( command );
+                }
+            }
+            draggingItem = null;
+            return true;
+        }
     }
 }
