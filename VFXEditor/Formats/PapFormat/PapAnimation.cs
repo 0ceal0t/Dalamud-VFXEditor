@@ -1,6 +1,8 @@
+using Dalamud.Interface;
 using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
@@ -11,6 +13,34 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
+        private readonly List<string> Prefixes = new() {
+            "cbfp",
+            "cbfa",
+            "cbep",
+            "cbba",
+            "csnw",
+            "cbbm",
+            "cbbp",
+            "csxm",
+            "cblw",
+            "csbw",
+            "cblm",
+            "cbem",
+            "cbna",
+            "cfxf",
+            "pc",
+            "cbnm",
+            "cbew",
+            "cbbw",
+            "f",
+            "cbnw",
+            "cbnp",
+            "cfxl",
+            "cbfm",
+            "cbfw",
+            "cfxb",
+        };
+
         public readonly PapFile File;
 
         public short HavokIndex = 0;
@@ -72,6 +102,15 @@ namespace VfxEditor.PapFormat {
             }
 
             Name.Draw( CommandManager.Pap );
+            if( string.IsNullOrEmpty( Name.Value ) || !Name.Value.Contains( '_' ) || !Prefixes.Contains( Name.Value.Split( "_" )[0] ) ) {
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
+                }
+                ImGui.SameLine();
+                ImGui.TextWrapped( "Animation name must start with a valid prefix, such as cbbm_" );
+            }
+
             Type.Draw( CommandManager.Pap );
             Face.Draw( CommandManager.Pap );
 
