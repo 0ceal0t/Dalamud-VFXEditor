@@ -6,8 +6,8 @@
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.8.0.5</FileVersion>
-        <AssemblyVersion>1.8.0.5</AssemblyVersion>
+        <FileVersion>1.8.0.6</FileVersion>
+        <AssemblyVersion>1.8.0.6</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
