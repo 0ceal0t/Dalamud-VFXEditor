@@ -56,7 +56,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 var variant = variants[i];
                 if( variant.ClassName.String == "hkaSkeletonMapper" ) {
                     var mapper = ( SkeletonMapper* )variant.Variant.ptr;
-                    // Mapper->SkeletonA is the same as HavokBones->Skeleton
+                    // Mapper->SkeletonB is the same as HavokBones->Skeleton
                     Mappings.Add( new( this, mapper, variant.Name.String ) );
                 }
             }

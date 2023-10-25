@@ -9,8 +9,8 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbSimpleMapping : IUiItem {
         public readonly SklbMapping Mapping;
 
-        public readonly ParsedBoneIndex BoneA = new( "This Skeleton Bone", -1 );
-        public readonly ParsedBoneIndex BoneB = new( "Mapped Skeleton Bone", -1 );
+        public readonly ParsedBoneIndex BoneA = new( "Mapped Skeleton Bone", -1 );
+        public readonly ParsedBoneIndex BoneB = new( "This Skeleton Bone", -1 );
         public readonly ParsedInt Unk1 = new( "Unknown 1" );
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
         public readonly ParsedInt Unk3 = new( "Unknown 3" );
@@ -47,8 +47,8 @@ namespace VfxEditor.SklbFormat.Mapping {
                 BoneB.Draw( CommandManager.Sklb );
             }
             else {
-                BoneA.Draw( Mapping.Bones.Bones );
-                BoneB.Draw( Mapping.MappedSkeleton );
+                BoneA.Draw( Mapping.MappedSkeleton );
+                BoneB.Draw( Mapping.Bones.Bones );
             }
 
             Unk1.Draw( CommandManager.Sklb );

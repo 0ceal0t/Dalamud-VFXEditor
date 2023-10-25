@@ -36,10 +36,10 @@ namespace VfxEditor.SklbFormat.Mapping {
                 mapper->hkReferencedObject.MemSizeAndRefCount = 0;
                 mapper->hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObjectVtbl* )ResourceLoader.HavokMapperVtbl;
                 mapper->Mapping.SkeletonA = new() {
-                    ptr = File.Bones.Skeleton
+                    ptr = havokData.Skeleton
                 };
                 mapper->Mapping.SkeletonB = new() {
-                    ptr = havokData.Skeleton
+                    ptr = File.Bones.Skeleton
                 };
                 mapper->Mapping.PartitionMap = HavokData.CreateArray<short>( File.Handles, null );
                 mapper->Mapping.SimpleMappingPartitionRanges = HavokData.CreateArray<PartitionMappingRange>( File.Handles, null );
