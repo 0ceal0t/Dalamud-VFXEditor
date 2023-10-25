@@ -78,6 +78,6 @@ namespace VfxEditor.SklbFormat.Mapping {
 
         protected override void OnDelete( SklbMapping item ) => CommandManager.Sklb.Add( new GenericRemoveCommand<SklbMapping>( Items, item ) );
 
-        protected override void DrawSelected() => Selected.Draw();
+        protected override void DrawSelected() => Selected.Draw( Items.IndexOf( Selected ) );
     }
 }

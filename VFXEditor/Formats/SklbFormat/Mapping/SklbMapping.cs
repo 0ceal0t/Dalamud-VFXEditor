@@ -1,10 +1,13 @@
 using FFXIVClientStructs.Havok;
 using ImGuiFileDialog;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using VfxEditor.FileManager;
 using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -77,12 +80,12 @@ namespace VfxEditor.SklbFormat.Mapping {
             Mapper->Mapping.SimpleMappings = HavokData.CreateArray( handles, Mapper->Mapping.SimpleMappings, simpleMappings );
         }
 
-        public void Draw() {
+        public void Draw( int idx ) {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             DrawParameters();
-            DrawSimpleMappings();
+            DrawSimpleMappings( idx );
         }
 
         private void DrawParameters() {
@@ -96,8 +99,15 @@ namespace VfxEditor.SklbFormat.Mapping {
             Position.Draw( CommandManager.Sklb );
             Rotation.Draw( CommandManager.Sklb );
             Scale.Draw( CommandManager.Sklb );
+        }
 
-            if( ImGui.Button( "Replace Mapped Skeleton" ) ) {
+        private void DrawSimpleMappings( int idx ) {
+            using var tabItem = ImRaii.TabItem( "Simple Mappings" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "SimpleMappings" );
+
+            if( ImGui.Button( "Replace Skeleton" ) ) {
                 FileDialogManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
                     if( !ok ) return;
 
@@ -111,15 +121,85 @@ namespace VfxEditor.SklbFormat.Mapping {
                     CommandManager.Sklb.Add( new SklbMappingCommand( Mapper, havokData.Skeleton ) );
                 } );
             }
+
+            ImGui.SameLine();
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                if( ImGui.Button( "Generate" ) ) {
+                    GenerateMapping( idx, Plugin.Configuration.SklbMappingUpdateExisting );
+                }
+                ImGui.SameLine();
+                if( ImGui.Checkbox( "Update Existing", ref Plugin.Configuration.SklbMappingUpdateExisting ) ) Plugin.Configuration.Save();
+            }
+
+            ImGui.Separator();
+            SimpleMappingView.Draw();
         }
 
-        private void DrawSimpleMappings() {
-            using var tabItem = ImRaii.TabItem( "Simple Mappings" );
-            if( !tabItem ) return;
+        public void GenerateMapping( int idx, bool updateExisting ) {
+            var command = new CompoundCommand();
 
-            using var _ = ImRaii.PushId( "SimpleMappings" );
+            var mappedBoneNames = new Dictionary<string, int>();
+            for( var i = 0; i < MappedSkeleton->Bones.Length; i++ ) {
+                mappedBoneNames[MappedSkeleton->Bones[i].Name.String] = i;
+            }
 
-            SimpleMappingView.Draw();
+            // Which of the skeleton bones indexes already have a mapping associated with them
+            var alreadyMapped = new HashSet<int>();
+            foreach( var simple in SimpleMappings ) {
+                alreadyMapped.Add( simple.BoneB.Value );
+            }
+
+            var allMappings = new List<SklbSimpleMapping>();
+            if( updateExisting ) allMappings.AddRange( SimpleMappings );
+
+            foreach( var (bone, boneIdx) in Bones.Bones.WithIndex() ) {
+                if( alreadyMapped.Contains( boneIdx ) ) continue;
+                var name = bone.Name.Value;
+                if( !mappedBoneNames.TryGetValue( name, out var mappedIdx ) ) continue;
+
+                var newSimple = new SklbSimpleMapping( this );
+                newSimple.BoneA.Value = mappedIdx;
+                newSimple.BoneB.Value = boneIdx;
+
+                allMappings.Add( newSimple );
+                command.Add( new GenericAddCommand<SklbSimpleMapping>( SimpleMappings, newSimple ) );
+            }
+
+            foreach( var simple in allMappings ) {
+                var mappedBone = MappedSkeleton->Bones[simple.BoneA.Value];
+                var mappedPose = MappedSkeleton->ReferencePose[simple.BoneA.Value];
+                var thisBone = Bones.Bones[simple.BoneB.Value];
+
+                var _mappedPos = mappedPose.Translation;
+                var _mappedRot = mappedPose.Rotation;
+                var _mappedSCl = mappedPose.Scale;
+
+                var _thisPos = thisBone.Pos;
+                var _thisRot = thisBone.Rot;
+                var _thisScl = thisBone.Scl;
+
+                var mappedPos = new Vector3( _mappedPos.X, _mappedPos.Y, _mappedPos.Z );
+                var mappedRot = new Quaternion( _mappedRot.X, _mappedRot.Y, _mappedRot.Z, _mappedRot.W );
+                var mappedScl = new Vector3( _mappedSCl.X, _mappedSCl.Y, _mappedSCl.Z );
+
+                var thisPos = new Vector3( _thisPos.X, _thisPos.Y, _thisPos.Z );
+                var thisRot = _thisRot;
+                var thisScl = new Vector3( _thisScl.X, _thisScl.Y, _thisScl.Z );
+
+                var resultScl = mappedPos.Length() == 0 ? 1 : thisPos.Length() / mappedPos.Length();
+                var resultPos = thisPos - ( mappedPos * resultScl );
+
+                var resultRot = Quaternion.Multiply( thisRot, Quaternion.Inverse( mappedRot ) );
+                if( resultRot.W < 0 ) resultRot *= -1f;
+                if( idx % 2 == 0 ) resultRot = new( 0f, 0f, 0f, 1f );
+
+                command.Add( new ParsedSimpleCommand<Vector4>( simple.Translation, new( resultPos, 0 ) ) );
+                command.Add( new ParsedSimpleCommand<Vector3>( simple.Rotation, ParsedQuat.ToEuler( resultRot ) ) );
+                command.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
+            }
+
+            CommandManager.Sklb.Add( command );
         }
     }
 }
