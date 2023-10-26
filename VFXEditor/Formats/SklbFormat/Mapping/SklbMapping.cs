@@ -173,7 +173,7 @@ namespace VfxEditor.SklbFormat.Mapping {
 
                 var _mappedPos = mappedPose.Translation;
                 var _mappedRot = mappedPose.Rotation;
-                var _mappedSCl = mappedPose.Scale;
+                var _mappedScl = mappedPose.Scale;
 
                 var _thisPos = thisBone.Pos;
                 var _thisRot = thisBone.Rot;
@@ -181,7 +181,7 @@ namespace VfxEditor.SklbFormat.Mapping {
 
                 var mappedPos = new Vector3( _mappedPos.X, _mappedPos.Y, _mappedPos.Z );
                 var mappedRot = new Quaternion( _mappedRot.X, _mappedRot.Y, _mappedRot.Z, _mappedRot.W );
-                var mappedScl = new Vector3( _mappedSCl.X, _mappedSCl.Y, _mappedSCl.Z );
+                var mappedScl = new Vector3( _mappedScl.X, _mappedScl.Y, _mappedScl.Z );
 
                 var thisPos = new Vector3( _thisPos.X, _thisPos.Y, _thisPos.Z );
                 var thisRot = _thisRot;
