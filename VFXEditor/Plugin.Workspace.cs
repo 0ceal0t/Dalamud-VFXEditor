@@ -1,4 +1,3 @@
-using ImGuiFileDialog;
 using ImGuiNET;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using VfxEditor.FilePicker;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -77,7 +77,7 @@ namespace VfxEditor {
         }
 
         private static void OpenWorkspace() {
-            FileDialogManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var extension = new FileInfo( res ).Extension;
@@ -165,7 +165,7 @@ namespace VfxEditor {
         }
 
         private static void SaveAsWorkspace() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
                 ExportWorkspace( res );
                 Configuration.AddRecentWorkspace( res );

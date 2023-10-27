@@ -1,6 +1,5 @@
 using Dalamud.Configuration;
 using Dalamud.Interface.Utility;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -40,7 +39,6 @@ namespace VfxEditor {
         public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 10;
         public bool SelectDialogLogAllFilesHidden = true;
-        public int MaxUndoSize = 10;
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;
         public bool FilepickerImagePreview = true;
@@ -97,7 +95,7 @@ namespace VfxEditor {
         public Vector4 CurveEditorLineColor = new( 0, 0.1f, 1, 1 );
         public Vector4 CurveEditorPointColor = new( 1 );
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
-        public Vector4 CurveEditorPrimarySelectedColor = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
+        public Vector4 CurveEditorPrimarySelectedColor = new( 0.984f, 0.726f, 0.011f, 1.0f );
         public List<Vector4> CurveEditorPalette = new();
         public int CurveEditorLineWidth = 2;
         public int CurveEditorColorRingSize = 3;
@@ -107,6 +105,15 @@ namespace VfxEditor {
         public int CurveEditorPrimarySelectedSize = 12;
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
+
+        public Vector4 FilePickerSelectedColor = new( 1f, 0.173f, 0.173f, 1f );
+        public Vector4 FilePickerFolderColor = new( 0.516f, 0.859f, 1f, 1f );
+        public Vector4 FilePickerCodeColor = new( 0.229f, 1f, 0.832f, 1f );
+        public Vector4 FilePickerMiscColor = new( 1f, 0.789f, 0.233f, 1f );
+        public Vector4 FilePickerImageColor = new( 0.317f, 1f, 0.306f, 1f );
+        public Vector4 FilePickerFfxivColor = new( 0.874f, 0.984f, 0.010f, 1.0f );
+        public Vector4 FilePickerArchiveColor = new( 1f, 0.362f, 0.979f, 1.0f );
+        public bool FilePickerPreviewOpen = true;
 
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
@@ -140,7 +147,6 @@ namespace VfxEditor {
 
         public void Setup() {
             Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
-            FileDialogManager.ImagePreview = FilepickerImagePreview;
 
             // Move old configurations over to new
             ProcessOldManagerConfigs( RecentSelects, FavoriteVfx, "Vfx" );
@@ -214,6 +220,10 @@ namespace VfxEditor {
                 DrawKeybinds();
                 ImGui.EndTabItem();
             }
+            if( ImGui.BeginTabItem( "File Picker" ) ) {
+                DrawFilePicker();
+                ImGui.EndTabItem();
+            }
             if( ImGui.BeginTabItem( "Vfx" ) ) {
                 DrawVfx();
                 ImGui.EndTabItem();
@@ -258,18 +268,12 @@ namespace VfxEditor {
             if( ImGui.CollapsingHeader( "UI", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
                 if( ImGui.Checkbox( "Hide with Game UI", ref HideWithUI ) ) Save();
-                if( ImGui.Checkbox( "File Picker Image Preview", ref FilepickerImagePreview ) ) {
-                    FileDialogManager.ImagePreview = FilepickerImagePreview;
-                    Save();
-                }
                 if( ImGui.Checkbox( "Show Tab Bar", ref ShowTabBar ) ) Save();
                 ImGui.SetNextItemWidth( 135 );
                 if( ImGui.InputInt( "Recent File Limit", ref SaveRecentLimit ) ) {
                     SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );
                     Save();
                 }
-                ImGui.SetNextItemWidth( 135 );
-                if( ImGui.InputInt( "Undo History Size", ref MaxUndoSize ) ) Save();
                 ImGui.SetNextItemWidth( 135 );
                 if( ImGui.InputFloat( "Overlay Remove Delay", ref OverlayRemoveDelay ) ) Save();
                 if( ImGui.Checkbox( "Limit Overlay by Distance", ref OverlayLimit ) ) Save();
@@ -333,6 +337,18 @@ namespace VfxEditor {
                 if( ImGui.ColorEdit4( "Literal Color", ref LuaLiteralColor ) ) Save();
                 if( ImGui.ColorEdit4( "Variable Color", ref LuaVariableColor ) ) Save();
             }
+        }
+
+        private void DrawFilePicker() {
+            using var child = ImRaii.Child( "FilePicker" );
+
+            if( ImGui.ColorEdit4( "Selected Color", ref FilePickerSelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( "Folder Color", ref FilePickerFolderColor ) ) Save();
+            if( ImGui.ColorEdit4( "Code File Color", ref FilePickerCodeColor ) ) Save();
+            if( ImGui.ColorEdit4( "Misc File Color", ref FilePickerMiscColor ) ) Save();
+            if( ImGui.ColorEdit4( "Image File Color", ref FilePickerImageColor ) ) Save();
+            if( ImGui.ColorEdit4( "Archive File Color", ref FilePickerArchiveColor ) ) Save();
+            if( ImGui.ColorEdit4( "FFXIV File Color", ref FilePickerFfxivColor ) ) Save();
         }
 
         private void DrawEditorSpecific() {

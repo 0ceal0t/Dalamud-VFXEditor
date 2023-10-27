@@ -1,9 +1,9 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiFileDialog;
 using ImGuiNET;
 using System;
 using System.Numerics;
+using VfxEditor.FilePicker;
 using VfxEditor.Formats.TextureFormat.Ui;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
@@ -50,14 +50,14 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             }
         }
 
-        protected void DrawSettingsCog() {
+        protected static void DrawSettingsCog() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             using var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 1 ) );
             ImGui.SameLine();
             if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "ReplaceSettings" );
         }
 
-        protected void DrawSettingsPopup() {
+        protected static void DrawSettingsPopup() {
             using var popup = ImRaii.Popup( "ReplaceSettings" );
             if( !popup ) return;
 
@@ -65,7 +65,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,." + GameExtension + ",.dds},.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a File", "Image files{.png,." + GameExtension + ",.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     OnReplace( res );

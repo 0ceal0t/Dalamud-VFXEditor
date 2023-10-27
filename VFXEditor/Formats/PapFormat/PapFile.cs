@@ -1,4 +1,3 @@
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -6,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
+using VfxEditor.FilePicker;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -152,7 +152,7 @@ namespace VfxEditor.PapFormat {
             Variant.Draw( Command );
 
             if( ImGui.Button( $"Export Havok" ) ) {
-                FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                FilePickerManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }

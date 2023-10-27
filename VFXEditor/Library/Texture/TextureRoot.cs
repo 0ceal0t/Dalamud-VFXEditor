@@ -1,9 +1,9 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.FilePicker;
 using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
-                    FileDialogManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
+                    FilePickerManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ExportTextures( res );
                     } );
@@ -34,7 +34,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
-                    FileDialogManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
+                    FilePickerManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ImportTextures( res );
                     } );

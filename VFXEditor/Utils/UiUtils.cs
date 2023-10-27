@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -10,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.FilePicker;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
@@ -196,7 +196,7 @@ namespace VfxEditor.Utils {
         }
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext, string fileName ) {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
             } );
         }

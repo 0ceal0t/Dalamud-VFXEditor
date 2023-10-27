@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using FFXIVClientStructs.Havok;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui;
 using OtterGui.Raii;
@@ -11,6 +10,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
+using VfxEditor.FilePicker;
 using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
@@ -379,19 +379,19 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= IMPORT EXPORT ==========
 
         private void ExportHavok() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.Copy( Path, res, true );
             } );
         }
 
         private void ExportGltf() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );

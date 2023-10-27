@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Utils.Stacks;
 
 namespace VfxEditor {
     public class CommandManager {
@@ -21,8 +22,7 @@ namespace VfxEditor {
         public static CommandManager Shpk => Plugin.ShpkManager?.GetCurrentCommandManager();
         public static CommandManager Shcd => Plugin.ShcdManager?.GetCurrentCommandManager();
 
-        private readonly List<ICommand> CommandBuffer = new();
-        private int CommandIndex;
+        private readonly UndoRedoStack<ICommand> Commands = new( 25 );
 
         public readonly CopyManager Copy;
         private readonly FileManagerFile Data;
@@ -36,33 +36,29 @@ namespace VfxEditor {
         }
 
         public void Add( ICommand command ) {
-            var numberToRemove = CommandBuffer.Count - 1 - CommandIndex; // when a change is made, wipes out the previous undo
-            if( numberToRemove > 0 ) CommandBuffer.RemoveRange( CommandBuffer.Count - numberToRemove, numberToRemove );
-
-            CommandBuffer.Add( command );
-            while( CommandBuffer.Count > Plugin.Configuration.MaxUndoSize ) CommandBuffer.RemoveAt( 0 );
-            CommandIndex = CommandBuffer.Count - 1;
             command.Execute();
+            Commands.Add( command );
+
             Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
 
-        public bool CanUndo => CommandBuffer.Count > 0 && CommandIndex >= 0;
+        public bool CanUndo => Commands.CanUndo;
 
-        public bool CanRedo => CommandBuffer.Count > 0 && CommandIndex < ( CommandBuffer.Count - 1 );
+        public bool CanRedo => Commands.CanRedo;
 
         public void Undo() {
-            if( !CanUndo ) return;
-            CommandBuffer[CommandIndex].Undo();
-            CommandIndex--;
+            if( !Commands.Undo( out var item ) ) return;
+            item.Undo();
+
             Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
 
         public void Redo() {
-            if( !CanRedo ) return;
-            CommandIndex++;
-            CommandBuffer[CommandIndex].Redo();
+            if( !Commands.Redo( out var item ) ) return;
+            item.Redo();
+
             Data.SetUnsaved();
             OnChangeAction?.Invoke();
         }
@@ -82,7 +78,7 @@ namespace VfxEditor {
         }
 
         public void Dispose() {
-            CommandBuffer.Clear();
+            Commands.Clear();
         }
 
         public static void DisposeAll() {

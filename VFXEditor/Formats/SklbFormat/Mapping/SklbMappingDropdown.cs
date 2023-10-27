@@ -1,8 +1,8 @@
 using FFXIVClientStructs.Havok;
-using ImGuiFileDialog;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
+using VfxEditor.FilePicker;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -20,7 +20,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
         protected override unsafe void OnNew() {
-            FileDialogManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
+            FilePickerManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
                 if( !ok ) return;
 
                 var hkxPath = res;

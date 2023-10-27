@@ -1,8 +1,8 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
+using VfxEditor.FilePicker;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Havok.Ui {
@@ -51,7 +51,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
-                    FileDialogManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
+                    FilePickerManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
                         SklbReplaced = false;
                         OnUpdate.Invoke( SimpleSklb.LoadFromLocal( res ) );

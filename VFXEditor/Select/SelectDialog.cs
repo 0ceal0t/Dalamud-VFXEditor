@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.FilePicker;
 using VfxEditor.Select.Lists;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -150,7 +150,7 @@ namespace VfxEditor.Select {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FileDialogManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                        FilePickerManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
                             Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
                         } );

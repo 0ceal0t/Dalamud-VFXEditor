@@ -1,5 +1,5 @@
-using ImGuiFileDialog;
 using System.Collections.Generic;
+using VfxEditor.FilePicker;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
@@ -36,7 +36,7 @@ namespace VfxEditor.PapFormat {
         }
 
         protected override void OnNew() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
                 if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }

@@ -1,5 +1,4 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using NAudio.Wave;
 using OtterGui.Raii;
@@ -7,6 +6,7 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Threading.Tasks;
+using VfxEditor.FilePicker;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Utils;
 
@@ -291,14 +291,13 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void ImportDialog() {
-            var text = IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*";
-            FileDialogManager.OpenFileDialog( "Import File", text, ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Import File", IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*", ( bool ok, string res ) => {
                 if( ok ) ScdFile.Import( res, Entry );
             } );
         }
 
         private void SaveWaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
                 if( ok ) {
                     using var stream = Entry.Data.GetStream();
                     WaveFileWriter.CreateWaveFile( res, stream );
@@ -307,7 +306,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveOggDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
                     File.WriteAllBytes( res, data.DecodedData );

@@ -1,10 +1,10 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
+using VfxEditor.FilePicker;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.Formats.AvfxFormat.Texture {
@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Texture {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
                         var extension = path.Split( '.' )[^1].Trim( '\0' );
-                        FileDialogManager.OpenFileModal( "Select a File", "Image files{.png,." + extension + ",.dds},.*", ( bool ok, string res ) => {
+                        FilePickerManager.OpenFileModal( "Select a File", "Image files{.png,." + extension + ",.dds},.*", ( bool ok, string res ) => {
                             Show();
                             if( !ok ) return;
                             try {

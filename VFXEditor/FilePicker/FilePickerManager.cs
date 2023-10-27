@@ -1,72 +1,57 @@
 using Dalamud.Interface;
-using Dalamud.Plugin;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.FilePicker.SideBar;
 
-namespace ImGuiFileDialog {
-    public static class FileDialogManager {
-        private static FileDialog Dialog;
-        private static string SavedPath;
+namespace VfxEditor.FilePicker {
+    public static class FilePickerManager {
+        private static FilePickerDialog Dialog;
+        private static string SavedPath = ".";
         private static Action<bool, string> Callback;
-        private static List<SideBarItem> Recent;
-        private static DalamudPluginInterface PluginInterface;
-
-        public static bool ImagePreview { get; set; } = true;
-
-        public static void Initialize( DalamudPluginInterface pluginInterface ) {
-            PluginInterface = pluginInterface;
-            Dialog = null;
-            SavedPath = ".";
-            Callback = null;
-            Recent = new();
-        }
+        private static readonly List<FilePickerSidebarItem> Recent = new();
 
         public static void Dispose() {
             UnloadDialog();
             Dialog = null;
             Callback = null;
-            Recent = null;
-            SavedPath = null;
-            PluginInterface = null;
+            Recent.Clear();
         }
 
         public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
-            SetDialog( "OpenFolderDialog", title, "", SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback );
+            SetDialog( "OpenFolderDialog", title, "", ".", "", false, ImGuiFileDialogFlags.SelectOnly, true, callback );
         }
 
         public static void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
-            SetDialog( "SaveFolderDialog", title, "", SavedPath, defaultFolderName, "", 1, false, ImGuiFileDialogFlags.None, callback );
+            SetDialog( "SaveFolderDialog", title, "", defaultFolderName, "", false, ImGuiFileDialogFlags.None, true, callback );
         }
 
         public static void OpenFileDialog( string title, string filters, Action<bool, string> callback ) {
-            SetDialog( "OpenFileDialog", title, filters, SavedPath, ".", "", 1, false, ImGuiFileDialogFlags.SelectOnly, callback );
+            SetDialog( "OpenFileDialog", title, filters, ".", "", false, ImGuiFileDialogFlags.SelectOnly, false, callback );
         }
 
         public static void OpenFileModal( string title, string filters, Action<bool, string> callback ) {
-            SetDialog( "OpenFileDialog", title, filters, SavedPath, ".", "", 1, true, ImGuiFileDialogFlags.SelectOnly, callback );
+            SetDialog( "OpenFileDialog", title, filters, ".", "", true, ImGuiFileDialogFlags.SelectOnly, false, callback );
         }
 
         public static void SaveFileDialog( string title, string filters, string defaultFileName, string defaultExtension, Action<bool, string> callback ) {
-            SetDialog( "SaveFileDialog", title, filters, SavedPath, defaultFileName, defaultExtension, 1, false, ImGuiFileDialogFlags.None, callback );
+            SetDialog( "SaveFileDialog", title, filters, defaultFileName, defaultExtension, false, ImGuiFileDialogFlags.ConfirmOverwrite, false, callback );
         }
 
         private static void SetDialog(
             string id,
             string title,
             string filters,
-            string path,
             string defaultFileName,
             string defaultExtension,
-            int selectionCountMax,
-            bool isModal,
+            bool modal,
             ImGuiFileDialogFlags flags,
+            bool folderDialog,
             Action<bool, string> callback
         ) {
-            if( ImagePreview ) flags |= ImGuiFileDialogFlags.LoadPreview;
             UnloadDialog();
             Callback = callback;
-            Dialog = new FileDialog( PluginInterface, id, title, filters, path, defaultFileName, defaultExtension, selectionCountMax, isModal, Recent, flags );
+            Dialog = new FilePickerDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent );
             Dialog.Show();
         }
 
@@ -84,7 +69,6 @@ namespace ImGuiFileDialog {
 
         private static void UnloadDialog() {
             Dialog?.Hide();
-            Dialog?.Dispose();
         }
 
         private static void AddRecent( string path ) {
@@ -92,8 +76,8 @@ namespace ImGuiFileDialog {
                 if( recent.Location == path ) return;
             }
 
-            Recent.Add( new SideBarItem {
-                Icon = ( char )FontAwesomeIcon.Folder,
+            Recent.Add( new FilePickerSidebarItem {
+                Icon = FontAwesomeIcon.Folder,
                 Location = path,
                 Text = Path.GetFileName( path )
             } );

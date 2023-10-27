@@ -1,12 +1,12 @@
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Windowing;
-using ImGuiFileDialog;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.FilePicker;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Select;
@@ -57,7 +57,7 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void Import( SelectResult result ) {
-            FileDialogManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     AddRecent( result );

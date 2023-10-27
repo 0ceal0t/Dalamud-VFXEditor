@@ -1,9 +1,9 @@
-using ImGuiFileDialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using VfxEditor.FilePicker;
 
 namespace VfxEditor.Ui.Export {
     public struct TTMPL {
@@ -35,7 +35,7 @@ namespace VfxEditor.Ui.Export {
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

@@ -1,9 +1,9 @@
-using ImGuiFileDialog;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using VfxEditor.FilePicker;
 
 namespace VfxEditor.Ui.Export {
     [Serializable]
@@ -31,7 +31,7 @@ namespace VfxEditor.Ui.Export {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

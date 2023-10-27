@@ -1,7 +1,7 @@
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using VfxEditor.FilePicker;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         }
 
         public void SaveDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 File.Export( GetSelected(), res, ExportDependencies );
                 Plugin.AvfxManager?.ExportDialog.Hide();

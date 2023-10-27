@@ -1,11 +1,11 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.FilePicker;
 using VfxEditor.Interop;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
@@ -153,7 +153,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             if( ImGui.Button( "Export" ) ) {
-                FileDialogManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
+                FilePickerManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
                     if( !ok ) return;
                     File.WriteAllBytes( res, Data );
                 } );
@@ -161,7 +161,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) {
-                FileDialogManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
+                FilePickerManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
                     if( !ok ) return;
 
                     if( Path.GetExtension( res ) == ".hlsl" ) {

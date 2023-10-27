@@ -1,11 +1,11 @@
 using Dalamud.Interface;
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
+using VfxEditor.FilePicker;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 using VfxEditor.TmbFormat;
@@ -137,7 +137,7 @@ namespace VfxEditor.PapFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) {
-                    FileDialogManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                    FilePickerManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
                             CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
                             UiUtils.OkNotification( "Tmb data imported" );

@@ -1,4 +1,3 @@
-using ImGuiFileDialog;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -6,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.AvfxFormat.Model;
+using VfxEditor.FilePicker;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 using static VfxEditor.DirectX.ModelPreview;
@@ -166,7 +166,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FileDialogManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
+            FilePickerManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -180,7 +180,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FileDialogManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );
