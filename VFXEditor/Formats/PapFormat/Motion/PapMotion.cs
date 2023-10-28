@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Parsing;
@@ -157,14 +157,14 @@ namespace VfxEditor.PapFormat.Motion {
         // ======== IMPORT EXPORT =========
 
         private void ExportDialog( string animationName ) {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Plugin.AddModal( new PapGltfExportModal( this, animationName, res ) );
             } );
         }
 
         private void ImportDialog( int idx ) {
-            FilePickerManager.OpenFileDialog( "Select a File", "Motion{.hkx,.gltf},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Motion{.hkx,.gltf},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     Plugin.AddModal( new PapReplaceModal( this, idx, res ) );

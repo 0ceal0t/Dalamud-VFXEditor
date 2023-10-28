@@ -3,7 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.Ui;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
@@ -65,7 +65,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected void ImportDialog() {
-            FilePickerManager.OpenFileDialog( "Select a File", "Image files{.png,." + GameExtension + ",.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,." + GameExtension + ",.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     OnReplace( res );

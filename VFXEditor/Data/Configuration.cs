@@ -109,15 +109,15 @@ namespace VfxEditor {
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
 
-        public Vector4 FilePickerSelectedColor = new( 1f, 0.310f, 0.310f, 1f );
-        public Vector4 FilePickerFolderColor = new( 0.516f, 0.859f, 1f, 1f );
-        public Vector4 FilePickerCodeColor = new( 0.229f, 1f, 0.832f, 1f );
-        public Vector4 FilePickerMiscColor = new( 1f, 0.789f, 0.233f, 1f );
-        public Vector4 FilePickerImageColor = new( 0.321f, 1f, 0.310f, 1f );
-        public Vector4 FilePickerFfxivColor = new( 0.976f, 1f, 0.419f, 1.0f );
-        public Vector4 FilePickerArchiveColor = new( 1f, 0.475f, 0.805f, 1.0f );
-        public bool FilePickerPreviewOpen = true;
-        public bool FilePickerImagePreview = true;
+        public Vector4 FileBrowserSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
+        public Vector4 FileBrowserFolderColor = new( 0.516f, 0.859f, 1f, 1f );
+        public Vector4 FileBrowserCodeColor = new( 0.229f, 1f, 0.832f, 1f );
+        public Vector4 FileBrowserMiscColor = new( 1f, 0.789f, 0.233f, 1f );
+        public Vector4 FileBrowserImageColor = new( 0.321f, 1f, 0.310f, 1f );
+        public Vector4 FileBrowserFfxivColor = new( 1f, 0.543f, 0.508f, 1.0f );
+        public Vector4 FileBrowserArchiveColor = new( 1f, 0.475f, 0.805f, 1.0f );
+        public bool FileBrowserPreviewOpen = true;
+        public bool FileBrowserImagePreview = true;
 
         public bool PhybSkeletonSplit = true;
         public bool EidSkeletonSplit = true;
@@ -221,7 +221,7 @@ namespace VfxEditor {
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "File Picker" ) ) {
-                DrawFilePicker();
+                DrawFileBrowser();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Vfx" ) ) {
@@ -339,18 +339,18 @@ namespace VfxEditor {
             }
         }
 
-        private void DrawFilePicker() {
-            using var child = ImRaii.Child( "FilePicker" );
+        private void DrawFileBrowser() {
+            using var child = ImRaii.Child( "FileBrowser" );
 
-            if( ImGui.Checkbox( "Preview Images", ref FilePickerImagePreview ) ) Save();
+            if( ImGui.Checkbox( "Preview Images", ref FileBrowserImagePreview ) ) Save();
 
-            if( ImGui.ColorEdit4( "Selected Color", ref FilePickerSelectedColor ) ) Save();
-            if( ImGui.ColorEdit4( "Folder Color", ref FilePickerFolderColor ) ) Save();
-            if( ImGui.ColorEdit4( "Code File Color", ref FilePickerCodeColor ) ) Save();
-            if( ImGui.ColorEdit4( "Misc File Color", ref FilePickerMiscColor ) ) Save();
-            if( ImGui.ColorEdit4( "Image File Color", ref FilePickerImageColor ) ) Save();
-            if( ImGui.ColorEdit4( "Archive File Color", ref FilePickerArchiveColor ) ) Save();
-            if( ImGui.ColorEdit4( "FFXIV File Color", ref FilePickerFfxivColor ) ) Save();
+            if( ImGui.ColorEdit4( "Selected Color", ref FileBrowserSelectedColor ) ) Save();
+            if( ImGui.ColorEdit4( "Folder Color", ref FileBrowserFolderColor ) ) Save();
+            if( ImGui.ColorEdit4( "Code File Color", ref FileBrowserCodeColor ) ) Save();
+            if( ImGui.ColorEdit4( "Misc File Color", ref FileBrowserMiscColor ) ) Save();
+            if( ImGui.ColorEdit4( "Image File Color", ref FileBrowserImageColor ) ) Save();
+            if( ImGui.ColorEdit4( "Archive File Color", ref FileBrowserArchiveColor ) ) Save();
+            if( ImGui.ColorEdit4( "FFXIV File Color", ref FileBrowserFfxivColor ) ) Save();
         }
 
         private void DrawEditorSpecific() {

@@ -6,8 +6,8 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FilePicker {
-    public partial class FilePickerDialog {
+namespace VfxEditor.FileBrowser {
+    public partial class FileBrowserDialog {
         private void DrawHeader() {
             DrawPathComposer();
 

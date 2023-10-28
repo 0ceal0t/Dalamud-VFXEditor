@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
@@ -208,7 +208,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void ImportDialog() {
-            FilePickerManager.OpenFileDialog( "Select a File", "TMB Entry{.tmbentry},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "TMB Entry{.tmbentry},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     ImportEntry( System.IO.File.ReadAllBytes( res ) );

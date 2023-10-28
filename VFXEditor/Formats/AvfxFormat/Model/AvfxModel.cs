@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.AvfxFormat.Model;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 using static VfxEditor.DirectX.ModelPreview;
@@ -166,7 +166,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FilePickerManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -180,7 +180,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );

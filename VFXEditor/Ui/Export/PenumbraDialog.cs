@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 
 namespace VfxEditor.Ui.Export {
     [Serializable]
@@ -31,7 +31,7 @@ namespace VfxEditor.Ui.Export {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

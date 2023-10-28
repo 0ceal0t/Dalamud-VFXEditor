@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 
 namespace VfxEditor.Ui.Export {
     public struct TTMPL {
@@ -35,7 +35,7 @@ namespace VfxEditor.Ui.Export {
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -71,14 +71,14 @@ namespace VfxEditor {
                 await Task.Delay( 100 );
                 WorkspaceFileCount = Managers.Count - 1;
                 foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
-                FilePickerManager.Dispose();
+                FileBrowserManager.Dispose();
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
         }
 
         private static void OpenWorkspace() {
-            FilePickerManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var extension = new FileInfo( res ).Extension;
@@ -132,7 +132,7 @@ namespace VfxEditor {
                 manager.Reset();
                 manager.WorkspaceImport( meta, loadLocation );
             }
-            FilePickerManager.Dispose();
+            FileBrowserManager.Dispose();
 
             return true;
         }
@@ -167,7 +167,7 @@ namespace VfxEditor {
         }
 
         private static void SaveAsWorkspace() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
                 if( !ok ) return;
                 ExportWorkspace( res );
                 Configuration.AddRecentWorkspace( res );

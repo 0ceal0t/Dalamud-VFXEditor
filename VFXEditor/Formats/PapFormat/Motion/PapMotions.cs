@@ -2,7 +2,7 @@ using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Utils.Gltf;
@@ -75,7 +75,7 @@ namespace VfxEditor.PapFormat.Motion {
         public void DrawExportAll() {
             Selector.Init();
             if( ImGui.Button( "Export All Motions" ) ) {
-                FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                     if( !ok ) return;
                     GltfAnimation.ExportAnimation(
                         Skeleton,

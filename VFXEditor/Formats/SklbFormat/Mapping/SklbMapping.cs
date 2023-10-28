@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -108,7 +108,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             using var _ = ImRaii.PushId( "SimpleMappings" );
 
             if( ImGui.Button( "Replace Skeleton" ) ) {
-                FilePickerManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
                     if( !ok ) return;
 
                     var hkxPath = res;

@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
 
@@ -46,7 +46,7 @@ namespace VfxEditor.Ui.Tools {
             using var indent2 = ImRaii.PushIndent();
 
             if( ImGui.Button( ".atex to PNG" ) ) {
-                FilePickerManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsPng( res + ".png" );
@@ -55,7 +55,7 @@ namespace VfxEditor.Ui.Tools {
 
             ImGui.SameLine();
             if( ImGui.Button( ".atex to DDS" ) ) {
-                FilePickerManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureDataFile.LoadFromLocal( res );
                     texFile.SaveAsDds( res + ".dds" );

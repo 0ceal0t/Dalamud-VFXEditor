@@ -3,7 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
-                    FilePickerManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
+                    FileBrowserManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ExportTextures( res );
                     } );
@@ -34,7 +34,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
-                    FilePickerManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
                         if( !ok ) return;
                         library.ImportTextures( res );
                     } );

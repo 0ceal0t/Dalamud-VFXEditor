@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -152,7 +152,7 @@ namespace VfxEditor.PapFormat {
             Variant.Draw( Command );
 
             if( ImGui.Button( $"Export Havok" ) ) {
-                FilePickerManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }

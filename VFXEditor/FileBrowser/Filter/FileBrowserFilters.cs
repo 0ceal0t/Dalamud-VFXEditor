@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace VfxEditor.FilePicker.Filter {
-    public partial class FilePickerFilters {
-        private FilePickerFilter Selected;
-        private readonly FilePickerDialog Dialog;
-        public readonly List<FilePickerFilter> Filters = new();
+namespace VfxEditor.FileBrowser.Filter {
+    public partial class FileBrowserFilters {
+        private FileBrowserFilter Selected;
+        private readonly FileBrowserDialog Dialog;
+        public readonly List<FileBrowserFilter> Filters = new();
 
         [GeneratedRegex( "[^,{}]+(\\{([^{}]*?)\\})?", RegexOptions.Compiled )]
         private static partial Regex FilterRegexPattern();
         private static readonly Regex FilterRegex = FilterRegexPattern();
 
-        public FilePickerFilters( FilePickerDialog dialog, string filters ) {
+        public FileBrowserFilters( FileBrowserDialog dialog, string filters ) {
             Dialog = dialog;
 
             // ".*,.cpp,.h,.hpp"
@@ -28,13 +28,13 @@ namespace VfxEditor.FilePicker.Filter {
                 var match = m.Value;
 
                 if( match.Contains( '{' ) ) {
-                    Filters.Add( new FilePickerFilter {
+                    Filters.Add( new FileBrowserFilter {
                         Filter = match.Split( '{' )[0],
                         CollectionFilters = new HashSet<string>( m.Groups[2].Value.Split( ',' ) )
                     } );
                 }
                 else {
-                    Filters.Add( new FilePickerFilter {
+                    Filters.Add( new FileBrowserFilter {
                         Filter = match,
                         CollectionFilters = new()
                     } );

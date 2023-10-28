@@ -10,8 +10,8 @@ using VfxEditor.AvfxFormat;
 using VfxEditor.Data;
 using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
+using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.FilePicker;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
@@ -122,7 +122,7 @@ namespace VfxEditor {
 
             Dalamud.Framework.Update += FrameworkOnUpdate;
             Dalamud.PluginInterface.UiBuilder.Draw += Draw;
-            Dalamud.PluginInterface.UiBuilder.Draw += FilePickerManager.Draw;
+            Dalamud.PluginInterface.UiBuilder.Draw += FileBrowserManager.Draw;
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi += OpenConfigUi;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi += OpenConfigUi;
         }
@@ -150,7 +150,7 @@ namespace VfxEditor {
 
         public void Dispose() {
             Dalamud.Framework.Update -= FrameworkOnUpdate;
-            Dalamud.PluginInterface.UiBuilder.Draw -= FilePickerManager.Draw;
+            Dalamud.PluginInterface.UiBuilder.Draw -= FileBrowserManager.Draw;
             Dalamud.PluginInterface.UiBuilder.Draw -= Draw;
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
@@ -175,7 +175,7 @@ namespace VfxEditor {
 
             VfxSpawn.Dispose();
             TmbSpawn.Dispose();
-            FilePickerManager.Dispose();
+            FileBrowserManager.Dispose();
         }
     }
 }

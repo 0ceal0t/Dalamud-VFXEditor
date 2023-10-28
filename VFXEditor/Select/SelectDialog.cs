@@ -8,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Select.Lists;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -150,7 +150,7 @@ namespace VfxEditor.Select {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FilePickerManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
                             Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
                         } );

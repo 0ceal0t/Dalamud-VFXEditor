@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 using VfxEditor.TmbFormat;
@@ -137,7 +137,7 @@ namespace VfxEditor.PapFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) {
-                    FilePickerManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
                             CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
                             UiUtils.OkNotification( "Tmb data imported" );

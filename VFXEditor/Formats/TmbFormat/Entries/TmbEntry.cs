@@ -4,7 +4,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
@@ -110,7 +110,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         private void SaveDialog() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
             } );
         }

@@ -2,8 +2,8 @@ using ImGuiNET;
 using OtterGui.Raii;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FilePicker {
-    public partial class FilePickerDialog {
+namespace VfxEditor.FileBrowser {
+    public partial class FileBrowserDialog {
         private bool DrawFooter() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ImGui.GetStyle().ItemSpacing.Y );
             ImGui.Separator();

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace VfxEditor.FilePicker.FolderFiles {
+namespace VfxEditor.FileBrowser.FolderFiles {
     public enum FilePickerFileType {
         File,
         Directory
@@ -21,7 +21,7 @@ namespace VfxEditor.FilePicker.FolderFiles {
         Archive,
     }
 
-    public unsafe class FilePickerFile {
+    public unsafe class FileBrowserFile {
         private static Dictionary<string, (FontAwesomeIcon, FilePickerFileColor)> ICON_MAP;
 
         public FilePickerFileType Type;
@@ -40,13 +40,13 @@ namespace VfxEditor.FilePicker.FolderFiles {
                 (FontAwesomeIcon.Folder, FilePickerFileColor.Folder) :
                 ( GetIcon( Ext, out var _iconColor ) ? _iconColor : (FontAwesomeIcon.File, FilePickerFileColor.None) );
 
-            using var text = ImRaii.PushColor( ImGuiCol.Text, selected ? Plugin.Configuration.FilePickerSelectedColor : ( iconColor.Item2 switch {
-                FilePickerFileColor.Folder => Plugin.Configuration.FilePickerFolderColor,
-                FilePickerFileColor.Code => Plugin.Configuration.FilePickerCodeColor,
-                FilePickerFileColor.Misc => Plugin.Configuration.FilePickerMiscColor,
-                FilePickerFileColor.Image => Plugin.Configuration.FilePickerImageColor,
-                FilePickerFileColor.Ffxiv => Plugin.Configuration.FilePickerFfxivColor,
-                FilePickerFileColor.Archive => Plugin.Configuration.FilePickerArchiveColor,
+            using var text = ImRaii.PushColor( ImGuiCol.Text, selected ? Plugin.Configuration.FileBrowserSelectedColor : ( iconColor.Item2 switch {
+                FilePickerFileColor.Folder => Plugin.Configuration.FileBrowserFolderColor,
+                FilePickerFileColor.Code => Plugin.Configuration.FileBrowserCodeColor,
+                FilePickerFileColor.Misc => Plugin.Configuration.FileBrowserMiscColor,
+                FilePickerFileColor.Image => Plugin.Configuration.FileBrowserImageColor,
+                FilePickerFileColor.Ffxiv => Plugin.Configuration.FileBrowserFfxivColor,
+                FilePickerFileColor.Archive => Plugin.Configuration.FileBrowserArchiveColor,
                 _ => *ImGui.GetStyleColorVec4( ImGuiCol.Text )
             } ) );
 
@@ -166,7 +166,7 @@ namespace VfxEditor.FilePicker.FolderFiles {
 
         // ========= UTILS ==========
 
-        public static FilePickerFile FromFile( FileInfo file, string path ) => new() {
+        public static FileBrowserFile FromFile( FileInfo file, string path ) => new() {
             FileName = file.Name,
             FilePath = path,
             FileModifiedDate = FormatModifiedDate( file.LastWriteTime ),
@@ -176,7 +176,7 @@ namespace VfxEditor.FilePicker.FolderFiles {
             Ext = file.Extension.Trim( '.' )
         };
 
-        public static FilePickerFile FromDirectory( DirectoryInfo dir, string path ) => new() {
+        public static FileBrowserFile FromDirectory( DirectoryInfo dir, string path ) => new() {
             FileName = dir.Name,
             FilePath = path,
             FileModifiedDate = FormatModifiedDate( dir.LastWriteTime ),
@@ -196,7 +196,7 @@ namespace VfxEditor.FilePicker.FolderFiles {
 
         // ======== SORTING ===========
 
-        public static int SortByFileNameDesc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByFileNameDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.FileName[0] == '.' && b.FileName[0] != '.' ) return 1;
             if( a.FileName[0] != '.' && b.FileName[0] == '.' ) return -1;
             if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
@@ -209,7 +209,7 @@ namespace VfxEditor.FilePicker.FolderFiles {
             return -1 * string.Compare( a.FileName, b.FileName );
         }
 
-        public static int SortByFileNameAsc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByFileNameAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.FileName[0] == '.' && b.FileName[0] != '.' ) return -1;
             if( a.FileName[0] != '.' && b.FileName[0] == '.' ) return 1;
             if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
@@ -222,32 +222,32 @@ namespace VfxEditor.FilePicker.FolderFiles {
             return string.Compare( a.FileName, b.FileName );
         }
 
-        public static int SortByTypeDesc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByTypeDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? 1 : -1;
             return string.Compare( a.Ext, b.Ext );
         }
 
-        public static int SortByTypeAsc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByTypeAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? -1 : 1;
             return -1 * string.Compare( a.Ext, b.Ext );
         }
 
-        public static int SortBySizeDesc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortBySizeDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? 1 : -1;
             return ( a.FileSize > b.FileSize ) ? 1 : -1;
         }
 
-        public static int SortBySizeAsc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortBySizeAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? -1 : 1;
             return ( a.FileSize > b.FileSize ) ? -1 : 1;
         }
 
-        public static int SortByDateDesc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByDateDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? 1 : -1;
             return string.Compare( a.FileModifiedDate, b.FileModifiedDate );
         }
 
-        public static int SortByDateAsc( FilePickerFile a, FilePickerFile b ) {
+        public static int SortByDateAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? -1 : 1;
             return -1 * string.Compare( a.FileModifiedDate, b.FileModifiedDate );
         }

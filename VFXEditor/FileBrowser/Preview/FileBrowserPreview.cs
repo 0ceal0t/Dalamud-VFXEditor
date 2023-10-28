@@ -9,12 +9,12 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using TeximpNet.DDS;
-using VfxEditor.FilePicker.FolderFiles;
+using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FilePicker.Preview {
-    public class FilePickerPreview {
+namespace VfxEditor.FileBrowser.Preview {
+    public class FileBrowserPreview {
         private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex", "tex" };
 
         private static readonly SemaphoreSlim Lock = new( 1, 1 );
@@ -29,15 +29,15 @@ namespace VfxEditor.FilePicker.Preview {
                 ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 2, offset ) );
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 2, 2 ) );
-                if( UiUtils.TransparentButton( Plugin.Configuration.FilePickerPreviewOpen ?
+                if( UiUtils.TransparentButton( Plugin.Configuration.FileBrowserPreviewOpen ?
                     FontAwesomeIcon.AngleRight.ToIconString() :
                     FontAwesomeIcon.AngleLeft.ToIconString(), *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) ) ) {
-                    Plugin.Configuration.FilePickerPreviewOpen = !Plugin.Configuration.FilePickerPreviewOpen;
+                    Plugin.Configuration.FileBrowserPreviewOpen = !Plugin.Configuration.FileBrowserPreviewOpen;
                     Plugin.Configuration.Save();
                 }
             }
 
-            if( !Plugin.Configuration.FilePickerPreviewOpen ) return;
+            if( !Plugin.Configuration.FileBrowserPreviewOpen ) return;
 
             ImGui.SameLine();
             using var group = ImRaii.Group();
@@ -87,10 +87,10 @@ namespace VfxEditor.FilePicker.Preview {
             ImGui.TextDisabled( descText );
         }
 
-        public void Load( FilePickerFile file ) {
+        public void Load( FileBrowserFile file ) {
             Dispose();
 
-            if( !Plugin.Configuration.FilePickerImagePreview ) return;
+            if( !Plugin.Configuration.FileBrowserImagePreview ) return;
             if( !ImageExtensions.Contains( file.Ext.ToLower() ) ) return;
 
             Task.Run( async () => {

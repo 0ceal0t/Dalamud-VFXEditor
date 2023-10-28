@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
-namespace VfxEditor.FilePicker.Filter {
-    public class FilePickerFilter {
+namespace VfxEditor.FileBrowser.Filter {
+    public class FileBrowserFilter {
         public string Filter;
         public HashSet<string> CollectionFilters;
 

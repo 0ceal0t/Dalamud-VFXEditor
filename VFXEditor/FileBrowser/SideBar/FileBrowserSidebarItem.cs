@@ -2,8 +2,8 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 
-namespace VfxEditor.FilePicker.SideBar {
-    public class FilePickerSidebarItem {
+namespace VfxEditor.FileBrowser.SideBar {
+    public class FileBrowserSidebarItem {
         public FontAwesomeIcon Icon;
         public string Text;
         public string Location;

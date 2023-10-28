@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileManager;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -164,7 +164,7 @@ namespace VfxEditor.AvfxFormat {
         public void ShowExportDialog( AvfxNode node ) => ExportUi.Show( node );
 
         public void ShowImportDialog() {
-            FilePickerManager.OpenFileDialog( "Select a File", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Partial VFX{.vfxedit2,.vfxedit},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     Import( res );

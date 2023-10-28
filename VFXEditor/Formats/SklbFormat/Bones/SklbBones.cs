@@ -10,7 +10,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
@@ -379,19 +379,19 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= IMPORT EXPORT ==========
 
         private void ExportHavok() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.Copy( Path, res, true );
             } );
         }
 
         private void ExportGltf() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FilePickerManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );

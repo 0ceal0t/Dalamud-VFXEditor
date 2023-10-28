@@ -2,10 +2,10 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
-using VfxEditor.FilePicker.FolderFiles;
+using VfxEditor.FileBrowser.FolderFiles;
 
-namespace VfxEditor.FilePicker {
-    public partial class FilePickerDialog {
+namespace VfxEditor.FileBrowser {
+    public partial class FileBrowserDialog {
         private void DrawBody() {
             var size = ImGui.GetContentRegionAvail() - new Vector2( 0, ImGui.GetFrameHeightWithSpacing() );
 
@@ -21,8 +21,8 @@ namespace VfxEditor.FilePicker {
             ImGui.TableSetupColumn( "##Preview", ImGuiTableColumnFlags.WidthFixed, 300 );
             ImGui.TableSetupColumn( "##PreviewClosed", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.DefaultHide, 15 );
 
-            ImGui.TableSetColumnEnabled( 2, Plugin.Configuration.FilePickerPreviewOpen );
-            ImGui.TableSetColumnEnabled( 3, !Plugin.Configuration.FilePickerPreviewOpen );
+            ImGui.TableSetColumnEnabled( 2, Plugin.Configuration.FileBrowserPreviewOpen );
+            ImGui.TableSetColumnEnabled( 3, !Plugin.Configuration.FileBrowserPreviewOpen );
 
             ImGui.TableNextRow();
 
@@ -32,7 +32,7 @@ namespace VfxEditor.FilePicker {
             ImGui.TableSetColumnIndex( 1 );
             DrawFileList();
 
-            ImGui.TableSetColumnIndex( Plugin.Configuration.FilePickerPreviewOpen ? 2 : 3 );
+            ImGui.TableSetColumnIndex( Plugin.Configuration.FileBrowserPreviewOpen ? 2 : 3 );
             Preview.Draw();
         }
 
@@ -110,7 +110,7 @@ namespace VfxEditor.FilePicker {
             clipper.End();
         }
 
-        private bool NavigateTo( FilePickerFile file ) {
+        private bool NavigateTo( FileBrowserFile file ) {
             if( file.FileName == ".." ) {
                 if( PathParts.Count > 1 ) {
                     SetPath( ComposeNewPath( PathParts.GetRange( 0, PathParts.Count - 1 ) ), true );

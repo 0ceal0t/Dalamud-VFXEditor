@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
@@ -306,21 +306,21 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SavePngDialog() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
                 if( !ok ) return;
                 SaveAsPng( res );
             } );
         }
 
         public void SaveDdsDialog() {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
                 if( !ok ) return;
                 SaveAsDds( res );
             } );
         }
 
         public void SaveTexDialog( string ext ) {
-            FilePickerManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, GetAllData() );
             } );

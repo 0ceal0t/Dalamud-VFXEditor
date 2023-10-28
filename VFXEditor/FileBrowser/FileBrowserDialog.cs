@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.FilePicker.Filter;
-using VfxEditor.FilePicker.FolderFiles;
-using VfxEditor.FilePicker.Preview;
-using VfxEditor.FilePicker.SideBar;
+using VfxEditor.FileBrowser.Filter;
+using VfxEditor.FileBrowser.FolderFiles;
+using VfxEditor.FileBrowser.Preview;
+using VfxEditor.FileBrowser.SideBar;
 using VfxEditor.Utils.Stacks;
 
-namespace VfxEditor.FilePicker {
+namespace VfxEditor.FileBrowser {
     public enum SortingField : int {
         None = 0,
         FileName = 1,
@@ -24,7 +24,7 @@ namespace VfxEditor.FilePicker {
         SelectOnly = 2
     }
 
-    public partial class FilePickerDialog {
+    public partial class FileBrowserDialog {
         public readonly string Id;
         public readonly string Title;
         public readonly bool Modal;
@@ -34,16 +34,16 @@ namespace VfxEditor.FilePicker {
         public readonly string DefaultExtension;
         public readonly string DefaultFileName;
 
-        private readonly FilePickerSideBar SideBar;
-        private readonly FilePickerFilters Filters;
-        private readonly FilePickerPreview Preview;
+        private readonly FileBrowserSideBar SideBar;
+        private readonly FileBrowserFilters Filters;
+        private readonly FileBrowserPreview Preview;
 
         private string SearchInput = "";
         private string FileNameInput = "";
 
-        private FilePickerFile Selected;
-        private readonly List<FilePickerFile> Files = new();
-        private readonly List<FilePickerFile> SearchedFiles = new();
+        private FileBrowserFile Selected;
+        private readonly List<FileBrowserFile> Files = new();
+        private readonly List<FileBrowserFile> SearchedFiles = new();
         private SortingField CurrentSortingField = SortingField.FileName;
         private readonly bool[] SortDescending = new bool[] { false, false, false, false };
 
@@ -60,7 +60,7 @@ namespace VfxEditor.FilePicker {
         private bool CreatingFolder = false;
         private string NewFolderInput = "";
 
-        public FilePickerDialog(
+        public FileBrowserDialog(
             string id,
             string title,
             bool modal,
@@ -70,7 +70,7 @@ namespace VfxEditor.FilePicker {
             string currentPath,
             string defaultFileName,
             string defaultExtension,
-            List<FilePickerSidebarItem> recent
+            List<FileBrowserSidebarItem> recent
         ) {
             Id = id;
             Title = title;
@@ -117,7 +117,7 @@ namespace VfxEditor.FilePicker {
             if( PathParts.Count == 0 ) return;
 
             if( PathParts.Count > 1 ) {
-                Files.Add( new FilePickerFile() {
+                Files.Add( new FileBrowserFile() {
                     Type = FilePickerFileType.Directory,
                     FilePath = CurrentPath,
                     FileName = ".."
@@ -128,13 +128,13 @@ namespace VfxEditor.FilePicker {
 
             foreach( var dir in info.EnumerateDirectories().OrderBy( d => d.Name ) ) {
                 if( string.IsNullOrEmpty( dir.Name ) ) continue;
-                Files.Add( FilePickerFile.FromDirectory( dir, CurrentPath ) );
+                Files.Add( FileBrowserFile.FromDirectory( dir, CurrentPath ) );
             }
 
             foreach( var file in info.EnumerateFiles().OrderBy( f => f.Name ) ) {
                 if( string.IsNullOrEmpty( file.Name ) ) continue;
                 if( Filters.FilterOut( file.Extension ) ) continue;
-                Files.Add( FilePickerFile.FromFile( file, CurrentPath ) );
+                Files.Add( FileBrowserFile.FromFile( file, CurrentPath ) );
             }
 
             SortFiles( CurrentSortingField );
@@ -151,11 +151,11 @@ namespace VfxEditor.FilePicker {
             if( canChangeOrder && sortingField == CurrentSortingField ) SortDescending[idx] = !SortDescending[idx]; // flip sorting
             var descending = SortDescending[idx];
 
-            Comparison<FilePickerFile> comparison = sortingField switch {
-                SortingField.FileName => descending ? FilePickerFile.SortByFileNameDesc : FilePickerFile.SortByFileNameAsc,
-                SortingField.Type => descending ? FilePickerFile.SortByTypeDesc : FilePickerFile.SortByTypeAsc,
-                SortingField.Size => descending ? FilePickerFile.SortBySizeDesc : FilePickerFile.SortBySizeAsc,
-                SortingField.Date => descending ? FilePickerFile.SortByDateDesc : FilePickerFile.SortByDateAsc,
+            Comparison<FileBrowserFile> comparison = sortingField switch {
+                SortingField.FileName => descending ? FileBrowserFile.SortByFileNameDesc : FileBrowserFile.SortByFileNameAsc,
+                SortingField.Type => descending ? FileBrowserFile.SortByTypeDesc : FileBrowserFile.SortByTypeAsc,
+                SortingField.Size => descending ? FileBrowserFile.SortBySizeDesc : FileBrowserFile.SortBySizeAsc,
+                SortingField.Date => descending ? FileBrowserFile.SortByDateDesc : FileBrowserFile.SortByDateAsc,
                 _ => null
             };
 

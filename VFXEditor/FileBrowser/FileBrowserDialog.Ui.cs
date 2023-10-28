@@ -4,8 +4,8 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FilePicker {
-    public partial class FilePickerDialog {
+namespace VfxEditor.FileBrowser {
+    public partial class FileBrowserDialog {
         private bool IsOk = false;
         private bool WantsToQuit = false;
         private bool WaitingForConfirmation;
@@ -19,7 +19,7 @@ namespace VfxEditor.FilePicker {
             IsOk = false;
             WantsToQuit = false;
 
-            using var _ = ImRaii.PushId( "FilePicker" );
+            using var _ = ImRaii.PushId( "FileBrowser" );
             ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
             if( Modal && !WaitingForConfirmation ) {
                 ImGui.OpenPopup( name );

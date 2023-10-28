@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.FilePicker;
+using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Select;
@@ -57,7 +57,7 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void Import( SelectResult result ) {
-            FilePickerManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     AddRecent( result );

@@ -2,14 +2,14 @@ using Dalamud.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FilePicker.SideBar;
+using VfxEditor.FileBrowser.SideBar;
 
-namespace VfxEditor.FilePicker {
-    public static class FilePickerManager {
-        private static FilePickerDialog Dialog;
+namespace VfxEditor.FileBrowser {
+    public static class FileBrowserManager {
+        private static FileBrowserDialog Dialog;
         private static string SavedPath = ".";
         private static Action<bool, string> Callback;
-        private static readonly List<FilePickerSidebarItem> Recent = new();
+        private static readonly List<FileBrowserSidebarItem> Recent = new();
 
         public static void Dispose() {
             UnloadDialog();
@@ -51,7 +51,7 @@ namespace VfxEditor.FilePicker {
         ) {
             UnloadDialog();
             Callback = callback;
-            Dialog = new FilePickerDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent );
+            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent );
             Dialog.Show();
         }
 
@@ -77,7 +77,7 @@ namespace VfxEditor.FilePicker {
                 if( recent.Location == path ) return;
             }
 
-            Recent.Add( new FilePickerSidebarItem {
+            Recent.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Folder,
                 Location = path,
                 Text = Path.GetFileName( path )

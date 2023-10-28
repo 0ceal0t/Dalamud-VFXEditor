@@ -7,18 +7,18 @@ using System.IO;
 using System.Reflection;
 using VfxEditor.Utils;
 
-namespace VfxEditor.FilePicker.SideBar {
-    public class FilePickerSideBar {
-        private readonly FilePickerDialog Dialog;
+namespace VfxEditor.FileBrowser.SideBar {
+    public class FileBrowserSideBar {
+        private readonly FileBrowserDialog Dialog;
 
-        private FilePickerSidebarItem Selected;
+        private FileBrowserSidebarItem Selected;
 
-        private readonly List<FilePickerSidebarItem> Drives = new();
-        private readonly List<FilePickerSidebarItem> QuickAccess = new();
-        private readonly List<FilePickerSidebarItem> Favorites = new();
-        private readonly List<FilePickerSidebarItem> Recent;
+        private readonly List<FileBrowserSidebarItem> Drives = new();
+        private readonly List<FileBrowserSidebarItem> QuickAccess = new();
+        private readonly List<FileBrowserSidebarItem> Favorites = new();
+        private readonly List<FileBrowserSidebarItem> Recent;
 
-        public FilePickerSideBar( FilePickerDialog dialog, List<FilePickerSidebarItem> recent ) {
+        public FileBrowserSideBar( FileBrowserDialog dialog, List<FileBrowserSidebarItem> recent ) {
             Dialog = dialog;
             Recent = recent;
 
@@ -28,7 +28,7 @@ namespace VfxEditor.FilePicker.SideBar {
                 var label = drive.VolumeLabel;
                 var text = string.IsNullOrEmpty( label ) ? location : $"{label} ({location})";
 
-                Drives.Add( new FilePickerSidebarItem {
+                Drives.Add( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Server,
                     Location = drive.Name,
                     Text = text,
@@ -39,43 +39,43 @@ namespace VfxEditor.FilePicker.SideBar {
             if( string.IsNullOrEmpty( personal ) ) return;
             if( personal.EndsWith( "OneDrive" ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Desktop,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
                 Text = "Desktop"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.File,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
                 Text = "Documents"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Download,
                 Location = Path.Combine( personal, "Downloads" ),
                 Text = "Downloads"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Star,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
                 Text = "Favorites"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Music,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
                 Text = "Music"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Image,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
                 Text = "Pictures"
             } );
 
-            QuickAccess.Add( new FilePickerSidebarItem {
+            QuickAccess.Add( new FileBrowserSidebarItem {
                 Icon = FontAwesomeIcon.Video,
                 Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
                 Text = "Videos"
@@ -83,7 +83,7 @@ namespace VfxEditor.FilePicker.SideBar {
 
             if( GetQuickAccessFolders( out var folders ) ) {
                 foreach( var (name, path) in folders ) {
-                    Favorites.Add( new FilePickerSidebarItem {
+                    Favorites.Add( new FileBrowserSidebarItem {
                         Icon = FontAwesomeIcon.Folder,
                         Location = path,
                         Text = $"{name}"
@@ -110,7 +110,7 @@ namespace VfxEditor.FilePicker.SideBar {
             DrawCategory( Recent, "Recent", FontAwesomeIcon.History, ref idx );
         }
 
-        private void DrawCategory( List<FilePickerSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
+        private void DrawCategory( List<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
             if( items == null || items.Count == 0 ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
@@ -125,7 +125,7 @@ namespace VfxEditor.FilePicker.SideBar {
             }
         }
 
-        private void DrawSideBarItem( FilePickerSidebarItem item, ref int idx ) {
+        private void DrawSideBarItem( FileBrowserSidebarItem item, ref int idx ) {
             using var _ = ImRaii.PushId( idx );
 
             if( item.Draw( item == Selected ) ) {
