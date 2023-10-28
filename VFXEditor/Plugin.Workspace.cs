@@ -71,6 +71,7 @@ namespace VfxEditor {
                 await Task.Delay( 100 );
                 WorkspaceFileCount = Managers.Count - 1;
                 foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
+                FilePickerManager.Dispose();
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
@@ -131,6 +132,7 @@ namespace VfxEditor {
                 manager.Reset();
                 manager.WorkspaceImport( meta, loadLocation );
             }
+            FilePickerManager.Dispose();
 
             return true;
         }

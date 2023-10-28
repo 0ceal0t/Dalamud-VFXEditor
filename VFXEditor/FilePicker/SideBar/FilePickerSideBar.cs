@@ -23,10 +23,15 @@ namespace VfxEditor.FilePicker.SideBar {
             Recent = recent;
 
             foreach( var drive in DriveInfo.GetDrives() ) {
+                var location = drive.Name;
+                if( location[^1] == Path.DirectorySeparatorChar ) location = location[0..^1];
+                var label = drive.VolumeLabel;
+                var text = string.IsNullOrEmpty( label ) ? location : $"{label} ({location})";
+
                 Drives.Add( new FilePickerSidebarItem {
                     Icon = FontAwesomeIcon.Server,
                     Location = drive.Name,
-                    Text = drive.Name
+                    Text = text,
                 } );
             }
 
@@ -87,7 +92,7 @@ namespace VfxEditor.FilePicker.SideBar {
             }
         }
 
-        public void ClearSelected() {
+        public void Clear() {
             Selected = null;
         }
 
@@ -124,7 +129,7 @@ namespace VfxEditor.FilePicker.SideBar {
             using var _ = ImRaii.PushId( idx );
 
             if( item.Draw( item == Selected ) ) {
-                Dialog.SetPath( item.Location );
+                Dialog.SetPath( item.Location, true );
                 Selected = item;
             }
 

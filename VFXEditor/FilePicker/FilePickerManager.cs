@@ -68,6 +68,7 @@ namespace VfxEditor.FilePicker {
         }
 
         private static void UnloadDialog() {
+            Dialog?.Dispose();
             Dialog?.Hide();
         }
 

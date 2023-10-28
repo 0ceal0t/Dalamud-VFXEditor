@@ -3,6 +3,7 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FilePicker.FolderFiles;
+using VfxEditor.FilePicker.Preview;
 
 namespace VfxEditor.FilePicker {
     public partial class FilePickerDialog {
@@ -14,13 +15,14 @@ namespace VfxEditor.FilePicker {
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
             using( var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) ) ) {
                 ImGui.BeginChild( "Child", size );
-                ImGui.Columns( 2, "Columns" );
+                ImGui.Columns( 3, "Columns" );
             }
 
             if( !SideBarDrawn ) {
                 SideBarDrawn = true;
                 ImGui.SetColumnWidth( 0, 150 );
             }
+
             SideBar.Draw();
 
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
@@ -28,13 +30,21 @@ namespace VfxEditor.FilePicker {
                 ImGui.NextColumn();
             }
 
+            ImGui.SetColumnWidth( 1, size.X - ImGui.GetColumnWidth( 0 ) - FilePickerPreview.Width );
+
             DrawFileList();
 
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
             using( var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) ) ) {
-                ImGui.Columns( 1 );
-                ImGui.EndChild();
+                ImGui.NextColumn();
             }
+
+            ImGui.SetColumnWidth( 2, FilePickerPreview.Width );
+
+            Preview.Draw();
+
+            ImGui.Columns( 1 );
+            ImGui.EndChild();
         }
 
         private void DrawFileList() {
@@ -53,8 +63,8 @@ namespace VfxEditor.FilePicker {
             ImGui.TableSetupScrollFreeze( 0, 1 );
 
             ImGui.TableSetupColumn( "  Name", ImGuiTableColumnFlags.WidthStretch, -1, 0 );
-            ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, -1, 1 );
-            ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed, -1, 2 );
+            ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 100, 1 );
+            ImGui.TableSetupColumn( "Size", ImGuiTableColumnFlags.WidthFixed, 75, 2 );
             ImGui.TableSetupColumn( "Date  ", ImGuiTableColumnFlags.WidthFixed, -1, 3 );
 
             ImGui.TableNextRow( ImGuiTableRowFlags.Headers );
@@ -101,6 +111,8 @@ namespace VfxEditor.FilePicker {
                                 WantsToQuit = true;
                                 IsOk = true;
                             }
+
+                            Preview.Load( file ); // Load image preview
                         }
                     }
                 }
@@ -112,14 +124,14 @@ namespace VfxEditor.FilePicker {
         private bool NavigateTo( FilePickerFile file ) {
             if( file.FileName == ".." ) {
                 if( PathParts.Count > 1 ) {
-                    SetPath( ComposeNewPath( PathParts.GetRange( 0, PathParts.Count - 1 ) ) );
+                    SetPath( ComposeNewPath( PathParts.GetRange( 0, PathParts.Count - 1 ) ), true );
                     return true;
                 }
             }
             else {
                 var newPath = Path.Combine( CurrentPath, file.FileName );
                 if( Directory.Exists( newPath ) ) {
-                    SetPath( newPath );
+                    SetPath( newPath, true );
                     return true;
                 }
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using VfxEditor.FilePicker.Filter;
 using VfxEditor.FilePicker.FolderFiles;
+using VfxEditor.FilePicker.Preview;
 using VfxEditor.FilePicker.SideBar;
 using VfxEditor.Utils.Stacks;
 
@@ -35,6 +36,7 @@ namespace VfxEditor.FilePicker {
 
         private readonly FilePickerSideBar SideBar;
         private readonly FilePickerFilters Filters;
+        private readonly FilePickerPreview Preview;
 
         private string SearchInput = "";
         private string FileNameInput = "";
@@ -49,7 +51,7 @@ namespace VfxEditor.FilePicker {
 
         private bool Visible = false;
         private string CurrentPath;
-        private readonly UndoRedoStack<string> PathHistory = new( 25 );
+        private readonly UndoRedoStack<(string, string)> PathHistory = new( 25 );
 
         private readonly List<string> PathParts = new();
         private bool PathEditing = false;
@@ -83,8 +85,9 @@ namespace VfxEditor.FilePicker {
 
             SideBar = new( this, recent );
             Filters = new( this, filters );
+            Preview = new();
 
-            SetPath( currentPath );
+            SetPath( currentPath, false );
             Filters.SetSelectedFilter( DefaultExtension );
         }
 
@@ -92,15 +95,17 @@ namespace VfxEditor.FilePicker {
 
         public void Hide() { Visible = false; }
 
-        public void SetPath( string path ) {
+        public void SetPath( string path, bool record ) {
+            var prevPath = CurrentPath;
             CurrentPath = new DirectoryInfo( path ).FullName;
             if( CurrentPath[^1] == Path.DirectorySeparatorChar ) CurrentPath = CurrentPath[0..^1]; // handle selecting a drive, like C: -> C:\
-            PathHistory.Add( CurrentPath );
+            if( record ) PathHistory.Add( (prevPath, CurrentPath) );
 
             SearchInput = "";
             Selected = null;
             if( FolderDialog ) FileNameInput = DefaultFileName;
-            SideBar.ClearSelected();
+            SideBar.Clear();
+            Preview.Clear();
             UpdatePathParts();
             UpdateFiles();
         }
@@ -182,5 +187,7 @@ namespace VfxEditor.FilePicker {
             }
             return Path.Combine( parts.ToArray() );
         }
+
+        public void Dispose() => Preview.Dispose();
     }
 }

@@ -94,6 +94,7 @@ namespace VfxEditor {
 
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             Configuration.Setup();
+            Configuration.Hide();
 
             TextureManager.LoadLibrary();
             TextureManager = new();

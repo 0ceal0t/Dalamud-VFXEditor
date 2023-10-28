@@ -50,12 +50,14 @@ namespace VfxEditor.FilePicker.Filter {
             ImGui.SameLine();
             ImGui.SetNextItemWidth( 150 );
 
-            using var combo = ImRaii.Combo( "##Filters", Selected.Filter, ImGuiComboFlags.None );
+            var text = Selected == null ? "[NONE]" : ( Selected.Filter == ".*" ? "All Files" : Selected.Filter );
+
+            using var combo = ImRaii.Combo( "##Filters", text, ImGuiComboFlags.None );
             if( !combo ) return;
 
             foreach( var (filter, idx) in Filters.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
-                if( ImGui.Selectable( filter.Filter, filter == Selected ) ) {
+                if( ImGui.Selectable( filter.Filter == ".*" ? "All Files" : filter.Filter, filter == Selected ) ) {
                     Selected = filter;
                     Dialog.UpdateFiles();
                 }

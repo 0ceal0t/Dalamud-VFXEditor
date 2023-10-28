@@ -33,15 +33,20 @@ namespace VfxEditor {
         public bool LogVfxDebug = false;
         public bool LogVfxTriggers = false;
 
-        public bool HideWithUI = true;
         public bool UpdateWriteLocation = true;
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 10;
+
+        public bool HideWithUI = true;
+        public bool ShowTabBar = true;
+        public bool DocumentPopoutShowSource = false;
         public bool SelectDialogLogAllFilesHidden = true;
+        public bool UseDegreesForAngles = false;
+
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;
-        public bool FilepickerImagePreview = true;
+
         public bool BlockGameInputsWhenFocused = false;
         public string WriteLocation = Path.Combine( new[] {
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -90,8 +95,6 @@ namespace VfxEditor {
         public float ScdVolume = 1f;
         public bool SimulateScdLoop = false;
 
-        public bool UseDegreesForAngles = false;
-
         public Vector4 CurveEditorLineColor = new( 0, 0.1f, 1, 1 );
         public Vector4 CurveEditorPointColor = new( 1 );
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
@@ -106,22 +109,19 @@ namespace VfxEditor {
         public Vector4 TimelineSelectedColor = new( 1f, 0.532f, 0f, 1f );
         public Vector4 TimelineBarColor = new( 0.44f, 0.457f, 0.492f, 1f );
 
-        public Vector4 FilePickerSelectedColor = new( 1f, 0.173f, 0.173f, 1f );
+        public Vector4 FilePickerSelectedColor = new( 1f, 0.310f, 0.310f, 1f );
         public Vector4 FilePickerFolderColor = new( 0.516f, 0.859f, 1f, 1f );
         public Vector4 FilePickerCodeColor = new( 0.229f, 1f, 0.832f, 1f );
         public Vector4 FilePickerMiscColor = new( 1f, 0.789f, 0.233f, 1f );
-        public Vector4 FilePickerImageColor = new( 0.317f, 1f, 0.306f, 1f );
-        public Vector4 FilePickerFfxivColor = new( 0.874f, 0.984f, 0.010f, 1.0f );
-        public Vector4 FilePickerArchiveColor = new( 1f, 0.362f, 0.979f, 1.0f );
+        public Vector4 FilePickerImageColor = new( 0.321f, 1f, 0.310f, 1f );
+        public Vector4 FilePickerFfxivColor = new( 0.976f, 1f, 0.419f, 1.0f );
+        public Vector4 FilePickerArchiveColor = new( 1f, 0.475f, 0.805f, 1.0f );
         public bool FilePickerPreviewOpen = true;
-
-        public bool ShowTabBar = true;
-        public bool DocumentPopoutShowSource = false;
+        public bool FilePickerImagePreview = true;
 
         public bool PhybSkeletonSplit = true;
         public bool EidSkeletonSplit = true;
         public bool ShowBoneNames = true;
-
         public BoneDisplay SklbBoneDisplay = BoneDisplay.Blender_Style_Perpendicular;
         public bool SklbMappingIndexDisplay = false;
         public bool SklbMappingUpdateExisting = true;
@@ -341,6 +341,8 @@ namespace VfxEditor {
 
         private void DrawFilePicker() {
             using var child = ImRaii.Child( "FilePicker" );
+
+            if( ImGui.Checkbox( "Preview Images", ref FilePickerImagePreview ) ) Save();
 
             if( ImGui.ColorEdit4( "Selected Color", ref FilePickerSelectedColor ) ) Save();
             if( ImGui.ColorEdit4( "Folder Color", ref FilePickerFolderColor ) ) Save();
