@@ -3,48 +3,37 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FilePicker.FolderFiles;
-using VfxEditor.FilePicker.Preview;
 
 namespace VfxEditor.FilePicker {
     public partial class FilePickerDialog {
-        private bool SideBarDrawn = false;
-
         private void DrawBody() {
             var size = ImGui.GetContentRegionAvail() - new Vector2( 0, ImGui.GetFrameHeightWithSpacing() );
 
-            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
-            using( var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) ) ) {
-                ImGui.BeginChild( "Child", size );
-                ImGui.Columns( 3, "Columns" );
-            }
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            style.Push( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
+            style.Push( ImGuiStyleVar.CellPadding, new Vector2( 0, 0 ) );
+            using var child = ImRaii.Child( "Child", size );
+            using var table = ImRaii.Table( "Table", 4, ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoPadOuterX | ImGuiTableFlags.Hideable );
+            style.Dispose();
 
-            if( !SideBarDrawn ) {
-                SideBarDrawn = true;
-                ImGui.SetColumnWidth( 0, 150 );
-            }
+            ImGui.TableSetupColumn( "##SideBar", ImGuiTableColumnFlags.WidthFixed, 150 );
+            ImGui.TableSetupColumn( "##Files", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "##Preview", ImGuiTableColumnFlags.WidthFixed, 300 );
+            ImGui.TableSetupColumn( "##PreviewClosed", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.DefaultHide, 15 );
 
+            ImGui.TableSetColumnEnabled( 2, Plugin.Configuration.FilePickerPreviewOpen );
+            ImGui.TableSetColumnEnabled( 3, !Plugin.Configuration.FilePickerPreviewOpen );
+
+            ImGui.TableNextRow();
+
+            ImGui.TableSetColumnIndex( 0 );
             SideBar.Draw();
 
-            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
-            using( var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) ) ) {
-                ImGui.NextColumn();
-            }
-
-            ImGui.SetColumnWidth( 1, size.X - ImGui.GetColumnWidth( 0 ) - FilePickerPreview.Width );
-
+            ImGui.TableSetColumnIndex( 1 );
             DrawFileList();
 
-            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) ) )
-            using( var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) ) ) {
-                ImGui.NextColumn();
-            }
-
-            ImGui.SetColumnWidth( 2, FilePickerPreview.Width );
-
+            ImGui.TableSetColumnIndex( Plugin.Configuration.FilePickerPreviewOpen ? 2 : 3 );
             Preview.Draw();
-
-            ImGui.Columns( 1 );
-            ImGui.EndChild();
         }
 
         private void DrawFileList() {

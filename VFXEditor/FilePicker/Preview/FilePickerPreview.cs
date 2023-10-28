@@ -15,7 +15,6 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FilePicker.Preview {
     public class FilePickerPreview {
-        public static int Width => Plugin.Configuration.FilePickerPreviewOpen ? 300 : 15;
         private static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex", "tex" };
 
         private static readonly SemaphoreSlim Lock = new( 1, 1 );
@@ -48,6 +47,8 @@ namespace VfxEditor.FilePicker.Preview {
             if( Texture == null ) {
                 var text = "No Image to Preview";
                 var textWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.InfoCircle ) + ImGui.CalcTextSize( text ).X;
+
+                if( size.X < textWidth ) return;
 
                 ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( ( size.X - textWidth ) / 2, offset ) );
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {

@@ -5,6 +5,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.FilePicker {
     public partial class FilePickerDialog {
         private bool DrawFooter() {
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() - ImGui.GetStyle().ItemSpacing.Y );
             ImGui.Separator();
 
             ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X - 100 - ( Filters.Filters.Count == 0 ? 0 : 150 ) );
