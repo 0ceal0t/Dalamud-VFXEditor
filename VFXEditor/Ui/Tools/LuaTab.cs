@@ -118,19 +118,24 @@ namespace VfxEditor.Ui.Tools {
             }
         }
 
+        // 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 20 44 8B 0D ? ? ? ? 48 8B F9 65 48 8B 04 25 ? ? ? ? 49 8B F0
+
         private static uint GetVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
             if( objectAddress == IntPtr.Zero ) return Plugin.ResourceLoader.GetLuaVariable( manager, value );
 
             return value switch {
-                0x10000013 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000025 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000026 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000027 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000028 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000029 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000033 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000034 => GetActorVariableValue( value, manager, objectAddress ),
-                0x10000039 => GetActorVariableValue( value, manager, objectAddress ),
+                0x10000013 or
+                0x10000025 or
+                0x10000026 or
+                0x10000027 or
+                0x10000028 or
+                0x10000029 or
+                0x10000033 or
+                0x10000034 or
+                0x10000039 or
+                0x1000003A or
+                0x1000003B
+                => GetActorVariableValue( value, manager, objectAddress ),
                 _ => Plugin.ResourceLoader.GetLuaVariable( manager, value )
             };
         }
@@ -138,7 +143,7 @@ namespace VfxEditor.Ui.Tools {
         private static uint GetActorVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
             var pos = Plugin.ResourceLoader.LuaActorVariables;
 
-            for( var i = 0; i < 21; i++ ) {
+            for( var i = 0; i < 30; i++ ) {
                 var posValue = Marshal.ReadIntPtr( pos );
                 if( posValue == value ) {
                     var funcLocation = Marshal.ReadIntPtr( pos + 8 );

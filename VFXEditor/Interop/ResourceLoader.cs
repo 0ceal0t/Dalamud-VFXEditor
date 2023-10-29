@@ -38,7 +38,7 @@ namespace VfxEditor.Interop {
 
             PlayActionHook = Dalamud.Hooks.HookFromSignature<PlayActionPrototype>( Constants.PlayActionSig, PlayActionDetour );
 
-            GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( Dalamud.SigScanner.ScanText( Constants.LuaVariableSig ) );
+            GetLuaVariable = Marshal.GetDelegateForFunctionPointer<LuaVariableDelegate>( Dalamud.SigScanner.ScanText( Constants.LuaGetVariableSig ) );
 
             var luaManagerStart = Dalamud.SigScanner.ScanText( Constants.LuaManagerSig ) + 3;
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
@@ -63,6 +63,8 @@ namespace VfxEditor.Interop {
             PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );
             InitSoundHook = Dalamud.Hooks.HookFromSignature<InitSoundPrototype>( Constants.InitSoundSig, InitSoundDetour );
 
+            LuaRead = Marshal.GetDelegateForFunctionPointer<LuaReadDelegate>( Dalamud.SigScanner.ScanText( "E8 ?? ?? ?? ?? 89 03 B0 01 48 8B 5C 24 ?? 48 83 C4 20" ) );
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
@@ -77,6 +79,8 @@ namespace VfxEditor.Interop {
             InitSoundHook.Enable();
 
             PathResolved += AddCrc;
+
+            // LuaReadTest( "math.abs(-3)" );
         }
 
         public void Dispose() {

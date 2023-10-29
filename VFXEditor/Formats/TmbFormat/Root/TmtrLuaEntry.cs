@@ -71,6 +71,58 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedUInt Value = new( "Value" );
         private readonly ParsedFloat FloatValue = new( "Float Value" );
 
+        public string Text => Operation.Value switch {
+            LuaOperation.Add => "+",
+            LuaOperation.Subtract => "-",
+            LuaOperation.Multiply => "*",
+            LuaOperation.Divide => "/",
+            LuaOperation.Modulo => "%",
+            LuaOperation.Greater_Than => ">",
+            LuaOperation.Greater_Equal => ">=",
+            LuaOperation.Less_Than => "<",
+            LuaOperation.Less_Equal => "<=",
+            LuaOperation.Not_Equal => "!=",
+            LuaOperation.Equal => "==",
+            LuaOperation.And => "&&",
+            LuaOperation.Or => "||",
+            LuaOperation.Not => "!",
+            LuaOperation.Abs => "math.abs",
+            LuaOperation.Acos => "math.acos",
+            LuaOperation.Asin => "math.asin",
+            LuaOperation.Atan2 => "math.atan2",
+            LuaOperation.Atan => "math.atan",
+            LuaOperation.Ceil => "math.ceil",
+            LuaOperation.Cosh => "math.cosh",
+            LuaOperation.Cos => "math.cos",
+            LuaOperation.Deg => "math.deg",
+            LuaOperation.Exp => "math.exp",
+            LuaOperation.Floor => "math.floor",
+            LuaOperation.Fmod => "math.fmod",
+            LuaOperation.Frexp => "math.frexp",
+            LuaOperation.Ldexp => "math.ldexp",
+            LuaOperation.Log10 => "math.log10",
+            LuaOperation.Log => "math.log",
+            LuaOperation.Max => "math.max",
+            LuaOperation.Min => "math.min",
+            LuaOperation.Modf => "math.modf",
+            LuaOperation.Pow => "math.pow",
+            LuaOperation.Rad => "math.rad",
+            LuaOperation.Random => "math.random",
+            LuaOperation.Random_Seed => "math.randomseed",
+            LuaOperation.Sinh => "math.sinh",
+            LuaOperation.Sin => "math.sin",
+            LuaOperation.Sqrt => "math.sqrt",
+            LuaOperation.Tanh => "math.tanh",
+            LuaOperation.Tan => "math.tan",
+            // ===============
+            LuaOperation.Int_Value => $"{Value.Value}",
+            LuaOperation.Float_Value => $"{FloatValue.Value}",
+            LuaOperation.Variable => GetVariableText( VariablePool, VariableIndex ),
+            LuaOperation.Open_Parens => new string( '(', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
+            LuaOperation.Close_Parens => new string( ')', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
+            _ => $"{Operation.Value}"
+        };
+
         public TmtrLuaEntry( TmbFile file, Tmtr track ) {
             File = file;
             Track = track;
@@ -89,57 +141,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         public bool Draw( bool first, float maxX, ref float currentX ) {
-            var text = Operation.Value switch {
-                LuaOperation.Add => "+",
-                LuaOperation.Subtract => "-",
-                LuaOperation.Multiply => "*",
-                LuaOperation.Divide => "/",
-                LuaOperation.Modulo => "%",
-                LuaOperation.Greater_Than => ">",
-                LuaOperation.Greater_Equal => ">=",
-                LuaOperation.Less_Than => "<",
-                LuaOperation.Less_Equal => "<=",
-                LuaOperation.Not_Equal => "!=",
-                LuaOperation.Equal => "==",
-                LuaOperation.And => "&&",
-                LuaOperation.Or => "||",
-                LuaOperation.Not => "!",
-                LuaOperation.Abs => "math.abs",
-                LuaOperation.Acos => "math.acos",
-                LuaOperation.Asin => "math.asin",
-                LuaOperation.Atan2 => "math.atan2",
-                LuaOperation.Atan => "math.atan",
-                LuaOperation.Ceil => "math.ceil",
-                LuaOperation.Cosh => "math.cosh",
-                LuaOperation.Cos => "math.cos",
-                LuaOperation.Deg => "math.deg",
-                LuaOperation.Exp => "math.exp",
-                LuaOperation.Floor => "math.floor",
-                LuaOperation.Fmod => "math.fmod",
-                LuaOperation.Frexp => "math.frexp",
-                LuaOperation.Ldexp => "math.ldexp",
-                LuaOperation.Log10 => "math.log10",
-                LuaOperation.Log => "math.log",
-                LuaOperation.Max => "math.max",
-                LuaOperation.Min => "math.min",
-                LuaOperation.Modf => "math.modf",
-                LuaOperation.Pow => "math.pow",
-                LuaOperation.Rad => "math.rad",
-                LuaOperation.Random => "math.random",
-                LuaOperation.Random_Seed => "math.randomseed",
-                LuaOperation.Sinh => "math.sinh",
-                LuaOperation.Sin => "math.sin",
-                LuaOperation.Sqrt => "math.sqrt",
-                LuaOperation.Tanh => "math.tanh",
-                LuaOperation.Tan => "math.tan",
-                // ===============
-                LuaOperation.Int_Value => $"{Value.Value}",
-                LuaOperation.Float_Value => $"{FloatValue.Value}",
-                LuaOperation.Variable => GetVariableText( VariablePool, VariableIndex ),
-                LuaOperation.Open_Parens => new string( '(', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
-                LuaOperation.Close_Parens => new string( ')', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
-                _ => $"{Operation.Value}"
-            };
+            var text = Text;
 
             var color = Operation.Value switch {
                 LuaOperation.Int_Value => Plugin.Configuration.LuaLiteralColor,
@@ -177,9 +179,7 @@ namespace VfxEditor.TmbFormat {
             }
 
             using var popup = ImRaii.Popup( "LuaPopup" );
-
             if( !popup ) return false;
-
             return DrawPopup();
         }
 

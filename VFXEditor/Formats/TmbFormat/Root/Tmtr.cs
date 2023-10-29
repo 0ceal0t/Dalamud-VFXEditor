@@ -1,13 +1,14 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
@@ -26,6 +27,7 @@ namespace VfxEditor.TmbFormat {
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
+        private TmtrLuaEntry DraggingItem;
         private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
         public readonly List<TmtrLuaEntry> LuaEntries = new();
 
@@ -81,11 +83,11 @@ namespace VfxEditor.TmbFormat {
 
                 var currentX = 0f;
                 var maxX = ImGui.GetContentRegionAvail().X;
-                for( var idx = 0; idx < LuaEntries.Count; idx++ ) {
-                    var lua = LuaEntries[idx];
+                foreach( var (lua, idx) in LuaEntries.WithIndex() ) {
                     using var __ = ImRaii.PushId( idx );
 
                     if( lua.Draw( idx == 0, maxX, ref currentX ) ) break;
+                    if( UiUtils.DrawDragDrop( LuaEntries, lua, lua.Text, ref DraggingItem, "LUA", File.Command ) ) break;
                 }
 
                 if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
