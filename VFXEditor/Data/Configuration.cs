@@ -118,6 +118,7 @@ namespace VfxEditor {
         public Vector4 FileBrowserArchiveColor = new( 1f, 0.475f, 0.805f, 1.0f );
         public bool FileBrowserPreviewOpen = true;
         public bool FileBrowserImagePreview = true;
+        public bool FileBrowserOverwriteDontAsk = false;
 
         public bool PhybSkeletonSplit = true;
         public bool EidSkeletonSplit = true;
@@ -343,6 +344,7 @@ namespace VfxEditor {
             using var child = ImRaii.Child( "FileBrowser" );
 
             if( ImGui.Checkbox( "Preview Images", ref FileBrowserImagePreview ) ) Save();
+            if( ImGui.Checkbox( "Skip File Overwriting Confirmation", ref FileBrowserOverwriteDontAsk ) ) Save();
 
             if( ImGui.ColorEdit4( "Selected Color", ref FileBrowserSelectedColor ) ) Save();
             if( ImGui.ColorEdit4( "Folder Color", ref FileBrowserFolderColor ) ) Save();

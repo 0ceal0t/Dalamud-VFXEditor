@@ -76,7 +76,7 @@ namespace VfxEditor.FileBrowser {
             Title = title;
             Modal = modal;
             SelectOnly = flags.HasFlag( ImGuiFileDialogFlags.SelectOnly );
-            ConfirmOverwrite = flags.HasFlag( ImGuiFileDialogFlags.ConfirmOverwrite );
+            ConfirmOverwrite = flags.HasFlag( ImGuiFileDialogFlags.ConfirmOverwrite ) && !Plugin.Configuration.FileBrowserOverwriteDontAsk;
             FolderDialog = folderDialog;
             CurrentPath = currentPath;
             DefaultFileName = defaultFileName;

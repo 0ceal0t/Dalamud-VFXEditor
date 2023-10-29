@@ -74,6 +74,8 @@ namespace VfxEditor.FileBrowser {
                 var name = "Overwrite This File?";
                 ImGui.OpenPopup( name );
                 if( ImGui.BeginPopupModal( name, ref open, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove ) ) {
+                    if( ImGui.Checkbox( "Never ask me again", ref Plugin.Configuration.FileBrowserOverwriteDontAsk ) ) Plugin.Configuration.Save();
+
                     if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
                         WaitingForConfirmation = false;
                         IsOk = true;
