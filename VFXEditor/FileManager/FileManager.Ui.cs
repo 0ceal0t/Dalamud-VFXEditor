@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System.Numerics;
 using VfxEditor.Data;
@@ -7,6 +8,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase where T : FileManagerDocument<R, S> where R : FileManagerFile {
+        private T DraggingItem;
+
         protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
@@ -78,32 +81,30 @@ namespace VfxEditor.FileManager {
             var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) - ImGui.GetStyle().ItemInnerSpacing.X;
 
             using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
-                using var tabBar = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
-                if( !tabBar ) return;
+                using var tabs = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+                if( !tabs ) return;
 
-                for( var i = 0; i < Documents.Count; i++ ) {
-                    using var __ = ImRaii.PushId( i );
-                    var document = Documents[i];
+                foreach( var (document, idx) in Documents.WithIndex() ) {
+                    using var __ = ImRaii.PushId( idx );
 
                     var open = true;
                     var flags = ImGuiTabItemFlags.NoTooltip;
                     if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
-                    if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{i}", ref open, flags ) ) ImGui.EndTabItem();
+                    if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
+
+                    if( UiUtils.DrawDragDrop( Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENT-TABS", null ) ) break;
 
                     if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
 
                     if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && open ) SelectDocument( document );
-
                     if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RenamePopup" );
 
                     using var itemSpacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 8, 4 ) );
-
                     using( var popup = ImRaii.Popup( "RenamePopup" ) ) {
                         if( popup ) document.DrawRename();
                     }
-
                     using( var popup = ImRaii.Popup( "DeletePopup" ) ) {
                         if( popup ) {
                             if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {

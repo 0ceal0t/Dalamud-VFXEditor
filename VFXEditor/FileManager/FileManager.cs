@@ -59,10 +59,12 @@ namespace VfxEditor.FileManager {
         }
 
         public bool RemoveDocument( T document ) {
-            var switchDoc = ( document == ActiveDocument );
             Documents.Remove( document );
 
-            if( switchDoc ) {
+            DraggingItem = null;
+            DocumentWindow.Reset();
+
+            if( document == ActiveDocument ) {
                 ActiveDocument = Documents[0];
                 document.Dispose();
                 return true;
@@ -124,7 +126,10 @@ namespace VfxEditor.FileManager {
             Documents.Clear();
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
+
             ActiveDocument = null;
+            DraggingItem = null;
+            DocumentWindow.Reset();
 
             DOC_ID = 0;
         }

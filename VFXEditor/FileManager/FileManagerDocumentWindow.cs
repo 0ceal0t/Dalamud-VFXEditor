@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System.Numerics;
 using VfxEditor.Ui;
@@ -7,6 +8,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public class FileManagerDocumentWindow<T, R, S> : DalamudWindow where T : FileManagerDocument<R, S> where R : FileManagerFile {
+        private T DraggingItem;
         private readonly FileManager<T, R, S> Manager;
         private static bool ShowSourceColumn => Plugin.Configuration.DocumentPopoutShowSource;
 
@@ -31,8 +33,7 @@ namespace VfxEditor.FileManager {
             if( ShowSourceColumn ) ImGui.TableSetupColumn( "##Column2", ImGuiTableColumnFlags.WidthStretch );
             ImGui.TableSetupColumn( "##Column3", ImGuiTableColumnFlags.WidthFixed, 25 );
 
-            for( var idx = 0; idx < Manager.Documents.Count; idx++ ) {
-                var document = Manager.Documents[idx];
+            foreach( var (document, idx) in Manager.Documents.WithIndex() ) {
                 using var __ = ImRaii.PushId( idx );
 
                 ImGui.TableNextRow();
@@ -59,6 +60,8 @@ namespace VfxEditor.FileManager {
                     }
                 }
 
+                if( UiUtils.DrawDragDrop( Manager.Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENTS-WINDOW", null ) ) break;
+
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "DocumentPopup" );
 
                 using var popup = ImRaii.Popup( "DocumentPopup" );
@@ -70,6 +73,10 @@ namespace VfxEditor.FileManager {
                     document.DrawRename();
                 }
             }
+        }
+
+        public void Reset() {
+            DraggingItem = null;
         }
     }
 }
