@@ -95,6 +95,7 @@ namespace VfxEditor {
         public float ScdVolume = 1f;
         public bool SimulateScdLoop = false;
 
+        public float CurveEditorHeight = 300;
         public Vector4 CurveEditorLineColor = new( 0, 0.1f, 1, 1 );
         public Vector4 CurveEditorPointColor = new( 1 );
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
@@ -305,6 +306,8 @@ namespace VfxEditor {
 
             if( ImGui.CollapsingHeader( "Curve Editor", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var indent = ImRaii.PushIndent( 10f );
+
+                if( ImGui.InputFloat( "Editor Height", ref CurveEditorHeight ) ) Save();
 
                 if( ImGui.ColorEdit4( "Line Color", ref CurveEditorLineColor ) ) Save();
                 if( ImGui.ColorEdit4( "Point Color", ref CurveEditorPointColor ) ) Save();

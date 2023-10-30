@@ -42,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
 
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, 300 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, Plugin.Configuration.CurveEditorHeight ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );

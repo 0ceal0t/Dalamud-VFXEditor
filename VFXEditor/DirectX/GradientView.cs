@@ -13,8 +13,8 @@ namespace VfxEditor.DirectX {
         public AvfxCurve CurrentCurve { get; private set; }
         public IntPtr Output => ShaderView.NativePointer;
 
-        private readonly int Width = 500;
-        private readonly int Height = 50;
+        private readonly int Width = 900;
+        private readonly int Height = 100;
 
         private RasterizerState State;
         private Texture2D DepthTexture;
