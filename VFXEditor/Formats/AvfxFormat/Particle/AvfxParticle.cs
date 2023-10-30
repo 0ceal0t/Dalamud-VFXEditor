@@ -2,15 +2,15 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticle : AvfxNode {
+    public class AvfxParticle : AvfxNodeWithData<ParticleType> {
         public const string NAME = "Ptcl";
 
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
-        public readonly AvfxEnum<ParticleType> ParticleVariety = new( "Type", "PrVT" );
         public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Compute Order", "RoOT" );
         public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrderType = new( "Coord Compute Order", "CCOT" );
@@ -56,7 +56,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
         public readonly AvfxCurve RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
         public readonly AvfxCurveColor Color = new( "Color", locked: true );
-        public AvfxData Data;
 
         // initialize these later
         public readonly AvfxParticleTextureColor1 TC1;
@@ -83,7 +82,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly UiDisplayList Parameters;
 
-        public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor ) {
+        public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
             NodeGroups = groupSet;
 
             // Initialize the remaining ones
@@ -103,7 +102,7 @@ namespace VfxEditor.AvfxFormat {
             Parsed = new() {
                 LoopStart,
                 LoopEnd,
-                ParticleVariety,
+                Type,
                 RotationDirectionBaseType,
                 RotationOrderType,
                 CoordComputeOrderType,
@@ -229,20 +228,15 @@ namespace VfxEditor.AvfxFormat {
                 TD,
                 TP
             } );
-
-            ParticleVariety.Extra = () => {
-                return new AvfxParticleDataCommand( this );
-            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
             Peek( reader, Parsed2, size );
-            var particleType = ParticleVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    SetData( particleType );
+                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
                 else if( _name == "UvSt" ) {
@@ -271,8 +265,8 @@ namespace VfxEditor.AvfxFormat {
             WriteNested( writer, Parsed2 );
         }
 
-        public void SetData( ParticleType type ) {
-            Data = type switch {
+        public override void UpdateData() {
+            Data = Type.Value switch {
                 ParticleType.Parameter => null,
                 ParticleType.Powder => new AvfxParticleDataPowder(),
                 ParticleType.Windmill => new AvfxParticleDataWindmill(),
@@ -294,7 +288,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Particle" );
             DrawRename();
-            ParticleVariety.Draw();
+            Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -328,7 +322,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Particle {GetIdx()} ({ParticleVariety.Value})";
+        public override string GetDefaultText() => $"Particle {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Ptcl{GetIdx()}";
     }

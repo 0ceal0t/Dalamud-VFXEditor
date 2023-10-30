@@ -1,6 +1,6 @@
 using OtterGui.Raii;
 using System.IO;
-using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
@@ -71,19 +71,16 @@ namespace VfxEditor.ScdFormat {
         Unknown64
     }
 
-    public class ScdTrackItem : IUiItem {
-        public readonly ParsedEnum<TrackCmd> Type = new( "Type", size: 2 );
-        public ScdTrackData Data = null;
+    public class ScdTrackItem : IUiItem, IItemWithData<ScdTrackData> {
+        public readonly ParsedDataEnum<TrackCmd, ScdTrackData> Type;
+        private ScdTrackData Data;
 
         public ScdTrackItem() {
-            Type.Extra = () => {
-                return new ScdTrackDataCommand( this );
-            };
+            Type = new( this, "Type", size: 2 );
         }
 
         public void Read( BinaryReader reader ) {
             Type.Read( reader );
-
             UpdateData();
             Data?.Read( reader );
         }
@@ -146,6 +143,10 @@ namespace VfxEditor.ScdFormat {
                 _ => null
             };
         }
+
+        public void SetData( ScdTrackData data ) { Data = data; }
+
+        public ScdTrackData GetData() => Data;
 
         public void Draw() {
             Type.Draw( CommandManager.Scd );

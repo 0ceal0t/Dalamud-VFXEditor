@@ -147,7 +147,7 @@ namespace VfxEditor.AvfxFormat {
             var imguiStyle = ImGui.GetStyle();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) ) ) {
                 ImGui.SetNextItemWidth( ImGui.GetWindowSize().X * 0.65f - imguiStyle.ItemInnerSpacing.X - ImGui.GetFrameHeight() );
-                if( ImGui.ColorEdit3( "##ColorInput", ref color, ImGuiColorEditFlags.NoAlpha | ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview ) ) {
+                if( ImGui.ColorEdit3( "##ColorInput", ref color, ImGuiColorEditFlags.NoAlpha | ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview | ImGuiColorEditFlags.Float ) ) {
                     changed = true;
                     Data.Value = color;
                 }

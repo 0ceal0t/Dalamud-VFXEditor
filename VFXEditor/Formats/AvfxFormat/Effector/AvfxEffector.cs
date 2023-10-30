@@ -2,38 +2,33 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffector : AvfxNode {
+    public class AvfxEffector : AvfxNodeWithData<EffectorType> {
         public const string NAME = "Efct";
 
-        public readonly AvfxEnum<EffectorType> EffectorVariety = new( "Type", "EfVT" );
         public readonly AvfxEnum<RotationOrder> RotationOrder = new( "Rotation Order", "RoOT" );
         public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrder = new( "Coordinate Compute Order", "CCOT" );
         public readonly AvfxBool AffectOtherVfx = new( "Affect Other VFX", "bAOV" );
         public readonly AvfxBool AffectGame = new( "Affect Game", "bAGm" );
         public readonly AvfxInt LoopPointStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopPointEnd = new( "Loop End", "LpEd" );
-        public AvfxData Data;
 
         private readonly List<AvfxBase> Parsed;
 
         private readonly UiDisplayList Parameters;
 
-        public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor ) {
+        public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor, "EfVT" ) {
             Parsed = new() {
-                EffectorVariety,
+                Type,
                 RotationOrder,
                 CoordComputeOrder,
                 AffectOtherVfx,
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            };
-
-            EffectorVariety.Extra = () => {
-                return new AvfxEffectorDataCommand( this );
             };
 
             Parameters = new( "Parameters", new() {
@@ -49,11 +44,10 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var effectorType = EffectorVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    SetData( effectorType );
+                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
             }, size );
@@ -69,8 +63,8 @@ namespace VfxEditor.AvfxFormat {
             Data?.Write( writer );
         }
 
-        public void SetData( EffectorType type ) {
-            Data = type switch {
+        public override void UpdateData() {
+            Data = Type.Value switch {
                 EffectorType.PointLight => new AvfxEffectorDataPointLight(),
                 EffectorType.DirectionalLight => new AvfxEffectorDataDirectionalLight(),
                 EffectorType.RadialBlur => new AvfxEffectorDataRadialBlur(),
@@ -84,7 +78,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Effector" );
             DrawRename();
-            EffectorVariety.Draw();
+            Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -106,7 +100,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Effector {GetIdx()} ({EffectorVariety.Value})";
+        public override string GetDefaultText() => $"Effector {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Effct{GetIdx()}";
     }

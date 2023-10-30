@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxData : AvfxItem {
+    public abstract class AvfxData : AvfxItem, IData {
         protected List<AvfxBase> Parsed;
 
         public readonly List<AvfxItem> DisplayTabs = new();

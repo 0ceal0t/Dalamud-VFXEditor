@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
@@ -49,9 +50,9 @@ namespace VfxEditor.ScdFormat {
         IsLocalFixedDirection = 0x80
     }
 
-    public class ScdLayoutEntry : ScdEntry, IUiItem {
+    public class ScdLayoutEntry : ScdEntry, IUiItem, IItemWithData<ScdLayoutData> {
         public ushort Size = 0x80;
-        public readonly ParsedEnum<SoundObjectType> Type = new( "Type", size: 1 );
+        public readonly ParsedDataEnum<SoundObjectType, ScdLayoutData> Type;
         public readonly ParsedByte Version = new( "Version" );
         public readonly ParsedFlag<SoundObjectFlags1> Flag1 = new( "Flag1", size: 1 );
         public readonly ParsedByte GroupNumber = new( "Group Number" );
@@ -62,11 +63,12 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedShort AbGroupNumber = new( "AB Group Number" );
         public readonly ParsedFloat4 Volume = new( "Volume" );
 
-        public ScdLayoutData Data = null;
+        private ScdLayoutData Data;
 
         private readonly List<ParsedBase> Parsed;
 
         public ScdLayoutEntry() {
+            Type = new( this, "Type", size: 1 );
             Parsed = new() {
                 Type,
                 Version,
@@ -78,10 +80,6 @@ namespace VfxEditor.ScdFormat {
                 ReverbType,
                 AbGroupNumber,
                 Volume
-            };
-
-            Type.Extra = () => {
-                return new ScdLayoutEntryExtraCommand( this );
             };
         }
 
@@ -118,6 +116,10 @@ namespace VfxEditor.ScdFormat {
                 _ => null
             };
         }
+
+        public void SetData( ScdLayoutData data ) { Data = data; }
+
+        public ScdLayoutData GetData() => Data;
 
         public void Draw() {
             ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );

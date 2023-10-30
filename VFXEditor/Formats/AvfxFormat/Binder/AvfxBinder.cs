@@ -2,10 +2,11 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxBinder : AvfxNode {
+    public class AvfxBinder : AvfxNodeWithData<BinderType> {
         public const string NAME = "Bind";
 
         public readonly AvfxBool StartToGlobalDirection = new( "Start To Global Direction", "bStG" );
@@ -22,19 +23,17 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool BET_Unknown = new( "BET (Unknown)", "bBET" );
         public readonly AvfxInt Life = new( "Life", "Life" );
         public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "Binder Rotation Type", "RoTp" );
-        public readonly AvfxEnum<BinderType> BinderVariety = new( "Type", "BnVr" );
         public readonly AvfxBinderProperties PropStart = new( "Properties Start", "PrpS" );
         public readonly AvfxBinderProperties Prop1 = new( "Properties 1", "Prp1" );
         public readonly AvfxBinderProperties Prop2 = new( "Properties 2", "Prp2" );
         public readonly AvfxBinderProperties PropGoal = new( "Properties Goal", "PrpG" );
-        public AvfxData Data;
 
         private readonly List<AvfxBase> Parsed;
 
         private readonly AvfxDisplaySplitView<AvfxBinderProperties> PropSplitDisplay;
         private readonly UiDisplayList Parameters;
 
-        public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor ) {
+        public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor, "BnVr" ) {
             Parsed = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
@@ -50,15 +49,11 @@ namespace VfxEditor.AvfxFormat {
                 BET_Unknown,
                 Life,
                 BinderRotationType,
-                BinderVariety,
+                Type,
                 PropStart,
                 Prop1,
                 Prop2,
                 PropGoal
-            };
-
-            BinderVariety.Extra = () => {
-                return new AvfxBinderDataCommand( this );
             };
 
             Parameters = new( "Parameters", new() {
@@ -89,11 +84,10 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var binderType = BinderVariety.Value;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    SetData( binderType );
+                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
             }, size );
@@ -109,8 +103,8 @@ namespace VfxEditor.AvfxFormat {
             Data?.Write( writer );
         }
 
-        public void SetData( BinderType type ) {
-            Data = type switch {
+        public override void UpdateData() {
+            Data = Type.Value switch {
                 BinderType.Point => new AvfxBinderDataPoint(),
                 BinderType.Linear => new AvfxBinderDataLinear(),
                 BinderType.Spline => new AvfxBinderDataSpline(),
@@ -124,7 +118,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Binder" );
             DrawRename();
-            BinderVariety.Draw();
+            Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -150,7 +144,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Binder {GetIdx()} ({BinderVariety.Value})";
+        public override string GetDefaultText() => $"Binder {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Bind{GetIdx()}";
     }

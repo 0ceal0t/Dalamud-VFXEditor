@@ -38,11 +38,11 @@ namespace VfxEditor.Parsing {
 
         protected abstract void DrawBody( CommandManager manager );
 
-        protected void SetValue( CommandManager manager, T prevValue, T value ) {
+        protected virtual void SetValue( CommandManager manager, T prevValue, T value ) {
             manager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, Extra?.Invoke() ) );
         }
 
-        protected void SetValue( CommandManager manager, T value ) {
+        protected virtual void SetValue( CommandManager manager, T value ) {
             manager.Add( new ParsedSimpleCommand<T>( this, value, Extra?.Invoke() ) );
         }
     }

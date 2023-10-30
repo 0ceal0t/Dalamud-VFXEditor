@@ -3,12 +3,13 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitter : AvfxNode {
+    public class AvfxEmitter : AvfxNodeWithData<EmitterType> {
         public const string NAME = "Emit";
 
         public readonly AvfxString Sound = new( "Sound", "SdNm", true, false, null, true );
@@ -18,7 +19,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ChildLimit = new( "Child Limit", "ClCn" );
         public readonly AvfxInt EffectorIdx = new( "Effector Select", "EfNo", value: -1 );
         public readonly AvfxBool AnyDirection = new( "Any Direction", "bAD", size: 1 );
-        public readonly AvfxEnum<EmitterType> EmitterVariety = new( "Type", "EVT" );
         public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
         public readonly AvfxEnum<CoordComputeOrder> CoordComputeOrderType = new( "Coordinate Compute Order", "CCOT" );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
@@ -50,7 +50,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve VelocityRandomX = new( "Velocity Random X", "VRX" );
         public readonly AvfxCurve VelocityRandomY = new( "Velocity Random Y", "VRY" );
         public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
-        public AvfxData Data;
 
         private readonly List<AvfxBase> Parsed;
 
@@ -68,7 +67,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiEmitterSplitView ParticleSplit;
         private readonly List<IUiItem> Parameters;
 
-        public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor ) {
+        public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
             NodeGroups = groupSet;
 
             Parsed = new() {
@@ -79,7 +78,7 @@ namespace VfxEditor.AvfxFormat {
                 ChildLimit,
                 EffectorIdx,
                 AnyDirection,
-                EmitterVariety,
+                Type,
                 RotationDirectionBaseType,
                 CoordComputeOrderType,
                 RotationOrderType,
@@ -136,13 +135,8 @@ namespace VfxEditor.AvfxFormat {
             } );
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
-
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
             ParticleSplit = new( "Create Particles", Particles, this, true );
-
-            EmitterVariety.Extra = () => {
-                return new AvfxEmitterDataCommand( this );
-            };
 
             NodeView = new UiNodeGraphView( this );
 
@@ -165,14 +159,13 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
-            var emitterType = EmitterVariety.Value;
 
             AvfxEmitterItemContainer lastParticle = null;
             AvfxEmitterItemContainer lastEmitter = null;
 
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    SetData( emitterType );
+                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
                 else if( _name == "ItPr" ) {
@@ -231,8 +224,8 @@ namespace VfxEditor.AvfxFormat {
             Data?.Write( writer );
         }
 
-        public void SetData( EmitterType type ) {
-            Data = type switch {
+        public override void UpdateData() {
+            Data = Type.Value switch {
                 EmitterType.Point => null,
                 EmitterType.Cone => new AvfxEmitterDataCone(),
                 EmitterType.ConeModel => new AvfxEmitterDataConeModel(),
@@ -247,7 +240,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "Emitter" );
             DrawRename();
-            EmitterVariety.Draw();
+            Type.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -296,7 +289,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Draw();
         }
 
-        public override string GetDefaultText() => $"Emitter {GetIdx()} ({EmitterVariety.Value})";
+        public override string GetDefaultText() => $"Emitter {GetIdx()} ({Type.Value})";
 
         public override string GetWorkspaceId() => $"Emit{GetIdx()}";
 
