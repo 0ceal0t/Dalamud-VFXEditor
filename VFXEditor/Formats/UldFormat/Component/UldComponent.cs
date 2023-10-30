@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Component.Data;
@@ -39,25 +40,24 @@ namespace VfxEditor.UldFormat.Component {
         Unknown_25 = 0x19,
     }
 
-    public class UldComponent : UldWorkspaceItem {
+    public class UldComponent : UldWorkspaceItem, IItemWithData<UldGenericData> {
         public readonly ParsedByteBool IgnoreInput = new( "Ignore Input" );
         public readonly ParsedByteBool DragArrow = new( "Drag Arrow" );
         public readonly ParsedByteBool DropArrow = new( "Drop Arrow" );
 
-        public readonly ParsedEnum<ComponentType> Type = new( "Type", size: 1 );
-        public UldGenericData Data = null;
+        public readonly ParsedDataEnum<ComponentType, UldGenericData> Type;
+        public UldGenericData Data;
 
         public readonly List<UldNode> Nodes = new();
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {
+            Type = new( this, "Type", size: 1 );
+
             NodeSplitView = new( "Node", Nodes, true,
                 ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ), () => CommandManager.Uld );
 
             Id.Value = 1001; // default
-            Type.Extra = () => {
-                return new UldComponentDataCommand( this );
-            };
         }
 
         public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
@@ -144,6 +144,10 @@ namespace VfxEditor.UldFormat.Component {
                 _ => null
             };
         }
+
+        public void SetData( UldGenericData data ) { Data = data; }
+
+        public UldGenericData GetData() => Data;
 
         public override void Draw() {
             DrawRename();

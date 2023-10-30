@@ -6,7 +6,7 @@ namespace VfxEditor.Parsing {
         public readonly string Name;
 
         public T Value = default;
-        public Func<ICommand> Extra;
+        public Action OnChangeAction;
 
         public ParsedSimpleBase( string name, T value ) : this( name ) {
             Value = value;
@@ -23,7 +23,7 @@ namespace VfxEditor.Parsing {
                 copy.SetValue( this, Name, Value );
             }
             else if( copy.IsPasting && copy.GetValue<T>( this, Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<T>( this, val, Extra?.Invoke() ) );
+                copy.PasteCommand.Add( new ParsedSimpleCommand<T>( this, val, OnChangeAction ) );
                 return true;
             }
 
@@ -39,11 +39,11 @@ namespace VfxEditor.Parsing {
         protected abstract void DrawBody( CommandManager manager );
 
         protected virtual void SetValue( CommandManager manager, T prevValue, T value ) {
-            manager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, Extra?.Invoke() ) );
+            manager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, OnChangeAction ) );
         }
 
         protected virtual void SetValue( CommandManager manager, T value ) {
-            manager.Add( new ParsedSimpleCommand<T>( this, value, Extra?.Invoke() ) );
+            manager.Add( new ParsedSimpleCommand<T>( this, value, OnChangeAction ) );
         }
     }
 }

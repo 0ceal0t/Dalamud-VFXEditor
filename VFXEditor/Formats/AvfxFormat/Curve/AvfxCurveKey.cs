@@ -51,8 +51,8 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxCurveKey( AvfxCurve curve ) {
             Curve = curve;
-            Type.Extra = () => new AvfxCurveCommand( Curve );
-            Time.Extra = () => new AvfxCurveCommand( Curve );
+            Type.OnChangeAction = Curve.Update;
+            Time.OnChangeAction = Curve.Update;
             // Don't need to bother with X, Y, Z since they have their own weird inputs
         }
 

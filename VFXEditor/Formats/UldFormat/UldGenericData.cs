@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.UldFormat {
-    public abstract class UldGenericData {
+    public abstract class UldGenericData : IData {
         protected List<ParsedBase> Parsed = new();
 
         public virtual void Read( BinaryReader reader ) {
@@ -21,5 +22,9 @@ namespace VfxEditor.UldFormat {
         protected void AddUnknown( int count, string prefix ) {
             for( var i = 1; i <= count + 1; i++ ) Parsed.Add( new ParsedUInt( $"{prefix} {i}" ) );
         }
+
+        public void Enable() { }
+
+        public void Disable() { }
     }
 }

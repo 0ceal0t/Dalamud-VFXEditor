@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Timeline.Frames;
 using VfxEditor.Utils;
@@ -52,14 +53,12 @@ namespace VfxEditor.UldFormat.Timeline {
 
     public class UldKeyGroup : IUiItem {
         public readonly ParsedEnum<KeyUsage> Usage = new( "Usage", size: 2 );
-        public readonly ParsedEnum<KeyGroupType> Type = new( "Type", size: 2 );
+        public readonly ParsedDataListEnum<KeyGroupType, UldKeyframe> Type;
 
         public readonly List<UldKeyframe> Keyframes = new();
 
         public UldKeyGroup() {
-            Type.Extra = () => {
-                return new UldKeyGroupDataCommand( this );
-            };
+            Type = new( Keyframes, "Type", size: 2 );
         }
 
         public UldKeyGroup( BinaryReader reader ) : this() {

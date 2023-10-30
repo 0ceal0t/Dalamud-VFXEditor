@@ -10,6 +10,7 @@ namespace VfxEditor.ScdFormat {
         public abstract void Draw();
 
         public void Enable() { }
+
         public void Disable() { }
     }
 }

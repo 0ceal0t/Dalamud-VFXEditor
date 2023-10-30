@@ -5,13 +5,6 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEnum<T> : AvfxLiteral<ParsedEnum<T>, T> where T : Enum {
-        public Func<ICommand> Extra {
-            get => Parsed.Extra;
-            set {
-                Parsed.Extra = value;
-            }
-        }
-
         public AvfxEnum( string name, string avfxName, T value ) : base( avfxName, new( name, value ) ) { }
 
         public AvfxEnum( string name, string avfxName ) : base( avfxName, new( name ) ) { }

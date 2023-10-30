@@ -1,37 +1,39 @@
+using System;
+
 namespace VfxEditor.Parsing {
     public class ParsedSimpleCommand<S> : ICommand {
         private readonly ParsedSimpleBase<S> Item;
-        private readonly ICommand ExtraCommand;
+        private readonly Action OnChangeAction;
         private readonly S State;
         private S PrevState;
 
         private readonly bool PrevStateSet = false;
 
-        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S prevState, S state, ICommand extraCommand = null ) : this( item, state, extraCommand ) {
+        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S prevState, S state, Action onChangeAction = null ) : this( item, state, onChangeAction ) {
             PrevState = prevState;
             PrevStateSet = true;
         }
 
-        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S state, ICommand extraCommand = null ) {
+        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S state, Action onChangeAction = null ) {
             Item = item;
             State = state;
-            ExtraCommand = extraCommand;
+            OnChangeAction = onChangeAction;
         }
 
         public void Execute() {
             if( !PrevStateSet ) PrevState = Item.Value;
             Item.Value = State;
-            ExtraCommand?.Execute();
+            OnChangeAction?.Invoke();
         }
 
         public void Redo() {
             Item.Value = State;
-            ExtraCommand?.Redo();
+            OnChangeAction?.Invoke();
         }
 
         public void Undo() {
             Item.Value = PrevState;
-            ExtraCommand?.Undo();
+            OnChangeAction?.Invoke();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace VfxEditor.ScdFormat {
         public void Draw() => Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
 
         public void Enable() { }
+
         public void Disable() { }
     }
 }

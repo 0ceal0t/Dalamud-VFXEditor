@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Data;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
 
@@ -30,7 +31,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         AnchorRight = 0x80
     }
 
-    public class UldNode : UldWorkspaceItem {
+    public class UldNode : UldWorkspaceItem, IItemWithData<UldGenericData> {
         private readonly List<UldComponent> Components;
         private readonly UldWorkspaceItem Parent;
 
@@ -40,11 +41,12 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt ChildNodeId = new( "Child Node Id" );
 
         public bool IsComponentNode = false;
-        public readonly ParsedEnum<NodeType> Type = new( "Type" );
         public readonly ParsedInt ComponentTypeId = new( "Component Id" );
         public UldGenericData Data = null;
 
+        public readonly ParsedDataEnum<NodeType, UldGenericData> Type;
         private readonly List<ParsedBase> Parsed;
+
         public readonly ParsedShort TabIndex = new( "Tab Index" );
         public readonly ParsedInt Unk1 = new( "Unknown 1" );
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
@@ -79,9 +81,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
             Parent = parent;
             Components = components;
-            Type.Extra = () => {
-                return new UldNodeDataCommand( this );
-            };
+            Type = new( this, "Type" );
 
             Parsed = new() {
                 TabIndex,
@@ -213,6 +213,10 @@ namespace VfxEditor.UldFormat.Component.Node {
                 };
             }
         }
+
+        public void SetData( UldGenericData data ) { Data = data; }
+
+        public UldGenericData GetData() => Data;
 
         public override void Draw() {
             DrawRename();
