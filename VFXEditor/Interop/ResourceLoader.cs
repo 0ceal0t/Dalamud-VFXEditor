@@ -79,8 +79,6 @@ namespace VfxEditor.Interop {
             InitSoundHook.Enable();
 
             PathResolved += AddCrc;
-
-            // LuaReadTest( "math.abs(-3)" );
         }
 
         public void Dispose() {

@@ -1,11 +1,11 @@
 using static VfxEditor.AvfxFormat.Enums;
 
-namespace VfxEditor.AvfxFormat {
-    public struct UiCurveEditorState {
-        public UiCurveEditorPointState[] Points;
+namespace VfxEditor.Formats.AvfxFormat.Curve.Editor {
+    public struct AvfxCurveState {
+        public AvfxCurveKeyState[] Points;
     }
 
-    public struct UiCurveEditorPointState {
+    public struct AvfxCurveKeyState {
         public KeyType Type;
         public int Time;
         public float X;

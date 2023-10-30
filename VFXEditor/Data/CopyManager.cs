@@ -2,6 +2,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.AvfxFormat;
+using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.Data {
     public class CopyManager {
@@ -13,13 +15,13 @@ namespace VfxEditor.Data {
 
         public readonly Dictionary<(Type, string), bool> AvfxAssigned = new();
         public readonly Dictionary<(Type, string), object> Data = new();
-        public readonly List<Vector4> CurveKeys = new();
+        public readonly List<(KeyType, Vector4)> CurveKeys = new();
 
         public CopyManager() { }
 
         public bool HasCurveKeys() => CurveKeys.Count > 0;
 
-        public void AddCurveKey( float time, float x, float y, float z ) => CurveKeys.Add( new Vector4( time, x, y, z ) );
+        public void AddCurveKey( AvfxCurveKey key ) => CurveKeys.Add( key.CopyPasteData );
 
         public void ClearCurveKeys() => CurveKeys.Clear();
 

@@ -14,31 +14,38 @@ namespace VfxEditor.AvfxFormat {
         Base
     }
 
-    public class AvfxCurve : AvfxOptional {
+    public partial class AvfxCurve : AvfxOptional {
+        private static int EDITOR_ID = 0;
+        private readonly CurveType Type;
+        private readonly int Id;
+
         public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "Pre Behavior", "BvPr" );
         public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "Post Behavior", "BvPo" );
         public readonly AvfxEnum<RandomType> Random = new( "RandomType", "RanT" );
-        public readonly AvfxCurveKeys Keys = new();
+        public readonly AvfxCurveKeys KeyList;
+        public List<AvfxCurveKey> Keys => KeyList.Keys;
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<IUiItem> Display;
-        private readonly UiCurveEditor CurveEditor;
 
         private readonly string Name;
         private readonly bool Locked;
 
         public AvfxCurve( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
             Name = name;
+            Type = type;
             Locked = locked;
+
+            Id = EDITOR_ID++;
+            KeyList = new( this );
 
             Parsed = new() {
                 PreBehavior,
                 PostBehavior,
                 Random,
-                Keys
+                KeyList
             };
 
-            CurveEditor = new UiCurveEditor( this, type );
             Display = new() {
                 PreBehavior,
                 PostBehavior,
@@ -48,13 +55,12 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             ReadNested( reader, Parsed, size );
-            CurveEditor.Initialize();
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
 
         public override void WriteContents( BinaryWriter writer ) {
-            WriteLeaf( writer, "KeyC", 4, Keys.Keys.Count );
+            WriteLeaf( writer, "KeyC", 4, KeyList.Keys.Count );
             WriteNested( writer, Parsed );
         }
 
@@ -71,7 +77,7 @@ namespace VfxEditor.AvfxFormat {
             AssignedCopyPaste( this, Name );
             if( !Locked && DrawRemoveButton( this, Name ) ) return;
             DrawItems( Display );
-            CurveEditor.Draw();
+            DrawEditor();
         }
 
         public override string GetDefaultText() => Name;

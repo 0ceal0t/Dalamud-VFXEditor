@@ -7,6 +7,10 @@ namespace VfxEditor {
 
         public CompoundCommand() { }
 
+        public CompoundCommand( IEnumerable<ICommand> commands ) {
+            Commands.AddRange( commands );
+        }
+
         public void Add( ICommand command ) => Commands.Add( command );
 
         public void Clear() => Commands.Clear();

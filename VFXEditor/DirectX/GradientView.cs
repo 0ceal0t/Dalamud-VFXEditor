@@ -38,25 +38,27 @@ namespace VfxEditor.DirectX {
 
         public void SetGradient( AvfxCurve curve ) {
             CurrentCurve = curve;
-            var numPoints = curve.Keys.Keys.Count;
+            var numPoints = curve.KeyList.Keys.Count;
             if( numPoints < 2 ) {
                 Gradient.ClearVertexes();
             }
             else {
                 var data = new List<Vector4>();
 
-                float startTime = curve.Keys.Keys[0].Time;
-                float endTime = curve.Keys.Keys[numPoints - 1].Time;
+                float startTime = curve.Keys[0].Time.Value;
+                float endTime = curve.Keys[numPoints - 1].Time.Value;
                 var timeDiff = ( endTime - startTime );
 
                 for( var i = 0; i < numPoints - 1; i++ ) {
-                    var left = curve.Keys.Keys[i];
-                    var right = curve.Keys.Keys[i + 1];
+                    var left = curve.KeyList.Keys[i];
+                    var right = curve.KeyList.Keys[i + 1];
 
-                    var leftPosition = ( ( left.Time - startTime ) / timeDiff ) * 2 - 1;
-                    var rightPosition = ( ( right.Time - startTime ) / timeDiff ) * 2 - 1;
-                    var leftColor = new Vector4( left.X, left.Y, left.Z, 1 );
-                    var rightColor = new Vector4( right.X, right.Y, right.Z, 1 );
+                    var leftPosition = ( ( left.Time.Value - startTime ) / timeDiff ) * 2 - 1;
+                    var rightPosition = ( ( right.Time.Value - startTime ) / timeDiff ) * 2 - 1;
+                    var _leftColor = left.Color;
+                    var _rightColor = right.Color;
+                    var leftColor = new Vector4( _leftColor.X, _leftColor.Y, _leftColor.Z, 1 );
+                    var rightColor = new Vector4( _rightColor.X, _rightColor.Y, _rightColor.Z, 1 );
 
                     var topLeftPos = new Vector4( leftPosition, 1, 0, 1 );
                     var topRightPos = new Vector4( rightPosition, 1, 0, 1 );
