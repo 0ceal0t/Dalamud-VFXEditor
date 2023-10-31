@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
             var idx = 0;
             foreach( var item in Items.Where( x => x.IsAssigned() ) ) {
                 using( var _ = ImRaii.PushId( idx ) ) {
-                    if( item is AvfxOptional assignable ) AvfxBase.AssignedCopyPaste( assignable, assignable.GetDefaultText() );
+                    if( item is AvfxOptional assignable ) assignable.AssignedCopyPaste( assignable.GetDefaultText() );
                     if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
                         Selected = item;
                     }

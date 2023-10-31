@@ -203,10 +203,7 @@ namespace VfxEditor.FileManager {
         // ====== DRAWING ==========
 
         public virtual void CheckKeybinds() {
-            //if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
-            //if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
-            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Undo();
-            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Redo();
+            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) Update();
         }
 
         public void Draw() {

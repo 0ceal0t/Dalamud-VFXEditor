@@ -1,5 +1,6 @@
 using OtterGui.Raii;
 using System;
+using VfxEditor.Data.Copy;
 
 namespace VfxEditor.Parsing {
     public abstract class ParsedSimpleBase<T> : ParsedBase {
@@ -17,18 +18,11 @@ namespace VfxEditor.Parsing {
         }
 
         protected bool CopyPaste() {
-            /*
-            var copy = manager.Copy;
-
-            // TODO
-            if( copy.IsCopying ) {
-                copy.SetValue( this, Name, Value );
-            }
-            else if( copy.IsPasting && copy.GetValue<T>( this, Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<T>( this, val, OnChangeAction ) );
+            CopyManager.TryCopyValue( this, Name, Value );
+            if( CopyManager.TryGetValue<T>( this, Name, out var val ) ) {
+                CommandManager.Paste( new ParsedSimpleCommand<T>( this, val, OnChangeAction ) );
                 return true;
             }
-            */
             return false;
         }
 

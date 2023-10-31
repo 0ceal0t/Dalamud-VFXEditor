@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -164,18 +165,15 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( $"Node{Name}" );
 
             // Unassigned
-            AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
+            Literal.AssignedCopyPaste( Name );
+            if( Literal.DrawAddButton( Name ) ) return;
 
             // Copy/Paste
-            /*
-            var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
-            if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
+            CopyManager.TryCopyValue( this, Name, Literal.Value );
+            if( CopyManager.TryGetValue<int>( this, Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
-                copy.PasteCommand.Add( new AvfxNodeSelectCommand<T>( this, newSelected ) );
+                CommandManager.Paste( new AvfxNodeSelectCommand<T>( this, newSelected ) );
             }
-            */
 
             // Draw
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
@@ -183,7 +181,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetNextItemWidth( inputSize );
             DrawCombo();
 
-            AvfxBase.DrawRemoveContextMenu( Literal, Name );
+            Literal.DrawRemoveContextMenu( Name );
 
             // Draw go button
             ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );

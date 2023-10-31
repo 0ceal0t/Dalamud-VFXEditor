@@ -37,12 +37,12 @@ namespace VfxEditor.AvfxFormat {
 
         public void Draw( float offset ) {
             // Unassigned
-            AssignedCopyPaste( this, Parsed.Name );
-            if( DrawAddButton( this, Parsed.Name ) ) return;
+            AssignedCopyPaste( Parsed.Name );
+            if( DrawAddButton( Parsed.Name ) ) return;
 
             Parsed.DrawInput( 255, Parsed.Name, offset, ImGuiInputTextFlags.None );
 
-            DrawRemoveContextMenu( this, Parsed.Name );
+            DrawRemoveContextMenu( Parsed.Name );
 
             Parsed.DrawIcons();
         }

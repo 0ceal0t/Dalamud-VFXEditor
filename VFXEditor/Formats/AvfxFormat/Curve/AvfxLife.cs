@@ -52,14 +52,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "Life" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
-            DrawAddButtonRecurse( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
+            DrawAddButtonRecurse( GetDefaultText() );
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "Life" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             DrawItems( Display );
         }
 

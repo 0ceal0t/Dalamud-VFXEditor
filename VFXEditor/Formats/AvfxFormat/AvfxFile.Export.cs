@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
             var newPath = Plugin.LibraryManager.GetNodePath( newId );
             Export( node, newPath, true );
             UiUtils.OkNotification( "Saved item to library" );
-            Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.Selected.SourceDisplay, newPath );
+            Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.Document.SourceDisplay, newPath );
         }
 
         public void Export( AvfxNode node, string path, bool exportDependencies ) => Export( new List<AvfxNode> { node }, path, exportDependencies );

@@ -52,15 +52,15 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
-            DrawAddButtonRecurse( this, Name );
+            AssignedCopyPaste( Name );
+            DrawAddButtonRecurse( Name );
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
-            if( !Locked && DrawRemoveButton( this, Name ) ) return;
+            AssignedCopyPaste( Name );
+            if( !Locked && DrawRemoveButton( Name ) ) return;
 
             AvfxCurve.DrawUnassignedCurves( Curves );
 

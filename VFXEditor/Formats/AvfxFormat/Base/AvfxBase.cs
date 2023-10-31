@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -17,13 +18,76 @@ namespace VfxEditor.AvfxFormat {
             AvfxName = avfxName;
         }
 
+        public string GetAvfxName() => AvfxName;
+
         public bool IsAssigned() => Assigned;
 
         public void SetAssigned( bool assigned ) {
             Assigned = assigned;
         }
 
-        public string GetAvfxName() => AvfxName;
+        public void AssignedCopyPaste( string name ) {
+            CopyManager.TryCopyAssigned( this, name );
+            if( CopyManager.TryGetAssigned( this, name, out var val ) ) {
+                CommandManager.Paste( new AvfxAssignCommand( this, val ) );
+            }
+        }
+
+        public bool DrawAddButton( string name ) {
+            if( !IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommand( this, true ) );
+                return true;
+            }
+            return false;
+        }
+
+        public bool DrawAddButtonRecurse( string name ) {
+            if( !IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommandMulti( this, true ) );
+                return true;
+            }
+            return false;
+        }
+
+        public void DrawRemoveContextMenu( string name ) {
+            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommand( this, false ) );
+        }
+
+        public void DrawRemoveContextMenuRecurse( string name ) {
+            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommandMulti( this, false ) );
+        }
+
+        public bool DrawRemoveButton( string name ) {
+            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
+                CommandManager.Add( new AvfxAssignCommand( this, false ) );
+                return true;
+            }
+            return false;
+        }
+
+        // ===== USED FOR WEIRD CASES LIKE UIFLOAT2 / UIFLOAT3 ======
+
+        public bool DrawAddButton<T>( List<T> extra, string name ) where T : AvfxBase {
+            if( !IsAssigned() ) {
+                if( ImGui.SmallButton( $"+ {name}" ) ) {
+                    var items = new List<T>();
+                    if( this is T item ) items.Add( item );
+                    items.AddRange( extra );
+                    CommandManager.Add( new AvfxAssignCommandToggle<T>( items, true ) );
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public void DrawRemoveContextMenu<T>( List<T> extra, string name ) where T : AvfxBase {
+            if( DrawUnassignContextMenu( name ) ) {
+                var items = new List<T>();
+                if( this is T item ) items.Add( item );
+                items.AddRange( extra );
+                CommandManager.Add( new AvfxAssignCommandToggle<T>( items, false ) );
+            }
+        }
 
         // ==== PARSING =====
 
@@ -145,6 +209,8 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < count; i++ ) writer.Write( ( byte )0 );
         }
 
+        // ==================================
+
         public static byte[] FloatTo2Bytes( float floatVal ) => BitConverter.GetBytes( Pack( floatVal ) );
 
         public static float Bytes2ToFloat( byte[] bytes ) => Unpack( bytes, 0 );
@@ -206,59 +272,6 @@ namespace VfxEditor.AvfxFormat {
             }
 
             return false;
-        }
-
-        public static bool DrawAddButton<T>( T assignable, string name ) where T : AvfxBase {
-            if( !assignable.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommand( assignable, true ) );
-                return true;
-            }
-            return false;
-        }
-
-        public static void DrawRemoveContextMenu<T>( T assignable, string name ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommand( assignable, false ) );
-        }
-
-        public static bool DrawAddButton<T>( List<T> assignable, string name ) where T : AvfxBase {
-            if( !assignable[0].IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommandToggle<T>( assignable, true ) );
-                return true;
-            }
-            return false;
-        }
-
-        public static void DrawRemoveContextMenu<T>( List<T> assignable, string name ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommandToggle<T>( assignable, false ) );
-        }
-
-        public static bool DrawAddButtonRecurse<T>( T assignable, string name ) where T : AvfxBase {
-            if( !assignable.IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommandMulti( assignable, true ) );
-                return true;
-            }
-            return false;
-        }
-
-        public static void DrawRemoveContextMenuRecurse<T>( T assignable, string name ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommandMulti( assignable, false ) );
-        }
-
-        public static bool DrawRemoveButton<T>( T assignable, string name ) where T : AvfxBase {
-            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
-                CommandManager.Add( new AvfxAssignCommand( assignable, false ) );
-                return true;
-            }
-            return false;
-        }
-
-        public static void AssignedCopyPaste<T>( T assignable, string name ) where T : AvfxBase {
-            /*
-            var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) copy.AvfxAssigned[(typeof( T ), name)] = assignable.IsAssigned();
-            if( copy.IsPasting && copy.AvfxAssigned.TryGetValue( (typeof( T ), name), out var val ) ) {
-                copy.PasteCommand.Add( new AvfxAssignCommand( assignable, val ) );
-            }*/
         }
 
         public static void DrawNamedItems<T>( List<T> items ) where T : INamedUiItem {

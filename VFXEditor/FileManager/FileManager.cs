@@ -2,14 +2,15 @@ using ImGuiNET;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        public T Selected { get; protected set; } = null;
-        public R File => Selected?.File;
+        public T Document { get; protected set; } = null;
+        public R File => Document?.File;
 
         private int DOC_ID = 0;
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
@@ -27,19 +28,22 @@ namespace VfxEditor.FileManager {
         // ===================
 
         public override void SetSource( SelectResult result ) {
-            Selected?.SetSource( result );
+            Document?.SetSource( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
         public override void SetReplace( SelectResult result ) {
-            Selected?.SetReplace( result );
+            Document?.SetReplace( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
-            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) Selected?.Update();
-            Selected?.CheckKeybinds();
+            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) CopyManager.Copy();
+            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Redo();
+            Document?.CheckKeybinds();
         }
 
         // ====================
@@ -48,12 +52,12 @@ namespace VfxEditor.FileManager {
 
         public void AddDocument() {
             var newDocument = GetNewDocument();
-            Selected = newDocument;
+            Document = newDocument;
             Documents.Add( newDocument );
         }
 
         public void SelectDocument( T document ) {
-            Selected = document;
+            Document = document;
         }
 
         public bool RemoveDocument( T document ) {
@@ -62,8 +66,8 @@ namespace VfxEditor.FileManager {
             DraggingItem = null;
             DocumentWindow.Reset();
 
-            if( document == Selected ) {
-                Selected = Documents[0];
+            if( document == Document ) {
+                Document = Documents[0];
                 document.Dispose();
                 return true;
             }
@@ -84,7 +88,7 @@ namespace VfxEditor.FileManager {
             }
             foreach( var item in items ) {
                 var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
-                Selected = newDocument;
+                Document = newDocument;
                 Documents.Add( newDocument );
             }
             if( Documents.Count == 0 ) AddDocument();
@@ -125,7 +129,7 @@ namespace VfxEditor.FileManager {
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
 
-            Selected = null;
+            Document = null;
             DraggingItem = null;
             DocumentWindow.Reset();
 

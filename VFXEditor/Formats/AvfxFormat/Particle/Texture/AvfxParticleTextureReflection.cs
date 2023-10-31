@@ -52,14 +52,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TR" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Reflection" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "TR" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             DrawNamedItems( DisplayTabs );
         }
 

@@ -5,22 +5,23 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.AvfxFormat {
     public class UiFloat2 : IUiItem {
         public readonly UiParsedFloat2 Parsed;
-        private readonly List<AvfxBase> Literals;
+        private readonly AvfxFloat Literal;
+        private readonly List<AvfxFloat> Extra;
 
         public UiFloat2( string name, AvfxFloat x, AvfxFloat y ) {
-            Literals = new() { x, y };
+            Literal = x;
+            Extra = new() { y };
             Parsed = new( name, x.Parsed, y.Parsed );
         }
 
         public void Draw() {
-            // Unassigned
-            AvfxBase.AssignedCopyPaste( Literals[0], $"{Parsed.Name}_1" );
-            AvfxBase.AssignedCopyPaste( Literals[1], $"{Parsed.Name}_2" );
-            if( AvfxBase.DrawAddButton( Literals, Parsed.Name ) ) return;
+            Literal.AssignedCopyPaste( $"{Parsed.Name}_1" );
+            Extra[0].AssignedCopyPaste( $"{Parsed.Name}_2" );
+            if( Literal.DrawAddButton( Extra, Parsed.Name ) ) return;
 
             Parsed.Draw();
 
-            AvfxBase.DrawRemoveContextMenu( Literals, Parsed.Name );
+            Literal.DrawRemoveContextMenu( Extra, Parsed.Name );
         }
     }
 }

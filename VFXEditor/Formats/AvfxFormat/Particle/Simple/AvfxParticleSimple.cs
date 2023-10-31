@@ -211,14 +211,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "Simple" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( ImGui.SmallButton( "+ Simple Animation" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "Simple" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( UiUtils.RemoveButton( "Delete", small: true ) ) {
                 Unassign();
                 return;

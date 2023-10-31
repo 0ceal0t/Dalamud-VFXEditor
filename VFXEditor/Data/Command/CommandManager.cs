@@ -1,6 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data.Copy;
 using VfxEditor.FileManager;
 using VfxEditor.Utils.Stacks;
 
@@ -9,9 +10,18 @@ namespace VfxEditor {
         public static CommandManager Current => Stack.Count == 0 ? null : Stack.Peek();
         private static readonly Stack<CommandManager> Stack = new();
 
-        public static void Push( CommandManager current ) => Stack.Push( current );
+        public static void Push( CommandManager current ) {
+            Stack.Push( current );
+        }
 
-        public static void Pop() => Stack.Pop();
+        public static void Pop() {
+            var item = Stack.Pop();
+            if( item != null && CopyManager.IsPasting ) {
+                // Commit the changes
+                item.AddAndExecute( item.PasteCommand );
+                item.PasteCommand = new();
+            }
+        }
 
         public static void Add( ICommand command ) => Current?.AddAndExecute( command );
 
@@ -30,11 +40,19 @@ namespace VfxEditor {
 
         public static void Redo() => Current?.RedoInternal();
 
+        public static void Paste( ICommand command ) {
+            if( Current == null ) return;
+            if( !CopyManager.IsPasting ) return;
+            Current.PasteCommand.Add( command );
+        }
+
         // ======================
 
         private readonly UndoRedoStack<ICommand> Commands = new( 25 );
 
         private readonly FileManagerFile File;
+
+        protected CompoundCommand PasteCommand = new();
 
         public CommandManager( FileManagerFile file ) {
             File = file;

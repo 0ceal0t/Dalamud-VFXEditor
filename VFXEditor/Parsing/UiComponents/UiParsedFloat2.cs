@@ -1,5 +1,6 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Parsing {
@@ -18,15 +19,13 @@ namespace VfxEditor.Parsing {
 
         public void Draw() {
             // Copy/Paste
-            /*
-            var copy = manager.Copy;
-            if( copy.IsCopying ) copy.SetValue( this, Name, Value );
-            if( copy.IsPasting && copy.GetValue<Vector2>( this, Name, out var val ) ) {
+            CopyManager.TryCopyValue( this, Name, Value );
+            if( CopyManager.TryGetValue<Vector2>( this, Name, out var val ) ) {
                 var command = new CompoundCommand();
                 command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
-                manager.Add( command );
-            }*/
+                CommandManager.Paste( command );
+            }
 
             var value = Value;
             if( ImGui.InputFloat2( Name, ref value ) ) {

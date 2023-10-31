@@ -109,15 +109,15 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
-            DrawAddButtonRecurse( this, Name );
+            AssignedCopyPaste( Name );
+            DrawAddButtonRecurse( Name );
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
-            DrawRemoveButton( this, Name );
+            AssignedCopyPaste( Name );
+            DrawRemoveButton( Name );
 
             DrawNamedItems( DisplayTabs );
         }

@@ -22,8 +22,8 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawEditMenuItems() {
             if( ImGui.BeginMenu( "Templates" ) ) {
-                if( ImGui.MenuItem( "Blank" ) ) Selected?.OpenTemplate( "default_vfx.avfx" );
-                if( ImGui.MenuItem( "Weapon" ) ) Selected?.OpenTemplate( "default_weapon.avfx" );
+                if( ImGui.MenuItem( "Blank" ) ) Document?.OpenTemplate( "default_vfx.avfx" );
+                if( ImGui.MenuItem( "Weapon" ) ) Document?.OpenTemplate( "default_weapon.avfx" );
                 ImGui.EndMenu();
             }
 
@@ -48,8 +48,8 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.MenuItem( "Clean Up" ) ) File?.Cleanup();
         }
 
-        public void Import( string path ) => Selected.Import( path );
+        public void Import( string path ) => Document.Import( path );
 
-        public void ShowExportDialog( AvfxNode node ) => Selected.ShowExportDialog( node );
+        public void ShowExportDialog( AvfxNode node ) => Document.ShowExportDialog( node );
     }
 }

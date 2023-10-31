@@ -64,14 +64,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TD" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Distortion" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "TD" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             DrawNamedItems( DisplayTabs );
         }
 

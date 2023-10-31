@@ -71,14 +71,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TC1" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( ImGui.SmallButton( "+ Texture Color 1" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( "TC1" );
 
-            AssignedCopyPaste( this, GetDefaultText() );
+            AssignedCopyPaste( GetDefaultText() );
             if( UiUtils.RemoveButton( "Delete Texture Color 1", small: true ) ) {
                 Unassign();
                 return;

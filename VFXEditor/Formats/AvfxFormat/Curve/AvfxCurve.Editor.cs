@@ -14,6 +14,8 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxCurve {
+        private readonly List<(KeyType, Vector4)> CopiedKeys = new();
+
         private readonly List<AvfxCurveKey> Selected = new();
         private AvfxCurveKey SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
 
@@ -180,20 +182,18 @@ namespace VfxEditor.AvfxFormat {
                     DrawOnce = true;
                 }
 
-                /*
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) {
-                    //CopyManager.Avfx.ClearCurveKeys();
-                    //foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key );
+                    CopiedKeys.Clear();
+                    foreach( var key in Keys ) CopiedKeys.Add( key.CopyPasteData );
                 }
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Paste", CopyManager.Avfx.HasCurveKeys(), true ) ) {
+                if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) {
                     var command = new AvfxCurveCompoundCommand( this );
-                    foreach( var key in CopyManager.Avfx.CurveKeys ) command.Add( new GenericAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
+                    foreach( var key in CopiedKeys ) command.Add( new GenericAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
                     CommandManager.Add( command );
                 }
-                */
 
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( "Clear", true ) ) {

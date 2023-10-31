@@ -67,14 +67,14 @@ namespace VfxEditor.AvfxFormat {
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
+            AssignedCopyPaste( Name );
             if( ImGui.SmallButton( $"+ {Name}" ) ) Assign();
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( Name );
 
-            AssignedCopyPaste( this, Name );
+            AssignedCopyPaste( Name );
             if( AvfxName != "TC2" && UiUtils.RemoveButton( $"Delete {Name}", small: true ) ) {
                 Unassign();
                 return;

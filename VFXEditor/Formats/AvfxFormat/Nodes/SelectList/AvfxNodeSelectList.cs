@@ -4,6 +4,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data.Copy;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -129,24 +130,21 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( $"Node{Name}" );
 
             // Unassigned
-            AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
+            Literal.AssignedCopyPaste( Name );
+            if( Literal.DrawAddButton( Name ) ) return;
 
             // Copy/Paste
-            /*
-            var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) {
-                for( var idx = 0; idx < Selected.Count; idx++ ) copy.SetValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
+            if( CopyManager.IsCopying ) {
+                for( var idx = 0; idx < Selected.Count; idx++ ) CopyManager.TryCopyValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
             }
-            if( copy.IsPasting ) {
+            if( CopyManager.IsPasting ) {
                 for( var idx = 0; idx < Selected.Count; idx++ ) {
-                    if( copy.GetValue<int>( this, $"{Name}_{idx}", out var val ) ) {
+                    if( CopyManager.TryGetValue<int>( this, $"{Name}_{idx}", out var val ) ) {
                         var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
-                        copy.PasteCommand.Add( new AvfxNodeSelectListCommand<T>( this, newSelected, idx ) );
+                        CommandManager.Paste( new AvfxNodeSelectListCommand<T>( this, newSelected, idx ) );
                     }
                 }
             }
-            */
 
             // Draw
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
@@ -157,7 +155,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SetNextItemWidth( inputSize );
                 DrawCombo( idx );
 
-                AvfxBase.DrawRemoveContextMenu( Literal, Name );
+                Literal.DrawRemoveContextMenu( Name );
 
                 var imguiStyle = ImGui.GetStyle();
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
@@ -196,7 +194,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
-                AvfxBase.DrawRemoveContextMenu( Literal, Name );
+                Literal.DrawRemoveContextMenu( Name );
             }
         }
 

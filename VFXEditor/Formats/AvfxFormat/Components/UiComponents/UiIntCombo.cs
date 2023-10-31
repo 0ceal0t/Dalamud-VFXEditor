@@ -1,6 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data.Copy;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -20,17 +21,14 @@ namespace VfxEditor.AvfxFormat {
 
         public void Draw() {
             // Unassigned
-            AvfxBase.AssignedCopyPaste( Literal, Name );
-            if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
+            Literal.AssignedCopyPaste( Name );
+            if( Literal.DrawAddButton( Name ) ) return;
 
             // Copy/Paste
-            /*
-            var copy = CopyManager.Avfx;
-            if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
-            if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
-                copy.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
+            CopyManager.TryCopyValue( this, Name, Literal.Value );
+            if( CopyManager.TryGetValue<int>( this, Name, out var val ) ) {
+                CommandManager.Paste( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
             }
-            */
 
             var value = Literal.Value;
             var spacing = ImGui.GetStyle().ItemSpacing.X;
@@ -43,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
             DrawCombo( value );
 
-            AvfxBase.DrawRemoveContextMenu( Literal, Name );
+            Literal.DrawRemoveContextMenu( Name );
         }
 
         private void DrawCombo( int value ) {

@@ -68,7 +68,7 @@ namespace VfxEditor.AvfxFormat {
         // ========= DRAWING =============
 
         protected override void DrawExtraColumn() {
-            using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
+            using var padding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
                 if( VfxSpawn.Active ) {
                     if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
@@ -96,7 +96,7 @@ namespace VfxEditor.AvfxFormat {
             }
             Plugin.TrackerManager.Vfx.DrawEye( new Vector2( 28, height ) );
 
-            framePadding.Pop(); // so it doesn't mess with the popups
+            padding.Pop(); // so it doesn't mess with the popups
 
             VfxSpawn.DrawPopup( SpawnPath, true );
 
