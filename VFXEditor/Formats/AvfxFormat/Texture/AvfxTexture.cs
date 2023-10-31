@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat {
             Plugin.LibraryManager.DrawTextureCombo( Path.Value, ( TextureLeaf texture ) => {
                 if( texture.DrawSelectable() ) {
                     var newValue = texture.GetPath().Trim().Trim( '\0' );
-                    CommandManager.Avfx.Add( new ParsedSimpleCommand<string>( Path.Parsed, newValue ) );
+                    CommandManager.Add( new ParsedSimpleCommand<string>( Path.Parsed, newValue ) );
                 }
             } );
 

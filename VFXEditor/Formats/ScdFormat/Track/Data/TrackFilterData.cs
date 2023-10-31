@@ -24,10 +24,10 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Type.Draw( CommandManager.Scd );
-            Frequency.Draw( CommandManager.Scd );
-            InvQ.Draw( CommandManager.Scd );
-            Gain.Draw( CommandManager.Scd );
+            Type.Draw();
+            Frequency.Draw();
+            InvQ.Draw();
+            Gain.Draw();
         }
     }
 }

@@ -90,8 +90,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         }
 
         public void Draw() {
-            Target.Draw( CommandManager.Scd );
-            Volume.Draw( CommandManager.Scd );
+            Target.Draw();
+            Volume.Draw();
         }
     }
 
@@ -130,8 +130,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "EffectParam" );
 
-            Type.Draw( CommandManager.Scd );
-            NumFilters.Draw( CommandManager.Scd );
+            Type.Draw();
+            NumFilters.Draw();
 
             for( var idx = 0; idx < Filters.Count; idx++ ) {
                 var filter = Filters[idx];
@@ -167,10 +167,10 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "Filter" );
 
-            Frequency.Draw( CommandManager.Scd );
-            Invq.Draw( CommandManager.Scd );
-            Gain.Draw( CommandManager.Scd );
-            Type.Draw( CommandManager.Scd );
+            Frequency.Draw();
+            Invq.Draw();
+            Gain.Draw();
+            Type.Draw();
         }
     }
 }

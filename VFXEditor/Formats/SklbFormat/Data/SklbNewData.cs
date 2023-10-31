@@ -30,7 +30,7 @@ namespace VfxEditor.SklbFormat.Data {
                 Parents.Add( new( reader ) );
             }
 
-            ParentsView = new( Parents, () => new(), () => CommandManager.Sklb );
+            ParentsView = new( Parents, () => new() );
 
             FileUtils.PadTo( reader, 16 );
         }
@@ -50,7 +50,7 @@ namespace VfxEditor.SklbFormat.Data {
 
         public override void Draw() {
             ImGui.TextDisabled( "Header Version: [NEW]" );
-            Parsed.ForEach( x => x.Draw( CommandManager.Sklb ) );
+            Parsed.ForEach( x => x.Draw() );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
@@ -70,6 +70,6 @@ namespace VfxEditor.SklbFormat.Data {
 
         public void Write( BinaryWriter writer ) => Parent.Write( writer );
 
-        public void Draw() => Parent.Draw( CommandManager.Sklb );
+        public void Draw() => Parent.Draw();
     }
 }

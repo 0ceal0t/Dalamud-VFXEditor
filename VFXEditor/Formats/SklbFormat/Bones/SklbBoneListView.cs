@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.SklbFormat.Bones {
             foreach( var (bone, idx) in Bones.WithIndex() ) {
                 var text = "[" + $"{idx}".PadLeft( 3, '0' ) + $"]  {bone.Name.Value}";
                 ImGui.TreeNodeEx( text, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.NoTreePushOnOpen );
-                if( UiUtils.DrawDragDrop( Bones, bone, text, ref DraggingItem, "BONE-LIST", CommandManager.Sklb ) ) break;
+                if( UiUtils.DrawDragDrop( Bones, bone, text, ref DraggingItem, "BONE-LIST", true ) ) break;
             }
         }
     }

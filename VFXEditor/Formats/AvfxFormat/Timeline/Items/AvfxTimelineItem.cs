@@ -74,7 +74,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.DrawItems( Display );
 
             var clipAssigned = ClipIdx.IsAssigned();
-            if( ImGui.Checkbox( "Clip Enabled", ref clipAssigned ) ) CommandManager.Avfx.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
+            if( ImGui.Checkbox( "Clip Enabled", ref clipAssigned ) ) CommandManager.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
             ClipIdx.Draw();
         }
 

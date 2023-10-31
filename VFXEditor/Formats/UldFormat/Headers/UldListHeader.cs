@@ -28,7 +28,7 @@ namespace VfxEditor.UldFormat.Headers {
         }
 
         public void Draw() {
-            Unk1.Draw( CommandManager.Uld );
+            Unk1.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 1 );
             ImGui.Separator();

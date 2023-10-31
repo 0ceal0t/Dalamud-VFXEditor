@@ -15,7 +15,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         public readonly CommandSplitView<UldKeyGroup> KeyGroupView;
 
         public UldFrame() {
-            KeyGroupView = new( "Key Group", KeyGroups, true, null, () => new UldKeyGroup(), () => CommandManager.Uld );
+            KeyGroupView = new( "Key Group", KeyGroups, true, null, () => new UldKeyGroup() );
         }
 
         public UldFrame( BinaryReader reader ) : this() {
@@ -50,8 +50,8 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         }
 
         public void Draw() {
-            StartFrame.Draw( CommandManager.Uld );
-            EndFrame.Draw( CommandManager.Uld );
+            StartFrame.Draw();
+            EndFrame.Draw();
 
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
             KeyGroupView.Draw();

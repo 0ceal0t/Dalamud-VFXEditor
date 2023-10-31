@@ -32,12 +32,12 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
                 PassIndexes.Add( new( $"##Pass {i}", -1 ) );
             }
 
-            PassView = new( "Pass", Passes, false, null, () => new(), () => CommandManager.Shpk );
+            PassView = new( "Pass", Passes, false, null, () => new() );
 
-            SystemKeyView = new( SystemKeys, () => new(), () => CommandManager.Shpk, true );
-            SceneKeyView = new( SceneKeys, () => new(), () => CommandManager.Shpk, true );
-            MaterialKeyView = new( MaterialKeys, () => new(), () => CommandManager.Shpk, true );
-            SubViewKeyView = new( SubViewKeys, () => new(), () => CommandManager.Shpk, true );
+            SystemKeyView = new( SystemKeys, () => new(), true );
+            SceneKeyView = new( SceneKeys, () => new(), true );
+            MaterialKeyView = new( MaterialKeys, () => new(), true );
+            SubViewKeyView = new( SubViewKeys, () => new(), true );
         }
 
         public ShpkNode( BinaryReader reader, int systemKeyCount, int sceneKeyCount, int materialKeyCount, int subViewKeyCount ) : this() {
@@ -91,12 +91,12 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child " );
 
-            Selector.Draw( CommandManager.Shpk );
+            Selector.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             ImGui.TextDisabled( "Pass Indexes:" );
-            foreach( var passIdx in PassIndexes ) passIdx.Draw( CommandManager.Shpk );
+            foreach( var passIdx in PassIndexes ) passIdx.Draw();
         }
 
         private void DrawKeys() {

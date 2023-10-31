@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
         }
 
         public void Draw() {
-            Id.Draw( CommandManager.Shpk, CrcMaps.Keys );
+            Id.Draw( CrcMaps.Keys );
         }
     }
 }

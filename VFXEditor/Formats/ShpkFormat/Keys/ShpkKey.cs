@@ -25,8 +25,8 @@ namespace VfxEditor.Formats.ShpkFormat.Keys {
         }
 
         public void Draw() {
-            Id.Draw( CommandManager.Shpk, CrcMaps.Keys );
-            DefaultValue.Draw( CommandManager.Shpk, CrcMaps.Keys );
+            Id.Draw( CrcMaps.Keys );
+            DefaultValue.Draw( CrcMaps.Keys );
         }
 
         public string GetText( int idx ) => CrcMaps.Keys.TryGetValue( Id.Value, out var text ) ? text : $"Key {idx} (0x{Id.Value:X4})";

@@ -29,8 +29,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "Extra" );
 
-            Version.Draw( CommandManager.Scd );
-            PlayTimeLength.Draw( CommandManager.Scd );
+            Version.Draw();
+            PlayTimeLength.Draw();
         }
     }
 }

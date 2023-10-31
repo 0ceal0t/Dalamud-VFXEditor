@@ -85,7 +85,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public virtual void DrawBody() {
             DrawHeader();
-            foreach( var item in Parsed ) item.Draw( Command );
+            foreach( var item in Parsed ) item.Draw();
         }
 
         public override void Write( TmbWriter writer ) {

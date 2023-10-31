@@ -9,8 +9,8 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
@@ -176,7 +176,7 @@ namespace VfxEditor.SklbFormat.Bones {
                             var newId = BONE_ID++;
                             var newBone = new SklbBone( newId );
                             newBone.Name.Value = $"bone_{newId}";
-                            CommandManager.Sklb.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
+                            CommandManager.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
                         }
                     }
                     UiUtils.Tooltip( "Create new bone at root" );
@@ -249,7 +249,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( !combo ) return;
 
             if( ImGui.Selectable( "[NONE]", bone.Parent == null ) ) {
-                CommandManager.Sklb.Add( new SklbBoneParentCommand( bone, null ) );
+                CommandManager.Add( new SklbBoneParentCommand( bone, null ) );
             }
 
             var idx = 0;
@@ -260,7 +260,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 var selected = bone.Parent == item;
 
                 if( ImGui.Selectable( item.Name.Value, selected ) ) {
-                    CommandManager.Sklb.Add( new SklbBoneParentCommand( bone, item ) );
+                    CommandManager.Add( new SklbBoneParentCommand( bone, item ) );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();
@@ -296,7 +296,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     var command = new CompoundCommand();
                     command.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
                     command.Add( new SklbBoneParentCommand( newBone, bone ) );
-                    CommandManager.Sklb.Add( command );
+                    CommandManager.Add( command );
                 }
 
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
@@ -304,7 +304,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     ImGui.CloseCurrentPopup();
                 }
 
-                bone.Name.Draw( CommandManager.Sklb, 128, "##Rename", 0, ImGuiInputTextFlags.AutoSelectAll );
+                bone.Name.Draw( 128, "##Rename", 0, ImGuiInputTextFlags.AutoSelectAll );
                 ImGui.EndPopup();
             }
 
@@ -364,7 +364,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     Dalamud.Log( "Tried to put bone into itself" );
                 }
                 else {
-                    CommandManager.Sklb.Add( new SklbBoneParentCommand( DraggingBone, destination ) );
+                    CommandManager.Add( new SklbBoneParentCommand( DraggingBone, destination ) );
                 }
             }
 
@@ -397,12 +397,12 @@ namespace VfxEditor.SklbFormat.Bones {
                     var importHavok = new HavokBones( res, true );
                     var newBones = importHavok.Bones;
                     importHavok.RemoveReference();
-                    CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );
+                    CommandManager.Add( new SklbBonesImportCommand( this, newBones ) );
                 }
                 else {
                     try {
                         var newBones = GltfSkeleton.ImportSkeleton( res, Bones );
-                        CommandManager.Sklb.Add( new SklbBonesImportCommand( this, newBones ) );
+                        CommandManager.Add( new SklbBonesImportCommand( this, newBones ) );
                     }
                     catch( Exception e ) {
                         Dalamud.Error( e, "Could not import data" );
@@ -447,7 +447,7 @@ namespace VfxEditor.SklbFormat.Bones {
             foreach( var item in toDelete ) {
                 command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
             }
-            CommandManager.Sklb.Add( command );
+            CommandManager.Add( command );
         }
 
         public void PopulateChildren( SklbBone parent, List<SklbBone> children ) {

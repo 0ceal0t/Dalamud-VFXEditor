@@ -15,10 +15,10 @@ namespace VfxEditor.Parsing {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value;
             if( ImGui.InputFloat( Name, ref value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

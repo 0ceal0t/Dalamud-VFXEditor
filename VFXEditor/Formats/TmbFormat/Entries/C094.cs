@@ -79,16 +79,16 @@ namespace VfxEditor.TmbFormat.Entries {
 
             ImGui.Checkbox( "Extra Data", ref ExtraData );
             if( ExtraData ) {
-                EnableFilter.Draw( Command );
+                EnableFilter.Draw();
 
                 using( var disabled = ImRaii.Disabled( !EnableFilter.Value ) )
                 using( var indent = ImRaii.PushIndent() ) {
-                    Filter.Draw( Command );
+                    Filter.Draw();
                 }
 
-                Unk4.Draw( Command );
-                Unk5.Draw( Command );
-                Unk6.Draw( Command );
+                Unk4.Draw();
+                Unk5.Draw();
+                Unk6.Draw();
             }
         }
     }

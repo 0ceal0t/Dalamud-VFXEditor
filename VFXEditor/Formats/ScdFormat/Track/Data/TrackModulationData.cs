@@ -60,11 +60,11 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Carrier.Draw( CommandManager.Scd );
-            Modulator.Draw( CommandManager.Scd );
-            Curve.Draw( CommandManager.Scd );
-            Depth.Draw( CommandManager.Scd );
-            Rate.Draw( CommandManager.Scd );
+            Carrier.Draw();
+            Modulator.Draw();
+            Curve.Draw();
+            Depth.Draw();
+            Rate.Draw();
         }
     }
 }

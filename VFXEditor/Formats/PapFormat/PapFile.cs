@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -38,7 +38,7 @@ namespace VfxEditor.PapFormat {
 
         public readonly HashSet<nint> Handles = new();
 
-        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base( Plugin.PapManager ) {
+        public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base() {
             SourcePath = sourcePath;
             HkxTempLocation = hkxTemp;
             AnimationsDropdown = new( this, Animations );
@@ -147,9 +147,9 @@ namespace VfxEditor.PapFormat {
             using var tabItem = ImRaii.TabItem( "Parameters" );
             if( !tabItem ) return;
 
-            ModelId.Draw( Command );
-            ModelType.Draw( Command );
-            Variant.Draw( Command );
+            ModelId.Draw();
+            ModelType.Draw();
+            Variant.Draw();
 
             if( ImGui.Button( $"Export Havok" ) ) {
                 FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {

@@ -6,9 +6,9 @@ namespace VfxEditor.Parsing {
 
         public ParsedRadians( string name, float value ) : base( name, value ) { }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             if( UiUtils.DrawRadians( Name, Value, out var value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

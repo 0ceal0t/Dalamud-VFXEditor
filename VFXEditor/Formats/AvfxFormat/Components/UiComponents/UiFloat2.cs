@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxBase.AssignedCopyPaste( Literals[1], $"{Parsed.Name}_2" );
             if( AvfxBase.DrawAddButton( Literals, Parsed.Name ) ) return;
 
-            Parsed.Draw( CommandManager.Avfx );
+            Parsed.Draw();
 
             AvfxBase.DrawRemoveContextMenu( Literals, Parsed.Name );
         }

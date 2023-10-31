@@ -12,9 +12,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract class FileManagerDocument<R, S> : IFileDocument where R : FileManagerFile {
-        public R CurrentFile { get; protected set; }
-        protected VerifiedStatus Verified => CurrentFile == null ? VerifiedStatus.UNKNOWN : CurrentFile.Verified;
-        public bool Unsaved => CurrentFile != null && CurrentFile.Unsaved;
+        public R File { get; protected set; }
+        protected VerifiedStatus Verified => File == null ? VerifiedStatus.UNKNOWN : File.Verified;
+        public bool Unsaved => File != null && File.Unsaved;
 
         public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
         protected string Name = "";
@@ -44,7 +44,7 @@ namespace VfxEditor.FileManager {
 
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = null;
-            if( CurrentFile == null ) return false;
+            if( File == null ) return false;
 
             replacePath = ReplacePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
@@ -53,7 +53,7 @@ namespace VfxEditor.FileManager {
         protected abstract R FileFromReader( BinaryReader reader, bool verify );
 
         protected void LoadLocal( string path, bool verify ) {
-            if( !File.Exists( path ) ) {
+            if( !System.IO.File.Exists( path ) ) {
                 Dalamud.Error( $"Local file: [{path}] does not exist" );
                 return;
             }
@@ -64,9 +64,9 @@ namespace VfxEditor.FileManager {
             }
 
             try {
-                using var reader = new BinaryReader( File.Open( path, FileMode.Open ) );
-                CurrentFile?.Dispose();
-                CurrentFile = FileFromReader( reader, verify );
+                using var reader = new BinaryReader( System.IO.File.Open( path, FileMode.Open ) );
+                File?.Dispose();
+                File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error Reading File" );
@@ -89,8 +89,8 @@ namespace VfxEditor.FileManager {
                 var file = Dalamud.DataManager.GetFile( path );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
-                CurrentFile?.Dispose();
-                CurrentFile = FileFromReader( reader, verify );
+                File?.Dispose();
+                File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error Reading File" );
@@ -107,14 +107,14 @@ namespace VfxEditor.FileManager {
             if( result.Type == SelectResultType.Local ) LoadLocal( result.Path, true );
             else LoadGame( result.Path, true );
 
-            if( CurrentFile != null ) {
+            if( File != null ) {
                 WriteFile( WriteLocation );
             }
         }
 
         protected void RemoveSource() {
-            CurrentFile?.Dispose();
-            CurrentFile = null;
+            File?.Dispose();
+            File = null;
             Source = null;
         }
 
@@ -125,18 +125,18 @@ namespace VfxEditor.FileManager {
         // =====================
 
         protected void WriteFile( string path ) {
-            if( CurrentFile == null ) return;
+            if( File == null ) return;
             if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"Wrote {Id} file to {path}" );
-            File.WriteAllBytes( path, CurrentFile.ToBytes() );
+            System.IO.File.WriteAllBytes( path, File.ToBytes() );
         }
 
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", CurrentFile.ToBytes(), Extension, "ExportedFile" );
+        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", File.ToBytes(), Extension, "ExportedFile" );
 
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
             LastUpdate = DateTime.Now;
 
-            CurrentFile?.Update();
+            File?.Update();
 
             if( Plugin.Configuration.UpdateWriteLocation ) {
                 var newWriteLocation = Manager.NewWriteLocation;
@@ -147,8 +147,8 @@ namespace VfxEditor.FileManager {
                 WriteFile( WriteLocation );
             }
 
-            if( CurrentFile != null && !ReplacePath.Contains( ".sklb" ) ) {
-                Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, CurrentFile.GetPapIds(), CurrentFile.GetPapTypes() );
+            if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
+                Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );
             }
 
             Plugin.ResourceLoader.ReRender();
@@ -162,7 +162,7 @@ namespace VfxEditor.FileManager {
             Replace = replace;
             Disabled = disabled;
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
-            if( CurrentFile != null ) CurrentFile.Verified = VerifiedStatus.WORKSPACE;
+            if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }
 
@@ -170,21 +170,21 @@ namespace VfxEditor.FileManager {
 
         public string GetExportReplace() => DisplayName;
 
-        public bool CanExport() => CurrentFile != null && !string.IsNullOrEmpty( ReplacePath );
+        public bool CanExport() => File != null && !string.IsNullOrEmpty( ReplacePath );
 
         public void PenumbraExport( string modFolder, Dictionary<string, string> filesOut ) {
             var path = ReplacePath;
-            if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
-            var data = CurrentFile.ToBytes();
+            if( string.IsNullOrEmpty( path ) || File == null ) return;
+            var data = File.ToBytes();
 
             PenumbraUtils.WriteBytes( data, modFolder, path, filesOut );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {
             var path = ReplacePath;
-            if( string.IsNullOrEmpty( path ) || CurrentFile == null ) return;
+            if( string.IsNullOrEmpty( path ) || File == null ) return;
 
-            var modData = TexToolsUtils.CreateType2Data( CurrentFile.ToBytes() );
+            var modData = TexToolsUtils.CreateType2Data( File.ToBytes() );
             simplePartsOut.Add( TexToolsUtils.CreateModResource( path, modOffset, modData.Length ) );
             writer.Write( modData );
             modOffset += modData.Length;
@@ -193,20 +193,20 @@ namespace VfxEditor.FileManager {
         public abstract S GetWorkspaceMeta( string newPath );
 
         public void WorkspaceExport( List<S> meta, string rootPath, string newPath ) {
-            if( CurrentFile == null ) return;
+            if( File == null ) return;
 
             var newFullPath = Path.Combine( rootPath, newPath );
-            File.WriteAllBytes( newFullPath, CurrentFile.ToBytes() );
+            System.IO.File.WriteAllBytes( newFullPath, File.ToBytes() );
             meta.Add( GetWorkspaceMeta( newPath ) );
         }
 
         // ====== DRAWING ==========
 
         public virtual void CheckKeybinds() {
-            if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
-            if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
-            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) Manager.GetCurrentCommandManager()?.Undo();
-            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) Manager.GetCurrentCommandManager()?.Redo();
+            //if( Plugin.Configuration.CopyKeybind.KeyPressed() ) Manager.GetCopyManager()?.Copy();
+            //if( Plugin.Configuration.PasteKeybind.KeyPressed() ) Manager.GetCopyManager()?.Paste();
+            if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Undo();
+            if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Redo();
         }
 
         public void Draw() {
@@ -408,13 +408,16 @@ namespace VfxEditor.FileManager {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            if( CurrentFile == null ) DisplayBeginHelpText();
-            else {
-                DisplayFileControls();
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                using var _ = ImRaii.PushId( "Body" );
-                CurrentFile.Draw();
+            if( File == null ) {
+                DisplayBeginHelpText();
+                return;
             }
+
+            DisplayFileControls();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            using var _ = ImRaii.PushId( "Body" );
+            File.Draw();
         }
 
         public void DrawRename() {
@@ -424,9 +427,9 @@ namespace VfxEditor.FileManager {
         }
 
         public virtual void Dispose() {
-            CurrentFile?.Dispose();
-            CurrentFile = null;
-            File.Delete( WriteLocation );
+            File?.Dispose();
+            File = null;
+            System.IO.File.Delete( WriteLocation );
         }
 
         // ========================

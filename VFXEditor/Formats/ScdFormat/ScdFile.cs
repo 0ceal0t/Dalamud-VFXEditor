@@ -28,7 +28,7 @@ namespace VfxEditor.ScdFormat {
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
-        public ScdFile( BinaryReader reader, bool verify ) : base( Plugin.ScdManager ) {
+        public ScdFile( BinaryReader reader, bool verify ) : base() {
             Header = new( reader );
             OffsetsHeader = new( reader );
 
@@ -67,9 +67,9 @@ namespace VfxEditor.ScdFormat {
             if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );
-            LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry(), () => CommandManager.Scd );
-            SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry(), () => CommandManager.Scd );
-            TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry(), () => CommandManager.Scd );
+            LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry() );
+            SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
+            TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry() );
             AttributeView = new( "Attribute", Attributes, false, false );
         }
 

@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -95,10 +95,10 @@ namespace VfxEditor.SklbFormat.Mapping {
             using var child = ImRaii.Child( "Child" );
             using var _ = ImRaii.PushId( "Parameters" );
 
-            Name.Draw( CommandManager.Sklb );
-            Position.Draw( CommandManager.Sklb );
-            Rotation.Draw( CommandManager.Sklb );
-            Scale.Draw( CommandManager.Sklb );
+            Name.Draw();
+            Position.Draw();
+            Rotation.Draw();
+            Scale.Draw();
         }
 
         private void DrawSimpleMappings( int idx ) {
@@ -118,7 +118,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                     }
 
                     var havokData = new HavokBones( hkxPath, true );
-                    CommandManager.Sklb.Add( new SklbMappingCommand( Mapper, havokData.Skeleton ) );
+                    CommandManager.Add( new SklbMappingCommand( Mapper, havokData.Skeleton ) );
                 } );
             }
 
@@ -199,7 +199,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 command.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
             }
 
-            CommandManager.Sklb.Add( command );
+            CommandManager.Add( command );
         }
     }
 }

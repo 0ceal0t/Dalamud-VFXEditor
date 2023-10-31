@@ -8,8 +8,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        public T ActiveDocument { get; protected set; } = null;
-        public R CurrentFile => ActiveDocument?.CurrentFile;
+        public T Selected { get; protected set; } = null;
+        public R File => Selected?.File;
 
         private int DOC_ID = 0;
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
@@ -24,24 +24,22 @@ namespace VfxEditor.FileManager {
             DocumentWindow = new( title, this );
         }
 
-        public override CommandManager GetCurrentCommandManager() => CurrentFile?.Command;
-
         // ===================
 
         public override void SetSource( SelectResult result ) {
-            ActiveDocument?.SetSource( result );
+            Selected?.SetSource( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
         public override void SetReplace( SelectResult result ) {
-            ActiveDocument?.SetReplace( result );
+            Selected?.SetReplace( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
         private void CheckKeybinds() {
             if( !ImGui.IsWindowFocused( ImGuiFocusedFlags.RootAndChildWindows ) ) return;
-            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) ActiveDocument?.Update();
-            ActiveDocument?.CheckKeybinds();
+            if( Plugin.Configuration.UpdateKeybind.KeyPressed() ) Selected?.Update();
+            Selected?.CheckKeybinds();
         }
 
         // ====================
@@ -50,12 +48,12 @@ namespace VfxEditor.FileManager {
 
         public void AddDocument() {
             var newDocument = GetNewDocument();
-            ActiveDocument = newDocument;
+            Selected = newDocument;
             Documents.Add( newDocument );
         }
 
         public void SelectDocument( T document ) {
-            ActiveDocument = document;
+            Selected = document;
         }
 
         public bool RemoveDocument( T document ) {
@@ -64,8 +62,8 @@ namespace VfxEditor.FileManager {
             DraggingItem = null;
             DocumentWindow.Reset();
 
-            if( document == ActiveDocument ) {
-                ActiveDocument = Documents[0];
+            if( document == Selected ) {
+                Selected = Documents[0];
                 document.Dispose();
                 return true;
             }
@@ -86,7 +84,7 @@ namespace VfxEditor.FileManager {
             }
             foreach( var item in items ) {
                 var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
-                ActiveDocument = newDocument;
+                Selected = newDocument;
                 Documents.Add( newDocument );
             }
             if( Documents.Count == 0 ) AddDocument();
@@ -127,7 +125,7 @@ namespace VfxEditor.FileManager {
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
 
-            ActiveDocument = null;
+            Selected = null;
             DraggingItem = null;
             DocumentWindow.Reset();
 

@@ -24,10 +24,10 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.W );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value.ToArray();
             if( ImGui.InputInt4( Name, ref value[0] ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

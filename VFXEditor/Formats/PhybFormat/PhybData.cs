@@ -21,6 +21,6 @@ namespace VfxEditor.PhybFormat {
 
         public virtual void Write( BinaryWriter writer ) => WriteParsed( writer );
 
-        public virtual void Draw() => DrawParsed( CommandManager.Phyb );
+        public virtual void Draw() => DrawParsed();
     }
 }

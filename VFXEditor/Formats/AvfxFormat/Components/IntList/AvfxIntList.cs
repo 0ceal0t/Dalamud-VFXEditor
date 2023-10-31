@@ -1,7 +1,6 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxIntList : AvfxDrawable {
@@ -64,13 +63,15 @@ namespace VfxEditor.AvfxFormat {
             if( DrawAddButton( this, Name ) ) return;
 
             // Copy/Paste
+            /*
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) copy.SetValue( this, Name, Items[0] );
             if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) copy.PasteCommand.Add( new AvfxIntListCommand( this, val ) );
+            */
 
             var value = Items[0];
             if( ImGui.InputInt( Name, ref value ) ) {
-                CommandManager.Avfx.Add( new AvfxIntListCommand( this, value ) );
+                CommandManager.Add( new AvfxIntListCommand( this, value ) );
             }
 
             DrawRemoveContextMenu( this, Name );

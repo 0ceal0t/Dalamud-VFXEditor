@@ -1,7 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Data;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -25,17 +24,19 @@ namespace VfxEditor.AvfxFormat {
             if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
+            /*
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
             if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
                 copy.PasteCommand.Add( new ParsedSimpleCommand<int>( Literal.Parsed, val ) );
             }
+            */
 
             var value = Literal.Value;
             var spacing = ImGui.GetStyle().ItemSpacing.X;
             var comboWidth = ImGui.GetContentRegionAvail().X * 0.65f - 100 - spacing;
             ImGui.SetNextItemWidth( 100 );
-            if( ImGui.InputInt( "##MainInput", ref value ) ) CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
+            if( ImGui.InputInt( "##MainInput", ref value ) ) CommandManager.Add( new ParsedSimpleCommand<int>( Literal.Parsed, value ) );
 
             ImGui.SameLine( 100 + spacing );
             ImGui.SetNextItemWidth( comboWidth );
@@ -54,7 +55,7 @@ namespace VfxEditor.AvfxFormat {
                 using var _ = ImRaii.PushId( idx );
                 var isSelected = entry.Key == value;
                 if( ImGui.Selectable( $"{entry.Value}", isSelected ) ) {
-                    CommandManager.Avfx.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
+                    CommandManager.Add( new ParsedSimpleCommand<int>( Literal.Parsed, entry.Key ) );
                 }
 
                 if( isSelected ) ImGui.SetItemDefaultFocus();

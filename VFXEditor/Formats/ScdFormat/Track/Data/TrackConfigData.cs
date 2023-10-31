@@ -39,7 +39,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Type.Draw( CommandManager.Scd );
+            Type.Draw();
         }
     }
 }

@@ -41,9 +41,9 @@ namespace VfxEditor.ScdFormat {
             using var _ = ImRaii.PushId( "Tracks" );
 
             if( type == SoundType.Cycle ) {
-                CycleInterval.Draw( CommandManager.Scd );
-                CycleNumPlayTrack.Draw( CommandManager.Scd );
-                CycleRange.Draw( CommandManager.Scd );
+                CycleInterval.Draw();
+                CycleNumPlayTrack.Draw();
+                CycleRange.Draw();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
@@ -54,7 +54,7 @@ namespace VfxEditor.ScdFormat {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Scd.Add( new GenericRemoveCommand<RandomTrackInfo>( Tracks, Tracks[idx] ) );
+                        CommandManager.Add( new GenericRemoveCommand<RandomTrackInfo>( Tracks, Tracks[idx] ) );
                         break;
                     }
 
@@ -64,7 +64,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Scd.Add( new GenericAddCommand<RandomTrackInfo>( Tracks, new RandomTrackInfo() ) );
+                CommandManager.Add( new GenericAddCommand<RandomTrackInfo>( Tracks, new RandomTrackInfo() ) );
             }
         }
     }
@@ -85,7 +85,7 @@ namespace VfxEditor.ScdFormat {
 
         public void Draw() {
             Track.Draw();
-            UpperLimit.Draw( CommandManager.Scd );
+            UpperLimit.Draw();
         }
     }
 }

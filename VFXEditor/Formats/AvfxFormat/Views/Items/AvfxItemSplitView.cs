@@ -24,13 +24,13 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             if( ShowControls && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                CommandManager.Avfx.Add( new AvfxItemSplitViewAddCommand<T>( this, Items ) );
+                CommandManager.Add( new AvfxItemSplitViewAddCommand<T>( this, Items ) );
             }
 
             if( Selected != null && AllowDelete ) {
                 if( ShowControls ) ImGui.SameLine();
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Avfx.Add( new AvfxItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
+                    CommandManager.Add( new AvfxItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }
             }
         }

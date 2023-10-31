@@ -60,13 +60,13 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public void WriteRows( BinaryWriter writer ) => Rows.ForEach( x => x.Write( writer ) );
 
         public void Draw() {
-            Parsed.ForEach( x => x.Draw( Command ) );
+            Parsed.ForEach( x => x.Draw() );
 
             for( var idx = 0; idx < Rows.Count; idx++ ) {
                 if( ImGui.CollapsingHeader( $"Row {idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
-                    Rows[idx].Draw( Command );
+                    Rows[idx].Draw();
                 }
             }
         }

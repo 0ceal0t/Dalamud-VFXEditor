@@ -32,9 +32,9 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "Atomos" );
 
-            Version.Draw( CommandManager.Scd );
-            MinPeople.Draw( CommandManager.Scd );
-            MaxPeople.Draw( CommandManager.Scd );
+            Version.Draw();
+            MinPeople.Draw();
+            MaxPeople.Draw();
         }
     }
 }

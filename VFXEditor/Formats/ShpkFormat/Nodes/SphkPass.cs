@@ -24,9 +24,9 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
         }
 
         public void Draw() {
-            Id.Draw( CommandManager.Shpk, CrcMaps.Passes );
-            VertexShaderIdx.Draw( CommandManager.Shpk );
-            PixelShaderIdx.Draw( CommandManager.Shpk );
+            Id.Draw( CrcMaps.Passes );
+            VertexShaderIdx.Draw();
+            PixelShaderIdx.Draw();
         }
     }
 }

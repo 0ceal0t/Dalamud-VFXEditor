@@ -8,8 +8,7 @@ namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbSimpleMappingSplitView : CommandSplitView<SklbSimpleMapping> {
         private readonly SklbMapping Mapping;
 
-        public SklbSimpleMappingSplitView( SklbMapping mapping, List<SklbSimpleMapping> items ) :
-            base( "Mapping", items, false, null, () => new( mapping ), () => CommandManager.Sklb ) {
+        public SklbSimpleMappingSplitView( SklbMapping mapping, List<SklbSimpleMapping> items ) : base( "Mapping", items, false, null, () => new( mapping ) ) {
             Mapping = mapping;
         }
 

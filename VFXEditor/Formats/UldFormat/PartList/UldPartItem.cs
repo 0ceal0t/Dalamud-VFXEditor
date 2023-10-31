@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.PartList {
         private readonly ParsedUInt W = new( "W", size: 2 );
         private readonly ParsedUInt H = new( "H", size: 2 );
 
-        public UldTexture CurrentTexture => Plugin.UldManager.CurrentFile.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
+        public UldTexture CurrentTexture => Plugin.UldManager.File.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
 
         private bool ShowHd = false;
 
@@ -35,7 +35,7 @@ namespace VfxEditor.UldFormat.PartList {
         }
 
         public void Draw() {
-            TextureId.Draw( CommandManager.Uld );
+            TextureId.Draw();
 
             ImGui.Checkbox( "Show HD", ref ShowHd );
 
@@ -54,10 +54,10 @@ namespace VfxEditor.UldFormat.PartList {
                 }
             }
 
-            U.Draw( CommandManager.Uld );
-            V.Draw( CommandManager.Uld );
-            W.Draw( CommandManager.Uld );
-            H.Draw( CommandManager.Uld );
+            U.Draw();
+            V.Draw();
+            W.Draw();
+            H.Draw();
         }
     }
 }

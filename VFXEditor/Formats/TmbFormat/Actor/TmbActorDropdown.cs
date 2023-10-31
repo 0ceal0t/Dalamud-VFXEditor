@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Actor {
             command.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
             command.Add( new GenericRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
             item.DeleteChildren( command, File );
-            File.Command.Add( command );
+            CommandManager.Add( command );
         }
 
         protected override void OnNew() {
@@ -30,7 +30,7 @@ namespace VfxEditor.TmbFormat.Actor {
             var command = new TmbRefreshIdsCommand( File );
             command.Add( new GenericAddCommand<Tmac>( Items, newActor ) );
             command.Add( new GenericAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
-            File.Command.Add( command );
+            CommandManager.Add( command );
         }
 
         protected override void DrawSelected() => Selected.Draw();

@@ -2,16 +2,19 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
     public abstract class Modal {
         public readonly string Title;
         private readonly bool ShowCancel;
+        protected readonly CommandManager Command;
 
         public Modal( string title, bool showCancel ) {
             Title = title;
             ShowCancel = showCancel;
+            Command = CommandManager.Current;
         }
 
         protected abstract void DrawBody();
@@ -19,12 +22,12 @@ namespace VfxEditor.Ui.Components {
         protected abstract void OnCancel();
 
         public void Draw() {
+            using var command = new CommandRaii( Command );
+
             var open = true;
             if( ImGui.BeginPopupModal( Title, ref open, ImGuiWindowFlags.AlwaysAutoResize ) ) {
                 using var _ = ImRaii.PushId( "Modal" );
-
                 DrawBody();
-
                 ImGui.Separator();
 
                 if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {

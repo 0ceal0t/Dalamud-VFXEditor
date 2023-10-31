@@ -12,8 +12,8 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void Draw() {
-            Frame.Draw( CommandManager.Avfx );
-            Color.Draw( CommandManager.Avfx );
+            Frame.Draw();
+            Color.Draw();
         }
     }
 }

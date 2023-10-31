@@ -132,7 +132,7 @@ namespace VfxEditor.Formats.AtchFormat {
         public readonly List<AtchEntry> Entries = new();
         private readonly AtchEntrySplitView EntryView;
 
-        public AtchFile( BinaryReader reader ) : base( Plugin.AtchManager ) {
+        public AtchFile( BinaryReader reader ) : base() {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
 
             var numEntries = reader.ReadUInt16();

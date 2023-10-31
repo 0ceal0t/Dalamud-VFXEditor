@@ -12,7 +12,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public SklbLayers( SklbFile file ) {
             File = file;
-            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer( file ), () => IsSklb ? CommandManager.Sklb : CommandManager.Skp );
+            LayerView = new( "Layer", Layers, true, null, () => new SklbLayer( file ) );
         }
 
         public SklbLayers( SklbFile file, BinaryReader reader ) : this( file ) {

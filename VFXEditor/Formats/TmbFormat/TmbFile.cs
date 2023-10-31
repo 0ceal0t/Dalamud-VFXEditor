@@ -34,7 +34,7 @@ namespace VfxEditor.TmbFormat {
 
         public TmbFile( BinaryReader binaryReader, bool verify ) : this( binaryReader, null, verify ) { }
 
-        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool verify ) : base( Plugin.TmbManager, manager ) {
+        public TmbFile( BinaryReader binaryReader, CommandManager manager, bool verify ) : base( manager ) {
             ActorsDropdown = new( this );
             TmfcDropdown = new( this );
 
@@ -166,7 +166,7 @@ namespace VfxEditor.TmbFormat {
                 track.DeleteEntry( command, DraggingEntry ); // will add to command
             }
             destination.AddEntry( command, DraggingEntry );
-            Command.Add( command );
+            CommandManager.Add( command );
 
             DraggingEntry = null;
         }

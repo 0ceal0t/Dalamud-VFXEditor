@@ -4,7 +4,6 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -134,6 +133,7 @@ namespace VfxEditor.AvfxFormat {
             if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
+            /*
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) {
                 for( var idx = 0; idx < Selected.Count; idx++ ) copy.SetValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
@@ -146,6 +146,7 @@ namespace VfxEditor.AvfxFormat {
                     }
                 }
             }
+            */
 
             // Draw
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
@@ -165,7 +166,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
-                    if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected[idx] );
+                    if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected[idx] );
                 }
 
                 UiUtils.Tooltip( "Navigate to selected node" );
@@ -179,7 +180,7 @@ namespace VfxEditor.AvfxFormat {
                     ImGui.SameLine();
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new AvfxNodeSelectListRemoveCommand<T>( this, idx ) );
+                        CommandManager.Add( new AvfxNodeSelectListRemoveCommand<T>( this, idx ) );
                         return;
                     }
                 }
@@ -194,7 +195,7 @@ namespace VfxEditor.AvfxFormat {
             if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
 
             if( Selected.Count < 4 ) {
-                if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Avfx.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
+                if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
                 AvfxBase.DrawRemoveContextMenu( Literal, Name );
             }
         }
@@ -203,12 +204,12 @@ namespace VfxEditor.AvfxFormat {
             using var combo = ImRaii.Combo( $"##Combo", Selected[idx] == null ? "[NONE]" : Selected[idx].GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Avfx.Add( new AvfxNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
+            if( ImGui.Selectable( "[NONE]", Selected[idx] == null ) ) CommandManager.Add( new AvfxNodeSelectListCommand<T>( this, null, idx ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );
 
-                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) && !cycle ) CommandManager.Avfx.Add( new AvfxNodeSelectListCommand<T>( this, item, idx ) );
+                if( ImGui.Selectable( item.GetText(), Selected[idx] == item ) && !cycle ) CommandManager.Add( new AvfxNodeSelectListCommand<T>( this, item, idx ) );
                 if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }

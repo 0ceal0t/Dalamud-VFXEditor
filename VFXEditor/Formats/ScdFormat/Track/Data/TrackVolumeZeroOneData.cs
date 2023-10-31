@@ -33,7 +33,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Version.Draw( CommandManager.Scd );
+            Version.Draw();
 
             for( var idx = 0; idx < Points.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );
@@ -57,8 +57,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            ZeroOne.Draw( CommandManager.Scd );
-            Value.Draw( CommandManager.Scd );
+            ZeroOne.Draw();
+            Value.Draw();
         }
     }
 }

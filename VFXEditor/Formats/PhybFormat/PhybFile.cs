@@ -33,7 +33,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base( Plugin.PhybManager, () => Plugin.PhybManager.CurrentFile?.Updated() ) {
+        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
 
             if( Version.Value > 0 ) {
@@ -92,8 +92,8 @@ namespace VfxEditor.PhybFormat {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using( var child = ImRaii.Child( "Child", size, false ) ) {
-                Version.Draw( CommandManager.Phyb );
-                DataType.Draw( CommandManager.Phyb );
+                Version.Draw();
+                DataType.Draw();
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -126,7 +126,7 @@ namespace VfxEditor.PhybFormat {
             Simulation.AddPhysicsObjects( meshes, boneMatrixes );
         }
 
-        public void Updated() {
+        public override void OnChange() {
             PhysicsUpdated = true;
         }
 

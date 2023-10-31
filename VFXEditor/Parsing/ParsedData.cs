@@ -19,8 +19,8 @@ namespace VfxEditor.Parsing {
             foreach( var parsed in Parsed ) parsed.Write( writer );
         }
 
-        protected void DrawParsed( CommandManager command ) {
-            foreach( var parsed in Parsed ) parsed.Draw( command );
+        protected void DrawParsed() {
+            foreach( var parsed in Parsed ) parsed.Draw();
         }
     }
 }

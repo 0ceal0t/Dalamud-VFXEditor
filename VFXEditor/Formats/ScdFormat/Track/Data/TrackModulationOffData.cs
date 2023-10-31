@@ -14,7 +14,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Carrier.Draw( CommandManager.Scd );
+            Carrier.Draw();
         }
     }
 }

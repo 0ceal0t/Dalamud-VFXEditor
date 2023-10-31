@@ -27,9 +27,9 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
         }
 
         public void Draw() {
-            Id.Draw( CommandManager.Shpk, CrcMaps.MaterialParams );
-            Offset.Draw( CommandManager.Shpk );
-            Size.Draw( CommandManager.Shpk );
+            Id.Draw( CrcMaps.MaterialParams );
+            Offset.Draw();
+            Size.Draw();
         }
     }
 }

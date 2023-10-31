@@ -33,7 +33,7 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             foreach( var option in options ) {
                 var intOption = ( int )( object )option;
@@ -45,7 +45,7 @@ namespace VfxEditor.Parsing {
                     if( hasFlag ) intValue |= intOption;
                     else intValue &= ~intOption;
 
-                    SetValue( manager, ( T )( object )intValue );
+                    SetValue( ( T )( object )intValue );
                 }
             }
         }

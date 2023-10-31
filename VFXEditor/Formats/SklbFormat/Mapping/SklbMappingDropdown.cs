@@ -1,8 +1,8 @@
 using FFXIVClientStructs.Havok;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -72,11 +72,11 @@ namespace VfxEditor.SklbFormat.Mapping {
                     Storage = 1
                 };
 
-                CommandManager.Sklb.Add( new GenericAddCommand<SklbMapping>( Items, new SklbMapping( File.Bones, mapper, "hkaSkeletonMapper" ) ) );
+                CommandManager.Add( new GenericAddCommand<SklbMapping>( Items, new SklbMapping( File.Bones, mapper, "hkaSkeletonMapper" ) ) );
             } );
         }
 
-        protected override void OnDelete( SklbMapping item ) => CommandManager.Sklb.Add( new GenericRemoveCommand<SklbMapping>( Items, item ) );
+        protected override void OnDelete( SklbMapping item ) => CommandManager.Add( new GenericRemoveCommand<SklbMapping>( Items, item ) );
 
         protected override void DrawSelected() => Selected.Draw( Items.IndexOf( Selected ) );
     }

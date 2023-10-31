@@ -32,10 +32,10 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )IntValue );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

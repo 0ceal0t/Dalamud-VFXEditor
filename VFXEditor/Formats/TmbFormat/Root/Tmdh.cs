@@ -25,9 +25,9 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw() {
-            Unk1.Draw( Command );
-            Length.Draw( Command );
-            Unk3.Draw( Command );
+            Unk1.Draw();
+            Length.Draw();
+            Unk3.Draw();
         }
     }
 }

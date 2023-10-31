@@ -36,11 +36,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                null, () => new( file, simulator ), () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
+                null, () => new( file, simulator ), ( PhybCollisionData _ ) => File.OnChange() );
 
-            // 1-indexed?
             NodeSplitView = new( "Node", Nodes, false,
-                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), () => CommandManager.Phyb, ( PhybNode item ) => File.Updated() );
+                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), ( PhybNode _ ) => File.OnChange() );
         }
 
         public PhybChain( PhybFile file, PhybSimulator simulator, BinaryReader reader, long simulatorStartPos ) : this( file, simulator ) {
@@ -82,7 +81,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             using( var tab = ImRaii.TabItem( "Parameters" ) ) {
                 if( tab ) {
                     using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
-                    foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Phyb );
+                    foreach( var parsed in Parsed ) parsed.Draw();
                 }
             }
 

@@ -32,7 +32,7 @@ namespace VfxEditor.UldFormat.PartList {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
+            Id.Draw();
 
             for( var idx = 0; idx < Parts.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );
@@ -45,7 +45,7 @@ namespace VfxEditor.UldFormat.PartList {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Uld.Add( new GenericRemoveCommand<UldPartItem>( Parts, item ) );
+                        CommandManager.Add( new GenericRemoveCommand<UldPartItem>( Parts, item ) );
                         break;
                     }
 
@@ -54,7 +54,7 @@ namespace VfxEditor.UldFormat.PartList {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Uld.Add( new GenericAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
+                CommandManager.Add( new GenericAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
             }
         }
 

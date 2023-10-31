@@ -37,7 +37,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
                 if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
             }
 
-            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", null ) ) return true;
+            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", false ) ) return true;
             return false;
         }
 

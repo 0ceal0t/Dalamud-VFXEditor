@@ -4,9 +4,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
-using VfxEditor.FileManager.Interfaces;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Select;
@@ -32,10 +31,6 @@ namespace VfxEditor.Formats.TextureFormat {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }
-
-        public CopyManager GetCopyManager() => null;
-
-        public CommandManager GetCurrentCommandManager() => null;
 
         public ManagerConfiguration GetConfig() => Configuration;
 

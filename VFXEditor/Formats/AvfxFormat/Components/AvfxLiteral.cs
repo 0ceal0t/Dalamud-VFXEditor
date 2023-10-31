@@ -29,7 +29,7 @@ namespace VfxEditor.Formats.AvfxFormat.Components {
             AssignedCopyPaste( this, Parsed.Name );
             if( DrawAddButton( this, Parsed.Name ) ) return;
 
-            Parsed.Draw( CommandManager.Avfx );
+            Parsed.Draw();
 
             DrawRemoveContextMenu( this, Parsed.Name );
         }

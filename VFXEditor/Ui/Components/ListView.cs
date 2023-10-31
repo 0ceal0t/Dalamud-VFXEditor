@@ -11,19 +11,15 @@ namespace VfxEditor.Ui.Components {
     public class ListView<T> where T : class, IUiItem {
         private readonly List<T> Items;
         private readonly Func<T> NewAction;
-        private readonly Func<CommandManager> CommandAction;
         private readonly bool DeleteButtonFirst;
 
-        public ListView( List<T> items, Func<T> newAction, Func<CommandManager> commandAction, bool deleteButtonFirst = false ) {
+        public ListView( List<T> items, Func<T> newAction, bool deleteButtonFirst = false ) {
             Items = items;
             NewAction = newAction;
-            CommandAction = commandAction;
             DeleteButtonFirst = deleteButtonFirst;
         }
 
         public void Draw() {
-            var commandManager = CommandAction.Invoke();
-
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 using var _ = ImRaii.PushId( idx );
@@ -31,7 +27,7 @@ namespace VfxEditor.Ui.Components {
                 if( DeleteButtonFirst ) {
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        commandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
+                        CommandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
                         break;
                     }
 
@@ -47,14 +43,14 @@ namespace VfxEditor.Ui.Components {
 
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        commandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
+                        CommandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
                         break;
                     }
                 }
             }
 
             if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
-                commandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
+                CommandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
             }
         }
     }

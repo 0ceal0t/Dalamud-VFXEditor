@@ -7,7 +7,6 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.SklbFormat.Layers {
     public class SklbLayer : IUiItem {
-        public bool IsSklb => File != null;
         public readonly SklbFile File;
 
         public readonly ParsedInt Id = new( "Id" );
@@ -18,7 +17,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public SklbLayer( SklbFile file ) {
             File = file;
-            BonesView = new( Bones, () => new( File ), () => IsSklb ? CommandManager.Sklb : CommandManager.Skp );
+            BonesView = new( Bones, () => new( File ) );
         }
 
         public SklbLayer( SklbFile file, BinaryReader reader ) : this( file ) {
@@ -36,7 +35,7 @@ namespace VfxEditor.SklbFormat.Layers {
         }
 
         public void Draw() {
-            Id.Draw( IsSklb ? CommandManager.Sklb : CommandManager.Skp );
+            Id.Draw();
             BonesView.Draw();
         }
     }
@@ -66,7 +65,7 @@ namespace VfxEditor.SklbFormat.Layers {
 
         public void Draw() {
             if( IsSklb ) Bone.Draw( File.Bones.Bones );
-            else SkpBone.Draw( CommandManager.Skp );
+            else SkpBone.Draw();
         }
     }
 }

@@ -2,7 +2,6 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
-using VfxEditor.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -169,12 +168,14 @@ namespace VfxEditor.AvfxFormat {
             if( AvfxBase.DrawAddButton( Literal, Name ) ) return;
 
             // Copy/Paste
+            /*
             var copy = CopyManager.Avfx;
             if( copy.IsCopying ) copy.SetValue( this, Name, Literal.Value );
             if( copy.IsPasting && copy.GetValue<int>( this, Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                 copy.PasteCommand.Add( new AvfxNodeSelectCommand<T>( this, newSelected ) );
             }
+            */
 
             // Draw
             var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
@@ -188,7 +189,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
-                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.CurrentFile.SelectItem( Selected );
+                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected );
             }
 
             UiUtils.Tooltip( "Navigate to selected node" );
@@ -201,12 +202,12 @@ namespace VfxEditor.AvfxFormat {
             using var combo = ImRaii.Combo( "##MainCombo", GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Avfx.Add( new AvfxNodeSelectCommand<T>( this, null ) ); // "None" selector
+            if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Add( new AvfxNodeSelectCommand<T>( this, null ) ); // "None" selector
             foreach( var item in Group.Items ) {
                 var cycle = Node.IsChildOf( item );
                 using var disabled = ImRaii.Disabled( cycle );
 
-                if( ImGui.Selectable( item.GetText(), Selected == item ) && !cycle ) CommandManager.Avfx.Add( new AvfxNodeSelectCommand<T>( this, item ) );
+                if( ImGui.Selectable( item.GetText(), Selected == item ) && !cycle ) CommandManager.Add( new AvfxNodeSelectCommand<T>( this, item ) );
                 if( ImGui.IsItemHovered() ) item.ShowTooltip();
             }
         }

@@ -11,7 +11,7 @@ namespace VfxEditor.ScdFormat {
 
         public void Write( BinaryWriter writer ) => Parsed.ForEach( x => x.Write( writer ) );
 
-        public void Draw() => Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
+        public void Draw() => Parsed.ForEach( x => x.Draw() );
 
         public void Enable() { }
 

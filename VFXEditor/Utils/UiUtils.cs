@@ -339,7 +339,7 @@ namespace VfxEditor.Utils {
 
         public static bool Contains( Vector2 min, Vector2 max, Vector2 point ) => point.X >= min.X && point.Y >= min.Y && point.X <= max.X && point.Y <= max.Y;
 
-        public static bool DrawDragDrop<T>( List<T> items, T item, string text, ref T draggingItem, string id, CommandManager manager ) where T : class {
+        public static bool DrawDragDrop<T>( List<T> items, T item, string text, ref T draggingItem, string id, bool record ) where T : class {
             var listModified = false;
 
             if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
@@ -349,14 +349,14 @@ namespace VfxEditor.Utils {
                 ImGui.EndDragDropSource();
             }
             if( ImGui.BeginDragDropTarget() ) {
-                if( StopDragging( items, item, ref draggingItem, id, manager ) ) listModified = true;
+                if( StopDragging( items, item, ref draggingItem, id, record ) ) listModified = true;
                 ImGui.EndDragDropTarget();
             }
 
             return listModified;
         }
 
-        private static unsafe bool StopDragging<T>( List<T> items, T destination, ref T draggingItem, string id, CommandManager manager ) where T : class {
+        private static unsafe bool StopDragging<T>( List<T> items, T destination, ref T draggingItem, string id, bool record ) where T : class {
             if( draggingItem == null ) return false;
 
             var payload = ImGui.AcceptDragDropPayload( id );
@@ -364,11 +364,11 @@ namespace VfxEditor.Utils {
 
             if( draggingItem != destination && items.Contains( draggingItem ) && items.Contains( destination ) ) {
                 var command = new GenericMoveCommand<T>( items, draggingItem, destination );
-                if( manager == null ) {
+                if( !record ) {
                     command.Execute();
                 }
                 else {
-                    manager.Add( command );
+                    CommandManager.Add( command );
                 }
             }
             draggingItem = null;

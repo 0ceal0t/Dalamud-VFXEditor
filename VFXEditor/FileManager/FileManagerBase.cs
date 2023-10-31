@@ -1,5 +1,5 @@
 using Dalamud.Interface.Windowing;
-using VfxEditor.Data;
+using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Ui;
@@ -13,6 +13,7 @@ namespace VfxEditor.FileManager {
         public readonly string WorkspacePath;
 
         public readonly ManagerConfiguration Configuration;
+
         public readonly CopyManager Copy = new();
 
         public readonly WindowSystem WindowSystem = new();
@@ -33,10 +34,6 @@ namespace VfxEditor.FileManager {
         }
 
         public ManagerConfiguration GetConfig() => Configuration;
-
-        public CopyManager GetCopyManager() => Copy;
-
-        public abstract CommandManager GetCurrentCommandManager();
 
         public void ShowSource() => SourceSelect?.Show();
 

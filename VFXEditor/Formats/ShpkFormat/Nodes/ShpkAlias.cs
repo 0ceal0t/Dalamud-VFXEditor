@@ -21,8 +21,8 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
         }
 
         public void Draw() {
-            Selector.Draw( CommandManager.Shpk );
-            NodeIdx.Draw( CommandManager.Shpk );
+            Selector.Draw();
+            NodeIdx.Draw();
         }
     }
 }

@@ -66,8 +66,8 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public override void DrawBody() {
             base.DrawBody();
 
-            Unk1.Draw( Command );
-            Unk2.Draw( Command );
+            Unk1.Draw();
+            Unk2.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();

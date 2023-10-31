@@ -28,13 +28,13 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             Unk5.Write( writer );
         }
 
-        public void Draw( CommandManager command ) {
-            Unk1.Draw( command );
-            Time.Draw( command );
-            Unk2.Draw( command );
-            Unk3.Draw( command );
-            Unk4.Draw( command );
-            Unk5.Draw( command );
+        public void Draw() {
+            Unk1.Draw();
+            Time.Draw();
+            Unk2.Draw();
+            Unk3.Draw();
+            Unk4.Draw();
+            Unk5.Draw();
         }
     }
 }

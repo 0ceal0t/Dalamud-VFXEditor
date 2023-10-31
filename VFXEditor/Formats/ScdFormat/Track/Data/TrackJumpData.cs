@@ -22,8 +22,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Condition.Draw( CommandManager.Scd );
-            Offset.Draw( CommandManager.Scd );
+            Condition.Draw();
+            Offset.Draw();
         }
     }
 }

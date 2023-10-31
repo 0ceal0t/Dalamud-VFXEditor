@@ -42,7 +42,7 @@ namespace VfxEditor.UldFormat {
         public readonly CommandDropdown<UldTimeline> TimelineDropdown;
         public readonly CommandDropdown<UldWidget> WidgetDropdown;
 
-        public UldFile( BinaryReader reader, bool verify ) : base( Plugin.UldManager ) {
+        public UldFile( BinaryReader reader, bool verify ) : base() {
             var pos = reader.BaseStream.Position;
             Header = new( reader ); // uldh 0100
 
@@ -100,19 +100,19 @@ namespace VfxEditor.UldFormat {
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             TextureSplitView = new( "Texture", Textures, true,
-                ( UldTexture item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+                ( UldTexture item, int idx ) => item.GetText(), () => new() );
 
             PartsSplitView = new( "Part List", Parts, true,
-                ( UldPartList item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+                ( UldPartList item, int idx ) => item.GetText(), () => new() );
 
             ComponentDropdown = new( "Component", Components,
-                ( UldComponent item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
+                ( UldComponent item, int idx ) => item.GetText(), () => new( Components ) );
 
             TimelineDropdown = new( "Timeline", Timelines,
-                ( UldTimeline item, int idx ) => item.GetText(), () => new(), () => CommandManager.Uld );
+                ( UldTimeline item, int idx ) => item.GetText(), () => new() );
 
             WidgetDropdown = new( "Widget", Widgets,
-                ( UldWidget item, int idx ) => item.GetText(), () => new( Components ), () => CommandManager.Uld );
+                ( UldWidget item, int idx ) => item.GetText(), () => new( Components ) );
         }
 
         public override void Write( BinaryWriter writer ) {

@@ -16,8 +16,8 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
 
         public ParsedCrc( string name, uint value ) : base( name, value, 4 ) { }
 
-        public void Draw( CommandManager manager, Dictionary<uint, string> crcMap ) {
-            CopyPaste( manager );
+        public void Draw( Dictionary<uint, string> crcMap ) {
+            CopyPaste();
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
             using var _ = ImRaii.PushId( Name );
@@ -33,7 +33,7 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
                         var idx = 0;
                         foreach( var entry in crcMap ) {
                             using var __ = ImRaii.PushId( idx );
-                            if( ImGui.Selectable( entry.Value, entry.Key == Value ) ) manager.Add( new ParsedSimpleCommand<uint>( this, entry.Key ) );
+                            if( ImGui.Selectable( entry.Value, entry.Key == Value ) ) CommandManager.Add( new ParsedSimpleCommand<uint>( this, entry.Key ) );
                             idx++;
                         }
                     }

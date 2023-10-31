@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         private readonly CollapsingHeaders<SkpLookAtGroupElement> ElementView;
 
         public SkpLookAtGroup() {
-            ElementView = new( "Element", Elements, null, () => new(), () => CommandManager.Skp );
+            ElementView = new( "Element", Elements, null, () => new() );
         }
 
         public SkpLookAtGroup( BinaryReader reader ) : this() {
@@ -31,7 +31,7 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         }
 
         public void Draw() {
-            Id.Draw( CommandManager.Skp );
+            Id.Draw();
             ElementView.Draw();
         }
     }

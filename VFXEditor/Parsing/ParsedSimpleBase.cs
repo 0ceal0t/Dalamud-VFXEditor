@@ -16,9 +16,11 @@ namespace VfxEditor.Parsing {
             Name = name;
         }
 
-        protected bool CopyPaste( CommandManager manager ) {
+        protected bool CopyPaste() {
+            /*
             var copy = manager.Copy;
 
+            // TODO
             if( copy.IsCopying ) {
                 copy.SetValue( this, Name, Value );
             }
@@ -26,24 +28,24 @@ namespace VfxEditor.Parsing {
                 copy.PasteCommand.Add( new ParsedSimpleCommand<T>( this, val, OnChangeAction ) );
                 return true;
             }
-
+            */
             return false;
         }
 
-        public override void Draw( CommandManager manager ) {
+        public override void Draw() {
             using var _ = ImRaii.PushId( Name );
-            CopyPaste( manager );
-            DrawBody( manager );
+            CopyPaste();
+            DrawBody();
         }
 
-        protected abstract void DrawBody( CommandManager manager );
+        protected abstract void DrawBody();
 
-        protected virtual void SetValue( CommandManager manager, T prevValue, T value ) {
-            manager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, OnChangeAction ) );
+        protected virtual void SetValue( T prevValue, T value ) {
+            CommandManager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, OnChangeAction ) );
         }
 
-        protected virtual void SetValue( CommandManager manager, T value ) {
-            manager.Add( new ParsedSimpleCommand<T>( this, value, OnChangeAction ) );
+        protected virtual void SetValue( T value ) {
+            CommandManager.Add( new ParsedSimpleCommand<T>( this, value, OnChangeAction ) );
         }
     }
 }

@@ -23,7 +23,7 @@ namespace VfxEditor.SklbFormat {
 
         public readonly HashSet<nint> Handles = new();
 
-        public SklbFile( BinaryReader reader, string hkxTemp, bool init, bool verify ) : base( Plugin.SklbManager, () => Plugin.SklbManager.CurrentFile?.Updated() ) {
+        public SklbFile( BinaryReader reader, string hkxTemp, bool init, bool verify ) : base() {
             HkxTempLocation = hkxTemp;
 
             reader.ReadInt32(); // Magic
@@ -145,7 +145,7 @@ namespace VfxEditor.SklbFormat {
             Bones?.MappingView.Draw();
         }
 
-        public void Updated() {
+        public override void OnChange() {
             Bones?.Updated();
         }
 

@@ -13,7 +13,7 @@ namespace VfxEditor.TmbFormat {
 
         public override void SetReplace( SelectResult result ) {
             base.SetReplace( result );
-            if( ActiveDocument != null ) ActiveDocument.AnimationId = TmbSpawn.GetIdFromTmbPath( result.Path );
+            if( Selected != null ) Selected.AnimationId = TmbSpawn.GetIdFromTmbPath( result.Path );
         }
 
         protected override TmbDocument GetNewDocument() => new( this, NewWriteLocation );

@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Lists {
         public SelectFavoriteTab( SelectDialog dialog, string name, List<SelectResult> items ) : base( dialog, name, items ) { }
 
         protected override bool PostRow( SelectResult item, int idx ) {
-            if( UiUtils.DrawDragDrop( Items, item, item?.DisplayString ?? string.Empty, ref DraggingItem, $"{Name}-FAVORITE", null ) ) {
+            if( UiUtils.DrawDragDrop( Items, item, item?.DisplayString ?? string.Empty, ref DraggingItem, $"{Name}-FAVORITE", false ) ) {
                 Plugin.Configuration.Save();
                 return true;
             }

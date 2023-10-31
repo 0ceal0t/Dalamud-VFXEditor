@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.FileBrowser.SideBar;
 
 namespace VfxEditor.FileBrowser {
@@ -12,9 +13,7 @@ namespace VfxEditor.FileBrowser {
         private static readonly List<FileBrowserSidebarItem> Recent = new();
 
         public static void Dispose() {
-            UnloadDialog();
-            Dialog = null;
-            Callback = null;
+            Reset();
             Recent.Clear();
         }
 
@@ -49,27 +48,31 @@ namespace VfxEditor.FileBrowser {
             bool folderDialog,
             Action<bool, string> callback
         ) {
-            UnloadDialog();
+            Reset();
             Callback = callback;
-            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent );
+            // Save CommandManager so we can use it for later
+            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters,
+                SavedPath, defaultFileName, defaultExtension, Recent, CommandManager.Current );
             Dialog.Show();
         }
 
         public static void Draw() {
             if( Dialog == null ) return;
             if( Dialog.Draw() ) {
+                using var command = new CommandRaii( Dialog.Command );
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
+
                 SavedPath = Dialog.GetCurrentPath();
                 AddRecent( SavedPath );
-                UnloadDialog();
-                Dialog = null;
-                Callback = null;
+                Reset();
             }
         }
 
-        private static void UnloadDialog() {
+        private static void Reset() {
             Dialog?.Dispose();
             Dialog?.Hide();
+            Dialog = null;
+            Callback = null;
         }
 
         private static void AddRecent( string path ) {

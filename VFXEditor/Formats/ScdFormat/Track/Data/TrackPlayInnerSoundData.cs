@@ -17,8 +17,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            BankNumber.Draw( CommandManager.Scd );
-            SoundIndex.Draw( CommandManager.Scd );
+            BankNumber.Draw();
+            SoundIndex.Draw();
         }
     }
 }

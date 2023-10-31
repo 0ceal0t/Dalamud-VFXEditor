@@ -51,17 +51,17 @@ namespace VfxEditor.TmbFormat.Entries {
         public override void DrawBody() {
             DrawHeader();
 
-            Flags.Draw( Command );
+            Flags.Draw();
 
             using( var disabled = ImRaii.Disabled( !Flags.HasFlag( AnimationFlags.TimeControlEnabled ) ) ) {
-                Duration.Draw( Command );
-                AnimationStart.Draw( Command );
-                AnimationEnd.Draw( Command );
+                Duration.Draw();
+                AnimationStart.Draw();
+                AnimationEnd.Draw();
             }
 
-            Unk1.Draw( Command );
-            Path.Draw( Command );
-            Unk5.Draw( Command );
+            Unk1.Draw();
+            Path.Draw();
+            Unk5.Draw();
         }
     }
 }

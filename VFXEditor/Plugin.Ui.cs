@@ -7,7 +7,6 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Export;
@@ -26,7 +25,6 @@ namespace VfxEditor {
         public static void Draw() {
             if( CheckLoadState() ) return;
 
-            CopyManager.ResetAll();
             CheckWorkspaceKeybinds();
 
             TexToolsDialog.Tick();
@@ -34,8 +32,6 @@ namespace VfxEditor {
 
             WindowSystem.Draw();
             TrackerManager.Draw();
-
-            CopyManager.FinalizeAll();
 
             CheckAutoSave();
 

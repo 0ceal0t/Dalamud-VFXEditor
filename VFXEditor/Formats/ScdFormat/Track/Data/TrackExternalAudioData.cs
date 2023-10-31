@@ -23,7 +23,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            BankNumber.Draw( CommandManager.Scd );
+            BankNumber.Draw();
         }
     }
 }

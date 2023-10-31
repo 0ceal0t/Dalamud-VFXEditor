@@ -35,11 +35,11 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )intValue );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[UNKNOWN]";
             if( UiUtils.EnumComboBox( Name, text, options, Value, out var value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

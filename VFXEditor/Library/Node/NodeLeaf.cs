@@ -43,7 +43,7 @@ namespace VfxEditor.Library.Node {
         }
 
         protected override void DrawImport() {
-            var importDisabled = Plugin.AvfxManager.CurrentFile == null;
+            var importDisabled = Plugin.AvfxManager.File == null;
             using var disabled = ImRaii.Disabled( importDisabled );
             if( UiUtils.IconSelectable( FontAwesomeIcon.Download, "Import" ) && !importDisabled ) Plugin.AvfxManager.Import( Path );
         }

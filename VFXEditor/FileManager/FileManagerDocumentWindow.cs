@@ -39,7 +39,7 @@ namespace VfxEditor.FileManager {
                 ImGui.TableNextRow();
                 ImGui.TableNextColumn();
 
-                var active = document == Manager.ActiveDocument;
+                var active = document == Manager.Selected;
                 using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, active ) ) {
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 10 );
 
@@ -60,7 +60,7 @@ namespace VfxEditor.FileManager {
                     }
                 }
 
-                if( UiUtils.DrawDragDrop( Manager.Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENTS-WINDOW", null ) ) break;
+                if( UiUtils.DrawDragDrop( Manager.Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENTS-WINDOW", false ) ) break;
 
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "DocumentPopup" );
 

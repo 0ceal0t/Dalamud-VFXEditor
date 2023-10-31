@@ -220,16 +220,16 @@ namespace VfxEditor.UldFormat.Component.Node {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
+            Id.Draw();
 
-            if( ImGui.Checkbox( "Is Component Node", ref IsComponentNode ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this, true ) );
+            if( ImGui.Checkbox( "Is Component Node", ref IsComponentNode ) ) CommandManager.Add( new UldNodeDataCommand( this, true ) );
 
             if( IsComponentNode ) {
-                ComponentTypeId.Draw( CommandManager.Uld );
+                ComponentTypeId.Draw();
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Update" ) ) CommandManager.Uld.Add( new UldNodeDataCommand( this ) );
+                if( ImGui.SmallButton( "Update" ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
             }
-            else Type.Draw( CommandManager.Uld );
+            else Type.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -247,12 +247,12 @@ namespace VfxEditor.UldFormat.Component.Node {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child" );
 
-            ParentId.Draw( CommandManager.Uld );
-            NextSiblingId.Draw( CommandManager.Uld );
-            PrevSiblingId.Draw( CommandManager.Uld );
-            ChildNodeId.Draw( CommandManager.Uld );
+            ParentId.Draw();
+            NextSiblingId.Draw();
+            PrevSiblingId.Draw();
+            ChildNodeId.Draw();
 
-            Parsed.ForEach( x => x.Draw( CommandManager.Uld ) );
+            Parsed.ForEach( x => x.Draw() );
         }
 
         private void DrawData() {

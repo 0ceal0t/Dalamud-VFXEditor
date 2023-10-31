@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
                     var command = new TmbRefreshIdsCommand( File );
                     command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
                     command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, item ) );
-                    File.Command.Add( command );
+                    CommandManager.Add( command );
                 }
             ) );
         }
@@ -31,7 +31,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             var command = new TmbRefreshIdsCommand( File );
             command.Add( new GenericAddCommand<Tmfc>( Items, newTmfc ) );
             command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, newTmfc ) );
-            File.Command.Add( command );
+            CommandManager.Add( command );
         }
 
         protected override void DrawSelected() => Selected.DrawBody();

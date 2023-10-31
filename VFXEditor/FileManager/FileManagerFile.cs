@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
@@ -9,13 +8,13 @@ namespace VfxEditor.FileManager {
         public VerifiedStatus Verified = VerifiedStatus.WORKSPACE;
         public bool Unsaved { get; protected set; } = false;
 
-        public FileManagerFile( FileManagerBase manager, Action action ) : this( manager, null, action ) { }
-
-        public FileManagerFile( FileManagerBase manager, CommandManager command = null, Action action = null ) {
-            Command = command ?? new( this, manager, action );
+        public FileManagerFile( CommandManager command = null ) {
+            Command = command ?? new( this );
         }
 
         public abstract void Draw();
+
+        public virtual void OnChange() { }
 
         public void SetUnsaved() {
             Unsaved = true;
@@ -38,6 +37,6 @@ namespace VfxEditor.FileManager {
             return ms.ToArray();
         }
 
-        public virtual void Dispose() { }
+        public virtual void Dispose() => Command.Dispose();
     }
 }

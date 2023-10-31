@@ -37,10 +37,10 @@ namespace VfxEditor.Parsing {
             AvfxBase.WritePad( writer, Size - 1 );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

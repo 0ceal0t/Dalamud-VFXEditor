@@ -22,7 +22,6 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public readonly bool HasResources;
 
         public readonly ShaderFileType Type;
-        private CommandManager Command => GetCommand( Type );
 
         private readonly int TempOffset;
         private readonly int TempSize;
@@ -58,10 +57,10 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             DxVersion = dxVersion;
             Type = type;
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
+            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
             if( HasResources ) {
-                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ), () => Command );
+                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
             }
         }
 

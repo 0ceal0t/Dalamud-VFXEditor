@@ -20,10 +20,10 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Y );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value;
             if( ImGui.InputFloat2( Name, ref value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

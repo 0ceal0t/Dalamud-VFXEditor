@@ -5,7 +5,7 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.AtchFormat.Entry {
     public class AtchEntrySplitView : CommandSplitView<AtchEntry> {
-        public AtchEntrySplitView( List<AtchEntry> items ) : base( "Entry", items, false, null, () => new(), () => CommandManager.Atch ) { }
+        public AtchEntrySplitView( List<AtchEntry> items ) : base( "Entry", items, false, null, () => new() ) { }
 
         protected override bool DrawLeftItem( AtchEntry item, int idx ) {
             using var _ = ImRaii.PushId( idx );

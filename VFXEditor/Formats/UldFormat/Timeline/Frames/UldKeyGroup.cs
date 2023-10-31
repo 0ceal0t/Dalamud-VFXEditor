@@ -96,15 +96,15 @@ namespace VfxEditor.UldFormat.Timeline {
         }
 
         public void Draw() {
-            Usage.Draw( CommandManager.Uld );
-            Type.Draw( CommandManager.Uld );
+            Usage.Draw();
+            Type.Draw();
 
             for( var idx = 0; idx < Keyframes.Count; idx++ ) {
                 if( DrawKeyframe( Keyframes[idx], idx ) ) break;
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Uld.Add( new GenericAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
+                CommandManager.Add( new GenericAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
             }
         }
 
@@ -114,7 +114,7 @@ namespace VfxEditor.UldFormat.Timeline {
                 using var indent = ImRaii.PushIndent();
 
                 if( UiUtils.RemoveButton( $"Delete", true ) ) { // REMOVE
-                    CommandManager.Uld.Add( new GenericRemoveCommand<UldKeyframe>( Keyframes, item ) );
+                    CommandManager.Add( new GenericRemoveCommand<UldKeyframe>( Keyframes, item ) );
                     return true;
                 }
 

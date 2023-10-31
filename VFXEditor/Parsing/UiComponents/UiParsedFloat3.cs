@@ -1,8 +1,9 @@
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Parsing {
-    public class UiParsedFloat3 : IParsedUiBase {
+    public class UiParsedFloat3 : IUiItem {
         public readonly string Name;
         public readonly ParsedFloat P1;
         public readonly ParsedFloat P2;
@@ -17,8 +18,9 @@ namespace VfxEditor.Parsing {
             P3 = p3;
         }
 
-        public void Draw( CommandManager manager ) {
+        public void Draw() {
             // Copy/Paste
+            /*
             var copy = manager.Copy;
             if( copy.IsCopying ) copy.SetValue( this, Name, Value );
             if( copy.IsPasting && copy.GetValue<Vector3>( this, Name, out var val ) ) {
@@ -27,7 +29,7 @@ namespace VfxEditor.Parsing {
                 command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
                 command.Add( new ParsedSimpleCommand<float>( P3, val.Z ) );
                 manager.Add( command );
-            }
+            }*/
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
@@ -35,7 +37,7 @@ namespace VfxEditor.Parsing {
                 command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
                 command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
                 command.Add( new ParsedSimpleCommand<float>( P3, value.Z ) );
-                manager.Add( command );
+                CommandManager.Add( command );
             }
         }
     }

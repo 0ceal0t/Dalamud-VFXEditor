@@ -117,13 +117,13 @@ namespace VfxEditor.ScdFormat {
         public void Draw() {
             ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
 
-            BusNumber.Draw( CommandManager.Scd );
-            Priority.Draw( CommandManager.Scd );
-            Type.Draw( CommandManager.Scd );
-            Volume.Draw( CommandManager.Scd );
-            LocalNumber.Draw( CommandManager.Scd );
-            UserId.Draw( CommandManager.Scd );
-            PlayHistory.Draw( CommandManager.Scd );
+            BusNumber.Draw();
+            Priority.Draw();
+            Type.Draw();
+            Volume.Draw();
+            LocalNumber.Draw();
+            UserId.Draw();
+            PlayHistory.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -131,7 +131,7 @@ namespace VfxEditor.ScdFormat {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Attributes" ) ) {
-                Attributes.Draw( CommandManager.Scd );
+                Attributes.Draw();
                 ImGui.EndTabItem();
             }
 

@@ -35,9 +35,9 @@ namespace VfxEditor.Parsing {
             writer.Write( q.W );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             if( UiUtils.DrawRadians3( Name, Value, out var newValue ) ) {
-                SetValue( manager, newValue );
+                SetValue( newValue );
             }
         }
 

@@ -140,8 +140,8 @@ namespace VfxEditor.PapFormat.Motion {
 
         public void DrawHavok() {
             ImGui.TextDisabled( $"{Animation->Type}" );
-            OriginalSkeletonName.Draw( CommandManager.Pap );
-            BlendHint.Draw( CommandManager.Pap );
+            OriginalSkeletonName.Draw();
+            BlendHint.Draw();
         }
 
         public void UpdateHavok( HashSet<nint> handles ) {

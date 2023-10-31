@@ -29,7 +29,7 @@ namespace VfxEditor.SklbFormat {
 
             // Game file
             foreach( var document in Documents ) {
-                if( document.CurrentFile == null ) continue;
+                if( document.File == null ) continue;
                 if( document.ReplacePath.ToLower().Equals( path.ToLower() ) ) {
                     replaced = true;
                     skeleton = SimpleSklb.LoadFromLocal( document.WriteLocation );

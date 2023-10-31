@@ -33,7 +33,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Version.Draw( CommandManager.Scd );
+            Version.Draw();
 
             for( var idx = 0; idx < Channels.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );

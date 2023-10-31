@@ -71,12 +71,12 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            FirstCondition.Draw( CommandManager.Scd );
-            SecondCondition.Draw( CommandManager.Scd );
-            JoinTypeSelect.Draw( CommandManager.Scd );
-            NumberOfConditions.Draw( CommandManager.Scd );
-            SelfArgument.Draw( CommandManager.Scd );
-            TargetArgument.Draw( CommandManager.Scd );
+            FirstCondition.Draw();
+            SecondCondition.Draw();
+            JoinTypeSelect.Draw();
+            NumberOfConditions.Draw();
+            SelfArgument.Draw();
+            TargetArgument.Draw();
 
             using var _ = ImRaii.PushId( "Result" );
             Result.Draw();

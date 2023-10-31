@@ -29,7 +29,7 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
-            CommandManager.Pap.Add( new PapHavokCommand( Motion.File, () => {
+            Command.AddAndExecute( new PapHavokCommand( Motion.File, () => {
                 var newAnimation = new HavokData( ImportPath, true );
                 var container = Motion.File.MotionData.AnimationContainer;
 

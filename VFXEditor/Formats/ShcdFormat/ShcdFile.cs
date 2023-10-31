@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.ShcdFormat {
         public readonly ParsedEnum<ShaderStage> Stage = new( "Stage", 1 );
         public readonly ShpkShader Shader;
 
-        public ShcdFile( BinaryReader reader, bool verify ) : base( Plugin.ShcdManager ) {
+        public ShcdFile( BinaryReader reader, bool verify ) : base() {
             reader.ReadInt32(); // Magic
             Version = reader.ReadBytes( 3 );
             Stage.Read( reader );
@@ -56,8 +56,7 @@ namespace VfxEditor.Formats.ShcdFormat {
             ImGui.Separator();
             ImGui.TextDisabled( $"Version: {Version[1]} DirectX: {DxVersion}" );
 
-            Stage.Draw( CommandManager.Shcd );
-
+            Stage.Draw();
             Shader.Draw();
         }
     }

@@ -30,9 +30,9 @@ namespace VfxEditor.UldFormat.Texture {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
+            Id.Draw();
 
-            Path.Draw( CommandManager.Uld );
+            Path.Draw();
 
             if( !string.IsNullOrEmpty( Path.Value ) ) {
                 ImGui.Checkbox( "Show HD", ref ShowHd );
@@ -40,14 +40,14 @@ namespace VfxEditor.UldFormat.Texture {
                 Plugin.TextureManager.GetTexture( TexturePath )?.Draw();
             }
 
-            IconId.Draw( CommandManager.Uld );
+            IconId.Draw();
             if( IconId.Value > 0 ) {
                 ImGui.Checkbox( "Show HD", ref ShowHd );
                 ImGui.TextDisabled( IconPath );
                 Plugin.TextureManager.GetTexture( IconPath )?.Draw();
             }
 
-            Unk1.Draw( CommandManager.Uld );
+            Unk1.Draw();
         }
 
         public override string GetDefaultText() => $"Texture {GetIdx()}";

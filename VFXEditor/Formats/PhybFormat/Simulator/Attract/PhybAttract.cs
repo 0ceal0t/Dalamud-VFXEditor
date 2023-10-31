@@ -31,8 +31,7 @@ namespace VfxEditor.PhybFormat.Simulator.Attract {
         };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
-            Simulator.ConnectNodeToBone( ChainId.Value, NodeId.Value, BoneName.Value,
-                new( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z ), meshes.Spring, boneMatrixes );
+            Simulator.ConnectNodeToBone( ChainId.Value, NodeId.Value, BoneName.Value, meshes.Spring, boneMatrixes );
         }
     }
 }

@@ -24,9 +24,9 @@ namespace VfxEditor.AvfxFormat {
 
         protected void DisableAllSelectors() => NodeSelects.ForEach( x => x.Enable() );
 
-        protected void Assign() => CommandManager.Avfx.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, true ) );
+        protected void Assign() => CommandManager.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, true ) );
 
-        protected void Unassign() => CommandManager.Avfx.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, false ) );
+        protected void Unassign() => CommandManager.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, false ) );
 
         public abstract List<AvfxNodeSelect> GetNodeSelects();
     }

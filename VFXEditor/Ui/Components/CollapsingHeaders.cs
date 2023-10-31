@@ -13,19 +13,15 @@ namespace VfxEditor.Ui.Components {
         private readonly string Id;
         private readonly Func<T, int, string> GetTextAction;
         private readonly Func<T> NewAction;
-        private readonly Func<CommandManager> CommandAction;
 
-        public CollapsingHeaders( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Func<CommandManager> commandAction ) {
+        public CollapsingHeaders( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction ) {
             Id = id;
             Items = items;
             GetTextAction = getTextAction;
             NewAction = newAction;
-            CommandAction = commandAction;
         }
 
         public void Draw() {
-            var commandManager = CommandAction.Invoke();
-
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 var item = Items[idx];
                 var text = GetTextAction == null ? $"{Id} {idx}" : GetTextAction.Invoke( item, idx );
@@ -34,7 +30,7 @@ namespace VfxEditor.Ui.Components {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        commandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
+                        CommandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
                         break;
                     }
 
@@ -43,7 +39,7 @@ namespace VfxEditor.Ui.Components {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                commandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
+                CommandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
             }
         }
     }

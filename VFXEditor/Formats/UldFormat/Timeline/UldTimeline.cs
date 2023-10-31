@@ -14,10 +14,8 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly CommandSplitView<UldFrame> FramesView2;
 
         public UldTimeline() {
-            FramesView1 = new( "Frame", Frames1, true,
-                null, () => new UldFrame(), () => CommandManager.Uld );
-            FramesView2 = new( "Frame", Frames1, true,
-                null, () => new UldFrame(), () => CommandManager.Uld );
+            FramesView1 = new( "Frame", Frames1, true, null, () => new UldFrame() );
+            FramesView2 = new( "Frame", Frames1, true, null, () => new UldFrame() );
         }
 
         public UldTimeline( BinaryReader reader ) : this() {
@@ -55,7 +53,7 @@ namespace VfxEditor.UldFormat.Timeline {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
+            Id.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );

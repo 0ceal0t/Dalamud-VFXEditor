@@ -33,7 +33,7 @@ namespace VfxEditor.ScdFormat {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Scd.Add( new GenericRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
+                        CommandManager.Add( new GenericRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
                     }
 
                     Tracks[idx].Draw();
@@ -42,7 +42,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Scd.Add( new GenericAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
+                CommandManager.Add( new GenericAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
             }
         }
     }
@@ -62,8 +62,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            TrackIdx.Draw( CommandManager.Scd );
-            AudioIdx.Draw( CommandManager.Scd );
+            TrackIdx.Draw();
+            AudioIdx.Draw();
         }
     }
 }

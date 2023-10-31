@@ -11,7 +11,7 @@ namespace VfxEditor.UldFormat {
 
         public UldDocument( UldManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation ) {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-            CurrentFile?.ReadRenamingMap( data.Renaming );
+            File?.ReadRenamingMap( data.Renaming );
         }
 
         protected override UldFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
@@ -21,7 +21,7 @@ namespace VfxEditor.UldFormat {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Renaming = CurrentFile.GetRenamingMap(),
+            Renaming = File.GetRenamingMap(),
             Disabled = Disabled
         };
     }

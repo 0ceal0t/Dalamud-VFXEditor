@@ -24,7 +24,7 @@ namespace VfxEditor.PhybFormat.Simulator {
             }
 
             SimulatorDropdown = new( "Simulator", Simulators,
-                null, () => new PhybSimulator( File ), () => CommandManager.Phyb );
+                null, () => new PhybSimulator( File ) );
         }
 
         public void Write( SimulationWriter writer ) {

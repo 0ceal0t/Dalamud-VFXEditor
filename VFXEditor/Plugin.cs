@@ -7,7 +7,6 @@ using ImPlotNET;
 using OtterGui;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
-using VfxEditor.Data;
 using VfxEditor.DirectX;
 using VfxEditor.EidFormat;
 using VfxEditor.FileBrowser;
@@ -162,9 +161,6 @@ namespace VfxEditor {
 
             ResourceLoader?.Dispose();
             ResourceLoader = null;
-
-            CopyManager.DisposeAll();
-            CommandManager.DisposeAll();
 
             TextureManager.FreeLibrary();
             Managers.ForEach( x => x?.Reset() );

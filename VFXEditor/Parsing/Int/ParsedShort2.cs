@@ -20,10 +20,10 @@ namespace VfxEditor.Parsing.Int {
             writer.Write( ( short )Value.Y );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value.ToArray();
             if( ImGui.InputInt2( Name, ref value[0] ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

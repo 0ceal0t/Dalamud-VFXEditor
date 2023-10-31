@@ -19,13 +19,13 @@ namespace VfxEditor.Parsing.Sheets {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        protected override void DrawBody( CommandManager manager ) {
-            DrawCombo( manager );
+        protected override void DrawBody() {
+            DrawCombo();
             ImGui.SameLine();
             ImGui.Text( Name );
         }
 
-        private void DrawCombo( CommandManager manager ) {
+        private void DrawCombo() {
             using var combo = ImRaii.Combo( "##Combo", $"[{Value}] {CurrentTimeline}" );
             if( !combo ) return;
 
@@ -33,7 +33,7 @@ namespace VfxEditor.Parsing.Sheets {
                 var selected = option.Key == Value;
 
                 if( ImGui.Selectable( $"[{option.Key}] {option.Value}", selected ) ) {
-                    SetValue( manager, option.Key );
+                    SetValue( option.Key );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();

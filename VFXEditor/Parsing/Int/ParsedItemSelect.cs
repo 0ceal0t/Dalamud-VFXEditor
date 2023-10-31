@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing.Int {
             ToValue = toValue;
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var selected = ToValue == null ?
                 ( ( Value < 0 || Value >= Items.Count ) ? null : Items[Value] ) :
                 Items.FirstOrDefault( x => ToValue( x ) == Value, null );
@@ -28,11 +28,11 @@ namespace VfxEditor.Parsing.Int {
             using var combo = ImRaii.Combo( Name, selected == null ? "[NONE]" : selected.GetText() );
             if( !combo ) return;
 
-            if( ImGui.Selectable( "[NONE]", selected == null ) ) manager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
+            if( ImGui.Selectable( "[NONE]", selected == null ) ) CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
             for( var i = 0; i < Items.Count; i++ ) {
                 using var _ = ImRaii.PushId( i );
                 if( ImGui.Selectable( Items[i].GetText(), Items[i] == selected ) ) {
-                    SetValue( manager, ToValue == null ? i : ToValue( Items[i] ) );
+                    SetValue( ToValue == null ? i : ToValue( Items[i] ) );
                 }
             }
         }

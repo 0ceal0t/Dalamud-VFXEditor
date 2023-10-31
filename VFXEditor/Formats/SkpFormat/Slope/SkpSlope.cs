@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.SkpFormat.Slope {
         private readonly CollapsingHeaders<SkpSlopePoint> PointView;
 
         public SkpSlope() {
-            PointView = new( "Point", Points, null, () => new(), () => CommandManager.Skp );
+            PointView = new( "Point", Points, null, () => new() );
         }
 
         public void Read( BinaryReader reader ) {
@@ -41,9 +41,9 @@ namespace VfxEditor.Formats.SkpFormat.Slope {
         }
 
         public void Draw() {
-            Unknown1.Draw( CommandManager.Skp );
-            Unknown2.Draw( CommandManager.Skp );
-            CenterOffset.Draw( CommandManager.Skp );
+            Unknown1.Draw();
+            Unknown2.Draw();
+            CenterOffset.Draw();
 
             PointView.Draw();
         }

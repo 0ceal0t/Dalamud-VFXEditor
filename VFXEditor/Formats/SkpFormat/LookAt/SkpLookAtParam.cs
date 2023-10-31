@@ -33,8 +33,8 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
 
         public void Draw() {
             // Draw the index first
-            Index.Draw( CommandManager.Skp );
-            foreach( var item in Parsed.Where( x => x != Index ) ) item.Draw( CommandManager.Skp );
+            Index.Draw();
+            foreach( var item in Parsed.Where( x => x != Index ) ) item.Draw();
         }
 
         public string GetText() => $"Parameters {Index.Value}";

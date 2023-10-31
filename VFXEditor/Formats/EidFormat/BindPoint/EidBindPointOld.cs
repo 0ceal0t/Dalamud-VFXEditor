@@ -38,10 +38,10 @@ namespace VfxEditor.EidFormat {
         public override void Draw() {
             ImGui.TextDisabled( "Data Version: [OLD]" );
 
-            Name.Draw( CommandManager.Eid );
-            Id.Draw( CommandManager.Eid );
-            Position.Draw( CommandManager.Eid );
-            Rotation.Draw( CommandManager.Eid );
+            Name.Draw();
+            Id.Draw();
+            Position.Draw();
+            Rotation.Draw();
         }
 
         protected override Vector3 GetOffset() => new( Position.Value.Y, Position.Value.X, Position.Value.Z );

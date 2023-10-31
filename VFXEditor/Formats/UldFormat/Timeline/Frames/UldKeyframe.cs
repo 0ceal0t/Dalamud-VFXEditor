@@ -156,13 +156,13 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         }
 
         public void Draw() {
-            Time.Draw( CommandManager.Uld );
-            Interpolation.Draw( CommandManager.Uld );
-            Unk1.Draw( CommandManager.Uld );
-            Acceleration.Draw( CommandManager.Uld );
-            Deceleration.Draw( CommandManager.Uld );
+            Time.Draw();
+            Interpolation.Draw();
+            Unk1.Draw();
+            Acceleration.Draw();
+            Deceleration.Draw();
 
-            Data.ForEach( x => x.Draw( CommandManager.Uld ) );
+            Data.ForEach( x => x.Draw() );
         }
     }
 }

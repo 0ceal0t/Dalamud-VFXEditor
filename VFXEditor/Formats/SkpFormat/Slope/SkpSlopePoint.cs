@@ -12,6 +12,6 @@ namespace VfxEditor.Formats.SkpFormat.Slope {
 
         public void Write( BinaryWriter writer ) => Position.Write( writer );
 
-        public void Draw() => Position.Draw( CommandManager.Skp );
+        public void Draw() => Position.Draw();
     }
 }

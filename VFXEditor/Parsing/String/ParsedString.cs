@@ -40,17 +40,17 @@ namespace VfxEditor.Parsing {
 
         public override void Write( BinaryWriter writer ) => FileUtils.WriteString( writer, Value, writeNull: true );
 
-        public override void Draw( CommandManager manager ) => Draw( manager, 255, Name, 0, ImGuiInputTextFlags.None );
+        public override void Draw() => Draw( 255, Name, 0, ImGuiInputTextFlags.None );
 
-        public void Draw( CommandManager manager, uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
-            DrawInput( manager, maxSize, label, offset, flags );
+        public void Draw( uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
+            DrawInput( maxSize, label, offset, flags );
             DrawIcons();
         }
 
-        protected override void DrawBody( CommandManager manager ) { }
+        protected override void DrawBody() { }
 
-        public void DrawInput( CommandManager manager, uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
-            CopyPaste( manager );
+        public void DrawInput( uint maxSize, string label, float offset, ImGuiInputTextFlags flags ) {
+            CopyPaste();
             using var _ = ImRaii.PushId( Name );
 
             if( HasIcons || offset > 0 ) {
@@ -69,7 +69,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                SetValue( manager, StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
+                SetValue( StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
             }
         }
 

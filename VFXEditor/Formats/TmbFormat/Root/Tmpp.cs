@@ -36,11 +36,11 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void Draw() {
-            Assigned.Draw( Command );
+            Assigned.Draw();
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Facial-Expressions" );
 
-            if( IsAssigned ) Path.Draw( Command );
+            if( IsAssigned ) Path.Draw();
         }
     }
 }

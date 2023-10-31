@@ -9,7 +9,7 @@ namespace VfxEditor.ScdFormat {
         private readonly CollapsingHeaders<ScdTrackItem> TrackView;
 
         public ScdTrackEntry() {
-            TrackView = new( "Item", Items, ( ScdTrackItem item, int idx ) => $"Item {idx} ({item.Type.Value})", () => new ScdTrackItem(), () => CommandManager.Scd );
+            TrackView = new( "Item", Items, ( ScdTrackItem item, int idx ) => $"Item {idx} ({item.Type.Value})", () => new ScdTrackItem() );
         }
 
         public override void Read( BinaryReader reader ) {

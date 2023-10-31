@@ -1,88 +1,82 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Collections.Generic;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Utils.Stacks;
 
 namespace VfxEditor {
     public class CommandManager {
-        public static readonly List<CommandManager> CommandManagers = new();
+        public static CommandManager Current => Stack.Count == 0 ? null : Stack.Peek();
+        private static readonly Stack<CommandManager> Stack = new();
 
-        public static CommandManager Avfx => Plugin.AvfxManager?.GetCurrentCommandManager();
-        public static CommandManager Pap => Plugin.PapManager?.GetCurrentCommandManager();
-        public static CommandManager Scd => Plugin.ScdManager?.GetCurrentCommandManager();
-        public static CommandManager Eid => Plugin.EidManager?.GetCurrentCommandManager();
-        public static CommandManager Uld => Plugin.UldManager?.GetCurrentCommandManager();
-        public static CommandManager Phyb => Plugin.PhybManager?.GetCurrentCommandManager();
-        public static CommandManager Sklb => Plugin.SklbManager?.GetCurrentCommandManager();
-        public static CommandManager Atch => Plugin.AtchManager?.GetCurrentCommandManager();
-        public static CommandManager Skp => Plugin.SkpManager?.GetCurrentCommandManager();
-        public static CommandManager Shpk => Plugin.ShpkManager?.GetCurrentCommandManager();
-        public static CommandManager Shcd => Plugin.ShcdManager?.GetCurrentCommandManager();
+        public static void Push( CommandManager current ) => Stack.Push( current );
+
+        public static void Pop() => Stack.Pop();
+
+        public static void Add( ICommand command ) => Current?.AddAndExecute( command );
+
+        public static void Draw() {
+            if( Current == null ) {
+                using var disabled = ImRaii.Disabled();
+                ImGui.MenuItem( "Undo" );
+                ImGui.MenuItem( "Redo" );
+                return;
+            }
+
+            Current.DrawMenu();
+        }
+
+        public static void Undo() => Current?.UndoInternal();
+
+        public static void Redo() => Current?.RedoInternal();
+
+        // ======================
 
         private readonly UndoRedoStack<ICommand> Commands = new( 25 );
 
-        public readonly CopyManager Copy;
-        private readonly FileManagerFile Data;
-        private readonly Action OnChangeAction;
+        private readonly FileManagerFile File;
 
-        public CommandManager( FileManagerFile data, FileManagerBase manager, Action onChangeAction ) {
-            CommandManagers.Add( this );
-            Data = data;
-            Copy = manager.GetCopyManager();
-            OnChangeAction = onChangeAction;
+        public CommandManager( FileManagerFile file ) {
+            File = file;
         }
 
-        public void Add( ICommand command ) {
+        public void AddAndExecute( ICommand command ) {
             command.Execute();
             Commands.Add( command );
 
-            Data.SetUnsaved();
-            OnChangeAction?.Invoke();
+            File.SetUnsaved();
+            File.OnChange();
         }
 
-        public bool CanUndo => Commands.CanUndo;
+        protected bool CanUndo => Commands.CanUndo;
 
-        public bool CanRedo => Commands.CanRedo;
+        protected bool CanRedo => Commands.CanRedo;
 
-        public void Undo() {
+        protected void UndoInternal() {
             if( !Commands.Undo( out var item ) ) return;
             item.Undo();
 
-            Data.SetUnsaved();
-            OnChangeAction?.Invoke();
+            File.SetUnsaved();
+            File.OnChange();
         }
 
-        public void Redo() {
+        protected void RedoInternal() {
             if( !Commands.Redo( out var item ) ) return;
             item.Redo();
 
-            Data.SetUnsaved();
-            OnChangeAction?.Invoke();
+            File.SetUnsaved();
+            File.OnChange();
         }
 
-        public unsafe void Draw() {
+        protected unsafe void DrawMenu() {
             using( var dimUndo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanUndo ) ) {
-                if( ImGui.MenuItem( "Undo" ) ) Undo();
+                if( ImGui.MenuItem( "Undo" ) ) UndoInternal();
             }
 
             using var dimRedo = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), !CanRedo );
-            if( ImGui.MenuItem( "Redo" ) ) Redo();
+            if( ImGui.MenuItem( "Redo" ) ) RedoInternal();
         }
 
-        public static void DrawDisabled() {
-            ImGui.MenuItem( "Undo" );
-            ImGui.MenuItem( "Redo" );
-        }
-
-        public void Dispose() {
-            Commands.Clear();
-        }
-
-        public static void DisposeAll() {
-            CommandManagers.ForEach( x => x.Dispose() );
-        }
+        public void Dispose() => Commands.Clear();
     }
 }

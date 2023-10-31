@@ -17,8 +17,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Pitch.Draw( CommandManager.Scd );
-            Time.Draw( CommandManager.Scd );
+            Pitch.Draw();
+            Time.Draw();
         }
     }
 }

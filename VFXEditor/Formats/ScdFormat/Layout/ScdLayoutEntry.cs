@@ -124,7 +124,7 @@ namespace VfxEditor.ScdFormat {
         public void Draw() {
             ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
 
-            Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
+            Parsed.ForEach( x => x.Draw() );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();

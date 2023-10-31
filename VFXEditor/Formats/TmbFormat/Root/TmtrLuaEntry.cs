@@ -186,18 +186,18 @@ namespace VfxEditor.TmbFormat {
         private bool DrawPopup() {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    File.Command.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
+                    CommandManager.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
                     ImGui.CloseCurrentPopup();
                     return true;
                 }
             }
 
-            Operation.Draw( File.Command );
+            Operation.Draw();
 
             if( Operation.Value == LuaOperation.Variable ) DrawVariablePopup();
             else {
-                Value.Draw( File.Command );
-                FloatValue.Draw( File.Command );
+                Value.Draw();
+                FloatValue.Draw();
             }
 
             return false;
@@ -220,7 +220,7 @@ namespace VfxEditor.TmbFormat {
 
             if( update ) {
                 var newValue = ( ( uint )pool << 28 ) | ( ( uint )value );
-                File.Command.Add( new ParsedSimpleCommand<uint>( Value, newValue ) );
+                CommandManager.Add( new ParsedSimpleCommand<uint>( Value, newValue ) );
             }
         }
 

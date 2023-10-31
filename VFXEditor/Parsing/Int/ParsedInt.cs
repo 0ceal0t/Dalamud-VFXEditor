@@ -31,10 +31,10 @@ namespace VfxEditor.Parsing {
             else writer.Write( ( byte )Value );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
     }

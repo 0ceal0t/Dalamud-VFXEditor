@@ -22,8 +22,8 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawEditMenuItems() {
             if( ImGui.BeginMenu( "Templates" ) ) {
-                if( ImGui.MenuItem( "Blank" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
-                if( ImGui.MenuItem( "Weapon" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
+                if( ImGui.MenuItem( "Blank" ) ) Selected?.OpenTemplate( "default_vfx.avfx" );
+                if( ImGui.MenuItem( "Weapon" ) ) Selected?.OpenTemplate( "default_weapon.avfx" );
                 ImGui.EndMenu();
             }
 
@@ -35,21 +35,21 @@ namespace VfxEditor.AvfxFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Apply" ) ) {
-                    foreach( var file in Documents.Where( x => x.CurrentFile != null ).Select( x => x.CurrentFile ) ) {
+                    foreach( var file in Documents.Where( x => x.File != null ).Select( x => x.File ) ) {
                         var command = new CompoundCommand();
                         file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( command ) );
-                        file.Command.Add( command );
+                        file.Command.AddAndExecute( command );
                     }
                 }
                 ImGui.EndMenu();
             }
 
-            using var disabled = ImRaii.Disabled( CurrentFile == null );
-            if( ImGui.MenuItem( "Clean Up" ) ) CurrentFile?.Cleanup();
+            using var disabled = ImRaii.Disabled( File == null );
+            if( ImGui.MenuItem( "Clean Up" ) ) File?.Cleanup();
         }
 
-        public void Import( string path ) => ActiveDocument.Import( path );
+        public void Import( string path ) => Selected.Import( path );
 
-        public void ShowExportDialog( AvfxNode node ) => ActiveDocument.ShowExportDialog( node );
+        public void ShowExportDialog( AvfxNode node ) => Selected.ShowExportDialog( node );
     }
 }

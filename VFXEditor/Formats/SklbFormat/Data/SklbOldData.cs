@@ -43,7 +43,7 @@ namespace VfxEditor.SklbFormat.Data {
         public override void Draw() {
             ImGui.TextDisabled( "Header Version: [OLD]" );
 
-            Parsed.ForEach( x => x.Draw( CommandManager.Sklb ) );
+            Parsed.ForEach( x => x.Draw() );
         }
     }
 }

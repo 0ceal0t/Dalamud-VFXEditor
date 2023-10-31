@@ -58,7 +58,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            Parsed.ForEach( x => x.Draw( CommandManager.Scd ) );
+            Parsed.ForEach( x => x.Draw() );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

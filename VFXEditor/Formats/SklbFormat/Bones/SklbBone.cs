@@ -40,14 +40,14 @@ namespace VfxEditor.SklbFormat.Bones {
         public void DrawBody( int boneIdx ) {
             using var _ = ImRaii.PushId( Id );
 
-            Name.Draw( CommandManager.Sklb );
+            Name.Draw();
             ImGui.SameLine();
             ImGui.TextDisabled( $"[ ID: {boneIdx} ]" );
 
-            Position.Draw( CommandManager.Sklb );
-            Rotation.Draw( CommandManager.Sklb );
-            Scale.Draw( CommandManager.Sklb );
-            LockTranslation.Draw( CommandManager.Sklb );
+            Position.Draw();
+            Rotation.Draw();
+            Scale.Draw();
+            LockTranslation.Draw();
         }
 
         public void ToHavok( HashSet<nint> handles, out hkaBone bone, out hkQsTransformf pose ) {

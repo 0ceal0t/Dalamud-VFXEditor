@@ -223,7 +223,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 newEntry.LoopEnd = newEntry.Data.SamplesToBytes( loopEndSamples );
             }
 
-            Plugin.ScdManager.CurrentFile.Replace( oldEntry, newEntry );
+            Plugin.ScdManager.File.Replace( oldEntry, newEntry );
             oldEntry.Dispose();
         }
 

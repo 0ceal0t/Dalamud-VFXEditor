@@ -29,7 +29,7 @@ namespace VfxEditor.Parsing {
             writer.Write( ( byte )( int )( Value.W * 255f ) );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var prevValue = Value;
             if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
                 if( !Editing ) {
@@ -40,7 +40,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                SetValue( manager, StateBeforeEdit, Value );
+                SetValue( StateBeforeEdit, Value );
             }
         }
     }

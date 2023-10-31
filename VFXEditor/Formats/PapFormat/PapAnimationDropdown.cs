@@ -30,7 +30,7 @@ namespace VfxEditor.PapFormat {
                 container->Animations = HavokData.CreateArray( File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
                 container->Bindings = HavokData.CreateArray( File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
             } ) );
-            File.Command.Add( command );
+            CommandManager.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );
         }

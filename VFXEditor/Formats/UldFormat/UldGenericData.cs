@@ -16,7 +16,7 @@ namespace VfxEditor.UldFormat {
         }
 
         public virtual void Draw() {
-            foreach( var parsed in Parsed ) parsed.Draw( CommandManager.Uld );
+            foreach( var parsed in Parsed ) parsed.Draw();
         }
 
         protected void AddUnknown( int count, string prefix ) {

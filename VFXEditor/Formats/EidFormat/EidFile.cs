@@ -27,7 +27,7 @@ namespace VfxEditor.EidFormat {
         public bool BindPointsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base( Plugin.EidManager, () => Plugin.EidManager.CurrentFile?.Updated() ) {
+        public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
             Version2 = reader.ReadInt16();
@@ -41,7 +41,7 @@ namespace VfxEditor.EidFormat {
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             Dropdown = new( "Bind Point", BindPoints,
-                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew(), () => CommandManager.Eid );
+                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew() );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
@@ -85,7 +85,7 @@ namespace VfxEditor.EidFormat {
             BindPoints.ForEach( x => x.AddBindPoint( mesh, boneMatrixes ) );
         }
 
-        public void Updated() {
+        public override void OnChange() {
             BindPointsUpdated = true;
         }
 

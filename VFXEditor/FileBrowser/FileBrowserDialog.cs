@@ -33,6 +33,7 @@ namespace VfxEditor.FileBrowser {
         public readonly bool FolderDialog;
         public readonly string DefaultExtension;
         public readonly string DefaultFileName;
+        public readonly CommandManager Command;
 
         private readonly FileBrowserSideBar SideBar;
         private readonly FileBrowserFilters Filters;
@@ -70,7 +71,8 @@ namespace VfxEditor.FileBrowser {
             string currentPath,
             string defaultFileName,
             string defaultExtension,
-            List<FileBrowserSidebarItem> recent
+            List<FileBrowserSidebarItem> recent,
+            CommandManager command
         ) {
             Id = id;
             Title = title;
@@ -82,6 +84,7 @@ namespace VfxEditor.FileBrowser {
             DefaultFileName = defaultFileName;
             DefaultExtension = defaultExtension;
             FileNameInput = DefaultFileName;
+            Command = command;
 
             SideBar = new( this, recent );
             Filters = new( this, filters );

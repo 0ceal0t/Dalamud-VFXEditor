@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
 
                     ImGui.SameLine();
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Avfx.Add( new AvfxNodeViewRemoveCommand<T>( view, group, selected ) );
+                        CommandManager.Add( new AvfxNodeViewRemoveCommand<T>( view, group, selected ) );
                     }
                 }
             }

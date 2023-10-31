@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
                 Parsed.Icons.Add( new() {
                     Icon = () => FontAwesomeIcon.Trash,
                     Remove = true,
-                    Action = ( string value ) => CommandManager.Avfx.Add( new AvfxAssignCommand( this, false ) )
+                    Action = ( string value ) => CommandManager.Add( new AvfxAssignCommand( this, false ) )
                 } );
             }
             Pad = pad;
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
             AssignedCopyPaste( this, Parsed.Name );
             if( DrawAddButton( this, Parsed.Name ) ) return;
 
-            Parsed.DrawInput( CommandManager.Avfx, 255, Parsed.Name, offset, ImGuiInputTextFlags.None );
+            Parsed.DrawInput( 255, Parsed.Name, offset, ImGuiInputTextFlags.None );
 
             DrawRemoveContextMenu( this, Parsed.Name );
 

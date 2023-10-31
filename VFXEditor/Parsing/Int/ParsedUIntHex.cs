@@ -14,7 +14,7 @@ namespace VfxEditor.Parsing.Int {
 
         public ParsedUIntHex( string name, uint value ) : base( name, value ) { }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var xSize = ImGui.CalcTextSize( "0x" ).X + ImGui.GetStyle().FramePadding.X * 2 + 2;
             var inputSize = UiUtils.GetOffsetInputSize( xSize );
 
@@ -41,7 +41,7 @@ namespace VfxEditor.Parsing.Int {
 
                 try {
                     var newValue = string.IsNullOrEmpty( HexString ) ? 0 : Convert.ToUInt32( HexString, 16 ); // Try to convert it back
-                    SetValue( manager, newValue );
+                    SetValue( newValue );
                 }
                 catch( Exception ) { }
             }

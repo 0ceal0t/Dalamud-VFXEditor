@@ -101,7 +101,7 @@ namespace VfxEditor.PapFormat {
                 UiUtils.HelpMarker( "These values are hard-coded in the game's MotionTimeline sheet, and are based on the animation name" );
             }
 
-            Name.Draw( CommandManager.Pap );
+            Name.Draw();
             if( string.IsNullOrEmpty( Name.Value ) || !Name.Value.Contains( '_' ) || !Prefixes.Contains( Name.Value.Split( "_" )[0] ) ) {
                 using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR );
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -111,8 +111,8 @@ namespace VfxEditor.PapFormat {
                 ImGui.TextWrapped( "Animation name must start with a valid prefix, such as cbbm_" );
             }
 
-            Type.Draw( CommandManager.Pap );
-            Face.Draw( CommandManager.Pap );
+            Type.Draw();
+            Face.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.TextDisabled( $"This animation has Havok index: {HavokIndex}" );
@@ -139,7 +139,7 @@ namespace VfxEditor.PapFormat {
                 if( ImGui.Button( "Replace" ) ) {
                     FileBrowserManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
                         if( ok ) {
-                            CommandManager.Pap.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, CommandManager.Pap ) ) );
+                            CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
                             UiUtils.OkNotification( "Tmb data imported" );
                         }
                     } );

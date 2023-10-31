@@ -31,8 +31,8 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Version.Draw( CommandManager.Scd );
-            Unk1.Draw( CommandManager.Scd );
+            Version.Draw();
+            Unk1.Draw();
 
             for( var idx = 0; idx < Items.Count; idx++ ) {
                 using var _ = ImRaii.PushId( idx );
@@ -62,10 +62,10 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            BankNumber.Draw( CommandManager.Scd );
-            Index.Draw( CommandManager.Scd );
-            Unk1.Draw( CommandManager.Scd );
-            Unk2.Draw( CommandManager.Scd );
+            BankNumber.Draw();
+            Index.Draw();
+            Unk1.Draw();
+            Unk2.Draw();
         }
     }
 }

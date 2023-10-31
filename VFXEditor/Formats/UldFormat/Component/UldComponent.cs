@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ), () => CommandManager.Uld );
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ) );
 
             Id.Value = 1001; // default
         }
@@ -151,8 +151,8 @@ namespace VfxEditor.UldFormat.Component {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
-            Type.Draw( CommandManager.Uld );
+            Id.Draw();
+            Type.Draw();
             ImGui.TextDisabled( $"Nodes referencing this component: {NumNodesReferencing}" );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -171,9 +171,9 @@ namespace VfxEditor.UldFormat.Component {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child" );
 
-            IgnoreInput.Draw( CommandManager.Uld );
-            DragArrow.Draw( CommandManager.Uld );
-            DropArrow.Draw( CommandManager.Uld );
+            IgnoreInput.Draw();
+            DragArrow.Draw();
+            DropArrow.Draw();
         }
 
         private void DrawData() {
@@ -208,7 +208,7 @@ namespace VfxEditor.UldFormat.Component {
         }
 
         private int NumNodesReferencing =>
-            Plugin.UldManager.CurrentFile.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
-            Plugin.UldManager.CurrentFile.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
+            Plugin.UldManager.File.Components.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum() +
+            Plugin.UldManager.File.Widgets.Select( c => c.Nodes.Where( x => x.IsComponentNode && x.ComponentTypeId.Value == Id.Value ).Count() ).Sum();
     }
 }

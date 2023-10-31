@@ -61,10 +61,10 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            SelfCommandSelect.Draw( CommandManager.Scd );
-            TargetArgument.Draw( CommandManager.Scd );
-            SelfArgument.Draw( CommandManager.Scd );
-            TargetArgument.Draw( CommandManager.Scd );
+            SelfCommandSelect.Draw();
+            TargetArgument.Draw();
+            SelfArgument.Draw();
+            TargetArgument.Draw();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace VfxEditor.UldFormat.Widget {
 
         public UldWidget( List<UldComponent> components ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( components, this ), () => CommandManager.Uld );
+                ( UldNode item, int idx ) => item.GetText(), () => new( components, this ) );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
@@ -72,7 +72,7 @@ namespace VfxEditor.UldFormat.Widget {
 
         public override void Draw() {
             DrawRename();
-            Id.Draw( CommandManager.Uld );
+            Id.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -89,9 +89,9 @@ namespace VfxEditor.UldFormat.Widget {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child" );
 
-            AlignmentType.Draw( CommandManager.Uld );
-            X.Draw( CommandManager.Uld );
-            Y.Draw( CommandManager.Uld );
+            AlignmentType.Draw();
+            X.Draw();
+            Y.Draw();
         }
 
         private void DrawNodes() {

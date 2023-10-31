@@ -32,9 +32,9 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "BusDucking" );
 
-            Number.Draw( CommandManager.Scd );
-            FadeTime.Draw( CommandManager.Scd );
-            Volume.Draw( CommandManager.Scd );
+            Number.Draw();
+            FadeTime.Draw();
+            Volume.Draw();
         }
     }
 }

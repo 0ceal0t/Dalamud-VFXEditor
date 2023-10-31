@@ -32,10 +32,10 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         }
 
         public void Draw() {
-            Version.Draw( CommandManager.Scd );
-            Volume.Draw( CommandManager.Scd );
-            UpTime.Draw( CommandManager.Scd );
-            DownTime.Draw( CommandManager.Scd );
+            Version.Draw();
+            Volume.Draw();
+            UpTime.Draw();
+            DownTime.Draw();
         }
     }
 
@@ -71,8 +71,8 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public void Draw() {
             using var _ = ImRaii.PushId( "Acceleration" );
 
-            Version.Draw( CommandManager.Scd );
-            NumAcceleration.Draw( CommandManager.Scd );
+            Version.Draw();
+            NumAcceleration.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 

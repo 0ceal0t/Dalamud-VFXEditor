@@ -17,10 +17,10 @@ namespace VfxEditor.Parsing {
             writer.Write( Value );
         }
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                SetValue( manager, ( sbyte )value );
+                SetValue( ( sbyte )value );
             }
         }
     }

@@ -33,7 +33,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( !combo ) return;
 
             if( ImGui.Selectable( "[NONE]", Value == -1 ) ) {
-                CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( this, -1 ) );
+                CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
             }
 
             for( var i = 0; i < names.Count; i++ ) {
@@ -41,7 +41,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 var selected = i == Value;
 
                 if( ImGui.Selectable( names[i], selected ) ) {
-                    CommandManager.Sklb.Add( new ParsedSimpleCommand<int>( this, i ) );
+                    CommandManager.Add( new ParsedSimpleCommand<int>( this, i ) );
                 }
                 if( selected ) ImGui.SetItemDefaultFocus();
             }

@@ -1,9 +1,10 @@
 using System.IO;
 using VfxEditor.Parsing.Utils;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Parsing {
-    public abstract class ParsedBase : IParsedUiBase {
-        public abstract void Draw( CommandManager manager );
+    public abstract class ParsedBase : IUiItem {
+        public abstract void Draw();
 
         public virtual void Read( ParsingReader reader ) => Read( reader.Reader );
 

@@ -71,7 +71,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void DrawLua() {
-            LuaAssigned.Draw( Command );
+            LuaAssigned.Draw();
             ImGui.SameLine();
             UiUtils.HelpMarker( "The current value of Lua variables can be found in the \"Lua Variables\" tab of File > Tools" );
 
@@ -87,11 +87,11 @@ namespace VfxEditor.TmbFormat {
                     using var __ = ImRaii.PushId( idx );
 
                     if( lua.Draw( idx == 0, maxX, ref currentX ) ) break;
-                    if( UiUtils.DrawDragDrop( LuaEntries, lua, lua.Text, ref DraggingItem, "LUA", File.Command ) ) break;
+                    if( UiUtils.DrawDragDrop( LuaEntries, lua, lua.Text, ref DraggingItem, "LUA", true ) ) break;
                 }
 
                 if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
-                    Command.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
+                    CommandManager.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
                 }
             }
 
@@ -136,7 +136,7 @@ namespace VfxEditor.TmbFormat {
 
             var command = new TmbRefreshIdsCommand( File );
             AddEntry( command, newEntry );
-            Command.Add( command );
+            CommandManager.Add( command );
         }
 
         public void AddEntry( CompoundCommand command, TmbEntry entry ) {
@@ -148,7 +148,7 @@ namespace VfxEditor.TmbFormat {
             if( !Entries.Contains( entry ) ) return;
             var command = new TmbRefreshIdsCommand( File );
             DeleteEntry( command, entry );
-            Command.Add( command );
+            CommandManager.Add( command );
         }
 
         public void DeleteEntry( CompoundCommand command, TmbEntry entry ) {
@@ -206,7 +206,7 @@ namespace VfxEditor.TmbFormat {
 
             var command = new TmbRefreshIdsCommand( File );
             AddEntry( command, newEntry );
-            Command.Add( command );
+            CommandManager.Add( command );
         }
 
         private void ImportDialog() {

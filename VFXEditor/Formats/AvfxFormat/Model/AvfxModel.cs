@@ -170,7 +170,7 @@ namespace VfxEditor.AvfxFormat {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
-                        CommandManager.Avfx.Add( new AvfxModelImportCommand( this, newIndexes, newVertexes ) );
+                        CommandManager.Add( new AvfxModelImportCommand( this, newIndexes, newVertexes ) );
                     }
                 }
                 catch( Exception e ) {

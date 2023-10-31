@@ -20,9 +20,9 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            Carrier.Draw( CommandManager.Scd );
-            Depth.Draw( CommandManager.Scd );
-            FadeTime.Draw( CommandManager.Scd );
+            Carrier.Draw();
+            Depth.Draw();
+            FadeTime.Draw();
         }
     }
 }

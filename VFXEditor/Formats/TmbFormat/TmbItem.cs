@@ -61,7 +61,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         protected void DrawHeader() {
-            Time.Draw( Command );
+            Time.Draw();
             ImGui.SameLine();
             ImGui.TextDisabled( $"[ ID: {Id} ]" );
         }

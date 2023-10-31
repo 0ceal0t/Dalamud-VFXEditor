@@ -126,7 +126,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                     if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
                 }
 
-                if( UiUtils.DrawDragDrop( Textures, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", null ) ) break;
+                if( UiUtils.DrawDragDrop( Textures, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", false ) ) break;
 
                 using( var _ = ImRaii.PushId( idx ) ) {
                     ImGui.SameLine();

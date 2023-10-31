@@ -46,8 +46,8 @@ namespace VfxEditor.TmbFormat.Actor {
 
         public void Draw() {
             DrawHeader();
-            AbilityDelay.Draw( Command );
-            Unk2.Draw( Command );
+            AbilityDelay.Draw();
+            Unk2.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
@@ -69,7 +69,7 @@ namespace VfxEditor.TmbFormat.Actor {
                         var command = new TmbRefreshIdsCommand( File );
                         command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
                         command.Add( new GenericAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
-                        Command.Add( command );
+                        CommandManager.Add( command );
                     }
 
                     if( SelectedTrack != null ) {
@@ -79,7 +79,7 @@ namespace VfxEditor.TmbFormat.Actor {
                             command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
                             command.Add( new GenericRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
                             SelectedTrack.DeleteAllEntries( command );
-                            Command.Add( command );
+                            CommandManager.Add( command );
 
                             SelectedTrack = null;
                         }

@@ -17,13 +17,13 @@ namespace VfxEditor.Parsing.Int {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        protected override void DrawBody( CommandManager manager ) {
+        protected override void DrawBody() {
             var bytes = BitConverter.GetBytes( Value );
             var value = bytes.Select( x => ( int )x ).ToArray();
 
             if( ImGui.InputInt4( Name, ref value[0] ) ) {
                 var newValue = BitConverter.ToInt32( value.Select( x => ( byte )x ).ToArray() );
-                SetValue( manager, newValue );
+                SetValue( newValue );
             }
         }
     }

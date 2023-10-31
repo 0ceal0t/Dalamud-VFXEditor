@@ -103,7 +103,7 @@ namespace VfxEditor.AvfxFormat {
             ImportGroup( emitters, reader, EmitterView, NodeGroupSet.Emitters, importCommand );
             ImportGroup( timelines, reader, TimelineView, NodeGroupSet.Timelines, importCommand );
 
-            CommandManager.Avfx.Add( importCommand ); // doesn't actually execute anything
+            Command.AddAndExecute( importCommand ); // doesn't actually execute anything
 
             NodeGroupSet.PostImport();
         }

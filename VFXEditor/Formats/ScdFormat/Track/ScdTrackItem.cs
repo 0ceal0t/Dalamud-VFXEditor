@@ -149,7 +149,7 @@ namespace VfxEditor.ScdFormat {
         public ScdTrackData GetData() => Data;
 
         public void Draw() {
-            Type.Draw( CommandManager.Scd );
+            Type.Draw();
             using var _ = ImRaii.PushId( "Data" );
             Data?.Draw();
         }

@@ -43,20 +43,20 @@ namespace VfxEditor.SklbFormat.Mapping {
             if( ImGui.Checkbox( "Display Raw Indexes", ref Plugin.Configuration.SklbMappingIndexDisplay ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.SklbMappingIndexDisplay ) {
-                BoneA.Draw( CommandManager.Sklb );
-                BoneB.Draw( CommandManager.Sklb );
+                BoneA.Draw();
+                BoneB.Draw();
             }
             else {
                 BoneA.Draw( Mapping.MappedSkeleton );
                 BoneB.Draw( Mapping.Bones.Bones );
             }
 
-            Unk1.Draw( CommandManager.Sklb );
-            Unk2.Draw( CommandManager.Sklb );
-            Unk3.Draw( CommandManager.Sklb );
-            Translation.Draw( CommandManager.Sklb );
-            Rotation.Draw( CommandManager.Sklb );
-            Scale.Draw( CommandManager.Sklb );
+            Unk1.Draw();
+            Unk2.Draw();
+            Unk3.Draw();
+            Translation.Draw();
+            Rotation.Draw();
+            Scale.Draw();
         }
 
         public SimpleMapping ToHavok() {

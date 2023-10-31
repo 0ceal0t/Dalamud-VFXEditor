@@ -39,10 +39,10 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         }
 
         public void Draw() {
-            Bone.Draw( CommandManager.Atch );
-            Scale.Draw( CommandManager.Atch );
-            Offset.Draw( CommandManager.Atch );
-            Rotation.Draw( CommandManager.Atch );
+            Bone.Draw();
+            Scale.Draw();
+            Offset.Draw();
+            Rotation.Draw();
         }
     }
 }

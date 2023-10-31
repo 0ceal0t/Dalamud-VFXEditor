@@ -101,7 +101,7 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Avfx.Add( new GenericRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new GenericRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _ ) => Curve.Update() ) );
                     return;
                 }
 
@@ -109,28 +109,28 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
-                    CommandManager.Avfx.Add( new GenericAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new GenericAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
 
                 // Shift left/right
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[0] == this ) ) ) {
-                    CommandManager.Avfx.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[^1] == this ) ) ) {
-                    CommandManager.Avfx.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
             }
 
-            Time.Draw( CommandManager.Avfx );
-            Type.Draw( CommandManager.Avfx );
+            Time.Draw();
+            Type.Draw();
 
             if( IsColor ) DrawColor();
             else {
                 var data = Converted;
                 if( ImGui.InputFloat3( "Value", ref data ) ) {
-                    CommandManager.Avfx.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
+                    CommandManager.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
                     } ) );
                 }
@@ -175,7 +175,7 @@ namespace VfxEditor.AvfxFormat {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) { // Only actually commit the changes if 200ms have passed since the last one
                 Editing = false;
-                CommandManager.Avfx.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
+                CommandManager.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
                     new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color ),
                 } ) );
             }

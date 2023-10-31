@@ -3,7 +3,8 @@ using ImGuiNET;
 using OtterGui;
 using OtterGui.Raii;
 using System.Numerics;
-using VfxEditor.Data;
+using VfxEditor.Data.Command;
+using VfxEditor.Data.Copy;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
@@ -13,23 +14,24 @@ namespace VfxEditor.FileManager {
         protected virtual void DrawEditMenuItems() { }
 
         public override void DrawBody() {
-            WindowSystem.Draw();
+            using var copy = new CopyRaii( Copy );
+            using var command = new CommandRaii( File?.Command );
 
+            CheckKeybinds();
+
+            WindowSystem.Draw();
             WindowName = Title
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
                 + $"###{Title}";
 
-            CheckKeybinds();
-
             using var _ = ImRaii.PushId( Id );
             DrawMenu();
-
             if( Plugin.Configuration.ShowTabBar ) {
                 DrawTabs();
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }
 
-            ActiveDocument?.Draw();
+            Selected?.Draw();
         }
 
         private void DrawMenu() {
@@ -39,16 +41,8 @@ namespace VfxEditor.FileManager {
             Plugin.DrawFileMenu();
 
             if( ImGui.BeginMenu( "Edit" ) ) {
-                if( CurrentFile == null ) {
-                    using var disabled = ImRaii.Disabled();
-                    CopyManager.DrawDisabled();
-                    CommandManager.DrawDisabled();
-                }
-                else {
-                    GetCopyManager().Draw();
-                    GetCurrentCommandManager().Draw();
-                }
-
+                CommandManager.Draw();
+                CopyManager.Draw();
                 DrawEditMenuItems();
                 ImGui.EndMenu();
             }
@@ -89,12 +83,12 @@ namespace VfxEditor.FileManager {
 
                     var open = true;
                     var flags = ImGuiTabItemFlags.NoTooltip;
-                    if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
+                    if( Selected == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
                     if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
 
-                    if( UiUtils.DrawDragDrop( Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENT-TABS", null ) ) break;
+                    if( UiUtils.DrawDragDrop( Documents, document, document.DisplayName, ref DraggingItem, "DOCUMENT-TABS", false ) ) break;
 
                     if( !open && Documents.Count > 1 ) ImGui.OpenPopup( "DeletePopup" );
 
@@ -139,7 +133,7 @@ namespace VfxEditor.FileManager {
             for( var i = 0; i < Documents.Count; i++ ) {
                 using var __ = ImRaii.PushId( i );
                 var document = Documents[i];
-                if( ImGui.Selectable( document.DisplayName, document == ActiveDocument ) ) SelectDocument( document );
+                if( ImGui.Selectable( document.DisplayName, document == Selected ) ) SelectDocument( document );
             }
         }
 

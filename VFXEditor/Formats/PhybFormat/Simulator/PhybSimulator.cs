@@ -47,28 +47,28 @@ namespace VfxEditor.PhybFormat.Simulator {
             Params = new( file );
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _ ) => File.OnChange() );
 
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), () => CommandManager.Phyb, ( PhybCollisionData item ) => File.Updated() );
+                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _ ) => File.OnChange() );
 
             ChainDropdown = new( "Chain", Chains,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybChain item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybChain _ ) => File.OnChange() );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybConnector item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybConnector _ ) => File.OnChange() );
 
             AttractSplitView = new( "Attract", Attracts, false,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybAttract item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybAttract _ ) => File.OnChange() );
 
             PinSplitView = new( "Pin", Pins, false,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybPin item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybPin _ ) => File.OnChange() );
 
             SpringSplitView = new( "Spring", Springs, false,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybSpring item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybSpring _ ) => File.OnChange() );
 
             PostAlignmentSplitView = new( "Post Alignment", PostAlignments, false,
-                null, () => new( File, this ), () => CommandManager.Phyb, ( PhybPostAlignment item ) => File.Updated() );
+                null, () => new( File, this ), ( PhybPostAlignment _ ) => File.OnChange() );
         }
 
         public PhybSimulator( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {
@@ -211,11 +211,11 @@ namespace VfxEditor.PhybFormat.Simulator {
         }
 
         public void ConnectNodeToBone( int chainId, int nodeId,
-            string boneName, Vector3 offset,
+            string boneName,
             MeshBuilder builder, Dictionary<string, Bone> boneMatrixes ) {
 
             if( !GetNode( chainId, nodeId, boneMatrixes, out var nodeBone, out var node ) ) return;
-            if( !boneMatrixes.TryGetValue( boneName, out var bone ) ) return;
+            if( !boneMatrixes.TryGetValue( boneName, out var _ ) ) return;
 
             var nodeStart = nodeBone.BindPose.TranslationVector;
             // var bonePos = Vector3.Transform( offset, bone.BindPose ).ToVector3();

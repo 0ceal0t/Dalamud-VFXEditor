@@ -60,7 +60,7 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandDropdown<ShpkNode> NodeView;
         private readonly CommandSplitView<ShpkAlias> AliasView;
 
-        public ShpkFile( BinaryReader reader, bool verify ) : base( Plugin.ShpkManager ) {
+        public ShpkFile( BinaryReader reader, bool verify ) : base() {
             reader.ReadInt32(); // Magic
             Version = reader.ReadUInt32();
             DxMagic = reader.ReadUInt32();
@@ -115,22 +115,22 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             // ====== CONSTRUCT VIEWS ==========
 
-            VertexView = new( "Vertex Shader", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ), () => CommandManager.Shpk );
-            PixelView = new( "Pixel Shader", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ), () => CommandManager.Shpk );
+            VertexView = new( "Vertex Shader", VertexShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
+            PixelView = new( "Pixel Shader", PixelShaders, null, () => new( ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk ) );
 
-            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new(), () => CommandManager.Shpk );
+            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new() );
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ), () => CommandManager.Shpk );
+            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
 
-            SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
-            SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
-            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
-            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new(), () => CommandManager.Shpk );
+            SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
 
-            NodeView = new( "Node", Nodes, null, () => new(), () => CommandManager.Shpk );
-            AliasView = new( "Alias", Aliases, false, null, () => new(), () => CommandManager.Shpk );
+            NodeView = new( "Node", Nodes, null, () => new() );
+            AliasView = new( "Alias", Aliases, false, null, () => new() );
 
             // TODO: don't be dumb when adding keys, actually update selectors and stuff
             // TOOD: when adding keys, make sure to do it everywhere

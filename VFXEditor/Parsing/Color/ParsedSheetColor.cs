@@ -20,13 +20,13 @@ namespace VfxEditor.Parsing.Color {
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value );
 
-        protected override void DrawBody( CommandManager manager ) {
-            DrawCombo( manager );
+        protected override void DrawBody() {
+            DrawCombo();
             ImGui.SameLine();
             ImGui.Text( Name );
         }
 
-        private void DrawCombo( CommandManager manager ) {
+        private void DrawCombo() {
             using var color = ImRaii.PushColor( ImGuiCol.Text, CurrentColor );
             var text = SheetData.UiColors.ContainsKey( Value ) ? $"----{Value}----" : "[NONE]";
 
@@ -38,7 +38,7 @@ namespace VfxEditor.Parsing.Color {
 
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );
                 if( ImGui.Selectable( $"----{option.Key}----", selected ) ) {
-                    SetValue( manager, option.Key );
+                    SetValue( option.Key );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();

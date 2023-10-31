@@ -27,10 +27,10 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         }
 
         public void Draw() {
-            ParameterIndex.Draw( CommandManager.Skp );
-            Priority.Draw( CommandManager.Skp );
-            BoneName.Draw( CommandManager.Skp );
-            ParentBoneName.Draw( CommandManager.Skp );
+            ParameterIndex.Draw();
+            Priority.Draw();
+            BoneName.Draw();
+            ParentBoneName.Draw();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation ) {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-            CurrentFile?.ReadRenamingMap( data.Renaming );
+            File?.ReadRenamingMap( data.Renaming );
         }
 
         public override void CheckKeybinds() {
@@ -48,10 +48,10 @@ namespace VfxEditor.AvfxFormat {
         protected override AvfxFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
 
         public void Import( string path ) {
-            if( CurrentFile != null && File.Exists( path ) ) CurrentFile.Import( path );
+            if( File != null && System.IO.File.Exists( path ) ) File.Import( path );
         }
 
-        public void ShowExportDialog( AvfxNode node ) => CurrentFile.ShowExportDialog( node );
+        public void ShowExportDialog( AvfxNode node ) => File.ShowExportDialog( node );
 
         public void OpenTemplate( string path ) =>
             SetSource( new SelectResult( SelectResultType.Local, "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat {
             RelativeLocation = newPath,
             Replace = Replace,
             Source = Source,
-            Renaming = CurrentFile.GetRenamingMap(),
+            Renaming = File.GetRenamingMap(),
             Disabled = Disabled
         };
 
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         protected override string GetWarningText() {
-            var invalidTimeline = CurrentFile.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
+            var invalidTimeline = File.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
             if( invalidTimeline == null ) return "";
             return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
         }
@@ -117,11 +117,11 @@ namespace VfxEditor.AvfxFormat {
         protected override void DisplayFileControls() {
             base.DisplayFileControls();
 
-            if( CurrentFile.TextureView.Group.Items.Where( x => !x.FileExists() ).Any() ) {
+            if( File.TextureView.Group.Items.Where( x => !x.FileExists() ).Any() ) {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Images.ToIconString() ) ) {
-                        var paths = CurrentFile.TextureView.Group.Items
+                        var paths = File.TextureView.Group.Items
                             .Where( x => !x.FileExists() )
                             .Select( x => x.Path.Value.Trim( '\0' ) )
                             .Where( x => !string.IsNullOrEmpty( x ) ).ToList();

@@ -29,7 +29,7 @@ namespace VfxEditor.SklbFormat {
 
         public override void Dispose() {
             base.Dispose();
-            File.Delete( HkxTemp );
+            System.IO.File.Delete( HkxTemp );
         }
 
         protected override void DrawExtraColumn() {

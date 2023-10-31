@@ -8,8 +8,6 @@ using static VfxEditor.Utils.ShaderUtils;
 namespace VfxEditor.Formats.ShpkFormat.Shaders {
     public class ShpkParameterInfo : IUiItem, ITextItem {
         public readonly ShaderFileType Type;
-        private CommandManager Command => GetCommand( Type );
-
         public uint Id => Crc32.Get( Value.Value, 0xFFFFFFFFu );
         public uint DataSize => ( uint )Size.Value;
 
@@ -49,9 +47,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public void Draw() {
-            Value.Draw( Command );
-            Slot.Draw( Command );
-            Size.Draw( Command );
+            Value.Draw();
+            Slot.Draw();
+            Size.Draw();
         }
 
         public string GetText() => Value.Value;

@@ -30,12 +30,6 @@ namespace VfxEditor.Utils {
             _ => DX.UNKNOWN
         };
 
-        public static CommandManager GetCommand( ShaderFileType type ) => type switch {
-            ShaderFileType.Shpk => CommandManager.Shpk,
-            ShaderFileType.Shcd => CommandManager.Shcd,
-            _ => null
-        };
-
         public static void WriteOffsets( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions ) {
             var shaderOffset = writer.BaseStream.Position;
 

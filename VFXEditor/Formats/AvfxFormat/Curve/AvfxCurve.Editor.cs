@@ -7,7 +7,6 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AvfxFormat.Curve.Editor;
 using VfxEditor.Utils;
@@ -98,7 +97,7 @@ namespace VfxEditor.AvfxFormat {
                         Editing = false;
                         var command = new AvfxCurveCompoundCommand( this );
                         Selected.ForEach( x => x.StopDragging( command ) );
-                        CommandManager.Avfx.Add( command );
+                        CommandManager.Add( command );
                     }
 
                     // Selecting point [Left Click]
@@ -139,7 +138,7 @@ namespace VfxEditor.AvfxFormat {
                         insertIdx++;
                     }
 
-                    CommandManager.Avfx.Add( new GenericAddCommand<AvfxCurveKey>( Keys,
+                    CommandManager.Add( new GenericAddCommand<AvfxCurveKey>( Keys,
                         new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
                         insertIdx, ( AvfxCurveKey _ ) => Update() ) );
                 }
@@ -181,22 +180,24 @@ namespace VfxEditor.AvfxFormat {
                     DrawOnce = true;
                 }
 
+                /*
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) {
-                    CopyManager.Avfx.ClearCurveKeys();
-                    foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key );
+                    //CopyManager.Avfx.ClearCurveKeys();
+                    //foreach( var key in Keys ) CopyManager.Avfx.AddCurveKey( key );
                 }
 
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Paste", CopyManager.Avfx.HasCurveKeys(), true ) ) {
                     var command = new AvfxCurveCompoundCommand( this );
                     foreach( var key in CopyManager.Avfx.CurveKeys ) command.Add( new GenericAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
-                    CommandManager.Avfx.Add( command );
+                    CommandManager.Add( command );
                 }
+                */
 
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( "Clear", true ) ) {
-                    CommandManager.Avfx.Add( new GenericListCommand<AvfxCurveKey>( Keys, new List<AvfxCurveKey>(), Update ) );
+                    CommandManager.Add( new GenericListCommand<AvfxCurveKey>( Keys, new List<AvfxCurveKey>(), Update ) );
                 }
             }
 
@@ -232,7 +233,7 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.RemoveButton( "Sort", true ) ) {
                 var sorted = new List<AvfxCurveKey>( Keys );
                 sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
-                CommandManager.Avfx.Add( new GenericListCommand<AvfxCurveKey>( Keys, sorted, Update ) );
+                CommandManager.Add( new GenericListCommand<AvfxCurveKey>( Keys, sorted, Update ) );
             }
         }
 

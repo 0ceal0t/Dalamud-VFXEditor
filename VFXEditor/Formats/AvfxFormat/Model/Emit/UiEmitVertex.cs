@@ -21,10 +21,10 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             using var _ = ImRaii.PushId( "VNum" );
 
-            Number.Number.Draw( CommandManager.Avfx );
-            Vertex.Position.Draw( CommandManager.Avfx, out var positionChanged );
-            Vertex.Normal.Draw( CommandManager.Avfx, out var normalChanged );
-            Vertex.Color.Draw( CommandManager.Avfx );
+            Number.Number.Draw();
+            Vertex.Position.Draw( out var positionChanged );
+            Vertex.Normal.Draw( out var normalChanged );
+            Vertex.Color.Draw();
 
             if( positionChanged || normalChanged ) Model.RefreshModelPreview();
         }

@@ -23,19 +23,19 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Z );
         }
 
-        public override void Draw( CommandManager manager ) => Draw( manager, out var _ );
+        public override void Draw() => Draw( out var _ );
 
-        public void Draw( CommandManager manager, out bool edited ) {
+        public void Draw( out bool edited ) {
             using var _ = ImRaii.PushId( Name );
-            edited = CopyPaste( manager );
+            edited = CopyPaste();
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
                 edited = true;
-                SetValue( manager, value );
+                SetValue( value );
             }
         }
 
-        protected override void DrawBody( CommandManager manager ) { }
+        protected override void DrawBody() { }
     }
 }

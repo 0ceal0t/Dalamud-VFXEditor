@@ -23,10 +23,10 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Draw() {
-            AttackTime.Draw( CommandManager.Scd );
-            DecayTime.Draw( CommandManager.Scd );
-            SustainLevel.Draw( CommandManager.Scd );
-            ReleaseTime.Draw( CommandManager.Scd );
+            AttackTime.Draw();
+            DecayTime.Draw();
+            SustainLevel.Draw();
+            ReleaseTime.Draw();
         }
     }
 }

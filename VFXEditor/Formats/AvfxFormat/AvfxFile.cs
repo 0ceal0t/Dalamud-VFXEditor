@@ -7,8 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.AvfxFormat.Dialogs;
-using VfxEditor.FileManager;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
-        public AvfxFile( BinaryReader reader, bool verify ) : base( Plugin.AvfxManager ) {
+        public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
@@ -112,7 +112,7 @@ namespace VfxEditor.AvfxFormat {
             CleanupInternalView( BinderView, command, removedNodes );
             CleanupInternalView( TextureView, command, removedNodes );
             CleanupInternalView( ModelView, command, removedNodes );
-            CommandManager.Avfx.Add( command );
+            Command.AddAndExecute( command );
         }
 
         private void CleanupInternalView<T>( IUiNodeView<T> view, CompoundCommand command, List<AvfxNode> removedNodes ) where T : AvfxNode {
