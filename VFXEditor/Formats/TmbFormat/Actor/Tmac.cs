@@ -3,7 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
@@ -67,8 +67,8 @@ namespace VfxEditor.TmbFormat.Actor {
                         var idx = Tracks.Count == 0 ? 0 : File.Tracks.IndexOf( Tracks.Last() ) + 1;
 
                         var command = new TmbRefreshIdsCommand( File );
-                        command.Add( new GenericAddCommand<Tmtr>( Tracks, newTrack ) );
-                        command.Add( new GenericAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
+                        command.Add( new ListAddCommand<Tmtr>( Tracks, newTrack ) );
+                        command.Add( new ListAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
                         CommandManager.Add( command );
                     }
 
@@ -76,8 +76,8 @@ namespace VfxEditor.TmbFormat.Actor {
                         ImGui.SameLine();
                         if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) { // REMOVE
                             var command = new TmbRefreshIdsCommand( File );
-                            command.Add( new GenericRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
-                            command.Add( new GenericRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
+                            command.Add( new ListRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
+                            command.Add( new ListRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
                             SelectedTrack.DeleteAllEntries( command );
                             CommandManager.Add( command );
 
@@ -123,8 +123,8 @@ namespace VfxEditor.TmbFormat.Actor {
 
         public void DeleteChildren( TmbRefreshIdsCommand command, TmbFile file ) {
             foreach( var track in Tracks ) {
-                command.Add( new GenericRemoveCommand<Tmtr>( Tracks, track ) );
-                command.Add( new GenericRemoveCommand<Tmtr>( file.Tracks, track ) );
+                command.Add( new ListRemoveCommand<Tmtr>( Tracks, track ) );
+                command.Add( new ListRemoveCommand<Tmtr>( file.Tracks, track ) );
                 track.DeleteAllEntries( command );
             }
         }

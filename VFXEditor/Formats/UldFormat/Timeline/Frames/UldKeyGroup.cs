@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Interfaces;
@@ -104,7 +104,7 @@ namespace VfxEditor.UldFormat.Timeline {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new GenericAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
+                CommandManager.Add( new ListAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
             }
         }
 
@@ -114,7 +114,7 @@ namespace VfxEditor.UldFormat.Timeline {
                 using var indent = ImRaii.PushIndent();
 
                 if( UiUtils.RemoveButton( $"Delete", true ) ) { // REMOVE
-                    CommandManager.Add( new GenericRemoveCommand<UldKeyframe>( Keyframes, item ) );
+                    CommandManager.Add( new ListRemoveCommand<UldKeyframe>( Keyframes, item ) );
                     return true;
                 }
 

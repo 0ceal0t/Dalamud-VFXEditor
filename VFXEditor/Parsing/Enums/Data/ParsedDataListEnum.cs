@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 
 namespace VfxEditor.Parsing.Data {
     public class ParsedDataListEnum<T, S> : ParsedEnum<T> where T : Enum where S : class {
@@ -17,14 +17,14 @@ namespace VfxEditor.Parsing.Data {
         protected override void SetValue( T prevValue, T value ) {
             CommandManager.Add( new CompoundCommand( new ICommand[] {
                 new ParsedSimpleCommand<T>( this, prevValue, value ),
-                new GenericListCommand<S>( Items, new List<S>() )
+                new ListSetCommand<S>( Items, new List<S>() )
             } ) );
         }
 
         protected override void SetValue( T value ) {
             CommandManager.Add( new CompoundCommand( new ICommand[] {
                 new ParsedSimpleCommand<T>( this, value ),
-                new GenericListCommand<S>( Items, new List<S>() )
+                new ListSetCommand<S>( Items, new List<S>() )
             } ) );
         }
     }

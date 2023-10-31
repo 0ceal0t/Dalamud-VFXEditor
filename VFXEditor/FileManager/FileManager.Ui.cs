@@ -31,7 +31,7 @@ namespace VfxEditor.FileManager {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             }
 
-            Document?.Draw();
+            ActiveDocument?.Draw();
         }
 
         private void DrawMenu() {
@@ -83,7 +83,7 @@ namespace VfxEditor.FileManager {
 
                     var open = true;
                     var flags = ImGuiTabItemFlags.NoTooltip;
-                    if( Document == document ) flags |= ImGuiTabItemFlags.SetSelected;
+                    if( ActiveDocument == document ) flags |= ImGuiTabItemFlags.SetSelected;
                     if( document.Unsaved ) flags |= ImGuiTabItemFlags.UnsavedDocument;
 
                     if( ImGui.BeginTabItem( $"{document.DisplayName}###Tab{idx}", ref open, flags ) ) ImGui.EndTabItem();
@@ -133,7 +133,7 @@ namespace VfxEditor.FileManager {
             for( var i = 0; i < Documents.Count; i++ ) {
                 using var __ = ImRaii.PushId( i );
                 var document = Documents[i];
-                if( ImGui.Selectable( document.DisplayName, document == Document ) ) SelectDocument( document );
+                if( ImGui.Selectable( document.DisplayName, document == ActiveDocument ) ) SelectDocument( document );
             }
         }
 

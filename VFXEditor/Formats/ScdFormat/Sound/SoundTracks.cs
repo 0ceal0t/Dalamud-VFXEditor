@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
@@ -33,7 +33,7 @@ namespace VfxEditor.ScdFormat {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Add( new GenericRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
+                        CommandManager.Add( new ListRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
                     }
 
                     Tracks[idx].Draw();
@@ -42,7 +42,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new GenericAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
+                CommandManager.Add( new ListAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
             }
         }
     }

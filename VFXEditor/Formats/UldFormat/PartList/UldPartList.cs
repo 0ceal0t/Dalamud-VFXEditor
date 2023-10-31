@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.PartList {
@@ -45,7 +45,7 @@ namespace VfxEditor.UldFormat.PartList {
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Add( new GenericRemoveCommand<UldPartItem>( Parts, item ) );
+                        CommandManager.Add( new ListRemoveCommand<UldPartItem>( Parts, item ) );
                         break;
                     }
 
@@ -54,7 +54,7 @@ namespace VfxEditor.UldFormat.PartList {
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new GenericAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
+                CommandManager.Add( new ListAddCommand<UldPartItem>( Parts, new UldPartItem() ) );
             }
         }
 

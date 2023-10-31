@@ -17,8 +17,7 @@ namespace VfxEditor {
         public static void Pop() {
             var item = Stack.Pop();
             if( item != null && CopyManager.IsPasting ) {
-                // Commit the changes
-                item.AddAndExecute( item.PasteCommand );
+                item.AddAndExecute( item.PasteCommand ); // Commit the changes
                 item.PasteCommand = new();
             }
         }
@@ -61,8 +60,6 @@ namespace VfxEditor {
         public void AddAndExecute( ICommand command ) {
             command.Execute();
             Commands.Add( command );
-
-            File.SetUnsaved();
             File.OnChange();
         }
 
@@ -73,16 +70,12 @@ namespace VfxEditor {
         protected void UndoInternal() {
             if( !Commands.Undo( out var item ) ) return;
             item.Undo();
-
-            File.SetUnsaved();
             File.OnChange();
         }
 
         protected void RedoInternal() {
             if( !Commands.Redo( out var item ) ) return;
             item.Redo();
-
-            File.SetUnsaved();
             File.OnChange();
         }
 

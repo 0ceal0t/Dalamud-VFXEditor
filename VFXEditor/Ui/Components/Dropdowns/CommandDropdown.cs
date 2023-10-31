@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Ui.Components {
@@ -21,8 +21,8 @@ namespace VfxEditor.Ui.Components {
 
         protected override string GetText( T item, int idx ) => GetTextAction == null ? $"{Id} {idx}" : GetTextAction.Invoke( item, idx );
 
-        protected override void OnNew() => CommandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke(), OnChangeAction ) );
+        protected override void OnNew() => CommandManager.Add( new ListAddCommand<T>( Items, NewAction.Invoke(), OnChangeAction ) );
 
-        protected override void OnDelete( T item ) => CommandManager.Add( new GenericRemoveCommand<T>( Items, item, OnChangeAction ) );
+        protected override void OnDelete( T item ) => CommandManager.Add( new ListRemoveCommand<T>( Items, item, OnChangeAction ) );
     }
 }

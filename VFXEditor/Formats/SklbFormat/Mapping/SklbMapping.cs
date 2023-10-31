@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using VfxEditor.FileManager;
 using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
@@ -163,7 +163,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 newSimple.BoneB.Value = boneIdx;
 
                 allMappings.Add( newSimple );
-                command.Add( new GenericAddCommand<SklbSimpleMapping>( SimpleMappings, newSimple ) );
+                command.Add( new ListAddCommand<SklbSimpleMapping>( SimpleMappings, newSimple ) );
             }
 
             foreach( var simple in allMappings ) {

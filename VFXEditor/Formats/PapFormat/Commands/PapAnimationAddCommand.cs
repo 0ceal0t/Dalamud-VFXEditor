@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 
 namespace VfxEditor.PapFormat {
-    public class PapAnimationAddCommand : GenericAddCommand<PapAnimation> {
+    public class PapAnimationAddCommand : ListAddCommand<PapAnimation> {
         public readonly PapFile File;
 
         public PapAnimationAddCommand( PapFile file, List<PapAnimation> group, PapAnimation item ) : base( group, item ) {

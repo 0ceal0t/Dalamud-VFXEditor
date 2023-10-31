@@ -169,7 +169,7 @@ namespace VfxEditor.AvfxFormat {
             if( Literal.DrawAddButton( Name ) ) return;
 
             // Copy/Paste
-            CopyManager.TryCopyValue( this, Name, Literal.Value );
+            CopyManager.TrySetValue( this, Name, Literal.Value );
             if( CopyManager.TryGetValue<int>( this, Name, out var val ) ) {
                 var newSelected = ( val == -1 || val >= Group.Items.Count ) ? null : Group.Items[val];
                 CommandManager.Paste( new AvfxNodeSelectCommand<T>( this, newSelected ) );

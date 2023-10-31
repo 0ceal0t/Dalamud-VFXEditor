@@ -1,5 +1,6 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
+using OtterGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Copy;
@@ -9,8 +10,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
-        public T Document { get; protected set; } = null;
-        public R File => Document?.File;
+        public T ActiveDocument { get; protected set; }
+        public R File => ActiveDocument?.File;
 
         private int DOC_ID = 0;
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
@@ -28,12 +29,12 @@ namespace VfxEditor.FileManager {
         // ===================
 
         public override void SetSource( SelectResult result ) {
-            Document?.SetSource( result );
+            ActiveDocument?.SetSource( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
         public override void SetReplace( SelectResult result ) {
-            Document?.SetReplace( result );
+            ActiveDocument?.SetReplace( result );
             Plugin.Configuration.AddRecent( Configuration.RecentItems, result );
         }
 
@@ -43,7 +44,7 @@ namespace VfxEditor.FileManager {
             if( Plugin.Configuration.PasteKeybind.KeyPressed() ) CopyManager.Paste();
             if( Plugin.Configuration.UndoKeybind.KeyPressed() ) CommandManager.Undo();
             if( Plugin.Configuration.RedoKeybind.KeyPressed() ) CommandManager.Redo();
-            Document?.CheckKeybinds();
+            ActiveDocument?.CheckKeybinds();
         }
 
         // ====================
@@ -51,28 +52,25 @@ namespace VfxEditor.FileManager {
         protected abstract T GetNewDocument();
 
         public void AddDocument() {
-            var newDocument = GetNewDocument();
-            Document = newDocument;
-            Documents.Add( newDocument );
+            ActiveDocument = GetNewDocument();
+            Documents.Add( ActiveDocument );
         }
 
         public void SelectDocument( T document ) {
-            Document = document;
+            ActiveDocument = document;
         }
 
         public bool RemoveDocument( T document ) {
             Documents.Remove( document );
+            document.Dispose();
 
             DraggingItem = null;
             DocumentWindow.Reset();
 
-            if( document == Document ) {
-                Document = Documents[0];
-                document.Dispose();
+            if( document == ActiveDocument ) {
+                ActiveDocument = Documents[0];
                 return true;
             }
-
-            document.Dispose();
             return false;
         }
 
@@ -82,16 +80,15 @@ namespace VfxEditor.FileManager {
 
         public void WorkspaceImport( JObject meta, string loadLocation ) {
             var items = WorkspaceUtils.ReadFromMeta<S>( meta, WorkspaceKey );
-            if( items == null ) {
+            if( items == null || items.Length == 0 ) {
                 AddDocument();
                 return;
             }
             foreach( var item in items ) {
                 var newDocument = GetWorkspaceDocument( item, Path.Combine( loadLocation, WorkspacePath ) );
-                Document = newDocument;
+                ActiveDocument = newDocument;
                 Documents.Add( newDocument );
             }
-            if( Documents.Count == 0 ) AddDocument();
         }
 
         protected abstract T GetWorkspaceDocument( S data, string localPath );
@@ -100,11 +97,9 @@ namespace VfxEditor.FileManager {
             var rootPath = Path.Combine( saveLocation, WorkspacePath );
             Directory.CreateDirectory( rootPath );
 
-            var documentIdx = 0;
             List<S> documentMeta = new();
-
-            foreach( var document in Documents ) {
-                document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{documentIdx++}.{Extension}" );
+            foreach( var (document, idx) in Documents.WithIndex() ) {
+                document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{idx}.{Extension}" );
             }
 
             WorkspaceUtils.WriteToMeta( meta, documentMeta.ToArray(), WorkspaceKey );
@@ -129,7 +124,7 @@ namespace VfxEditor.FileManager {
             SourceSelect?.Hide();
             ReplaceSelect?.Hide();
 
-            Document = null;
+            ActiveDocument = null;
             DraggingItem = null;
             DocumentWindow.Reset();
 

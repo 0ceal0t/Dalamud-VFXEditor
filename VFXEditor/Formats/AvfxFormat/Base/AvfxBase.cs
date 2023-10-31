@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void AssignedCopyPaste( string name ) {
-            CopyManager.TryCopyAssigned( this, name );
+            CopyManager.TrySetAssigned( this, name );
             if( CopyManager.TryGetAssigned( this, name, out var val ) ) {
                 CommandManager.Paste( new AvfxAssignCommand( this, val ) );
             }

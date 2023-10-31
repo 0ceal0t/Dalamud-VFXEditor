@@ -14,9 +14,7 @@ namespace VfxEditor.FileManager {
 
         public abstract void Draw();
 
-        public virtual void OnChange() { }
-
-        public void SetUnsaved() {
+        public virtual void OnChange() {
             Unsaved = true;
         }
 

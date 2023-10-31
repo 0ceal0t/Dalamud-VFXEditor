@@ -1,5 +1,5 @@
 using System.Numerics;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
@@ -18,8 +18,8 @@ namespace VfxEditor.TmbFormat.Actor {
 
         protected override void OnDelete( Tmac item ) {
             var command = new TmbRefreshIdsCommand( File );
-            command.Add( new GenericRemoveCommand<Tmac>( Items, item ) );
-            command.Add( new GenericRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
+            command.Add( new ListRemoveCommand<Tmac>( Items, item ) );
+            command.Add( new ListRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
             item.DeleteChildren( command, File );
             CommandManager.Add( command );
         }
@@ -28,8 +28,8 @@ namespace VfxEditor.TmbFormat.Actor {
             var newActor = new Tmac( File );
 
             var command = new TmbRefreshIdsCommand( File );
-            command.Add( new GenericAddCommand<Tmac>( Items, newActor ) );
-            command.Add( new GenericAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
+            command.Add( new ListAddCommand<Tmac>( Items, newActor ) );
+            command.Add( new ListAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
             CommandManager.Add( command );
         }
 

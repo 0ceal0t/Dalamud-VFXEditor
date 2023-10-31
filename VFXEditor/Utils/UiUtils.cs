@@ -8,8 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using VfxEditor.FileManager;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
@@ -363,7 +363,7 @@ namespace VfxEditor.Utils {
             if( payload.NativePtr == null ) return false;
 
             if( draggingItem != destination && items.Contains( draggingItem ) && items.Contains( destination ) ) {
-                var command = new GenericMoveCommand<T>( items, draggingItem, destination );
+                var command = new ListMoveCommand<T>( items, draggingItem, destination );
                 if( !record ) {
                     command.Execute();
                 }

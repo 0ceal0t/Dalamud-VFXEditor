@@ -3,7 +3,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -27,7 +27,7 @@ namespace VfxEditor.Ui.Components {
                 if( DeleteButtonFirst ) {
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
+                        CommandManager.Add( new ListRemoveCommand<T>( Items, item ) );
                         break;
                     }
 
@@ -43,14 +43,14 @@ namespace VfxEditor.Ui.Components {
 
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                        CommandManager.Add( new GenericRemoveCommand<T>( Items, item ) );
+                        CommandManager.Add( new ListRemoveCommand<T>( Items, item ) );
                         break;
                     }
                 }
             }
 
             if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
-                CommandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke() ) );
+                CommandManager.Add( new ListAddCommand<T>( Items, NewAction.Invoke() ) );
             }
         }
     }

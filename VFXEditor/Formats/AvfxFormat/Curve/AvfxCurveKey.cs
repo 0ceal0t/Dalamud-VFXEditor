@@ -5,7 +5,7 @@ using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Formats.AvfxFormat.Curve.Editor;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
@@ -101,7 +101,7 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Add( new GenericRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _ ) => Curve.Update() ) );
                     return;
                 }
 
@@ -109,17 +109,17 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
-                    CommandManager.Add( new GenericAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
 
                 // Shift left/right
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[0] == this ) ) ) {
-                    CommandManager.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[^1] == this ) ) ) {
-                    CommandManager.Add( new GenericMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
                 }
             }
 

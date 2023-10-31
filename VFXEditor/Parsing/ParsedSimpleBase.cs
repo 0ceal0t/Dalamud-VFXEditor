@@ -18,7 +18,7 @@ namespace VfxEditor.Parsing {
         }
 
         protected bool CopyPaste() {
-            CopyManager.TryCopyValue( this, Name, Value );
+            CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<T>( this, Name, out var val ) ) {
                 CommandManager.Paste( new ParsedSimpleCommand<T>( this, val, OnChangeAction ) );
                 return true;

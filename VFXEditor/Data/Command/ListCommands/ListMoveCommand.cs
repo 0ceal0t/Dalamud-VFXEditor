@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace VfxEditor.FileManager {
-    public class GenericMoveCommand<T> : ICommand where T : class {
+namespace VfxEditor.Data.Command.ListCommands {
+    public class ListMoveCommand<T> : ICommand where T : class {
         protected readonly Action<T> OnChangeAction;
         protected readonly List<T> Items;
         protected readonly T Item;
@@ -10,7 +10,7 @@ namespace VfxEditor.FileManager {
         protected int ItemIdx;
         protected int DestinationIdx;
 
-        public GenericMoveCommand( List<T> items, T item, T destination, Action<T> onChangeAction = null ) {
+        public ListMoveCommand( List<T> items, T item, T destination, Action<T> onChangeAction = null ) {
             OnChangeAction = onChangeAction;
             Items = items;
             Item = item;

@@ -7,7 +7,7 @@ using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Formats.AvfxFormat.Curve.Editor;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
@@ -140,7 +140,7 @@ namespace VfxEditor.AvfxFormat {
                         insertIdx++;
                     }
 
-                    CommandManager.Add( new GenericAddCommand<AvfxCurveKey>( Keys,
+                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Keys,
                         new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
                         insertIdx, ( AvfxCurveKey _ ) => Update() ) );
                 }
@@ -191,13 +191,13 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) {
                     var command = new AvfxCurveCompoundCommand( this );
-                    foreach( var key in CopiedKeys ) command.Add( new GenericAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
+                    foreach( var key in CopiedKeys ) command.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
                     CommandManager.Add( command );
                 }
 
                 ImGui.SameLine();
                 if( UiUtils.RemoveButton( "Clear", true ) ) {
-                    CommandManager.Add( new GenericListCommand<AvfxCurveKey>( Keys, new List<AvfxCurveKey>(), Update ) );
+                    CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, new List<AvfxCurveKey>(), Update ) );
                 }
             }
 
@@ -233,7 +233,7 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.RemoveButton( "Sort", true ) ) {
                 var sorted = new List<AvfxCurveKey>( Keys );
                 sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
-                CommandManager.Add( new GenericListCommand<AvfxCurveKey>( Keys, sorted, Update ) );
+                CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, Update ) );
             }
         }
 

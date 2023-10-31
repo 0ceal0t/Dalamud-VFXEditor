@@ -19,7 +19,7 @@ namespace VfxEditor.Parsing {
 
         public void Draw() {
             // Copy/Paste
-            CopyManager.TryCopyValue( this, Name, Value );
+            CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<Vector2>( this, Name, out var val ) ) {
                 var command = new CompoundCommand();
                 command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );

@@ -135,7 +135,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Copy/Paste
             if( CopyManager.IsCopying ) {
-                for( var idx = 0; idx < Selected.Count; idx++ ) CopyManager.TryCopyValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
+                for( var idx = 0; idx < Selected.Count; idx++ ) CopyManager.TrySetValue( this, $"{Name}_{idx}", Literal.GetItems()[idx] );
             }
             if( CopyManager.IsPasting ) {
                 for( var idx = 0; idx < Selected.Count; idx++ ) {

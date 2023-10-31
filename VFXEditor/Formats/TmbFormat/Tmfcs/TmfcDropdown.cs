@@ -1,4 +1,4 @@
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
@@ -19,8 +19,8 @@ namespace VfxEditor.TmbFormat.Tmfcs {
                 "Are you sure you want to delete this item? This change is potentially detectable, so make sure you know what you're doing.",
                 () => {
                     var command = new TmbRefreshIdsCommand( File );
-                    command.Add( new GenericRemoveCommand<Tmfc>( Items, item ) );
-                    command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, item ) );
+                    command.Add( new ListRemoveCommand<Tmfc>( Items, item ) );
+                    command.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, item ) );
                     CommandManager.Add( command );
                 }
             ) );
@@ -29,8 +29,8 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         protected override void OnNew() {
             var newTmfc = new Tmfc( File );
             var command = new TmbRefreshIdsCommand( File );
-            command.Add( new GenericAddCommand<Tmfc>( Items, newTmfc ) );
-            command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, newTmfc ) );
+            command.Add( new ListAddCommand<Tmfc>( Items, newTmfc ) );
+            command.Add( new ListAddCommand<TmbEntry>( File.AllEntries, newTmfc ) );
             CommandManager.Add( command );
         }
 

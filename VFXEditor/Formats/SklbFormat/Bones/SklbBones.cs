@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.DirectX;
 using VfxEditor.FileBrowser;
-using VfxEditor.FileManager;
 using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
@@ -176,7 +176,7 @@ namespace VfxEditor.SklbFormat.Bones {
                             var newId = BONE_ID++;
                             var newBone = new SklbBone( newId );
                             newBone.Name.Value = $"bone_{newId}";
-                            CommandManager.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
+                            CommandManager.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
                         }
                     }
                     UiUtils.Tooltip( "Create new bone at root" );
@@ -294,7 +294,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
                     var command = new CompoundCommand();
-                    command.Add( new GenericAddCommand<SklbBone>( Bones, newBone ) );
+                    command.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
                     command.Add( new SklbBoneParentCommand( newBone, bone ) );
                     CommandManager.Add( command );
                 }
@@ -445,7 +445,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             var command = new CompoundCommand();
             foreach( var item in toDelete ) {
-                command.Add( new GenericRemoveCommand<SklbBone>( Bones, item ) );
+                command.Add( new ListRemoveCommand<SklbBone>( Bones, item ) );
             }
             CommandManager.Add( command );
         }

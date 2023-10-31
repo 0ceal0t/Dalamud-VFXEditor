@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using VfxEditor.FileManager;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
@@ -91,7 +91,7 @@ namespace VfxEditor.TmbFormat {
                 }
 
                 if( UiUtils.IconButton( FontAwesomeIcon.Plus, "New" ) ) {
-                    CommandManager.Add( new GenericAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
+                    CommandManager.Add( new ListAddCommand<TmtrLuaEntry>( LuaEntries, new TmtrLuaEntry( File, this ) ) );
                 }
             }
 
@@ -140,8 +140,8 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void AddEntry( CompoundCommand command, TmbEntry entry ) {
-            command.Add( new GenericAddCommand<TmbEntry>( Entries, entry ) );
-            command.Add( new GenericAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
+            command.Add( new ListAddCommand<TmbEntry>( Entries, entry ) );
+            command.Add( new ListAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
         }
 
         public void DeleteEntry( TmbEntry entry ) {
@@ -153,14 +153,14 @@ namespace VfxEditor.TmbFormat {
 
         public void DeleteEntry( CompoundCommand command, TmbEntry entry ) {
             if( !Entries.Contains( entry ) ) return;
-            command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
-            command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+            command.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
+            command.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
         }
 
         public void DeleteAllEntries( TmbRefreshIdsCommand command ) {
             foreach( var entry in Entries ) {
-                command.Add( new GenericRemoveCommand<TmbEntry>( Entries, entry ) );
-                command.Add( new GenericRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+                command.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
+                command.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
             }
         }
 

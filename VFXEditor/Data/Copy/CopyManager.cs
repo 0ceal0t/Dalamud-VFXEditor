@@ -28,7 +28,7 @@ namespace VfxEditor.Data.Copy {
 
         public static void Paste() => Current?.PasteInternal();
 
-        public static void TryCopyValue<R>( object item, string name, R value ) {
+        public static void TrySetValue<R>( object item, string name, R value ) {
             if( !IsCopying ) return;
             Current.SetValue( item, name, value );
         }
@@ -39,7 +39,7 @@ namespace VfxEditor.Data.Copy {
             return Current.GetValue( item, name, out value );
         }
 
-        public static void TryCopyAssigned<R>( R item, string name ) where R : AvfxBase {
+        public static void TrySetAssigned<R>( R item, string name ) where R : AvfxBase {
             if( !IsCopying ) return;
             Current.AvfxAssigned[(item.GetType(), name)] = item.IsAssigned();
         }

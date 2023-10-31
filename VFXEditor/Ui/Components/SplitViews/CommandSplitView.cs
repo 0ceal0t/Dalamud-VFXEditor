@@ -2,7 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
@@ -30,11 +30,11 @@ namespace VfxEditor.Ui.Components.SplitViews {
         }
 
         protected override void OnNew() {
-            CommandManager.Add( new GenericAddCommand<T>( Items, NewAction.Invoke(), OnChangeAction ) );
+            CommandManager.Add( new ListAddCommand<T>( Items, NewAction.Invoke(), OnChangeAction ) );
         }
 
         protected override void OnDelete( T item ) {
-            CommandManager.Add( new GenericRemoveCommand<T>( Items, item, OnChangeAction ) );
+            CommandManager.Add( new ListRemoveCommand<T>( Items, item, OnChangeAction ) );
         }
 
         protected override string GetText( T item, int idx ) => GetTextAction == null ? base.GetText( item, idx ) : GetTextAction.Invoke( item, idx );

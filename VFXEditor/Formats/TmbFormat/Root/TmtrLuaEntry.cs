@@ -4,7 +4,7 @@ using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
-using VfxEditor.FileManager;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Root;
 using VfxEditor.Utils;
@@ -186,7 +186,7 @@ namespace VfxEditor.TmbFormat {
         private bool DrawPopup() {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Add( new GenericRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
+                    CommandManager.Add( new ListRemoveCommand<TmtrLuaEntry>( Track.LuaEntries, this ) );
                     ImGui.CloseCurrentPopup();
                     return true;
                 }
