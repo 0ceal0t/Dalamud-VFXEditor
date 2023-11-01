@@ -1,5 +1,5 @@
 using VfxEditor.FileManager;
-using VfxEditor.Select.Phyb;
+using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {

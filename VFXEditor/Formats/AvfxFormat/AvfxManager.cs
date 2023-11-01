@@ -3,7 +3,7 @@ using OtterGui.Raii;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AvfxFormat.Dialogs;
-using VfxEditor.Select.Vfx;
+using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {

@@ -1,6 +1,6 @@
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok;
-using VfxEditor.Select.Sklb;
+using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat {

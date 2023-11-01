@@ -1,5 +1,5 @@
 using VfxEditor.FileManager;
-using VfxEditor.Select.Shcd;
+using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShcdFormat {

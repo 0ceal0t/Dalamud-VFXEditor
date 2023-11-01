@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Select;
-using VfxEditor.Select.Tex;
+using VfxEditor.Select.Formats;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 

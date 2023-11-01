@@ -53,17 +53,5 @@ namespace VfxEditor.Select {
             ImGui.SameLine();
             if( ImGui.SmallButton( "Github##ResLogger" ) ) UiUtils.OpenUrl( "https://github.com/lmcintyre/ResLogger2" );
         }
-
-        public static byte[] BgraToRgba( byte[] data ) {
-            var ret = new byte[data.Length];
-            for( var i = 0; i < data.Length / 4; i++ ) {
-                var idx = i * 4;
-                ret[idx + 0] = data[idx + 2];
-                ret[idx + 1] = data[idx + 1];
-                ret[idx + 2] = data[idx + 0];
-                ret[idx + 3] = data[idx + 3];
-            }
-            return ret;
-        }
     }
 }

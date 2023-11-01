@@ -1,0 +1,51 @@
+using ImGuiNET;
+using Lumina.Data.Files;
+using System;
+using System.Linq;
+
+namespace VfxEditor.Select.Tabs.Mounts {
+    public class MountRowSelectedVfx {
+        public string ImcPath;
+        public int Id;
+        public string Path;
+    }
+
+    public class MountTabVfx : MountTab<MountRowSelectedVfx> {
+        public MountTabVfx( SelectDialog dialog, string name ) : base( dialog, name ) { }
+
+        // ===== LOADING =====
+
+        public override void LoadSelection( MountRow item, out MountRowSelectedVfx loaded ) {
+            loaded = null;
+            var imcPath = item.ImcPath;
+
+            if( !Dalamud.DataManager.FileExists( imcPath ) ) return;
+            try {
+                var file = Dalamud.DataManager.GetFile<ImcFile>( imcPath );
+                var ids = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
+                var id = ids.Count > 0 ? ids[0] : 0;
+
+                loaded = new() {
+                    ImcPath = file.FilePath,
+                    Id = id,
+                    Path = id > 0 ? item.GetVfxPath( id ) : ""
+                };
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error loading IMC file " + imcPath );
+            }
+        }
+
+        // ===== DRAWING ======
+
+        protected override void DrawSelected() {
+            DrawIcon( Selected.Icon );
+            ImGui.Text( "Variant: " + Selected.Variant );
+            ImGui.Text( "IMC: " );
+            ImGui.SameLine();
+            SelectUiUtils.DisplayPath( Loaded.ImcPath );
+
+            DrawPath( "VFX", Loaded.Path, Selected.Name, true );
+        }
+    }
+}

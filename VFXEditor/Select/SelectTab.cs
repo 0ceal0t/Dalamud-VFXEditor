@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using VfxEditor.Select.Scd.BgmQuest;
+using VfxEditor.Select.Tabs.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
@@ -27,7 +27,7 @@ namespace VfxEditor.Select {
 
         protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
 
-        protected void DrawPapsWithHeader( Dictionary<string, Dictionary<string, string>> items, string name ) {
+        protected void DrawWithHeader( Dictionary<string, Dictionary<string, string>> items, string name ) {
             if( items == null ) return;
 
             foreach( var (subName, subItems) in items ) {

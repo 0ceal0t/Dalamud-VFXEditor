@@ -1,5 +1,5 @@
 using VfxEditor.FileManager;
-using VfxEditor.Select.Eid;
+using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
