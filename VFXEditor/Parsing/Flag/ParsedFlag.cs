@@ -6,6 +6,8 @@ namespace VfxEditor.Parsing {
     public class ParsedFlag<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
 
+        public int IntValue => ( int )( object )Value;
+
         public ParsedFlag( string name, T value, int size = 4 ) : base( name, value ) {
             Size = size;
         }
@@ -27,7 +29,7 @@ namespace VfxEditor.Parsing {
         }
 
         public override void Write( BinaryWriter writer ) {
-            var intValue = Value == null ? -1 : ( int )( object )Value;
+            var intValue = Value == null ? -1 : IntValue;
             if( Size == 4 ) writer.Write( intValue );
             else if( Size == 2 ) writer.Write( ( short )intValue );
             else writer.Write( ( byte )intValue );
@@ -41,7 +43,7 @@ namespace VfxEditor.Parsing {
 
                 var hasFlag = HasFlag( option );
                 if( ImGui.Checkbox( $"{option}", ref hasFlag ) ) {
-                    var intValue = ( int )( object )Value;
+                    var intValue = IntValue;
                     if( hasFlag ) intValue |= intOption;
                     else intValue &= ~intOption;
 

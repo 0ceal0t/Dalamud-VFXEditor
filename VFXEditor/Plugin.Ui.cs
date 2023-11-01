@@ -111,6 +111,7 @@ namespace VfxEditor {
                 AtchManager,
                 ShpkManager,
                 ShcdManager,
+                MtrlManager,
             };
 
             var dropdown = false;

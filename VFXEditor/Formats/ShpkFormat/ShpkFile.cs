@@ -186,7 +186,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             SceneKeys.ForEach( x => x.Write( writer ) );
             MaterialKeys.ForEach( x => x.Write( writer ) );
 
-            SubViewKeys.ForEach( x => writer.Write( x.DefaultValue.Value ) );
+            SubViewKeys.ForEach( x => writer.Write( x.Value.Value ) );
 
             Nodes.ForEach( x => x.Write( writer ) );
             Aliases.ForEach( x => x.Write( writer ) );
