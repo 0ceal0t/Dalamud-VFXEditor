@@ -44,9 +44,14 @@ namespace VfxEditor.Select.Shared.Item {
         OffHand,
         Head,
         Body,
-        Gloves,
+        Hands,
         Legs,
         Feet,
+        Neck,
+        RFinger,
+        LFinger,
+        Wrists,
+        Ears,
         Other
     }
 
@@ -54,12 +59,12 @@ namespace VfxEditor.Select.Shared.Item {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
-
         public readonly ItemIds Ids;
         public readonly ItemIds SecondaryIds;
         public readonly bool HasModel;
-
         public readonly ItemType Type = ItemType.Other;
+
+        public string VariantString => "v" + GetVariant().ToString().PadLeft( 4, '0' );
 
         public ItemRow( Lumina.Excel.GeneratedSheets.Item item ) {
             Name = item.Name.ToString();
@@ -75,9 +80,14 @@ namespace VfxEditor.Select.Shared.Item {
             else if( category?.OffHand == 1 ) Type = ItemType.OffHand;
             else if( category?.Head == 1 ) Type = ItemType.Head;
             else if( category?.Body == 1 ) Type = ItemType.Body;
-            else if( category?.Gloves == 1 ) Type = ItemType.Gloves;
+            else if( category?.Gloves == 1 ) Type = ItemType.Hands;
             else if( category?.Legs == 1 ) Type = ItemType.Legs;
             else if( category?.Feet == 1 ) Type = ItemType.Feet;
+            else if( category?.Neck == 1 ) Type = ItemType.Neck;
+            else if( category?.FingerR == 1 ) Type = ItemType.RFinger;
+            else if( category?.FingerL == 1 ) Type = ItemType.LFinger;
+            else if( category?.Wrists == 1 ) Type = ItemType.Wrists;
+            else if( category?.Ears == 1 ) Type = ItemType.Ears;
         }
 
         public string GetVfxPath( int idx ) => $"{GetVfxRootPath()}{idx.ToString().PadLeft( 4, '0' )}.avfx";

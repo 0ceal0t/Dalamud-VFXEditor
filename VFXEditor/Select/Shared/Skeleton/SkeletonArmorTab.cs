@@ -27,16 +27,12 @@ namespace VfxEditor.Select.Shared.Skeleton {
         }
 
         public override void LoadSelection( ArmorRow item, out Dictionary<string, string> loaded ) {
-            var armorString = item.Type switch {
-                ItemType.Body => "top",
-                ItemType.Head => "met",
-                _ => "unk"
-            };
-            var itemString = $"{armorString[0]}{item.Ids.Id:D4}";
+            var suffix = item.Suffix;
+            var itemString = $"{suffix[0]}{item.Ids.Id:D4}";
 
             var paths = new Dictionary<string, string>();
             foreach( var race in SelectDataUtils.RaceAnimationIds ) {
-                paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{armorString}/{itemString}/{Prefix}_{race.Value.SkeletonId}{itemString}.{Extension}";
+                paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{suffix}/{itemString}/{Prefix}_{race.Value.SkeletonId}{itemString}.{Extension}";
             }
             loaded = SelectDataUtils.FileExistsFilter( paths );
         }

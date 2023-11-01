@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
+using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Table;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat.Keys;
@@ -38,11 +39,15 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly ParsedUInt ShaderFlags = new( "Shader Flags" );
 
         private readonly List<ShpkKey> Keys = new();
+        private readonly List<MtrlConstant> Constants = new();
+        private readonly List<MtrlSampler> Samplers = new();
 
         private readonly CommandSplitView<MtrlTexture> TextureView;
         private readonly CommandSplitView<MtrlAttributeSet> UvSetView;
         private readonly CommandSplitView<MtrlAttributeSet> ColorSetView;
         private readonly CommandSplitView<ShpkKey> KeyView;
+        private readonly CommandSplitView<MtrlConstant> ConstantView;
+        private readonly CommandSplitView<MtrlSampler> SamplerView;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
             Version = reader.ReadBytes( 4 );
@@ -92,28 +97,13 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             ShaderFlags.Read( reader ); // TODO: look into these flags more
 
-            /*
-             * public struct Constant
-    {
-        public uint ConstantId;
-        public ushort ValueOffset;
-        public ushort ValueSize;
-    }
-
-    public unsafe struct Sampler
-    {
-        public uint SamplerId;
-        public uint Flags; // Bitfield; values unknown
-        public byte TextureIndex;
-        private fixed byte Padding[3];
-    }
-             */
-
             for( var i = 0; i < shaderKeyCount; i++ ) Keys.Add( new( reader ) );
+            for( var i = 0; i < constantCount; i++ ) Constants.Add( new( reader ) );
+            for( var i = 0; i < samplerCount; i++ ) Samplers.Add( new( reader ) );
 
-            //ShaderPackage.Constants = r.Read<Constant>( constantCount ).ToArray();
-            //ShaderPackage.Samplers = r.Read<Sampler>( samplerCount ).ToArray();
-            //ShaderPackage.ShaderValues = r.Read<float>( shaderValueListSize / 4 ).ToArray();
+            var shaderValues = new List<float>();
+            for( var i = 0; i < shaderValueSize / 4; i++ ) shaderValues.Add( reader.ReadSingle() );
+            Constants.ForEach( x => x.PickValues( shaderValues ) );
 
             // ======== VIEWS =========
 
@@ -121,6 +111,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             KeyView = new( "Key", Keys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            ConstantView = new( "Constant", Constants, false, null, () => new() );
+            SamplerView = new( "Sampler", Samplers, false, null, () => new() );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -172,6 +164,14 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             using( var tab = ImRaii.TabItem( "Keys" ) ) {
                 if( tab ) KeyView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Constants" ) ) {
+                if( tab ) ConstantView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Samplers" ) ) {
+                if( tab ) SamplerView.Draw();
             }
         }
     }
