@@ -31,11 +31,10 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly List<ShpkShader> VertexShaders = new();
         private readonly List<ShpkShader> PixelShaders = new();
 
-        private readonly List<ShpkMaterialParmeter> MaterialParameters = new();
-
-        private readonly List<ShpkParameterInfo> Constants = new();
-        private readonly List<ShpkParameterInfo> Samplers = new();
-        private readonly List<ShpkParameterInfo> Resources = new();
+        public readonly List<ShpkMaterialParmeter> MaterialParameters = new();
+        public readonly List<ShpkParameterInfo> Constants = new();
+        public readonly List<ShpkParameterInfo> Samplers = new();
+        public readonly List<ShpkParameterInfo> Resources = new();
 
         private readonly List<ShpkKey> SystemKeys = new();
         private readonly List<ShpkKey> SceneKeys = new();

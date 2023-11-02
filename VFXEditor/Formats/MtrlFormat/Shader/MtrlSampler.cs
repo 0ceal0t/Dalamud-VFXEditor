@@ -1,7 +1,8 @@
 using ImGuiNET;
 using System.IO;
-using VfxEditor.Formats.ShpkFormat.Utils;
+using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
@@ -13,22 +14,25 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
     }
 
     public class MtrlSampler : IUiItem {
-        public readonly ParsedCrc Id = new( "Id" );
+        private readonly MtrlFile File;
+
+        public readonly ParsedUIntPicker<ShpkParameterInfo> Id;
         public readonly ParsedEnum<TextureAddressMode> AddressModeU = new( "U Address Mode" );
         public readonly ParsedEnum<TextureAddressMode> AddressModeV = new( "V Address Mode" );
         public readonly ParsedFloat LoDBias = new( "LoD Bias" );
         public readonly ParsedUInt MinLoD = new( "Minimum LoD" );
+        public readonly ParsedUIntHex Flags = new( "Flags" );
         public readonly ParsedByte TextureIndex = new( "Texture Index" );
         private readonly ParsedReserve Padding = new( 3 );
 
-        private readonly uint OriginalFlags = 0;
-        private uint MaskedFlags => OriginalFlags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );
+        public MtrlSampler( MtrlFile file ) {
+            File = file;
+            Id = new( "Sampler", () => File.ShaderFile.Samplers, ( ShpkParameterInfo item ) => item.GetText(), ( ShpkParameterInfo item ) => item.Id );
+        }
 
-        public MtrlSampler() { }
-
-        public MtrlSampler( BinaryReader reader ) {
+        public MtrlSampler( MtrlFile file, BinaryReader reader ) : this( file ) {
             Id.Read( reader );
-            OriginalFlags = reader.ReadUInt32();
+            var flags = reader.ReadUInt32();
             TextureIndex.Read( reader );
             Padding.Read( reader );
 
@@ -40,16 +44,17 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             //  4 Min LoD
             //  8 ??????
 
-            AddressModeU.Value = ( TextureAddressMode )( OriginalFlags & 0x3u );
-            AddressModeV.Value = ( TextureAddressMode )( ( OriginalFlags >> 2 ) & 0x3u );
-            LoDBias.Value = ( ( OriginalFlags >> 10 ) & 0x3FF ) / 64f;
-            MinLoD.Value = ( ( OriginalFlags >> 20 ) & 0xF );
+            Flags.Value = Masked( flags );
+            AddressModeU.Value = ( TextureAddressMode )( flags & 0x3u );
+            AddressModeV.Value = ( TextureAddressMode )( ( flags >> 2 ) & 0x3u );
+            LoDBias.Value = ( ( flags >> 10 ) & 0x3FF ) / 64f;
+            MinLoD.Value = ( ( flags >> 20 ) & 0xF );
         }
 
         public void Write( BinaryWriter writer ) {
             Id.Write( writer );
 
-            var flags = MaskedFlags;
+            var flags = Masked( Flags.Value );
             flags |= ( uint )AddressModeU.Value;
             flags |= ( uint )AddressModeV.Value << 2;
             flags |= ( uint )( ( int )( LoDBias.Value * 64.0f ) & 0x3FF ) << 10;
@@ -61,13 +66,18 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         }
 
         public void Draw() {
-            Id.Draw( CrcMaps.MaterialParams ); // TODO
+            Id.Draw();
+            ImGui.SameLine();
+            ImGui.TextDisabled( $"(from {File.Shader.Value})" );
+
             AddressModeU.Draw();
             AddressModeV.Draw();
             LoDBias.Draw();
             MinLoD.Draw();
-            ImGui.TextDisabled( $"Extra Flags: 0x{MaskedFlags:X8}" );
+            Flags.Draw();
             TextureIndex.Draw();
         }
+
+        private static uint Masked( uint flags ) => flags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );
     }
 }

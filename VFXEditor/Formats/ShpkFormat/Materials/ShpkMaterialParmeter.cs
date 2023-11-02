@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using VfxEditor.Formats.ShpkFormat.Utils;
 using VfxEditor.Parsing;
@@ -31,5 +32,10 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
             Offset.Draw();
             Size.Draw();
         }
+
+        private static readonly string[] Swizzle = new[] { "x", "y", "z", "w" };
+
+        public string MaterialSlotText =>
+            $"MaterialParameters[{( ( int )Math.Floor( StartSlot / 4f ) ).ToString().PadLeft( 2, '0' )}].{Swizzle[StartSlot % 4]}";
     }
 }

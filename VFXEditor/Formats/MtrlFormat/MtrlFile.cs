@@ -10,8 +10,10 @@ using VfxEditor.Formats.MtrlFormat.AttributeSet;
 using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Table;
 using VfxEditor.Formats.MtrlFormat.Texture;
+using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.ShpkFormat.Keys;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
@@ -24,6 +26,19 @@ namespace VfxEditor.Formats.MtrlFormat {
         Has_Dye_Table = 0x8
     }
 
+    [Flags]
+    public enum ShaderFlagOptions {
+        Hide_Backfaces = 0x01,
+        Enable_Transparency = 0x10
+    }
+
+    public enum ShpkFileState {
+        None,
+        Penumbra,
+        Replaced,
+        Missing
+    }
+
     public class MtrlFile : FileManagerFile {
         private readonly byte[] Version;
         private readonly byte[] ExtraData;
@@ -32,13 +47,14 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly List<MtrlAttributeSet> UvSets = new();
         private readonly List<MtrlAttributeSet> ColorSets = new();
 
-        private readonly ParsedString Shader = new( "Shader" );
+        public readonly ParsedString Shader = new( "Shader" );
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
 
         private readonly MtrlColorTable ColorTable;
         private readonly MtrlDyeTable DyeTable;
 
-        private readonly ParsedUInt ShaderFlags = new( "Shader Flags" );
+        private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
+        private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
 
         private readonly List<ShpkKey> Keys = new();
         private readonly List<MtrlMaterialParameter> MaterialParameters = new();
@@ -50,6 +66,11 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly CommandSplitView<ShpkKey> KeyView;
         private readonly CommandSplitView<MtrlMaterialParameter> MaterialParameterView;
         private readonly CommandSplitView<MtrlSampler> SamplerView;
+
+        public ShpkFile ShaderFile { get; private set; }
+        public ShpkFileState ShaderFileState { get; private set; } = ShpkFileState.Missing;
+        public string ShaderFilePath => $"shader/sm5/shpk/{Shader.Value}";
+        private bool ShaderFileLoaded = false;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
             Version = reader.ReadBytes( 4 );
@@ -97,11 +118,13 @@ namespace VfxEditor.Formats.MtrlFormat {
             var constantCount = reader.ReadUInt16();
             var samplerCount = reader.ReadUInt16();
 
-            ShaderFlags.Read( reader ); // TODO: look into these flags more
+            var shaderFlags = reader.ReadUInt32();
+            ShaderFlags.Value = Masked( shaderFlags );
+            ShaderOptions.Value = ( ShaderFlagOptions )( shaderFlags & 0x11u );
 
             for( var i = 0; i < shaderKeyCount; i++ ) Keys.Add( new( reader ) );
             for( var i = 0; i < constantCount; i++ ) MaterialParameters.Add( new( reader ) );
-            for( var i = 0; i < samplerCount; i++ ) Samplers.Add( new( reader ) );
+            for( var i = 0; i < samplerCount; i++ ) Samplers.Add( new( this, reader ) );
 
             var shaderValues = new List<float>();
             for( var i = 0; i < shaderValueSize / 4; i++ ) shaderValues.Add( reader.ReadSingle() );
@@ -113,8 +136,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             KeyView = new( "Key", Keys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new() );
-            SamplerView = new( "Sampler", Samplers, false, null, () => new() );
+            MaterialParameterView = new( "Constant", MaterialParameters, false, null, () => new() );
+            SamplerView = new( "Sampler", Samplers, false, null, () => new( this ) );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
@@ -178,7 +201,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             writer.Write( ( ushort )MaterialParameters.Count );
             writer.Write( ( ushort )Samplers.Count );
 
-            ShaderFlags.Write( writer );
+            var shaderFlags = Masked( ShaderFlags.Value );
+            shaderFlags |= ( uint )ShaderOptions.Value;
+            writer.Write( shaderFlags );
 
             Keys.ForEach( x => x.Write( writer ) );
             var constantPositions = new List<long>();
@@ -206,6 +231,11 @@ namespace VfxEditor.Formats.MtrlFormat {
         }
 
         public override void Draw() {
+            if( !ShaderFileLoaded ) {
+                UpdateShaderFile();
+                ShaderFileLoaded = true;
+            }
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
@@ -240,13 +270,18 @@ namespace VfxEditor.Formats.MtrlFormat {
             using var _ = ImRaii.PushId( "Shader" );
 
             Shader.Draw();
-            ShaderFlags.Draw();
-            Flags.Draw();
+            if( ImGui.Button( "Update" ) ) UpdateShaderFile();
+            ImGui.SameLine();
+            ImGui.TextDisabled( ShaderFilePath );
+            if( ShaderFileState != ShpkFileState.None ) {
+                using var color = ImRaii.PushColor( ImGuiCol.TextDisabled, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
+                ImGui.SameLine();
+                ImGui.Text( $"[{ShaderFileState}]" );
+            }
 
-            /*
-             * const uint transparencyBit = 0x10;
-        const uint backfaceBit     = 0x01;
-            */
+            ShaderFlags.Draw();
+            ShaderOptions.Draw();
+            Flags.Draw();
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -263,5 +298,43 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) SamplerView.Draw();
             }
         }
+
+        private void UpdateShaderFile() {
+            ShaderFile?.Dispose();
+            ShaderFile = null;
+            ShaderFileState = ShpkFileState.Missing;
+
+            var path = ShaderFilePath;
+            var newPath = "";
+            var state = ShpkFileState.None;
+
+            if( Plugin.ShpkManager.GetReplacePath( path, out var replacePath ) ) {
+                newPath = replacePath;
+                state = ShpkFileState.Replaced;
+            }
+            else if( Plugin.PenumbraIpc.PenumbraFileExists( path, out var penumbraPath ) ) {
+                newPath = penumbraPath;
+                state = ShpkFileState.Penumbra;
+            }
+            else if( Dalamud.DataManager.FileExists( path ) ) {
+                newPath = path;
+            }
+
+            if( string.IsNullOrEmpty( newPath ) ) return;
+
+            try {
+                var data = Path.IsPathRooted( newPath ) ? File.ReadAllBytes( newPath ) : Dalamud.DataManager.GetFile( newPath ).Data;
+                using var ms = new MemoryStream( data );
+                using var reader = new BinaryReader( ms );
+
+                ShaderFile = new ShpkFile( reader, false );
+                ShaderFileState = state;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, $"Error reading shader {newPath}" );
+            }
+        }
+
+        private static uint Masked( uint flags ) => flags & ( ~0x11u );
     }
 }
