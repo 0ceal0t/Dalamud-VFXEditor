@@ -23,8 +23,7 @@ namespace VfxEditor.Parsing.Int {
                 return;
             }
 
-            var found = items.FindFirst( x => ValueAction( x ) == Value, out var _selected );
-            var selected = found ? _selected! : null;
+            var selected = GetSelected();
 
             var text = selected == null ? $"[UNKNOWN]" : TextAction( selected );
             using var combo = ImRaii.Combo( Name, text );
@@ -37,6 +36,14 @@ namespace VfxEditor.Parsing.Int {
                 }
                 if( item == selected ) ImGui.SetItemDefaultFocus();
             }
+        }
+
+        public T GetSelected() {
+            var items = ListAction.Invoke();
+            if( items == null ) return null;
+
+            var found = items.FindFirst( x => ValueAction( x ) == Value, out var _selected );
+            return found ? _selected! : null;
         }
     }
 }

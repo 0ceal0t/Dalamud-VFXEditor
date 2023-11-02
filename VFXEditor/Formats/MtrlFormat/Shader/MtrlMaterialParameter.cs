@@ -1,13 +1,19 @@
+using ImGuiNET;
+using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.ShpkFormat.Utils;
+using System.Numerics;
+using VfxEditor.Formats.ShpkFormat.Materials;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
     public class MtrlMaterialParameter : IUiItem {
-        public readonly ParsedCrc Id = new( "Id" );
+        private readonly MtrlFile File;
+
+        public readonly ParsedUIntPicker<ShpkMaterialParmeter> Id;
         public readonly List<ParsedFloat> Values = new();
 
         private readonly ushort TempOffset;
@@ -15,11 +21,13 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
 
         private readonly ListView<ParsedFloat> ValueView;
 
-        public MtrlMaterialParameter() {
+        public MtrlMaterialParameter( MtrlFile file ) {
+            File = file;
             ValueView = new( Values, () => new( "##Value" ), true );
+            Id = new( "Parameter", () => File.ShaderFile?.MaterialParameters, ( ShpkMaterialParmeter item ) => item.GetText(), ( ShpkMaterialParmeter item ) => item.Id.Value );
         }
 
-        public MtrlMaterialParameter( BinaryReader reader ) : this() {
+        public MtrlMaterialParameter( MtrlFile file, BinaryReader reader ) : this( file ) {
             Id.Read( reader );
             TempOffset = reader.ReadUInt16();
             TempSize = reader.ReadUInt16();
@@ -39,7 +47,12 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         }
 
         public void Draw() {
-            Id.Draw( CrcMaps.MaterialParams );
+            Id.Draw();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 2 ) ) ) {
+                ImGui.SameLine();
+            }
+            ImGui.TextDisabled( $"[{File.Shader.Value}]" );
+
             ValueView.Draw();
         }
     }

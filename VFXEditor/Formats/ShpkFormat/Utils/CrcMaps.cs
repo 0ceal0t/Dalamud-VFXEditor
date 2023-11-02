@@ -20,8 +20,6 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
             {  0xC1D3BFA3, "PASS_14" },
         };
 
-        public static readonly Dictionary<uint, string> MaterialParams = new();
-
         public static readonly Dictionary<uint, string> Keys = new() {
             { 0x2C6C023C, "DecodeDepthBuffer" },
             { 0x627FCF5B, "DecodeDepthBuffer_RAWZ" },

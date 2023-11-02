@@ -11,7 +11,6 @@ using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Table;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat;
-using VfxEditor.Formats.ShpkFormat.Keys;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
@@ -56,14 +55,14 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
         private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
 
-        private readonly List<ShpkKey> Keys = new();
+        private readonly List<MtrlKey> Keys = new();
         private readonly List<MtrlMaterialParameter> MaterialParameters = new();
         private readonly List<MtrlSampler> Samplers = new();
 
         private readonly CommandSplitView<MtrlTexture> TextureView;
         private readonly CommandSplitView<MtrlAttributeSet> UvSetView;
         private readonly CommandSplitView<MtrlAttributeSet> ColorSetView;
-        private readonly CommandSplitView<ShpkKey> KeyView;
+        private readonly CommandSplitView<MtrlKey> KeyView;
         private readonly CommandSplitView<MtrlMaterialParameter> MaterialParameterView;
         private readonly CommandSplitView<MtrlSampler> SamplerView;
 
@@ -123,7 +122,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             ShaderOptions.Value = ( ShaderFlagOptions )( shaderFlags & 0x11u );
 
             for( var i = 0; i < shaderKeyCount; i++ ) Keys.Add( new( reader ) );
-            for( var i = 0; i < constantCount; i++ ) MaterialParameters.Add( new( reader ) );
+            for( var i = 0; i < constantCount; i++ ) MaterialParameters.Add( new( this, reader ) );
             for( var i = 0; i < samplerCount; i++ ) Samplers.Add( new( this, reader ) );
 
             var shaderValues = new List<float>();
@@ -135,9 +134,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             TextureView = new( "Texture", Textures, false, ( MtrlTexture item, int idx ) => item.Text, () => new() );
             UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
-            KeyView = new( "Key", Keys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialParameterView = new( "Constant", MaterialParameters, false, null, () => new() );
-            SamplerView = new( "Sampler", Samplers, false, null, () => new( this ) );
+            KeyView = new( "Key", Keys, false, ( MtrlKey item, int idx ) => item.GetText( idx ), () => new() );
+            MaterialParameterView = new( "Constant", MaterialParameters, false, null, () => new( this ) );
+            SamplerView = new( "Sampler", Samplers, false, ( MtrlSampler item, int idx ) => item.GetText( idx ), () => new( this ) );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }

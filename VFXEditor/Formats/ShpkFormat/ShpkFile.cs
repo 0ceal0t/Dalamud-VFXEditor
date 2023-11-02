@@ -36,10 +36,10 @@ namespace VfxEditor.Formats.ShpkFormat {
         public readonly List<ShpkParameterInfo> Samplers = new();
         public readonly List<ShpkParameterInfo> Resources = new();
 
-        private readonly List<ShpkKey> SystemKeys = new();
-        private readonly List<ShpkKey> SceneKeys = new();
-        private readonly List<ShpkKey> MaterialKeys = new();
-        private readonly List<ShpkKey> SubViewKeys = new();
+        public readonly List<ShpkKey> SystemKeys = new();
+        public readonly List<ShpkKey> SceneKeys = new();
+        public readonly List<ShpkKey> MaterialKeys = new();
+        public readonly List<ShpkKey> SubViewKeys = new();
 
         private readonly List<ShpkNode> Nodes = new();
         private readonly List<ShpkAlias> Aliases = new();
@@ -187,7 +187,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             SceneKeys.ForEach( x => x.Write( writer ) );
             MaterialKeys.ForEach( x => x.Write( writer ) );
 
-            SubViewKeys.ForEach( x => writer.Write( x.Value.Value ) );
+            SubViewKeys.ForEach( x => writer.Write( x.DefaultValue.Value ) );
 
             Nodes.ForEach( x => x.Write( writer ) );
             Aliases.ForEach( x => x.Write( writer ) );

@@ -2,31 +2,31 @@ using System.IO;
 using VfxEditor.Formats.ShpkFormat.Utils;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Formats.ShpkFormat.Keys {
-    public class ShpkKey : IUiItem {
+namespace VfxEditor.Formats.MtrlFormat.Shader {
+    public class MtrlKey : IUiItem {
         public readonly ParsedCrc Id = new( "Id" );
-        public readonly ParsedCrc DefaultValue = new( "Default Value" );
+        public readonly ParsedCrc Value = new( "Value" );
 
-        public ShpkKey() { }
+        public MtrlKey() { }
 
-        public ShpkKey( uint id, uint defaultValue ) {
+        public MtrlKey( uint id, uint defaultValue ) {
             Id.Value = id;
-            DefaultValue.Value = defaultValue;
+            Value.Value = defaultValue;
         }
 
-        public ShpkKey( BinaryReader reader ) {
+        public MtrlKey( BinaryReader reader ) {
             Id.Read( reader );
-            DefaultValue.Read( reader );
+            Value.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
             Id.Write( writer );
-            DefaultValue.Write( writer );
+            Value.Write( writer );
         }
 
         public void Draw() {
             Id.Draw( CrcMaps.Keys );
-            DefaultValue.Draw( CrcMaps.Keys );
+            Value.Draw( CrcMaps.Keys );
         }
 
         public string GetText( int idx ) => CrcMaps.Keys.TryGetValue( Id.Value, out var text ) ? text : $"Key {idx} (0x{Id.Value:X4})";

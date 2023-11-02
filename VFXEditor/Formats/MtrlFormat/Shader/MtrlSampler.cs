@@ -1,5 +1,7 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
@@ -27,7 +29,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
 
         public MtrlSampler( MtrlFile file ) {
             File = file;
-            Id = new( "Sampler", () => File.ShaderFile.Samplers, ( ShpkParameterInfo item ) => item.GetText(), ( ShpkParameterInfo item ) => item.Id );
+            Id = new( "Sampler", () => File.ShaderFile?.Samplers, ( ShpkParameterInfo item ) => item.GetText(), ( ShpkParameterInfo item ) => item.Id );
         }
 
         public MtrlSampler( MtrlFile file, BinaryReader reader ) : this( file ) {
@@ -67,8 +69,10 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
 
         public void Draw() {
             Id.Draw();
-            ImGui.SameLine();
-            ImGui.TextDisabled( $"(from {File.Shader.Value})" );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 2 ) ) ) {
+                ImGui.SameLine();
+            }
+            ImGui.TextDisabled( $"[{File.Shader.Value}]" );
 
             AddressModeU.Draw();
             AddressModeV.Draw();
@@ -76,6 +80,12 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             MinLoD.Draw();
             Flags.Draw();
             TextureIndex.Draw();
+        }
+
+        public string GetText( int idx ) {
+            var selected = Id.GetSelected();
+            if( selected != null ) return selected.GetText();
+            return $"Sampler {idx}"; ;
         }
 
         private static uint Masked( uint flags ) => flags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );

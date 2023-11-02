@@ -1,12 +1,12 @@
 using System;
 using System.IO;
-using VfxEditor.Formats.ShpkFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Materials {
     public class ShpkMaterialParmeter : IUiItem {
-        public readonly ParsedCrc Id = new( "Id" );
+        public readonly ParsedUIntHex Id = new( "Id" );
         public readonly ParsedShort Offset = new( "Offset" );
         public readonly ParsedShort Size = new( "Size" );
 
@@ -28,14 +28,22 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
         }
 
         public void Draw() {
-            Id.Draw( CrcMaps.MaterialParams );
+            Id.Draw();
             Offset.Draw();
             Size.Draw();
         }
 
         private static readonly string[] Swizzle = new[] { "x", "y", "z", "w" };
 
-        public string MaterialSlotText =>
-            $"MaterialParameters[{( ( int )Math.Floor( StartSlot / 4f ) ).ToString().PadLeft( 2, '0' )}].{Swizzle[StartSlot % 4]}";
+        public string GetText() {
+            var ret = $"g_MaterialParameter[{( ( int )Math.Floor( StartSlot / 4f ) ).ToString().PadLeft( 2, '0' )}].";
+            for( var slot = StartSlot; slot < EndSlot; slot++ ) {
+                ret += $"{Swizzle[slot % 4]}";
+            }
+
+            ret += $" (0x{Id.Value:X8})";
+
+            return ret;
+        }
     }
 }
