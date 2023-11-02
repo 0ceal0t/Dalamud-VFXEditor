@@ -5,15 +5,20 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace VfxEditor.Select {
-    public class RaceData {
+    public class RacialData {
         public readonly string SkeletonId;
-        public readonly int HairOffset;
-        public readonly List<int> FaceIds;
 
-        public RaceData( string skeletonId, int hairOffset ) {
+        public RacialData( string skeletonId ) {
             SkeletonId = skeletonId;
-            HairOffset = hairOffset;
         }
+    }
+
+    public class RacialOptions {
+        public readonly SortedSet<int> Face = new();
+        public readonly SortedSet<int> Hair = new();
+        public readonly SortedSet<int> Tail = new();
+        public readonly SortedSet<int> Ear = new();
+        public readonly SortedSet<int> Body = new();
     }
 
     public partial class SelectDataUtils {
@@ -24,7 +29,7 @@ namespace VfxEditor.Select {
         public static string CommonUldPath => Path.Combine( Plugin.RootLocation, "Files", "common_uld" );
         public static string CommonShpkPath => Path.Combine( Plugin.RootLocation, "Files", "common_shpk" );
         public static string CommonShcdPath => Path.Combine( Plugin.RootLocation, "Files", "common_shcd" );
-        public static string CommonFacesPath => Path.Combine( Plugin.RootLocation, "Files", "common_faces" );
+        public static string CommonRacialPath => Path.Combine( Plugin.RootLocation, "Files", "common_racial" );
 
         [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
         private static partial Regex AvfxRegexPattern();
@@ -36,50 +41,61 @@ namespace VfxEditor.Select {
 
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
-        public static Dictionary<string, List<int>> FaceMap {
+        public static Dictionary<string, RacialOptions> RacialOptions {
             get {
-                if( _FaceMapInternal == null ) PopulateFaceMap();
-                return _FaceMapInternal;
+                if( OptionsInternal == null ) PopulateRacialOptions();
+                return OptionsInternal;
             }
         }
 
-        private static Dictionary<string, List<int>> _FaceMapInternal;
+        private static Dictionary<string, RacialOptions> OptionsInternal;
 
-        private static void PopulateFaceMap() {
-            if( _FaceMapInternal != null ) return;
-            _FaceMapInternal = new();
+        private static void PopulateRacialOptions() {
+            if( OptionsInternal != null ) return;
+            OptionsInternal = new();
 
-            var sklbFiles = File.ReadAllLines( CommonFacesPath );
-            // chara/human/c0101/skeleton/face/f0222/skl_c0101f0222.sklb
-            foreach( var line in sklbFiles ) {
-                var modelFace = line.Split( "skl_" )[1].Replace( ".sklb", "" ).Split( "f" );
-                var model = modelFace[0];
-                var face = Convert.ToInt32( modelFace[1] );
+            // chara/human/c0804/obj/face/f0101/material/mt_c0804f0101_etc_a.mtrl
 
-                if( !_FaceMapInternal.ContainsKey( model ) ) _FaceMapInternal[model] = new();
-                _FaceMapInternal[model].Add( face );
+            var files = File.ReadAllLines( CommonRacialPath );
+            foreach( var line in files ) {
+                var split = line.Split( "/" );
+                var skeleton = split[2]; // c0804
+                var type = split[4]; // face
+                var code = Convert.ToInt32( split[5][1..] ); // f0101 -> 0101
+
+                if( !OptionsInternal.ContainsKey( skeleton ) ) OptionsInternal[skeleton] = new();
+                var data = OptionsInternal[skeleton];
+
+                ( type switch {
+                    "face" => data.Face,
+                    "hair" => data.Hair,
+                    "zear" => data.Ear,
+                    "tail" => data.Tail,
+                    "body" => data.Body,
+                    _ => null
+                } )?.Add( code );
             }
         }
 
-        public static readonly Dictionary<string, RaceData> RaceAnimationIds = new() {
-            { "Midlander M", new RaceData( "c0101", 0 ) },
-            { "Midlander F", new RaceData( "c0201", 100 ) },
-            { "Highlander M", new RaceData( "c0301", 200 ) },
-            { "Highlander F", new RaceData( "c0401", 300 ) },
-            { "Elezen M", new RaceData( "c0501", 400 ) },
-            { "Elezen F", new RaceData( "c0601", 500 ) },
-            { "Miquote M", new RaceData( "c0701", 800 ) },
-            { "Miquote F", new RaceData( "c0801", 900 ) },
-            { "Roegadyn M", new RaceData( "c0901", 1000 ) },
-            { "Roegadyn F", new RaceData( "c1001", 1100 ) },
-            { "Lalafell M", new RaceData( "c1101", 600 ) },
-            { "Lalafell F", new RaceData( "c1201", 700 ) },
-            { "Aura M", new RaceData( "c1301", 1200 ) },
-            { "Aura F", new RaceData( "c1401", 1300 ) },
-            { "Hrothgar M", new RaceData( "c1501", 1400 ) },
+        public static readonly Dictionary<string, RacialData> RaceAnimationIds = new() {
+            { "Midlander M", new RacialData( "c0101" ) },
+            { "Midlander F", new RacialData( "c0201" ) },
+            { "Highlander M", new RacialData( "c0301" ) },
+            { "Highlander F", new RacialData( "c0401" ) },
+            { "Elezen M", new RacialData( "c0501" ) },
+            { "Elezen F", new RacialData( "c0601" ) },
+            { "Miquote M", new RacialData( "c0701" ) },
+            { "Miquote F", new RacialData( "c0801" ) },
+            { "Roegadyn M", new RacialData( "c0901" ) },
+            { "Roegadyn F", new RacialData( "c1001" ) },
+            { "Lalafell M", new RacialData( "c1101" ) },
+            { "Lalafell F", new RacialData( "c1201" ) },
+            { "Aura M", new RacialData( "c1301" ) },
+            { "Aura F", new RacialData( "c1401" ) },
+            { "Hrothgar M", new RacialData( "c1501" ) },
             // 1601 coming soon (tm)
-            { "Viera M", new RaceData( "c1701", 1600 ) },
-            { "Viera F", new RaceData( "c1801", 1700 ) },
+            { "Viera M", new RacialData( "c1701" ) },
+            { "Viera F", new RacialData( "c1801" ) },
         };
 
         public static readonly Dictionary<string, string> JobAnimationIds = new() {
@@ -120,16 +136,12 @@ namespace VfxEditor.Select {
 
         public static readonly int MaxChangePoses = 6;
 
-        public static readonly int HairEntries = 100;
-
-        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) =>
-            dict.Where( x => Dalamud.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
+        public static Dictionary<string, string> FileExistsFilter( Dictionary<string, string> dict ) => dict.Where( x => Dalamud.DataManager.FileExists( x.Value ) ).ToDictionary( x => x.Key, x => x.Value );
 
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, string>();
-
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonPath( x.Value.SkeletonId, path ) );
         }
 
@@ -137,15 +149,13 @@ namespace VfxEditor.Select {
 
         public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
-
             return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
         }
 
         public static Dictionary<string, string> GetAllFacePaps( string modelId, string path ) {
             Dictionary<string, string> ret = new();
-
-            if( FaceMap.TryGetValue( modelId, out var faces ) ) {
-                foreach( var face in faces ) {
+            if( RacialOptions.TryGetValue( modelId, out var data ) ) {
+                foreach( var face in data.Face ) {
                     ret.Add( $"Face {face}", $"chara/human/{modelId}/animation/f{face:D4}/nonresident/{path}.pap" );
                 }
             }
@@ -155,7 +165,6 @@ namespace VfxEditor.Select {
 
         public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
             if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
-
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path ) );
         }
 

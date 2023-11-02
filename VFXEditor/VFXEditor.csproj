@@ -120,7 +120,7 @@
         <None Update="Files\bnpc.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Files\common_faces">
+        <None Update="Files\common_racial">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Files\common_shcd">

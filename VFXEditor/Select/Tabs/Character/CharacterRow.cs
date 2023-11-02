@@ -1,16 +1,12 @@
-using Lumina.Excel.GeneratedSheets;
-using System.Collections.Generic;
-
 namespace VfxEditor.Select.Tabs.Character {
     public class CharacterRow {
         public readonly string Name;
-        public readonly RaceData Data;
+        public readonly RacialData Data;
 
         public string SkeletonId => Data.SkeletonId;
-        public int HairOffset => Data.HairOffset;
         public string AtchPath => $"chara/xls/attachoffset/{SkeletonId}.atch";
 
-        public CharacterRow( string name, RaceData data ) {
+        public CharacterRow( string name, RacialData data ) {
             Name = name;
             Data = data;
         }
@@ -21,24 +17,18 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public string GetPap( string path ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/resident/{path}.pap";
 
-        public List<int> GetHairIds() {
-            var ret = new List<int>();
-            var sheet = Dalamud.DataManager.GetExcelSheet<CharaMakeCustomize>();
-            for( var hair = HairOffset; hair < HairOffset + SelectDataUtils.HairEntries; hair++ ) {
-                var hairRow = sheet.GetRow( ( uint )hair );
-                var hairId = ( int )hairRow.FeatureID;
-                if( hairId == 0 ) continue;
+        public string GetBodymaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/body/b{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
 
-                ret.Add( hairId );
-            }
-            ret.Sort();
-            return ret;
-        }
+        public string GetEarMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/zear/z{Pad( id )}/material/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
 
-        public List<int> GetFaceIds() {
-            var ret = SelectDataUtils.FaceMap.TryGetValue( SkeletonId, out var faces ) ? faces : new List<int>();
-            ret.Sort();
-            return ret;
-        }
+        public string GetTailMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/tail/t{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+
+        public string GetHairMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/hair/h{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+
+        public string GetFaceMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/face/f{Pad( id )}/material/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+
+        public RacialOptions GetOptions() => SelectDataUtils.RacialOptions.TryGetValue( SkeletonId, out var data ) ? data : new();
+
+        private string Pad( int id ) => id.ToString().PadLeft( 4, '0' );
     }
 }

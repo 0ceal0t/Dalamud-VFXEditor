@@ -36,12 +36,12 @@ namespace VfxEditor.Select.Tabs.Character {
             var facePaths = new Dictionary<string, string>();
             var hairPaths = new Dictionary<string, string>();
 
-            foreach( var face in item.GetFaceIds() ) {
+            foreach( var face in item.GetOptions().Face ) {
                 facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}";
             }
 
-            foreach( var hairId in item.GetHairIds() ) {
-                hairPaths[$"Hair {hairId}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/h{hairId:D4}/{Prefix}_{item.SkeletonId}h{hairId:D4}.{Extension}";
+            foreach( var hair in item.GetOptions().Hair ) {
+                hairPaths[$"Hair {hair}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}";
             }
 
             loaded.FacePaths = SelectDataUtils.FileExistsFilter( facePaths );

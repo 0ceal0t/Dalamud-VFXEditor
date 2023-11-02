@@ -43,7 +43,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
             // Faces
             var facePaths = new Dictionary<string, string>();
-            foreach( var face in item.GetFaceIds() ) {
+            foreach( var face in item.GetOptions().Face ) {
                 facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
             }
 
