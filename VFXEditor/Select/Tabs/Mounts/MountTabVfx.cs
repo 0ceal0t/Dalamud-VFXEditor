@@ -4,18 +4,18 @@ using System;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Mounts {
-    public class MountRowSelectedVfx {
+    public class SelectedVfx {
         public string ImcPath;
         public int Id;
         public string Path;
     }
 
-    public class MountTabVfx : MountTab<MountRowSelectedVfx> {
+    public class MountTabVfx : MountTab<SelectedVfx> {
         public MountTabVfx( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         // ===== LOADING =====
 
-        public override void LoadSelection( MountRow item, out MountRowSelectedVfx loaded ) {
+        public override void LoadSelection( MountRow item, out SelectedVfx loaded ) {
             loaded = null;
             var imcPath = item.ImcPath;
 

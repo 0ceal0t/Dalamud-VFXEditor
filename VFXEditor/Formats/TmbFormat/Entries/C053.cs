@@ -6,8 +6,8 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     [Flags]
     public enum SoundFlags {
-        StopOnMovement = 0x01,
-        OverlapSounds = 0x02,
+        Stop_on_Movement = 0x01,
+        Overlap_Sounds = 0x02,
         Unknown_1 = 0x04,
         Unknown_2 = 0x08,
         Unknown_3 = 0x10,

@@ -2,16 +2,16 @@ using Lumina.Excel.GeneratedSheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Orchestrions {
-    public class OrchestionSelected {
+    public class SelectedOrchestrion {
         public readonly string Path;
 
-        public OrchestionSelected( OrchestrionRow orchestrion ) {
+        public SelectedOrchestrion( OrchestrionRow orchestrion ) {
             var pathRow = Dalamud.DataManager.GetExcelSheet<OrchestrionPath>().GetRow( ( uint )orchestrion.RowId );
             Path = pathRow.File.ToString();
         }
     }
 
-    public class OrchestrionTab : SelectTab<OrchestrionRow, OrchestionSelected> {
+    public class OrchestrionTab : SelectTab<OrchestrionRow, SelectedOrchestrion> {
         public OrchestrionTab( SelectDialog dialog, string name ) : base( dialog, name, "Orchestrion", SelectResultType.GameMusic ) { }
 
         // ===== LOADING =====
@@ -21,7 +21,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
             foreach( var item in sheet ) Items.Add( new OrchestrionRow( item ) );
         }
 
-        public override void LoadSelection( OrchestrionRow item, out OrchestionSelected loaded ) {
+        public override void LoadSelection( OrchestrionRow item, out SelectedOrchestrion loaded ) {
             loaded = new( item );
         }
 

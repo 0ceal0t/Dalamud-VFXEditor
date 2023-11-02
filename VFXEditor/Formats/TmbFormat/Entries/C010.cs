@@ -7,7 +7,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     [Flags]
     public enum AnimationFlags {
-        TimeControlEnabled = 0x01,
+        Time_Control_Enabled = 0x01,
         Unknown_2 = 0x02,
         Unknown_3 = 0x04,
         Unknown_4 = 0x08,
@@ -53,7 +53,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
             Flags.Draw();
 
-            using( var disabled = ImRaii.Disabled( !Flags.HasFlag( AnimationFlags.TimeControlEnabled ) ) ) {
+            using( var disabled = ImRaii.Disabled( !Flags.HasFlag( AnimationFlags.Time_Control_Enabled ) ) ) {
                 Duration.Draw();
                 AnimationStart.Draw();
                 AnimationEnd.Draw();

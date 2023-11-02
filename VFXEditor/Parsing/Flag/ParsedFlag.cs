@@ -42,7 +42,7 @@ namespace VfxEditor.Parsing {
                 if( intOption == 0 ) continue;
 
                 var hasFlag = HasFlag( option );
-                if( ImGui.Checkbox( $"{option}", ref hasFlag ) ) {
+                if( ImGui.Checkbox( $"{option}".Replace( "_", " " ), ref hasFlag ) ) {
                     var intValue = IntValue;
                     if( hasFlag ) intValue |= intOption;
                     else intValue &= ~intOption;

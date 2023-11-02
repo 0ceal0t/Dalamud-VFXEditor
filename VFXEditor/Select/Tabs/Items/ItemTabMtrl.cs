@@ -5,19 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Items {
-    public class ItemSelectedMtrl {
+    public class SelectedMtrl {
         public bool IsWeapon;
         public string ImcPath;
         public Dictionary<string, string> WeaponPaths;
         public Dictionary<string, Dictionary<string, string>> ArmorPaths;
     }
 
-    public class ItemTabMtrl : ItemTab<ItemSelectedMtrl> {
+    public class ItemTabMtrl : ItemTab<SelectedMtrl> {
         public ItemTabMtrl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mtrl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Acc ) { }
 
         // ===== LOADING =====
 
-        public override void LoadSelection( ItemRow item, out ItemSelectedMtrl loaded ) {
+        public override void LoadSelection( ItemRow item, out SelectedMtrl loaded ) {
             loaded = new() {
                 ImcPath = null,
                 IsWeapon = false,

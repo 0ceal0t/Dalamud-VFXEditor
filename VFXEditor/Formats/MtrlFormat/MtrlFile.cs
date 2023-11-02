@@ -20,8 +20,8 @@ namespace VfxEditor.Formats.MtrlFormat {
 
     [Flags]
     public enum TableFlags {
-        HasTable = 0x4,
-        HasDyeTable = 0x8
+        Has_Table = 0x4,
+        Has_Dye_Table = 0x8
     }
 
     public class MtrlFile : FileManagerFile {
@@ -41,14 +41,14 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly ParsedUInt ShaderFlags = new( "Shader Flags" );
 
         private readonly List<ShpkKey> Keys = new();
-        private readonly List<MtrlConstant> Constants = new();
+        private readonly List<MtrlMaterialParameter> MaterialParameters = new();
         private readonly List<MtrlSampler> Samplers = new();
 
         private readonly CommandSplitView<MtrlTexture> TextureView;
         private readonly CommandSplitView<MtrlAttributeSet> UvSetView;
         private readonly CommandSplitView<MtrlAttributeSet> ColorSetView;
         private readonly CommandSplitView<ShpkKey> KeyView;
-        private readonly CommandSplitView<MtrlConstant> ConstantView;
+        private readonly CommandSplitView<MtrlMaterialParameter> MaterialParameterView;
         private readonly CommandSplitView<MtrlSampler> SamplerView;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
@@ -88,8 +88,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            ColorTable = ( Flags.HasFlag( TableFlags.HasTable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( reader ) : new();
-            DyeTable = ( Flags.HasFlag( TableFlags.HasDyeTable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
+            ColorTable = ( Flags.HasFlag( TableFlags.Has_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( reader ) : new();
+            DyeTable = ( Flags.HasFlag( TableFlags.Has_Dye_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
             reader.BaseStream.Seek( dataEnd, SeekOrigin.Begin );
 
             var shaderValueSize = reader.ReadUInt16();
@@ -100,12 +100,12 @@ namespace VfxEditor.Formats.MtrlFormat {
             ShaderFlags.Read( reader ); // TODO: look into these flags more
 
             for( var i = 0; i < shaderKeyCount; i++ ) Keys.Add( new( reader ) );
-            for( var i = 0; i < constantCount; i++ ) Constants.Add( new( reader ) );
+            for( var i = 0; i < constantCount; i++ ) MaterialParameters.Add( new( reader ) );
             for( var i = 0; i < samplerCount; i++ ) Samplers.Add( new( reader ) );
 
             var shaderValues = new List<float>();
             for( var i = 0; i < shaderValueSize / 4; i++ ) shaderValues.Add( reader.ReadSingle() );
-            Constants.ForEach( x => x.PickValues( shaderValues ) );
+            MaterialParameters.ForEach( x => x.PickValues( shaderValues ) );
 
             // ======== VIEWS =========
 
@@ -113,7 +113,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             UvSetView = new( "UV Set", UvSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             ColorSetView = new( "Color Set", ColorSets, false, ( MtrlAttributeSet item, int idx ) => item.Name.Value, () => new() );
             KeyView = new( "Key", Keys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            ConstantView = new( "Constant", Constants, false, null, () => new() );
+            MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new() );
             SamplerView = new( "Sampler", Samplers, false, null, () => new() );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
@@ -169,24 +169,24 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataStart = writer.BaseStream.Position;
-            if( Flags.HasFlag( TableFlags.HasTable ) ) ColorTable.Write( writer );
-            if( Flags.HasFlag( TableFlags.HasDyeTable ) ) DyeTable.Write( writer );
+            if( Flags.HasFlag( TableFlags.Has_Table ) ) ColorTable.Write( writer );
+            if( Flags.HasFlag( TableFlags.Has_Dye_Table ) ) DyeTable.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
-            writer.Write( ( ushort )Constants.Select( x => x.Values.Count * 4 ).Sum() );
+            writer.Write( ( ushort )MaterialParameters.Select( x => x.Values.Count * 4 ).Sum() );
             writer.Write( ( ushort )Keys.Count );
-            writer.Write( ( ushort )Constants.Count );
+            writer.Write( ( ushort )MaterialParameters.Count );
             writer.Write( ( ushort )Samplers.Count );
 
             ShaderFlags.Write( writer );
 
             Keys.ForEach( x => x.Write( writer ) );
             var constantPositions = new List<long>();
-            Constants.ForEach( x => x.Write( writer, constantPositions ) );
+            MaterialParameters.ForEach( x => x.Write( writer, constantPositions ) );
             Samplers.ForEach( x => x.Write( writer ) );
 
             var shaderValueStart = writer.BaseStream.Position;
-            foreach( var (constant, idx) in Constants.WithIndex() ) {
+            foreach( var (constant, idx) in MaterialParameters.WithIndex() ) {
                 var offset = writer.BaseStream.Position - shaderValueStart;
                 foreach( var value in constant.Values ) writer.Write( value.Value ); // write float values
 
@@ -225,12 +225,12 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) ColorSetView.Draw();
             }
 
-            if( Flags.HasFlag( TableFlags.HasTable ) ) {
+            if( Flags.HasFlag( TableFlags.Has_Table ) ) {
                 using var tab = ImRaii.TabItem( "Color Table" );
                 if( tab ) ColorTable.Draw();
             }
 
-            if( Flags.HasFlag( TableFlags.HasDyeTable ) ) {
+            if( Flags.HasFlag( TableFlags.Has_Dye_Table ) ) {
                 using var tab = ImRaii.TabItem( "Dye Table" );
                 if( tab ) DyeTable.Draw();
             }
@@ -243,6 +243,11 @@ namespace VfxEditor.Formats.MtrlFormat {
             ShaderFlags.Draw();
             Flags.Draw();
 
+            /*
+             * const uint transparencyBit = 0x10;
+        const uint backfaceBit     = 0x01;
+            */
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
@@ -250,8 +255,8 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) KeyView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Constants" ) ) {
-                if( tab ) ConstantView.Draw();
+            using( var tab = ImRaii.TabItem( "Material Parameters" ) ) {
+                if( tab ) MaterialParameterView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Samplers" ) ) {

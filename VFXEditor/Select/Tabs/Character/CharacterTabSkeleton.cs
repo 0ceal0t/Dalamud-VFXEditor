@@ -3,13 +3,13 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Character {
-    public class SkeletonSelected {
+    public class SelectedSkeleton {
         public string BodyPath;
         public Dictionary<string, string> FacePaths;
         public Dictionary<string, string> HairPaths;
     }
 
-    public class CharacterTabSkeleton : SelectTab<CharacterRow, SkeletonSelected> {
+    public class CharacterTabSkeleton : SelectTab<CharacterRow, SelectedSkeleton> {
         private readonly string Prefix;
         private readonly string Extension;
         private readonly bool HairFace;
@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadData() => CharacterTab.Load( Items );
 
-        public override void LoadSelection( CharacterRow item, out SkeletonSelected loaded ) {
+        public override void LoadSelection( CharacterRow item, out SelectedSkeleton loaded ) {
             var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/{Prefix}_{item.SkeletonId}b0001.{Extension}";
 
             loaded = new() {

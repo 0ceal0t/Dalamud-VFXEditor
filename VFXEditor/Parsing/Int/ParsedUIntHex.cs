@@ -1,15 +1,10 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedUIntHex : ParsedUInt {
-        private bool Editing = false;
-        private DateTime LastEditTime = DateTime.Now;
-        private string HexString = "";
-
         public ParsedUIntHex( string name ) : base( name ) { }
 
         public ParsedUIntHex( string name, uint value ) : base( name, value ) { }
@@ -27,23 +22,10 @@ namespace VfxEditor.Parsing.Int {
                 ImGui.SameLine();
             }
 
-            if( !Editing ) HexString = $"{Value:X4}";
-
+            var value = ( int )Value;
             ImGui.SetNextItemWidth( inputSize );
-            if( ImGui.InputTextWithHint( Name, "Hex Value", ref HexString, 255 ) ) {
-                if( !Editing ) {
-                    Editing = true;
-                }
-                LastEditTime = DateTime.Now;
-            }
-            else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
-                Editing = false;
-
-                try {
-                    var newValue = string.IsNullOrEmpty( HexString ) ? 0 : Convert.ToUInt32( HexString, 16 ); // Try to convert it back
-                    SetValue( newValue );
-                }
-                catch( Exception ) { }
+            if( ImGui.InputInt( Name, ref value, 0, 0, ImGuiInputTextFlags.CharsHexadecimal ) ) {
+                SetValue( ( uint )value );
             }
         }
     }

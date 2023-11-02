@@ -17,18 +17,18 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public string GetPap( string path ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/resident/{path}.pap";
 
-        public string GetBodymaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/body/b{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+        public string GetBodyMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/body/b{Pad( id )}/material/v0001/mt_{SkeletonId}b{Pad( id )}_{suffix}.mtrl";
 
-        public string GetEarMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/zear/z{Pad( id )}/material/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+        public string GetEarMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/zear/z{Pad( id )}/material/mt_{SkeletonId}z{Pad( id )}_{suffix}.mtrl";
 
-        public string GetTailMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/tail/t{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+        public string GetTailMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/tail/t{Pad( id )}/material/v0001/mt_{SkeletonId}t{Pad( id )}_{suffix}.mtrl";
 
-        public string GetHairMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/hair/h{Pad( id )}/material/v0001/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+        public string GetHairMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/hair/h{Pad( id )}/material/v0001/mt_{SkeletonId}h{Pad( id )}_{suffix}.mtrl";
 
-        public string GetFaceMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/face/f{Pad( id )}/material/mt_{SkeletonId}{Pad( id )}_{suffix}.mtrl";
+        public string GetFaceMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/face/f{Pad( id )}/material/mt_{SkeletonId}f{Pad( id )}_{suffix}.mtrl";
 
         public RacialOptions GetOptions() => SelectDataUtils.RacialOptions.TryGetValue( SkeletonId, out var data ) ? data : new();
 
-        private string Pad( int id ) => id.ToString().PadLeft( 4, '0' );
+        private static string Pad( int id ) => id.ToString().PadLeft( 4, '0' );
     }
 }

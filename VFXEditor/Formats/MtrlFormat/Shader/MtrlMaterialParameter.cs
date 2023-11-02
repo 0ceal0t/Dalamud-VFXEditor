@@ -6,7 +6,7 @@ using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
-    public class MtrlConstant : IUiItem {
+    public class MtrlMaterialParameter : IUiItem {
         public readonly ParsedCrc Id = new( "Id" );
         public readonly List<ParsedFloat> Values = new();
 
@@ -15,11 +15,11 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
 
         private readonly ListView<ParsedFloat> ValueView;
 
-        public MtrlConstant() {
+        public MtrlMaterialParameter() {
             ValueView = new( Values, () => new( "##Value" ), true );
         }
 
-        public MtrlConstant( BinaryReader reader ) : this() {
+        public MtrlMaterialParameter( BinaryReader reader ) : this() {
             Id.Read( reader );
             TempOffset = reader.ReadUInt16();
             TempSize = reader.ReadUInt16();

@@ -60,7 +60,9 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandDropdown<ShpkNode> NodeView;
         private readonly CommandSplitView<ShpkAlias> AliasView;
 
-        public ShpkFile( BinaryReader reader, bool verify ) : base() {
+        public ShpkFile( BinaryReader reader, bool verify ) : this( reader, null, verify ) { }
+
+        public ShpkFile( BinaryReader reader, CommandManager manager, bool verify ) : base( manager ) {
             reader.ReadInt32(); // Magic
             Version = reader.ReadUInt32();
             DxMagic = reader.ReadUInt32();

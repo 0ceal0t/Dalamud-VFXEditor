@@ -10,7 +10,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         Specular = 0x02,
         Emissive = 0x04,
         Gloss = 0x08,
-        SpecularStrength = 0x10
+        Specular_Strength = 0x10
     }
 
     public class MtrlDyeTableRow : IUiItem {

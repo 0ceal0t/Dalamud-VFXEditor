@@ -4,7 +4,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.ScdFormat {
     [Flags]
     public enum ObstructionFlags {
-        UseHiCutFac = 0x08
+        Use_HiCut_FAC = 0x08
     }
 
     public class LayoutBoardObstructionData : ScdLayoutData {
@@ -13,7 +13,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedFloat4 Position3 = new( "Position 3" );
         public readonly ParsedFloat4 Position4 = new( "Position 4" );
         public readonly ParsedFloat ObstacleFac = new( "Obstacle FAC" );
-        public readonly ParsedFloat HiCutFac = new( "Hi-Cut FAC" );
+        public readonly ParsedFloat HiCutFac = new( "HiCut FAC" );
         public readonly ParsedFlag<ObstructionFlags> Flags = new( "Flags", size: 1 );
         public readonly ParsedReserve Reserved1 = new( 3 );
         public readonly ParsedShort OpenTime = new( "Open Time" );

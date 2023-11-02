@@ -3,7 +3,7 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Job {
-    public class JobSelected {
+    public class SelectedJob {
         // Race -> Idle, MoveA, MoveB
         public Dictionary<string, Dictionary<string, string>> General;
         // Race -> Start, Loop
@@ -12,14 +12,14 @@ namespace VfxEditor.Select.Tabs.Job {
         public Dictionary<string, Dictionary<string, string>> AutoAttack;
     }
 
-    public class JobTab : SelectTab<JobRow, JobSelected> {
+    public class JobTab : SelectTab<JobRow, SelectedJob> {
         public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job", SelectResultType.GameJob ) { }
 
         public override void LoadData() {
             foreach( var item in SelectDataUtils.JobAnimationIds ) Items.Add( new JobRow( item.Key, item.Value ) );
         }
 
-        public override void LoadSelection( JobRow item, out JobSelected loaded ) {
+        public override void LoadSelection( JobRow item, out SelectedJob loaded ) {
             var general = new Dictionary<string, Dictionary<string, string>>();
             var poses = new Dictionary<string, Dictionary<string, string>>();
             var autoAttack = new Dictionary<string, Dictionary<string, string>>();

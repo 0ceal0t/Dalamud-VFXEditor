@@ -11,11 +11,11 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         public string DaybreakPath;
     }
 
-    public class BgmQuestSelected {
+    public class SelectedBgmQuest {
         public BgmSituationStruct Situation;
     }
 
-    public class BgmQuestTab : SelectTab<BgmQuestRow, BgmQuestSelected> {
+    public class BgmQuestTab : SelectTab<BgmQuestRow, SelectedBgmQuest> {
         public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "BgmQuest", SelectResultType.GameMusic ) { }
 
         // ===== LOADING =====
@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
             foreach( var item in sheet ) Items.Add( new BgmQuestRow( item ) );
         }
 
-        public override void LoadSelection( BgmQuestRow item, out BgmQuestSelected loaded ) {
+        public override void LoadSelection( BgmQuestRow item, out SelectedBgmQuest loaded ) {
             loaded = new() {
                 Situation = GetBgmSituation( item.BgmId )
             };

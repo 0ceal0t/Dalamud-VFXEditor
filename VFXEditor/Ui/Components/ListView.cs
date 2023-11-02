@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,7 @@ namespace VfxEditor.Ui.Components {
         }
 
         public void Draw() {
-            for( var idx = 0; idx < Items.Count; idx++ ) {
-                var item = Items[idx];
+            foreach( var (item, idx) in Items.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
 
                 if( DeleteButtonFirst ) {
@@ -35,6 +35,7 @@ namespace VfxEditor.Ui.Components {
                     ImGui.SameLine();
                 }
 
+                ImGui.SetNextItemWidth( UiUtils.GetOffsetInputSize( FontAwesomeIcon.Trash ) );
                 item.Draw();
 
                 if( !DeleteButtonFirst ) {

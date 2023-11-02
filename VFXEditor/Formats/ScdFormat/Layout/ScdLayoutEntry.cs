@@ -28,26 +28,26 @@ namespace VfxEditor.ScdFormat {
 
     [Flags]
     public enum SoundObjectFlags1 {
-        UseFixedDirection = 0x01,
-        UnboundedDistance = 0x02,
-        FirstInactive = 0x04,
-        BottomInfinity = 0x08,
-        TopInfinity = 0x10,
+        Use_Fixed_Direction = 0x01,
+        Unbounded_Distance = 0x02,
+        First_Inactive = 0x04,
+        Bottom_Infinity = 0x08,
+        Top_Infinity = 0x10,
         Flag3D = 0x20,
-        PointExpansion = 0x40,
-        IsLittleEndian = 0x80
+        Point_Expansion = 0x40,
+        Is_Little_Endian = 0x80
     }
 
     [Flags]
     public enum SoundObjectFlags2 {
-        IsMaxRangeInterior = 0x01,
-        UseDistanceFilters = 0x02,
-        UseDirFirstPos = 0x04,
-        IsWooferOnly = 0x08,
-        IsFixedVolume = 0x10,
-        IsIgnoreObstruction = 0x20,
-        IsFirstFixedDirection = 0x40,
-        IsLocalFixedDirection = 0x80
+        Is_MaxRange_Interior = 0x01,
+        Use_Distance_Filters = 0x02,
+        Use_Dir_First_Pos = 0x04,
+        Is_Woofer_Only = 0x08,
+        Is_Fixed_Volume = 0x10,
+        Is_Ignore_Obstruction = 0x20,
+        Is_First_Fixed_Direction = 0x40,
+        Is_Local_Fixed_Direction = 0x80
     }
 
     public class ScdLayoutEntry : ScdEntry, IUiItem, IItemWithData<ScdLayoutData> {

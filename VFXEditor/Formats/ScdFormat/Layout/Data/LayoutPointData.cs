@@ -4,14 +4,14 @@ using VfxEditor.Parsing;
 namespace VfxEditor.ScdFormat {
     [Flags]
     public enum PointEnvironmentFlags {
-        IsUseEnvFilterDepth = 0x40,
-        IsFireWorks = 0x80
+        Use_Env_Filter_Depth = 0x40,
+        Is_FireWorks = 0x80
     }
 
     [Flags]
     public enum PointFlags {
-        IsReverbObject = 0x40,
-        IsWhizGenerate = 0x80
+        Is_Reverb_Object = 0x40,
+        Is_Whiz_Generate = 0x80
     }
 
     public class LayoutPointData : ScdLayoutData {

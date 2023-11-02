@@ -6,17 +6,17 @@ using System.Linq;
 using VfxEditor.Select.Tabs.BgmQuest;
 
 namespace VfxEditor.Select.Tabs.Zone {
-    public class ZoneSelectedScd {
+    public class SelectedScd {
         public BgmSituationStruct Situation;
         public Dictionary<string, BgmSituationStruct> Quests = new();
     }
 
-    public class ZoneTabScd : ZoneTab<ZoneSelectedScd> {
+    public class ZoneTabScd : ZoneTab<SelectedScd> {
         public ZoneTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Zone-Scd" ) { }
 
         // ===== LOADING =====
 
-        public override void LoadSelection( ZoneRow item, out ZoneSelectedScd loaded ) {
+        public override void LoadSelection( ZoneRow item, out SelectedScd loaded ) {
             loaded = new() {
                 Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
             };

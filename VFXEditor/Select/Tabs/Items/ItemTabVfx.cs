@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Items {
-    public class ItemVfxSelected {
+    public class SelectedVfx {
         public string ImcPath;
         public List<string> Paths;
     }
 
-    public class ItemTabVfx : ItemTab<ItemVfxSelected> {
+    public class ItemTabVfx : ItemTab<SelectedVfx> {
         public ItemTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Item-Vfx", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor ) { }
 
         // ===== LOADING =====
 
-        public override void LoadSelection( ItemRow item, out ItemVfxSelected loaded ) {
+        public override void LoadSelection( ItemRow item, out SelectedVfx loaded ) {
             loaded = null;
             var imcPath = item.ImcPath;
             if( !Dalamud.DataManager.FileExists( imcPath ) ) return;

@@ -32,18 +32,18 @@ namespace VfxEditor.ScdFormat {
         Invalid = 0,
         Loop = 0x0001,
         Reverb = 0x0002,
-        FixedVolume = 0x0004,
-        FixedPosition = 0x0008,
+        Fixed_Volume = 0x0004,
+        Fixed_Position = 0x0008,
         Music = 0x0020,
-        BypassPLIIz = 0x0040,
-        UseExternalAttr = 0x0080,
-        ExistRoutingSetting = 0x0100,
-        MusicSurround = 0x0200,
-        BusDucking = 0x0400,
+        Bypass_PLIIz = 0x0040,
+        Use_External_Attr = 0x0080,
+        Exist_Routing_Setting = 0x0100,
+        Music_Surround = 0x0200,
+        Bus_Ducking = 0x0400,
         Acceleration = 0x0800,
-        DynamixEnd = 0x1000,
-        ExtraDesc = 0x2000,
-        DynamixPlus = 0x4000,
+        Dynamix_End = 0x1000,
+        Extra_Desc = 0x2000,
+        Dynamix_Plus = 0x4000,
         Atomosgear = 0x8000,
     }
 
@@ -65,11 +65,11 @@ namespace VfxEditor.ScdFormat {
         public SoundRandomTracks RandomTracks = new(); // Includes Cycle
         public SoundTracks Tracks = new();
 
-        private bool RoutingEnabled => Attributes.Value.HasFlag( SoundAttribute.ExistRoutingSetting );
-        private bool BusDuckingEnabled => Attributes.Value.HasFlag( SoundAttribute.BusDucking );
+        private bool RoutingEnabled => Attributes.Value.HasFlag( SoundAttribute.Exist_Routing_Setting );
+        private bool BusDuckingEnabled => Attributes.Value.HasFlag( SoundAttribute.Bus_Ducking );
         private bool AccelerationEnabled => Attributes.Value.HasFlag( SoundAttribute.Acceleration );
         private bool AtomosEnabled => Attributes.Value.HasFlag( SoundAttribute.Atomosgear );
-        private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.ExtraDesc );
+        private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.Extra_Desc );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
         public override void Read( BinaryReader reader ) {

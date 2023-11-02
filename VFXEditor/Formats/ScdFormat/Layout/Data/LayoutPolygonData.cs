@@ -4,7 +4,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.ScdFormat {
     [Flags]
     public enum PolygonFlags {
-        IsReverbObject = 0x80
+        Is_Reverb_Object = 0x80
     }
 
     public class LayoutPolygonData : ScdLayoutData {

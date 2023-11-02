@@ -15,9 +15,9 @@ namespace VfxEditor.Formats.SkpFormat {
     [Flags]
     public enum SkpFlags {
         Animation = 0x01,
-        LookAt = 0x02,
-        CCD_Unsupported = 0x04,
-        Feet_Unknown = 0x08,
+        Look_At = 0x02,
+        CCD = 0x04,
+        Feet = 0x08,
         Slope = 0x10
     }
 
@@ -45,8 +45,8 @@ namespace VfxEditor.Formats.SkpFormat {
             reader.ReadBytes( NewVersion ? 20 : 16 );
 
             if( Activated.HasFlag( SkpFlags.Animation ) ) Animation.Read( reader );
-            if( Activated.HasFlag( SkpFlags.LookAt ) ) LookAt.Read( reader );
-            if( Activated.HasFlag( SkpFlags.Feet_Unknown ) ) Dalamud.Error( "FootIK found, please report this" );
+            if( Activated.HasFlag( SkpFlags.Look_At ) ) LookAt.Read( reader );
+            if( Activated.HasFlag( SkpFlags.Feet ) ) Dalamud.Error( "FootIK found, please report this" );
             if( NewVersion && Activated.HasFlag( SkpFlags.Slope ) ) Slope.Read( reader );
 
             VerifyIgnore = new();
@@ -69,7 +69,7 @@ namespace VfxEditor.Formats.SkpFormat {
             }
 
             var lookAtOffset = 0;
-            if( Activated.HasFlag( SkpFlags.LookAt ) ) {
+            if( Activated.HasFlag( SkpFlags.Look_At ) ) {
                 lookAtOffset = ( int )writer.BaseStream.Position;
                 LookAt.Write( writer );
             }
@@ -81,7 +81,7 @@ namespace VfxEditor.Formats.SkpFormat {
             }
 
             var size = ( int )writer.BaseStream.Length;
-            var ccdOffset = Activated.HasFlag( SkpFlags.CCD_Unsupported ) ? size : 0;
+            var ccdOffset = Activated.HasFlag( SkpFlags.CCD ) ? size : 0;
 
             writer.BaseStream.Seek( offsetPosition, SeekOrigin.Begin );
             writer.Write( lookAtOffset );
@@ -118,7 +118,7 @@ namespace VfxEditor.Formats.SkpFormat {
         }
 
         private void DrawLookAt() {
-            if( !Activated.HasFlag( SkpFlags.LookAt ) ) return;
+            if( !Activated.HasFlag( SkpFlags.Look_At ) ) return;
 
             using var tabItem = ImRaii.TabItem( "Look At" );
             if( !tabItem ) return;
