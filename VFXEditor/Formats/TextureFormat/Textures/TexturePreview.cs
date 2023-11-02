@@ -27,6 +27,11 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public override void DrawImage() {
             if( Wrap == null ) return;
+            var maxWidth = ImGui.GetContentRegionAvail().X;
+            if( Width > maxWidth ) {
+                ImGui.Image( Wrap.ImGuiHandle, new Vector2( maxWidth, ( ( float )Height / Width ) * maxWidth ) );
+                return;
+            }
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( Width, Height ) );
         }
 

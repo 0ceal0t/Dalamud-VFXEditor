@@ -45,6 +45,6 @@ namespace VfxEditor.Select.Tabs.Items {
             SubItem = new ItemRowWeapon( subItem, doubleHand ? ImcPath : null );
         }
 
-        public string GetMtrlPath( string suffix ) => $"chara/weapon/{ModelString}/obj/body/{BodyString}/material/{VariantString}/mt_{ModelString}{BodyString}_{suffix}.mtrl";
+        public string GetMtrlPath( int id, string suffix ) => $"chara/weapon/{ModelString}/obj/body/{BodyString}/material/v" + id.ToString().PadLeft( 4, '0' ) + $"/mt_{ModelString}{BodyString}_{suffix}.mtrl";
     }
 }

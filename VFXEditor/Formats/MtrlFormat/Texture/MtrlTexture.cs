@@ -33,6 +33,7 @@ namespace VfxEditor.Formats.MtrlFormat.Texture {
         public void Draw() {
             Path.Draw();
             Flags.Draw();
+            Plugin.TextureManager.GetTexture( Path.Value )?.Draw();
         }
     }
 }
