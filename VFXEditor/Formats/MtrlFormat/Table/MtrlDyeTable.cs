@@ -20,5 +20,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         }
 
         public void Draw() => RowView.Draw();
+
+        public void Write( BinaryWriter writer ) => Rows.ForEach( x => x.Write( writer ) );
     }
 }

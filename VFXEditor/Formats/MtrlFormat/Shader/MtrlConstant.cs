@@ -7,8 +7,8 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
     public class MtrlConstant : IUiItem {
-        private readonly ParsedCrc Id = new( "Id" );
-        private readonly List<ParsedFloat> Values = new();
+        public readonly ParsedCrc Id = new( "Id" );
+        public readonly List<ParsedFloat> Values = new();
 
         private readonly ushort TempOffset;
         private readonly ushort TempSize;
@@ -31,8 +31,11 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             }
         }
 
-        public void Write( BinaryWriter writer ) {
-            // TODO
+        public void Write( BinaryWriter writer, List<long> constantPositions ) {
+            Id.Write( writer );
+            constantPositions.Add( writer.BaseStream.Position );
+            writer.Write( ( ushort )0 ); // placeholder
+            writer.Write( ( ushort )( Values.Count * 4 ) );
         }
 
         public void Draw() {

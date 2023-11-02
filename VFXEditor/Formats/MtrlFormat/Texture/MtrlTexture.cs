@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
@@ -28,6 +29,12 @@ namespace VfxEditor.Formats.MtrlFormat.Texture {
         public void ReadString( BinaryReader reader, long stringsStart ) {
             reader.BaseStream.Seek( stringsStart + TempOffset, SeekOrigin.Begin );
             Path.Value = FileUtils.ReadString( reader );
+        }
+
+        public void Write( BinaryWriter writer, Dictionary<long, string> stringPositions ) {
+            stringPositions[writer.BaseStream.Position] = Path.Value;
+            writer.Write( ( ushort )0 ); // placeholder
+            Flags.Write( writer );
         }
 
         public void Draw() {

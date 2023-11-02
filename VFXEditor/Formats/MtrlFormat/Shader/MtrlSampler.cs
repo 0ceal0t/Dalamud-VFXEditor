@@ -5,9 +5,9 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {
     public class MtrlSampler : IUiItem {
-        private readonly ParsedCrc Id = new( "Id" );
-        private readonly ParsedUInt Flags = new( "Flags" );
-        private readonly ParsedByte TextureIndex = new( "Texture Index" );
+        public readonly ParsedCrc Id = new( "Id" );
+        public readonly ParsedUInt Flags = new( "Flags" );
+        public readonly ParsedByte TextureIndex = new( "Texture Index" );
         private readonly ParsedReserve Padding = new( 3 );
 
         public MtrlSampler() { }
@@ -19,8 +19,11 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             Padding.Read( reader );
         }
 
-        public void Writer( BinaryWriter writer ) {
-            // TODO
+        public void Write( BinaryWriter writer ) {
+            Id.Write( writer );
+            Flags.Write( writer );
+            TextureIndex.Write( writer );
+            Padding.Write( writer );
         }
 
         public void Draw() {

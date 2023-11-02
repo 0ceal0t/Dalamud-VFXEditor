@@ -1,8 +1,10 @@
 using ImGuiNET;
+using OtterGui;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
 using VfxEditor.Formats.MtrlFormat.Shader;
@@ -113,12 +115,94 @@ namespace VfxEditor.Formats.MtrlFormat {
             KeyView = new( "Key", Keys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
             ConstantView = new( "Constant", Constants, false, null, () => new() );
             SamplerView = new( "Sampler", Samplers, false, null, () => new() );
+
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
 
         public override void Write( BinaryWriter writer ) {
             writer.Write( Version );
+            var placeholderPos = writer.BaseStream.Position;
+            writer.Write( ( ushort )0 ); // file size
+            writer.Write( ( ushort )0 ); // data size
+            writer.Write( ( ushort )0 ); // string size
+            writer.Write( ( ushort )0 ); // shader offset
 
-            // TODO
+            writer.Write( ( byte )Textures.Count );
+            writer.Write( ( byte )UvSets.Count );
+            writer.Write( ( byte )ColorSets.Count );
+
+            writer.Write( ( byte )( ExtraData == null ? 0 : ExtraData.Length + 1 ) ); // TODO maybe this is padding?
+
+            var stringPositions = new Dictionary<long, string>(); // Mapping of placeholder positions to their string
+            Textures.ForEach( x => x.Write( writer, stringPositions ) );
+            UvSets.ForEach( x => x.Write( writer, stringPositions ) );
+            ColorSets.ForEach( x => x.Write( writer, stringPositions ) );
+
+            // =======================
+
+            var stringStart = writer.BaseStream.Position;
+            var stringOffsets = new Dictionary<string, long>(); // Mapping of written strings to their offsets
+
+            foreach( var entry in stringPositions ) {
+                if( !stringOffsets.TryGetValue( entry.Value, out var offset ) ) {
+                    offset = writer.BaseStream.Position - stringStart;
+                    stringOffsets[entry.Value] = offset;
+                    FileUtils.WriteString( writer, entry.Value, true );
+                }
+                var savePos = writer.BaseStream.Position;
+                writer.BaseStream.Seek( entry.Key, SeekOrigin.Begin );
+                writer.Write( ( ushort )offset );
+                writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            }
+
+            var shaderOffset = writer.BaseStream.Position - stringStart;
+            Shader.Write( writer );
+
+            FileUtils.PadTo( writer, 4 );
+            var stringEnd = writer.BaseStream.Position;
+
+            // =======================
+
+            if( ExtraData != null ) {
+                Flags.Write( writer );
+                writer.Write( ExtraData );
+            }
+
+            var dataStart = writer.BaseStream.Position;
+            if( Flags.HasFlag( TableFlags.HasTable ) ) ColorTable.Write( writer );
+            if( Flags.HasFlag( TableFlags.HasDyeTable ) ) DyeTable.Write( writer );
+            var dataEnd = writer.BaseStream.Position;
+
+            writer.Write( ( ushort )Constants.Select( x => x.Values.Count * 4 ).Sum() );
+            writer.Write( ( ushort )Keys.Count );
+            writer.Write( ( ushort )Constants.Count );
+            writer.Write( ( ushort )Samplers.Count );
+
+            ShaderFlags.Write( writer );
+
+            Keys.ForEach( x => x.Write( writer ) );
+            var constantPositions = new List<long>();
+            Constants.ForEach( x => x.Write( writer, constantPositions ) );
+            Samplers.ForEach( x => x.Write( writer ) );
+
+            var shaderValueStart = writer.BaseStream.Position;
+            foreach( var (constant, idx) in Constants.WithIndex() ) {
+                var offset = writer.BaseStream.Position - shaderValueStart;
+                foreach( var value in constant.Values ) writer.Write( value.Value ); // write float values
+
+                var savePos = writer.BaseStream.Position;
+                writer.BaseStream.Seek( constantPositions[idx], SeekOrigin.Begin );
+                writer.Write( ( ushort )offset );
+                writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            }
+
+            // ================
+
+            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.Write( ( ushort )writer.BaseStream.Length );
+            writer.Write( ( ushort )( dataEnd - dataStart ) );
+            writer.Write( ( ushort )( stringEnd - stringStart ) );
+            writer.Write( ( ushort )shaderOffset );
         }
 
         public override void Draw() {
