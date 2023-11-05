@@ -222,7 +222,7 @@ namespace VfxEditor {
                 DrawKeybinds();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "File Picker" ) ) {
+            if( ImGui.BeginTabItem( "File Browser" ) ) {
                 DrawFileBrowser();
                 ImGui.EndTabItem();
             }

@@ -1,5 +1,6 @@
 using OtterGui.Raii;
 using System.Numerics;
+using VfxEditor.Data.Command;
 
 namespace VfxEditor.AvfxFormat {
     public class UiEmitVertex : GenericSelectableItem {
@@ -20,13 +21,14 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "VNum" );
+            using var edited = new Edited();
 
             Number.Number.Draw();
-            Vertex.Position.Draw( out var positionChanged );
-            Vertex.Normal.Draw( out var normalChanged );
+            Vertex.Position.Draw();
+            Vertex.Normal.Draw();
             Vertex.Color.Draw();
 
-            if( positionChanged || normalChanged ) Model.RefreshModelPreview();
+            if( edited.IsEdited ) Model.RefreshModelPreview();
         }
 
         public override string GetDefaultText() => $"{GetIdx()}";

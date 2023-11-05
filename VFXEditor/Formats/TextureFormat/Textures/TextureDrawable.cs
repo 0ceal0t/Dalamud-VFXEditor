@@ -19,6 +19,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected abstract void OnReplace( string importPath );
 
+        public abstract void DrawFullImage();
         public abstract void DrawImage();
         public abstract void DrawImage( uint u, uint v, uint w, uint h );
         public abstract void DrawImage( float height );

@@ -1,6 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager;
 using VfxEditor.Utils.Stacks;
@@ -61,6 +62,7 @@ namespace VfxEditor {
             command.Execute();
             Commands.Add( command );
             File.OnChange();
+            Edited.SetEdited();
         }
 
         protected bool CanUndo => Commands.CanUndo;

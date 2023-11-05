@@ -5,6 +5,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
     public class TextureMissing : TextureDrawable {
         public TextureMissing( string gamePath ) : base( gamePath ) { }
 
+        public override void DrawFullImage() { }
+
         public override void DrawImage() { }
 
         public override void DrawImage( uint u, uint v, uint w, uint h ) { }

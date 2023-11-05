@@ -130,6 +130,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             DrawControls();
         }
 
+        public override void DrawFullImage() => Preview?.DrawFullImage();
+
         public override void DrawImage() => Preview?.DrawImage();
 
         public override void DrawImage( uint u, uint v, uint w, uint h ) => Preview?.DrawImage( u, v, w, h );

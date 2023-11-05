@@ -42,7 +42,7 @@ namespace VfxEditor.Library.Texture {
 
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
-                Plugin.TextureManager.GetTexture( Path )?.DrawImage();
+                Plugin.TextureManager.GetTexture( Path )?.DrawFullImage();
                 ImGui.EndTooltip();
             }
         }
@@ -52,7 +52,7 @@ namespace VfxEditor.Library.Texture {
 
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();
-                Plugin.TextureManager.GetTexture( Path )?.DrawImage();
+                Plugin.TextureManager.GetTexture( Path )?.DrawFullImage();
                 ImGui.EndTooltip();
             }
 

@@ -102,8 +102,9 @@ namespace VfxEditor.Formats.MtrlFormat {
                     Remove = false,
                     Action = ( string _ ) => UpdateShaderFile()
                 }
-            } );
-            Shader.Value = FileUtils.ReadString( reader );
+            } ) {
+                Value = FileUtils.ReadString( reader )
+            };
 
             reader.BaseStream.Seek( stringsStart + stringSize, SeekOrigin.Begin );
 

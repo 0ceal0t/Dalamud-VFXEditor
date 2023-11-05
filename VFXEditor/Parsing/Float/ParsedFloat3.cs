@@ -23,15 +23,12 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Z );
         }
 
-        public override void Draw() => Draw( out var _ );
-
-        public void Draw( out bool edited ) {
+        public override void Draw() {
             using var _ = ImRaii.PushId( Name );
-            edited = CopyPaste();
+            CopyPaste();
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
-                edited = true;
                 SetValue( value );
             }
         }
