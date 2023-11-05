@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui;
 using OtterGui.Raii;
@@ -21,7 +22,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
     [Flags]
     public enum TableFlags {
-        Has_Table = 0x4,
+        Has_Color_Table = 0x4,
         Has_Dye_Table = 0x8
     }
 
@@ -32,6 +33,7 @@ namespace VfxEditor.Formats.MtrlFormat {
     }
 
     public enum ShpkFileState {
+        Unloaded,
         None,
         Penumbra,
         Replaced,
@@ -46,7 +48,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly List<MtrlAttributeSet> UvSets = new();
         private readonly List<MtrlAttributeSet> ColorSets = new();
 
-        public readonly ParsedString Shader = new( "Shader" );
+        public readonly ParsedString Shader;
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
 
         private readonly MtrlColorTable ColorTable;
@@ -67,9 +69,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly CommandSplitView<MtrlSampler> SamplerView;
 
         public ShpkFile ShaderFile { get; private set; }
-        public ShpkFileState ShaderFileState { get; private set; } = ShpkFileState.Missing;
-        public string ShaderFilePath => $"shader/sm5/shpk/{Shader.Value}";
-        private bool ShaderFileLoaded = false;
+        public ShpkFileState ShaderFileState { get; private set; } = ShpkFileState.Unloaded;
+        public string ShaderFilePath { get; private set; } = "";
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
             Version = reader.ReadBytes( 4 );
@@ -95,6 +96,13 @@ namespace VfxEditor.Formats.MtrlFormat {
             ColorSets.ForEach( x => x.ReadString( reader, stringsStart ) );
 
             reader.BaseStream.Seek( stringsStart + shaderOffset, SeekOrigin.Begin );
+            Shader = new( "Shader", new List<ParsedStringIcon>() {
+                new() {
+                    Icon = () => FontAwesomeIcon.Sync,
+                    Remove = false,
+                    Action = ( string _ ) => UpdateShaderFile()
+                }
+            } );
             Shader.Value = FileUtils.ReadString( reader );
 
             reader.BaseStream.Seek( stringsStart + stringSize, SeekOrigin.Begin );
@@ -108,7 +116,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            ColorTable = ( Flags.HasFlag( TableFlags.Has_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( reader ) : new();
+            ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( reader ) : new();
             DyeTable = ( Flags.HasFlag( TableFlags.Has_Dye_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
             reader.BaseStream.Seek( dataEnd, SeekOrigin.Begin );
 
@@ -191,7 +199,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataStart = writer.BaseStream.Position;
-            if( Flags.HasFlag( TableFlags.Has_Table ) ) ColorTable.Write( writer );
+            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) ColorTable.Write( writer );
             if( Flags.HasFlag( TableFlags.Has_Dye_Table ) ) DyeTable.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
@@ -230,10 +238,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         }
 
         public override void Draw() {
-            if( !ShaderFileLoaded ) {
-                UpdateShaderFile();
-                ShaderFileLoaded = true;
-            }
+            if( ShaderFileState == ShpkFileState.Unloaded ) UpdateShaderFile();
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -254,7 +259,7 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) ColorSetView.Draw();
             }
 
-            if( Flags.HasFlag( TableFlags.Has_Table ) ) {
+            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) {
                 using var tab = ImRaii.TabItem( "Color Table" );
                 if( tab ) ColorTable.Draw();
             }
@@ -269,8 +274,6 @@ namespace VfxEditor.Formats.MtrlFormat {
             using var _ = ImRaii.PushId( "Shader" );
 
             Shader.Draw();
-            if( ImGui.Button( "Update" ) ) UpdateShaderFile();
-            ImGui.SameLine();
             ImGui.TextDisabled( ShaderFilePath );
             if( ShaderFileState != ShpkFileState.None ) {
                 using var color = ImRaii.PushColor( ImGuiCol.TextDisabled, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
@@ -281,6 +284,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             ShaderFlags.Draw();
             ShaderOptions.Draw();
             Flags.Draw();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -303,7 +308,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             ShaderFile = null;
             ShaderFileState = ShpkFileState.Missing;
 
-            var path = ShaderFilePath;
+            var path = $"shader/sm5/shpk/{Shader.Value}";
             var newPath = "";
             var state = ShpkFileState.None;
 
@@ -328,6 +333,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
                 ShaderFile = new ShpkFile( reader, false );
                 ShaderFileState = state;
+                ShaderFilePath = path;
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error reading shader {newPath}" );

@@ -13,16 +13,16 @@ namespace VfxEditor.Formats.SklbFormat.Mapping {
         }
 
         public void Execute() {
-            OldSkeleton = Mapper->Mapping.SkeletonB.ptr;
-            Mapper->Mapping.SkeletonB.ptr = NewSkeleton;
+            OldSkeleton = Mapper->Mapping.SkeletonA.ptr;
+            Mapper->Mapping.SkeletonA.ptr = NewSkeleton;
         }
 
         public void Redo() {
-            Mapper->Mapping.SkeletonB.ptr = NewSkeleton;
+            Mapper->Mapping.SkeletonA.ptr = NewSkeleton;
         }
 
         public void Undo() {
-            Mapper->Mapping.SkeletonB.ptr = OldSkeleton;
+            Mapper->Mapping.SkeletonA.ptr = OldSkeleton;
         }
     }
 }

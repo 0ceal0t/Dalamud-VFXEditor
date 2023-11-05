@@ -40,9 +40,6 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
             for( var slot = StartSlot; slot < EndSlot; slot++ ) {
                 ret += $"{Swizzle[slot % 4]}";
             }
-
-            ret += $" (0x{Id.Value:X8})";
-
             return ret;
         }
     }
