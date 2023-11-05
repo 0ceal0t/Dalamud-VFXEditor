@@ -72,7 +72,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 2 ) ) ) {
                 ImGui.SameLine();
             }
-            ImGui.TextDisabled( $"[{File.Shader.Value}]" );
+            ImGui.TextDisabled( $"[{File.ShaderFilePath.Split( '/' )[^1]}]" );
 
             AddressModeU.Draw();
             AddressModeV.Draw();
