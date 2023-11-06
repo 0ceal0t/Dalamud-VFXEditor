@@ -61,6 +61,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void WriteContents( BinaryWriter writer ) {
             WriteLeaf( writer, "KeyC", 4, KeyList.Keys.Count );
+            if( Type == CurveType.Color ) Random.SetAssigned( false );
             WriteNested( writer, Parsed );
         }
 

@@ -20,7 +20,7 @@ namespace VfxEditor.FileBrowser {
             WantsToQuit = false;
 
             using var _ = ImRaii.PushId( "FileBrowser" );
-            ImGui.SetNextWindowSize( new Vector2( 800, 500 ), ImGuiCond.FirstUseEver );
+            ImGui.SetNextWindowSize( new Vector2( 1000, 700 ), ImGuiCond.FirstUseEver );
             if( Modal && !WaitingForConfirmation ) {
                 ImGui.OpenPopup( name );
                 if( ImGui.BeginPopupModal( name, ref Visible, ImGuiWindowFlags.NoScrollbar ) ) {
