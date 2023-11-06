@@ -1,9 +1,7 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using VfxEditor.AvfxFormat;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedNullableBool : ParsedSimpleBase<bool?> {
@@ -44,21 +42,21 @@ namespace VfxEditor.Parsing {
             using var _ = ImRaii.PushId( Name );
             using var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
-            if( Value != null ) {
-                var value = Value == true;
-                if( ImGui.Checkbox( "##Input", ref value ) ) SetValue( value );
-
-                ImGui.SameLine();
-                using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) SetValue( null );
-            }
-            else {
-                using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) SetValue( false );
+            var prevValue = Value;
+            var value = Value == true;
+            if( ImGui.Checkbox( "##Input", ref value ) ) {
+                if( prevValue == null ) SetValue( false ); // null -> false
+                else if( prevValue == true ) SetValue( null ); // true -> null
+                else if( prevValue == false ) SetValue( true ); // false -> true
             }
 
             ImGui.SameLine();
-            ImGui.Text( Name );
+            if( Value == null ) {
+                ImGui.TextDisabled( Name );
+            }
+            else {
+                ImGui.Text( Name );
+            }
         }
     }
 }
