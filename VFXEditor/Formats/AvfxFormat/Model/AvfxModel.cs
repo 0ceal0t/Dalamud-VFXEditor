@@ -62,10 +62,22 @@ namespace VfxEditor.AvfxFormat {
             EmitVertexNumbers.VertexNumbers.Clear();
             EmitVertexNumbers.VertexNumbers.AddRange( CombinedEmitVertexes.Select( x => x.Number ) );
 
-            if( EmitVertexNumbers.VertexNumbers.Count > 0 ) EmitVertexNumbers.Write( writer );
-            if( EmitVertexes.EmitVertexes.Count > 0 ) EmitVertexes.Write( writer );
-            if( Vertexes.Vertexes.Count > 0 ) Vertexes.Write( writer );
-            if( Indexes.Indexes.Count > 0 ) Indexes.Write( writer );
+            if( EmitVertexNumbers.VertexNumbers.Count > 0 ) {
+                EmitVertexNumbers.SetAssigned( true );
+                EmitVertexNumbers.Write( writer );
+            }
+            if( EmitVertexes.EmitVertexes.Count > 0 ) {
+                EmitVertexes.SetAssigned( true );
+                EmitVertexes.Write( writer );
+            }
+            if( Vertexes.Vertexes.Count > 0 ) {
+                Vertexes.SetAssigned( true );
+                Vertexes.Write( writer );
+            }
+            if( Indexes.Indexes.Count > 0 ) {
+                Indexes.SetAssigned( true );
+                Indexes.Write( writer );
+            }
         }
 
         public override void Draw() {

@@ -187,7 +187,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 var thisRot = _thisRot;
                 var thisScl = new Vector3( _thisScl.X, _thisScl.Y, _thisScl.Z );
 
-                var resultScl = mappedPos.Length() == 0 ? 1 : thisPos.Length() / mappedPos.Length();
+                var resultScl = mappedPos.Length() < 0.01f ? 1 : thisPos.Length() / mappedPos.Length();
                 var resultPos = thisPos - ( mappedPos * resultScl );
 
                 var resultRot = Quaternion.Multiply( thisRot, Quaternion.Inverse( mappedRot ) );
