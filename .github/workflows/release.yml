@@ -72,6 +72,7 @@ jobs:
           $json[0].DownloadLinkInstall = $json.DownloadLinkInstall -replace '[^/]+/VFXEditor.zip',"$ver/VFXEditor.zip"
           $json[0].DownloadLinkTesting = $json.DownloadLinkTesting -replace '[^/]+/VFXEditor.zip',"$ver/VFXEditor.zip"
           $json[0].DownloadLinkUpdate = $json.DownloadLinkUpdate -replace '[^/]+/VFXEditor.zip',"$ver/VFXEditor.zip"
+          $json[0].InternalName = "VFXEditor-Beta"
           $content = $json | ConvertTo-Json -AsArray
           set-content -Path $path -Value $content
 
