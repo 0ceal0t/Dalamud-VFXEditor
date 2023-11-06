@@ -55,6 +55,7 @@ namespace VfxEditor.Select {
             OptionsInternal = new();
 
             // chara/human/c0804/obj/face/f0101/material/mt_c0804f0101_etc_a.mtrl
+            // chara/human/c0601/skeleton/face/f0092/skl_c0601f0092.sklb
 
             var files = File.ReadAllLines( CommonRacialPath );
             foreach( var line in files ) {
