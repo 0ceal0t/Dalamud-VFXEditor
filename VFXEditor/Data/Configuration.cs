@@ -37,6 +37,8 @@ namespace VfxEditor {
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 10;
+        public bool AutosaveBackups = true;
+        public int BackupCount = 20;
 
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
@@ -248,11 +250,16 @@ namespace VfxEditor {
                 ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
                 if( ImGui.InputText( "Write Location", ref WriteLocation, 255 ) ) Save();
                 if( ImGui.Checkbox( "Refresh on Update", ref UpdateWriteLocation ) ) Save();
+
                 if( ImGui.Checkbox( "Autosave Workspace", ref AutosaveEnabled ) ) Save();
-                using var autosaveDim = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, !AutosaveEnabled );
+                using var disabled = ImRaii.Disabled( !AutosaveEnabled );
                 using var indent = ImRaii.PushIndent();
                 ImGui.SetNextItemWidth( 120 );
                 if( ImGui.InputInt( "Autosave Time (seconds)", ref AutosaveSeconds ) ) Save();
+                if( ImGui.Checkbox( "Backup Instead of Overwriting", ref AutosaveBackups ) ) Save();
+                using var disabled2 = ImRaii.Disabled( !AutosaveBackups );
+                ImGui.SetNextItemWidth( 120 );
+                if( ImGui.InputInt( "Backup Count", ref BackupCount ) ) Save();
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

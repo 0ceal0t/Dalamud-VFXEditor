@@ -24,7 +24,9 @@ namespace VfxEditor {
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
         public static bool Saving { get; private set; } = false;
+
         private static readonly SemaphoreSlim SavingLock = new( 1, 1 );
+        private static int BackupId = 0;
 
         // Havok init and texture wrap dispose
         public static Action OnMainThread;
@@ -62,7 +64,13 @@ namespace VfxEditor {
             if( string.IsNullOrEmpty( CurrentWorkspaceLocation ) ) return;
 
             Dalamud.Log( "Autosaving workspace..." );
-            SaveWorkspace();
+            if( Configuration.AutosaveBackups ) {
+                var id = BackupId++ % Configuration.BackupCount;
+                ExportWorkspace( CurrentWorkspaceLocation.Replace( ".vfxworkspace", $" - {id}.vfxworkspace" ), false );
+            }
+            else {
+                ExportWorkspace(); // Overwrite current file
+            }
         }
 
         private static async void NewWorkspace() {
@@ -106,6 +114,7 @@ namespace VfxEditor {
 
                 if( OpenWorkspaceFolder( tempDir ) ) {
                     CurrentWorkspaceLocation = loadLocation;
+                    BackupId = 0;
                     Configuration.AddRecentWorkspace( loadLocation );
                     State = WorkspaceState.Cleanup;
                 }
@@ -174,7 +183,7 @@ namespace VfxEditor {
             } );
         }
 
-        private static void ExportWorkspace( string newLocation = null ) {
+        private static void ExportWorkspace( string location = null, bool updateLocation = true ) {
             Task.Run( async () => {
                 if( !await SavingLock.WaitAsync( 1000 ) ) {
                     Dalamud.Error( "Could not get lock" );
@@ -183,7 +192,7 @@ namespace VfxEditor {
                 Saving = true;
 
                 try {
-                    var workspaceLocation = string.IsNullOrEmpty( newLocation ) ? CurrentWorkspaceLocation : newLocation;
+                    var workspaceLocation = string.IsNullOrEmpty( location ) ? CurrentWorkspaceLocation : location;
 
                     var saveLocation = Path.Combine( Path.GetDirectoryName( workspaceLocation ), "VFX_WORKSPACE_OUT" );
                     Directory.CreateDirectory( saveLocation );
@@ -200,7 +209,10 @@ namespace VfxEditor {
                     Dalamud.Log( $"Saved to {workspaceLocation}" );
                     Directory.Delete( saveLocation, true );
 
-                    CurrentWorkspaceLocation = workspaceLocation;
+                    if( updateLocation ) {
+                        CurrentWorkspaceLocation = workspaceLocation;
+                        BackupId = 0;
+                    }
                 }
                 catch( Exception ex ) {
                     Dalamud.Error( ex, "Error saving workspace" );
