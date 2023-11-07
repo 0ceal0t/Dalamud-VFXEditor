@@ -13,11 +13,11 @@
     </Target>
 
     <Target Name="PackageBeta" AfterTargets="Cleanup" Condition="'$(Configuration)' == 'Beta'">
-        <WriteLinesToFile
-          File="$(TargetDir)\VFXEditor-Beta.json"
-          Lines="$([System.IO.File]::ReadAllText($(TargetDir)\VFXEditor.json).Replace('&quot;VFXEditor&quot;','&quot;VFXEditor-Beta&quot;'))"
-          Overwrite="true"
-          Encoding="Unicode"/>
+        <Move SourceFiles="$(TargetDir)\VFXEditor.json" DestinationFiles="$(TargetDir)\VFXEditor-Beta.json"/>
+        <JsonPoke JsonInputPath="$(TargetDir)\VFXEditor-Beta.json" JValue="[BETA] VFXEditor" JPath="Name"></JsonPoke>
+        <JsonPoke JsonInputPath="$(TargetDir)\VFXEditor-Beta.json" JValue="VFXEditor Beta Builds" JPath="Punchline"></JsonPoke>
+        <JsonPoke JsonInputPath="$(TargetDir)\VFXEditor-Beta.json" JValue="VFXEditor-Beta" JPath="InternalName"></JsonPoke>
+        
         <Move SourceFiles="$(TargetDir)\VFXEditor.dll" DestinationFiles="$(TargetDir)\VFXEditor-Beta.dll"/>
     </Target>
 </Project>

@@ -133,6 +133,7 @@ namespace VfxEditor {
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
         public bool ModelShowEmitters = true;
+        public bool EmitterVertexSplitOpen = true;
 
         public Vector4 LuaParensColor = new( 0.5f, 0.5f, 0.5f, 1f );
         public Vector4 LuaFunctionColor = new( 0f, 0.439f, 1f, 1f );

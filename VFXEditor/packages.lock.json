@@ -41,6 +41,12 @@
           "System.Threading.Tasks.Parallel": "4.3.0"
         }
       },
+      "JsonPoke.MSBuild": {
+        "type": "Direct",
+        "requested": "[1.0.9, )",
+        "resolved": "1.0.9",
+        "contentHash": "0C2NW2nWDBCMuDGqKqBeLIu8ijcJp4/RkWZ50m6MdiU5yahtIaajyeMvUNmPrv+EdEZ780vvkLnvKEsGNhr/mg=="
+      },
       "mgholam.fastCSV": {
         "type": "Direct",
         "requested": "[2.0.9, )",

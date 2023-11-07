@@ -102,6 +102,10 @@
         <PackageReference Include="DalamudPackager" Version="2.1.12" />
         <PackageReference Include="HelixToolkit" Version="2.24.0" />
         <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.24.0" />
+        <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
         <PackageReference Include="NAudio.Core" Version="2.2.1" />
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />

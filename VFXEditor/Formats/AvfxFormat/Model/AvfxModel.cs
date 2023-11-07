@@ -1,9 +1,11 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.AvfxFormat.Model;
 using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
@@ -59,6 +61,7 @@ namespace VfxEditor.AvfxFormat {
         public override void WriteContents( BinaryWriter writer ) {
             EmitVertexes.EmitVertexes.Clear();
             EmitVertexes.EmitVertexes.AddRange( CombinedEmitVertexes.Select( x => x.Vertex ) );
+
             EmitVertexNumbers.VertexNumbers.Clear();
             EmitVertexNumbers.VertexNumbers.AddRange( CombinedEmitVertexes.Select( x => x.Number ) );
 
@@ -66,14 +69,17 @@ namespace VfxEditor.AvfxFormat {
                 EmitVertexNumbers.SetAssigned( true );
                 EmitVertexNumbers.Write( writer );
             }
+
             if( EmitVertexes.EmitVertexes.Count > 0 ) {
                 EmitVertexes.SetAssigned( true );
                 EmitVertexes.Write( writer );
             }
+
             if( Vertexes.Vertexes.Count > 0 ) {
                 Vertexes.SetAssigned( true );
                 Vertexes.Write( writer );
             }
+
             if( Indexes.Indexes.Count > 0 ) {
                 Indexes.SetAssigned( true );
                 Indexes.Write( writer );
@@ -109,15 +115,42 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "ModelTabs" );
             if( !tabBar ) return;
 
-            DrawModel3D();
+            using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                if( tab ) DrawModel3D();
+            }
 
             using( var tab = ImRaii.TabItem( "UV View" ) ) {
                 if( tab ) UvView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Emitter Vertices" ) ) {
-                if( tab ) EmitSplitDisplay.Draw();
+                if( tab ) DrawEmitterVertices();
             }
+        }
+
+        private void DrawEmitterVertices() {
+            var open = Plugin.Configuration.EmitterVertexSplitOpen;
+
+            var size = open ?
+                new Vector2( ImGui.GetContentRegionAvail().X, 300 ) :
+                new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeightWithSpacing() );
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            using( var child = ImRaii.Child( "Child", size, false ) ) {
+                EmitSplitDisplay.Draw();
+            }
+
+            if( open ) ImGui.Separator();
+
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( open ? FontAwesomeIcon.AngleDoubleDown.ToIconString() : FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
+                    Plugin.Configuration.EmitterVertexSplitOpen = !open;
+                    Plugin.Configuration.Save();
+                }
+            }
+
+            CheckRefresh();
+            if( Plugin.Configuration.EmitterVertexSplitOpen ) Plugin.DirectXManager.ModelPreview.DrawInline();
         }
 
         public void OnSelect() {
@@ -126,16 +159,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawModel3D() {
-            using var tabItem = ImRaii.TabItem( "3D View" );
-            if( !tabItem ) return;
-
             using var _ = ImRaii.PushId( "3DModel" );
-
-            if( Refresh ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( this, ( RenderMode )Mode );
-                UvView.LoadModel( this );
-                Refresh = false;
-            }
 
             if( ImGui.Checkbox( "Wireframe", ref Plugin.Configuration.ModelWireframe ) ) {
                 Plugin.DirectXManager.ModelPreview.RefreshRasterizeState();
@@ -174,7 +198,16 @@ namespace VfxEditor.AvfxFormat {
                 Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
             }
 
+            CheckRefresh();
             Plugin.DirectXManager.ModelPreview.DrawInline();
+        }
+
+        private void CheckRefresh() {
+            if( !Refresh ) return;
+
+            Plugin.DirectXManager.ModelPreview.LoadModel( this, ( RenderMode )Mode );
+            UvView.LoadModel( this );
+            Refresh = false;
         }
 
         private void ImportDialog() {
