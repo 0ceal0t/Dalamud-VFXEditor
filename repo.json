@@ -1,7 +1,7 @@
 [
     {
         "Author": "ocealot",
-        "Name": "VFXEditor",
+        "Name": "VFXEditor-Beta",
         "Punchline": "VFX editor and viewer",
         "Description": "VFX, animation, and sound editing plugin. Icon by PAPACHIN",
         "Tags": [
@@ -20,9 +20,9 @@
         "IsTestingExclusive": "False",
         "DownloadCount": 1,
         "LastUpdate": 1618608322,
-        "DownloadLinkInstall": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor.zip",
-        "DownloadLinkUpdate": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor.zip",
-        "DownloadLinkTesting": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor.zip",
+        "DownloadLinkInstall": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor-Beta.zip",
+        "DownloadLinkUpdate": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor-Beta.zip",
+        "DownloadLinkTesting": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.8.1.0/VFXEditor-Beta.zip",
         "IconUrl": "https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/icon.png"
     }
 ]
