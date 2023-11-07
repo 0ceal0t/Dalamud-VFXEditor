@@ -20,7 +20,12 @@ namespace VfxEditor.FileManager {
             CheckKeybinds();
 
             WindowSystem.Draw();
-            WindowName = Title
+            WindowName =
+#if BETA
+                $"[BETA] {Title}"
+#else
+                Title
+#endif
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
                 + $"###{Title}";
 

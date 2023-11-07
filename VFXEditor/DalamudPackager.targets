@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <Target Name="Cleanup" AfterTargets="Build">
-        <Delete Files="$(TargetDir)\SharpDX.Direct2D1.dll" />
-        <Delete Files="$(TargetDir)\SharpDX.Direct3D11.dll" />
-        <Delete Files="$(TargetDir)\SharpDX.DXGI.dll" />
-        <Delete Files="$(TargetDir)\SharpDX.Mathematics.dll" />
-        <Delete Files="$(TargetDir)\SharpDX.dll" />
+        <Delete Files="$(TargetDir)\SharpDX.Direct2D1.dll"/>
+        <Delete Files="$(TargetDir)\SharpDX.Direct3D11.dll"/>
+        <Delete Files="$(TargetDir)\SharpDX.DXGI.dll"/>
+        <Delete Files="$(TargetDir)\SharpDX.Mathematics.dll"/>
+        <Delete Files="$(TargetDir)\SharpDX.dll"/>
     </Target>
     
     <Target Name="PackagePlugin" AfterTargets="Cleanup" Condition="'$(Configuration)' == 'Release'">
-        <Delete Files="$(TargetDir)\VFXEditor-Beta.json" />
-        
         <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" MakeZip="true"/>
     </Target>
 
-    <Target Name="PackagePluginBeta" AfterTargets="Cleanup" Condition="'$(Configuration)' == 'Beta'">
-        <Delete Files="$(TargetDir)\VFXEditor.json" />
+    <Target Name="PackageBeta" AfterTargets="Cleanup" Condition="'$(Configuration)' == 'Beta'">
+        <WriteLinesToFile
+          File="$(TargetDir)\VFXEditor-Beta.json"
+          Lines="$([System.IO.File]::ReadAllText($(TargetDir)\VFXEditor.json).Replace('&quot;VFXEditor&quot;','&quot;VFXEditor-Beta&quot;'))"
+          Overwrite="true"
+          Encoding="Unicode"/>
         <Move SourceFiles="$(TargetDir)\VFXEditor.dll" DestinationFiles="$(TargetDir)\VFXEditor-Beta.dll"/>
-        
-        <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)-Beta" MakeZip="true"/>
     </Target>
 </Project>
