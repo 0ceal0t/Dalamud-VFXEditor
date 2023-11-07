@@ -24,11 +24,21 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 | `.sklb` | Skeleton and bone definitions |
 | `.skp` | Skeleton paramters, such as IK |
 | `.shpk` | Bundled packages of vertex and pixel shaders |
+| `.shcd` | Individual shaders |
+| `.mtrl` | Materials for models |
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
 2. Install the plugin from the `/xlplugins` menu
 3. Once installed, open with `/vfxedit`
+
+### Beta Builds
+Add the following custom repository in `/xlsettings > Experimental`:
+```
+https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json
+```
+
+The beta and main builds cannot both be enabled at the same time, so make sure to disable one before enabling the other. Open the beta version using `/vfxbeta`
 
 ## Usage
 1. Select a _"Loaded Vfx"_ (the new effect you want to use)

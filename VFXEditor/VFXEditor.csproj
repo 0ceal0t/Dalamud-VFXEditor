@@ -32,7 +32,7 @@
         <DefineConstants>TRACE</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Beta|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
       <DebugType>pdbonly</DebugType>
       <Optimize>true</Optimize>
       <DefineConstants>BETA;TRACE</DefineConstants>
