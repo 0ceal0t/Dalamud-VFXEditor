@@ -21,8 +21,8 @@ namespace VfxEditor.FileBrowser {
             ImGui.TableSetupColumn( "##Preview", ImGuiTableColumnFlags.WidthFixed, 300 );
             ImGui.TableSetupColumn( "##PreviewClosed", ImGuiTableColumnFlags.WidthFixed | ImGuiTableColumnFlags.NoResize | ImGuiTableColumnFlags.DefaultHide, 15 );
 
-            ImGui.TableSetColumnEnabled( 2, Plugin.Configuration.FileBrowserPreviewOpen );
-            ImGui.TableSetColumnEnabled( 3, !Plugin.Configuration.FileBrowserPreviewOpen );
+            ImGui.TableSetColumnEnabled( 2, EnablePreview && Plugin.Configuration.FileBrowserPreviewOpen );
+            ImGui.TableSetColumnEnabled( 3, EnablePreview && !Plugin.Configuration.FileBrowserPreviewOpen );
 
             ImGui.TableNextRow();
 
@@ -32,8 +32,10 @@ namespace VfxEditor.FileBrowser {
             ImGui.TableSetColumnIndex( 1 );
             DrawFileList();
 
-            ImGui.TableSetColumnIndex( Plugin.Configuration.FileBrowserPreviewOpen ? 2 : 3 );
-            Preview.Draw();
+            if( EnablePreview ) {
+                ImGui.TableSetColumnIndex( Plugin.Configuration.FileBrowserPreviewOpen ? 2 : 3 );
+                Preview.Draw();
+            }
         }
 
         private void DrawFileList() {

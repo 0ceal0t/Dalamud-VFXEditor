@@ -31,6 +31,7 @@ namespace VfxEditor.FileBrowser {
         public readonly bool SelectOnly;
         public readonly bool ConfirmOverwrite;
         public readonly bool FolderDialog;
+        public readonly bool EnablePreview;
         public readonly string DefaultExtension;
         public readonly string DefaultFileName;
         public readonly CommandManager Command;
@@ -89,6 +90,9 @@ namespace VfxEditor.FileBrowser {
             SideBar = new( this, recent );
             Filters = new( this, filters );
             Preview = new();
+
+            // Decide whether preview is even necessary
+            EnablePreview = Filters.Filters.Any( x => x.HasExtension( FileBrowserPreview.ImageExtensions ) );
 
             SetPath( currentPath, false );
             Filters.SetSelectedFilter( DefaultExtension );
