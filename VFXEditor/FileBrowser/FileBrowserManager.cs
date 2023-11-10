@@ -17,14 +17,6 @@ namespace VfxEditor.FileBrowser {
             Recent.Clear();
         }
 
-        public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
-            SetDialog( "OpenFolderDialog", title, "", ".", "", false, ImGuiFileDialogFlags.SelectOnly, true, callback );
-        }
-
-        public static void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
-            SetDialog( "SaveFolderDialog", title, "", defaultFolderName, "", false, ImGuiFileDialogFlags.None, true, callback );
-        }
-
         public static void OpenFileDialog( string title, string filters, Action<bool, string> callback ) {
             SetDialog( "OpenFileDialog", title, filters, ".", "", false, ImGuiFileDialogFlags.SelectOnly, false, callback );
         }
@@ -35,6 +27,14 @@ namespace VfxEditor.FileBrowser {
 
         public static void SaveFileDialog( string title, string filters, string defaultFileName, string defaultExtension, Action<bool, string> callback ) {
             SetDialog( "SaveFileDialog", title, filters, defaultFileName, defaultExtension, false, ImGuiFileDialogFlags.ConfirmOverwrite, false, callback );
+        }
+
+        // These 2 aren't actually used, but save them just in case
+        public static void OpenFolderDialog( string title, Action<bool, string> callback ) {
+            SetDialog( "OpenFolderDialog", title, "", ".", "", false, ImGuiFileDialogFlags.SelectOnly, true, callback );
+        }
+        public static void SaveFolderDialog( string title, string defaultFolderName, Action<bool, string> callback ) {
+            SetDialog( "SaveFolderDialog", title, "", defaultFolderName, "", false, ImGuiFileDialogFlags.None, true, callback );
         }
 
         private static void SetDialog(

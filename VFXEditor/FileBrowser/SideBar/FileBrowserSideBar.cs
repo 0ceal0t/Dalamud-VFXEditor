@@ -23,6 +23,7 @@ namespace VfxEditor.FileBrowser.SideBar {
             Recent = recent;
 
             foreach( var drive in DriveInfo.GetDrives() ) {
+                if( !drive.IsReady ) continue;
                 var location = drive.Name;
                 if( location[^1] == Path.DirectorySeparatorChar ) location = location[0..^1];
                 var label = drive.VolumeLabel;
