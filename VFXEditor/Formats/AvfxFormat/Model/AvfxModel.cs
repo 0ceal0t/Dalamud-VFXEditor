@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -129,28 +128,21 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawEmitterVertices() {
-            var open = Plugin.Configuration.EmitterVertexSplitOpen;
-
-            var size = open ?
-                new Vector2( ImGui.GetContentRegionAvail().X, 300 ) :
-                new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeightWithSpacing() );
+            var size = Plugin.Configuration.EmitterVertexSplitOpen ?
+                new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y / 2f ) :
+                new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - UiUtils.AngleUpDownSize );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using( var child = ImRaii.Child( "Child", size, false ) ) {
                 EmitSplitDisplay.Draw();
             }
 
-            if( open ) ImGui.Separator();
+            if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.EmitterVertexSplitOpen ) ) Plugin.Configuration.Save();
 
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( open ? FontAwesomeIcon.AngleDoubleDown.ToIconString() : FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
-                    Plugin.Configuration.EmitterVertexSplitOpen = !open;
-                    Plugin.Configuration.Save();
-                }
+            if( Plugin.Configuration.EmitterVertexSplitOpen ) {
+                CheckRefresh();
+                Plugin.DirectXManager.ModelPreview.DrawInline();
             }
-
-            CheckRefresh();
-            if( Plugin.Configuration.EmitterVertexSplitOpen ) Plugin.DirectXManager.ModelPreview.DrawInline();
         }
 
         public void OnSelect() {

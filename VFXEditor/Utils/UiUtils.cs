@@ -76,6 +76,14 @@ namespace VfxEditor.Utils {
 
         public static bool OkButton( string label, bool small = false ) => ColorButton( label, GREEN_COLOR, small );
 
+        public static bool TransparentButton( string label, Vector4 color, Vector2 size ) {
+            using var style = ImRaii.PushColor( ImGuiCol.Text, color );
+            style.Push( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
+            style.Push( ImGuiCol.ButtonActive, new Vector4( 0 ) );
+            using var col = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) );
+            return ImGui.Button( label, size );
+        }
+
         public static bool TransparentButton( string label, Vector4 color ) {
             using var style = ImRaii.PushColor( ImGuiCol.Text, color );
             style.Push( ImGuiCol.ButtonHovered, new Vector4( 0.710f, 0.710f, 0.710f, 0.2f ) );
@@ -374,5 +382,24 @@ namespace VfxEditor.Utils {
             draggingItem = null;
             return true;
         }
+
+        public static unsafe bool DrawAngleUpDown( ref bool open ) {
+            using var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 2 ) );
+            ImGui.Separator();
+            var offset = ImGui.GetContentRegionAvail().X / 2 - 15;
+            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( offset, 0 ) );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 5, 1 ) );
+            if( TransparentButton( open ? FontAwesomeIcon.AngleDown.ToIconString() : FontAwesomeIcon.AngleUp.ToIconString(), *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ), new( 30, 15 ) ) ) {
+                open = !open;
+                return true;
+            }
+
+            if( open ) ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+
+            return false;
+        }
+
+        public static float AngleUpDownSize => 17 + ImGui.GetStyle().ItemSpacing.Y;
     }
 }

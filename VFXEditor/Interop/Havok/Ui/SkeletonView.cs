@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -7,6 +6,7 @@ using System.Numerics;
 using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Havok.Ui {
     public abstract class SkeletonView {
@@ -71,23 +71,12 @@ namespace VfxEditor.Interop.Havok.Ui {
             else if( splitOpen ) {
                 return new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y / 2 );
             }
-            return new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeightWithSpacing() );
+            return new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - UiUtils.AngleUpDownSize );
         }
 
         public void DrawSplit( ref bool open ) {
-            if( open ) ImGui.Separator();
-
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( open ? FontAwesomeIcon.AngleDoubleDown.ToIconString() : FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
-                    open = !open;
-                    Plugin.Configuration.Save();
-                }
-            }
-
-            if( open ) {
-                ImGui.SameLine();
-                Draw();
-            }
+            if( UiUtils.DrawAngleUpDown( ref open ) ) Plugin.Configuration.Save();
+            if( open ) Draw();
         }
 
         protected abstract void UpdateData();

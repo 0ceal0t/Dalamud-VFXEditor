@@ -45,7 +45,7 @@ namespace VfxEditor.FileBrowser.Preview {
             var size = ImGui.GetContentRegionAvail();
 
             if( Texture == null ) {
-                var text = "No Image to Preview";
+                var text = "No File to Preview";
                 var textWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.InfoCircle ) + ImGui.CalcTextSize( text ).X;
 
                 if( size.X < textWidth ) return;
