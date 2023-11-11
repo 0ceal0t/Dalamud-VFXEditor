@@ -1,6 +1,8 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.IO;
+using System.Numerics;
 using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Parsing {
@@ -40,23 +42,25 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             using var _ = ImRaii.PushId( Name );
-            using var __ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
+            var pos = ImGui.GetCursorScreenPos();
 
             var prevValue = Value;
             var value = Value == true;
-            if( ImGui.Checkbox( "##Input", ref value ) ) {
-                if( prevValue == null ) SetValue( false ); // null -> false
-                else if( prevValue == true ) SetValue( null ); // true -> null
-                else if( prevValue == false ) SetValue( true ); // false -> true
+            if( ImGui.Checkbox( Name, ref value ) ) {
+                if( prevValue == null ) SetValue( true ); // null -> true
+                else if( prevValue == true ) SetValue( false ); // true -> false
+                else if( prevValue == false ) SetValue( null ); // false -> null
             }
 
-            ImGui.SameLine();
-            if( Value == null ) {
-                ImGui.TextDisabled( Name );
-            }
-            else {
-                ImGui.Text( Name );
-            }
+            // https://github.com/ocornut/imgui/blob/master/imgui_widgets.cpp#L1134
+            if( Value != null ) return;
+            var color = ImGui.GetColorU32( ImGuiCol.CheckMark );
+            var rounding = ImGui.GetStyle().FrameRounding;
+            var size = ImGui.GetFrameHeight();
+            var pad = new Vector2( ( float )Math.Floor( size / 6f ), size / 2.5f );
+
+            ImGui.GetWindowDrawList().AddRectFilled( pos + pad, pos + new Vector2( size, size ) - pad, color, 0 );
         }
     }
 }
