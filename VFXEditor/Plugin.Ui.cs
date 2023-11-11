@@ -125,7 +125,7 @@ namespace VfxEditor {
                     if( width > ImGui.GetContentRegionAvail().X ) {
                         dropdown = true;
                         using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                        if( !ImGui.BeginMenu( FontAwesomeIcon.CaretDown.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                        if( !ImGui.BeginMenu( FontAwesomeIcon.EllipsisH.ToIconString() ) ) return; // Menu hidden, just skip the rest
                     }
                 }
 

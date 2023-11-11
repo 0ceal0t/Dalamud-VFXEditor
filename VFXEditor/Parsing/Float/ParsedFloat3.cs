@@ -1,5 +1,4 @@
 using ImGuiNET;
-using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 
@@ -23,16 +22,11 @@ namespace VfxEditor.Parsing {
             writer.Write( Value.Z );
         }
 
-        public override void Draw() {
-            using var _ = ImRaii.PushId( Name );
-            CopyPaste();
-
+        protected override void DrawBody() {
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
                 SetValue( value );
             }
         }
-
-        protected override void DrawBody() { }
     }
 }
