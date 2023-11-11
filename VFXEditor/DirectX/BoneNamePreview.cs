@@ -160,7 +160,7 @@ namespace VfxEditor.DirectX {
                     var startPos = boneScreenMap[bone.Name];
                     var endPos = boneScreenList[bone.ParentIndex];
 
-                    drawList.AddLine( startPos, endPos, 0xFFFFFFFF, 2f );
+                    drawList.AddLine( startPos, endPos, ImGui.ColorConvertFloat4ToU32( Plugin.Configuration.SkeletonBoneLineColor ), 2f );
                 }
             }
 
@@ -171,7 +171,7 @@ namespace VfxEditor.DirectX {
                 foreach( var group in groups ) {
                     var idx = 0;
                     foreach( var item in group ) {
-                        drawList.AddText( group.Key + new Vec2( 0, 12f * idx ), 0xFFFFFFFF, item );
+                        drawList.AddText( group.Key + new Vec2( 0, 12f * idx ), ImGui.ColorConvertFloat4ToU32( Plugin.Configuration.SkeletonBoneNameColor ), item );
                         idx++;
                     }
                 }

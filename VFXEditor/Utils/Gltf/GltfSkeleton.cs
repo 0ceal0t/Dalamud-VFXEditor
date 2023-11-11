@@ -5,6 +5,7 @@ using SharpGLTF.Materials;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
 using SharpGLTF.Transforms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -37,7 +38,12 @@ namespace VfxEditor.Utils.Gltf {
                 var scl = transform.Scale;
 
                 bone.Position.Value = new( pos.X, pos.Y, pos.Z, 1 );
-                bone.Rotation.Quat = new( rot.X, rot.Y, rot.Z, rot.W );
+                bone.Rotation.Quat = new(
+                    Cleanup( rot.X ),
+                    Cleanup( rot.Y ),
+                    Cleanup( rot.Z ),
+                    Cleanup( rot.W )
+                );
                 bone.Scale.Value = new( scl.X, scl.Y, scl.Z, 0 );
                 bone.Name.Value = name;
 
@@ -146,5 +152,7 @@ namespace VfxEditor.Utils.Gltf {
 
             return dummyMesh;
         }
+
+        public static float Cleanup( float value ) => Math.Abs( value ) < 0.0001f ? 0f : value;
     }
 }

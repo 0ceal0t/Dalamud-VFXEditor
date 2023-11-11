@@ -129,6 +129,8 @@ namespace VfxEditor {
         public BoneDisplay SklbBoneDisplay = BoneDisplay.Blender_Style_Perpendicular;
         public bool SklbMappingIndexDisplay = false;
         public bool SklbMappingUpdateExisting = true;
+        public Vector4 SkeletonBoneNameColor = new( 1f );
+        public Vector4 SkeletonBoneLineColor = new( 1f );
 
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
@@ -227,6 +229,10 @@ namespace VfxEditor {
             }
             if( ImGui.BeginTabItem( "File Browser" ) ) {
                 DrawFileBrowser();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Skeletons" ) ) {
+                DrawSkeletons();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Vfx" ) ) {
@@ -364,6 +370,13 @@ namespace VfxEditor {
             if( ImGui.ColorEdit4( "Image File Color", ref FileBrowserImageColor ) ) Save();
             if( ImGui.ColorEdit4( "Archive File Color", ref FileBrowserArchiveColor ) ) Save();
             if( ImGui.ColorEdit4( "FFXIV File Color", ref FileBrowserFfxivColor ) ) Save();
+        }
+
+        private void DrawSkeletons() {
+            using var child = ImRaii.Child( "Skeletons" );
+
+            if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
+            if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
         }
 
         private void DrawEditorSpecific() {

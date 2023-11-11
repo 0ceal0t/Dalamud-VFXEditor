@@ -220,10 +220,10 @@ namespace VfxEditor.Utils.Gltf {
                     if( rotSamplers.TryGetValue( track, out var rotSampler ) ) {
                         var _rot = rotSampler.GetPoint( time );
                         rot = new() {
-                            X = _rot.X,
-                            Y = _rot.Y,
-                            Z = _rot.Z,
-                            W = _rot.W
+                            X = GltfSkeleton.Cleanup( _rot.X ),
+                            Y = GltfSkeleton.Cleanup( _rot.Y ),
+                            Z = GltfSkeleton.Cleanup( _rot.Z ),
+                            W = GltfSkeleton.Cleanup( _rot.W )
                         };
                     }
 
