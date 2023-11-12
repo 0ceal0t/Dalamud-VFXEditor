@@ -92,7 +92,7 @@ namespace VfxEditor.DirectX {
                 } );
 
             var builder = new MeshBuilder( true, true, true );
-            builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 100, 100 );
+            builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
             var data = FromMeshBuilder( builder, null, false, false, true, out var count );
             Model.SetVertexes( Device, data, count );
         }

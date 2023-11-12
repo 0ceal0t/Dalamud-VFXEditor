@@ -43,26 +43,41 @@ PS_IN VS(VS_IN input)
 
     output.WorldPos = mul(float4(input.pos.xyz, 1.0f), World).xyz;
     output.Position = mul(float4(output.WorldPos, 1.0f), ViewProjection);
-    output.Normal = normalize(mul(input.norm.xyz, (float3x3)World));
     output.TexCoords = input.uv.xy;
-
-    output.CameraPos = mul(CameraPos, (float3x3)World);
-    output.LightPos = mul(LightPos, (float3x3)World);
+    
+    output.Normal = normalize(input.norm.xyz);
+    output.CameraPos = CameraPos;
+    output.LightPos = LightPos;
 
     return output;
 }
 
+
 float4 PS(PS_IN input) : SV_Target
 {
-    // Get light direction for this fragment
-    float3 lightDir = normalize(input.LightPos - input.WorldPos);
+    float3 cameraDir = normalize(-input.CameraPos);
+    
+    float ambientStrength = 0.1;
+    float specularStrength = 0.9;
+    float specularExponent = 100;
+    
+    float3 lightDirEye = input.LightPos - input.CameraPos;
+    float inverseDistance = 1 / length(lightDirEye);
+    lightDirEye *= inverseDistance; //normalise
+    float3 lightColor = LightColor;
 
-    float diffuseLighting = saturate(dot(input.Normal, -lightDir)); // per pixel diffuse lighting
+    float3 iAmbient = ambientStrength;
 
-    diffuseLighting *= ((length(lightDir) * length(lightDir)) / dot(input.LightPos - input.WorldPos, input.LightPos - input.WorldPos));
+    float diffuseFactor = max(0.0, dot(input.Normal, lightDirEye));
+    float3 iDiffuse = diffuseFactor;
 
-    float3 h = normalize(normalize(input.CameraPos - input.WorldPos) - lightDir);
-    float specLighting = pow(saturate(dot(h, input.Normal)), 2.0f);
+    float3 halfwayEye = normalize(cameraDir + lightDirEye);
+    float specularFactor = max(0.0, dot(halfwayEye, input.Normal));
+    float3 iSpecular = specularStrength * pow(specularFactor, 2 * specularExponent);
 
-    return float4(saturate(AmbientLightColor + (DiffuseColor * LightDiffuseColor * 0.6f) + (specLighting * 0.5f)), 1);
+    float3 pointLightIntensity = (iAmbient + iDiffuse + iSpecular) * lightColor * inverseDistance;
+    
+    float3 result = (pointLightIntensity) * DiffuseColor;
+
+    return float4(result, 1.0);
 }
