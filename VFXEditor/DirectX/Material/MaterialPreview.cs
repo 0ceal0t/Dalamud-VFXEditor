@@ -15,6 +15,11 @@ namespace VfxEditor.DirectX {
     // "Additionally, HLSL packs data so that it does not cross a 16-byte boundary"
     // I want to die
 
+    // TODO: skew
+    // TODO: bump
+    // TODO: tile
+    // TODO: dye
+
     [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
     public struct VSMaterialBuffer {
         public Vector3 ViewDirection; // 0x00
@@ -55,9 +60,14 @@ namespace VfxEditor.DirectX {
 
         protected Buffer MaterialPixelShaderBuffer;
         protected PSMaterialBuffer PSBufferData;
-
         protected Buffer MaterialVertexShaderBuffer;
         protected VSMaterialBuffer VSBufferData;
+
+        protected SamplerState Sampler;
+        protected ShaderResourceView DiffuseView;
+        protected ShaderResourceView NormalView;
+        protected Texture2D DiffuseTexture;
+        protected Texture2D NormalTexture;
 
         public MaterialPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
@@ -78,6 +88,21 @@ namespace VfxEditor.DirectX {
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
             var data = FromMeshBuilder( builder, null, false, false, true, out var count );
             Model.SetVertexes( Device, data, count );
+
+            // ================
+
+            Sampler = new( Device, new() {
+                Filter = Filter.MinMagMipLinear,
+                AddressU = TextureAddressMode.Wrap,
+                AddressV = TextureAddressMode.Wrap,
+                AddressW = TextureAddressMode.Wrap,
+                BorderColor = Color.Black,
+                ComparisonFunction = Comparison.Never,
+                MaximumAnisotropy = 16,
+                MipLodBias = 0,
+                MinimumLod = -float.MaxValue,
+                MaximumLod = float.MaxValue
+            } );
         }
 
         public void LoadColorRow( MtrlFile file, MtrlColorTableRow row ) {
@@ -92,7 +117,18 @@ namespace VfxEditor.DirectX {
                 SpecularPower = row.GlossStrength.Value,
             };
 
-            // TODO: tiling
+            // Clear out the old
+            DiffuseView?.Dispose();
+            DiffuseTexture?.Dispose();
+            NormalView?.Dispose();
+            NormalTexture?.Dispose();
+
+            var tileIdx = row.TileMaterial.Value;
+            var diffuse = Plugin.TextureManager.TileDiffuseFile;
+            var normal = Plugin.TextureManager.TileNormalFile;
+
+            DiffuseView = GetTexture( diffuse.Layers[tileIdx], diffuse.Header.Height, diffuse.Header.Width, out DiffuseTexture );
+            NormalView = GetTexture( normal.Layers[tileIdx], normal.Header.Height, normal.Header.Width, out NormalTexture );
 
             UpdateDraw();
         }
@@ -103,6 +139,8 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDraw() {
+            if( DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed ) return;
+
             var psBuffer = PSBufferData with {
                 LightColor = ToVec3( Plugin.Configuration.MaterialLightColor ),
                 AmbientColor = ToVec3( Plugin.Configuration.MaterialAmbientColor ),
@@ -120,13 +158,42 @@ namespace VfxEditor.DirectX {
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
 
+            Ctx.PixelShader.SetSampler( 0, Sampler );
+            Ctx.PixelShader.SetShaderResource( 0, DiffuseView );
+            Ctx.PixelShader.SetShaderResource( 1, NormalView );
+
             Model.Draw( Ctx, new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+        }
+
+        private ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {
+            var stream = DataStream.Create( data, true, true );
+            var rect = new DataRectangle( stream.DataPointer, width * 4 );
+            texture = new( Device, new() {
+                Width = width,
+                Height = height,
+                ArraySize = 1,
+                BindFlags = BindFlags.ShaderResource,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags = CpuAccessFlags.None,
+                Format = Format.B8G8R8A8_UNorm,
+                MipLevels = 1,
+                OptionFlags = ResourceOptionFlags.None,
+                SampleDescription = new SampleDescription( 1, 0 ),
+            }, rect );
+
+            return new ShaderResourceView( Device, texture );
         }
 
         public override void OnDispose() {
             Model?.Dispose();
             MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();
+
+            Sampler?.Dispose();
+            DiffuseView?.Dispose();
+            DiffuseTexture?.Dispose();
+            NormalView?.Dispose();
+            NormalTexture?.Dispose();
         }
 
         // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/Resources/Shaders/psCustomMeshBlinnPhong.hlsl
@@ -134,6 +201,7 @@ namespace VfxEditor.DirectX {
         // lmMaterial.SpecularColor = lmMaterial.SpecularColor * specularPower;
         // use power to multiply specular, gloss is the actual power constant
         // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
+        // https://github.com/sharpdx/SharpDX-Samples/blob/f4fb0fe0f12e3edc4eda3f6307d135a66fa172cd/StoreApp/OldSamplesToBeBackPorted/MiniCubeVideoTexture/CubeTextureRenderer.cs#L49
 
         public static Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }

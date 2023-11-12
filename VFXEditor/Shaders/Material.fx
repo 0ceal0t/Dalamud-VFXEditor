@@ -40,6 +40,10 @@ struct PS_IN
   float3 LightPos : LIGHTPOS;
 };
 
+SamplerState SamplerSurface : register(s0);
+Texture2D DiffuseTexture : register(t0);
+Texture2D Normaltexture : register(t1);
+
 PS_IN VS(VS_IN input)
 {
     PS_IN output = (PS_IN)0;

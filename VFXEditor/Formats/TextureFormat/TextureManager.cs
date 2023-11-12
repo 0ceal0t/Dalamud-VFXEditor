@@ -22,6 +22,8 @@ namespace VfxEditor.Formats.TextureFormat {
         public readonly List<IDalamudTextureWrap> Wraps = new();
         public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
 
+        public readonly TextureDataFile TileDiffuseFile;
+        public readonly TextureDataFile TileNormalFile;
         public readonly List<IDalamudTextureWrap> TileDiffuse = new();
         public readonly List<IDalamudTextureWrap> TileNormal = new();
 
@@ -35,13 +37,13 @@ namespace VfxEditor.Formats.TextureFormat {
             View = new( this, Textures );
 
             // For use in materials
-            var tileDiffuse = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );
-            var tileNormal = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_n.tex" );
-            foreach( var layer in tileDiffuse.Layers ) {
-                TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, tileDiffuse.Header.Width, tileDiffuse.Header.Height, 4 ) );
+            TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );
+            TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_n.tex" );
+            foreach( var layer in TileDiffuseFile.Layers ) {
+                TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height, 4 ) );
             }
-            foreach( var layer in tileNormal.Layers ) {
-                TileNormal.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, tileNormal.Header.Width, tileNormal.Header.Height, 4 ) );
+            foreach( var layer in TileNormalFile.Layers ) {
+                TileNormal.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileNormalFile.Header.Width, TileNormalFile.Header.Height, 4 ) );
             }
         }
 
