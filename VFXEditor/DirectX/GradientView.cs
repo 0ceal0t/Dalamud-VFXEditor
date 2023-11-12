@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX.Drawable;
+using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -150,7 +151,7 @@ namespace VfxEditor.DirectX {
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             Ctx.Rasterizer.State = State;
 
-            Gradient.Draw( Ctx, null, null );
+            Gradient.Draw( Ctx, new List<Buffer>(), new List<Buffer>() );
             Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );

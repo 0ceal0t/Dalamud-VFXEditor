@@ -71,7 +71,7 @@ namespace VfxEditor.DirectX {
             if( Model.ShaderError ) return;
             if( Model.Count == 0 && NumWireframe == 0 ) return;
 
-            Model.SetupCtx( Ctx, VertexShaderBuffer, PixelShaderBuffer );
+            Model.SetupCtx( Ctx, new List<Buffer>() { VertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer } );
 
             if( Model.Count > 0 ) {
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Model.Data, Utilities.SizeOf<Vector4>() * Model.Span, 0 ) );

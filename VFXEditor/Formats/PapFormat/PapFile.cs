@@ -196,7 +196,6 @@ namespace VfxEditor.PapFormat {
             MotionData?.Dispose();
             if( Plugin.DirectXManager.PapPreview.CurrentFile == this ) {
                 Plugin.DirectXManager.PapPreview.ClearFile();
-                Plugin.DirectXManager.PapPreview.ClearAnimation();
             }
 
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );

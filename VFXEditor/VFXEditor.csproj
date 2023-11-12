@@ -203,7 +203,13 @@
         <None Update="Shaders\Gradient.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\ModelPreview.fx">
+        <None Update="Shaders\Material.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\CommonBuffers.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\Model.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="VFXEditor.json">

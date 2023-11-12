@@ -22,7 +22,7 @@ namespace VfxEditor.DirectX {
         private readonly DirectXDrawable Emitters;
 
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            Model = new( Device, Path.Combine( shaderPath, "ModelPreview.fx" ), 3, true, false,
+            Model = new( Device, Path.Combine( shaderPath, "Model.fx" ), 3, true, false,
                 new InputElement[] {
                     new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new InputElement( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
@@ -41,7 +41,7 @@ namespace VfxEditor.DirectX {
 
             var builder = new MeshBuilder( true, false );
             builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
-            var data = FromMeshBuilder( builder, null, out var emitterCount );
+            var data = FromMeshBuilder( builder, null, false, false, false, out var emitterCount );
             Emitters.SetVertexes( Device, data, emitterCount );
         }
 

@@ -51,8 +51,9 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly ParsedString Shader;
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
 
-        private readonly MtrlColorTable ColorTable;
-        private readonly MtrlDyeTable DyeTable;
+        public readonly MtrlColorTable ColorTable;
+        public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Has_Dye_Table );
+        public readonly MtrlDyeTable DyeTable;
 
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
         private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
@@ -117,7 +118,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( reader ) : new();
+            ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( this, reader ) : new( this );
             DyeTable = ( Flags.HasFlag( TableFlags.Has_Dye_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
             reader.BaseStream.Seek( dataEnd, SeekOrigin.Begin );
 
@@ -264,11 +265,6 @@ namespace VfxEditor.Formats.MtrlFormat {
                 using var tab = ImRaii.TabItem( "Color Table" );
                 if( tab ) ColorTable.Draw();
             }
-
-            if( Flags.HasFlag( TableFlags.Has_Dye_Table ) ) {
-                using var tab = ImRaii.TabItem( "Dye Table" );
-                if( tab ) DyeTable.Draw();
-            }
         }
 
         private void DrawParameters() {
@@ -342,5 +338,12 @@ namespace VfxEditor.Formats.MtrlFormat {
         }
 
         private static uint Masked( uint flags ) => flags & ( ~0x11u );
+
+        public override void Dispose() {
+            base.Dispose();
+            if( Plugin.DirectXManager.MaterialPreview.CurrentFile == this ) {
+                Plugin.DirectXManager.MaterialPreview.ClearFile();
+            }
+        }
     }
 }

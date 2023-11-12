@@ -8,14 +8,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly List<MtrlColorTableRow> Rows = new();
         private readonly MtrlColorTableSplitView RowView;
 
-        public MtrlColorTable() {
-            for( var i = 0; i < 16; i++ ) Rows.Add( new() );
-            RowView = new( Rows );
+        public MtrlColorTable( MtrlFile file ) {
+            for( var i = 0; i < 16; i++ ) Rows.Add( new( file ) );
+            RowView = new( file, Rows );
         }
 
-        public MtrlColorTable( BinaryReader reader ) {
-            for( var i = 0; i < 16; i++ ) Rows.Add( new( reader ) );
-            RowView = new( Rows );
+        public MtrlColorTable( MtrlFile file, BinaryReader reader ) {
+            for( var i = 0; i < 16; i++ ) Rows.Add( new( file, reader ) );
+            RowView = new( file, Rows );
         }
 
         public void Draw() => RowView.Draw();

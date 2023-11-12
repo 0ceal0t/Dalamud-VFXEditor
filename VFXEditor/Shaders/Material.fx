@@ -1,3 +1,5 @@
+#include"CommonBuffers.fx"
+
 struct VS_IN
 {
     float4 pos : POSITION;
@@ -23,21 +25,6 @@ struct PS_IN
     float4 col : COLOR;
     float2 barycentricCoordinates : TEXCOORD9;
 };
-
-cbuffer VSConstants : register(b0)
-{
-    float4x4 World;
-    float4x4 ViewProjection;
-    float4x4 CubeMatrix;
-}
-
-cbuffer PSConstants : register(b0)
-{
-    float4 LightDirection;
-    float4 LightColor;
-    int ShowEdges;
-    
-}
 
 GS_IN VS(VS_IN input)
 {

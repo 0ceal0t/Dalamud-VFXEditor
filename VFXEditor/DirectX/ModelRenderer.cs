@@ -87,7 +87,7 @@ namespace VfxEditor.DirectX {
             for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 1, 0, 1 ) );
             for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 0, 1, 1 ) );
 
-            var data = FromMeshBuilder( builder, colors, out var cubeCount );
+            var data = FromMeshBuilder( builder, colors, false, false, false, out var cubeCount );
             Cube.SetVertexes( Device, data, cubeCount );
         }
 
@@ -320,33 +320,42 @@ namespace VfxEditor.DirectX {
             OnDispose();
         }
 
-        public static Vector4[] FromMeshBuilder( MeshBuilder builder, List<Vector4> colors, out int indexCount ) {
-            var useColors = colors != null;
-
+        public static Vector4[] FromMeshBuilder( MeshBuilder builder, List<Vector4> colors, bool useTangents, bool useBiTangents, bool useUv, out int indexCount ) {
             var mesh = builder.ToMesh();
             mesh.Normals = mesh.CalculateNormals();
-            var normals = mesh.Normals;
-            var positions = mesh.Positions;
-            var indexes = mesh.Indices;
 
             var data = new List<Vector4>();
+            for( var idx = 0; idx < mesh.Indices.Count; idx++ ) {
+                var pointIdx = mesh.Indices[idx];
 
-            for( var idx = 0; idx < indexes.Count; idx++ ) {
-                var pointIdx = indexes[idx];
-                var position = positions[pointIdx];
-                var normal = normals[pointIdx];
+                var position = mesh.Positions[pointIdx];
+                data.Add( new( position.X, position.Y, position.Z, 1 ) );
 
-                data.Add( new( position.X, position.Y, position.Z, 1 ) ); // POSITION
-
-                if( useColors ) {
+                if( colors != null ) {
                     var color = colors[pointIdx];
-                    data.Add( new( color.X, color.Y, color.Z, color.W ) ); // COLOR
+                    data.Add( new( color.X, color.Y, color.Z, color.W ) );
                 }
 
-                data.Add( new( normal.X, normal.Y, normal.Z, 0 ) ); // NORMAL
+                if( useTangents ) {
+                    var tangent = mesh.Tangents[pointIdx];
+                    data.Add( new( tangent.X, tangent.Y, tangent.Z, 1 ) );
+                }
+
+                if( useBiTangents ) {
+                    var biTangent = mesh.BiTangents[pointIdx];
+                    data.Add( new( biTangent.X, biTangent.Y, biTangent.Z, 1 ) );
+                }
+
+                if( useUv ) {
+                    var uv = mesh.TextureCoordinates[pointIdx];
+                    data.Add( new( uv.X, uv.Y, uv.X, uv.Y ) );
+                }
+
+                var normal = mesh.Normals[pointIdx];
+                data.Add( new( normal.X, normal.Y, normal.Z, 0 ) );
             }
 
-            indexCount = indexes.Count;
+            indexCount = mesh.Indices.Count;
             return data.ToArray();
         }
     }

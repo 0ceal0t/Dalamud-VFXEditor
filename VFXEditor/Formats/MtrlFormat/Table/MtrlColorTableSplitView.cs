@@ -5,7 +5,11 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTableSplitView : UiSplitView<MtrlColorTableRow> {
-        public MtrlColorTableSplitView( List<MtrlColorTableRow> items ) : base( "Row", items, false, false ) { }
+        private readonly MtrlFile File;
+
+        public MtrlColorTableSplitView( MtrlFile file, List<MtrlColorTableRow> items ) : base( "Row", items, false, false ) {
+            File = file;
+        }
 
         protected override bool DrawLeftItem( MtrlColorTableRow item, int idx ) {
             using var _ = ImRaii.PushId( idx );
@@ -21,6 +25,12 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             if( ImGui.Selectable( $"Row {idx}", item == Selected ) ) Selected = item;
 
             return false;
+        }
+
+        protected override void DrawSelected() {
+            var idx = Items.IndexOf( Selected );
+            using var _ = ImRaii.PushId( idx );
+            Selected.Draw( File.DyeTableEnabled ? File.DyeTable.Rows[idx] : null );
         }
     }
 }

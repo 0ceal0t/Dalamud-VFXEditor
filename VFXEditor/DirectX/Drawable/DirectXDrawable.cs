@@ -1,8 +1,10 @@
+using OtterGui;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
+using System.Collections.Generic;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -35,15 +37,15 @@ namespace VfxEditor.DirectX.Drawable {
             Span = span;
 
             try {
-                CompiledVertexShader = ShaderBytecode.CompileFromFile( shader, "VS", "vs_4_0" );
-                CompiledPixelShader = ShaderBytecode.CompileFromFile( shader, "PS", "ps_4_0" );
+                CompiledVertexShader = ShaderBytecode.CompileFromFile( shader, "VS", "vs_4_0", include: DirectXManager.IncludeHandler );
+                CompiledPixelShader = ShaderBytecode.CompileFromFile( shader, "PS", "ps_4_0", include: DirectXManager.IncludeHandler );
                 VertexShader = new VertexShader( device, CompiledVertexShader );
                 PixelShader = new PixelShader( device, CompiledPixelShader );
                 Signature = ShaderSignature.GetInputSignature( CompiledVertexShader );
                 Layout = new InputLayout( device, Signature, layout );
 
                 if( UseGeometryShader ) {
-                    CompiledGeometryShader = ShaderBytecode.CompileFromFile( shader, "GS", "gs_4_0" );
+                    CompiledGeometryShader = ShaderBytecode.CompileFromFile( shader, "GS", "gs_4_0", include: DirectXManager.IncludeHandler );
                     GeometryShader = new GeometryShader( device, CompiledGeometryShader );
                 }
             }
@@ -75,11 +77,13 @@ namespace VfxEditor.DirectX.Drawable {
             Instances = Buffer.Create( device, BindFlags.VertexBuffer, data );
         }
 
-        public virtual void Draw( DeviceContext ctx, Buffer vertexBuffer, Buffer pixelBuffer ) {
+        public virtual void Draw( DeviceContext ctx, Buffer vertexBuffer, Buffer pixelBuffer ) => Draw( ctx, new List<Buffer>() { vertexBuffer }, new List<Buffer>() { pixelBuffer } );
+
+        public virtual void Draw( DeviceContext ctx, List<Buffer> vertexBuffers, List<Buffer> pixelBuffers ) {
             if( ShaderError ) return;
             if( Count == 0 || ( UseInstances && InstanceCount == 0 ) ) return;
 
-            SetupCtx( ctx, vertexBuffer, pixelBuffer );
+            SetupCtx( ctx, vertexBuffers, pixelBuffers );
             ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Data, Utilities.SizeOf<Vector4>() * Span, 0 ) );
 
             if( UseInstances ) {
@@ -93,15 +97,20 @@ namespace VfxEditor.DirectX.Drawable {
             ctx.GeometryShader.Set( null );
         }
 
-        public void SetupCtx( DeviceContext ctx, Buffer vertexBuffer, Buffer pixelBuffer ) {
+        public void SetupCtx( DeviceContext ctx, List<Buffer> vertexBuffers, List<Buffer> pixelBuffers ) {
             ctx.PixelShader.Set( PixelShader );
             ctx.GeometryShader.Set( GeometryShader );
             ctx.VertexShader.Set( VertexShader );
             ctx.InputAssembler.InputLayout = Layout;
             ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
-            if( vertexBuffer != null ) ctx.VertexShader.SetConstantBuffer( 0, vertexBuffer );
-            if( pixelBuffer != null ) ctx.PixelShader.SetConstantBuffer( 0, pixelBuffer );
+            foreach( var (buffer, idx) in vertexBuffers.WithIndex() ) {
+                ctx.VertexShader.SetConstantBuffer( idx, buffer );
+            }
+
+            foreach( var (buffer, idx) in pixelBuffers.WithIndex() ) {
+                ctx.PixelShader.SetConstantBuffer( idx, buffer );
+            }
         }
 
         public virtual void Dispose() {

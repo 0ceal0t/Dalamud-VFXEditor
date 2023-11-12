@@ -1,3 +1,5 @@
+using ImGuiNET;
+using OtterGui.Raii;
 using System;
 using System.IO;
 using System.Numerics;
@@ -7,6 +9,8 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTableRow : IUiItem {
+        private readonly MtrlFile File;
+
         public const int Size = 32; // 16 ushorts
 
         public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
@@ -19,9 +23,11 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly ParsedHalf2 MaterialSkew = new( "Material Skew" );
         public readonly ParsedHalf MaterialRepeatY = new( "Material Repeat Y", 16f );
 
-        public MtrlColorTableRow() { }
+        public MtrlColorTableRow( MtrlFile file ) {
+            File = file;
+        }
 
-        public MtrlColorTableRow( BinaryReader reader ) {
+        public MtrlColorTableRow( MtrlFile file, BinaryReader reader ) : this( file ) {
             Diffuse.Read( reader );
             SpecularStrength.Read( reader );
             Specular.Read( reader );
@@ -55,6 +61,29 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             MaterialRepeatX.Draw();
             MaterialRepeatY.Draw();
             MaterialSkew.Draw();
+
+            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this ) {
+                Plugin.DirectXManager.MaterialPreview.LoadColorRow( File, this );
+            }
+            Plugin.DirectXManager.MaterialPreview.DrawInline();
+        }
+
+        public void Draw( MtrlDyeTableRow dye ) {
+            if( dye == null ) {
+                Draw();
+                return;
+            }
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Color" ) ) {
+                if( tab ) Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Dye" ) ) {
+                if( tab ) dye.Draw();
+            }
         }
     }
 }

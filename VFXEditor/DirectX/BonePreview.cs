@@ -13,7 +13,7 @@ namespace VfxEditor.DirectX {
         protected DirectXDrawable Model;
 
         public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            Model = new( Device, Path.Combine( shaderPath, "ModelPreview.fx" ), 3, true, false,
+            Model = new( Device, Path.Combine( shaderPath, "Model.fx" ), 3, true, false,
                 new InputElement[] {
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),

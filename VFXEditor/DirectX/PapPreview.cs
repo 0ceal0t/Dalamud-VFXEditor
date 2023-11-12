@@ -26,6 +26,7 @@ namespace VfxEditor.DirectX {
 
         public void ClearFile() {
             CurrentFile = null;
+            ClearAnimation();
         }
 
         public void ClearAnimation() {
