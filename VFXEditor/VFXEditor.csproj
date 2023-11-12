@@ -206,7 +206,7 @@
         <None Update="Shaders\Material.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\CommonBuffers.fx">
+        <None Update="Shaders\ModelBuffers.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\Model.fx">

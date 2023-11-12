@@ -38,6 +38,7 @@ namespace VfxEditor.DirectX {
         private float Yaw;
         private float Pitch;
         private Vector3 Position = new( 0, 0, 0 );
+        protected Vector3 CameraPosition;
         private float Distance = 5;
         protected Matrix LocalMatrix = Matrix.Scaling( new Vector3( -1, 1, 1 ) );
 
@@ -190,8 +191,9 @@ namespace VfxEditor.DirectX {
         public void UpdateViewMatrix() {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             var lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
+            CameraPosition = Position - Distance * lookDirection;
 
-            ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
+            ViewMatrix = Matrix.LookAtLH( CameraPosition, Position, Vector3.UnitY );
             CubeMatrix = Matrix.LookAtLH( new Vector3( 0 ) - 1 * lookDirection, new Vector3( 0 ), Vector3.UnitY );
             Draw();
         }

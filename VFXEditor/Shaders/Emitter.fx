@@ -1,4 +1,4 @@
-#include"CommonBuffers.fx"
+#include"ModelBuffers.fx"
 
 struct VS_IN
 {
