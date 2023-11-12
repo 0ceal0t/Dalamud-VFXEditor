@@ -14,12 +14,19 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
+// TODO: fix explicit/sequential
+// TODO: multiple lights
+// TODO: move light stuff to configurable objects
+
 namespace VfxEditor.DirectX {
     [StructLayout( LayoutKind.Sequential )]
     public struct VSBufferStruct {
         public Matrix World;
         public Matrix ViewProjection;
         public Matrix CubeMatrix;
+        public Matrix Projection;
+        public Matrix View;
+        public Matrix NormalMatrix;
     }
 
     [StructLayout( LayoutKind.Sequential )]
@@ -27,7 +34,7 @@ namespace VfxEditor.DirectX {
         public Vector4 LightDirection;
         public Vector4 LightColor;
         public int ShowEdges;
-        public Vector3 Padding;
+        public Vector3 _Pad0;
     }
 
     public abstract class ModelRenderer : Renderer {
@@ -229,6 +236,9 @@ namespace VfxEditor.DirectX {
                 World = world,
                 ViewProjection = viewProj,
                 CubeMatrix = cubeProj,
+                Projection = ProjMatrix,
+                View = ViewMatrix,
+                NormalMatrix = Matrix.Invert( Matrix.Multiply( ViewMatrix, LocalMatrix ) )
             };
 
             var psBuffer = new PSBufferStruct {
