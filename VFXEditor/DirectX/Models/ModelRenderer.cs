@@ -16,23 +16,23 @@ using Vec2 = System.Numerics.Vector2;
 
 // TODO: fix explicit/sequential
 // TODO: multiple lights
-// TODO: move light stuff to configurable objects
+// TODO: move light stuff to configurable objects (Including radius and falloff)
+// TODO: rename matrixes
+// TODO: configurable background color
 
 namespace VfxEditor.DirectX {
     [StructLayout( LayoutKind.Sequential )]
     public struct VSBufferStruct {
-        public Matrix World;
-        public Matrix ViewProjection;
-        public Matrix CubeMatrix;
-        public Matrix Projection;
-        public Matrix View;
+        public Matrix ModelMatrix;
+        public Matrix ViewMatrix;
+        public Matrix ProjectionMatrix;
+        public Matrix ViewProjectionMatrix;
         public Matrix NormalMatrix;
+        public Matrix CubeMatrix;
     }
 
     [StructLayout( LayoutKind.Sequential )]
     public struct PSBufferStruct {
-        public Vector4 LightDirection;
-        public Vector4 LightColor;
         public int ShowEdges;
         public Vector3 _Pad0;
     }
@@ -40,12 +40,13 @@ namespace VfxEditor.DirectX {
     public abstract class ModelRenderer : Renderer {
         public IntPtr Output => RenderShad.NativePointer;
         public bool IsDragging = false;
+        protected bool NeedsRedraw = false;
 
         private Vector2 LastMousePos;
         private float Yaw;
         private float Pitch;
         private Vector3 Position = new( 0, 0, 0 );
-        protected Vector3 CameraPosition;
+        protected Vector3 ViewDirection;
         private float Distance = 5;
         protected Matrix LocalMatrix = Matrix.Scaling( new Vector3( -1, 1, 1 ) );
 
@@ -199,7 +200,7 @@ namespace VfxEditor.DirectX {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             var lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
             //CameraPosition = Position - Distance * lookDirection;
-            CameraPosition = lookDirection;
+            ViewDirection = lookDirection;
 
             ViewMatrix = Matrix.LookAtLH( Position - Distance * lookDirection, Position, Vector3.UnitY );
             CubeMatrix = Matrix.LookAtLH( new Vector3( 0 ) - 1 * lookDirection, new Vector3( 0 ), Vector3.UnitY );
@@ -220,7 +221,9 @@ namespace VfxEditor.DirectX {
 
         protected virtual bool ShowEdges() => Plugin.Configuration.ModelShowEdges && !Plugin.Configuration.ModelWireframe;
 
-        public void Draw() {
+        public void Redraw() { NeedsRedraw = true; }
+
+        public override void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
@@ -233,17 +236,15 @@ namespace VfxEditor.DirectX {
             world.Transpose();
 
             var vsBuffer = new VSBufferStruct {
-                World = world,
-                ViewProjection = viewProj,
+                ModelMatrix = world,
+                ViewProjectionMatrix = viewProj,
                 CubeMatrix = cubeProj,
-                Projection = ProjMatrix,
-                View = ViewMatrix,
+                ProjectionMatrix = ProjMatrix,
+                ViewMatrix = ViewMatrix,
                 NormalMatrix = Matrix.Invert( Matrix.Multiply( ViewMatrix, LocalMatrix ) )
             };
 
             var psBuffer = new PSBufferStruct {
-                LightDirection = new( 1.0f, 1.0f, 1.0f, 1.0f ),
-                LightColor = new( 10.0f, 8.0f, 5.0f, 0.0f ),
                 ShowEdges = ShowEdges() ? 1 : 0,
             };
 
@@ -252,7 +253,12 @@ namespace VfxEditor.DirectX {
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
-            Ctx.ClearRenderTargetView( RenderView, new Color4( 0.272f, 0.273f, 0.320f, 1.0f ) );
+            Ctx.ClearRenderTargetView( RenderView, new Color4(
+                Plugin.Configuration.RendererBackground.X,
+                Plugin.Configuration.RendererBackground.Y,
+                Plugin.Configuration.RendererBackground.Z,
+                Plugin.Configuration.RendererBackground.W
+            ) );
 
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             Ctx.Rasterizer.State = RasterizeState;
@@ -275,6 +281,11 @@ namespace VfxEditor.DirectX {
         protected virtual bool CanDrag() => true;
 
         protected void DrawImage() {
+            if( NeedsRedraw ) {
+                Draw();
+                NeedsRedraw = false;
+            }
+
             var cursor = ImGui.GetCursorScreenPos();
             var size = ImGui.GetContentRegionAvail();
             Resize( size );
@@ -319,7 +330,7 @@ namespace VfxEditor.DirectX {
 
         public abstract void OnDispose();
 
-        public void Dispose() {
+        public override void Dispose() {
             RasterizeState?.Dispose();
             RenderTex?.Dispose();
             RenderShad?.Dispose();

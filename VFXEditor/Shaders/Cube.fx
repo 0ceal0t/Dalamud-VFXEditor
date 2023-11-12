@@ -18,7 +18,7 @@ PS_IN VS(VS_IN input)
 {
     PS_IN output = (PS_IN) 0;
 
-    float4x4 finalMatrix = mul(World, CubeMatrix);
+    float4x4 finalMatrix = mul(ModelMatrix, CubeMatrix);
 
     output.pos = mul(input.pos, finalMatrix);
     output.norm = input.norm;

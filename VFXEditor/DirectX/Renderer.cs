@@ -2,7 +2,7 @@ using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public class Renderer {
+    public abstract class Renderer {
         protected readonly Device Device;
         protected readonly DeviceContext Ctx;
 
@@ -20,5 +20,9 @@ namespace VfxEditor.DirectX {
             Ctx.Rasterizer.State = oldState;
             Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
         }
+
+        public abstract void Draw();
+
+        public abstract void Dispose();
     }
 }

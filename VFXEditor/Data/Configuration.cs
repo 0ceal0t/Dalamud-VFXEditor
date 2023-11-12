@@ -123,6 +123,15 @@ namespace VfxEditor {
         public bool FileBrowserImagePreview = true;
         public bool FileBrowserOverwriteDontAsk = false;
 
+        public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
+        public Vector3 MaterialLightColor = new( 1.0f, 0.7843f, 0.4078f );
+        public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
+        public float MaterialRoughness = 0.2f;
+        public float MaterialAlbedo = 0.5f;
+        public Vector3 MaterialLightPosition = new( 2, 2, 2 );
+        public float MaterialLightRadius = 5f;
+        public float MaterialLightFalloff = 0.15f;
+
         public bool PhybSkeletonSplit = true;
         public bool EidSkeletonSplit = true;
         public bool ShowBoneNames = true;
@@ -231,8 +240,8 @@ namespace VfxEditor {
                 DrawFileBrowser();
                 ImGui.EndTabItem();
             }
-            if( ImGui.BeginTabItem( "Skeletons" ) ) {
-                DrawSkeletons();
+            if( ImGui.BeginTabItem( "3D Preview" ) ) {
+                Draw3DView();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Vfx" ) ) {
@@ -372,11 +381,37 @@ namespace VfxEditor {
             if( ImGui.ColorEdit4( "FFXIV File Color", ref FileBrowserFfxivColor ) ) Save();
         }
 
-        private void DrawSkeletons() {
-            using var child = ImRaii.Child( "Skeletons" );
+        private void Draw3DView() {
+            using var child = ImRaii.Child( "3D View" );
 
-            if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
-            if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
+            if( ImGui.ColorEdit4( "Background Color", ref RendererBackground ) ) {
+                Plugin.DirectXManager.Redraw();
+                Save();
+            }
+
+            if( ImGui.CollapsingHeader( "Skeleton" ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
+                if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
+            }
+
+            if( ImGui.CollapsingHeader( "Material" ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+
+                var materialUpdated = false;
+                materialUpdated |= ImGui.InputFloat3( "Light Position", ref MaterialLightPosition );
+                materialUpdated |= ImGui.ColorEdit3( "Light Color", ref MaterialLightColor );
+                materialUpdated |= ImGui.InputFloat( "Light Radius", ref MaterialLightRadius );
+                materialUpdated |= ImGui.InputFloat( "Light Falloff", ref MaterialLightFalloff );
+                materialUpdated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
+                materialUpdated |= ImGui.InputFloat( "Roughness", ref MaterialRoughness );
+                materialUpdated |= ImGui.InputFloat( "Albedo", ref MaterialAlbedo );
+
+                if( materialUpdated ) {
+                    Plugin.DirectXManager.MaterialPreview.Redraw();
+                    Save();
+                }
+            }
         }
 
         private void DrawEditorSpecific() {

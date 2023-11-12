@@ -21,7 +21,7 @@ PS_IN VS(VS_IN input)
     PS_IN output = (PS_IN) 0;
 
     float4x4 instanceMatrix = float4x4(input.ir0, input.ir1, input.ir2, input.ir3);
-    float4x4 finalMatrix = mul(instanceMatrix, mul(World, ViewProjection));
+    float4x4 finalMatrix = mul(instanceMatrix, mul(ModelMatrix, ViewProjectionMatrix));
 
     output.pos = mul(input.pos, finalMatrix);
     output.norm = input.norm;
@@ -31,17 +31,17 @@ PS_IN VS(VS_IN input)
 
 float4 PS(PS_IN input) : SV_Target
 {
-    float3 LightPos = { 0.0f, 1.0f, 0.0f };
-    float3 Norm = normalize(input.norm.xyz);
-    float3 WorldPos = input.pos.xyz;
-    float3 LightDir = normalize(LightPos - WorldPos);
+    float3 lightPos = { 0.0f, 1.0f, 0.0f };
+    float3 norm = normalize(input.norm.xyz);
+    float3 worldPos = input.pos.xyz;
+    float3 lightDir = normalize(lightPos - worldPos);
 
     float3 lightColor = { 1.0f, 1.0f, 1.0f };
-    float3 ObjectColor = { 0.0f, 1.0f, 0.0f };
-    float3 Ambient = { 0.7f, 0.7f, 0.7f };
-    float Diffuse = saturate(dot(Norm, -LightDir));
-    float3 Result = saturate((Ambient + (lightColor * Diffuse * 0.6f)) * ObjectColor);
+    float3 color = { 0.0f, 1.0f, 0.0f };
+    float3 ambient = { 0.7f, 0.7f, 0.7f };
+    float diffuse = saturate(dot(norm, -lightDir));
+    float3 result = saturate((ambient + (lightColor * diffuse * 0.6f)) * color);
 
-    float4 Out_Col = { Result.x, Result.y, Result.z, 1.0f };
-    return Out_Col;
+    return float4(result, 1);
+
 }

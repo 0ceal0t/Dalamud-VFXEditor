@@ -142,7 +142,7 @@ namespace VfxEditor.DirectX {
             DepthView = new DepthStencilView( Device, DepthTexture );
         }
 
-        public void Draw() {
+        public override void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
@@ -157,7 +157,7 @@ namespace VfxEditor.DirectX {
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
         }
 
-        public void Dispose() {
+        public override void Dispose() {
             State?.Dispose();
             RenderTexture?.Dispose();
             ShaderView?.Dispose();

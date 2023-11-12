@@ -11,53 +11,40 @@ using VfxEditor.Formats.MtrlFormat.Table;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    [StructLayout( LayoutKind.Sequential )]
-    public struct Vec3 {
-        public float X;
-        public float Y;
-        public float Z;
-
-        public Vec3( float x, float y, float z ) {
-            X = x; Y = y; Z = z;
-        }
-
-        public Vec3( Vector3 val ) {
-            X = val.X;
-            Y = val.Y;
-            Z = val.Z;
-        }
-
-        public Vec3( System.Numerics.Vector3 val ) {
-            X = val.X;
-            Y = val.Y;
-            Z = val.Z;
-        }
-    }
-
     // https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
     // "Additionally, HLSL packs data so that it does not cross a 16-byte boundary"
     // I want to die
-    [StructLayout( LayoutKind.Explicit, Size = 0x40 )]
-    public struct PSMaterialBuffer {
-        [FieldOffset( 0x00 )]
-        public Vec3 DiffuseColor;
-        [FieldOffset( 0x10 )]
-        public Vec3 EmissiveColor;
-        [FieldOffset( 0x20 )]
-        public Vec3 SpecularColor;
 
-        [FieldOffset( 0x2C )]
-        public float SpecularPower;
-        [FieldOffset( 0x30 )]
-        public float SpecularIntensity;
+    [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
+    public struct VSMaterialBuffer {
+        public Vector3 ViewDirection; // 0x00
+        public float _Pad0;
+
+        public Vector3 LightPos; // 0x10
+        public float _Pad1;
     }
 
-    [StructLayout( LayoutKind.Explicit, Size = 0x20 )]
-    public struct VSMaterialBuffer {
-        [FieldOffset( 0x00 )]
-        public Vec3 CameraPos;
-        [FieldOffset( 0x10 )]
-        public Vec3 LightPos;
+    [StructLayout( LayoutKind.Sequential, Size = 0x60 )]
+    public struct PSMaterialBuffer {
+        public Vector3 DiffuseColor; // 0x00
+        public float _Pad0;
+
+        public Vector3 EmissiveColor; // 0x10
+        public float _Pad1;
+
+        public Vector3 SpecularColor; // 0x20
+
+        public float SpecularPower; // 0x2C
+        public float SpecularIntensity; // 0x30
+
+        public Vector3 LightColor; // 0x34
+
+        public Vector3 AmbientColor; // 0x40
+
+        public float Roughness; // 0x4C
+        public float Albedo; // 0x50
+        public float Radius; // 0x54
+        public float Falloff; // 0x58
     }
 
     public class MaterialPreview : ModelRenderer {
@@ -78,9 +65,7 @@ namespace VfxEditor.DirectX {
 
             PSBufferData = new() { };
 
-            VSBufferData = new() {
-                LightPos = new( 2, 2, 2 )
-            };
+            VSBufferData = new() { };
 
             Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 3, false, false,
                 new InputElement[] {
@@ -100,9 +85,9 @@ namespace VfxEditor.DirectX {
             CurrentColorRow = row;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = new( row.Diffuse.Value ),
-                EmissiveColor = new( row.Emissive.Value ),
-                SpecularColor = new( row.Specular.Value ),
+                DiffuseColor = ToVec3( row.Diffuse.Value ),
+                EmissiveColor = ToVec3( row.Emissive.Value ),
+                SpecularColor = ToVec3( row.Specular.Value ),
                 SpecularIntensity = row.SpecularStrength.Value,
                 SpecularPower = row.GlossStrength.Value,
             };
@@ -118,10 +103,18 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDraw() {
-            var psBuffer = PSBufferData;
+            var psBuffer = PSBufferData with {
+                LightColor = ToVec3( Plugin.Configuration.MaterialLightColor ),
+                AmbientColor = ToVec3( Plugin.Configuration.MaterialAmbientColor ),
+                Roughness = Plugin.Configuration.MaterialRoughness,
+                Albedo = Plugin.Configuration.MaterialAlbedo,
+                Radius = Plugin.Configuration.MaterialLightRadius,
+                Falloff = Plugin.Configuration.MaterialLightFalloff
+            };
 
             var vsBuffer = VSBufferData with {
-                CameraPos = new( CameraPosition )
+                LightPos = ToVec3( Plugin.Configuration.MaterialLightPosition ),
+                ViewDirection = ViewDirection
             };
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
@@ -141,5 +134,7 @@ namespace VfxEditor.DirectX {
         // lmMaterial.SpecularColor = lmMaterial.SpecularColor * specularPower;
         // use power to multiply specular, gloss is the actual power constant
         // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
+
+        public static Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }
 }

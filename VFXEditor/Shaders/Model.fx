@@ -30,10 +30,10 @@ GS_IN VS(VS_IN input)
 {
     GS_IN output = (GS_IN)0;
 
-    output.PositionWS = mul(float4(input.pos.xyz, 1.0f), World).xyz;
-    output.PositionCS = mul(float4(output.PositionWS, 1.0f), ViewProjection);
+    output.PositionWS = mul(float4(input.pos.xyz, 1.0f), ModelMatrix).xyz;
+    output.PositionCS = mul(float4(output.PositionWS, 1.0f), ViewProjectionMatrix);
     output.DepthVS = output.PositionCS.w;
-    output.NormalWS = normalize(mul(input.norm.xyz, (float3x3)World));
+    output.NormalWS = normalize(mul(input.norm.xyz, (float3x3)ModelMatrix));
     output.col = input.col;
 
     return output;
