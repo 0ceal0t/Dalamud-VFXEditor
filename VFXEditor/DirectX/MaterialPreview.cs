@@ -16,7 +16,6 @@ namespace VfxEditor.DirectX {
         public float X;
         public float Y;
         public float Z;
-        public float Padding; // HLSL weirdness
 
         public Vec3( float x, float y, float z ) {
             X = x; Y = y; Z = z;
@@ -35,26 +34,29 @@ namespace VfxEditor.DirectX {
         }
     }
 
-    [StructLayout( LayoutKind.Sequential )]
+    // https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
+    // "Additionally, HLSL packs data so that it does not cross a 16-byte boundary"
+    // I want to die
+    [StructLayout( LayoutKind.Explicit, Size = 0x40 )]
     public struct PSMaterialBuffer {
-        public Vec3 LightDiffuseColor;
-        public Vec3 LightSpecularColor;
-
-        // Update with new material
-        // TODO: tiles + textures
+        [FieldOffset( 0x00 )]
         public Vec3 DiffuseColor;
-        public Vec3 AmbientLightColor;
+        [FieldOffset( 0x10 )]
         public Vec3 EmissiveColor;
+        [FieldOffset( 0x20 )]
         public Vec3 SpecularColor;
 
+        [FieldOffset( 0x2C )]
         public float SpecularPower;
+        [FieldOffset( 0x30 )]
         public float SpecularIntensity;
-        public Vector2 Padding;
     }
 
-    [StructLayout( LayoutKind.Sequential )]
+    [StructLayout( LayoutKind.Explicit, Size = 0x20 )]
     public struct VSMaterialBuffer {
+        [FieldOffset( 0x00 )]
         public Vec3 CameraPos;
+        [FieldOffset( 0x10 )]
         public Vec3 LightPos;
     }
 
@@ -74,14 +76,10 @@ namespace VfxEditor.DirectX {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
-            PSBufferData = new() { // TODO: update these
-                LightDiffuseColor = new( 0.7f, 0.7f, 0.7f ),
-                LightSpecularColor = new( 0.7f, 0.7f, 0.7f ),
-                AmbientLightColor = new( 0.2f, 0.2f, 0.2f ),
-            };
+            PSBufferData = new() { };
 
-            VSBufferData = new() { // TODO: update these
-                LightPos = new( 1, 1, 1 )
+            VSBufferData = new() {
+                LightPos = new( 2, 2, 2 )
             };
 
             Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 3, false, false,
