@@ -10,6 +10,7 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -78,7 +79,7 @@ namespace VfxEditor {
             await Task.Run( async () => {
                 await Task.Delay( 100 );
                 WorkspaceFileCount = Managers.Count - 1;
-                foreach( var manager in Managers.Where( x => x != null ) ) { manager.ToDefault(); }
+                foreach( var manager in Managers.Where( x => x != null ) ) { manager.Reset( ResetType.ToDefault ); }
                 FileBrowserManager.Dispose();
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
@@ -138,7 +139,7 @@ namespace VfxEditor {
 
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
             foreach( var manager in Managers.Where( x => x != null ) ) {
-                manager.Reset();
+                manager.Reset( ResetType.Reset );
                 manager.WorkspaceImport( meta, loadLocation );
             }
             FileBrowserManager.Dispose();

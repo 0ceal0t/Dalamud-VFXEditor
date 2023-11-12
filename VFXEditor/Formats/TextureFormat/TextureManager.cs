@@ -22,6 +22,9 @@ namespace VfxEditor.Formats.TextureFormat {
         public readonly List<IDalamudTextureWrap> Wraps = new();
         public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
 
+        public readonly List<IDalamudTextureWrap> TileDiffuse = new();
+        public readonly List<IDalamudTextureWrap> TileNormal = new();
+
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
         private readonly TextureView View;
@@ -30,6 +33,16 @@ namespace VfxEditor.Formats.TextureFormat {
         public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
+
+            // For use in materials
+            var tileDiffuse = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );
+            var tileNormal = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_n.tex" );
+            foreach( var layer in tileDiffuse.Layers ) {
+                TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, tileDiffuse.Header.Width, tileDiffuse.Header.Height, 4 ) );
+            }
+            foreach( var layer in tileNormal.Layers ) {
+                TileNormal.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, tileNormal.Header.Width, tileNormal.Header.Height, 4 ) );
+            }
         }
 
         public ManagerConfiguration GetConfig() => Configuration;
@@ -166,9 +179,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // ================
 
-        public void ToDefault() => Reset();
-
-        public void Reset() {
+        public void Reset( ResetType type ) {
             Textures.Clear();
             Previews.Clear();
 
@@ -176,11 +187,21 @@ namespace VfxEditor.Formats.TextureFormat {
             WrapsToCleanup.Clear();
             WrapsToCleanup.AddRange( Wraps );
             Wraps.Clear();
-
             if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += CleanupWraps;
             else CleanupWraps();
 
             TEX_ID = 0;
+
+            // Clean up textures used for materials
+            if( type == ResetType.PluginClosing ) {
+                try {
+                    foreach( var wrap in TileDiffuse ) wrap?.Dispose();
+                    foreach( var wrap in TileNormal ) wrap?.Dispose();
+                }
+                catch( Exception ) { }
+                TileDiffuse.Clear();
+                TileNormal.Clear();
+            }
         }
 
         public void CleanupWraps() {

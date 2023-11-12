@@ -113,12 +113,7 @@ namespace VfxEditor.FileManager {
 
         public bool DoDebug( string path ) => path.Contains( $".{Extension}" );
 
-        public void ToDefault() {
-            Reset();
-            AddDocument();
-        }
-
-        public virtual void Reset() {
+        public virtual void Reset( ResetType type ) {
             Documents.ForEach( x => x.Dispose() );
             Documents.Clear();
             SourceSelect?.Hide();
@@ -129,6 +124,8 @@ namespace VfxEditor.FileManager {
             DocumentWindow.Reset();
 
             DOC_ID = 0;
+
+            if( type == ResetType.ToDefault ) AddDocument(); // Default document
         }
     }
 }

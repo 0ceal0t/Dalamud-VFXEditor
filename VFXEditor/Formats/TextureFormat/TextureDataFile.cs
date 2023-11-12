@@ -1,5 +1,6 @@
 using Lumina.Data.Parsing.Tex;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using TeximpNet;
@@ -84,9 +85,12 @@ namespace VfxEditor.Formats.TextureFormat {
             public uint[] OffsetToSurface;
         };
 
-        public bool ValidFormat { get; private set; } = false;
-        public byte[] ImageData { get; private set; } // decompressed into ARGB or whatever. used for image previews
         public TexHeader Header { get; private set; }
+        public bool ValidFormat { get; private set; } = false;
+
+        // Used for image previews
+        public List<byte[]> Layers { get; private set; }
+        public byte[] ImageData => Layers[0];
 
         private static int HeaderLength => Marshal.SizeOf( typeof( TexHeader ) );
         private byte[] DdsData;
@@ -103,7 +107,7 @@ namespace VfxEditor.Formats.TextureFormat {
             Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
             Marshal.FreeHGlobal( handle );
 
-            ImageData = BgraToRgba( Convert( DataSpan[HeaderLength..].ToArray(), Header.Format, Header.Width, Header.Height ) );
+            Layers = Convert( DataSpan[HeaderLength..].ToArray(), Header.Format, Header.Width, Header.Height, Header.Depth );
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -122,7 +126,7 @@ namespace VfxEditor.Formats.TextureFormat {
             Marshal.FreeHGlobal( handle );
 
             DdsData = br.ReadBytes( localData.Length - HeaderLength );
-            ImageData = BgraToRgba( Convert( DdsData, Header.Format, Header.Width, Header.Height ) );
+            Layers = Convert( DdsData, Header.Format, Header.Width, Header.Height, Header.Depth );
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -133,41 +137,49 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         // converts various formats to A8R8G8B8
-        public static byte[] Convert( byte[] data, TextureFormat format, int width, int height ) {
+        public static List<byte[]> Convert( byte[] data, TextureFormat format, int width, int height, int layers ) {
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
 
             switch( format ) {
                 case TextureFormat.DXT1:
-                    DecompressDxt1( data, writer, width, height );
+                    DecompressDxt1( data, writer, width, height * layers );
                     break;
                 case TextureFormat.DXT3:
-                    DecompressDxt3( data, writer, width, height );
+                    DecompressDxt3( data, writer, width, height * layers );
                     break;
                 case TextureFormat.DXT5:
-                    DecompressDxt5( data, writer, width, height );
+                    DecompressDxt5( data, writer, width, height * layers );
                     break;
                 case TextureFormat.A8R8G8B8:
                     writer.Write( data ); // already ok
                     break;
                 case TextureFormat.R4G4B4A4:
-                    Read4444( data, writer, width, height );
+                    Read4444( data, writer, width, height * layers );
                     break;
                 case TextureFormat.R5G5B5A1:
-                    Read5551( data, writer, width, height );
+                    Read5551( data, writer, width, height * layers );
                     break;
                 case TextureFormat.A8:
-                    DecompressA8( data, writer, width, height );
+                    DecompressA8( data, writer, width, height * layers );
                     break;
                 default:
-                    return Array.Empty<byte>(); // ???
+                    return new() { Array.Empty<byte>() };
             }
 
             var output = ms.ToArray();
-            var result = new byte[width * height * 4];
-            Array.Copy( output, result, Math.Min( output.Length, result.Length ) );
+            var size = width * height * 4;
 
-            return result;
+            var res = new List<byte[]>();
+            for( var i = 0; i < layers; i++ ) {
+                var offset = size * i;
+                var layer = new byte[size];
+                var remaining = output.Length - offset;
+                if( remaining <= 0 ) continue;
+                Array.Copy( output, offset, layer, 0, Math.Min( remaining, size ) );
+                res.Add( BgraToRgba( layer ) );
+            }
+            return res;
         }
 
         public static TextureFormat DXGItoTextureFormat( DXGIFormat format ) {
@@ -202,7 +214,7 @@ namespace VfxEditor.Formats.TextureFormat {
             return ret;
         }
 
-        public static void DecompressA8( byte[] data, BinaryWriter writer, int width, int height ) {
+        private static void DecompressA8( byte[] data, BinaryWriter writer, int width, int height ) {
             for( var i = 0; i < width * height; i++ ) {
                 writer.Write( ( byte )0xFF );
                 writer.Write( ( byte )0xFF );
@@ -211,19 +223,19 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public static void DecompressDxt1( byte[] data, BinaryWriter writer, int width, int height ) {
+        private static void DecompressDxt1( byte[] data, BinaryWriter writer, int width, int height ) {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT1 ) );
         }
 
-        public static void DecompressDxt3( byte[] data, BinaryWriter writer, int width, int height ) {
+        private static void DecompressDxt3( byte[] data, BinaryWriter writer, int width, int height ) {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT3 ) );
         }
 
-        public static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
+        private static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
         }
 
-        public static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
+        private static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
             using var ms = new MemoryStream( src );
             using var reader = new BinaryReader( ms );
 
@@ -243,7 +255,7 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public static void Read5551( byte[] src, BinaryWriter writer, int width, int height ) {
+        private static void Read5551( byte[] src, BinaryWriter writer, int width, int height ) {
             using var ms = new MemoryStream( src );
             using var reader = new BinaryReader( ms );
 
@@ -263,7 +275,7 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public static byte[] BgraToRgba( byte[] data ) {
+        private static byte[] BgraToRgba( byte[] data ) {
             var ret = new byte[data.Length];
             for( var i = 0; i < data.Length / 4; i++ ) {
                 var idx = i * 4;

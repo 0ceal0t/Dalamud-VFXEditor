@@ -140,7 +140,7 @@ namespace VfxEditor.FileBrowser.Preview {
 
             var ddsFormat = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
             format = $"{ddsFormat}";
-            var convertedData = TextureDataFile.BgraToRgba( TextureDataFile.Convert( data, ddsFormat, width, height ) );
+            var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
             return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
         }
 

@@ -1,9 +1,7 @@
 using ImGuiNET;
 using OtterGui.Raii;
-using System;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Parsing;
 using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
@@ -18,7 +16,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
         public readonly ParsedHalf GlossStrength = new( "Gloss Strength", 20f );
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
-        public readonly ParsedInt TileMaterial = new( "Tile Material" );
+        public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
         public readonly ParsedHalf MaterialRepeatX = new( "Material Repeat X", 16f );
         public readonly ParsedHalf2 MaterialSkew = new( "Material Skew" );
         public readonly ParsedHalf MaterialRepeatY = new( "Material Repeat Y", 16f );
@@ -33,7 +31,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             Specular.Read( reader );
             GlossStrength.Read( reader );
             Emissive.Read( reader );
-            TileMaterial.Value = ( int )( ( float )reader.ReadHalf() * 64f );
+            TileMaterial.Read( reader );
             MaterialRepeatX.Read( reader );
             MaterialSkew.Read( reader );
             MaterialRepeatY.Read( reader );
@@ -45,7 +43,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             Specular.Write( writer );
             GlossStrength.Write( writer );
             Emissive.Write( writer );
-            writer.Write( ( Half )( ( TileMaterial.Value + 0.5f ) / 64f ) );
+            TileMaterial.Write( writer );
             MaterialRepeatX.Write( writer );
             MaterialSkew.Write( writer );
             MaterialRepeatY.Write( writer );

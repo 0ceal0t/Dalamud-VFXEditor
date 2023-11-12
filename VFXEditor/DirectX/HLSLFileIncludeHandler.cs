@@ -43,8 +43,7 @@ namespace VfxEditor.DirectX {
 
         public Stream Open( IncludeType type, string fileName, Stream parentStream ) {
             var currentDirectory = CurrentDirectory.Peek();
-            if( currentDirectory == null )
-                currentDirectory = Environment.CurrentDirectory;
+            currentDirectory ??= Environment.CurrentDirectory;
 
             var filePath = fileName;
 
@@ -64,7 +63,7 @@ namespace VfxEditor.DirectX {
                 throw new FileNotFoundException( string.Format( "Unable to find file [{0}]", filePath ?? fileName ) );
             }
 
-            NativeFileStream fs = new NativeFileStream( filePath, NativeFileMode.Open, NativeFileAccess.Read );
+            var fs = new NativeFileStream( filePath, NativeFileMode.Open, NativeFileAccess.Read );
             CurrentDirectory.Push( Path.GetDirectoryName( filePath ) );
             return fs;
         }

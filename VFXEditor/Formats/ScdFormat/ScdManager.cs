@@ -1,5 +1,6 @@
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
@@ -17,9 +18,9 @@ namespace VfxEditor.ScdFormat {
 
         protected override ScdDocument GetWorkspaceDocument( WorkspaceMetaBasic data, string localPath ) => new( this, NewWriteLocation, localPath, data );
 
-        public override void Reset() {
+        public override void Reset( ResetType type ) {
             File?.Dispose();
-            base.Reset();
+            base.Reset( type );
             ScdUtils.Cleanup();
         }
     }

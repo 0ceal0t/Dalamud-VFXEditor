@@ -171,7 +171,7 @@ namespace VfxEditor {
             ResourceLoader = null;
 
             TextureManager.FreeLibrary();
-            Managers.ForEach( x => x?.Reset() );
+            Managers.ForEach( x => x?.Reset( ResetType.PluginClosing ) );
             DirectXManager?.Dispose();
 
             WindowSystem.RemoveAllWindows();

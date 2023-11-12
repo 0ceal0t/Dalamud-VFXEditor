@@ -9,6 +9,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         private readonly ushort Height;
         private readonly ushort Width;
         private readonly ushort MipLevels;
+        private readonly ushort Depth;
         private readonly TextureFormat Format;
         private readonly IDalamudTextureWrap Wrap;
 
@@ -19,6 +20,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             MipLevels = file.Header.MipLevels;
             Width = file.Header.Width;
             Height = file.Header.Height;
+            Depth = file.Header.Depth;
             Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
             Penumbra = penumbra;
 
@@ -58,7 +60,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.Image( Wrap.ImGuiHandle, new Vector2( ( ( float )Width / Height ) * height, height ) );
         }
 
-        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} / {Width}x{Height}" );
+        public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} Layers / {Width}x{Height}" );
 
         protected override void DrawControls() {
             DrawParams();

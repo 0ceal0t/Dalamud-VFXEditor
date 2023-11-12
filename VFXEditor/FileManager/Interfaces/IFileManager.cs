@@ -2,6 +2,12 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace VfxEditor.FileManager.Interfaces {
+    public enum ResetType {
+        Reset,
+        PluginClosing,
+        ToDefault
+    }
+
     public interface IFileManager : IFileManagerSelect {
         public bool DoDebug( string path );
 
@@ -19,9 +25,7 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public void Draw();
 
-        public void ToDefault();
-
-        public void Reset();
+        public void Reset( ResetType type );
 
         public static bool FileExist( IFileManager manager, string path ) =>
             Dalamud.GameFileExists( path ) || Plugin.PenumbraIpc.PenumbraFileExists( path, out var _ ) || manager.GetReplacePath( path, out var _ );
