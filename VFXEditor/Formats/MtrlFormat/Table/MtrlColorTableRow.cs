@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
@@ -50,6 +51,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         }
 
         public void Draw() {
+            using var editing = new Edited();
+
             Diffuse.Draw();
             SpecularStrength.Draw();
             Specular.Draw();
@@ -60,7 +63,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             MaterialRepeatY.Draw();
             MaterialSkew.Draw();
 
-            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this ) {
+            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this || editing.IsEdited ) {
                 Plugin.DirectXManager.MaterialPreview.LoadColorRow( File, this );
             }
             Plugin.DirectXManager.MaterialPreview.DrawInline();

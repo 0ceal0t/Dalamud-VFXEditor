@@ -12,24 +12,50 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     [StructLayout( LayoutKind.Sequential )]
+    public struct Vec3 {
+        public float X;
+        public float Y;
+        public float Z;
+        public float Padding; // HLSL weirdness
+
+        public Vec3( float x, float y, float z ) {
+            X = x; Y = y; Z = z;
+        }
+
+        public Vec3( Vector3 val ) {
+            X = val.X;
+            Y = val.Y;
+            Z = val.Z;
+        }
+
+        public Vec3( System.Numerics.Vector3 val ) {
+            X = val.X;
+            Y = val.Y;
+            Z = val.Z;
+        }
+    }
+
+    [StructLayout( LayoutKind.Sequential )]
     public struct PSMaterialBuffer {
-        public Vector3 CameraPos; // On Draw
-        // Init
-        // TODO: multiple lights
-        public Vector3 LightPos;
-        public Vector3 LightDiffuseColor;
-        public Vector3 LightSpecularColor;
+        public Vec3 LightDiffuseColor;
+        public Vec3 LightSpecularColor;
 
         // Update with new material
         // TODO: tiles + textures
-        public Vector3 DiffuseColor;
-        public Vector3 AmbientLightColor; // Init
-        public Vector3 EmissiveColor;
-        public Vector3 SpecularColor;
+        public Vec3 DiffuseColor;
+        public Vec3 AmbientLightColor;
+        public Vec3 EmissiveColor;
+        public Vec3 SpecularColor;
 
         public float SpecularPower;
         public float SpecularIntensity;
         public Vector2 Padding;
+    }
+
+    [StructLayout( LayoutKind.Sequential )]
+    public struct VSMaterialBuffer {
+        public Vec3 CameraPos;
+        public Vec3 LightPos;
     }
 
     public class MaterialPreview : ModelRenderer {
@@ -39,15 +65,23 @@ namespace VfxEditor.DirectX {
         public MtrlColorTableRow CurrentColorRow { get; private set; }
 
         protected Buffer MaterialPixelShaderBuffer;
-        protected PSMaterialBuffer BufferData;
+        protected PSMaterialBuffer PSBufferData;
+
+        protected Buffer MaterialVertexShaderBuffer;
+        protected VSMaterialBuffer VSBufferData;
 
         public MaterialPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            BufferData = new() { // TODO: update these
-                LightPos = new( 1, 1, 1 ),
-                LightDiffuseColor = new( 1, 1, 1 ),
-                LightSpecularColor = new( 1, 1, 1 ),
-                AmbientLightColor = new( 1, 1, 1 ),
+            MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+
+            PSBufferData = new() { // TODO: update these
+                LightDiffuseColor = new( 0.7f, 0.7f, 0.7f ),
+                LightSpecularColor = new( 0.7f, 0.7f, 0.7f ),
+                AmbientLightColor = new( 0.2f, 0.2f, 0.2f ),
+            };
+
+            VSBufferData = new() { // TODO: update these
+                LightPos = new( 1, 1, 1 )
             };
 
             Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 3, false, false,
@@ -58,7 +92,7 @@ namespace VfxEditor.DirectX {
                 } );
 
             var builder = new MeshBuilder( true, true, true );
-            builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
+            builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 100, 100 );
             var data = FromMeshBuilder( builder, null, false, false, true, out var count );
             Model.SetVertexes( Device, data, count );
         }
@@ -67,18 +101,12 @@ namespace VfxEditor.DirectX {
             CurrentFile = file;
             CurrentColorRow = row;
 
-            var diffuse = row.Diffuse.Value;
-            var emissive = row.Emissive.Value;
-            var specular = row.Specular.Value;
-            var intensity = row.SpecularStrength.Value;
-            var power = row.GlossStrength.Value;
-
-            BufferData = BufferData with {
-                DiffuseColor = new( diffuse.X, diffuse.Y, diffuse.Z ),
-                EmissiveColor = new( emissive.X, emissive.Y, emissive.Z ),
-                SpecularColor = new( specular.X, specular.Y, specular.Z ),
-                SpecularIntensity = intensity,
-                SpecularPower = power,
+            PSBufferData = PSBufferData with {
+                DiffuseColor = new( row.Diffuse.Value ),
+                EmissiveColor = new( row.Emissive.Value ),
+                SpecularColor = new( row.Specular.Value ),
+                SpecularIntensity = row.SpecularStrength.Value,
+                SpecularPower = row.GlossStrength.Value,
             };
 
             // TODO: tiling
@@ -92,17 +120,21 @@ namespace VfxEditor.DirectX {
         }
 
         public override void OnDraw() {
-            var psBuffer = BufferData with {
-                CameraPos = CameraPosition
+            var psBuffer = PSBufferData;
+
+            var vsBuffer = VSBufferData with {
+                CameraPos = new( CameraPosition )
             };
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
+            Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
 
-            Model.Draw( Ctx, new List<Buffer>() { VertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+            Model.Draw( Ctx, new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
         public override void OnDispose() {
             Model?.Dispose();
+            MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();
         }
 
