@@ -152,7 +152,7 @@ namespace VfxEditor.DirectX {
 
             var vsBuffer = VSBufferData with {
                 LightPos = ToVec3( Plugin.Configuration.MaterialLightPosition ),
-                ViewDirection = ViewDirection
+                ViewDirection = CameraPosition
             };
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );

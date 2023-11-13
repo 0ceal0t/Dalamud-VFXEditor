@@ -48,12 +48,10 @@ PS_IN VS(VS_IN input)
 {
     PS_IN output = (PS_IN)0;
     
-    float4x4 modelViewMatrix = mul(ViewMatrix, ModelMatrix);
-    float4 viewModelPosition = mul(modelViewMatrix, float4(input.pos.xyz, 1.0f));
-    
-    output.WorldPos = viewModelPosition.xyz;
-    
+    float4 worldPosition = mul(ModelMatrix, float4(input.pos.xyz, 1.0f));
+    float4 viewModelPosition = mul(ViewMatrix, worldPosition);
     output.Position = mul(ProjectionMatrix, viewModelPosition);
+    output.WorldPos = worldPosition.xyz;
     
     float3x3 normalMatrix = transpose((float3x3) NormalMatrix);
     output.Normal = normalize(mul(normalMatrix, input.norm.xyz));
@@ -75,7 +73,7 @@ float attenuation(float r, float f, float d)
 
 float phongSpecular(float3 lightDirection, float3 viewDirection, float3 surfaceNormal, float shininess)
 {
-    float3 R = reflect(lightDirection, surfaceNormal); // Should be negative?
+    float3 R = -reflect(lightDirection, surfaceNormal); // Should be negative?
     return pow(max(0.0f, dot(viewDirection, R)), shininess);
 }
 
@@ -111,7 +109,7 @@ float4 PS(PS_IN input) : SV_Target
     float falloff = attenuation(Radius, Falloff, lightDistance);
     
     float3 L = normalize(lightDir);
-    float3 V = normalize(input.WorldPos);
+    float3 V = normalize(input.ViewDirection - input.WorldPos);
     float3 N = normalize(input.Normal);
     
     float specularStrength = SpecularPower;
