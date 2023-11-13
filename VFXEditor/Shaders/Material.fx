@@ -4,6 +4,9 @@ cbuffer VSMaterialConstants : register(b1)
 {
     float3 ViewDirection;
     float3 LightPos;
+    
+    float2 Repeat;
+    float2 Skew;
 }
 
 cbuffer PSMaterialConstants : register(b1)
@@ -58,7 +61,7 @@ PS_IN VS(VS_IN input)
     
     output.LightPos = LightPos;
     output.ViewDirection = ViewDirection;
-    output.TexCoords = input.uv.xy;
+    output.TexCoords = input.uv.xy * Repeat;
 
     return output;
 }
@@ -101,7 +104,6 @@ float orenNayarDiffuse(float3 lightDirection, float3 viewDirection, float3 surfa
 
 float4 PS(PS_IN input) : SV_Target
 {
-    
     float3 lightDir = input.LightPos - input.WorldPos;
     float lightDistance = length(lightDir);
     
@@ -124,12 +126,14 @@ float4 PS(PS_IN input) : SV_Target
         specular += LightColor * phongSpecular(L, V, N, specularExponent) * specularStrength * falloff;
     }
     
+    float3 sampledDiffuse = DiffuseTexture.Sample(SamplerSurface, input.TexCoords).xyz;
+    
     // roughness, abledo
     float3 diffuse = LightColor * orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
-    color += DiffuseColor * (diffuse + AmbientColor);
+    color += DiffuseColor * sampledDiffuse * (diffuse + AmbientColor);
     color += SpecularColor * (specular);
     
     color = toGamma(color);

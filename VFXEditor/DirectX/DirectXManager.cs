@@ -17,7 +17,7 @@ namespace VfxEditor.DirectX {
         public readonly BoneNamePreview EidPreview;
         public readonly MaterialPreview MaterialPreview;
 
-        private List<ModelRenderer> Renderers = new();
+        private readonly List<ModelRenderer> Renderers = new();
 
         public static Include IncludeHandler { get; private set; }
 

@@ -17,16 +17,18 @@ namespace VfxEditor.DirectX {
 
     // TODO: skew
     // TODO: bump
-    // TODO: tile
     // TODO: dye
 
-    [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
+    [StructLayout( LayoutKind.Sequential, Size = 0x30 )]
     public struct VSMaterialBuffer {
         public Vector3 ViewDirection; // 0x00
         public float _Pad0;
 
         public Vector3 LightPos; // 0x10
         public float _Pad1;
+
+        public Vector2 Repeat; // 0x20
+        public Vector2 Skew; // 0x28
     }
 
     [StructLayout( LayoutKind.Sequential, Size = 0x60 )]
@@ -108,6 +110,11 @@ namespace VfxEditor.DirectX {
         public void LoadColorRow( MtrlFile file, MtrlColorTableRow row ) {
             CurrentFile = file;
             CurrentColorRow = row;
+
+            VSBufferData = VSBufferData with {
+                Repeat = new( row.MaterialRepeatX.Value, row.MaterialRepeatY.Value ),
+                Skew = new( row.MaterialSkew.Value.X, row.MaterialSkew.Value.Y ),
+            };
 
             PSBufferData = PSBufferData with {
                 DiffuseColor = ToVec3( row.Diffuse.Value ),
