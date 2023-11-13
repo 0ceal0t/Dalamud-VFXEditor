@@ -31,7 +31,8 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var prevValue = Value;
-            if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop ) ) {
+            if( InTable ) ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( ImGui.GetContentRegionAvail().X - ImGui.GetFrameHeight() ) / 2f );
+            if( ImGui.ColorEdit4( Name, ref Value, ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoDragDrop | ( InTable ? ImGuiColorEditFlags.NoInputs : ImGuiColorEditFlags.None ) ) ) {
                 if( !Editing ) {
                     Editing = true;
                     StateBeforeEdit = prevValue;

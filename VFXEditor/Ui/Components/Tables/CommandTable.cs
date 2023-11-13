@@ -29,11 +29,13 @@ namespace VfxEditor.Ui.Components.Tables {
             OnChangeAction = onChangeAction;
         }
 
-        public void Draw() {
+        public void Draw() => Draw( new( -1 ) );
+
+        public void Draw( Vector2 childSize ) {
             using var _ = ImRaii.PushId( Id );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 4 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
+            using var child = ImRaii.Child( "Child", childSize, false );
             using var table = ImRaii.Table( "Table", Columns.Count + ( AllowNewDelete ? 1 : 0 ),
                 ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendX | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.PadOuterX );
             if( !table ) return;

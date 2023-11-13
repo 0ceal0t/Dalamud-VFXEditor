@@ -86,9 +86,9 @@ namespace VfxEditor.DirectX {
             builder.AddBox( new( 0 ), 0.42f, 0.42f, 0.42f ); // 24 points total (6 faces * 4 corners)
 
             var colors = new List<Vector4>();
-            for( var i = 0; i < 8; i++ ) colors.Add( new( 1, 0, 0, 1 ) );
-            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 1, 0, 1 ) );
-            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 0, 1, 1 ) );
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 0.75f, 0, 0, 1 ) );
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 0.75f, 0, 1 ) );
+            for( var i = 0; i < 8; i++ ) colors.Add( new( 0, 0, 0.75f, 1 ) );
 
             var data = FromMeshBuilder( builder, colors, false, false, false, out var cubeCount );
             Cube.SetVertexes( Device, data, cubeCount );

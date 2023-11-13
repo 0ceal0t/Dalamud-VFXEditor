@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.AvfxFormat.Model;
 using VfxEditor.FileBrowser;
+using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 using static VfxEditor.DirectX.ModelPreview;
@@ -24,8 +25,8 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly UiModelEmitSplitView EmitSplitDisplay;
-        public readonly UiNodeGraphView NodeView;
+        private readonly UiNodeGraphView NodeView;
+        private readonly CommandTable<UiEmitVertex> VertexTable;
 
         private int Mode = ( int )RenderMode.Color;
         private bool Refresh = false;
@@ -41,7 +42,14 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView = new( this );
             UvView = new UiModelUvView();
-            EmitSplitDisplay = new( this, CombinedEmitVertexes );
+
+            VertexTable = new( "Emit", true, CombinedEmitVertexes, new() {
+                ( "Order", ImGuiTableColumnFlags.None, -1 ),
+                ( "Position", ImGuiTableColumnFlags.None, -1 ),
+                ( "Normal", ImGuiTableColumnFlags.None, -1 ),
+                ( "Color", ImGuiTableColumnFlags.None, - 1),
+            },
+            () => new( this, new(), new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -52,7 +60,6 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < Math.Min( EmitVertexes.EmitVertexes.Count, EmitVertexNumbers.VertexNumbers.Count ); i++ ) {
                 CombinedEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
             }
-            EmitSplitDisplay.UpdateIdx();
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
@@ -132,10 +139,7 @@ namespace VfxEditor.AvfxFormat {
                 new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y / 2f ) :
                 new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - UiUtils.AngleUpDownSize );
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using( var child = ImRaii.Child( "Child", size, false ) ) {
-                EmitSplitDisplay.Draw();
-            }
+            VertexTable.Draw( size );
 
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.EmitterVertexSplitOpen ) ) Plugin.Configuration.Save();
 

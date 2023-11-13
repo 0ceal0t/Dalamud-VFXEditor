@@ -43,6 +43,7 @@ namespace VfxEditor.Parsing {
         protected override void DrawBody() {
             using var _ = ImRaii.PushId( Name );
 
+            if( InTable ) ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( ImGui.GetContentRegionAvail().X - ImGui.GetFrameHeight() ) / 2f );
             var pos = ImGui.GetCursorScreenPos();
 
             var prevValue = Value;

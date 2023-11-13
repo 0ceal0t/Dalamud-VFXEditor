@@ -1,9 +1,10 @@
-using OtterGui.Raii;
+using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Data.Command;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class UiEmitVertex : GenericSelectableItem {
+    public class UiEmitVertex : IUiItem {
         public readonly AvfxEmitVertex Vertex;
         public readonly AvfxVertexNumber Number;
 
@@ -11,7 +12,7 @@ namespace VfxEditor.AvfxFormat {
 
         public Vector3 Position => Vertex.Position.Value;
         public Vector3 Normal => Vertex.Normal.Value;
-        public int Order => Number.Number.Value;
+        public int Order => Number.Order.Value;
 
         public UiEmitVertex( AvfxModel model, AvfxEmitVertex vertex, AvfxVertexNumber number ) {
             Model = model;
@@ -19,18 +20,25 @@ namespace VfxEditor.AvfxFormat {
             Number = number;
         }
 
-        public override void Draw() {
-            using var _ = ImRaii.PushId( "VNum" );
+        public void Draw() {
             using var edited = new Edited();
 
-            Number.Number.Draw();
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 75 );
+            Number.Order.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 200 );
             Vertex.Position.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 200 );
             Vertex.Normal.Draw();
+
+            ImGui.TableNextColumn();
             Vertex.Color.Draw();
 
             if( edited.IsEdited ) Model.RefreshModelPreview();
         }
-
-        public override string GetDefaultText() => $"{GetIdx()}";
     }
 }

@@ -20,12 +20,12 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public class AvfxVertexNumber {
-        public readonly ParsedShort Number = new( "Order" );
+        public readonly ParsedShort Order = new( "##Order" );
 
         public AvfxVertexNumber() { }
 
-        public AvfxVertexNumber( BinaryReader reader ) => Number.Read( reader );
+        public AvfxVertexNumber( BinaryReader reader ) => Order.Read( reader );
 
-        public void Write( BinaryWriter writer ) => Number.Write( writer );
+        public void Write( BinaryWriter writer ) => Order.Write( writer );
     }
 }

@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
 
         public readonly AvfxBool Enabled = new( "##Enabled", "bEna", value: true );
-        public readonly AvfxInt StartTime = new( "##StartTime", "StTm", value: 0 );
+        public readonly AvfxInt StartTime = new( "##Start Time", "StTm", value: 0 );
         public readonly AvfxInt TimelineIdx = new( "##TimelineIndex", "TlNo", value: -1 );
 
         private readonly List<AvfxBase> Parsed;
@@ -42,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
             DrawRename( "##Rename" );
 
             ImGui.TableNextColumn();
-            TimelineSelect.Draw( 200 );
+            TimelineSelect.Draw( 250 );
 
             ImGui.TableNextColumn();
             Enabled.Draw();

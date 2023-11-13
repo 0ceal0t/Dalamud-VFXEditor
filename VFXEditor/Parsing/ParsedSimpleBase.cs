@@ -6,6 +6,8 @@ namespace VfxEditor.Parsing {
     public abstract class ParsedSimpleBase<T> : ParsedBase {
         public readonly string Name;
 
+        protected bool InTable => Name.StartsWith( "##" );
+
         public T Value = default;
         public Action OnChangeAction;
 
