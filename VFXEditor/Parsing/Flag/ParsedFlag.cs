@@ -47,7 +47,7 @@ namespace VfxEditor.Parsing {
                     if( hasFlag ) intValue |= intOption;
                     else intValue &= ~intOption;
 
-                    SetValue( ( T )( object )intValue );
+                    Update( ( T )( object )intValue );
                 }
             }
         }

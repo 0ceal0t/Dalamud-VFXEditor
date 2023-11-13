@@ -34,7 +34,7 @@ namespace VfxEditor.Parsing {
         protected override void DrawBody() {
             var value = Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                SetValue( value );
+                Update( value );
             }
         }
     }

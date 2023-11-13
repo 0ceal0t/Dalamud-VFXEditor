@@ -39,7 +39,7 @@ namespace VfxEditor.Parsing {
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             var text = options.Contains( Value ) ? Value.ToString() : "[UNKNOWN]";
             if( UiUtils.EnumComboBox( Name, text, options, Value, out var value ) ) {
-                SetValue( value );
+                Update( value );
             }
         }
     }

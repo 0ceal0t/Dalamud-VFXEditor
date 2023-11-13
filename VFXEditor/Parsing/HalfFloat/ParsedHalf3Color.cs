@@ -23,7 +23,7 @@ namespace VfxEditor.Parsing.HalfFloat {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                SetValue( StateBeforeEdit, Value );
+                Update( StateBeforeEdit, Value );
             }
         }
 

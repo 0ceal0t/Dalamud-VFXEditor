@@ -3,12 +3,18 @@ using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Command;
+using VfxEditor.Formats.MtrlFormat.Stm;
 using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTableRow : IUiItem {
         private readonly MtrlFile File;
+
+        public MtrlDyeTableRow DyeRow { get; private set; }
+        public StmDyeData DyeData { get; private set; }
+
+        private MtrlDye PreviewDye;
 
         public const int Size = 32; // 16 ushorts
 
@@ -50,9 +56,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             MaterialRepeatY.Write( writer );
         }
 
-        public void Draw() {
-            using var editing = new Edited();
+        public void SetDyeRow( MtrlDyeTableRow dye ) { DyeRow = dye; }
 
+        public void SetPreviewDye( MtrlDye previewDye ) {
+            PreviewDye = previewDye;
+            RefreshDye();
+        }
+
+        private void DrawColor() {
             Diffuse.Draw();
             SpecularStrength.Draw();
             Specular.Draw();
@@ -62,29 +73,61 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             MaterialRepeatX.Draw();
             MaterialRepeatY.Draw();
             MaterialSkew.Draw();
-
-            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this || editing.IsEdited ) {
-                Plugin.DirectXManager.MaterialPreview.LoadColorRow( File, this );
-            }
-            Plugin.DirectXManager.MaterialPreview.DrawInline();
         }
 
-        public void Draw( MtrlDyeTableRow dye ) {
-            if( dye == null ) {
-                Draw();
-                return;
-            }
+        private void RefreshDye() {
+            DyeData = PreviewDye == null ? null : Plugin.MtrlManager.Stm.GetDye( DyeRow.Template.Value, ( int )PreviewDye.Id );
+        }
+
+        public void Draw() {
+            using var editing = new Edited();
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Color" ) ) {
-                if( tab ) Draw();
+                if( tab ) DrawColor();
             }
 
+            using( var disabled = ImRaii.Disabled( !File.DyeTableEnabled ) )
             using( var tab = ImRaii.TabItem( "Dye" ) ) {
-                if( tab ) dye.Draw();
+                if( tab ) DyeRow.Draw();
             }
+
+            if( PreviewDye != null ) {
+                using var child = ImRaii.Child( "Child", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+
+                if( DyeData == null ) {
+                    ImGui.TextDisabled( "[NO DYE VALUE]" );
+                }
+                else {
+                    var d = DyeData.Diffuse;
+                    ImGui.ColorEdit3( "##Diffuse", ref d, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+
+                    ImGui.SameLine();
+                    var s = DyeData.Specular;
+                    ImGui.ColorEdit3( "##Specular", ref s, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+
+                    ImGui.SameLine();
+                    var e = DyeData.Emissive;
+                    ImGui.ColorEdit3( "##Emissive", ref s, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+
+                    using var disabled = ImRaii.Disabled();
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( 75 );
+                    ImGui.InputFloat( "##Gloss", ref DyeData.Gloss, 0, 0, $"Gloss: %.1f", ImGuiInputTextFlags.ReadOnly );
+                    ImGui.SameLine();
+                    ImGui.SetNextItemWidth( 75 );
+                    ImGui.InputFloat( "##Power", ref DyeData.Gloss, 0, 0, $"Power: %.1f", ImGuiInputTextFlags.ReadOnly );
+                }
+            }
+
+            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this || editing.IsEdited ) {
+                RefreshDye();
+                Plugin.DirectXManager.MaterialPreview.LoadColorRow( File, this );
+            }
+            Plugin.DirectXManager.MaterialPreview.DrawInline();
         }
     }
 }

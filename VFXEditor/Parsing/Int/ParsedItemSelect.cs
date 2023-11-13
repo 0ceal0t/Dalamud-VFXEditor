@@ -32,7 +32,7 @@ namespace VfxEditor.Parsing.Int {
             for( var i = 0; i < Items.Count; i++ ) {
                 using var _ = ImRaii.PushId( i );
                 if( ImGui.Selectable( Items[i].GetText(), Items[i] == selected ) ) {
-                    SetValue( ToValue == null ? i : ToValue( Items[i] ) );
+                    Update( ToValue == null ? i : ToValue( Items[i] ) );
                 }
             }
         }

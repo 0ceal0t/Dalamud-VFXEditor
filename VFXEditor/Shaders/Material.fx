@@ -29,18 +29,22 @@ cbuffer PSMaterialConstants : register(b1)
 struct VS_IN
 {
     float4 pos : POSITION;
+    float4 tangent : TANGENT;
+    float4 bitangent : BITANGENT;
     float4 uv : UV;
     float4 norm : NORMAL;
 };
 
 struct PS_IN
 {
-  float4 Position : SV_POSITION;
-  float2 TexCoords : TEXCOORD0;
-  float3 Normal : TEXCOORD1;
-  float3 WorldPos : TEXCOORD2;
-  float3 ViewDirection: CAMERAPOS;
-  float3 LightPos : LIGHTPOS;
+    float4 Position : SV_POSITION;
+    float2 TexCoords : TEXCOORD0;
+    float3 Normal : TEXCOORD1;
+    float3 WorldPos : TEXCOORD2;
+    float3 ViewDirection: CAMERAPOS;
+    float3 LightPos : LIGHTPOS;
+    float3 Tangent : TANGENT;
+    float3 Bitangent : BITANGENT;
 };
 
 SamplerState SamplerSurface : register(s0);
@@ -58,6 +62,8 @@ PS_IN VS(VS_IN input)
     
     float3x3 normalMatrix = transpose((float3x3) NormalMatrix);
     output.Normal = normalize(mul(normalMatrix, input.norm.xyz));
+    output.Tangent = normalize(mul(normalMatrix, input.tangent.xyz));
+    output.Bitangent = normalize(mul(normalMatrix, input.bitangent.xyz));
     
     output.LightPos = LightPos;
     output.ViewDirection = ViewDirection;
@@ -108,28 +114,30 @@ float4 PS(PS_IN input) : SV_Target
     float3 lightDir = input.LightPos - input.WorldPos;
     float lightDistance = length(lightDir);
     
-    // radius, falloff, distance
     float falloff = attenuation(Radius, Falloff, lightDistance);
     
     float3 L = normalize(lightDir);
     float3 V = normalize(input.ViewDirection - input.WorldPos);
+    
+    float3 tangent = normalize(input.Tangent);
+    float3 biTangent = normalize(input.Bitangent);
+    float3 bumpMap = Normaltexture.Sample(SamplerSurface, input.TexCoords).xyz;
+    
     float3 N = normalize(input.Normal);
+    bumpMap = mad(2.0f, bumpMap, -1.0f);
+    N += mad(bumpMap.z, tangent, bumpMap.y * biTangent);
+    N = normalize(N);
     
     float specularStrength = SpecularPower;
     float specularExponent = SpecularIntensity * 10;
-    
     float df = dot(-lightDir, N);
-    
     float3 specular = float3(0, 0, 0);
-    
     if (df < 0.0f) // Idk what's happening at this point
     {
         specular += LightColor * phongSpecular(L, V, N, specularExponent) * specularStrength * falloff;
     }
     
-    float3 sampledDiffuse = DiffuseTexture.Sample(SamplerSurface, input.TexCoords).xyz;
-    
-    // roughness, abledo
+    float3 sampledDiffuse = DiffuseTexture.Sample(SamplerSurface, input.TexCoords).xyz; 
     float3 diffuse = LightColor * orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
     
     float3 color = float3(0, 0, 0);

@@ -1,3 +1,4 @@
+using Lumina.Data;
 using Lumina.Data.Parsing.Tex;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace VfxEditor.Formats.TextureFormat {
         Shadow24 = 0x5150,
     }
 
-    public class TextureDataFile : Lumina.Data.FileResource {
+    public class TextureDataFile : FileResource {
         [StructLayout( LayoutKind.Sequential, Pack = 4 )]
         public unsafe struct TexHeader {
             public Attribute Type;

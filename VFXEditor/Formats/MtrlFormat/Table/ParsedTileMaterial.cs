@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         }
 
         protected override void DrawBody() {
-            var size = Math.Min( Plugin.TextureManager.TileNormal.Count, Plugin.TextureManager.TileDiffuse.Count );
+            var size = Math.Min( Plugin.MtrlManager.TileNormal.Count, Plugin.MtrlManager.TileDiffuse.Count );
 
             var text = ( Value >= 0 && Value < size ) ? $"Tile {Value}" : "[UNKNOWN]";
             using var combo = ImRaii.Combo( Name, text );
@@ -28,12 +28,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
             for( var i = 0; i < size; i++ ) {
                 if( ImGui.Selectable( $"Tile {i}", i == Value ) ) {
-                    SetValue( i );
+                    Update( i );
                 }
+                if( i == Value ) ImGui.SetItemDefaultFocus();
+
                 if( ImGui.IsItemHovered() ) {
                     ImGui.BeginTooltip();
-                    var diffuse = Plugin.TextureManager.TileDiffuse[i];
-                    var normal = Plugin.TextureManager.TileNormal[i];
+                    var diffuse = Plugin.MtrlManager.TileDiffuse[i];
+                    var normal = Plugin.MtrlManager.TileNormal[i];
                     ImGui.Image( diffuse.ImGuiHandle, new Vector2( 100, 100 ) );
                     ImGui.SameLine();
                     ImGui.Image( normal.ImGuiHandle, new Vector2( 100, 100 ) );

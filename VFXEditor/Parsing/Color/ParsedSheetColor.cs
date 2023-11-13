@@ -38,7 +38,7 @@ namespace VfxEditor.Parsing.Color {
 
                 using var _ = ImRaii.PushColor( ImGuiCol.Text, option.Value );
                 if( ImGui.Selectable( $"----{option.Key}----", selected ) ) {
-                    SetValue( option.Key );
+                    Update( option.Key );
                 }
 
                 if( selected ) ImGui.SetItemDefaultFocus();

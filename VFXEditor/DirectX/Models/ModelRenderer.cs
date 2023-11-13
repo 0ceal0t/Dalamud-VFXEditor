@@ -14,12 +14,6 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
 
-// TODO: fix explicit/sequential
-// TODO: multiple lights
-// TODO: move light stuff to configurable objects (Including radius and falloff)
-// TODO: rename matrixes
-// TODO: configurable background color
-
 namespace VfxEditor.DirectX {
     [StructLayout( LayoutKind.Sequential )]
     public struct VSBufferStruct {
@@ -361,12 +355,12 @@ namespace VfxEditor.DirectX {
 
                 if( useTangents ) {
                     var tangent = mesh.Tangents[pointIdx];
-                    data.Add( new( tangent.X, tangent.Y, tangent.Z, 1 ) );
+                    data.Add( new( tangent.X, tangent.Y, tangent.Z, 0 ) );
                 }
 
                 if( useBiTangents ) {
                     var biTangent = mesh.BiTangents[pointIdx];
-                    data.Add( new( biTangent.X, biTangent.Y, biTangent.Z, 1 ) );
+                    data.Add( new( biTangent.X, biTangent.Y, biTangent.Z, 0 ) );
                 }
 
                 if( useUv ) {

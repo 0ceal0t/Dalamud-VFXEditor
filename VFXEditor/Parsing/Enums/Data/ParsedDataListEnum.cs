@@ -14,14 +14,14 @@ namespace VfxEditor.Parsing.Data {
             Items = items;
         }
 
-        protected override void SetValue( T prevValue, T value ) {
+        public override void Update( T prevValue, T value ) {
             CommandManager.Add( new CompoundCommand( new ICommand[] {
                 new ParsedSimpleCommand<T>( this, prevValue, value ),
                 new ListSetCommand<S>( Items, new List<S>() )
             } ) );
         }
 
-        protected override void SetValue( T value ) {
+        public override void Update( T value ) {
             CommandManager.Add( new CompoundCommand( new ICommand[] {
                 new ParsedSimpleCommand<T>( this, value ),
                 new ListSetCommand<S>( Items, new List<S>() )

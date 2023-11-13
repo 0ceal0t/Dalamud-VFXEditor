@@ -22,11 +22,6 @@ namespace VfxEditor.Formats.TextureFormat {
         public readonly List<IDalamudTextureWrap> Wraps = new();
         public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
 
-        public readonly TextureDataFile TileDiffuseFile;
-        public readonly TextureDataFile TileNormalFile;
-        public readonly List<IDalamudTextureWrap> TileDiffuse = new();
-        public readonly List<IDalamudTextureWrap> TileNormal = new();
-
         private readonly List<TextureReplace> Textures = new();
         private readonly Dictionary<string, TexturePreview> Previews = new();
         private readonly TextureView View;
@@ -35,16 +30,6 @@ namespace VfxEditor.Formats.TextureFormat {
         public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
-
-            // For use in materials
-            TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );
-            TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_n.tex" );
-            foreach( var layer in TileDiffuseFile.Layers ) {
-                TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height, 4 ) );
-            }
-            foreach( var layer in TileNormalFile.Layers ) {
-                TileNormal.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileNormalFile.Header.Width, TileNormalFile.Header.Height, 4 ) );
-            }
         }
 
         public ManagerConfiguration GetConfig() => Configuration;
@@ -193,17 +178,6 @@ namespace VfxEditor.Formats.TextureFormat {
             else CleanupWraps();
 
             TEX_ID = 0;
-
-            // Clean up textures used for materials
-            if( type == ResetType.PluginClosing ) {
-                try {
-                    foreach( var wrap in TileDiffuse ) wrap?.Dispose();
-                    foreach( var wrap in TileNormal ) wrap?.Dispose();
-                }
-                catch( Exception ) { }
-                TileDiffuse.Clear();
-                TileNormal.Clear();
-            }
         }
 
         public void CleanupWraps() {

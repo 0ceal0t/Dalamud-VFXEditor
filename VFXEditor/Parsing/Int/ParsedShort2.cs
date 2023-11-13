@@ -23,7 +23,7 @@ namespace VfxEditor.Parsing.Int {
         protected override void DrawBody() {
             var value = Value.ToArray();
             if( ImGui.InputInt2( Name, ref value[0] ) ) {
-                SetValue( value );
+                Update( value );
             }
         }
     }

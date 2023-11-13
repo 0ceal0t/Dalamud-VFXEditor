@@ -20,7 +20,7 @@ namespace VfxEditor.Parsing {
         protected override void DrawBody() {
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value ) ) {
-                SetValue( ( sbyte )value );
+                Update( ( sbyte )value );
             }
         }
     }

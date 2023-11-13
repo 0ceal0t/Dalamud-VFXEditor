@@ -35,7 +35,7 @@ namespace VfxEditor.Parsing {
         protected override void DrawBody() {
             var value = Value;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                SetValue( value );
+                Update( value );
             }
         }
     }

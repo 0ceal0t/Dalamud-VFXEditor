@@ -1,16 +1,18 @@
+using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     [Flags]
     public enum DyeRowFlags {
-        Diffuse = 0x01,
-        Specular = 0x02,
-        Emissive = 0x04,
-        Gloss = 0x08,
-        Specular_Strength = 0x10
+        Apply_Diffuse = 0x01,
+        Apply_Specular = 0x02,
+        Apply_Emissive = 0x04,
+        Apply_Gloss = 0x08,
+        Apply_Specular_Strength = 0x10
     }
 
     public class MtrlDyeTableRow : IUiItem {
@@ -32,7 +34,11 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         }
 
         public void Draw() {
-            Template.Draw();
+            ImGui.SetNextItemWidth( 200f );
+            if( UiUtils.EnumComboBox( "Template", Plugin.MtrlManager.Templates, Template.Value, out var value ) ) {
+                Template.Update( value );
+            }
+
             Flags.Draw();
         }
     }

@@ -12,11 +12,11 @@ namespace VfxEditor.Parsing.Data {
             Item = item;
         }
 
-        protected override void SetValue( T prevValue, T value ) {
+        public override void Update( T prevValue, T value ) {
             CommandManager.Add( new ParsedDataEnumCommand<T, S>( new ParsedSimpleCommand<T>( this, prevValue, value ), Item ) );
         }
 
-        protected override void SetValue( T value ) {
+        public override void Update( T value ) {
             CommandManager.Add( new ParsedDataEnumCommand<T, S>( new ParsedSimpleCommand<T>( this, value ), Item ) );
         }
     }

@@ -48,9 +48,9 @@ namespace VfxEditor.Parsing {
             var prevValue = Value;
             var value = Value == true;
             if( ImGui.Checkbox( Name, ref value ) ) {
-                if( prevValue == null ) SetValue( true ); // null -> true
-                else if( prevValue == true ) SetValue( false ); // true -> false
-                else if( prevValue == false ) SetValue( null ); // false -> null
+                if( prevValue == null ) Update( true ); // null -> true
+                else if( prevValue == true ) Update( false ); // true -> false
+                else if( prevValue == false ) Update( null ); // false -> null
             }
 
             // https://github.com/ocornut/imgui/blob/master/imgui_widgets.cpp#L1134

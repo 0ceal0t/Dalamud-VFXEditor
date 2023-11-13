@@ -15,9 +15,11 @@ namespace VfxEditor.DirectX {
     // "Additionally, HLSL packs data so that it does not cross a 16-byte boundary"
     // I want to die
 
-    // TODO: skew
-    // TODO: bump
-    // TODO: dye
+    // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/Resources/Shaders/psCustomMeshBlinnPhong.hlsl
+    // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
+    // https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/phong.frag
+
+    // TODO: multiple lights
 
     [StructLayout( LayoutKind.Sequential, Size = 0x30 )]
     public struct VSMaterialBuffer {
@@ -79,16 +81,18 @@ namespace VfxEditor.DirectX {
 
             VSBufferData = new() { };
 
-            Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 3, false, false,
+            Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 5, false, false,
                 new InputElement[] {
                     new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
-                    new InputElement( "UV", 0, Format.R32G32B32A32_Float, 16, 0 ),
-                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
+                    new InputElement( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new InputElement( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
+                    new InputElement( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
+                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
 
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
-            var data = FromMeshBuilder( builder, null, false, false, true, out var count );
+            var data = FromMeshBuilder( builder, null, true, true, true, out var count );
             Model.SetVertexes( Device, data, count );
 
             // ================
@@ -107,21 +111,28 @@ namespace VfxEditor.DirectX {
             } );
         }
 
+        public void RefreshColorRow() => LoadColorRow( CurrentFile, CurrentColorRow );
+
         public void LoadColorRow( MtrlFile file, MtrlColorTableRow row ) {
             CurrentFile = file;
             CurrentColorRow = row;
+
+            if( CurrentColorRow == null ) return;
 
             VSBufferData = VSBufferData with {
                 Repeat = new( row.MaterialRepeatX.Value, row.MaterialRepeatY.Value ),
                 Skew = new( row.MaterialSkew.Value.X, row.MaterialSkew.Value.Y ),
             };
 
+            var applyDye = CurrentColorRow.DyeData != null;
+            var dyeRow = CurrentColorRow.DyeRow;
+
             PSBufferData = PSBufferData with {
-                DiffuseColor = ToVec3( row.Diffuse.Value ),
-                EmissiveColor = ToVec3( row.Emissive.Value ),
-                SpecularColor = ToVec3( row.Specular.Value ),
-                SpecularIntensity = row.SpecularStrength.Value,
-                SpecularPower = row.GlossStrength.Value,
+                DiffuseColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? CurrentColorRow.DyeData.Diffuse : row.Diffuse.Value ),
+                EmissiveColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? CurrentColorRow.DyeData.Emissive : row.Emissive.Value ),
+                SpecularColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? CurrentColorRow.DyeData.Specular : row.Specular.Value ),
+                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? CurrentColorRow.DyeData.Power : row.SpecularStrength.Value,
+                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? CurrentColorRow.DyeData.Gloss : row.GlossStrength.Value,
             };
 
             // Clear out the old
@@ -131,8 +142,8 @@ namespace VfxEditor.DirectX {
             NormalTexture?.Dispose();
 
             var tileIdx = row.TileMaterial.Value;
-            var diffuse = Plugin.TextureManager.TileDiffuseFile;
-            var normal = Plugin.TextureManager.TileNormalFile;
+            var diffuse = Plugin.MtrlManager.TileDiffuseFile;
+            var normal = Plugin.MtrlManager.TileNormalFile;
 
             DiffuseView = GetTexture( diffuse.Layers[tileIdx], diffuse.Header.Height, diffuse.Header.Width, out DiffuseTexture );
             NormalView = GetTexture( normal.Layers[tileIdx], normal.Header.Height, normal.Header.Width, out NormalTexture );
@@ -202,13 +213,6 @@ namespace VfxEditor.DirectX {
             NormalView?.Dispose();
             NormalTexture?.Dispose();
         }
-
-        // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/Resources/Shaders/psCustomMeshBlinnPhong.hlsl
-        // https://brooknovak.wordpress.com/2008/11/13/hlsl-per-pixel-point-light-using-phong-blinn-lighting-model/
-        // lmMaterial.SpecularColor = lmMaterial.SpecularColor * specularPower;
-        // use power to multiply specular, gloss is the actual power constant
-        // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
-        // https://github.com/sharpdx/SharpDX-Samples/blob/f4fb0fe0f12e3edc4eda3f6307d135a66fa172cd/StoreApp/OldSamplesToBeBackPorted/MiniCubeVideoTexture/CubeTextureRenderer.cs#L49
 
         public static Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }

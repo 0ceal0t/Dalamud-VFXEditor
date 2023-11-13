@@ -34,11 +34,11 @@ namespace VfxEditor.Parsing {
 
         protected abstract void DrawBody();
 
-        protected virtual void SetValue( T prevValue, T value ) {
+        public virtual void Update( T prevValue, T value ) {
             CommandManager.Add( new ParsedSimpleCommand<T>( this, prevValue, value, OnChangeAction ) );
         }
 
-        protected virtual void SetValue( T value ) {
+        public virtual void Update( T value ) {
             CommandManager.Add( new ParsedSimpleCommand<T>( this, value, OnChangeAction ) );
         }
     }

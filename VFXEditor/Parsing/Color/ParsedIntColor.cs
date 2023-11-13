@@ -40,7 +40,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                SetValue( StateBeforeEdit, Value );
+                Update( StateBeforeEdit, Value );
             }
         }
     }

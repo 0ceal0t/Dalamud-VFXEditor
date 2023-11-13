@@ -69,7 +69,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                SetValue( StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
+                Update( StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
             }
         }
 

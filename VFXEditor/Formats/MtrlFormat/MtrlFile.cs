@@ -23,7 +23,7 @@ namespace VfxEditor.Formats.MtrlFormat {
     [Flags]
     public enum TableFlags {
         Has_Color_Table = 0x4,
-        Has_Dye_Table = 0x8
+        Dyeable = 0x8
     }
 
     [Flags]
@@ -52,7 +52,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
 
         public readonly MtrlColorTable ColorTable;
-        public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Has_Dye_Table );
+        public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
         public readonly MtrlDyeTable DyeTable;
 
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
@@ -72,6 +72,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public ShpkFile ShaderFile { get; private set; }
         public ShpkFileState ShaderFileState { get; private set; } = ShpkFileState.Unloaded;
         public string ShaderFilePath { get; private set; } = "";
+
+        private readonly int ModdedMod4 = 0;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
             Version = reader.ReadBytes( 4 );
@@ -108,6 +110,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             };
 
             reader.BaseStream.Seek( stringsStart + stringSize, SeekOrigin.Begin );
+            ModdedMod4 = ( int )( reader.BaseStream.Position % 4 );
 
             // ===============
 
@@ -119,7 +122,8 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             var dataEnd = reader.BaseStream.Position + dataSize;
             ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( this, reader ) : new( this );
-            DyeTable = ( Flags.HasFlag( TableFlags.Has_Dye_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
+            DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
+            for( var i = 0; i < 16; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
             reader.BaseStream.Seek( dataEnd, SeekOrigin.Begin );
 
             var shaderValueSize = reader.ReadUInt16();
@@ -190,7 +194,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             var shaderOffset = writer.BaseStream.Position - stringStart;
             Shader.Write( writer );
 
-            FileUtils.PadTo( writer, 4 );
+            FileUtils.PadTo( writer, writer.BaseStream.Position, 4, ModdedMod4 );
+
             var stringEnd = writer.BaseStream.Position;
 
             // =======================
@@ -202,7 +207,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             var dataStart = writer.BaseStream.Position;
             if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) ColorTable.Write( writer );
-            if( Flags.HasFlag( TableFlags.Has_Dye_Table ) ) DyeTable.Write( writer );
+            if( Flags.HasFlag( TableFlags.Dyeable ) ) DyeTable.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
             writer.Write( ( ushort )MaterialParameters.Select( x => x.Values.Count * 4 ).Sum() );

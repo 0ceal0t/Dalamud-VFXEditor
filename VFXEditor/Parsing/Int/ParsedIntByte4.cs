@@ -23,7 +23,7 @@ namespace VfxEditor.Parsing.Int {
 
             if( ImGui.InputInt4( Name, ref value[0] ) ) {
                 var newValue = BitConverter.ToInt32( value.Select( x => ( byte )x ).ToArray() );
-                SetValue( newValue );
+                Update( newValue );
             }
         }
     }

@@ -9,7 +9,7 @@ namespace VfxEditor.Parsing.Int {
         protected override void DrawBody() {
             var value = ( int )Value;
             if( ImGui.InputInt( Name, ref value, 0, 0, ImGuiInputTextFlags.CharsHexadecimal ) ) {
-                SetValue( ( uint )value );
+                Update( ( uint )value );
             }
         }
     }
