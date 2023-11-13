@@ -61,7 +61,8 @@ PS_IN VS(VS_IN input)
     
     output.LightPos = LightPos;
     output.ViewDirection = ViewDirection;
-    output.TexCoords = input.uv.xy * Repeat;
+    
+    output.TexCoords = input.uv.xy * Repeat + (float2(input.uv.y, input.uv.x) * Skew);
 
     return output;
 }
