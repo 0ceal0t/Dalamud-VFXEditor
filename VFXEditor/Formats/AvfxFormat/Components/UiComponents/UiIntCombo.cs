@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public void Draw() {
             // Unassigned
             Literal.AssignedCopyPaste( Name );
-            if( Literal.DrawAddButton( Name ) ) return;
+            if( Literal.DrawAssignButton( Name ) ) return;
 
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Literal.Value );
@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
             DrawCombo( value );
 
-            Literal.DrawRemoveContextMenu( Name );
+            Literal.DrawUnassignPopup( Name );
         }
 
         private void DrawCombo( int value ) {

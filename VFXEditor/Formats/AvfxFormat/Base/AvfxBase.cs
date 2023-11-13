@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
@@ -33,31 +34,24 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public bool DrawAddButton( string name ) {
-            if( !IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommand( this, true ) );
-                return true;
+        public bool DrawAssignButton( string name, bool recurse = false ) {
+            if( IsAssigned() ) return false;
+
+            if( name.StartsWith( "##" ) ) {
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) CommandManager.Add( recurse ? new AvfxAssignCommandMulti( this, true ) : new AvfxAssignCommand( this, true ) );
             }
-            return false;
-        }
-
-        public bool DrawAddButtonRecurse( string name ) {
-            if( !IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommandMulti( this, true ) );
-                return true;
+            else {
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( recurse ? new AvfxAssignCommandMulti( this, true ) : new AvfxAssignCommand( this, true ) );
             }
-            return false;
+            return true;
         }
 
-        public void DrawRemoveContextMenu( string name ) {
-            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommand( this, false ) );
+        public void DrawUnassignPopup( string name, bool recurse = false ) {
+            if( UnassignPopup( name ) ) CommandManager.Add( recurse ? new AvfxAssignCommandMulti( this, false ) : new AvfxAssignCommand( this, false ) );
         }
 
-        public void DrawRemoveContextMenuRecurse( string name ) {
-            if( DrawUnassignContextMenu( name ) ) CommandManager.Add( new AvfxAssignCommandMulti( this, false ) );
-        }
-
-        public bool DrawRemoveButton( string name ) {
+        public bool DrawUnassignButton( string name ) {
             if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
                 CommandManager.Add( new AvfxAssignCommand( this, false ) );
                 return true;
@@ -67,21 +61,20 @@ namespace VfxEditor.AvfxFormat {
 
         // ===== USED FOR WEIRD CASES LIKE UIFLOAT2 / UIFLOAT3 ======
 
-        public bool DrawAddButton<T>( List<T> extra, string name ) where T : AvfxBase {
-            if( !IsAssigned() ) {
-                if( ImGui.SmallButton( $"+ {name}" ) ) {
-                    var items = new List<T>();
-                    if( this is T item ) items.Add( item );
-                    items.AddRange( extra );
-                    CommandManager.Add( new AvfxAssignCommandToggle<T>( items, true ) );
-                }
-                return true;
+        public bool DrawAssignButton<T>( List<T> extra, string name ) where T : AvfxBase {
+            if( IsAssigned() ) return false;
+
+            if( ImGui.SmallButton( $"+ {name}" ) ) {
+                var items = new List<T>();
+                if( this is T item ) items.Add( item );
+                items.AddRange( extra );
+                CommandManager.Add( new AvfxAssignCommandToggle<T>( items, true ) );
             }
-            return false;
+            return true;
         }
 
-        public void DrawRemoveContextMenu<T>( List<T> extra, string name ) where T : AvfxBase {
-            if( DrawUnassignContextMenu( name ) ) {
+        public void DrawUnassignPopup<T>( List<T> extra, string name ) where T : AvfxBase {
+            if( UnassignPopup( name ) ) {
                 var items = new List<T>();
                 if( this is T item ) items.Add( item );
                 items.AddRange( extra );
@@ -260,12 +253,12 @@ namespace VfxEditor.AvfxFormat {
 
         // ========= STATIC DRAWING =============
 
-        public static bool DrawUnassignContextMenu( string name ) {
+        private static bool UnassignPopup( string name ) {
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{name}" );
 
             using var popup = ImRaii.Popup( $"Unassign/{name}" );
             if( popup ) {
-                if( ImGui.Selectable( $"Unassign {name}" ) ) {
+                if( ImGui.Selectable( $"Unassign {name.TrimStart( '#' )}" ) ) {
                     ImGui.CloseCurrentPopup();
                     return true;
                 }

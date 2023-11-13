@@ -38,11 +38,11 @@ namespace VfxEditor.AvfxFormat {
         public void Draw( float offset ) {
             // Unassigned
             AssignedCopyPaste( Parsed.Name );
-            if( DrawAddButton( Parsed.Name ) ) return;
+            if( DrawAssignButton( Parsed.Name ) ) return;
 
             Parsed.DrawInput( 255, Parsed.Name, offset, ImGuiInputTextFlags.None );
 
-            DrawRemoveContextMenu( Parsed.Name );
+            DrawUnassignPopup( Parsed.Name );
 
             Parsed.DrawIcons();
         }

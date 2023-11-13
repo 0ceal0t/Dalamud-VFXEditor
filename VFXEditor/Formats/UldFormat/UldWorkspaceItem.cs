@@ -27,6 +27,6 @@ namespace VfxEditor.UldFormat {
 
         public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public void DrawRename() => IWorkspaceUiItem.DrawRenameInput( this, ref Renamed );
+        public void DrawRename( string label = "Name##Rename" ) => IWorkspaceUiItem.DrawRenameInput( this, label, ref Renamed );
     }
 }

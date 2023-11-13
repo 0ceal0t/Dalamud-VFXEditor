@@ -53,7 +53,7 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( "Life" );
 
             AssignedCopyPaste( GetDefaultText() );
-            DrawAddButtonRecurse( GetDefaultText() );
+            DrawAssignButton( GetDefaultText(), true );
         }
 
         public override void DrawAssigned() {

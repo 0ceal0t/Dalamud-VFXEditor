@@ -7,9 +7,9 @@ namespace VfxEditor.Ui.Components {
     public class CommandDropdown<T> : Dropdown<T> where T : class, IUiItem {
         private readonly Func<T, int, string> GetTextAction;
         private readonly Func<T> NewAction;
-        private readonly Action<T> OnChangeAction;
+        private readonly Action<T, bool> OnChangeAction;
 
-        public CommandDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T> onChangeAction = null ) :
+        public CommandDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null ) :
             base( id, items, true, true ) {
 
             GetTextAction = getTextAction;

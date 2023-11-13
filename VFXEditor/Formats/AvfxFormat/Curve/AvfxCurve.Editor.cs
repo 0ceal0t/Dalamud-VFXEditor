@@ -142,7 +142,7 @@ namespace VfxEditor.AvfxFormat {
 
                     CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Keys,
                         new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
-                        insertIdx, ( AvfxCurveKey _ ) => Update() ) );
+                        insertIdx, ( AvfxCurveKey _, bool _ ) => Update() ) );
                 }
 
                 if( clickState && !PrevClickState ) {

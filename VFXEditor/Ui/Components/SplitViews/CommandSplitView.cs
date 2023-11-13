@@ -10,9 +10,9 @@ namespace VfxEditor.Ui.Components.SplitViews {
     public class CommandSplitView<T> : UiSplitView<T> where T : class, IUiItem {
         private readonly Func<T, int, string> GetTextAction;
         private readonly Func<T> NewAction;
-        private readonly Action<T> OnChangeAction;
+        private readonly Action<T, bool> OnChangeAction;
 
-        public CommandSplitView( string id, List<T> items, bool allowReorder, Func<T, int, string> getTextAction, Func<T> newAction, Action<T> onChangeAction = null ) :
+        public CommandSplitView( string id, List<T> items, bool allowReorder, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null ) :
             base( id, items, true, allowReorder ) {
 
             GetTextAction = getTextAction;

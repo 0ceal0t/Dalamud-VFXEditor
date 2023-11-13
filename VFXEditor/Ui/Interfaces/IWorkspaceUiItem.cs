@@ -9,7 +9,7 @@ namespace VfxEditor.Ui.Interfaces {
 
         public void SetRenamed( string renamed );
 
-        public void DrawRename();
+        public void DrawRename( string label );
 
         public void GetChildrenRename( Dictionary<string, string> RenameDict );
 
@@ -25,6 +25,6 @@ namespace VfxEditor.Ui.Interfaces {
             item.SetChildrenRename( renameDict );
         }
 
-        public static void DrawRenameInput( IWorkspaceUiItem item, ref string renamed ) => ImGui.InputTextWithHint( "Name##Rename", item.GetDefaultText(), ref renamed, 255 );
+        public static void DrawRenameInput( IWorkspaceUiItem item, string label, ref string renamed ) => ImGui.InputTextWithHint( label, item.GetDefaultText(), ref renamed, 255 );
     }
 }

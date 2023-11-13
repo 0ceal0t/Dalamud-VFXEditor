@@ -1,22 +1,19 @@
-using OtterGui.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxSchedulerItem : GenericWorkspaceItem {
         public readonly AvfxScheduler Scheduler;
         public readonly string Name;
 
-        public readonly AvfxBool Enabled = new( "Enabled", "bEna", value: true );
-        public readonly AvfxInt StartTime = new( "Start Time", "StTm", value: 0 );
-        public readonly AvfxInt TimelineIdx = new( "Timeline Index", "TlNo", value: -1 );
+        public readonly AvfxBool Enabled = new( "##Enabled", "bEna", value: true );
+        public readonly AvfxInt StartTime = new( "##StartTime", "StTm", value: 0 );
+        public readonly AvfxInt TimelineIdx = new( "##TimelineIndex", "TlNo", value: -1 );
 
         private readonly List<AvfxBase> Parsed;
 
         public AvfxNodeSelect<AvfxTimeline> TimelineSelect;
-
-        private readonly List<IUiItem> Display;
 
         public AvfxSchedulerItem( AvfxScheduler scheduler, string name, bool initNodeSelects ) {
             Scheduler = scheduler;
@@ -29,26 +26,30 @@ namespace VfxEditor.AvfxFormat {
             };
 
             if( initNodeSelects ) InitializeNodeSelects();
-
-            Display = new() {
-                Enabled,
-                StartTime
-            };
         }
 
         public AvfxSchedulerItem( AvfxScheduler scheduler, bool initNodeSelects, BinaryReader reader, string name ) : this( scheduler, name, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 36 );
 
         public void InitializeNodeSelects() {
-            TimelineSelect = new AvfxNodeSelect<AvfxTimeline>( Scheduler, "Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
+            TimelineSelect = new AvfxNodeSelect<AvfxTimeline>( Scheduler, "##Timeline", Scheduler.NodeGroups.Timelines, TimelineIdx );
         }
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
         public override void Draw() {
-            using var _ = ImRaii.PushId( Name );
-            DrawRename();
-            TimelineSelect.Draw();
-            AvfxBase.DrawItems( Display );
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X );
+            DrawRename( "##Rename" );
+
+            ImGui.TableNextColumn();
+            TimelineSelect.Draw( 200 );
+
+            ImGui.TableNextColumn();
+            Enabled.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 100 );
+            StartTime.Draw();
         }
 
         public override string GetDefaultText() => $"{GetIdx()}: {TimelineSelect.GetText()}";

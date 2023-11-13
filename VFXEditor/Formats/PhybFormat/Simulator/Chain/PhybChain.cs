@@ -36,10 +36,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                null, () => new( file, simulator ), ( PhybCollisionData _ ) => File.OnChange() );
+                null, () => new( file, simulator ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
 
             NodeSplitView = new( "Node", Nodes, false,
-                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), ( PhybNode _ ) => File.OnChange() );
+                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), ( PhybNode _, bool _ ) => File.OnChange() );
         }
 
         public PhybChain( PhybFile file, PhybSimulator simulator, BinaryReader reader, long simulatorStartPos ) : this( file, simulator ) {

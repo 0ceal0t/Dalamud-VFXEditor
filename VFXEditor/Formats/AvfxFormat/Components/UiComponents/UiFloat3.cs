@@ -18,11 +18,11 @@ namespace VfxEditor.AvfxFormat {
             Literal.AssignedCopyPaste( $"{Parsed.Name}_1" );
             Extra[0].AssignedCopyPaste( $"{Parsed.Name}_2" );
             Extra[1].AssignedCopyPaste( $"{Parsed.Name}_3" );
-            if( Literal.DrawAddButton( Extra, Parsed.Name ) ) return;
+            if( Literal.DrawAssignButton( Extra, Parsed.Name ) ) return;
 
             Parsed.Draw();
 
-            Literal.DrawRemoveContextMenu( Extra, Parsed.Name );
+            Literal.DrawUnassignPopup( Extra, Parsed.Name );
         }
     }
 }

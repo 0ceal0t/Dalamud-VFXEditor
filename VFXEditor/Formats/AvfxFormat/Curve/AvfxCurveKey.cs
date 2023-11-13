@@ -101,7 +101,7 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _, bool _ ) => Curve.Update() ) );
                     return;
                 }
 
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
-                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _, bool _ ) => Curve.Update() ) );
                 }
 
                 // Shift left/right

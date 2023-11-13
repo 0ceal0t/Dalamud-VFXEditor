@@ -48,19 +48,19 @@ namespace VfxEditor.PhybFormat.Collision {
             }
 
             CapsuleSplitView = new( "Capsule", Capsules, false,
-                ( PhybCapsule item, int idx ) => item.Name.Value, () => new( File ), ( PhybCapsule _ ) => File.OnChange() );
+                ( PhybCapsule item, int idx ) => item.Name.Value, () => new( File ), ( PhybCapsule _, bool _ ) => File.OnChange() );
 
             EllipsoidSplitView = new( "Ellipsoid", Ellipsoids, false,
-                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new( File ), ( PhybEllipsoid _ ) => File.OnChange() );
+                ( PhybEllipsoid item, int idx ) => item.Name.Value, () => new( File ), ( PhybEllipsoid _, bool _ ) => File.OnChange() );
 
             NormalPlaneSplitView = new( "Normal Plane", NormalPlanes, false,
-                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybNormalPlane _ ) => File.OnChange() );
+                ( PhybNormalPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybNormalPlane _, bool _ ) => File.OnChange() );
 
             ThreePointPlaneSplitView = new( "Three-Point Plane", ThreePointPlanes, false,
-                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybThreePointPlane _ ) => File.OnChange() );
+                ( PhybThreePointPlane item, int idx ) => item.Name.Value, () => new( File ), ( PhybThreePointPlane _, bool _ ) => File.OnChange() );
 
             SphereDropdown = new( "Sphere", Spheres, false,
-                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), ( PhybSphere _ ) => File.OnChange() );
+                ( PhybSphere item, int idx ) => item.Name.Value, () => new PhybSphere( File ), ( PhybSphere _, bool _ ) => File.OnChange() );
         }
 
         public void Write( BinaryWriter writer ) {

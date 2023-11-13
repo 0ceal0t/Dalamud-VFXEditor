@@ -161,12 +161,15 @@ namespace VfxEditor.AvfxFormat {
             UpdateLiteral();
         }
 
-        public override void Draw() {
+        public override void Draw() => Draw( UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share ) );
+
+        public void Draw( float inputWidth ) {
             using var _ = ImRaii.PushId( $"Node{Name}" );
+            using var group = ImRaii.Group();
 
             // Unassigned
             Literal.AssignedCopyPaste( Name );
-            if( Literal.DrawAddButton( Name ) ) return;
+            if( Literal.DrawAssignButton( Name ) ) return;
 
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Literal.Value );
@@ -176,15 +179,14 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
-
-            ImGui.SetNextItemWidth( inputSize );
+            ImGui.SetNextItemWidth( inputWidth );
             DrawCombo();
 
-            Literal.DrawRemoveContextMenu( Name );
+            Literal.DrawUnassignPopup( Name );
 
             // Draw go button
-            ImGui.SameLine( inputSize + ImGui.GetStyle().ItemInnerSpacing.X );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
                 if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) Plugin.AvfxManager.File.SelectItem( Selected );
@@ -192,8 +194,10 @@ namespace VfxEditor.AvfxFormat {
 
             UiUtils.Tooltip( "Navigate to selected node" );
 
-            ImGui.SameLine();
-            ImGui.Text( Name );
+            if( !Name.StartsWith( "##" ) ) {
+                ImGui.SameLine();
+                ImGui.Text( Name );
+            }
         }
 
         private void DrawCombo() {

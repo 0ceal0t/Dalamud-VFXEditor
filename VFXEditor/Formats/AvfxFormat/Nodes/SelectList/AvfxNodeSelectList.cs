@@ -3,7 +3,6 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.Utils;
 
@@ -126,12 +125,14 @@ namespace VfxEditor.AvfxFormat {
             UpdateLiteral();
         }
 
-        public override void Draw() {
+        public override void Draw() => Draw( UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share ) );
+
+        public void Draw( float inputWidth ) {
             using var _ = ImRaii.PushId( $"Node{Name}" );
 
             // Unassigned
             Literal.AssignedCopyPaste( Name );
-            if( Literal.DrawAddButton( Name ) ) return;
+            if( Literal.DrawAssignButton( Name ) ) return;
 
             // Copy/Paste
             if( CopyManager.IsCopying ) {
@@ -147,20 +148,16 @@ namespace VfxEditor.AvfxFormat {
             }
 
             // Draw
-            var inputSize = UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share );
-
             for( var idx = 0; idx < Selected.Count; idx++ ) {
                 using var __ = ImRaii.PushId( idx );
 
-                ImGui.SetNextItemWidth( inputSize );
+                ImGui.SetNextItemWidth( inputWidth );
                 DrawCombo( idx );
 
-                Literal.DrawRemoveContextMenu( Name );
-
-                var imguiStyle = ImGui.GetStyle();
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) );
+                Literal.DrawUnassignPopup( Name );
 
                 // Draw go button
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected[idx] == null );
@@ -194,7 +191,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( Selected.Count < 4 ) {
                 if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
-                Literal.DrawRemoveContextMenu( Name );
+                Literal.DrawUnassignPopup( Name );
             }
         }
 

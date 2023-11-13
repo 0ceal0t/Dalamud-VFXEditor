@@ -69,14 +69,14 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( Name );
 
             AssignedCopyPaste( Name );
-            DrawAddButtonRecurse( Name );
+            DrawAssignButton( Name, true );
         }
 
         public override void DrawAssigned() {
             using var _ = ImRaii.PushId( Name );
 
             AssignedCopyPaste( Name );
-            if( !Locked && DrawRemoveButton( Name ) ) return;
+            if( !Locked && DrawUnassignButton( Name ) ) return;
             DrawItems( Display );
             DrawEditor();
         }

@@ -27,11 +27,11 @@ namespace VfxEditor.Formats.AvfxFormat.Components {
         public override void Draw() {
             // Unassigned
             AssignedCopyPaste( Parsed.Name );
-            if( DrawAddButton( Parsed.Name ) ) return;
+            if( DrawAssignButton( Parsed.Name ) ) return;
 
             Parsed.Draw();
 
-            DrawRemoveContextMenu( Parsed.Name );
+            DrawUnassignPopup( Parsed.Name );
         }
     }
 }

@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
@@ -12,10 +13,18 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt TriggerCount = new( "Trigger Count", "TrCn" );
         public readonly List<AvfxSchedulerItem> Items = new();
         public readonly List<AvfxSchedulerItem> Triggers = new();
-        public readonly UiSchedulerSplitView ItemSplit;
-        public readonly UiSchedulerSplitView TriggerSplit;
         public readonly List<AvfxBase> Parsed;
         public readonly AvfxNodeGroupSet NodeGroups;
+
+        private readonly CommandTable<AvfxSchedulerItem> ItemTable;
+        private readonly CommandTable<AvfxSchedulerItem> TriggerTable;
+
+        private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = new() {
+            ( "Name", ImGuiTableColumnFlags.WidthStretch, -1 ),
+            ( "Timeline", ImGuiTableColumnFlags.None, -1 ),
+            ( "Enabled", ImGuiTableColumnFlags.None, -1 ),
+            ( "Start Time", ImGuiTableColumnFlags.None, -1 )
+        };
 
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
@@ -25,8 +34,14 @@ namespace VfxEditor.AvfxFormat {
                 TriggerCount
             };
 
-            ItemSplit = new( "ItEm", Items, this, true );
-            TriggerSplit = new( "Trgr", Triggers, this, false );
+            ItemTable = new( "ItEm", true, Items, Columns, () => new( this, "Item", true ),
+            ( AvfxSchedulerItem item, bool add ) => {
+                if( add ) item.TimelineSelect.Enable();
+                else item.TimelineSelect.Disable();
+                IIndexUiItem.UpdateIdx( Items );
+            } );
+
+            TriggerTable = new( "Trgr", false, Triggers, Columns, () => new( this, "Trgr", true ), null );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -55,8 +70,8 @@ namespace VfxEditor.AvfxFormat {
                 Triggers.ForEach( x => x.InitializeNodeSelects() );
             }
 
-            ItemSplit.UpdateIdx();
-            TriggerSplit.UpdateIdx();
+            IIndexUiItem.UpdateIdx( Items );
+            IIndexUiItem.UpdateIdx( Triggers );
         }
 
         protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
@@ -89,11 +104,11 @@ namespace VfxEditor.AvfxFormat {
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Items" ) ) {
-                if( tab ) ItemSplit.Draw();
+                if( tab ) ItemTable.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Triggers" ) ) {
-                if( tab ) TriggerSplit.Draw();
+                if( tab ) TriggerTable.Draw();
             }
         }
 

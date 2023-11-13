@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat {
         public override void Draw() {
             // Unassigned
             AssignedCopyPaste( Name );
-            if( DrawAddButton( Name ) ) return;
+            if( DrawAssignButton( Name ) ) return;
 
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Items[0] );
@@ -74,7 +74,7 @@ namespace VfxEditor.AvfxFormat {
                 CommandManager.Add( new AvfxIntListCommand( this, value ) );
             }
 
-            DrawRemoveContextMenu( Name );
+            DrawUnassignPopup( Name );
         }
     }
 }
