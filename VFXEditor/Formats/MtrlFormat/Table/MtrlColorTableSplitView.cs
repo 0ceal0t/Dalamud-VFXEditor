@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
@@ -19,6 +20,12 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             }
 
             if( ImGui.Selectable( $"Row {idx}", item == Selected ) ) Selected = item;
+
+            if( item.DyeData != null ) {
+                ImGui.SameLine();
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                ImGui.TextDisabled( FontAwesomeIcon.PaintBrush.ToIconString() );
+            }
 
             return false;
         }

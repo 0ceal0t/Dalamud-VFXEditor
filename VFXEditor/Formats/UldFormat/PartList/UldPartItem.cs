@@ -54,6 +54,7 @@ namespace VfxEditor.UldFormat.PartList {
                 }
             }
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             U.Draw();
             V.Draw();
             W.Draw();

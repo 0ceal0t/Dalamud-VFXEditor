@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Sound.Data;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Sound.Data;
 using VfxEditor.Ui.Interfaces;
@@ -62,6 +63,7 @@ namespace VfxEditor.ScdFormat {
         public SoundAcceleration Acceleration = new();
         public SoundAtomos Atomos = new();
         public SoundExtra Extra = new();
+        public SoundUnknown Unknown = new();
         public SoundRandomTracks RandomTracks = new(); // Includes Cycle
         public SoundTracks Tracks = new();
 
@@ -70,6 +72,7 @@ namespace VfxEditor.ScdFormat {
         private bool AccelerationEnabled => Attributes.Value.HasFlag( SoundAttribute.Acceleration );
         private bool AtomosEnabled => Attributes.Value.HasFlag( SoundAttribute.Atomosgear );
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.Extra_Desc );
+        private bool UnknownEnabled => Attributes.Value.HasFlag( SoundAttribute.Fixed_Position ) || Attributes.Value.HasFlag( SoundAttribute.Fixed_Volume ) || Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
         public override void Read( BinaryReader reader ) {
@@ -88,6 +91,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Read( reader );
             if( AtomosEnabled ) Atomos.Read( reader );
             if( ExtraEnabled ) Extra.Read( reader );
+            if( UnknownEnabled ) Unknown.Read( reader );
 
             if( RandomTracksEnabled ) RandomTracks.Read( reader, Type.Value, trackCount );
             else Tracks.Read( reader, trackCount );
@@ -109,6 +113,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Write( writer );
             if( AtomosEnabled ) Atomos.Write( writer );
             if( ExtraEnabled ) Extra.Write( writer );
+            if( UnknownEnabled ) Unknown.Write( writer );
 
             if( RandomTracksEnabled ) RandomTracks.Write( writer, Type.Value );
             else Tracks.Write( writer );
@@ -153,6 +158,10 @@ namespace VfxEditor.ScdFormat {
             }
             if( ExtraEnabled && ImGui.BeginTabItem( "Extra" ) ) {
                 Extra.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UnknownEnabled && ImGui.BeginTabItem( "Unknown" ) ) {
+                Unknown.Draw();
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Tracks" ) ) {

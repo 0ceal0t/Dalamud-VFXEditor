@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
@@ -71,21 +72,21 @@ namespace VfxEditor.ScdFormat {
 
     public class RandomTrackInfo {
         public readonly SoundTrackInfo Track = new();
-        public readonly ParsedInt UpperLimit = new( "Upper Limit" );
+        public readonly ParsedShort2 Limit = new( "Limit" );
 
         public void Read( BinaryReader reader ) {
             Track.Read( reader );
-            UpperLimit.Read( reader );
+            Limit.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
             Track.Write( writer );
-            UpperLimit.Write( writer );
+            Limit.Write( writer );
         }
 
         public void Draw() {
             Track.Draw();
-            UpperLimit.Draw();
+            Limit.Draw();
         }
     }
 }

@@ -1,7 +1,6 @@
-using OtterGui.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
@@ -53,7 +52,8 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
             StartFrame.Draw();
             EndFrame.Draw();
 
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            ImGui.Separator();
             KeyGroupView.Draw();
         }
     }
