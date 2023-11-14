@@ -93,14 +93,14 @@ namespace VfxEditor.AvfxFormat {
             }, size );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Parsed, assigned );
-            RecurseAssigned( Data, assigned );
-        }
-
         public override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Parsed );
             Data?.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
+            if( Data != null ) yield return Data;
         }
 
         public override void UpdateData() {
@@ -112,7 +112,7 @@ namespace VfxEditor.AvfxFormat {
                 BinderType.Unknown_4 => new AvfxBinderDataUnknown4(),
                 _ => null,
             };
-            Data?.SetAssigned( true );
+            Data?.SetAssigned( true, false );
         }
 
         public override void Draw() {

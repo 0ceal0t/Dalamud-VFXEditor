@@ -11,10 +11,12 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < size / 36; i++ ) Vertexes.Add( new AvfxVertex( reader ) );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             foreach( var vert in Vertexes ) vert.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
     }
 

@@ -53,16 +53,16 @@ namespace VfxEditor.AvfxFormat {
             if( type != CurveType.Color ) Display.Add( Random );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) {
-            ReadNested( reader, Parsed, size );
-        }
-
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
         public override void WriteContents( BinaryWriter writer ) {
             WriteLeaf( writer, "KeyC", 4, KeyList.Keys.Count );
             if( Type == CurveType.Color ) Random.SetAssigned( false );
             WriteNested( writer, Parsed );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void DrawUnassigned() {

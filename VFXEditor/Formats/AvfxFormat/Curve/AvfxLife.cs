@@ -39,14 +39,16 @@ namespace VfxEditor.AvfxFormat {
             Enabled = false;
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) {
             if( !Enabled ) {
                 writer.Write( -1 );
                 return;
             }
             WriteNested( writer, Parsed );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void DrawUnassigned() {

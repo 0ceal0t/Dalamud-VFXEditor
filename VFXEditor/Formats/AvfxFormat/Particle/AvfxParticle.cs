@@ -249,12 +249,6 @@ namespace VfxEditor.AvfxFormat {
             UvView.UpdateIdx();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Parsed, assigned );
-            RecurseAssigned( Data, assigned );
-            RecurseAssigned( Parsed2, assigned );
-        }
-
         public override void WriteContents( BinaryWriter writer ) {
             UvSetCount.Value = UvSets.Count;
             WriteNested( writer, Parsed );
@@ -263,6 +257,12 @@ namespace VfxEditor.AvfxFormat {
 
             Data?.Write( writer );
             WriteNested( writer, Parsed2 );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
+            if( Data != null ) yield return Data;
+            foreach( var item in Parsed2 ) yield return item;
         }
 
         public override void UpdateData() {

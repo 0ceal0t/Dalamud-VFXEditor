@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Parsing;
@@ -20,9 +21,11 @@ namespace VfxEditor.Formats.AvfxFormat.Components {
 
         public override void ReadContents( BinaryReader reader, int size ) => Parsed.Read( reader, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) => Parsed.Write( writer );
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
+        }
 
         public override void Draw() {
             // Unassigned

@@ -75,8 +75,6 @@ namespace VfxEditor.AvfxFormat {
             ItemSplit.UpdateIdx();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) {
             TimelineCount.Value = Items.Count;
             ClipCount.Value = Clips.Count;
@@ -90,6 +88,10 @@ namespace VfxEditor.AvfxFormat {
             }
 
             foreach( var clip in Clips ) clip.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void Draw() {

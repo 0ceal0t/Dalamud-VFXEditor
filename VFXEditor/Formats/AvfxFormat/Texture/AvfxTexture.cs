@@ -1,5 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -21,9 +22,11 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) => Path.ReadContents( reader, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) => Path.WriteContents( writer );
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
+        }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Texture" );

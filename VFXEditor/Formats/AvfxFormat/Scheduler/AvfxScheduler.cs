@@ -74,8 +74,6 @@ namespace VfxEditor.AvfxFormat {
             IIndexUiItem.UpdateIdx( Triggers );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) {
             ItemCount.Value = Items.Count;
             TriggerCount.Value = Triggers.Count;
@@ -95,6 +93,10 @@ namespace VfxEditor.AvfxFormat {
                 trigger.Items.AddRange( Triggers.GetRange( 0, i + 1 ) ); // get 1, then 2, etc.
                 trigger.Write( writer );
             }
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void Draw() {

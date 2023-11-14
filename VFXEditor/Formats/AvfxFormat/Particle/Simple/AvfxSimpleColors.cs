@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
@@ -17,13 +18,15 @@ namespace VfxEditor.AvfxFormat {
             Color4.Read( reader );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             Color1.Write( writer );
             Color2.Write( writer );
             Color3.Write( writer );
             Color4.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
     }
 
@@ -42,13 +45,15 @@ namespace VfxEditor.AvfxFormat {
             Frame4.Read( reader );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             Frame1.Write( writer );
             Frame2.Write( writer );
             Frame3.Write( writer );
             Frame4.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
     }
 }

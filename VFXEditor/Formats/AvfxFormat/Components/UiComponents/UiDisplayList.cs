@@ -33,16 +33,16 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => Name;
 
-        protected override void RecurseChildrenAssigned( bool assigned ) {
-            throw new NotImplementedException();
-        }
-
         public override void ReadContents( BinaryReader reader, int size ) {
             throw new NotImplementedException();
         }
 
         public override void WriteContents( BinaryWriter writer ) {
             throw new NotImplementedException();
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
     }
 }

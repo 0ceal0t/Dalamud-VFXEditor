@@ -2,6 +2,7 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
@@ -38,7 +39,7 @@ namespace VfxEditor.AvfxFormat {
                 Platform,
                 ClipIdx
             };
-            AvfxBase.RecurseAssigned( Parsed, false );
+            foreach( var item in Parsed ) item.SetAssigned( false );
 
             if( initNodeSelects ) InitializeNodeSelects();
 
@@ -73,8 +74,10 @@ namespace VfxEditor.AvfxFormat {
             EffectorSelect.Draw();
             AvfxBase.DrawItems( Display );
 
-            var clipAssigned = ClipIdx.IsAssigned();
-            if( ImGui.Checkbox( "Clip Enabled", ref clipAssigned ) ) CommandManager.Add( new AvfxAssignCommand( ClipIdx, clipAssigned ) );
+            var assigned = ClipIdx.IsAssigned();
+            if( ImGui.Checkbox( "Clip Enabled", ref assigned ) ) {
+                CommandManager.Add( new AvfxAssignCommand( ClipIdx, assigned, false, false ) );
+            }
             ClipIdx.Draw();
         }
 

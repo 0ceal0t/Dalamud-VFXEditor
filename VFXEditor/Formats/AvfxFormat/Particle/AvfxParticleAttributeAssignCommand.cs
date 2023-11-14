@@ -25,14 +25,10 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void SetState( bool state ) {
-            if( state ) { // set assigned
-                AvfxBase.RecurseAssigned( Item, state );
-                NodeSelects.ForEach( x => x.Enable() );
-            }
-            else { // set unassigned
-                Item.SetAssigned( state );
-                NodeSelects.ForEach( x => x.Disable() );
-            }
+            Item.SetAssigned( state, true );
+
+            if( state ) NodeSelects.ForEach( x => x.Enable() );
+            else NodeSelects.ForEach( x => x.Disable() );
         }
     }
 }

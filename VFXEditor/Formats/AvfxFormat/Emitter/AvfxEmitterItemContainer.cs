@@ -17,7 +17,9 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < size / 312; i++ ) Items.Add( new AvfxEmitterItem( IsParticle, Emitter, false, reader ) );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
+        }
 
         public override void WriteContents( BinaryWriter writer ) {
             foreach( var item in Items ) item.Write( writer );

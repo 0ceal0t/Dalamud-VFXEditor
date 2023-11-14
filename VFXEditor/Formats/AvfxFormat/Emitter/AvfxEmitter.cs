@@ -196,11 +196,6 @@ namespace VfxEditor.AvfxFormat {
             ParticleSplit.UpdateIdx();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) {
-            RecurseAssigned( Parsed, assigned );
-            RecurseAssigned( Data, assigned );
-        }
-
         public override void WriteContents( BinaryWriter writer ) {
             EmitterCount.Value = Emitters.Count;
             ParticleCount.Value = Particles.Count;
@@ -222,6 +217,11 @@ namespace VfxEditor.AvfxFormat {
             }
 
             Data?.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
+            if( Data != null ) yield return Data;
         }
 
         public override void UpdateData() {

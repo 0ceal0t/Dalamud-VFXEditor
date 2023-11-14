@@ -62,8 +62,6 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) {
             EmitVertexes.EmitVertexes.Clear();
             EmitVertexes.EmitVertexes.AddRange( CombinedEmitVertexes.Select( x => x.Vertex ) );
@@ -90,6 +88,10 @@ namespace VfxEditor.AvfxFormat {
                 Indexes.SetAssigned( true );
                 Indexes.Write( writer );
             }
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void Draw() {

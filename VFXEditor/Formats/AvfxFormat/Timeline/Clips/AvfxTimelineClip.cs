@@ -1,5 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
@@ -33,13 +34,15 @@ namespace VfxEditor.AvfxFormat {
             reader.ReadBytes( 4 * 32 );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             Type.Write( writer );
             RawInts.Write( writer );
             RawFloats.Write( writer );
             WritePad( writer, 4 * 32 );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
 
         public override void Draw() {

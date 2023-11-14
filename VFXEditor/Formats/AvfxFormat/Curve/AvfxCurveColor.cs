@@ -45,9 +45,11 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Curves, assigned );
-
         public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Curves );
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Curves ) yield return item;
+        }
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( Name );

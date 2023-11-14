@@ -15,10 +15,12 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < count; i++ ) Keys.Add( new AvfxCurveKey( Curve, reader ) );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             foreach( var key in Keys ) key.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
     }
 }

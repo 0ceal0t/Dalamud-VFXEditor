@@ -52,10 +52,12 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < Size; i++ ) Items.Add( reader.ReadByte() );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) { }
-
         public override void WriteContents( BinaryWriter writer ) {
             foreach( var item in Items ) writer.Write( ( byte )item );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            yield break;
         }
 
         public override void Draw() {

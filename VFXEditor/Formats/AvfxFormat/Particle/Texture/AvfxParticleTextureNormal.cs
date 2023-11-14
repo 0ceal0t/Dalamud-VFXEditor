@@ -45,9 +45,11 @@ namespace VfxEditor.AvfxFormat {
             EnableAllSelectors();
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
+        }
 
         public override void DrawUnassigned() {
             using var _ = ImRaii.PushId( "TN" );

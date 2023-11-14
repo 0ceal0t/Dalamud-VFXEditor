@@ -245,8 +245,6 @@ namespace VfxEditor.AvfxFormat {
             ScaleCombined = Math.Max( RevisedValuesScaleX.Value, Math.Max( RevisedValuesScaleY.Value, RevisedValuesScaleZ.Value ) );
         }
 
-        protected override void RecurseChildrenAssigned( bool assigned ) => RecurseAssigned( Parsed, assigned );
-
         public override void WriteContents( BinaryWriter writer ) {
             WriteNested( writer, Parsed );
 
@@ -267,6 +265,10 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Binders ) item.Write( writer );
             foreach( var item in Textures ) item.Write( writer );
             foreach( var item in Models ) item.Write( writer );
+        }
+
+        protected override IEnumerable<AvfxBase> GetChildren() {
+            foreach( var item in Parsed ) yield return item;
         }
 
         public override void Draw() {
