@@ -3,7 +3,6 @@ using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.Tables;
-using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxScheduler : AvfxNode {
@@ -20,7 +19,6 @@ namespace VfxEditor.AvfxFormat {
         private readonly CommandTable<AvfxSchedulerItem> TriggerTable;
 
         private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = new() {
-            ( "Name", ImGuiTableColumnFlags.WidthStretch, -1 ),
             ( "Timeline", ImGuiTableColumnFlags.None, -1 ),
             ( "Enabled", ImGuiTableColumnFlags.None, -1 ),
             ( "Start Time", ImGuiTableColumnFlags.None, -1 )
@@ -34,14 +32,13 @@ namespace VfxEditor.AvfxFormat {
                 TriggerCount
             };
 
-            ItemTable = new( "ItEm", true, Items, Columns, () => new( this, "Item", true ),
+            ItemTable = new( "ItEm", true, true, Items, Columns, () => new( this, "Item", true ),
             ( AvfxSchedulerItem item, bool add ) => {
                 if( add ) item.TimelineSelect.Enable();
                 else item.TimelineSelect.Disable();
-                IIndexUiItem.UpdateIdx( Items );
             } );
 
-            TriggerTable = new( "Trgr", false, Triggers, Columns, () => new( this, "Trgr", true ), null );
+            TriggerTable = new( "Trgr", false, true, Triggers, Columns, () => new( this, "Trgr", true ), null );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -69,9 +66,6 @@ namespace VfxEditor.AvfxFormat {
                 Triggers.AddRange( lastTrigger.Items.GetRange( lastTrigger.Items.Count - 12, 12 ) );
                 Triggers.ForEach( x => x.InitializeNodeSelects() );
             }
-
-            IIndexUiItem.UpdateIdx( Items );
-            IIndexUiItem.UpdateIdx( Triggers );
         }
 
         public override void WriteContents( BinaryWriter writer ) {
@@ -114,15 +108,9 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public override void GetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
-            Triggers.ForEach( item => IWorkspaceUiItem.GetRenamingMap( item, renameDict ) );
-        }
+        public override void GetChildrenRename( Dictionary<string, string> renameDict ) { }
 
-        public override void SetChildrenRename( Dictionary<string, string> renameDict ) {
-            Items.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
-            Triggers.ForEach( item => IWorkspaceUiItem.ReadRenamingMap( item, renameDict ) );
-        }
+        public override void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
         public override string GetDefaultText() => $"Scheduler {GetIdx()}";
 

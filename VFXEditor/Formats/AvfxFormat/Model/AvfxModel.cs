@@ -43,7 +43,7 @@ namespace VfxEditor.AvfxFormat {
             NodeView = new( this );
             UvView = new UiModelUvView();
 
-            VertexTable = new( "Emit", true, CombinedEmitVertexes, new() {
+            VertexTable = new( "Emit", true, true, CombinedEmitVertexes, new() {
                 ( "Order", ImGuiTableColumnFlags.None, -1 ),
                 ( "Position", ImGuiTableColumnFlags.None, -1 ),
                 ( "Normal", ImGuiTableColumnFlags.None, -1 ),

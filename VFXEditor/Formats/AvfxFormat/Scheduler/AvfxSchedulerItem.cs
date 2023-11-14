@@ -1,9 +1,10 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxSchedulerItem : GenericWorkspaceItem {
+    public class AvfxSchedulerItem : IUiItem {
         public readonly AvfxScheduler Scheduler;
         public readonly string Name;
 
@@ -36,11 +37,7 @@ namespace VfxEditor.AvfxFormat {
 
         public void Write( BinaryWriter writer ) => AvfxBase.WriteNested( writer, Parsed );
 
-        public override void Draw() {
-            ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( ImGui.GetContentRegionAvail().X );
-            DrawRename( "##Rename" );
-
+        public void Draw() {
             ImGui.TableNextColumn();
             TimelineSelect.Draw( 250 );
 
@@ -50,13 +47,6 @@ namespace VfxEditor.AvfxFormat {
             ImGui.TableNextColumn();
             ImGui.SetNextItemWidth( 100 );
             StartTime.Draw();
-        }
-
-        public override string GetDefaultText() => $"{GetIdx()}: {TimelineSelect.GetText()}";
-
-        public override string GetWorkspaceId() {
-            var type = ( Name == "Item" ) ? "Item" : "Trigger";
-            return $"{Scheduler.GetWorkspaceId()}/{type}{GetIdx()}";
         }
     }
 }

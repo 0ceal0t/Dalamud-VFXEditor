@@ -24,15 +24,15 @@ namespace VfxEditor.AvfxFormat {
             using var edited = new Edited();
 
             ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( 75 );
+            ImGui.SetNextItemWidth( 50 );
             Number.Order.Draw();
 
             ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( 200 );
+            ImGui.SetNextItemWidth( 170 );
             Vertex.Position.Draw();
 
             ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( 200 );
+            ImGui.SetNextItemWidth( 170 );
             Vertex.Normal.Draw();
 
             ImGui.TableNextColumn();

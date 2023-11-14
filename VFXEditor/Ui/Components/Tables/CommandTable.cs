@@ -13,15 +13,17 @@ namespace VfxEditor.Ui.Components.Tables {
     public class CommandTable<T> where T : class, IUiItem {
         protected readonly string Id;
         protected readonly bool AllowNewDelete;
+        protected readonly bool ShowRow;
         protected readonly List<T> Items;
         protected readonly List<(string, ImGuiTableColumnFlags, int)> Columns;
 
         private readonly Func<T> NewAction;
         private readonly Action<T, bool> OnChangeAction;
 
-        public CommandTable( string id, bool allowNewDelete, List<T> items, List<(string, ImGuiTableColumnFlags, int)> columns, Func<T> newAction, Action<T, bool> onChangeAction = null ) {
+        public CommandTable( string id, bool allowNewDelete, bool showRow, List<T> items, List<(string, ImGuiTableColumnFlags, int)> columns, Func<T> newAction, Action<T, bool> onChangeAction = null ) {
             Id = id;
             AllowNewDelete = allowNewDelete;
+            ShowRow = showRow;
             Items = items;
             Columns = columns;
 
@@ -36,7 +38,7 @@ namespace VfxEditor.Ui.Components.Tables {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 4 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", childSize, false );
-            using var table = ImRaii.Table( "Table", Columns.Count + ( AllowNewDelete ? 1 : 0 ),
+            using var table = ImRaii.Table( "Table", Columns.Count + ( AllowNewDelete ? 1 : 0 ) + ( ShowRow ? 1 : 0 ),
                 ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendX | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.PadOuterX );
             if( !table ) return;
 
@@ -49,9 +51,15 @@ namespace VfxEditor.Ui.Components.Tables {
             if( AllowNewDelete ) {
                 ImGui.TableSetupColumn( "##Controls", ImGuiTableColumnFlags.None, -1 );
             }
+
+            if( ShowRow ) {
+                ImGui.TableSetupColumn( "Row", ImGuiTableColumnFlags.None, -1 );
+            }
+
             foreach( var (name, flags, size) in Columns ) {
                 ImGui.TableSetupColumn( name, flags | ImGuiTableColumnFlags.NoResize, size );
             }
+
             ImGui.TableHeadersRow();
 
             // ===== BODY =========
@@ -67,6 +75,12 @@ namespace VfxEditor.Ui.Components.Tables {
                         CommandManager.Add( new ListRemoveCommand<T>( Items, item, OnChangeAction ) );
                         break;
                     }
+                }
+
+                if( ShowRow ) {
+                    ImGui.TableNextColumn();
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
+                    ImGui.TextDisabled( $"{idx}" );
                 }
 
                 item.Draw();
