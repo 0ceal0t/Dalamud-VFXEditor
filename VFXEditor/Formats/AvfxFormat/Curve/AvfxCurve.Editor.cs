@@ -1,4 +1,3 @@
-
 using Dalamud.Interface;
 using ImGuiNET;
 using ImPlotNET;
