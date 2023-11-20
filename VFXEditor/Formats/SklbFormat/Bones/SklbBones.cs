@@ -385,13 +385,13 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void ExportGltf() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".glb", "skeleton", "glb", ( bool ok, string res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );

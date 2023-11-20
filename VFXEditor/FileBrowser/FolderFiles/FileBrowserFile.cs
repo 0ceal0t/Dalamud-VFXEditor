@@ -117,6 +117,7 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                     "ts",
                     "java",
                     "gltf",
+                    "glb",
                     "hkx",
                 }, FontAwesomeIcon.FileCode, FilePickerFileColor.Code );
 

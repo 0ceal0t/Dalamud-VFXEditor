@@ -104,7 +104,9 @@ namespace VfxEditor.FileBrowser {
 
         public void SetPath( string path, bool record ) {
             var prevPath = CurrentPath;
-            CurrentPath = new DirectoryInfo( path ).FullName;
+            var partCount = path.Split( Path.DirectorySeparatorChar ).Length;
+            CurrentPath = new DirectoryInfo( partCount == 1 ? $"{path}{Path.DirectorySeparatorChar}" : path ).FullName;
+
             if( CurrentPath[^1] == Path.DirectorySeparatorChar ) CurrentPath = CurrentPath[0..^1]; // handle selecting a drive, like C: -> C:\
             if( record ) PathHistory.Add( (prevPath, CurrentPath) );
 
@@ -131,7 +133,7 @@ namespace VfxEditor.FileBrowser {
                 } );
             }
 
-            var info = new DirectoryInfo( CurrentPath );
+            var info = new DirectoryInfo( PathParts.Count == 1 ? $"{CurrentPath}{Path.DirectorySeparatorChar}" : CurrentPath );
 
             foreach( var dir in info.EnumerateDirectories().OrderBy( d => d.Name ) ) {
                 if( string.IsNullOrEmpty( dir.Name ) ) continue;

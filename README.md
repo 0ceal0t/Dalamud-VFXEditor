@@ -62,9 +62,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ## TODO
 - [ ] `.sgb` editor
 - [ ] `.imc` editor
-- [ ] Colorset preview
-- [ ] Material preview
-- [ ] Dye preview
 - [ ] Texture resize and basic edits
 - [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] `.sklb` gizmo

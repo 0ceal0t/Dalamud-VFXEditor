@@ -5,17 +5,18 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public string SkeletonId => Data.SkeletonId;
         public string AtchPath => $"chara/xls/attachoffset/{SkeletonId}.atch";
+        public string PapPrefix => $"chara/human/{SkeletonId}/animation/a0001/bt_common";
 
         public CharacterRow( string name, RacialData data ) {
             Name = name;
             Data = data;
         }
 
-        public string GetLoopPap( int poseId ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/emote/pose" + poseId.ToString().PadLeft( 2, '0' ) + "_loop.pap";
+        public string GetLoopPap( int id, string prefix ) => $"{PapPrefix}/emote/{prefix}pose" + id.ToString().PadLeft( 2, '0' ) + "_loop.pap";
 
-        public string GetStartPap( int poseId ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/emote/pose" + poseId.ToString().PadLeft( 2, '0' ) + "_start.pap";
+        public string GetStartPap( int id, string prefix ) => $"{PapPrefix}/emote/{prefix}pose" + id.ToString().PadLeft( 2, '0' ) + "_start.pap";
 
-        public string GetPap( string path ) => $"chara/human/{SkeletonId}/animation/a0001/bt_common/resident/{path}.pap";
+        public string GetPap( string path ) => $"{PapPrefix}/{path}.pap";
 
         public string GetBodyMaterial( int id, string suffix ) => $"chara/human/{SkeletonId}/obj/body/b{Pad( id )}/material/v0001/mt_{SkeletonId}b{Pad( id )}_{suffix}.mtrl";
 

@@ -106,7 +106,7 @@ namespace VfxEditor.AvfxFormat {
 
                 using( var popup = ImRaii.Popup( "ExportPopup" ) ) {
                     if( popup ) {
-                        if( ImGui.Selectable( ".gltf" ) ) ExportDialog();
+                        if( ImGui.Selectable( ".glb" ) ) ExportDialog();
                         if( ImGui.Selectable( ".avfx" ) ) Plugin.AvfxManager.ShowExportDialog( this );
                     }
                 }
@@ -209,7 +209,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", ".gltf,.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -223,7 +223,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".glb", "model", "glb", ( bool ok, string res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );
