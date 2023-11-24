@@ -51,8 +51,7 @@ namespace VfxEditor.FileBrowser {
             Reset();
             Callback = callback;
             // Save CommandManager so we can use it for later
-            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters,
-                SavedPath, defaultFileName, defaultExtension, Recent, CommandManager.Current );
+            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent, CommandManager.Current );
             Dialog.Show();
         }
 

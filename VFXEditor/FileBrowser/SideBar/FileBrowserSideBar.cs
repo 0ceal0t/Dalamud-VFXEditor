@@ -2,9 +2,12 @@ using Dalamud.Interface;
 using ImGuiNET;
 using OtterGui.Raii;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.SideBar {
@@ -13,84 +16,100 @@ namespace VfxEditor.FileBrowser.SideBar {
 
         private FileBrowserSidebarItem Selected;
 
-        private readonly List<FileBrowserSidebarItem> Drives = new();
-        private readonly List<FileBrowserSidebarItem> QuickAccess = new();
-        private readonly List<FileBrowserSidebarItem> Favorites = new();
+        private readonly ConcurrentQueue<FileBrowserSidebarItem> Drives = new();
+        private readonly ConcurrentQueue<FileBrowserSidebarItem> QuickAccess = new();
+        private readonly ConcurrentQueue<FileBrowserSidebarItem> Favorites = new();
         private readonly List<FileBrowserSidebarItem> Recent;
 
         public FileBrowserSideBar( FileBrowserDialog dialog, List<FileBrowserSidebarItem> recent ) {
             Dialog = dialog;
             Recent = recent;
 
-            foreach( var drive in DriveInfo.GetDrives() ) {
-                if( !drive.IsReady ) continue;
-                var location = drive.Name;
-                if( location[^1] == Path.DirectorySeparatorChar ) location = location[0..^1];
-                var label = drive.VolumeLabel;
-                var text = string.IsNullOrEmpty( label ) ? location : $"{label} ({location})";
+            PopulateDrives();
+            PopulateQuickAccess();
+            PopulateFavorites();
+        }
 
-                Drives.Add( new FileBrowserSidebarItem {
-                    Icon = FontAwesomeIcon.Server,
-                    Location = drive.Name,
-                    Text = text,
-                } );
-            }
+        private async void PopulateDrives() {
+            await Task.Run( () => {
+                foreach( var drive in DriveInfo.GetDrives() ) {
+                    if( !drive.IsReady ) continue;
+                    var location = drive.Name;
+                    if( location[^1] == Path.DirectorySeparatorChar ) location = location[0..^1];
+                    var label = drive.VolumeLabel;
+                    var text = string.IsNullOrEmpty( label ) ? location : $"{label} ({location})";
 
-            var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
-            if( string.IsNullOrEmpty( personal ) ) return;
-            if( personal.EndsWith( "OneDrive" ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Desktop,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
-                Text = "Desktop"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.File,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
-                Text = "Documents"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Download,
-                Location = Path.Combine( personal, "Downloads" ),
-                Text = "Downloads"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Star,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
-                Text = "Favorites"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Music,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
-                Text = "Music"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Image,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
-                Text = "Pictures"
-            } );
-
-            QuickAccess.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Video,
-                Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
-                Text = "Videos"
-            } );
-
-            if( GetQuickAccessFolders( out var folders ) ) {
-                foreach( var (name, path) in folders ) {
-                    Favorites.Add( new FileBrowserSidebarItem {
-                        Icon = FontAwesomeIcon.Folder,
-                        Location = path,
-                        Text = $"{name}"
+                    Drives.Enqueue( new FileBrowserSidebarItem {
+                        Icon = FontAwesomeIcon.Server,
+                        Location = drive.Name,
+                        Text = text,
                     } );
                 }
-            }
+            } );
+        }
+
+        private async void PopulateQuickAccess() {
+            await Task.Run( () => {
+                var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
+                if( string.IsNullOrEmpty( personal ) ) return;
+                if( personal.EndsWith( "OneDrive" ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Desktop,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.Desktop ),
+                    Text = "Desktop"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.File,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ),
+                    Text = "Documents"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Download,
+                    Location = Path.Combine( personal, "Downloads" ),
+                    Text = "Downloads"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Star,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.Favorites ),
+                    Text = "Favorites"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Music,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.MyMusic ),
+                    Text = "Music"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Image,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures ),
+                    Text = "Pictures"
+                } );
+
+                QuickAccess.Enqueue( new FileBrowserSidebarItem {
+                    Icon = FontAwesomeIcon.Video,
+                    Location = Environment.GetFolderPath( Environment.SpecialFolder.MyVideos ),
+                    Text = "Videos"
+                } );
+            } );
+        }
+
+        private async void PopulateFavorites() {
+            await Task.Run( () => {
+                if( GetQuickAccessFolders( out var folders ) ) {
+                    foreach( var (name, path) in folders ) {
+                        Favorites.Enqueue( new FileBrowserSidebarItem {
+                            Icon = FontAwesomeIcon.Folder,
+                            Location = path,
+                            Text = $"{name}"
+                        } );
+                    }
+                }
+            } );
         }
 
         public void Clear() {
@@ -111,8 +130,8 @@ namespace VfxEditor.FileBrowser.SideBar {
             DrawCategory( Recent, "Recent", FontAwesomeIcon.History, ref idx );
         }
 
-        private void DrawCategory( List<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
-            if( items == null || items.Count == 0 ) return;
+        private void DrawCategory( IEnumerable<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
+            if( items == null || items.Count() == 0 ) return;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             using( var disabled = ImRaii.Disabled() ) {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using VfxEditor.FileBrowser.Filter;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.FileBrowser.Preview;
@@ -56,6 +57,7 @@ namespace VfxEditor.FileBrowser {
         private readonly UndoRedoStack<(string, string)> PathHistory = new( 25 );
 
         private readonly List<string> PathParts = new();
+        private bool JustDrive => PathParts.Count == 1;
         private bool PathEditing = false;
         private string PathInput = "";
 
@@ -119,34 +121,36 @@ namespace VfxEditor.FileBrowser {
             UpdateFiles();
         }
 
-        public void UpdateFiles() {
-            Files.Clear();
-            SearchedFiles.Clear();
-            if( !Directory.Exists( CurrentPath ) ) return;
-            if( PathParts.Count == 0 ) return;
+        public async void UpdateFiles() {
+            await Task.Run( () => {
+                Files.Clear();
+                SearchedFiles.Clear();
+                if( !Directory.Exists( CurrentPath ) ) return;
+                if( PathParts.Count == 0 ) return;
 
-            if( PathParts.Count > 1 ) {
-                Files.Add( new FileBrowserFile() {
-                    Type = FilePickerFileType.Directory,
-                    FilePath = CurrentPath,
-                    FileName = ".."
-                } );
-            }
+                if( PathParts.Count > 1 ) {
+                    Files.Add( new FileBrowserFile() {
+                        Type = FilePickerFileType.Directory,
+                        FilePath = CurrentPath,
+                        FileName = ".."
+                    } );
+                }
 
-            var info = new DirectoryInfo( PathParts.Count == 1 ? $"{CurrentPath}{Path.DirectorySeparatorChar}" : CurrentPath );
+                var info = new DirectoryInfo( JustDrive ? $"{CurrentPath}{Path.DirectorySeparatorChar}" : CurrentPath );
 
-            foreach( var dir in info.EnumerateDirectories().OrderBy( d => d.Name ) ) {
-                if( string.IsNullOrEmpty( dir.Name ) ) continue;
-                Files.Add( FileBrowserFile.FromDirectory( dir, CurrentPath ) );
-            }
+                foreach( var dir in info.EnumerateDirectories().OrderBy( d => d.Name ) ) {
+                    if( string.IsNullOrEmpty( dir.Name ) ) continue;
+                    Files.Add( FileBrowserFile.FromDirectory( dir, CurrentPath ) );
+                }
 
-            foreach( var file in info.EnumerateFiles().OrderBy( f => f.Name ) ) {
-                if( string.IsNullOrEmpty( file.Name ) ) continue;
-                if( Filters.FilterOut( file.Extension ) ) continue;
-                Files.Add( FileBrowserFile.FromFile( file, CurrentPath ) );
-            }
+                foreach( var file in info.EnumerateFiles().OrderBy( f => f.Name ) ) {
+                    if( string.IsNullOrEmpty( file.Name ) ) continue;
+                    if( Filters.FilterOut( file.Extension ) ) continue;
+                    Files.Add( FileBrowserFile.FromFile( file, CurrentPath ) );
+                }
 
-            SortFiles( CurrentSortingField );
+                SortFiles( CurrentSortingField );
+            } );
         }
 
         private void UpdatePathParts() {

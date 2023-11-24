@@ -190,7 +190,16 @@ namespace VfxEditor.Select {
             // Navigate through items using the up and down arrow buttons
             if( KeybindConfiguration.NavigateUpDown( Searched, Selected, out var newSelected ) ) Select( newSelected );
 
-            ImGui.Columns( 2, "Columns", true );
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            using var table = ImRaii.Table( "Table", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY, new( -1, ImGui.GetContentRegionAvail().Y ) );
+            if( !table ) return;
+            style.Dispose();
+
+            ImGui.TableSetupColumn( "##Left", ImGuiTableColumnFlags.WidthFixed, 200 );
+            ImGui.TableSetupColumn( "##Right", ImGuiTableColumnFlags.WidthStretch );
+
+            ImGui.TableNextRow();
+            ImGui.TableNextColumn();
 
             using( var tree = ImRaii.Child( "Tree" ) ) {
                 SelectUiUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
@@ -213,12 +222,10 @@ namespace VfxEditor.Select {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + postItems * itemHeight );
             }
 
-            ImGui.NextColumn();
+            ImGui.TableNextColumn();
 
             if( Selected == null ) ImGui.Text( "Select an item..." );
             else DrawInner();
-
-            ImGui.Columns( 1 );
         }
 
         protected virtual void DrawInner() {

@@ -46,8 +46,6 @@ namespace VfxEditor.FileBrowser {
 
             Filters.CheckFilters();
 
-            if( Files.Count == 0 ) UpdateFiles();
-
             DrawHeader();
             DrawBody();
             return DrawFooter();
