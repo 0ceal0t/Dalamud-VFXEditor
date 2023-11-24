@@ -126,7 +126,7 @@ namespace VfxEditor.Utils.Gltf {
             scene.AddNode( armature );
 
             var model = scene.ToGltf2();
-            model.SaveGLB( path );
+            model.SaveGLTF( path );
             Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 

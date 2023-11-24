@@ -385,7 +385,7 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void ExportGltf() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".glb", "skeleton", "glb", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }

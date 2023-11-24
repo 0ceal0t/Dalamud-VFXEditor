@@ -157,7 +157,7 @@ namespace VfxEditor.PapFormat.Motion {
         // ======== IMPORT EXPORT =========
 
         private void ExportDialog( string animationName ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".glb", "motion", "glb", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
                 if( !ok ) return;
                 Plugin.AddModal( new PapGltfExportModal( this, animationName, res ) );
             } );

@@ -97,7 +97,7 @@ namespace VfxEditor.Utils.Gltf {
                 }
             }
 
-            model.SaveGLB( path );
+            model.SaveGLTF( path );
             Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 

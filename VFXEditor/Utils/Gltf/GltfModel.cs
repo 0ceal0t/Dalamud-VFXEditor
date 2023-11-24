@@ -35,7 +35,7 @@ namespace VfxEditor.Utils.Gltf {
 
             var scene = new SceneBuilder();
             scene.AddRigidMesh( mesh, Matrix4x4.Identity );
-            scene.ToGltf2().SaveGLB( path );
+            scene.ToGltf2().SaveGLTF( path );
             Dalamud.Log( $"Saved GLTF to: {path}" );
         }
 
