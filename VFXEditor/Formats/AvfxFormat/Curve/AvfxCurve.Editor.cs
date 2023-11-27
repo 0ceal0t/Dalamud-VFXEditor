@@ -13,7 +13,7 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxCurve {
-        private readonly List<(KeyType, Vector4)> CopiedKeys = new();
+        private static readonly List<(KeyType, Vector4)> CopiedKeys = new();
 
         private readonly List<AvfxCurveKey> Selected = new();
         private AvfxCurveKey SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
