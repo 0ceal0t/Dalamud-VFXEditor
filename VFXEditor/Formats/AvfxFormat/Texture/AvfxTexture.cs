@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ShowTooltip() {
             ImGui.BeginTooltip();
-            GetTexture()?.DrawImage();
+            GetTexture()?.DrawFullImage();
             ImGui.EndTooltip();
         }
 
