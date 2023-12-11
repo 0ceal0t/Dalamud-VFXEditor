@@ -17,28 +17,28 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x2C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" ); // chara/action/magic/2ff_sage/mgc007.tmb => 48
+        private readonly ParsedInt Duration = new( "Duration" ); // chara/action/magic/2ff_sage/mgc007.tmb => 48
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt BindPointId = new( "Bind Point Id" );
+        private readonly ParsedInt Rotation = new( "Rotation" );
         private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "Object Control" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );
-        private readonly ParsedFloat Unk8 = new( "Unknown 8" );
+        private readonly ParsedFloat Scale = new( "Scale" );
 
         public C203( TmbFile file ) : base( file ) { }
 
         public C203( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => new() {
-            Unk1,
+            Duration,
             Unk2,
-            Unk3,
-            Unk4,
+            BindPointId,
+            Rotation,
             ObjectControl,
             Unk6,
             Unk7,
-            Unk8
+            Scale
         };
     }
 }

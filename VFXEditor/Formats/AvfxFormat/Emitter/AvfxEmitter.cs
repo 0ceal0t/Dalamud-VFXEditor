@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionAngleY = new( "Injection Angle Y", "IAY", CurveType.Angle );
         public readonly AvfxCurve InjectionAngleRandomY = new( "Injection Angle Y Random", "IAYR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleZ = new( "Injection Angle Z", "IAX", CurveType.Angle );
+        public readonly AvfxCurve InjectionAngleZ = new( "Injection Angle Z", "IAZ", CurveType.Angle );
         public readonly AvfxCurve InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
 
         public readonly AvfxCurve VelocityRandomX = new( "Velocity Random X", "VRX" );
