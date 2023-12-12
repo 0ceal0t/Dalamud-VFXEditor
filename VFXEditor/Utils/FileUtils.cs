@@ -15,6 +15,24 @@ namespace VfxEditor.Utils {
             return Encoding.ASCII.GetString( strBytes.ToArray() );
         }
 
+        public static string ReadStringOffset( long startPos, BinaryReader reader ) {
+            var offset = reader.ReadUInt32();
+            var savePos = reader.BaseStream.Position;
+            reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
+            var ret = ReadString( reader );
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            return ret;
+        }
+
+        public static List<uint> ReadOffsets( uint count, long position, BinaryReader reader ) {
+            var ret = new List<uint>();
+            var savePos = reader.BaseStream.Position;
+            reader.BaseStream.Seek( position, SeekOrigin.Begin );
+            for( var i = 0; i < count; i++ ) ret.Add( reader.ReadUInt32() );
+            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            return ret;
+        }
+
         public static string ReadString( BinaryReader reader, int size ) => Encoding.ASCII.GetString( reader.ReadBytes( size ) );
 
         public static void WriteString( BinaryWriter writer, string str, bool writeNull = false ) {

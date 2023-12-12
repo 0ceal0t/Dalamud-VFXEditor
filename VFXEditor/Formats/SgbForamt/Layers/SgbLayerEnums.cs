@@ -1,7 +1,7 @@
 namespace VfxEditor.Formats.SgbForamt.Layers {
     // https://raw.githubusercontent.com/NotAdam/Lumina/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Layer/LayerEnums.cs
 
-    public enum LayerEntryType {
+    public enum LayerEntryType : int {
         AssetNone = 0x0,
         BG = 0x1,
         Attribute = 0x2,
@@ -85,32 +85,32 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         MaxAssetType = 0x50,
     }
 
-    public enum DoorState {
+    public enum DoorState : int {
         Auto = 0x1,
         Open = 0x2,
         Closed = 0x3,
     }
 
-    public enum RotationState {
+    public enum RotationState : int {
         Rounding = 0x1,
         Stopped = 0x2,
     }
 
-    public enum TransformState {
+    public enum TransformState : int {
         TransformStatePlay = 0x0,
         TransformStateStop = 0x1,
         TransformStateReplay = 0x2,
         TransformStateReset = 0x3,
     }
 
-    public enum ColourState {
+    public enum ColourState : int {
         ColorStatePlay = 0x0,
         ColorStateStop = 0x1,
         ColorStateReplay = 0x2,
         ColorStateReset = 0x3,
     }
 
-    public enum TriggerBoxShape {
+    public enum TriggerBoxShape : int {
         TriggerBoxShapeBox = 0x1,
         TriggerBoxShapeSphere = 0x2,
         TriggerBoxShapeCylinder = 0x3,
@@ -119,13 +119,13 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         TriggerBoxShapeBoardBothSides = 0x6,
     }
 
-    public enum ModelCollisionType {
+    public enum ModelCollisionType : int {
         None = 0x0,
         Replace = 0x1,
         Box = 0x2,
     }
 
-    public enum LightType {
+    public enum LightType : int {
         None = 0x0,
         Directional = 0x1,
         Point = 0x2,
@@ -135,30 +135,30 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         Specular = 0x6,
     }
 
-    public enum PointLightType {
+    public enum PointLightType : int {
         Sphere = 0x0,
         Hemisphere = 0x1,
     }
 
-    public enum PositionMarkerType {
+    public enum PositionMarkerType : int {
         DebugZonePop = 0x1,
         DebugJump = 0x2,
         NaviMesh = 0x3,
         LQEvent = 0x4,
     }
 
-    public enum EnvSetShape {
+    public enum EnvSetShape : int {
         EnvShapeEllipsoid = 0x1,
         EnvShapeCuboid = 0x2,
         EnvShapeCylinder = 0x3,
     }
 
-    public enum HelperObjectType {
+    public enum HelperObjectType : int {
         ProxyActor = 0x0,
         NullObject = 0x1,
     }
 
-    public enum TargetType {
+    public enum TargetType : int {
         None = 0x0,
         ENPCInstanceID = 0x1,
         Player = 0x2,
@@ -175,18 +175,18 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         Max = 0xD,
     }
 
-    public enum PopType {
+    public enum PopType : int {
         PC = 0x1,
         NPC = 0x2,
         BNPC = 0x2,
         Content = 0x3,
     }
 
-    public enum ExitType {
+    public enum ExitType : int {
         ZoneLine = 0x1,
     }
 
-    public enum RangeType {
+    public enum RangeType : int {
         Type01 = 0x1,
         Type02 = 0x2,
         Type03 = 0x3,
@@ -196,18 +196,18 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         Type07 = 0x7,
     }
 
-    public enum LineStyle {
+    public enum LineStyle : int {
         Red = 0x1,
         Blue = 0x2,
     }
 
-    public enum GimmickType {
+    public enum GimmickType : int {
         Fishing = 0x1,
         Content = 0x2,
         Room = 0x3,
     }
 
-    public enum TargetMarkerType {
+    public enum TargetMarkerType : int {
         UiTarget = 0x0,
         UiNameplate = 0x1,
         LookAt = 0x2,
@@ -215,12 +215,12 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         Root = 0x4,
     }
 
-    public enum ObjectType {
+    public enum ObjectType : int {
         ObjectChair = 0x0,
         ObjectBed = 0x1,
     }
 
-    public enum CharacterSize : byte {
+    public enum CharacterSize : int {
         DefaultSize = 0x0,
         VerySmall = 0x1,
         Small = 0x2,
@@ -229,32 +229,32 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         VeryLarge = 0x5,
     }
 
-    public enum DrawHeadParts : byte {
+    public enum DrawHeadParts : int {
         Default = 0x0,
         ForceOn = 0x1,
         ForceOff = 0x2,
     }
 
-    public enum RotationType {
+    public enum RotationType : int {
         NoRotate = 0x0,
         AllAxis = 0x1,
         YAxisOnly = 0x2,
     }
 
-    public enum MovePathMode {
+    public enum MovePathMode : int {
         None = 0x0,
         SharedGroupAction = 0x1,
         Timeline = 0x2,
     }
 
-    public enum LayerSetReferencedType {
+    public enum LayerSetReferencedType : int {
         All = 0x0,
         Include = 0x1,
         Exclude = 0x2,
         Undetermined = 0x3,
     }
 
-    public enum SoundEffectType {
+    public enum SoundEffectType : int {
         Point = 0x3,
         PointDir = 0x4,
         Line = 0x5,

@@ -1,7 +1,9 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.SgbForamt.Scenes;
+using VfxEditor.Ui.Components;
 
 namespace VfxEditor.Formats.SgbForamt {
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Files/SgbFile.cs#L14
@@ -9,7 +11,8 @@ namespace VfxEditor.Formats.SgbForamt {
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Scene/Scene.cs#L8
 
     public class SgbFile : FileManagerFile {
-        public readonly List<SgbScene> Scenes = new();
+        public readonly List<SgbEntry> Entries = new();
+        private readonly CommandDropdown<SgbEntry> EntryDropdown;
 
         public SgbFile( BinaryReader reader, bool verify ) : base() {
             reader.ReadInt32(); // magic
@@ -17,16 +20,22 @@ namespace VfxEditor.Formats.SgbForamt {
 
             var chunkCount = reader.ReadInt32();
             for( var i = 0; i < chunkCount; i++ ) { // TODO: find example with multiple chunks
-                Scenes.Add( new( this, reader ) );
+                Entries.Add( new( this, reader ) );
             }
+
+            // TODO: verify
+
+            EntryDropdown = new( "Entry", Entries,
+                ( SgbEntry item, int idx ) => $"Entry {idx} ({item.Id.Value})", () => new SgbEntry( this ) );
         }
 
         public override void Write( BinaryWriter writer ) {
-
+            // TODO
         }
 
         public override void Draw() {
-
+            ImGui.Separator();
+            EntryDropdown.Draw();
         }
     }
 }
