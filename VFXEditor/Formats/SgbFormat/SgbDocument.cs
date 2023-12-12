@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.SgbForamt {
+namespace VfxEditor.Formats.SgbFormat {
     public class SgbDocument : FileManagerDocument<SgbFile, WorkspaceMetaBasic> {
         public override string Id => "Sgb";
         public override string Extension => "sgb";

@@ -2,10 +2,10 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Formats.SgbForamt.Scenes;
+using VfxEditor.Formats.SgbFormat.Scenes;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.Formats.SgbForamt {
+namespace VfxEditor.Formats.SgbFormat {
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Files/SgbFile.cs#L14
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Layer/LayerGroup.cs#L12
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Scene/Scene.cs#L8

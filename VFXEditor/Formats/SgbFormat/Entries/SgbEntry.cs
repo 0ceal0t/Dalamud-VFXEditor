@@ -2,14 +2,14 @@ using ImGuiNET;
 using OtterGui.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.SgbForamt.Layers;
+using VfxEditor.Formats.SgbFormat.Layers;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.SgbForamt.Scenes {
+namespace VfxEditor.Formats.SgbFormat.Scenes {
     public class SgbEntry : IUiItem {
         public readonly SgbFile File;
         public readonly ParsedString Id = new( "Id" );

@@ -6,7 +6,7 @@ using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.SgbForamt.Layers {
+namespace VfxEditor.Formats.SgbFormat.Layers {
     public class SgbLayerGroup : IUiItem {
         public readonly ParsedUInt Id = new( "Id" );
         public readonly ParsedString Name = new( "Name" );

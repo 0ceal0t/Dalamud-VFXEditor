@@ -13,7 +13,7 @@ using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.MtrlFormat;
-using VfxEditor.Formats.SgbForamt;
+using VfxEditor.Formats.SgbFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;

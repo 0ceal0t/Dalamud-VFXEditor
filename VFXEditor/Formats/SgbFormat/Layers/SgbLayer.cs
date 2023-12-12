@@ -1,11 +1,13 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.SgbFormat.Layers.Objects;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.SgbForamt.Layers {
+namespace VfxEditor.Formats.SgbFormat.Layers {
     public class SgbLayer : IUiItem {
         public readonly ParsedUInt Id = new( "Layer Id" );
         public readonly ParsedString Name = new( "Name" );
@@ -19,7 +21,12 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
         private readonly ParsedByteBool IsHousing = new( "Is Housing" );
         private readonly ParsedShort VersionMask = new( "Version Mask" );
 
-        public SgbLayer() { }
+        private readonly List<SgbObject> Objects = new();
+        private readonly SgbObjectSplitView ObjectView;
+
+        public SgbLayer() {
+            ObjectView = new( Objects );
+        }
 
         public SgbLayer( BinaryReader reader ) : this() {
             // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Layer/LayerCommon.cs#L1596
@@ -47,7 +54,8 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
 
             foreach( var offset in FileUtils.ReadOffsets( instanceObjectCount, startPos + instanceObjects, reader ) ) {
                 reader.BaseStream.Seek( startPos + instanceObjects + offset, SeekOrigin.Begin );
-                //
+                var type = ( LayerEntryType )reader.ReadInt32();
+                Dalamud.Log( $"{type}" );
             }
 
             reader.BaseStream.Seek( startPos + layerSetReferenceList, SeekOrigin.Begin );
@@ -73,7 +81,7 @@ namespace VfxEditor.Formats.SgbForamt.Layers {
             }
 
             using( var tab = ImRaii.TabItem( "Objects" ) ) {
-                // TODO
+                if( tab ) ObjectView.Draw();
             }
 
             // TODO

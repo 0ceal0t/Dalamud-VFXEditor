@@ -1,4 +1,4 @@
-namespace VfxEditor.Formats.SgbForamt.Layers {
+namespace VfxEditor.Formats.SgbFormat.Layers {
     // https://raw.githubusercontent.com/NotAdam/Lumina/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Layer/LayerEnums.cs
 
     public enum LayerEntryType : int {

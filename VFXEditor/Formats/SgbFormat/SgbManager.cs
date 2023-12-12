@@ -2,7 +2,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.SgbForamt {
+namespace VfxEditor.Formats.SgbFormat {
     public unsafe class SgbManager : FileManager<SgbDocument, SgbFile, WorkspaceMetaBasic> {
         public SgbManager() : base( "Sgb Editor", "Sgb" ) {
             SourceSelect = new SgbSelectDialog( "Sgb Select [LOADED]", this, true );

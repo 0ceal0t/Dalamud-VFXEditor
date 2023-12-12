@@ -1,4 +1,4 @@
-using VfxEditor.Formats.SgbForamt;
+using VfxEditor.Formats.SgbFormat;
 
 namespace VfxEditor.Select.Formats {
     public class SgbSelectDialog : SelectDialog {
