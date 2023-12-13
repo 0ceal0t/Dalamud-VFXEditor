@@ -11,6 +11,7 @@ namespace VfxEditor.Formats.SgbFormat {
     // https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/Scene/Scene.cs#L8
 
     // TODO unlock disabled with warning
+    // TODO CollisionAttribute, CreationParamsBase, CreationParams
 
     public class SgbFile : FileManagerFile {
         public readonly List<SgbEntry> Entries = new();

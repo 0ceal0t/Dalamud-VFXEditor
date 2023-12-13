@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
         public readonly ParsedString Name = new( "Name" );
         private readonly ParsedFloat3 Translation = new( "Translation" );
         private readonly ParsedFloat3 Rotation = new( "Rotation" );
-        private readonly ParsedFloat3 Scale = new( "Scale " );
+        private readonly ParsedFloat3 Scale = new( "Scale" );
 
         public SgbObject( LayerEntryType type ) {
             Type = type;
@@ -25,10 +25,10 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
             Rotation.Read( reader );
             Scale.Read( reader );
 
-            ReadData( reader, startPos );
+            ReadBody( reader, startPos );
         }
 
-        protected abstract void ReadData( BinaryReader reader, long startPos );
+        protected abstract void ReadBody( BinaryReader reader, long startPos );
 
         public void Draw() {
             Id.Draw();
@@ -38,9 +38,9 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
                 Rotation.Draw();
                 Scale.Draw();
             }
-            DrawData();
+            DrawBody();
         }
 
-        protected abstract void DrawData();
+        protected abstract void DrawBody();
     }
 }

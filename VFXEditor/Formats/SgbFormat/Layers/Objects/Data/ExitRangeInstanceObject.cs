@@ -8,11 +8,11 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects.Data {
             Read( reader );
         }
 
-        protected override void DrawData() {
+        protected override void DrawBody() {
 
         }
 
-        protected override void ReadData( BinaryReader reader, long startPos ) {
+        protected override void ReadBody( BinaryReader reader, long startPos ) {
 
         }
     }
