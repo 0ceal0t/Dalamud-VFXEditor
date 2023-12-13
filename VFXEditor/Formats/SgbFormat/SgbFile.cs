@@ -12,6 +12,8 @@ namespace VfxEditor.Formats.SgbFormat {
 
     // TODO unlock disabled with warning
     // TODO CollisionAttribute, CreationParamsBase, CreationParams
+    // TODO SoundEffectParam data
+    // TODO Overriden stuff
 
     public class SgbFile : FileManagerFile {
         public readonly List<SgbEntry> Entries = new();

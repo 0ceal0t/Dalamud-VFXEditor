@@ -13,24 +13,25 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
             // TODO
         };
 
-        public SgbObjectSplitView( List<SgbObject> items ) : base( "Object", items, false, ( SgbObject item, int idx ) => $"{item.Name} ({item.Type})", null ) { }
+        public SgbObjectSplitView( List<SgbObject> items ) : base( "Object", items, false,
+            ( SgbObject item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"{item.Type}" : $"{item.Name.Value} ({item.Type})", null ) { }
 
         protected override void DrawControls() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) ImGui.OpenPopup( "NewObjectPopup" );
 
-            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) ImGui.OpenPopup( "NewObjectPopup" );
+                if( Selected != null && !DangerousObjectTypes.Contains( Selected.GetType() ) ) {
+                    ImGui.SameLine();
+                    if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                        OnDelete( Selected );
+                        Selected = null;
+                    }
+                }
+            }
 
             if( ImGui.BeginPopup( "NewObjectPopup" ) ) {
                 DrawNewPopup();
                 ImGui.EndPopup();
-            }
-
-            if( Selected != null && !DangerousObjectTypes.Contains( Selected.GetType() ) ) {
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    OnDelete( Selected );
-                    Selected = null;
-                }
             }
         }
 

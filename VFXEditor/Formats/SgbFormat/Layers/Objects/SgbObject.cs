@@ -20,6 +20,7 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
         protected void Read( BinaryReader reader ) {
             var startPos = reader.BaseStream.Position - 4; // account for type
             Id.Read( reader );
+            Dalamud.Log( $"{reader.BaseStream.Position:X8}" );
             Name.Value = FileUtils.ReadStringOffset( startPos, reader );
             Translation.Read( reader );
             Rotation.Read( reader );

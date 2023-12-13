@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.SgbFormat.Layers.Objects.Data {
-    public class NPCInstanceObject : GameInstanceObject {
+    public class NpcInstanceObject : GameInstanceObject {
         private readonly ParsedUInt PopWeather = new( "Pop Weather" );
         private readonly ParsedByte PopTimeStart = new( "Pop Time Start" );
         private readonly ParsedByte PopTimeEnd = new( "Pop Time End" );
@@ -11,9 +11,9 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects.Data {
         private readonly ParsedByte Route = new( "Route" );
         private readonly ParsedShort EventGroup = new( "Event Group" );
 
-        public NPCInstanceObject( LayerEntryType type ) : base( type ) { }
+        public NpcInstanceObject( LayerEntryType type ) : base( type ) { }
 
-        public NPCInstanceObject( LayerEntryType type, BinaryReader reader ) : this( type ) {
+        public NpcInstanceObject( LayerEntryType type, BinaryReader reader ) : this( type ) {
             Read( reader );
         }
 
