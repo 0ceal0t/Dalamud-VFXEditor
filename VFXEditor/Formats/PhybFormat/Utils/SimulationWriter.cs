@@ -30,7 +30,7 @@ namespace VfxEditor.PhybFormat.Utils {
 
         public override void WriteTo( BinaryWriter finalWriter ) {
             foreach( var offset in Offsets ) {
-                Writer.BaseStream.Seek( offset.PlaceholderPos, SeekOrigin.Begin );
+                Writer.BaseStream.Position = offset.PlaceholderPos;
 
                 var diff = Writer.BaseStream.Length + offset.ExtraPos;
                 Writer.Write( ( int )diff );

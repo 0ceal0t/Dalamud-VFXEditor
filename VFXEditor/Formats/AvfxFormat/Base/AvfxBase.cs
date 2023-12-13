@@ -115,10 +115,10 @@ namespace VfxEditor.AvfxFormat {
 
             endPos = writer.BaseStream.Position;
 
-            writer.BaseStream.Seek( sizePos, SeekOrigin.Begin );
+            writer.BaseStream.Position = sizePos;
             writer.Write( ( int )size );
 
-            writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = endPos;
         }
 
         public abstract void WriteContents( BinaryWriter writer );

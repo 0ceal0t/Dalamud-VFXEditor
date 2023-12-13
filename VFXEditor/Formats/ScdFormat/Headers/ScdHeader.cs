@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat {
 
         public static void UpdateFileSize( BinaryWriter writer, long subtract ) {
             var totalSize = writer.BaseStream.Length;
-            writer.BaseStream.Seek( FileSizeOffset, SeekOrigin.Begin );
+            writer.BaseStream.Position = FileSizeOffset;
             writer.Write( ( int )( totalSize - subtract ) );
         }
     }

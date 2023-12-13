@@ -19,7 +19,7 @@ namespace VfxEditor.Formats.MtrlFormat.AttributeSet {
         }
 
         public void ReadString( BinaryReader reader, long stringsStart ) {
-            reader.BaseStream.Seek( stringsStart + TempOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = stringsStart + TempOffset;
             Name.Value = FileUtils.ReadString( reader );
         }
 

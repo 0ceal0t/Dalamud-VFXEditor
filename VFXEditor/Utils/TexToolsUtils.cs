@@ -90,7 +90,7 @@ namespace VfxEditor.Utils {
 
             var remainder = uncompressedLength;
             using( var reader = new BinaryReader( new MemoryStream( fileData ) ) ) {
-                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+                reader.BaseStream.Position = 0;
                 for( var i = 1; i <= partCount; i++ ) {
                     if( i == partCount ) {
                         var compressedData = Compressor( reader.ReadBytes( remainder ) );
@@ -129,7 +129,7 @@ namespace VfxEditor.Utils {
             // Save header position
             var savePos = header.BaseStream.Position;
 
-            header.BaseStream.Seek( 12, SeekOrigin.Begin );
+            header.BaseStream.Position = 12;
             header.Write( totalCompSize / 128 );
             header.Write( totalCompSize / 128 );
 
@@ -138,11 +138,11 @@ namespace VfxEditor.Utils {
             if( rem != 0 ) headerSize += 128 - rem;
 
             // Update header size
-            header.BaseStream.Seek( 0, SeekOrigin.Begin );
+            header.BaseStream.Position = 0;
             header.Write( headerSize );
 
             // Reset header position
-            header.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            header.BaseStream.Position = savePos;
 
             var headerPadding = rem == 0 ? 0 : 128 - rem;
             header.Write( new byte[headerPadding] );

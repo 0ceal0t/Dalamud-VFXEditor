@@ -45,7 +45,7 @@ namespace VfxEditor.SklbFormat {
 
             Padding = ( int )( Data.HavokOffset - reader.BaseStream.Position ); // Do this b/c of modded skeletons like IVCS
 
-            reader.BaseStream.Seek( Data.HavokOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = Data.HavokOffset;
             var havokData = reader.ReadBytes( ( int )( reader.BaseStream.Length - Data.HavokOffset ) );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
@@ -73,7 +73,7 @@ namespace VfxEditor.SklbFormat {
 
             var havokOffset = writer.BaseStream.Position;
 
-            writer.BaseStream.Seek( havokOffsetPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = havokOffsetPos;
             if( Data is SklbOldData ) {
                 writer.Write( ( short )havokOffset );
             }
@@ -82,7 +82,7 @@ namespace VfxEditor.SklbFormat {
             }
 
             // Reset position
-            writer.BaseStream.Seek( havokOffset, SeekOrigin.Begin );
+            writer.BaseStream.Position = havokOffset;
 
             var data = File.ReadAllBytes( HkxTempLocation );
             writer.Write( data );

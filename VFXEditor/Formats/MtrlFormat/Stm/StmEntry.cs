@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public readonly IReadOnlyList<Half> Power;
 
         public StmEntry( BinaryReader reader, long offset ) {
-            reader.BaseStream.Seek( offset, SeekOrigin.Begin );
+            reader.BaseStream.Position = offset;
 
             // In bytes
             var diffuseEnd = reader.ReadUInt16() * 2;
@@ -51,7 +51,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public static Half ReadSingle( BinaryReader reader ) => reader.ReadHalf();
 
         private static IReadOnlyList<T> Read<T>( BinaryReader reader, long start, int length, Func<BinaryReader, T> read ) {
-            reader.BaseStream.Seek( start, SeekOrigin.Begin );
+            reader.BaseStream.Position = start;
 
             var entrySize = Marshal.SizeOf( typeof( T ) );
             var entryCount = length / entrySize;

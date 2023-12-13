@@ -26,18 +26,18 @@ namespace VfxEditor.Utils {
         public static string ReadStringOffset( long startPos, BinaryReader reader ) {
             var offset = reader.ReadUInt32();
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
+            reader.BaseStream.Position = startPos + offset;
             var ret = ReadString( reader );
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            reader.BaseStream.Position = savePos;
             return ret;
         }
 
         public static List<uint> ReadOffsets( uint count, long position, BinaryReader reader ) {
             var ret = new List<uint>();
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( position, SeekOrigin.Begin );
+            reader.BaseStream.Position = position;
             for( var i = 0; i < count; i++ ) ret.Add( reader.ReadUInt32() );
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            reader.BaseStream.Position = savePos;
             return ret;
         }
 
@@ -76,7 +76,7 @@ namespace VfxEditor.Utils {
 
         private static byte[] GetOriginal( BinaryReader reader ) {
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            reader.BaseStream.Position = 0;
 
             const int bufferSize = 4096;
             using var ms = new MemoryStream();
@@ -85,7 +85,7 @@ namespace VfxEditor.Utils {
             while( ( count = reader.Read( buffer, 0, buffer.Length ) ) != 0 )
                 ms.Write( buffer, 0, count );
 
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            reader.BaseStream.Position = savePos;
 
             return ms.ToArray();
 

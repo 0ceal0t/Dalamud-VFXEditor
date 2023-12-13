@@ -98,7 +98,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             UvSets.ForEach( x => x.ReadString( reader, stringsStart ) );
             ColorSets.ForEach( x => x.ReadString( reader, stringsStart ) );
 
-            reader.BaseStream.Seek( stringsStart + shaderOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = stringsStart + shaderOffset;
             Shader = new( "Shader", new List<ParsedStringIcon>() {
                 new() {
                     Icon = () => FontAwesomeIcon.Sync,
@@ -109,7 +109,7 @@ namespace VfxEditor.Formats.MtrlFormat {
                 Value = FileUtils.ReadString( reader )
             };
 
-            reader.BaseStream.Seek( stringsStart + stringSize, SeekOrigin.Begin );
+            reader.BaseStream.Position = stringsStart + stringSize;
             ModdedMod4 = ( int )( reader.BaseStream.Position % 4 );
 
             // ===============
@@ -124,7 +124,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( this, reader ) : new( this );
             DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
             for( var i = 0; i < 16; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
-            reader.BaseStream.Seek( dataEnd, SeekOrigin.Begin );
+            reader.BaseStream.Position = dataEnd;
 
             var shaderValueSize = reader.ReadUInt16();
             var shaderKeyCount = reader.ReadUInt16();
@@ -186,9 +186,9 @@ namespace VfxEditor.Formats.MtrlFormat {
                     FileUtils.WriteString( writer, entry.Value, true );
                 }
                 var savePos = writer.BaseStream.Position;
-                writer.BaseStream.Seek( entry.Key, SeekOrigin.Begin );
+                writer.BaseStream.Position = entry.Key;
                 writer.Write( ( ushort )offset );
-                writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+                writer.BaseStream.Position = savePos;
             }
 
             var shaderOffset = writer.BaseStream.Position - stringStart;
@@ -230,14 +230,14 @@ namespace VfxEditor.Formats.MtrlFormat {
                 foreach( var value in constant.Values ) writer.Write( value.Value ); // write float values
 
                 var savePos = writer.BaseStream.Position;
-                writer.BaseStream.Seek( constantPositions[idx], SeekOrigin.Begin );
+                writer.BaseStream.Position = constantPositions[idx];
                 writer.Write( ( ushort )offset );
-                writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+                writer.BaseStream.Position = savePos;
             }
 
             // ================
 
-            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = placeholderPos;
             writer.Write( ( ushort )writer.BaseStream.Length );
             writer.Write( ( ushort )( dataEnd - dataStart ) );
             writer.Write( ( ushort )( stringEnd - stringStart ) );

@@ -23,7 +23,7 @@ namespace VfxEditor.TmbFormat.Utils {
             var savePos = Reader.BaseStream.Position;
             var magic = ReadString( 4 );
             var size = ReadInt32();
-            Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = savePos;
 
             TmbItem entry;
 
@@ -90,18 +90,18 @@ namespace VfxEditor.TmbFormat.Utils {
         public bool ReadAtOffset( int offset, Action<BinaryReader> func ) {
             if( offset == 0 ) return false; // nothing to read
             var savePos = Reader.BaseStream.Position;
-            Reader.BaseStream.Seek( StartPosition + 8 + offset, SeekOrigin.Begin );
+            Reader.BaseStream.Position = StartPosition + 8 + offset;
             func( Reader );
-            Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = savePos;
             return true;
         }
 
         public string ReadOffsetString() {
             var offset = Reader.ReadInt32();
             var savePos = Reader.BaseStream.Position;
-            Reader.BaseStream.Seek( StartPosition + 8 + offset, SeekOrigin.Begin );
+            Reader.BaseStream.Position = StartPosition + 8 + offset;
             var res = FileUtils.ReadString( Reader );
-            Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = savePos;
             return res;
         }
 
@@ -109,12 +109,12 @@ namespace VfxEditor.TmbFormat.Utils {
             var offset = Reader.ReadInt32();
             var count = Reader.ReadInt32();
             var savePos = Reader.BaseStream.Position;
-            Reader.BaseStream.Seek( StartPosition + 8 + offset, SeekOrigin.Begin );
+            Reader.BaseStream.Position = StartPosition + 8 + offset;
             var res = new List<int>();
             for( var i = 0; i < count; i++ ) {
                 res.Add( Reader.ReadInt16() );
             }
-            Reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = savePos;
             return res;
         }
 
@@ -125,7 +125,7 @@ namespace VfxEditor.TmbFormat.Utils {
             if( count != 3 ) return new Vector3( 0 );
 
             var currentPos = Reader.BaseStream.Position;
-            Reader.BaseStream.Seek( offset + StartPosition + 8, SeekOrigin.Begin );
+            Reader.BaseStream.Position = offset + StartPosition + 8;
 
             var result = new Vector3() {
                 X = Reader.ReadSingle(),
@@ -133,7 +133,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 Z = Reader.ReadSingle(),
             };
 
-            Reader.BaseStream.Seek( currentPos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = currentPos;
             return result;
         }
 
@@ -144,7 +144,7 @@ namespace VfxEditor.TmbFormat.Utils {
             if( count != 4 ) return new Vector4( 0 );
 
             var currentPos = Reader.BaseStream.Position;
-            Reader.BaseStream.Seek( offset + StartPosition + 8, SeekOrigin.Begin );
+            Reader.BaseStream.Position = offset + StartPosition + 8;
 
             var result = new Vector4() {
                 X = Reader.ReadSingle(),
@@ -153,7 +153,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 W = Reader.ReadSingle(),
             };
 
-            Reader.BaseStream.Seek( currentPos, SeekOrigin.Begin );
+            Reader.BaseStream.Position = currentPos;
             return result;
         }
     }

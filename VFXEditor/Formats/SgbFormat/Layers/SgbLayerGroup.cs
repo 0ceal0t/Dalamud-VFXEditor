@@ -28,11 +28,11 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
             var endPos = reader.BaseStream.Position;
 
             foreach( var offset in FileUtils.ReadOffsets( layerCount, startPos + layersOffsets, reader ) ) {
-                reader.BaseStream.Seek( startPos + layersOffsets + offset, SeekOrigin.Begin );
+                reader.BaseStream.Position = startPos + layersOffsets + offset;
                 Layers.Add( new( reader ) );
             }
 
-            reader.BaseStream.Seek( endPos, SeekOrigin.Begin ); // reset position
+            reader.BaseStream.Position = endPos; // reset position
         }
 
         public void Draw() {

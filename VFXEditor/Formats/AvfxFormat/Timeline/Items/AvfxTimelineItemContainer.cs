@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
                 if( idx != numElements - 1 ) {
                     var resetPos = reader.BaseStream.Position;
                     var nextName = ReadAvfxName( reader );
-                    reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
+                    reader.BaseStream.Position = resetPos;
 
                     BENA_ahead = nextName == "bEna";
                 }

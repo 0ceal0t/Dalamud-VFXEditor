@@ -26,12 +26,12 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects.Data {
             reader.ReadBytes( 8 ); // padding
             var endPos = reader.BaseStream.Position;
 
-            reader.BaseStream.Seek( startPos + offset, SeekOrigin.Begin );
+            reader.BaseStream.Position = startPos + offset;
             for( var i = 0; i < count; i++ ) {
                 Points.Add( new( reader ) );
             }
 
-            reader.BaseStream.Seek( endPos, SeekOrigin.Begin );
+            reader.BaseStream.Position = endPos;
         }
     }
 }

@@ -128,14 +128,14 @@ namespace VfxEditor.FileBrowser.Preview {
             using var ms = new MemoryStream( File.ReadAllBytes( path ) );
             using var reader = new BinaryReader( ms );
 
-            reader.BaseStream.Seek( 12, SeekOrigin.Begin );
+            reader.BaseStream.Position = 12;
             var height = reader.ReadInt32();
             var width = reader.ReadInt32();
             reader.ReadInt32(); // pitch
             reader.ReadInt32(); // depth
             mips = reader.ReadInt32();
 
-            reader.BaseStream.Seek( 128, SeekOrigin.Begin ); // skip header
+            reader.BaseStream.Position = 128; // skip header
             var data = reader.ReadBytes( ( int )ms.Length - 128 );
 
             var ddsFormat = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );

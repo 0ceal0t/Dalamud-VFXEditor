@@ -9,7 +9,7 @@ namespace VfxEditor.Interop.Havok {
         public void LoadFile( BinaryReader reader ) {
             var size = reader.BaseStream.Length;
 
-            reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+            reader.BaseStream.Position = 0;
             reader.ReadInt32(); // Magic
             var version = reader.ReadInt32();
 
@@ -28,7 +28,7 @@ namespace VfxEditor.Interop.Havok {
                 havokOffset = reader.ReadInt16();
             }
 
-            reader.BaseStream.Seek( havokOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = havokOffset;
             HavokData = reader.ReadBytes( ( int )( size - havokOffset ) );
         }
 

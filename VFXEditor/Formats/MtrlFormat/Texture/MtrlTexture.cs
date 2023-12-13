@@ -32,7 +32,7 @@ namespace VfxEditor.Formats.MtrlFormat.Texture {
         }
 
         public void ReadString( BinaryReader reader, long stringsStart ) {
-            reader.BaseStream.Seek( stringsStart + TempOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = stringsStart + TempOffset;
             Path.Value = FileUtils.ReadString( reader );
         }
 

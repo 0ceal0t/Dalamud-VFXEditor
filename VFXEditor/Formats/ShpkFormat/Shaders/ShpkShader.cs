@@ -88,7 +88,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             Samplers.ForEach( x => x.Read( reader, parameterOffset ) );
             Resources.ForEach( x => x.Read( reader, parameterOffset ) );
 
-            reader.BaseStream.Seek( shaderOffset + TempOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = shaderOffset + TempOffset;
             ExtraData = reader.ReadBytes( ExtraSize );
             Data = reader.ReadBytes( TempSize - ExtraSize );
         }
@@ -116,9 +116,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             var offset = writer.BaseStream.Position - shaderOffset;
 
             var savePos = writer.BaseStream.Position;
-            writer.BaseStream.Seek( placeholderPosition, SeekOrigin.Begin );
+            writer.BaseStream.Position = placeholderPosition;
             writer.Write( ( uint )offset );
-            writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            writer.BaseStream.Position = savePos;
 
             writer.Write( ExtraData );
             writer.Write( Data );

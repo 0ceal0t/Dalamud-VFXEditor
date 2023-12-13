@@ -54,7 +54,7 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
             var obSetEnabledCount = reader.ReadUInt32();
 
             foreach( var offset in FileUtils.ReadOffsets( instanceObjectCount, startPos + instanceObjects, reader ) ) {
-                reader.BaseStream.Seek( startPos + instanceObjects + offset, SeekOrigin.Begin );
+                reader.BaseStream.Position = startPos + instanceObjects + offset;
                 var type = ( LayerEntryType )reader.ReadInt32();
                 if( !SgbObjectUtils.ObjectTypes.TryGetValue( type, out var objectType ) ) {
                     Dalamud.Error( $"Unknown object type {type}" );
@@ -66,15 +66,15 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
                 Objects.Add( newEntry );
             }
 
-            reader.BaseStream.Seek( startPos + layerSetReferenceList, SeekOrigin.Begin );
+            reader.BaseStream.Position = startPos + layerSetReferenceList;
             // Read list
 
-            reader.BaseStream.Seek( startPos + obSet, SeekOrigin.Begin );
+            reader.BaseStream.Position = startPos + obSet;
             for( var i = 0; i < obSetCount; i++ ) {
                 // Read OBSet
             }
 
-            reader.BaseStream.Seek( startPos + obSetEnabled, SeekOrigin.Begin );
+            reader.BaseStream.Position = startPos + obSetEnabled;
             for( var i = 0; i < obSetEnabledCount; i++ ) {
                 // Read OBSetEnabled
             }

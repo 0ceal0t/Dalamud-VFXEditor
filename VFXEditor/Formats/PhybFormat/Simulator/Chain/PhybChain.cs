@@ -53,13 +53,13 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
 
             var resetPos = reader.BaseStream.Position;
 
-            reader.BaseStream.Seek( simulatorStartPos + collisionOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + collisionOffset + 4;
             for( var i = 0; i < numCollisions; i++ ) Collisions.Add( new PhybCollisionData( file, simulator, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + nodeOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + nodeOffset + 4;
             for( var i = 0; i < numNodes; i++ ) Nodes.Add( new PhybNode( file, simulator, reader ) );
 
-            reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
+            reader.BaseStream.Position = resetPos;
         }
 
         protected override List<ParsedBase> GetParsed() => new() {

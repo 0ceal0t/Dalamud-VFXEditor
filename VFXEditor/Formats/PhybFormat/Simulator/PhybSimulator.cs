@@ -97,32 +97,32 @@ namespace VfxEditor.PhybFormat.Simulator {
 
             var resetPos = reader.BaseStream.Position;
 
-            reader.BaseStream.Seek( simulatorStartPos + collisionDataOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + collisionDataOffset + 4;
             for( var i = 0; i < numCollisionData; i++ ) Collisions.Add( new PhybCollisionData( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + collisionConnectorOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + collisionConnectorOffset + 4;
             for( var i = 0; i < numCollisionConnector; i++ ) CollisionConnectors.Add( new PhybCollisionData( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + chainOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + chainOffset + 4;
             for( var i = 0; i < numChain; i++ ) Chains.Add( new PhybChain( file, this, reader, simulatorStartPos ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + connectorOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + connectorOffset + 4;
             for( var i = 0; i < numConnector; i++ ) Connectors.Add( new PhybConnector( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + attractOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + attractOffset + 4;
             for( var i = 0; i < numAttract; i++ ) Attracts.Add( new PhybAttract( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + pinOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + pinOffset + 4;
             for( var i = 0; i < numPin; i++ ) Pins.Add( new PhybPin( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + springOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + springOffset + 4;
             for( var i = 0; i < numSpring; i++ ) Springs.Add( new PhybSpring( file, this, reader ) );
 
-            reader.BaseStream.Seek( simulatorStartPos + postAlignmentOffset + 4, SeekOrigin.Begin );
+            reader.BaseStream.Position = simulatorStartPos + postAlignmentOffset + 4;
             for( var i = 0; i < numPostAlignment; i++ ) PostAlignments.Add( new PhybPostAlignment( file, this, reader ) );
 
             // reset
-            reader.BaseStream.Seek( resetPos, SeekOrigin.Begin );
+            reader.BaseStream.Position = resetPos;
         }
 
         public long WriteHeader( SimulationWriter writer ) {

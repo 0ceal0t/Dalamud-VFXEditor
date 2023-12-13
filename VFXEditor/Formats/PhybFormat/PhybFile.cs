@@ -43,10 +43,10 @@ namespace VfxEditor.PhybFormat {
             var collisionOffset = reader.ReadUInt32();
             var simOffset = reader.ReadUInt32();
 
-            reader.BaseStream.Seek( collisionOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = collisionOffset;
             Collision = new( this, reader, collisionOffset == simOffset );
 
-            reader.BaseStream.Seek( simOffset, SeekOrigin.Begin );
+            reader.BaseStream.Position = simOffset;
             Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
@@ -55,7 +55,7 @@ namespace VfxEditor.PhybFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            writer.BaseStream.Seek( 0, SeekOrigin.Begin );
+            writer.BaseStream.Position = 0;
 
             if( Version.Value == 0 ) {
                 writer.Write( 0 );
@@ -79,7 +79,7 @@ namespace VfxEditor.PhybFormat {
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
 
-            writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = offsetPos;
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
         }

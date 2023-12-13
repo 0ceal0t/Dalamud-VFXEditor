@@ -265,7 +265,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             // Get DDS info
             using var ms = new MemoryStream( ddsData );
             using var reader = new BinaryReader( ms );
-            reader.BaseStream.Seek( 12, SeekOrigin.Begin );
+            reader.BaseStream.Position = 12;
             var height = reader.ReadInt32();
             var width = reader.ReadInt32();
             var pitch = reader.ReadInt32();
@@ -275,7 +275,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             writer.Write( TextureUtils.CreateTextureHeader( format, width, height, mipLevels ) );
 
             // Add DDS data
-            reader.BaseStream.Seek( 128, SeekOrigin.Begin );
+            reader.BaseStream.Position = 128;
             var uncompressedLength = ms.Length - 128;
             var imageData = new byte[uncompressedLength];
             reader.Read( imageData, 0, ( int )uncompressedLength );

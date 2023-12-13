@@ -60,13 +60,13 @@ namespace VfxEditor.PapFormat {
             }
 
             var havokDataSize = footerPosition - havokPosition;
-            reader.BaseStream.Seek( havokPosition, SeekOrigin.Begin );
+            reader.BaseStream.Position = havokPosition;
             var havokData = reader.ReadBytes( havokDataSize );
             File.WriteAllBytes( HkxTempLocation, havokData );
 
             ModdedPapMod4 = ( int )( reader.BaseStream.Position % 4 );
 
-            reader.BaseStream.Seek( footerPosition, SeekOrigin.Begin );
+            reader.BaseStream.Position = footerPosition;
             ModdedTmbOffset4 = ( int )( reader.BaseStream.Position % 4 );
 
             for( var i = 0; i < numAnimations; i++ ) {
@@ -126,11 +126,11 @@ namespace VfxEditor.PapFormat {
 
             // go back and write sizes
             var endPos = writer.BaseStream.Position;
-            writer.BaseStream.Seek( offsetPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = offsetPos;
             writer.Write( ( int )( infoPos - startPos ) );
             writer.Write( ( int )( havokPos - startPos ) );
             writer.Write( ( int )( timelinePos - startPos ) );
-            writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = endPos;
         }
 
         public override void Draw() {

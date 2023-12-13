@@ -15,11 +15,11 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
             var savePos = reader.BaseStream.Position;
 
             // Read string
-            reader.BaseStream.Seek( stringPos, SeekOrigin.Begin );
+            reader.BaseStream.Position = stringPos;
             Bone.Read( reader );
 
             // Reset
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            reader.BaseStream.Position = savePos;
             Scale.Read( reader );
             Offset.Read( reader );
             Rotation.Read( reader );

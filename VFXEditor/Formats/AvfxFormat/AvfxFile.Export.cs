@@ -49,11 +49,11 @@ namespace VfxEditor.AvfxFormat {
             var finalPos = writer.BaseStream.Position;
 
             // go back and fill out placeholders
-            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = placeholderPos;
             writer.Write( numberOfItems );
             writer.Write( ( int )size );
             writer.Write( ( int )renamedOffset );
-            writer.BaseStream.Seek( finalPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = finalPos;
         }
 
         private List<AvfxNode> ExportWithDepedencies( List<AvfxNode> startNodes, BinaryWriter bw ) {

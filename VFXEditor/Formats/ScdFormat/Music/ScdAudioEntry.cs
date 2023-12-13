@@ -58,7 +58,7 @@ namespace VfxEditor.ScdFormat {
             for( var i = 0; i < AuxCount; i++ ) {
                 reader.ReadInt32(); // id
                 chunkEndPos += reader.ReadInt32(); // data, skip for now
-                reader.BaseStream.Seek( chunkEndPos, SeekOrigin.Begin );
+                reader.BaseStream.Position = chunkEndPos;
             }
             AuxChunkData = GetDataRange( chunkStartPos, chunkEndPos, reader );
 
@@ -97,9 +97,9 @@ namespace VfxEditor.ScdFormat {
 
         public static byte[] GetDataRange( long start, long end, BinaryReader reader ) {
             var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Seek( start, SeekOrigin.Begin );
+            reader.BaseStream.Position = start;
             var ret = reader.ReadBytes( ( int )( end - start ) );
-            reader.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            reader.BaseStream.Position = savePos;
             return ret;
         }
     }

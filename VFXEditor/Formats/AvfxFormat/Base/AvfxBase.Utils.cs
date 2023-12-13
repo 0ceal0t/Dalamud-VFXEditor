@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public static void Peek( BinaryReader reader, List<AvfxBase> items, int size ) {
             var startPosition = reader.BaseStream.Position;
             ReadNested( reader, items, size );
-            reader.BaseStream.Seek( startPosition, SeekOrigin.Begin ); // reset position
+            reader.BaseStream.Position = startPosition; // reset position
         }
 
         public static void WriteNested<T>( BinaryWriter writer, List<T> children ) where T : AvfxBase => children.ForEach( child => child.Write( writer ) );
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
 
                 onRead( reader, avfxName, contentSize );
 
-                reader.BaseStream.Seek( finalPosition, SeekOrigin.Begin );
+                reader.BaseStream.Position = finalPosition;
                 bytesRead += contentSize;
 
                 var padding = CalculatePadding( contentSize );

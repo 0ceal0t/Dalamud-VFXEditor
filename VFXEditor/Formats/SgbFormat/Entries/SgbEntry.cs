@@ -56,7 +56,7 @@ namespace VfxEditor.Formats.SgbFormat.Scenes {
             }
 
             for( var i = 0; i < layerGroupCount; i++ ) {
-                reader.BaseStream.Seek( startPos + 8 + layerGroupOffset + ( i * 16 ), SeekOrigin.Begin ); // TODO: find an example with multiple layers
+                reader.BaseStream.Position = startPos + 8 + layerGroupOffset + ( i * 16 ); // TODO: find an example with multiple layers
                 LayerGroups.Add( new( reader ) );
             }
 

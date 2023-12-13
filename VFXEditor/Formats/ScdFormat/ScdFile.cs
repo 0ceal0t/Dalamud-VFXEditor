@@ -206,12 +206,12 @@ namespace VfxEditor.ScdFormat {
             }
             var savePos = writer.BaseStream.Position;
 
-            writer.BaseStream.Seek( offsetLocation, SeekOrigin.Begin );
+            writer.BaseStream.Position = offsetLocation;
             foreach( var position in positions ) {
                 writer.Write( position );
             }
 
-            writer.BaseStream.Seek( savePos, SeekOrigin.Begin );
+            writer.BaseStream.Position = savePos;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace VfxEditor.Parsing.Utils {
             WriterMs.Close();
         }
 
-        public void Seek( long pos ) => Writer.BaseStream.Seek( pos, SeekOrigin.Begin );
+        public void Seek( long pos ) => Writer.BaseStream.Position = pos;
 
         public void Write( uint data ) => Writer.Write( data );
         public void Write( int data ) => Writer.Write( data );

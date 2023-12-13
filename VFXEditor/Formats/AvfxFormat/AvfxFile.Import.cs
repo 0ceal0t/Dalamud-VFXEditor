@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
                 var firstSize = reader.ReadInt32();
                 var hasDependencies = dataSize > ( firstSize + 8 + 4 );
 
-                reader.BaseStream.Seek( 0, SeekOrigin.Begin ); // reset position
+                reader.BaseStream.Position = 0; // reset position
                 Import( reader, ( int )dataSize, hasDependencies, null );
             }
             else { // NEW METHOD
@@ -40,14 +40,14 @@ namespace VfxEditor.AvfxFormat {
                 if( dataSize < 8 ) return;
 
                 var dataOffset = reader.BaseStream.Position;
-                reader.BaseStream.Seek( renamedOffset, SeekOrigin.Begin );
+                reader.BaseStream.Position = renamedOffset;
                 List<string> renames = new();
 
                 for( var i = 0; i < numberOfItems; i++ ) {
                     renames.Add( FileUtils.ReadString( reader ) );
                 }
 
-                reader.BaseStream.Seek( dataOffset, SeekOrigin.Begin );
+                reader.BaseStream.Position = dataOffset;
                 Import( reader, dataSize, hasDependencies, renames );
             }
         }
@@ -110,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
 
         private static void ImportGroup<T>( List<NodePosition> positions, BinaryReader reader, IUiNodeView<T> view, NodeGroup<T> group, CompoundCommand command ) where T : AvfxNode {
             foreach( var pos in positions ) {
-                reader.BaseStream.Seek( pos.Position, SeekOrigin.Begin );
+                reader.BaseStream.Position = pos.Position;
                 var item = view.Read( reader, pos.Size );
                 if( !string.IsNullOrEmpty( pos.Renamed ) ) item.Renamed = pos.Renamed;
                 group.AddAndUpdate( item ); // triggers Idx update as well

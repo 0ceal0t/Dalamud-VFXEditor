@@ -61,7 +61,7 @@ namespace VfxEditor.TmbFormat {
 
             if( verify ) Verified = FileUtils.Verify( binaryReader, ToBytes(), null );
 
-            binaryReader.BaseStream.Seek( startPos + size, SeekOrigin.Begin );
+            binaryReader.BaseStream.Position = startPos + size;
 
             UnusedTracks = Tracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
             UnusedTrackView = new( "Track", UnusedTracks, false, false );
@@ -99,9 +99,9 @@ namespace VfxEditor.TmbFormat {
 
             // Fill in size placeholder
             var endPos = writer.BaseStream.Position;
-            writer.BaseStream.Seek( startPos + 4, SeekOrigin.Begin );
+            writer.BaseStream.Position = startPos + 4;
             writer.Write( ( int )( endPos - startPos ) );
-            writer.BaseStream.Seek( endPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = endPos;
         }
 
         public override void Draw() {

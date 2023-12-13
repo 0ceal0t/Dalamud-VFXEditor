@@ -69,7 +69,7 @@ namespace VfxEditor.AvfxFormat {
                 using var writer = new BinaryWriter( ms );
                 using var reader = new BinaryReader( ms );
                 selected.Write( writer );
-                reader.BaseStream.Seek( 0, SeekOrigin.Begin );
+                reader.BaseStream.Position = 0;
 
                 var size = ms.Length;
                 file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed } ) );

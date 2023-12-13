@@ -83,7 +83,7 @@ namespace VfxEditor.Formats.SkpFormat {
             var size = ( int )writer.BaseStream.Length;
             var ccdOffset = Activated.HasFlag( SkpFlags.CCD ) ? size : 0;
 
-            writer.BaseStream.Seek( offsetPosition, SeekOrigin.Begin );
+            writer.BaseStream.Position = offsetPosition;
             writer.Write( lookAtOffset );
             writer.Write( ccdOffset );
             writer.Write( 0 ); // foot offset, no example of it being used

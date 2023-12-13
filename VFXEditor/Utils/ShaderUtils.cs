@@ -48,11 +48,11 @@ namespace VfxEditor.Utils {
 
             foreach( var item in stringPositions ) {
                 var offset = stringOffsets[item.Item2];
-                writer.BaseStream.Seek( item.Item1, SeekOrigin.Begin );
+                writer.BaseStream.Position = item.Item1;
                 writer.Write( offset );
             }
 
-            writer.BaseStream.Seek( placeholderPos, SeekOrigin.Begin );
+            writer.BaseStream.Position = placeholderPos;
             writer.Write( ( uint )writer.BaseStream.Length );
             writer.Write( ( uint )shaderOffset );
             writer.Write( ( uint )parameterOffset );

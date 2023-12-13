@@ -99,7 +99,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
             var lastPageSamples = 0;
             foreach( var offset in pageOffsets ) {
-                decodedReader.BaseStream.Seek( offset + 6, SeekOrigin.Begin );
+                decodedReader.BaseStream.Position = offset + 6;
                 var samples = decodedReader.ReadInt32();
                 var pageOffset = offset + 4;
                 if( PageBytesToSamples.Count == 0 ) FirstPageBytes = pageOffset;
@@ -198,12 +198,12 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( rawHeader );
             writer.Write( oggData );
 
-            writer.BaseStream.Seek( 0, SeekOrigin.Begin );
+            writer.BaseStream.Position = 0;
             writer.Write( oggData.Length - 0x10 ); // update data length
             writer.Write( oggReader.Channels );
             writer.Write( oggReader.SampleRate );
 
-            writer.BaseStream.Seek( 0x10, SeekOrigin.Begin );
+            writer.BaseStream.Position = 0x10;
             writer.Write( 0 ); // loop start
             writer.Write( oggData.Length ); // loop end
 
