@@ -10,14 +10,6 @@ using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
-    public enum DangerLevel : int {
-        None,
-        Yellow,
-        Red,
-        Detectable,
-        DontAddRemove
-    }
-
     public abstract class TmbEntry : TmbItemWithTime {
         public abstract string DisplayName { get; }
         public virtual DangerLevel Danger => DangerLevel.None;

@@ -1,10 +1,10 @@
 using System.IO;
 
 namespace VfxEditor.Formats.SgbFormat.Layers.Objects.Data {
-    public class BGInstanceObject : SgbObject {
-        public BGInstanceObject( LayerEntryType type ) : base( type ) { }
+    public class EnvSetInstanceObject : SgbObject {
+        public EnvSetInstanceObject( LayerEntryType type ) : base( type ) { }
 
-        public BGInstanceObject( LayerEntryType type, BinaryReader reader ) : this( type ) {
+        public EnvSetInstanceObject( LayerEntryType type, BinaryReader reader ) : this( type ) {
             Read( reader );
         }
 

@@ -1,5 +1,6 @@
 using ImGuiNET;
 using OtterGui.Raii;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.SgbFormat.Layers.Objects;
@@ -55,7 +56,14 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
             foreach( var offset in FileUtils.ReadOffsets( instanceObjectCount, startPos + instanceObjects, reader ) ) {
                 reader.BaseStream.Seek( startPos + instanceObjects + offset, SeekOrigin.Begin );
                 var type = ( LayerEntryType )reader.ReadInt32();
-                Dalamud.Log( $"{type}" );
+                if( !SgbObjectUtils.ObjectTypes.TryGetValue( type, out var objectType ) ) {
+                    Dalamud.Error( $"Unknown object type {type}" );
+                    continue;
+                }
+
+                var constructor = objectType.GetConstructor( new Type[] { typeof( LayerEntryType ), typeof( BinaryReader ) } );
+                var newEntry = ( SgbObject )constructor.Invoke( new object[] { type, reader } );
+                Objects.Add( newEntry );
             }
 
             reader.BaseStream.Seek( startPos + layerSetReferenceList, SeekOrigin.Begin );

@@ -3,10 +3,10 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
 
     public enum LayerEntryType : int {
         AssetNone = 0x0,
-        BG = 0x1,
+        Background = 0x1,
         Attribute = 0x2,
         LayLight = 0x3,
-        VFX = 0x4,
+        Vfx = 0x4,
         PositionMarker = 0x5,
         SharedGroup = 0x6,
         Sound = 0x7,
@@ -61,7 +61,7 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
         ScenarioText = 0x38,
         CollisionBox = 0x39,
         DoorRange = 0x3A,
-        LineVFX = 0x3B,
+        LineVfx = 0x3B,
         SoundEnvSet = 0x3C,
         CutActionTimeline = 0x3D,
         CharaScene = 0x3E,

@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
@@ -32,9 +33,11 @@ namespace VfxEditor.Formats.SgbFormat.Layers.Objects {
         public void Draw() {
             Id.Draw();
             Name.Draw();
-            Translation.Draw();
-            Rotation.Draw();
-            Scale.Draw();
+            using( var disabled = ImRaii.Disabled() ) {
+                Translation.Draw();
+                Rotation.Draw();
+                Scale.Draw();
+            }
             DrawData();
         }
 

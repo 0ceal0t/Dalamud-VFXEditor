@@ -216,4 +216,8 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Formats\SgbFormat\Layers\Objects\Data\Base\" />
+    </ItemGroup>
 </Project>

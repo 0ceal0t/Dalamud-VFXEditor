@@ -6,6 +6,14 @@ using System.Linq;
 using System.Text;
 
 namespace VfxEditor.Utils {
+    public enum DangerLevel : int {
+        None,
+        Yellow,
+        Red,
+        Detectable,
+        DontAddRemove
+    }
+
     public static class FileUtils {
         public static string ReadString( BinaryReader reader ) {
             var strBytes = new List<byte>();
