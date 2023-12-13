@@ -12,11 +12,10 @@ namespace VfxEditor.Formats.SgbFormat.Layers {
         public readonly ParsedString Name = new( "Name" );
 
         private readonly List<SgbLayer> Layers = new();
-        private readonly CommandSplitView<SgbLayer> LayerView;
+        private readonly UiSplitView<SgbLayer> LayerView;
 
         public SgbLayerGroup() {
-            LayerView = new( "Layer", Layers, true,
-                ( SgbLayer item, int idx ) => $"Layer {idx} ({item.Name.Value})", () => new SgbLayer() );
+            LayerView = new( "Layer", Layers, false, false );
         }
 
         public SgbLayerGroup( BinaryReader reader ) : this() {

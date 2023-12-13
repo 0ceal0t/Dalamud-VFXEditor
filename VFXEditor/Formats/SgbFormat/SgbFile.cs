@@ -14,6 +14,9 @@ namespace VfxEditor.Formats.SgbFormat {
     // TODO CollisionAttribute, CreationParamsBase, CreationParams
     // TODO SoundEffectParam data
     // TODO Overriden stuff
+    // TODO collision config in BGInstanceObject
+    // TODO VFX preview
+    // TODO Texture preview in light
 
     public class SgbFile : FileManagerFile {
         public readonly List<SgbEntry> Entries = new();
@@ -30,8 +33,7 @@ namespace VfxEditor.Formats.SgbFormat {
 
             // TODO: verify
 
-            EntryDropdown = new( "Entry", Entries,
-                ( SgbEntry item, int idx ) => $"Entry {idx} ({item.Id.Value})", () => new SgbEntry( this ) );
+            EntryDropdown = new( "Entry", Entries, ( SgbEntry item, int idx ) => $"Entry {idx} ({item.Id.Value})", () => new SgbEntry( this ), null, false );
         }
 
         public override void Write( BinaryWriter writer ) {

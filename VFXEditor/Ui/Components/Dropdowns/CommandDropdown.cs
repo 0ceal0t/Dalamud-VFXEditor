@@ -9,7 +9,7 @@ namespace VfxEditor.Ui.Components {
         private readonly Func<T> NewAction;
         private readonly Action<T, bool> OnChangeAction;
 
-        public CommandDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null ) : base( id, items, true, true ) {
+        public CommandDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null, bool allowNew = true ) : base( id, items, allowNew, allowNew ) {
             GetTextAction = getTextAction;
             NewAction = newAction;
             OnChangeAction = onChangeAction;

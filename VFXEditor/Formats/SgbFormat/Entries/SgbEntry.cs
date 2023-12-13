@@ -23,8 +23,7 @@ namespace VfxEditor.Formats.SgbFormat.Scenes {
 
         public SgbEntry( SgbFile file ) {
             File = file;
-            LayerGroupView = new( "Layer Group", LayerGroups,
-                ( SgbLayerGroup item, int idx ) => $"Layer Group {idx} ({item.Name.Value})", () => new SgbLayerGroup() );
+            LayerGroupView = new( "Layer Group", LayerGroups, ( SgbLayerGroup item, int idx ) => $"Layer Group {idx} ({item.Name.Value})", () => new SgbLayerGroup(), null, false );
         }
 
         public SgbEntry( SgbFile file, BinaryReader reader ) : this( file ) {
