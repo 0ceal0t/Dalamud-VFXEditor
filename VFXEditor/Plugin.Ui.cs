@@ -112,7 +112,6 @@ namespace VfxEditor {
                 ShpkManager,
                 ShcdManager,
                 MtrlManager,
-                SgbManager,
             };
 
             var dropdown = false;

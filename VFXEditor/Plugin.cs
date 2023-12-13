@@ -13,7 +13,6 @@ using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.MtrlFormat;
-using VfxEditor.Formats.SgbFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;
@@ -61,7 +60,6 @@ namespace VfxEditor {
             ShpkManager,
             ShcdManager,
             MtrlManager,
-            SgbManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -78,7 +76,6 @@ namespace VfxEditor {
         public static ShpkManager ShpkManager { get; private set; }
         public static ShcdManager ShcdManager { get; private set; }
         public static MtrlManager MtrlManager { get; private set; }
-        public static SgbManager SgbManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -120,7 +117,6 @@ namespace VfxEditor {
             ShpkManager = new();
             ShcdManager = new();
             MtrlManager = new();
-            SgbManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();
