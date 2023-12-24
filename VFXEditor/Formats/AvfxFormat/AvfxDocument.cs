@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat {
         public void ShowExportDialog( AvfxNode node ) => File.ShowExportDialog( node );
 
         public void OpenTemplate( string path ) =>
-            SetSource( new SelectResult( SelectResultType.Local, "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
+            SetSource( new SelectResult( SelectResultType.Local, "", "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
 
         public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

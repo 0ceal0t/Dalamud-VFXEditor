@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.FileBrowser;
 using VfxEditor.Select.Lists;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
@@ -38,11 +38,13 @@ namespace VfxEditor.Select {
     [Serializable]
     public class SelectResult {
         public SelectResultType Type;
+        public string Name;
         public string DisplayString;
         public string Path;
 
-        public SelectResult( SelectResultType type, string displayString, string path ) {
+        public SelectResult( SelectResultType type, string name, string displayString, string path ) {
             Type = type;
+            Name = name;
             DisplayString = displayString;
             Path = path;
         }
@@ -152,14 +154,14 @@ namespace VfxEditor.Select {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
                         FileBrowserManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
-                            Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + res, res ) );
+                            Invoke( new SelectResult( SelectResultType.Local, res, "[LOCAL] " + res, res ) );
                         } );
                     }
                 }
 
                 ImGui.SameLine();
                 if( ImGui.Button( "SELECT" ) && Path.IsPathRooted( LocalPathInput ) && File.Exists( LocalPathInput ) ) {
-                    Invoke( new SelectResult( SelectResultType.Local, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
+                    Invoke( new SelectResult( SelectResultType.Local, LocalPathInput, "[LOCAL] " + LocalPathInput, LocalPathInput ) );
                     LocalPathInput = "";
                 }
             }
@@ -235,7 +237,7 @@ namespace VfxEditor.Select {
         private void SelectGamePath( string path ) {
             var cleanedPath = path.Trim().Replace( "\\", "/" );
             if( !ShowLocal || Dalamud.DataManager.FileExists( cleanedPath ) ) {
-                Invoke( new SelectResult( SelectResultType.GamePath, "[GAME] " + cleanedPath, cleanedPath ) );
+                Invoke( new SelectResult( SelectResultType.GamePath, cleanedPath, "[GAME] " + cleanedPath, cleanedPath ) );
                 GamePathInput = "";
             }
         }

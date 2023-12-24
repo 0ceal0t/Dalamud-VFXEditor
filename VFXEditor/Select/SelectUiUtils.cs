@@ -9,7 +9,7 @@ namespace VfxEditor.Select {
     public class SelectUiUtils {
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
             var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
-            return new SelectResult( resultType, $"[{resultPrefix}] {resultName}", path );
+            return new SelectResult( resultType, resultName, $"[{resultPrefix}] {resultName}", path );
         }
 
         public static void DisplayNoVfx() {

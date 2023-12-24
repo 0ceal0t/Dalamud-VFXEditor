@@ -26,9 +26,10 @@ namespace VfxEditor.Select.Lists {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
 
-            if( ImGui.BeginTable( "Table", 2, ImGuiTableFlags.RowBg ) ) {
-                ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthFixed, 20 );
-                ImGui.TableSetupColumn( "##Column2", ImGuiTableColumnFlags.WidthStretch );
+            if( ImGui.BeginTable( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit ) ) {
+                ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthFixed, 25 );
+                ImGui.TableSetupColumn( "##Column2" );
+                ImGui.TableSetupColumn( "##Column3", ImGuiTableColumnFlags.WidthStretch );
 
                 var idx = 0;
                 foreach( var item in Items ) {
@@ -48,11 +49,14 @@ namespace VfxEditor.Select.Lists {
             using var _ = ImRaii.PushId( idx );
 
             ImGui.TableNextColumn();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 6 );
             if( Dialog.DrawFavorite( item ) ) return true;
 
             ImGui.TableNextColumn();
-            ImGui.Selectable( item.DisplayString, false, ImGuiSelectableFlags.SpanAllColumns );
+            ImGui.TextDisabled( "[" + item.Type.ToString().ToUpper().Replace( "GAME", "" ) + "]" );
+
+            ImGui.TableNextColumn();
+            ImGui.Selectable( string.IsNullOrEmpty( item.Name ) ? item.DisplayString.Split( "]" )[^1] : item.Name, false, ImGuiSelectableFlags.SpanAllColumns );
 
             if( PostRow( item, idx ) ) return true;
 
