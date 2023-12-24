@@ -294,7 +294,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public byte[] GetDdsData() => Local ? DdsData : DataSpan[HeaderLength..].ToArray();
 
-        public void SaveAsPng( string path ) {
+        public Surface GetPngData( out nint pin ) {
             var data = new RGBAQuad[Header.Height * Header.Width];
             for( var i = 0; i < Header.Height; i++ ) {
                 for( var j = 0; j < Header.Width; j++ ) {
@@ -302,11 +302,17 @@ namespace VfxEditor.Formats.TextureFormat {
                     data[idx] = new RGBAQuad( ImageData[idx * 4], ImageData[idx * 4 + 1], ImageData[idx * 4 + 2], ImageData[idx * 4 + 3] );
                 }
             }
-            var ptr = MemoryHelper.PinObject( data );
-            var image = Surface.LoadFromRawData( ptr, Header.Width, Header.Height, Header.Width * 4, false, true );
-            if( image == null ) return;
+            pin = MemoryHelper.PinObject( data );
+            return Surface.LoadFromRawData( pin, Header.Width, Header.Height, Header.Width * 4, false, true );
+        }
 
-            image.SaveToFile( ImageFormat.PNG, path );
+        public void SaveAsPng( string path ) {
+            var surface = GetPngData( out var pin );
+            if( surface == null ) return;
+
+            surface.SaveToFile( ImageFormat.PNG, path );
+            surface.Dispose();
+            MemoryHelper.UnpinObject( pin );
         }
 
         public void SaveAsDds( string path ) {

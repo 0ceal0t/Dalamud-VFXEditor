@@ -6,14 +6,14 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public class TexturePreview : TextureDrawable {
-        private readonly ushort Height;
-        private readonly ushort Width;
-        private readonly ushort MipLevels;
-        private readonly ushort Depth;
-        private readonly TextureFormat Format;
-        private readonly IDalamudTextureWrap Wrap;
+        public readonly ushort Height;
+        public readonly ushort Width;
+        public readonly ushort MipLevels;
+        public readonly ushort Depth;
+        public readonly TextureFormat Format;
+        public readonly IDalamudTextureWrap Wrap;
 
-        private readonly bool Penumbra;
+        public readonly bool Penumbra;
 
         public TexturePreview( TextureDataFile file, bool penumbra, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;
@@ -71,14 +71,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.Text( "[Penumbra]" );
             }
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) ) ) {
-                DrawExportReplaceButtons();
-            }
-            DrawSettingsPopup();
+            DrawExportReplaceButtons();
         }
 
         protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
 
         protected override TextureDataFile GetRawData() => Dalamud.DataManager.GetFile<TextureDataFile>( GamePath );
+
+        protected override TexturePreview GetPreview() => this;
     }
 }

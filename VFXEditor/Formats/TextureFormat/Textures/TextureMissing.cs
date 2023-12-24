@@ -20,6 +20,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             DrawSettingsPopup();
         }
 
+        protected override TexturePreview GetPreview() => null;
+
         protected override TextureDataFile GetRawData() => null;
 
         protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );

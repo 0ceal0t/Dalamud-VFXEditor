@@ -61,7 +61,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 
 ## TODO
 - [ ] Use tables in select dialog
-- [ ] `.sgb` editor
+- [ ] ~~`.sgb` editor~~
 - [ ] `.imc` editor
 - [ ] Texture resize and basic edits
 - [ ] More investigation into `.pap` _Type_ and animation names

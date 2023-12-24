@@ -146,15 +146,16 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.Text( "[Replaced]" );
             }
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) ) ) {
-                DrawExportReplaceButtons();
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( "Reset" ) ) Plugin.TextureManager.RemoveReplace( this );
-            }
-            DrawSettingsPopup();
+            DrawExportReplaceButtons();
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
+            ImGui.SameLine();
+            if( UiUtils.RemoveButton( "Reset" ) ) Plugin.TextureManager.RemoveReplace( this );
         }
 
         protected override TextureDataFile GetRawData() => TextureDataFile.LoadFromLocal( WriteLocation );
+
+        protected override TexturePreview GetPreview() => Preview;
 
         // =========================
 

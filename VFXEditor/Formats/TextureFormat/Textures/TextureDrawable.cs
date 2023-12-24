@@ -2,19 +2,23 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
-using System.Numerics;
+using TeximpNet;
 using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.Ui;
+using Surface = TeximpNet.Surface;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public abstract class TextureDrawable {
         protected string GamePath = "";
         protected string GameExtension => GamePath.Split( '.' )[^1].Trim( '\0' );
 
+        private int[] ResizeInput;
+
         public TextureDrawable( string gamePath ) {
             GamePath = gamePath.Trim( '\0' );
         }
 
+        protected abstract TexturePreview GetPreview();
         protected abstract TextureDataFile GetRawData();
 
         protected abstract void OnReplace( string importPath );
@@ -37,11 +41,19 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected void DrawExportReplaceButtons() {
-            if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                if( ImGui.Button( "Export" ) ) ImGui.OpenPopup( "TexExport" );
 
-            ImGui.SameLine();
-            if( ImGui.Button( "Replace" ) ) ImportDialog();
-            DrawSettingsCog();
+                ImGui.SameLine();
+                if( ImGui.Button( "Replace" ) ) ImportDialog();
+
+                ImGui.SameLine();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "Edit" );
+                }
+
+                DrawSettingsCog();
+            }
 
             if( ImGui.BeginPopup( "TexExport" ) ) {
                 if( ImGui.Selectable( ".png" ) ) GetRawData()?.SavePngDialog();
@@ -49,18 +61,75 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 if( ImGui.Selectable( $".{GameExtension}" ) ) GetRawData()?.SaveTexDialog( GameExtension );
                 ImGui.EndPopup();
             }
+
+            if( ImGui.BeginPopup( "Edit" ) ) {
+                if( ResizeInput == null && GetPreview() != null ) ResizeInput = new int[] { GetPreview().Width, GetPreview().Height };
+                ImGui.SetNextItemWidth( 100f );
+                ImGui.InputInt2( "##Resize", ref ResizeInput[0] );
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                    ImGui.SameLine();
+                    if( ImGui.Button( "Resize" ) ) {
+                        ApplyEdit( ( Surface surface ) => surface.Resize( ResizeInput[0], ResizeInput[1], ImageFilter.Box ) );
+                    }
+                }
+
+                if( ImGui.Selectable( "Grayscale" ) ) {
+                    ApplyEdit( ( Surface surface ) => surface.ConvertTo( ImageConversion.ToGreyscale ) );
+                }
+
+                if( ImGui.Selectable( "Flip Horizontally" ) ) {
+                    ApplyEdit( ( Surface surface ) => surface.FlipHorizontally() );
+                }
+
+                if( ImGui.Selectable( "Flip Vertically" ) ) {
+                    ApplyEdit( ( Surface surface ) => surface.FlipVertically() );
+                }
+
+                if( ImGui.Selectable( "Rotate Left" ) ) {
+                    ApplyEdit( ( Surface surface ) => surface.Rotate( 90 ) );
+                }
+
+                if( ImGui.Selectable( "Rotate Right" ) ) {
+                    ApplyEdit( ( Surface surface ) => surface.Rotate( -90 ) );
+                }
+
+                ImGui.EndPopup();
+            }
+
+            DrawSettingsPopup();
+        }
+
+        private void ApplyEdit( Action<Surface> edit ) {
+            try {
+                var file = GetRawData();
+                if( file == null ) return;
+                var surface = file.GetPngData( out var pin );
+                if( surface == null ) return;
+
+                edit( surface );
+
+                surface.SaveToFile( ImageFormat.PNG, TextureManager.TempPng );
+                surface.Dispose();
+                MemoryHelper.UnpinObject( pin );
+
+                OnReplace( TextureManager.TempPng );
+            }
+            catch( Exception ex ) {
+                Dalamud.Error( ex, "Could not edit image" );
+            }
         }
 
         protected static void DrawSettingsCog() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            using var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 1, 1 ) );
             ImGui.SameLine();
-            if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "ReplaceSettings" );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "Settings" );
         }
 
         protected static void DrawSettingsPopup() {
-            using var popup = ImRaii.Popup( "ReplaceSettings" );
+            using var popup = ImRaii.Popup( "Settings" );
             if( !popup ) return;
+
+            ImGui.TextDisabled( ".png Import Settings" );
 
             TextureView.DrawPngSettings();
         }
