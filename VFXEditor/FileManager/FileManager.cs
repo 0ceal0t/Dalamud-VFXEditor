@@ -1,6 +1,5 @@
 using ImGuiNET;
 using Newtonsoft.Json.Linq;
-using OtterGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Copy;

@@ -1,7 +1,7 @@
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;

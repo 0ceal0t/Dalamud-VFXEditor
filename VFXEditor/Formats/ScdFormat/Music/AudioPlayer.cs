@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using NAudio.Wave;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;

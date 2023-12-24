@@ -1,6 +1,5 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using OtterGui;
-using OtterGui.Raii;
 using System.Collections.Generic;
 using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Utils;

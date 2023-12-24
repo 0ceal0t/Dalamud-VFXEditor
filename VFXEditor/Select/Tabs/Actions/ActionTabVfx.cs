@@ -1,6 +1,6 @@
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Actions {

@@ -1,7 +1,6 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using OtterGui;
-using OtterGui.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;

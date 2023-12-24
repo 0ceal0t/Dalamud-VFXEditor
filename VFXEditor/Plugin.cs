@@ -4,7 +4,6 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
 using ImPlotNET;
-using OtterGui;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX;

@@ -1,5 +1,5 @@
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser {

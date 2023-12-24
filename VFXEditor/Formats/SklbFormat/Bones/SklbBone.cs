@@ -1,6 +1,6 @@
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;

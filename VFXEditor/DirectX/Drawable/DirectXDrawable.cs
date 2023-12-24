@@ -1,4 +1,3 @@
-using OtterGui;
 using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;

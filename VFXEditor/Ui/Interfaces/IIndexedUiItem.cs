@@ -1,4 +1,3 @@
-using OtterGui;
 using System.Collections.Generic;
 
 namespace VfxEditor.Ui.Interfaces {

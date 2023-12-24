@@ -1,5 +1,5 @@
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AvfxFormat.Dialogs;

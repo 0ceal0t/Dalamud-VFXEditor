@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using Lumina.Misc;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Parsing;

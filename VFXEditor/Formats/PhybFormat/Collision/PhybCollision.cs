@@ -1,6 +1,6 @@
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.PhybFormat.Collision.Capsule;

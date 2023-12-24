@@ -1,8 +1,7 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
-using OtterGui;
-using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;

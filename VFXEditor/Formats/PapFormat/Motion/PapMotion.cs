@@ -2,7 +2,7 @@ using Dalamud.Interface;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using System;
 using System.Collections.Generic;

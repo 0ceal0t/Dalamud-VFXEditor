@@ -1,5 +1,4 @@
 using ImGuiNET;
-using OtterGui;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Mounts {

@@ -1,5 +1,5 @@
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 
 namespace VfxEditor.Ui.Tools {
     public partial class ToolsDialog : DalamudWindow {

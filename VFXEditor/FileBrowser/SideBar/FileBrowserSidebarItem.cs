@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 
 namespace VfxEditor.FileBrowser.SideBar {
     public class FileBrowserSidebarItem {

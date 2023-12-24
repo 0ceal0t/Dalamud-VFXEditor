@@ -1,5 +1,5 @@
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using SharpGLTF.Schema2;
 using System.Collections.Generic;
 using VfxEditor.PapFormat.Motion;

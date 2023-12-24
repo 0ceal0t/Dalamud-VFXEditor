@@ -1,5 +1,5 @@
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Emotes;

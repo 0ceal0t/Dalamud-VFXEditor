@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Components.SplitViews;
 

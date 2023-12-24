@@ -1,7 +1,7 @@
 using Dalamud.Configuration;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using OtterGui.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;

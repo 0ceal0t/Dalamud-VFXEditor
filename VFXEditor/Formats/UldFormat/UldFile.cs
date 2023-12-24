@@ -1,6 +1,6 @@
 using ImGuiNET;
 using Lumina.Extensions;
-using OtterGui.Raii;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
