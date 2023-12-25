@@ -1,7 +1,7 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

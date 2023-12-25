@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -168,27 +168,16 @@ namespace VfxEditor.Select {
 
             // =======================
 
-            if( Plugin.Configuration.SelectDialogLogAllFilesHidden ) {
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ImGui.GetContentRegionAvail().Y - ImGui.GetFrameHeight() );
-                using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( FontAwesomeIcon.AngleDoubleUp.ToIconString() ) ) {
-                    Plugin.Configuration.SelectDialogLogAllFilesHidden = false;
-                    Plugin.Configuration.Save();
-                }
-                return;
+            if( !Plugin.Configuration.SelectDialogLogOpen ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ImGui.GetContentRegionAvail().Y - UiUtils.AngleUpDownSize );
+            }
+            else {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 20 );
             }
 
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 20 );
-            ImGui.Separator();
+            if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.SelectDialogLogOpen ) ) Plugin.Configuration.Save();
+            if( !Plugin.Configuration.SelectDialogLogOpen ) return;
 
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.AngleDoubleDown.ToIconString() ) ) {
-                    Plugin.Configuration.SelectDialogLogAllFilesHidden = true;
-                    Plugin.Configuration.Save();
-                }
-            }
-
-            ImGui.SameLine();
             if( ImGui.Checkbox( "Log all files", ref Plugin.Configuration.LogAllFiles ) ) Plugin.Configuration.Save();
 
             using var disabled = ImRaii.Disabled( LoggedFiles.Count == 0 && !Plugin.Configuration.LogAllFiles );

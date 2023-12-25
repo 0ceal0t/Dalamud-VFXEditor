@@ -108,6 +108,7 @@ namespace VfxEditor {
                 PhybManager,
                 EidManager,
                 AtchManager,
+                MdlManager,
                 ShpkManager,
                 ShcdManager,
                 MtrlManager,

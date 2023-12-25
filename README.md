@@ -60,13 +60,9 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
-- [ ] Use tables in select dialog
+- [ ] `.mdl` editor
 - [ ] ~~`.sgb` editor~~
-- [ ] `.imc` editor
-- [ ] Texture resize and basic edits
 - [ ] More investigation into `.pap` _Type_ and animation names
-- [ ] `.sklb` gizmo
-- [ ] Toggle for `.pap` animation preview
 - [ ] C192
 - [ ] `.uld` update component type
 - [ ] Weapon bind points (some bind point ids aren't in the racial `.eid`)
@@ -121,4 +117,7 @@ chara/xls/animation/animation_work_table-weapon.awt
 https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Files/MtrlFile.cs
 https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Parsing/MtrlStructs.cs
 https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/src/Lumina/Data/Parsing/MtrlStructs.cs
+
+https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Files/MdlFile.cs#L7
+https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/MdlStructs.cs#L13
 ```

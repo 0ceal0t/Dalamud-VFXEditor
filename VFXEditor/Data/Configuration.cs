@@ -43,7 +43,7 @@ namespace VfxEditor {
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
-        public bool SelectDialogLogAllFilesHidden = true;
+        public bool SelectDialogLogOpen = true;
         public bool UseDegreesForAngles = false;
 
         public bool OverlayLimit = true;
