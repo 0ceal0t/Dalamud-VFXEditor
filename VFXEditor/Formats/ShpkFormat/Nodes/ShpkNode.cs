@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -89,7 +89,7 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
 
         private void DrawParameters() {
             using var _ = ImRaii.PushId( "Parameters" );
-            using var child = ImRaii.Child( "Child " );
+            using var child = ImRaii.Child( "Child" );
 
             Selector.Draw();
 

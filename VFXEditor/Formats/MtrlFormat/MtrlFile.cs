@@ -273,6 +273,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
         private void DrawParameters() {
             using var _ = ImRaii.PushId( "Shader" );
+            using var child = ImRaii.Child( "Child" );
 
             Shader.Draw();
             ImGui.TextDisabled( ShaderFilePath );
