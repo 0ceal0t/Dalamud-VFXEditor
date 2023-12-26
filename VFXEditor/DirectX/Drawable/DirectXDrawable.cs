@@ -59,6 +59,11 @@ namespace VfxEditor.DirectX.Drawable {
             Data?.Dispose();
         }
 
+        public virtual void SetVertexes( Buffer buffer, int count ) {
+            Count = count;
+            Data = buffer;
+        }
+
         public virtual void SetVertexes( Device device, Vector4[] data, int count ) {
             Count = count;
             Data?.Dispose();

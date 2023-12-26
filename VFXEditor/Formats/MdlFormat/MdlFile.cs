@@ -180,8 +180,23 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ===== MESHES ========
 
-            for( var i = 0; i < meshCount; i++ ) Meshes.Add( new( i, meshCount, vertexFormats[i], reader ) );
+            for( var i = 0; i < meshCount; i++ ) Meshes.Add( new( vertexFormats[i], reader ) );
             MeshView = new( "Mesh", Meshes, null, () => new() );
+
+            // .... TODO .....
+
+
+            // ===== POPULATE =======
+
+            var meshesPerBuffer = Math.Ceiling( meshCount / 3f );
+            for( var i = 0; i < meshCount; i++ ) {
+                var bufferIdx = ( int )Math.Floor( i / meshesPerBuffer );
+                Meshes[i].Populate( reader, vertexOffsets[bufferIdx], indexOffsets[bufferIdx] );
+
+                // TODO: populate submesh
+                // TODO: material string
+                // TODO: mesh data
+            }
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -224,7 +239,7 @@ namespace VfxEditor.Formats.MdlFormat {
             using( var edited = new Edited() ) {
                 Flags2.Draw();
                 if( edited.IsEdited && ExtraLodEnabled && ExtraLods.Count == 0 ) {
-                    for( var i = 0; i < 3; i++ ) ExtraLods.Add( new() );
+                    for( var i = 0; i < 3; i++ ) ExtraLods.Add( new() ); // Init extra LoD information
                 }
             }
             ModelClipOutDistance.Draw();

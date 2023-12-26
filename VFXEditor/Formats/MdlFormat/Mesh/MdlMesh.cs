@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using SharpDX.Direct3D11;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
@@ -7,7 +6,6 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {
     public struct DataRange {
-        public uint Stream;
         public uint Start;
         public uint End;
         public uint Count;
@@ -25,14 +23,19 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         private ushort VertexCount; // Maxes out at ushort.MaxValue
         private uint IndexCount;
-        private List<DataRange> VertexRange = new();
-        private DataRange IndexRange;
+
+        private uint _IndexOffset;
+        private uint[] _VertexBufferOffsets;
+
+        private byte[] RawIndexData;
+        private byte[] RawVertexData;
+        private Buffer Data; // starts as null
 
         public MdlMesh() {
             Format = new();
         }
 
-        public MdlMesh( int idx, int meshCount, MdlVertexDeclaration format, BinaryReader reader ) : this() {
+        public MdlMesh( MdlVertexDeclaration format, BinaryReader reader ) : this() {
             Format = format;
 
             VertexCount = reader.ReadUInt16();
@@ -42,32 +45,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             _SubmeshIndex = reader.ReadUInt16();
             _SubmeshCount = reader.ReadUInt16();
             BoneTableIndex.Read( reader );
-            var startIndex = reader.ReadUInt32();
+            _IndexOffset = 2 * reader.ReadUInt32();
 
-            var vertexBufferOffset = new[] { reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32() };
-            var vertexBufferStride = reader.ReadBytes( 3 );
-            var vertexStreamCount = reader.ReadByte();
-
-            var meshesPerIndexBuffer = Math.Ceiling( meshCount / 3f );
-            var indexBuffer = ( int )Math.Floor( idx / meshesPerIndexBuffer );
-
-            for( var i = 0u; i < vertexStreamCount; i++ ) {
-                VertexRange.Add( new() {
-                    Stream = i,
-                    Start = vertexBufferOffset[i],
-                    End = ( uint )( vertexBufferOffset[i] + ( vertexBufferStride[i] * VertexCount ) ),
-                    Count = VertexCount,
-                    Stride = vertexBufferStride[i]
-                } );
-            }
-
-            IndexRange = new() {
-                Stream = ( uint )indexBuffer,
-                Start = startIndex * 2,
-                End = ( startIndex + IndexCount ) * 2,
-                Count = IndexCount,
-                Stride = 2
-            };
+            _VertexBufferOffsets = new[] { reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32() };
+            reader.ReadBytes( 3 ); // strides
+            reader.ReadByte(); // stream count
 
             // var vertexBufferStride = GetVertexBufferStride( vertexDeclarations[i] ).ConvertAll( x => ( byte )x ).ToArray();
             // var vertexBufferOffsets = new List<int>() { vertexBufferOffset, 0, 0 };
@@ -80,6 +62,26 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             // VertexBufferOffset = vertexBufferOffsets.ConvertAll( x => ( uint )x ).ToArray(),
             // VertexBufferStride = vertexBufferStride,
             // VertexStreamCount = ( byte )vertexBufferStride.Where( x => x > 0 ).Count()
+        }
+
+        public Buffer GetBuffer( Device device, out int count ) {
+            if( Data == null ) RefreshBuffer( device );
+            count = VertexCount;
+            return Data;
+        }
+
+        public void RefreshBuffer( Device device ) {
+            Data?.Dispose();
+            // TODO
+        }
+
+        public void Populate( BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+            reader.BaseStream.Position = indexBufferPos + _IndexOffset;
+            RawIndexData = reader.ReadBytes( ( int )( IndexCount * 2 ) );
+
+            reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffsets[0];
+            var totalStride = Format.GetStride( 0 ) + Format.GetStride( 1 ) + Format.GetStride( 2 );
+            RawVertexData = reader.ReadBytes( VertexCount * totalStride );
         }
 
         public void Draw() {

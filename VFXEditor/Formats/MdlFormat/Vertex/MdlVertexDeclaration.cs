@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace VfxEditor.Formats.MdlFormat.Vertex {
     public enum VertexType : byte {
@@ -46,21 +45,33 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             reader.BaseStream.Position = endPos;
         }
 
-        public List<int> GetStrides() {
-            var streamElements = new List<List<MdlVertexElement>> { new(), new(), new() }; // which elements belong to which stream
+        public int GetStride( int stream ) {
+            MdlVertexElement lastElement = null;
             foreach( var element in Elements ) {
                 if( element.End ) break;
-                streamElements[element.Stream].Add( element );
+                if( element.Stream != stream ) continue;
+
+                lastElement = element;
             }
 
-            var strides = new List<int>() { 0, 0, 0 };
-            for( var i = 0; i < 3; i++ ) {
-                if( streamElements[i].Count == 0 ) continue;
-                var last = streamElements[i].Last();
-                strides[i] = last.Offset + last.Size;
-            }
+            if( lastElement == null ) return 0;
 
-            return strides;
+            return lastElement.Offset + lastElement.Size;
         }
+
+        /*
+         * 2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 0 0000 Half4 Position
+2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 0000 Half4 Normal
+2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 0008 ByteFloat4 Color
+2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 000C Half2 UV
+
+        2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 0000 Half4 Position
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 0008 ByteFloat4 BlendWeights
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 000C UInt BlendIndices
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0000 Half4 Normal
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0008 ByteFloat4 Tangent1
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 000C ByteFloat4 Color
+2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0010 Half4 UV
+         */
     }
 }
