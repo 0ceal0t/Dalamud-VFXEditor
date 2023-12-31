@@ -4,7 +4,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
     public abstract class MdlMeshDrawable {
         protected Buffer Data; // starts as null
 
-        public abstract ushort GetVertexCount();
+        public abstract uint GetIndexCount();
 
         public abstract void RefreshBuffer( Device device );
 

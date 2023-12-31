@@ -51,7 +51,7 @@ namespace VfxEditor.DirectX.Material {
 
             if( CurrentMesh == null ) return;
             var buffer = mesh.GetBuffer( Device );
-            Model.SetVertexes( buffer, mesh.GetVertexCount() );
+            Model.SetVertexes( buffer, ( int )mesh.GetIndexCount() );
             ToCleanUp.Add( buffer );
 
             UpdateDraw();

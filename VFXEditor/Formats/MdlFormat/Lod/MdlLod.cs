@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
@@ -33,6 +34,9 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly List<MdlMesh> Meshes = new();
         private readonly CommandDropdown<MdlMesh> MeshView;
 
+        private readonly List<MdlTerrainShadowMesh> TerrainShadows = new();
+        private readonly CommandDropdown<MdlTerrainShadowMesh> TerrainShadowView;
+
         public MdlLod( MdlFile file, BinaryReader reader ) {
             File = file;
 
@@ -62,6 +66,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             Dalamud.Log( $"Lod: edge:{EdgeGeometrySize:X4}/{EdgeGeometryOffset:X4} {PolygonCount} {Unknown}" );
 
             MeshView = new( "Mesh", Meshes, null, () => new( File ) );
+            TerrainShadowView = new( "Terrain Shadow", TerrainShadows, null, () => new( File ) );
         }
 
         public void Draw() {
@@ -69,6 +74,10 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Meshes" ) ) {
+                if( tab ) MeshView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Terrain Shadows" ) ) {
                 if( tab ) MeshView.Draw();
             }
 
@@ -80,9 +89,12 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate( List<MdlMesh> meshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+        public void Populate( List<MdlMesh> meshes, List<MdlTerrainShadowMesh> terrainShadows, List<MdlSubMesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
             Meshes.AddRange( meshes.GetRange( _MeshIndex, _MeshCount ) );
-            foreach( var mesh in Meshes ) mesh.Populate( reader, vertexBufferPos, indexBufferPos );
+            foreach( var mesh in Meshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos );
+
+            TerrainShadows.AddRange( terrainShadows.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
+            // TODO
         }
     }
 }

@@ -3,8 +3,10 @@ using ImGuiNET;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {
@@ -35,11 +37,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private List<byte[]> RawVertexData;
 
         private readonly List<MdlSubMesh> Submeshes = new();
+        private readonly CommandSplitView<MdlSubMesh> SubmeshView;
 
         // TODO: creating new
         public MdlMesh( MdlFile file ) {
             Format = new();
             File = file;
+
+            SubmeshView = new( "Sub-Mesh", Submeshes, false, null, () => new( this ) );
         }
 
         public MdlMesh( MdlFile file, MdlVertexDeclaration format, BinaryReader reader ) : this( file ) {
@@ -65,15 +70,17 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             return Data;
         }
 
-        public override ushort GetVertexCount() => VertexCount;
+        public override uint GetIndexCount() => IndexCount;
 
         public override void RefreshBuffer( Device device ) {
             Data?.Dispose();
-            var data = Format.GetData( RawIndexData, RawVertexData, ( int )IndexCount, VertexCount );
+            var data = GetData( ( int )IndexCount, RawIndexData );
             Data = Buffer.Create( device, BindFlags.VertexBuffer, data );
         }
 
-        public void Populate( BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+        public Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
+
+        public void Populate( List<MdlSubMesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
             reader.BaseStream.Position = indexBufferPos + _IndexOffset;
             RawIndexData = reader.ReadBytes( ( int )( IndexCount * 2 ) );
 
@@ -84,6 +91,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
                 reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffsets[i];
                 RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );
             }
+
+            // Sub-Meshes
+
+            Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );
         }
 
         public void Draw() {
@@ -95,7 +107,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             }
 
             using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
-                //if( tab ) SubmeshView.Draw();
+                if( tab ) SubmeshView.Draw();
             }
         }
 

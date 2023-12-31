@@ -95,7 +95,6 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
 
             for( var i = 0; i < indexCount; i++ ) {
                 var index = iReader.ReadInt16();
-                a.Add( index );
 
                 data.Add( positions.Count == 0 ? new( 0 ) : positions[index] );
                 data.Add( tangents.Count == 0 ? new( 0 ) : tangents[index] );
@@ -103,8 +102,6 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 data.Add( normals.Count == 0 ? new( 0 ) : normals[index] );
                 data.Add( colors.Count == 0 ? new( 0 ) : colors[index] );
             }
-
-            Dalamud.Log( $"Decl: {vertexCount} {indexCount} {a.Max()}" );
 
             return data.ToArray();
         }

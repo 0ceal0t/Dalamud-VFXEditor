@@ -8,6 +8,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
@@ -180,13 +181,23 @@ namespace VfxEditor.Formats.MdlFormat {
             var meshes = new List<MdlMesh>();
             for( var i = 0; i < meshCount; i++ ) meshes.Add( new( this, vertexFormats[i], reader ) );
 
+            for( var i = 0; i < attributeCount; i++ ) {
+                var offset = reader.ReadUInt32(); // TODO
+            }
+
+            var terrainShadowMeshes = new List<MdlTerrainShadowMesh>();
+            for( var i = 0; i < terrainShadowMeshCount; i++ ) terrainShadowMeshes.Add( new( this, reader ) );
+
+            var submeshes = new List<MdlSubMesh>();
+            for( var i = 0; i < submeshCount; i++ ) submeshes.Add( new( reader ) );
+
             // .... TODO .....
 
 
             // ===== POPULATE =======
 
             for( var i = 0; i < Lods.Count; i++ ) {
-                Lods[i].Populate( meshes, reader, vertexOffsets[i], indexOffsets[i] );
+                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, reader, vertexOffsets[i], indexOffsets[i] );
             }
         }
 
