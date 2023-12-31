@@ -91,6 +91,8 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // ===== STRINGS =======
 
+            // TODO: https://github.com/goaaats/ffxiv-explorer-fork/blob/fcf2e0167a8b1af642b40ea67d85113234d8b05c/src/main/java/com/fragmenterworks/ffxivextract/models/Model.java#L145
+
             var stringsStart = reader.BaseStream.Position;
 
             Textures.ForEach( x => x.ReadString( reader, stringsStart ) );

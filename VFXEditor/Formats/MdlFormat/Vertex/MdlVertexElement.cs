@@ -1,4 +1,5 @@
 using System.IO;
+using System.Numerics;
 
 namespace VfxEditor.Formats.MdlFormat.Vertex {
     public class MdlVertexElement {
@@ -9,6 +10,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         public readonly byte UsageIndex;
 
         public bool End => Stream == 255;
+        public int EndOffset => Offset + Size;
 
         public int Size => Type switch {
             VertexType.Single3 => 12,
@@ -34,5 +36,14 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 Dalamud.Log( $"Element: {Stream} {Offset:X4} {Type} {Usage}" );
             }
         }
+
+        public Vector4 Read( BinaryReader reader ) => Type switch {
+            VertexType.Half2 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), 0, 0 ),
+            VertexType.Half4 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf() ),
+            VertexType.Single3 => new( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), 0 ),
+            VertexType.Single4 => new( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() ),
+            VertexType.UInt or VertexType.ByteFloat4 => new( reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() ),
+            _ => new( 0 )
+        };
     }
 }

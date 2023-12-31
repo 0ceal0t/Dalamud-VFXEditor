@@ -13,7 +13,7 @@ namespace VfxEditor.DirectX.Material {
         private readonly DirectXDrawable Model;
 
         public MdlFile CurrentFile { get; private set; }
-        public MdlMesh CurrentMesh { get; private set; }
+        public MdlMeshDrawable CurrentMesh { get; private set; }
 
         private readonly HashSet<Buffer> ToCleanUp = new();
 
@@ -45,13 +45,13 @@ namespace VfxEditor.DirectX.Material {
             LoadMesh( CurrentFile, CurrentMesh );
         }
 
-        public void LoadMesh( MdlFile file, MdlMesh mesh ) {
+        public void LoadMesh( MdlFile file, MdlMeshDrawable mesh ) {
             CurrentFile = file;
             CurrentMesh = mesh;
 
             if( CurrentMesh == null ) return;
-            var buffer = mesh.GetBuffer( Device, out var count );
-            Model.SetVertexes( buffer, count );
+            var buffer = mesh.GetBuffer( Device );
+            Model.SetVertexes( buffer, mesh.GetVertexCount() );
             ToCleanUp.Add( buffer );
 
             UpdateDraw();
@@ -98,7 +98,7 @@ namespace VfxEditor.DirectX.Material {
             MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();
 
-            foreach( var buffer in ToCleanUp ) buffer.Dispose();
+            foreach( var buffer in ToCleanUp ) buffer?.Dispose();
             ToCleanUp.Clear();
         }
 

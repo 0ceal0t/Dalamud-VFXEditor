@@ -65,14 +65,11 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly CommandSplitView<MdlEid> EidView;
 
         private readonly List<MdlLod> Lods = new();
-        private readonly UiSplitView<MdlLod> LodView;
+        private readonly CommandDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
         private readonly List<MdlExtraLod> ExtraLods = new();
-        private readonly UiSplitView<MdlExtraLod> ExtraLodView;
-
-        private readonly List<MdlMesh> Meshes = new();
-        private readonly CommandDropdown<MdlMesh> MeshView;
+        private readonly CommandDropdown<MdlExtraLod> ExtraLodView;
 
         // public const uint FileHeaderSize = 0x44;
         // public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
@@ -170,32 +167,26 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ====== LOD ========
 
-            for( var i = 0; i < 3; i++ ) Lods.Add( new( reader ) );
-            LodView = new( "LoD", Lods, false, false );
+            for( var i = 0; i < 3; i++ ) Lods.Add( new( this, reader ) );
+            LodView = new( "Level of Detail", Lods, null, null, null, false );
 
             if( ExtraLodEnabled ) {
                 for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( reader ) );
             }
-            ExtraLodView = new( "LoD", ExtraLods, false, false );
+            ExtraLodView = new( "Level of Detail", ExtraLods, null, null, null, false ); ;
 
             // ===== MESHES ========
 
-            for( var i = 0; i < meshCount; i++ ) Meshes.Add( new( vertexFormats[i], reader ) );
-            MeshView = new( "Mesh", Meshes, null, () => new() );
+            var meshes = new List<MdlMesh>();
+            for( var i = 0; i < meshCount; i++ ) meshes.Add( new( this, vertexFormats[i], reader ) );
 
             // .... TODO .....
 
 
             // ===== POPULATE =======
 
-            var meshesPerBuffer = Math.Ceiling( meshCount / 3f );
-            for( var i = 0; i < meshCount; i++ ) {
-                var bufferIdx = ( int )Math.Floor( i / meshesPerBuffer );
-                Meshes[i].Populate( reader, vertexOffsets[bufferIdx], indexOffsets[bufferIdx] );
-
-                // TODO: populate submesh
-                // TODO: material string
-                // TODO: mesh data
+            for( var i = 0; i < Lods.Count; i++ ) {
+                Lods[i].Populate( meshes, reader, vertexOffsets[i], indexOffsets[i] );
             }
         }
 
@@ -215,17 +206,13 @@ namespace VfxEditor.Formats.MdlFormat {
                 if( tab ) EidView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "LoD" ) ) {
+            using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
                 if( tab ) LodView.Draw();
             }
 
             if( ExtraLodEnabled ) {
                 using var tab = ImRaii.TabItem( "Extra LoD" );
                 if( tab ) ExtraLodView.Draw();
-            }
-
-            using( var tab = ImRaii.TabItem( "Meshes" ) ) {
-                if( tab ) MeshView.Draw();
             }
         }
 

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Numerics;
 
 namespace VfxEditor.Formats.MdlFormat.Vertex {
     public enum VertexType : byte {
@@ -46,32 +48,65 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         }
 
         public int GetStride( int stream ) {
-            MdlVertexElement lastElement = null;
-            foreach( var element in Elements ) {
-                if( element.End ) break;
-                if( element.Stream != stream ) continue;
+            var elements = GetElements( stream );
+            if( elements.Count == 0 ) return 0;
 
-                lastElement = element;
-            }
-
-            if( lastElement == null ) return 0;
-
-            return lastElement.Offset + lastElement.Size;
+            return elements.Last().EndOffset;
         }
 
-        /*
-         * 2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 0 0000 Half4 Position
-2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 0000 Half4 Normal
-2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 0008 ByteFloat4 Color
-2023-12-25 22:54:15.966 -05:00 [INF] [VFXEditor] Element: 1 000C Half2 UV
+        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => x.Stream == stream ).ToList();
 
-        2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 0000 Half4 Position
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 0008 ByteFloat4 BlendWeights
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 0 000C UInt BlendIndices
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0000 Half4 Normal
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0008 ByteFloat4 Tangent1
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 000C ByteFloat4 Color
-2023-12-25 22:37:25.419 -05:00 [INF] [VFXEditor] Element: 1 0010 Half4 UV
-         */
+        public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount ) {
+            var data = new List<Vector4>();
+
+            var positions = new List<Vector4>();
+            var tangents = new List<Vector4>();
+            var uvs = new List<Vector4>();
+            var normals = new List<Vector4>();
+            var colors = new List<Vector4>();
+
+            for( var i = 0; i < vertexStreams.Count; i++ ) {
+                var streamData = vertexStreams[i];
+                var elements = GetElements( i ).OrderBy( x => x.Offset ).ToList();
+                if( elements.Count == 0 ) continue;
+
+                using var ms = new MemoryStream( streamData );
+                using var reader = new BinaryReader( ms );
+
+                for( var j = 0; j < vertexCount; j++ ) {
+                    foreach( var element in elements ) {
+                        var item = element.Read( reader );
+
+                        if( element.Usage == VertexUsage.Position ) positions.Add( item );
+                        else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( item );
+                        else if( element.Usage == VertexUsage.UV ) uvs.Add( item );
+                        else if( element.Usage == VertexUsage.Normal ) normals.Add( item );
+                        else if( element.Usage == VertexUsage.Color ) colors.Add( item / 255f );
+                    }
+                }
+            }
+
+            // ====== INDEX ===========
+
+            using var iMs = new MemoryStream( rawIndex );
+            using var iReader = new BinaryReader( iMs );
+
+            var a = new HashSet<short>();
+
+            for( var i = 0; i < indexCount; i++ ) {
+                var index = iReader.ReadInt16();
+                a.Add( index );
+
+                data.Add( positions.Count == 0 ? new( 0 ) : positions[index] );
+                data.Add( tangents.Count == 0 ? new( 0 ) : tangents[index] );
+                data.Add( uvs.Count == 0 ? new( 0 ) : uvs[index] );
+                data.Add( normals.Count == 0 ? new( 0 ) : normals[index] );
+                data.Add( colors.Count == 0 ? new( 0 ) : colors[index] );
+            }
+
+            Dalamud.Log( $"Decl: {vertexCount} {indexCount} {a.Max()}" );
+
+            return data.ToArray();
+        }
     }
 }
