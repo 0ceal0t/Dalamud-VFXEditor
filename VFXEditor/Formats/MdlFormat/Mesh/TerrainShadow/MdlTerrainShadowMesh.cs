@@ -1,23 +1,27 @@
-using SharpDX.Direct3D11;
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.Interfaces;
+using System.Numerics;
+using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
-    public class MdlTerrainShadowMesh : MdlMeshDrawable, IUiItem {
-        public readonly MdlFile File;
-
+    public class MdlTerrainShadowMesh : MdlMeshData {
         private readonly ushort _SubmeshIndex;
         private readonly ushort _SubmeshCount;
-        private readonly uint _IndexOffset;
         private readonly uint _VertexBufferOffset;
 
         private ushort VertexCount;
-        private uint IndexCount;
-        private byte Stride;
 
-        // TODO: creating new
-        public MdlTerrainShadowMesh( MdlFile file ) {
-            File = file;
+        private byte[] RawVertexData = Array.Empty<byte>();
+
+        private readonly List<MdlTerrainShadowSubmesh> Submeshes = new();
+        private readonly CommandSplitView<MdlTerrainShadowSubmesh> SubmeshView;
+
+        public MdlTerrainShadowMesh( MdlFile file ) : base( file ) {
+            SubmeshView = new( "Sub-Mesh", Submeshes, false, null, () => new( this ) );
         }
 
         public MdlTerrainShadowMesh( MdlFile file, BinaryReader reader ) : this( file ) {
@@ -27,18 +31,64 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             VertexCount = reader.ReadUInt16();
             _SubmeshIndex = reader.ReadUInt16();
             _SubmeshCount = reader.ReadUInt16();
-            Stride = reader.ReadByte();
+            var stride = reader.ReadByte();
             reader.ReadByte(); // padding
+
+            if( stride != 8 ) {
+                Dalamud.Log( $"Terrain Shadow: stride={stride}" );
+            }
         }
 
-        public void Draw() {
-            // TODO
+        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) {
+            var data = new List<Vector4>();
+
+            var positions = new List<Vector4>();
+
+            using var ms = new MemoryStream( RawVertexData );
+            using var reader = new BinaryReader( ms );
+
+            for( var i = 0; i < VertexCount; i++ ) {
+                positions.Add( new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf() ) );
+            }
+
+            using var iMs = new MemoryStream( rawIndexData );
+            using var iReader = new BinaryReader( iMs );
+
+            for( var i = 0; i < indexCount; i++ ) {
+                var index = iReader.ReadInt16();
+
+                data.Add( positions[index] );
+                data.Add( new( 1, 0, 0, 1 ) ); // tangent
+                data.Add( new( 0, 0, 0, 0 ) ); // uv
+                data.Add( new( 0, 1, 0, 1 ) ); // normal
+                data.Add( new( 1, 1, 1, 1 ) ); // colot
+            }
+
+            return data.ToArray();
         }
 
-        public override uint GetIndexCount() => IndexCount;
+        public void Populate( List<MdlTerrainShadowSubmesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+            Populate( reader, indexBufferPos );
 
-        public override void RefreshBuffer( Device device ) {
-            // TODO
+            reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffset;
+            RawVertexData = reader.ReadBytes( VertexCount * 8 );
+
+
+            Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );
+        }
+
+        public override void Draw() {
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Mesh" ) ) {
+                if( tab ) DrawPreview();
+            }
+
+            using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
+                if( tab ) SubmeshView.Draw();
+            }
         }
     }
 }

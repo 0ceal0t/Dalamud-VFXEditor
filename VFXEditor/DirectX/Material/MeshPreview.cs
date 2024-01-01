@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.Formats.MdlFormat;
-using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Material {

@@ -1,13 +1,13 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using SharpDX.Direct3D11;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
-using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {
     public struct DataRange {
@@ -17,33 +17,26 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         public uint Stride;
     }
 
-    public class MdlMesh : MdlMeshDrawable, IUiItem {
-        public readonly MdlFile File;
+    public class MdlMesh : MdlMeshData {
         public readonly MdlVertexDeclaration Format;
 
-        private ushort _MaterialStringIdx;
+        private readonly ushort _MaterialStringIdx;
         private readonly ushort _SubmeshIndex;
         private readonly ushort _SubmeshCount;
-        private readonly uint _IndexOffset;
         private readonly uint[] _VertexBufferOffsets;
 
         private readonly ParsedString Material = new( "Material" );
-        private readonly ParsedShort BoneTableIndex = new( "Bone Table Index" );
+        private readonly ParsedShort BoneTableIndex = new( "Bone Table Index" ); // TODO
 
         private ushort VertexCount; // Maxes out at ushort.MaxValue
-        private uint IndexCount;
 
-        private byte[] RawIndexData;
-        private List<byte[]> RawVertexData;
+        private List<byte[]> RawVertexData = new() { Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>() };
 
         private readonly List<MdlSubMesh> Submeshes = new();
         private readonly CommandSplitView<MdlSubMesh> SubmeshView;
 
-        // TODO: creating new
-        public MdlMesh( MdlFile file ) {
+        public MdlMesh( MdlFile file ) : base( file ) {
             Format = new();
-            File = file;
-
             SubmeshView = new( "Sub-Mesh", Submeshes, false, null, () => new( this ) );
         }
 
@@ -64,25 +57,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             reader.ReadByte(); // stream count
         }
 
-        public Buffer GetBuffer( Device device, out int vertexCount ) {
-            if( Data == null ) RefreshBuffer( device );
-            vertexCount = VertexCount;
-            return Data;
-        }
-
-        public override uint GetIndexCount() => IndexCount;
-
-        public override void RefreshBuffer( Device device ) {
-            Data?.Dispose();
-            var data = GetData( ( int )IndexCount, RawIndexData );
-            Data = Buffer.Create( device, BindFlags.VertexBuffer, data );
-        }
-
-        public Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
+        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
 
         public void Populate( List<MdlSubMesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
-            reader.BaseStream.Position = indexBufferPos + _IndexOffset;
-            RawIndexData = reader.ReadBytes( ( int )( IndexCount * 2 ) );
+            Populate( reader, indexBufferPos );
 
             RawVertexData = new();
             for( var i = 0; i < 3; i++ ) {
@@ -92,13 +70,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
                 RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );
             }
 
-            // Sub-Meshes
-
             Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
             foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );
         }
 
-        public void Draw() {
+        public override void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
@@ -114,11 +90,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private void DrawMesh() {
             Material.Draw();
             BoneTableIndex.Draw();
-
-            if( Plugin.DirectXManager.MeshPreview.CurrentMesh != this ) {
-                Plugin.DirectXManager.MeshPreview.LoadMesh( File, this );
-            }
-            Plugin.DirectXManager.MeshPreview.DrawInline();
+            DrawPreview();
         }
     }
 }

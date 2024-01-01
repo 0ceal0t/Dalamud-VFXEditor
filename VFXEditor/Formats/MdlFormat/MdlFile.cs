@@ -72,6 +72,7 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly List<MdlExtraLod> ExtraLods = new();
         private readonly CommandDropdown<MdlExtraLod> ExtraLodView;
 
+        // TODO
         // public const uint FileHeaderSize = 0x44;
         // public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
         // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
@@ -97,8 +98,6 @@ namespace VfxEditor.Formats.MdlFormat {
             var indexBufferSizes = new List<uint>();
             for( var i = 0; i < 3; i++ ) indexBufferSizes.Add( reader.ReadUInt32() );
 
-            Dalamud.Log( $"V: {vertexOffsets[0]:X4} {vertexOffsets[1]:X4} {vertexOffsets[2]:X4} / {vertexBufferSizes[0]:X4} {vertexBufferSizes[1]:X4} {vertexBufferSizes[2]:X4} I: {indexOffsets[0]:X4} {indexOffsets[1]:X4} {indexOffsets[2]:X4} / {indexBufferSizes[0]:X4} {indexBufferSizes[1]:X4} {indexBufferSizes[2]:X4}" );
-
             var _lodCount = reader.ReadByte();
             IndexBufferStreaming.Read( reader );
             EdgeGeometry.Read( reader );
@@ -121,7 +120,7 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < stringCount; i++ ) {
                 var pos = reader.BaseStream.Position - stringStartPos;
                 var value = FileUtils.ReadString( reader );
-                Dalamud.Log( value );
+                Dalamud.Log( $"string: {pos} {value}" );
                 stringOffsets[( uint )pos] = value;
             }
 
@@ -172,6 +171,7 @@ namespace VfxEditor.Formats.MdlFormat {
             LodView = new( "Level of Detail", Lods, null, null, null, false );
 
             if( ExtraLodEnabled ) {
+                Dalamud.Error( "Extra LoD" );
                 for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( reader ) );
             }
             ExtraLodView = new( "Level of Detail", ExtraLods, null, null, null, false ); ;
@@ -181,8 +181,9 @@ namespace VfxEditor.Formats.MdlFormat {
             var meshes = new List<MdlMesh>();
             for( var i = 0; i < meshCount; i++ ) meshes.Add( new( this, vertexFormats[i], reader ) );
 
+            var attributeStrings = new List<string>( 0 );
             for( var i = 0; i < attributeCount; i++ ) {
-                var offset = reader.ReadUInt32(); // TODO
+                attributeStrings.Add( stringOffsets[reader.ReadUInt32()] );
             }
 
             var terrainShadowMeshes = new List<MdlTerrainShadowMesh>();
@@ -191,13 +192,37 @@ namespace VfxEditor.Formats.MdlFormat {
             var submeshes = new List<MdlSubMesh>();
             for( var i = 0; i < submeshCount; i++ ) submeshes.Add( new( reader ) );
 
-            // .... TODO .....
+            var terrainShadowSubmeshes = new List<MdlTerrainShadowSubmesh>();
+            for( var i = 0; i < terrainShadowSubmeshCount; i++ ) terrainShadowSubmeshes.Add( new( reader ) );
 
+            var materialStrings = new List<string>( 0 );
+            for( var i = 0; i < materialCount; i++ ) {
+                materialStrings.Add( stringOffsets[reader.ReadUInt32()] );
+            }
+
+            var boneStrings = new List<string>( 0 );
+            for( var i = 0; i < boneCount; i++ ) {
+                attributeStrings.Add( stringOffsets[reader.ReadUInt32()] );
+            }
+
+            // TODO: Bone Tables
+
+            // TODO: Shapes
+
+            // TODO: Shape Meshes
+
+            // TODO: Shape Values
+
+            // TODO: Submesh bone map
+
+            // TODO: Padding
+
+            // TODO: Bounding boxes (regular, model, water, vertical fog, bones)
 
             // ===== POPULATE =======
 
             for( var i = 0; i < Lods.Count; i++ ) {
-                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, reader, vertexOffsets[i], indexOffsets[i] );
+                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, terrainShadowSubmeshes, reader, vertexOffsets[i], indexOffsets[i], attributeStrings, materialStrings, boneStrings );
             }
         }
 

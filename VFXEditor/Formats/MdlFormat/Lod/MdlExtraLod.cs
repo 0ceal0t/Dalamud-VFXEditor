@@ -4,14 +4,15 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Lod {
     public class MdlExtraLod : IUiItem {
-        private readonly ParsedShort LightShaftMeshIndex = new( "Light Shaft Mesh Index" );
-        private readonly ParsedShort LightShaftMeshCount = new( "Light Shaft Mesh Count" );
-        private readonly ParsedShort GlassMeshIndex = new( "Glast Mesh Index" );
-        private readonly ParsedShort GlassMeshCount = new( "Glass Mesh Count" );
-        private readonly ParsedShort MaterialChangeMeshIndex = new( "Material Change Mesh Index" );
-        private readonly ParsedShort MaterialChangeMeshCount = new( "MaterialChange Mesh Count" );
-        private readonly ParsedShort CrestChangetMeshIndex = new( "Crest Change Mesh Index" );
-        private readonly ParsedShort CrestChangeMeshCount = new( "Crest Change Mesh Count" );
+        private readonly ushort _LightShaftMeshIndex;
+        private readonly ushort _LightShaftMeshCount;
+        private readonly ushort _GlassMeshIndex;
+        private readonly ushort _GlassMeshCount;
+        private readonly ushort _MaterialChangeMeshIndex;
+        private readonly ushort _MaterialChangeMeshCount;
+        private readonly ushort _CrestChangetMeshIndex;
+        private readonly ushort _CrestChangeMeshCount;
+
         private readonly ParsedShort Unknown1 = new( "Unknown 1" );
         private readonly ParsedShort Unknown2 = new( "Unknown 2" );
         private readonly ParsedShort Unknown3 = new( "Unknown 3" );
@@ -28,14 +29,15 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         public MdlExtraLod() { }
 
         public MdlExtraLod( BinaryReader reader ) : this() {
-            LightShaftMeshIndex.Read( reader );
-            LightShaftMeshCount.Read( reader );
-            GlassMeshIndex.Read( reader );
-            GlassMeshCount.Read( reader );
-            MaterialChangeMeshIndex.Read( reader );
-            MaterialChangeMeshCount.Read( reader );
-            CrestChangetMeshIndex.Read( reader );
-            CrestChangeMeshCount.Read( reader );
+            _LightShaftMeshIndex = reader.ReadUInt16();
+            _LightShaftMeshCount = reader.ReadUInt16();
+            _GlassMeshIndex = reader.ReadUInt16();
+            _GlassMeshCount = reader.ReadUInt16();
+            _MaterialChangeMeshIndex = reader.ReadUInt16();
+            _MaterialChangeMeshCount = reader.ReadUInt16();
+            _CrestChangetMeshIndex = reader.ReadUInt16();
+            _CrestChangeMeshCount = reader.ReadUInt16();
+
             Unknown1.Read( reader );
             Unknown2.Read( reader );
             Unknown3.Read( reader );
@@ -51,14 +53,6 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Draw() {
-            LightShaftMeshIndex.Draw();
-            LightShaftMeshCount.Draw();
-            GlassMeshIndex.Draw();
-            GlassMeshCount.Draw();
-            MaterialChangeMeshIndex.Draw();
-            MaterialChangeMeshCount.Draw();
-            CrestChangetMeshIndex.Draw();
-            CrestChangeMeshCount.Draw();
             Unknown1.Draw();
             Unknown2.Draw();
             Unknown3.Draw();
