@@ -16,8 +16,6 @@ struct PS_IN
     float2 TexCoords : TEXCOORD0;
     float3 Normal : TEXCOORD1;
     float3 WorldPos : TEXCOORD2;
-    float3 ViewDirection: CAMERAPOS;
-    float3 LightPos : LIGHTPOS;
     float3 Tangent : TANGENT;
     float3 Bitangent : BITANGENT;
     float3 Color : COLOR;
@@ -37,9 +35,6 @@ PS_IN VS(VS_IN input)
     output.Tangent = normalize(mul(normalMatrix, input.tangent.xyz));
     output.Bitangent = normalize(cross(output.Normal, output.Tangent)); // Bitangent calculated here <---
     
-    output.LightPos = LightPos;
-    output.ViewDirection = ViewDirection;
-    
     output.TexCoords = input.uv.xy;
     output.Color = input.color.xyz;
 
@@ -52,15 +47,15 @@ float4 PS(PS_IN input) : SV_Target
     float3 biTangent = normalize(input.Bitangent);
     float3 N = normalize(input.Normal);
     
-    float3 specular = LightColor * computeSpecular(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
+    float3 specular = computeSpecular(Light1, input.WorldPos, N) + computeSpecular(Light2, input.WorldPos, N);
     
-    float3 diffuse = LightColor * computeDiffuse(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
+    float3 diffuse = computeDiffuse(Light1, input.WorldPos, N) + computeDiffuse(Light2, input.WorldPos, N);
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
     color += AmbientColor;
     color += DiffuseColor * input.Color * diffuse * 0.6f;
-    color += SpecularColor * specular * 0.5f;
+    color += SpecularColor * input.Color * specular * 0.5f;
     
     color = toGamma(color);
     

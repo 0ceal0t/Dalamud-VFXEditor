@@ -16,8 +16,6 @@ struct PS_IN
     float2 TexCoords : TEXCOORD0;
     float3 Normal : TEXCOORD1;
     float3 WorldPos : TEXCOORD2;
-    float3 ViewDirection: CAMERAPOS;
-    float3 LightPos : LIGHTPOS;
     float3 Tangent : TANGENT;
     float3 Bitangent : BITANGENT;
 };
@@ -40,9 +38,6 @@ PS_IN VS(VS_IN input)
     output.Tangent = normalize(mul(normalMatrix, input.tangent.xyz));
     output.Bitangent = normalize(mul(normalMatrix, input.bitangent.xyz));
     
-    output.LightPos = LightPos;
-    output.ViewDirection = ViewDirection;
-    
     output.TexCoords = input.uv.xy * Repeat + (float2(input.uv.y, input.uv.x) * Skew);
 
     return output;
@@ -58,10 +53,10 @@ float4 PS(PS_IN input) : SV_Target
     N += mad(bumpMap.z, tangent, bumpMap.y * biTangent);
     N = normalize(N);
     
-    float3 specular = LightColor * computeSpecular(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
+    float3 specular = computeSpecular(Light1, input.WorldPos, N) + computeSpecular(Light2, input.WorldPos, N);
     
     float3 sampledDiffuse = DiffuseTexture.Sample(SamplerSurface, input.TexCoords).xyz; 
-    float3 diffuse = LightColor * computeDiffuse(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
+    float3 diffuse = computeDiffuse(Light1, input.WorldPos, N) + computeDiffuse(Light2, input.WorldPos, N);
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;

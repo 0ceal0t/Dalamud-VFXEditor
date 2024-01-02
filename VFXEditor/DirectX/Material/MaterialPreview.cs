@@ -19,21 +19,22 @@ namespace VfxEditor.DirectX {
     // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
     // https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/phong.frag
 
-    // TODO: multiple lights
 
-    [StructLayout( LayoutKind.Sequential, Size = 0x30 )]
+    [StructLayout( LayoutKind.Sequential, Size = 0x10 )]
     public struct VSMaterialBuffer {
-        public Vector3 ViewDirection; // 0x00
-        public float _Pad0;
-
-        public Vector3 LightPos; // 0x10
-        public float _Pad1;
-
-        public Vector2 Repeat; // 0x20
-        public Vector2 Skew; // 0x28
+        public Vector2 Repeat; // 0x00
+        public Vector2 Skew; // 0x08
     }
 
-    [StructLayout( LayoutKind.Sequential, Size = 0x60 )]
+    [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
+    public struct LightData {
+        public Vector3 Color;
+        public float Radius;
+        public Vector3 Position;
+        public float Falloff;
+    }
+
+    [StructLayout( LayoutKind.Sequential, Size = 0xA0 )]
     public struct PSMaterialBuffer {
         public Vector3 DiffuseColor; // 0x00
         public float _Pad0;
@@ -42,18 +43,22 @@ namespace VfxEditor.DirectX {
         public float _Pad1;
 
         public Vector3 SpecularColor; // 0x20
-
         public float SpecularPower; // 0x2C
+
         public float SpecularIntensity; // 0x30
+        public Vector3 AmbientColor; // 0x34
 
-        public Vector3 LightColor; // 0x34
+        public float Roughness; // 0x40
+        public float Albedo; // 0x44
+        public Vector2 _Pad2; // 0x48
 
-        public Vector3 AmbientColor; // 0x40
+        public Vector3 ViewDirection; // 0x50
+        public float _Pad3; // 0x5C
 
-        public float Roughness; // 0x4C
-        public float Albedo; // 0x50
-        public float Radius; // 0x54
-        public float Falloff; // 0x58
+        // ----- 0x60 ------
+
+        public LightData Light1;
+        public LightData Light2;
     }
 
     public class MaterialPreview : ModelRenderer {
@@ -128,9 +133,9 @@ namespace VfxEditor.DirectX {
             var dyeRow = CurrentColorRow.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? CurrentColorRow.DyeData.Diffuse : row.Diffuse.Value ),
-                EmissiveColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? CurrentColorRow.DyeData.Emissive : row.Emissive.Value ),
-                SpecularColor = ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? CurrentColorRow.DyeData.Specular : row.Specular.Value ),
+                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? CurrentColorRow.DyeData.Diffuse : row.Diffuse.Value ),
+                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? CurrentColorRow.DyeData.Emissive : row.Emissive.Value ),
+                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? CurrentColorRow.DyeData.Specular : row.Specular.Value ),
                 SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? CurrentColorRow.DyeData.Power : row.SpecularStrength.Value,
                 SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? CurrentColorRow.DyeData.Gloss : row.GlossStrength.Value,
             };
@@ -160,18 +165,15 @@ namespace VfxEditor.DirectX {
             if( DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed ) return;
 
             var psBuffer = PSBufferData with {
-                LightColor = ToVec3( Plugin.Configuration.MaterialLightColor ),
-                AmbientColor = ToVec3( Plugin.Configuration.MaterialAmbientColor ),
+                AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
                 Roughness = Plugin.Configuration.MaterialRoughness,
                 Albedo = Plugin.Configuration.MaterialAlbedo,
-                Radius = Plugin.Configuration.MaterialLightRadius,
-                Falloff = Plugin.Configuration.MaterialLightFalloff
+                ViewDirection = CameraPosition,
+                Light1 = Plugin.Configuration.Light1.GetData(),
+                Light2 = Plugin.Configuration.Light2.GetData(),
             };
 
-            var vsBuffer = VSBufferData with {
-                LightPos = ToVec3( Plugin.Configuration.MaterialLightPosition ),
-                ViewDirection = CameraPosition
-            };
+            var vsBuffer = VSBufferData;
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
@@ -213,7 +215,5 @@ namespace VfxEditor.DirectX {
             NormalView?.Dispose();
             NormalTexture?.Dispose();
         }
-
-        public static Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }
 }

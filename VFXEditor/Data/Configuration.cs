@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.DirectX.Lights;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Library;
 using VfxEditor.Select;
@@ -123,13 +124,11 @@ namespace VfxEditor {
         public bool FileBrowserOverwriteDontAsk = false;
 
         public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
-        public Vector3 MaterialLightColor = new( 1.0f, 0.7843f, 0.4078f );
         public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
         public float MaterialRoughness = 0.2f;
         public float MaterialAlbedo = 0.5f;
-        public Vector3 MaterialLightPosition = new( 2, 2, 2 );
-        public float MaterialLightRadius = 5f;
-        public float MaterialLightFalloff = 0.15f;
+        public LightConfiguration Light1 = new( new( 2, 2, 2 ), new( 0.9153226f, 0.8648891f, 0.76768994f ), 10f, 0.1f );
+        public LightConfiguration Light2 = new( new( -2, -2, -2 ), new( 0.39516127f, 0.28755587f, 0.2692833f ), 10f, 0.1f );
 
         public bool PhybSkeletonSplit = true;
         public bool EidSkeletonSplit = true;
@@ -381,33 +380,52 @@ namespace VfxEditor {
         private void Draw3DView() {
             using var child = ImRaii.Child( "3D View" );
 
-            if( ImGui.ColorEdit4( "Background Color", ref RendererBackground ) ) {
-                Plugin.DirectXManager.Redraw();
-                Save();
-            }
+            DrawDirectXCommon();
 
             if( ImGui.CollapsingHeader( "Skeleton" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
-                if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
-                if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
+                DrawDirectXSkeleton();
             }
 
             if( ImGui.CollapsingHeader( "Material" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
+                DrawDirectXMaterials();
+            }
+        }
 
-                var materialUpdated = false;
-                materialUpdated |= ImGui.InputFloat3( "Light Position", ref MaterialLightPosition );
-                materialUpdated |= ImGui.ColorEdit3( "Light Color", ref MaterialLightColor );
-                materialUpdated |= ImGui.InputFloat( "Light Radius", ref MaterialLightRadius );
-                materialUpdated |= ImGui.InputFloat( "Light Falloff", ref MaterialLightFalloff );
-                materialUpdated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
-                materialUpdated |= ImGui.InputFloat( "Roughness", ref MaterialRoughness );
-                materialUpdated |= ImGui.InputFloat( "Albedo", ref MaterialAlbedo );
+        public void DrawDirectXCommon() {
+            if( ImGui.ColorEdit4( "Background Color", ref RendererBackground ) ) {
+                Plugin.DirectXManager.Redraw();
+                Save();
+            }
+        }
 
-                if( materialUpdated ) {
-                    Plugin.DirectXManager.MaterialPreview.Redraw();
-                    Save();
-                }
+        public void DrawDirectXSkeleton() {
+            if( ImGui.ColorEdit4( "Bone Name Color", ref SkeletonBoneNameColor ) ) Save();
+            if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
+        }
+
+        public void DrawDirectXMaterials() {
+            var updated = false;
+            updated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
+            updated |= ImGui.InputFloat( "Roughness", ref MaterialRoughness );
+            updated |= ImGui.InputFloat( "Albedo", ref MaterialAlbedo );
+
+            if( ImGui.CollapsingHeader( "Light 1" ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                using var __ = ImRaii.PushId( "Light1" );
+                updated |= Light1.Draw();
+            }
+
+            if( ImGui.CollapsingHeader( "Light 2" ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                using var __ = ImRaii.PushId( "Light2" );
+                updated |= Light2.Draw();
+            }
+
+            if( updated ) {
+                Plugin.DirectXManager.RedrawMaterials();
+                Save();
             }
         }
 

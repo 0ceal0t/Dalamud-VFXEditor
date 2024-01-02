@@ -49,6 +49,11 @@ namespace VfxEditor.DirectX {
             };
         }
 
+        public void RedrawMaterials() {
+            MaterialPreview.Redraw();
+            MeshPreview.Redraw();
+        }
+
         public void Redraw() => Renderers.ForEach( x => x.Redraw() );
 
         public void Dispose() {
@@ -58,5 +63,7 @@ namespace VfxEditor.DirectX {
             Device = null;
             Ctx = null;
         }
+
+        public static SharpDX.Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }
 }

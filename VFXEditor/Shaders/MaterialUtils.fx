@@ -1,11 +1,16 @@
 cbuffer VSMaterialConstants : register(b1)
 {
-    float3 ViewDirection;
-    float3 LightPos;
-    
     float2 Repeat;
     float2 Skew;
 }
+
+struct LightData
+{
+    float3 Color;
+    float Radius;
+    float3 Position;
+    float Falloff;
+};
 
 cbuffer PSMaterialConstants : register(b1)
 {
@@ -16,12 +21,13 @@ cbuffer PSMaterialConstants : register(b1)
     float SpecularPower;
     float SpecularIntensity;
     
-    float3 LightColor;
     float3 AmbientColor;
     float Roughness;
     float Albedo;
-    float Radius;
-    float Falloff;
+    
+    float3 ViewDirection;
+    LightData Light1;
+    LightData Light2;
 }
 
 float attenuation(float r, float f, float d)
@@ -71,6 +77,11 @@ float computeDiffuse(float3 viewDirection, float3 worldPos, float radius, float 
     return orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
 }
 
+float3 computeDiffuse(LightData data, float3 worldPos, float3 N)
+{
+    return data.Color * computeDiffuse(ViewDirection, worldPos, data.Radius, data.Falloff, data.Position, N);
+}
+
 float computeSpecular(float3 viewDirection, float3 worldPos, float radius, float lightFalloff, float3 lightPos, float3 N)
 {
     float3 lightDir = lightPos - worldPos;
@@ -85,4 +96,9 @@ float computeSpecular(float3 viewDirection, float3 worldPos, float radius, float
         return phongSpecular(L, V, N, SpecularIntensity * 10) * SpecularPower * falloff;
     }
     return 0.0f;
+}
+
+float3 computeSpecular(LightData data, float3 worldPos, float3 N)
+{
+    return data.Color * computeSpecular(ViewDirection, worldPos, data.Radius, data.Falloff, data.Position, N);
 }

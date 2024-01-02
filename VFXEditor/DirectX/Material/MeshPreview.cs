@@ -64,12 +64,12 @@ namespace VfxEditor.DirectX.Material {
 
         public override void OnDraw() {
             var psBuffer = PSBufferData with {
-                LightColor = ToVec3( Plugin.Configuration.MaterialLightColor ),
-                AmbientColor = ToVec3( Plugin.Configuration.MaterialAmbientColor ),
+                AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
                 Roughness = Plugin.Configuration.MaterialRoughness,
                 Albedo = Plugin.Configuration.MaterialAlbedo,
-                Radius = Plugin.Configuration.MaterialLightRadius,
-                Falloff = Plugin.Configuration.MaterialLightFalloff,
+                ViewDirection = CameraPosition,
+                Light1 = Plugin.Configuration.Light1.GetData(),
+                Light2 = Plugin.Configuration.Light2.GetData(),
 
                 // TODO: tweak these
                 DiffuseColor = new( 1f, 1f, 1f ),
@@ -80,9 +80,6 @@ namespace VfxEditor.DirectX.Material {
             };
 
             var vsBuffer = VSBufferData with {
-                LightPos = ToVec3( Plugin.Configuration.MaterialLightPosition ),
-                ViewDirection = CameraPosition,
-
                 Repeat = new( 1, 1 ),
                 Skew = new( 0, 0 )
             };
@@ -101,7 +98,5 @@ namespace VfxEditor.DirectX.Material {
             foreach( var buffer in ToCleanUp ) buffer?.Dispose();
             ToCleanUp.Clear();
         }
-
-        public static Vector3 ToVec3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
     }
 }
