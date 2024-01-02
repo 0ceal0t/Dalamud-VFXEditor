@@ -59,3 +59,30 @@ float orenNayarDiffuse(float3 lightDirection, float3 viewDirection, float3 surfa
 
     return albedo * max(0.0f, NdotL) * (A + B * s / t) / 3.14159265f;
 }
+
+float computeDiffuse(float3 viewDirection, float3 worldPos, float radius, float lightFalloff, float3 lightPos, float3 N)
+{
+    float3 lightDir = lightPos - worldPos;
+    float lightDistance = length(lightDir);
+    float falloff = attenuation(radius, lightFalloff, lightDistance);
+    float3 L = normalize(lightDir);
+    float3 V = normalize(viewDirection - worldPos);
+    
+    return orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
+}
+
+float computeSpecular(float3 viewDirection, float3 worldPos, float radius, float lightFalloff, float3 lightPos, float3 N)
+{
+    float3 lightDir = lightPos - worldPos;
+    float lightDistance = length(lightDir);
+    float falloff = attenuation(radius, lightFalloff, lightDistance);
+    float3 L = normalize(lightDir);
+    float3 V = normalize(viewDirection - worldPos);
+    
+    float df = dot(-lightDir, N);
+    if (df < 0.0f)
+    {
+        return phongSpecular(L, V, N, SpecularIntensity * 10) * SpecularPower * falloff;
+    }
+    return 0.0f;
+}

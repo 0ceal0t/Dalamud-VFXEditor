@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -291,14 +291,11 @@ namespace VfxEditor.DirectX {
             LastSize = bottomRight - topLeft;
             LastMid = topLeft + ( LastSize / 2f );
 
-            // ==== RESET =====
-            var drawList = ImGui.GetWindowDrawList();
-            var resetSize = new Vec2( 43, 25 );
-            var resetPos = pos + new Vec2( LastSize.X - resetSize.X - 5, 5 );
-            var resetHovered = UiUtils.MouseOver( resetPos, resetPos + resetSize );
-            drawList.AddRectFilled( resetPos, resetPos + resetSize, ImGui.GetColorU32( resetHovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
-            drawList.AddText( resetPos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), "Reset" );
-            if( resetHovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
+            // ==== BUTTONS ========
+
+            var topRight = pos + new Vec2( LastSize.X - 5, 5 );
+
+            if( DrawButton( "Reset", new Vec2( 43, 25 ), topRight - new Vec2( 43, 0 ) ) ) {
                 LastMousePos = default;
                 Yaw = default;
                 Pitch = default;
@@ -307,9 +304,10 @@ namespace VfxEditor.DirectX {
                 UpdateViewMatrix();
             }
 
+            // ================
+
             if( CanDrag() && ImGui.IsItemActive() && ImGui.IsMouseDragging( ImGuiMouseButton.Left ) ) {
-                var delta = ImGui.GetMouseDragDelta();
-                Drag( delta, true );
+                Drag( ImGui.GetMouseDragDelta(), true );
             }
             else if( CanDrag() && ImGui.IsWindowHovered() && ImGui.IsMouseDragging( ImGuiMouseButton.Right ) ) {
                 Drag( ImGui.GetMousePos() - cursor, false );
@@ -319,6 +317,15 @@ namespace VfxEditor.DirectX {
             }
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
+        }
+
+        private bool DrawButton( string text, Vec2 size, Vec2 pos ) {
+            var drawList = ImGui.GetWindowDrawList();
+            var hovered = UiUtils.MouseOver( pos, pos + size );
+            drawList.AddRectFilled( pos, pos + size, ImGui.GetColorU32( hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
+            drawList.AddText( pos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), "Reset" );
+            if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) return true;
+            return false;
         }
 
         public abstract void OnDispose();

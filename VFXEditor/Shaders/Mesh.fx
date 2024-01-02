@@ -48,34 +48,19 @@ PS_IN VS(VS_IN input)
 
 float4 PS(PS_IN input) : SV_Target
 {
-    float3 lightDir = input.LightPos - input.WorldPos;
-    float lightDistance = length(lightDir);
-    
-    float falloff = attenuation(Radius, Falloff, lightDistance);
-    
-    float3 L = normalize(lightDir);
-    float3 V = normalize(input.ViewDirection - input.WorldPos);
-    
     float3 tangent = normalize(input.Tangent);
     float3 biTangent = normalize(input.Bitangent);
-
     float3 N = normalize(input.Normal);
     
-    float specularStrength = SpecularPower;
-    float specularExponent = SpecularIntensity * 10;
-    float df = dot(-lightDir, N);
-    float3 specular = float3(0, 0, 0);
-    if (df < 0.0f) // Idk what's happening at this point
-    {
-        specular += LightColor * phongSpecular(L, V, N, specularExponent) * specularStrength * falloff;
-    }
+    float3 specular = LightColor * computeSpecular(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
     
-    float3 diffuse = LightColor * orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
+    float3 diffuse = LightColor * computeDiffuse(input.ViewDirection, input.WorldPos, Radius, Falloff, input.LightPos, N);
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
-    color += DiffuseColor * input.Color * (diffuse + AmbientColor); // <--- TODO: change to UV if necessary
-    color += SpecularColor * (specular);
+    color += AmbientColor;
+    color += DiffuseColor * input.Color * diffuse * 0.6f;
+    color += SpecularColor * specular * 0.5f;
     
     color = toGamma(color);
     

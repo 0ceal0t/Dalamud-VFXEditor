@@ -122,8 +122,6 @@ namespace VfxEditor.FileManager {
             DraggingItem = null;
             DocumentWindow.Reset();
 
-            DOC_ID = 0;
-
             if( type == ResetType.ToDefault ) AddDocument(); // Default document
         }
     }
