@@ -32,7 +32,7 @@ namespace VfxEditor.DirectX {
     }
 
     public abstract class ModelRenderer : Renderer {
-        public IntPtr Output => RenderShad.NativePointer;
+        public IntPtr Output => RenderResource.NativePointer;
         public bool IsDragging = false;
         protected bool NeedsRedraw = false;
 
@@ -55,9 +55,11 @@ namespace VfxEditor.DirectX {
         protected RasterizerState RasterizeState;
         protected Buffer VertexShaderBuffer;
         protected Buffer PixelShaderBuffer;
+
         protected Texture2D RenderTex;
-        protected ShaderResourceView RenderShad;
+        protected ShaderResourceView RenderResource;
         protected RenderTargetView RenderView;
+
         protected Texture2D DepthTex;
         protected DepthStencilView DepthView;
 
@@ -108,7 +110,7 @@ namespace VfxEditor.DirectX {
                 IsFrontCounterClockwise = false,
                 IsMultisampleEnabled = true,
                 IsScissorEnabled = false,
-                SlopeScaledDepthBias = 0
+                SlopeScaledDepthBias = 0,
             } );
         }
 
@@ -140,8 +142,8 @@ namespace VfxEditor.DirectX {
                 OptionFlags = ResourceOptionFlags.None
             } );
 
-            RenderShad?.Dispose();
-            RenderShad = new ShaderResourceView( Device, RenderTex );
+            RenderResource?.Dispose();
+            RenderResource = new ShaderResourceView( Device, RenderTex );
 
             RenderView?.Dispose();
             RenderView = new RenderTargetView( Device, RenderTex );
@@ -217,7 +219,7 @@ namespace VfxEditor.DirectX {
         public void Redraw() { NeedsRedraw = true; }
 
         public override void Draw() {
-            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
             var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
 
@@ -263,7 +265,7 @@ namespace VfxEditor.DirectX {
             Cube.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
             Ctx.Flush();
 
-            AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+            AfterDraw( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
         }
 
         public virtual void DrawInline() {
@@ -319,11 +321,11 @@ namespace VfxEditor.DirectX {
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
         }
 
-        private bool DrawButton( string text, Vec2 size, Vec2 pos ) {
+        private static bool DrawButton( string text, Vec2 size, Vec2 pos ) {
             var drawList = ImGui.GetWindowDrawList();
             var hovered = UiUtils.MouseOver( pos, pos + size );
             drawList.AddRectFilled( pos, pos + size, ImGui.GetColorU32( hovered ? ImGuiCol.ButtonHovered : ImGuiCol.Button ), ImGui.GetStyle().FrameRounding );
-            drawList.AddText( pos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), "Reset" );
+            drawList.AddText( pos + ImGui.GetStyle().FramePadding, ImGui.GetColorU32( ImGuiCol.Text ), text );
             if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) return true;
             return false;
         }
@@ -333,10 +335,12 @@ namespace VfxEditor.DirectX {
         public override void Dispose() {
             RasterizeState?.Dispose();
             RenderTex?.Dispose();
-            RenderShad?.Dispose();
+            RenderResource?.Dispose();
             RenderView?.Dispose();
+
             DepthTex?.Dispose();
             DepthView?.Dispose();
+
             VertexShaderBuffer?.Dispose();
             PixelShaderBuffer?.Dispose();
 

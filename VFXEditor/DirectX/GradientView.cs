@@ -143,7 +143,7 @@ namespace VfxEditor.DirectX {
         }
 
         public override void Draw() {
-            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView );
+            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
@@ -154,7 +154,7 @@ namespace VfxEditor.DirectX {
             Gradient.Draw( Ctx, new List<Buffer>(), new List<Buffer>() );
             Ctx.Flush();
 
-            AfterDraw( oldState, oldRenderViews, oldDepthStencilView );
+            AfterDraw( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
         }
 
         public override void Dispose() {

@@ -11,14 +11,16 @@ namespace VfxEditor.DirectX {
             Ctx = ctx;
         }
 
-        protected void BeforeDraw( out RasterizerState oldState, out RenderTargetView[] oldRenderViews, out DepthStencilView oldDepthStencilView ) {
+        protected void BeforeDraw( out RasterizerState oldState, out RenderTargetView[] oldRenderViews, out DepthStencilView oldDepthStencilView, out DepthStencilState oldDepthStencilState ) {
             oldState = Ctx.Rasterizer.State;
             oldRenderViews = Ctx.OutputMerger.GetRenderTargets( OutputMergerStage.SimultaneousRenderTargetCount, out oldDepthStencilView );
+            oldDepthStencilState = Ctx.OutputMerger.GetDepthStencilState( out var _ );
         }
 
-        protected void AfterDraw( RasterizerState oldState, RenderTargetView[] oldRenderViews, DepthStencilView oldDepthStencilView ) {
+        protected void AfterDraw( RasterizerState oldState, RenderTargetView[] oldRenderViews, DepthStencilView oldDepthStencilView, DepthStencilState oldDepthStencilState ) {
             Ctx.Rasterizer.State = oldState;
             Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
+            Ctx.OutputMerger.SetDepthStencilState( oldDepthStencilState );
         }
 
         public abstract void Draw();
