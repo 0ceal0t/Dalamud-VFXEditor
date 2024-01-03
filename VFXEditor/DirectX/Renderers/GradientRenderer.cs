@@ -33,7 +33,7 @@ namespace VfxEditor.DirectX.Renderers {
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                 } );
-            Gradient.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "gradient.fx" ), ShaderPassFlags.Pixel );
+            Gradient.AddPass( device, PassType.Final, Path.Combine( shaderPath, "gradient.fx" ), ShaderPassFlags.Pixel );
         }
 
         public void SetGradient( AvfxCurve curve ) {
@@ -150,8 +150,8 @@ namespace VfxEditor.DirectX.Renderers {
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             Ctx.Rasterizer.State = State;
 
-            Gradient.SetupPass( Ctx, PassType.Draw );
-            Gradient.Draw( Ctx );
+            Gradient.SetupPass( Ctx, PassType.Final );
+            Gradient.DrawVertexes( Ctx );
 
             Ctx.Flush();
 

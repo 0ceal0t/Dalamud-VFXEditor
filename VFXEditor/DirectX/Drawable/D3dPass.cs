@@ -5,8 +5,8 @@ using System;
 
 namespace VfxEditor.DirectX.Drawable {
     public enum PassType {
-        Depth,
-        Draw
+        GBuffer,
+        Final
     }
 
     [Flags]
@@ -18,6 +18,7 @@ namespace VfxEditor.DirectX.Drawable {
 
     public class D3dPass {
         public readonly ShaderPassFlags Flags;
+        public readonly PrimitiveTopology Topology;
 
         private bool GeoEnabled => Flags.HasFlag( ShaderPassFlags.Geometry );
         private bool PixelEnabled => Flags.HasFlag( ShaderPassFlags.Pixel );
@@ -34,8 +35,9 @@ namespace VfxEditor.DirectX.Drawable {
         public readonly ShaderSignature Signature;
         public readonly InputLayout Layout;
 
-        public D3dPass( Device device, string path, ShaderPassFlags flags, InputElement[] layout ) {
+        public D3dPass( Device device, string path, ShaderPassFlags flags, InputElement[] layout, PrimitiveTopology topology ) {
             Flags = flags;
+            Topology = topology;
 
             CompiledVertexShader = ShaderBytecode.CompileFromFile( path, "VS", "vs_4_0", include: DirectXManager.IncludeHandler );
             VertexShader = new VertexShader( device, CompiledVertexShader );
@@ -59,7 +61,7 @@ namespace VfxEditor.DirectX.Drawable {
             ctx.GeometryShader.Set( GeometryShader );
             ctx.VertexShader.Set( VertexShader );
             ctx.InputAssembler.InputLayout = Layout;
-            ctx.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            ctx.InputAssembler.PrimitiveTopology = Topology;
         }
 
         public void Dispose() {

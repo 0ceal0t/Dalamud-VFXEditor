@@ -1,4 +1,5 @@
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using Device = SharpDX.Direct3D11.Device;
 namespace VfxEditor.DirectX.Drawable {
     public class D3dDrawable {
         public readonly int Span;
+        public readonly PrimitiveTopology Toplogy;
 
         public bool ShaderError { get; protected set; } = false;
 
@@ -24,15 +26,16 @@ namespace VfxEditor.DirectX.Drawable {
 
         public bool DoDraw => !ShaderError && Count > 0 && ( !UseInstances || InstanceCount > 0 );
 
-        public D3dDrawable( int span, bool instances, InputElement[] layout ) {
+        public D3dDrawable( int span, bool instances, InputElement[] layout, PrimitiveTopology topology = PrimitiveTopology.TriangleList ) {
             UseInstances = instances;
             Span = span;
             Layout = layout;
+            Toplogy = topology;
         }
 
         public void AddPass( Device device, PassType type, string path, ShaderPassFlags flags ) {
             try {
-                Passes[type] = new( device, path, flags, Layout );
+                Passes[type] = new( device, path, flags, Layout, Toplogy );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error compiling shaders from {path}" );
@@ -92,16 +95,18 @@ namespace VfxEditor.DirectX.Drawable {
             }
         }
 
+        public void Draw( DeviceContext ctx, PassType type ) => Draw( ctx, type, new List<Buffer>(), new List<Buffer>() );
+
         public void Draw( DeviceContext ctx, PassType type, Buffer vertex, Buffer pixel ) => Draw( ctx, type, new List<Buffer>() { vertex }, new List<Buffer>() { pixel } );
 
         public void Draw( DeviceContext ctx, PassType type, List<Buffer> vertex, List<Buffer> pixel ) {
             if( !DoDraw ) return;
             SetupPass( ctx, type );
             SetConstantBuffers( ctx, vertex, pixel );
-            Draw( ctx );
+            DrawVertexes( ctx );
         }
 
-        public void Draw( DeviceContext ctx ) {
+        public void DrawVertexes( DeviceContext ctx ) {
             if( !DoDraw ) return;
 
             ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Data, Utilities.SizeOf<Vector4>() * Span, 0 ) );

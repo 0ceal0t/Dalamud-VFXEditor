@@ -59,11 +59,11 @@ namespace VfxEditor.DirectX.Renderers {
 
         protected Texture2D RenderTexture;
         protected ShaderResourceView RenderResource;
-        protected RenderTargetView RenderView;
+        protected RenderTargetView RenderTarget;
 
-        protected Texture2D DepthTexture;
-        protected DepthStencilView DepthView;
-        protected DepthStencilState DepthStencilState;
+        protected Texture2D StencilTexture;
+        protected DepthStencilView StencilView;
+        protected DepthStencilState StencilState;
 
         protected SamplerState Sampler;
 
@@ -87,7 +87,7 @@ namespace VfxEditor.DirectX.Renderers {
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
                 } );
-            Cube.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Cube.fx" ), ShaderPassFlags.Pixel );
+            Cube.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Cube.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
             builder.AddBox( new( 0 ), 0.42f, 0.42f, 0.42f ); // 24 points total (6 faces * 4 corners)
@@ -102,7 +102,7 @@ namespace VfxEditor.DirectX.Renderers {
 
             // ======== DEPTH =========
 
-            DepthStencilState = new( Device, new() {
+            StencilState = new( Device, new() {
                 IsDepthEnabled = true,
                 IsStencilEnabled = false,
                 DepthWriteMask = DepthWriteMask.All,
@@ -174,15 +174,15 @@ namespace VfxEditor.DirectX.Renderers {
             RenderResource?.Dispose();
             RenderResource = new ShaderResourceView( Device, RenderTexture );
 
-            RenderView?.Dispose();
-            RenderView = new RenderTargetView( Device, RenderTexture );
+            RenderTarget?.Dispose();
+            RenderTarget = new RenderTargetView( Device, RenderTexture );
 
             // ====== DEPTH ==========
 
-            DepthTexture?.Dispose();
-            DepthTexture = new Texture2D( Device, new() {
+            StencilTexture?.Dispose();
+            StencilTexture = new Texture2D( Device, new() {
                 ArraySize = 1,
-                BindFlags = BindFlags.DepthStencil,
+                BindFlags = BindFlags.DepthStencil | BindFlags.ShaderResource,
                 CpuAccessFlags = CpuAccessFlags.None,
                 Format = Format.R32_Typeless,
                 Width = Width,
@@ -193,8 +193,8 @@ namespace VfxEditor.DirectX.Renderers {
                 Usage = ResourceUsage.Default
             } );
 
-            DepthView?.Dispose();
-            DepthView = new DepthStencilView( Device, DepthTexture, new() {
+            StencilView?.Dispose();
+            StencilView = new DepthStencilView( Device, StencilTexture, new() {
                 Dimension = DepthStencilViewDimension.Texture2D,
                 Format = Format.D32_Float,
             } );
@@ -246,8 +246,8 @@ namespace VfxEditor.DirectX.Renderers {
             Ctx.UpdateSubresource( ref vsBuffer, VertexShaderBuffer );
             Ctx.UpdateSubresource( ref psBuffer, PixelShaderBuffer );
 
-            Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
-            Ctx.ClearRenderTargetView( RenderView, new Color4(
+            Ctx.ClearDepthStencilView( StencilView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
+            Ctx.ClearRenderTargetView( RenderTarget, new Color4(
                 Plugin.Configuration.RendererBackground.X,
                 Plugin.Configuration.RendererBackground.Y,
                 Plugin.Configuration.RendererBackground.Z,
@@ -257,18 +257,24 @@ namespace VfxEditor.DirectX.Renderers {
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             Ctx.Rasterizer.State = RasterizeState;
 
-            Ctx.OutputMerger.SetDepthStencilState( DepthStencilState );
-
             // ======= PASSES ======
 
-            Ctx.OutputMerger.SetTargets( DepthView, RenderView );
+            // TODO: make this always on top (depth stuff)
+
+            Ctx.OutputMerger.SetDepthStencilState( StencilState );
+            Ctx.OutputMerger.SetTargets( StencilView, RenderTarget );
+
             DrawPasses();
             Ctx.Flush();
 
             // ======= CUBE ===========
 
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, 80, 80, 0.0f, 1.0f ) );
-            Cube.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
+
+            Ctx.OutputMerger.SetDepthStencilState( StencilState );
+            Ctx.OutputMerger.SetTargets( StencilView, RenderTarget );
+
+            Cube.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
             Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
@@ -331,11 +337,11 @@ namespace VfxEditor.DirectX.Renderers {
             RasterizeState?.Dispose();
             RenderTexture?.Dispose();
             RenderResource?.Dispose();
-            RenderView?.Dispose();
+            RenderTarget?.Dispose();
 
-            DepthTexture?.Dispose();
-            DepthView?.Dispose();
-            DepthStencilState?.Dispose();
+            StencilTexture?.Dispose();
+            StencilView?.Dispose();
+            StencilState?.Dispose();
 
             Sampler?.Dispose();
 

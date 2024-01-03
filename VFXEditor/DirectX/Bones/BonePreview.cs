@@ -20,7 +20,7 @@ namespace VfxEditor.DirectX {
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
                 } );
-            Model.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
+            Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
         }
 
         public void LoadSkeleton( BoneSkinnedMeshGeometry3D mesh ) {
@@ -74,7 +74,7 @@ namespace VfxEditor.DirectX {
         protected override bool ShowEdges() => false;
 
         protected override void DrawPasses() {
-            Model.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
+            Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
         }
 
         public override void Dispose() {

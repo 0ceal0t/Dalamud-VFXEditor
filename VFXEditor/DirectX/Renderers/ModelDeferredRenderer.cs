@@ -1,41 +1,67 @@
+using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System.Collections.Generic;
+using System.Linq;
+using VfxEditor.DirectX.Drawable;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Renderers {
     public abstract class ModelDeferredRenderer : ModelRenderer {
-        protected Texture2D ShadowDepthTexture;
-        protected DepthStencilView GDepthView;
-        protected ShaderResourceView ShadowDepthResource;
+        protected readonly D3dDrawable Quad;
+        protected readonly DepthStencilState QuadStencilState;
 
-        protected ModelDeferredRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
+        protected ShaderResourceView DepthResource;
+
+        protected readonly DeferredTexture Position = new();
+        protected readonly DeferredTexture Normal = new();
+        protected readonly DeferredTexture Color = new();
+        protected readonly DeferredTexture UV = new();
+
+        protected List<DeferredTexture> DeferredTextures = new();
+
+        protected ModelDeferredRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
+            // https://github.com/justinstenning/Direct3D-Rendering-Cookbook/blob/672312ae7545c388387a8fec92d8db41cc326804/Ch10_01DeferredRendering/ScreenAlignedQuadRenderer.cs#L20
+
+            Quad = new( 1, false,
+                new InputElement[] {
+                    new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 )
+                } );
+
+            Quad.SetVertexes( Device, new Vector4[] {
+                new( -1.0f, -1.0f, 1, 1 ),
+                new( 1.0f, 1.0f, 1, 1 ),
+                new( -1.0f, 1.0f, 1, 1 ),
+                new( 1.0f, 1.0f, 1, 1 ),
+                new( -1.0f, -1.0f, 1, 1 ),
+                new( 1.0f, -1.0f, 1, 1 ),
+            }, 6 );
+
+            QuadStencilState = new( Device, new() {
+                IsDepthEnabled = false,
+                IsStencilEnabled = false,
+                DepthWriteMask = DepthWriteMask.All,
+                DepthComparison = Comparison.Always
+            } );
+        }
 
         protected override void ResizeResources() {
             base.ResizeResources();
 
-            ShadowDepthTexture?.Dispose();
-            ShadowDepthTexture = new Texture2D( Device, new() {
-                ArraySize = 1,
-                BindFlags = BindFlags.DepthStencil | BindFlags.ShaderResource,
-                CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.R32_Typeless,
-                Width = Width,
-                Height = Height,
-                MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.None,
-                SampleDescription = new( 1, 0 ),
-                Usage = ResourceUsage.Default
-            } );
+            if( DeferredTextures.Count == 0 ) {
+                DeferredTextures.AddRange( new[] {
+                    Position,
+                    Normal,
+                    Color,
+                    UV
+                } );
+            }
 
-            GDepthView?.Dispose();
-            GDepthView = new DepthStencilView( Device, ShadowDepthTexture, new() {
-                Dimension = DepthStencilViewDimension.Texture2D,
-                Format = Format.D32_Float,
-            } );
+            DeferredTextures.ForEach( x => x.Resize( Device, Width, Height ) );
 
-            ShadowDepthResource?.Dispose();
-            ShadowDepthResource = new ShaderResourceView( Device, ShadowDepthTexture, new() {
+            DepthResource?.Dispose();
+            DepthResource = new ShaderResourceView( Device, StencilTexture, new() {
                 Format = Format.R32_Float,
                 Dimension = ShaderResourceViewDimension.Texture2D,
                 Texture2D = new ShaderResourceViewDescription.Texture2DResource() {
@@ -45,34 +71,46 @@ namespace VfxEditor.DirectX.Renderers {
             } );
         }
 
-        protected abstract void OnDraw();
+        protected abstract void OnDrawUpdate();
 
-        protected abstract void FinalPass();
+        protected abstract void GBufferPass();
 
-        protected abstract void DepthPass();
+        protected abstract void QuadPass();
 
         protected override void DrawPasses() {
-            Ctx.ClearDepthStencilView( GDepthView, DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil, 1.0f, 0 );
+            Position.Clear( Ctx, new( 0 ) );
+            Normal.Clear( Ctx, new( 0 ) );
+            Color.Clear( Ctx, Plugin.Configuration.RendererBackground );
+            UV.Clear( Ctx, new( 0 ) );
 
-            OnDraw();
+            OnDrawUpdate();
 
-            // ======= DEPTH PASS ======
+            // ======= G-BUFFERS PASS ======
 
-            Ctx.OutputMerger.SetTargets( GDepthView );
-            DepthPass();
+            Ctx.OutputMerger.SetTargets( StencilView, DeferredTextures.Select( x => x.RenderTarget ).ToArray() );
+            Ctx.PixelShader.SetSampler( 0, Sampler );
+
+            GBufferPass();
             Ctx.Flush();
 
-            // ======= FINAL PASS ======
+            // ======= QUAD PASS ======
+            Ctx.OutputMerger.SetTargets( RenderTarget );
+            Ctx.PixelShader.SetShaderResource( 0, DepthResource );
+            foreach( var (tex, idx) in DeferredTextures.WithIndex() ) {
+                Ctx.PixelShader.SetShaderResource( idx + 1, tex.Resource );
+            }
 
-            Ctx.OutputMerger.SetTargets( DepthView, RenderView );
-            FinalPass();
+            Ctx.OutputMerger.SetDepthStencilState( QuadStencilState );
+            QuadPass();
             Ctx.Flush();
         }
 
         public override void Dispose() {
             base.Dispose();
-            ShadowDepthTexture?.Dispose();
-            ShadowDepthResource?.Dispose();
+            DeferredTextures.ForEach( x => x.Dispose() );
+            DepthResource?.Dispose();
+            Quad?.Dispose();
+            QuadStencilState?.Dispose();
         }
     }
 }

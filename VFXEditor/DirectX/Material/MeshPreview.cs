@@ -38,8 +38,9 @@ namespace VfxEditor.DirectX.Material {
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
-            Model.AddPass( Device, PassType.Depth, Path.Combine( shaderPath, "MeshDepth.fx" ), ShaderPassFlags.None );
-            Model.AddPass( Device, PassType.Draw, Path.Combine( shaderPath, "Mesh.fx" ), ShaderPassFlags.Pixel );
+            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MeshGBuffer.fx" ), ShaderPassFlags.Pixel );
+
+            Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "MeshQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
         public void RefreshMesh() {
@@ -64,7 +65,7 @@ namespace VfxEditor.DirectX.Material {
             CurrentMesh = null;
         }
 
-        protected override void OnDraw() {
+        protected override void OnDrawUpdate() {
             var psBuffer = PSBufferData with {
                 AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
                 Roughness = Plugin.Configuration.MaterialRoughness,
@@ -90,21 +91,18 @@ namespace VfxEditor.DirectX.Material {
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
         }
 
-        protected override void DepthPass() {
+        protected override void GBufferPass() {
             Model.Draw(
-                Ctx, PassType.Depth,
+                Ctx, PassType.GBuffer,
                 new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
                 new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
-        protected override void FinalPass() {
-            Ctx.PixelShader.SetSampler( 0, Sampler );
-            Ctx.PixelShader.SetShaderResource( 0, ShadowDepthResource );
-
-            Model.Draw(
-                Ctx, PassType.Draw,
-                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+        protected override void QuadPass() {
+            Quad.Draw(
+                Ctx, PassType.Final,
+                    new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                    new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
         public override void Dispose() {

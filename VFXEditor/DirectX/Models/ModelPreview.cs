@@ -29,7 +29,7 @@ namespace VfxEditor.DirectX {
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
                 } );
-            Model.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
+            Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
 
             Emitters = new( 2, true,
                 new InputElement[] {
@@ -40,7 +40,7 @@ namespace VfxEditor.DirectX {
                     new("INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
                     new("INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1)
                 } );
-            Emitters.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
+            Emitters.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
             builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
@@ -117,8 +117,8 @@ namespace VfxEditor.DirectX {
         }
 
         protected override void DrawPasses() {
-            Model.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
-            Emitters.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
+            Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
+            Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
         }
 
         public override void Dispose() {

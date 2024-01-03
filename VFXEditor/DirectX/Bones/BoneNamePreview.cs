@@ -72,7 +72,7 @@ namespace VfxEditor.DirectX {
             if( Model.ShaderError ) return;
             if( Model.Count == 0 && NumWireframe == 0 ) return;
 
-            Model.SetupPass( Ctx, PassType.Draw );
+            Model.SetupPass( Ctx, PassType.Final );
             Model.SetConstantBuffers( Ctx, VertexShaderBuffer, PixelShaderBuffer );
 
             if( Model.Count > 0 ) {

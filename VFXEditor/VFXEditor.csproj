@@ -202,10 +202,10 @@
         <None Update="Shaders\MaterialDepth.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\MeshDepth.fx">
+        <None Update="Shaders\MeshQuad.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\Mesh.fx">
+        <None Update="Shaders\MeshGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\Material.fx">

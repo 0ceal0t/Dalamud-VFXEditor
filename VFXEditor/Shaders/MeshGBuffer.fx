@@ -21,8 +21,13 @@ struct PS_IN
     float3 Color : COLOR;
 };
 
-SamplerState DepthSampler : register(s0);
-Texture2D DepthTexture : register(t0);
+struct GBUFFER
+{
+    float4 Position : SV_Target0;
+    float4 Normal : SV_Target1;
+    float4 Color : SV_Target2;
+    float4 UV : SV_Target3;
+};
 
 PS_IN VS(VS_IN input)
 {
@@ -45,11 +50,8 @@ PS_IN VS(VS_IN input)
 }
 
 
-float4 PS(PS_IN input) : SV_Target
+GBUFFER PS(PS_IN input)
 {
-    //float depth = (DepthTexture.Sample(DepthSampler, input.Position.xy / Size) / input.Position.w);
-    //return float4(depth, depth, depth, 1);
-    
     float3 tangent = normalize(input.Tangent);
     float3 biTangent = normalize(input.Bitangent);
     float3 N = normalize(input.Normal);
@@ -66,5 +68,13 @@ float4 PS(PS_IN input) : SV_Target
     
     color = toGamma(color);
     
-    return float4(saturate(color), 1);
+    float4 finalColor = float4(saturate(color), 1);
+    
+    GBUFFER result = (GBUFFER) 0;
+    result.Position = input.Position;
+    result.Normal = float4(N, 1);
+    result.Color = finalColor;
+    result.UV = float4(input.TexCoords, 0, 0);
+
+    return result;
 }

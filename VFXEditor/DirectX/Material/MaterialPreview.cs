@@ -62,7 +62,7 @@ namespace VfxEditor.DirectX {
         public LightData Light2;
     }
 
-    public class MaterialPreview : ModelDeferredRenderer {
+    public class MaterialPreview : ModelDepthRenderer {
         private readonly D3dDrawable Model;
 
         public MtrlFile CurrentFile { get; private set; }
@@ -95,8 +95,8 @@ namespace VfxEditor.DirectX {
                     new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
-            Model.AddPass( Device, PassType.Depth, Path.Combine( shaderPath, "MaterialDepth.fx" ), ShaderPassFlags.None );
-            Model.AddPass( Device, PassType.Draw, Path.Combine( shaderPath, "Material.fx" ), ShaderPassFlags.Pixel );
+            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialDepth.fx" ), ShaderPassFlags.None );
+            Model.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "Material.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
@@ -171,7 +171,7 @@ namespace VfxEditor.DirectX {
             if( SkipDraw ) return;
 
             Model.Draw(
-                Ctx, PassType.Depth,
+                Ctx, PassType.GBuffer,
                 new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
                 new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
@@ -185,7 +185,7 @@ namespace VfxEditor.DirectX {
             Ctx.PixelShader.SetShaderResource( 2, ShadowDepthResource );
 
             Model.Draw(
-                Ctx, PassType.Draw,
+                Ctx, PassType.Final,
                 new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
                 new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
