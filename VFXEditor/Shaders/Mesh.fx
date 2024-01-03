@@ -21,8 +21,8 @@ struct PS_IN
     float3 Color : COLOR;
 };
 
-//SamplerState DepthSampler : register(s0);
-//Texture2D DepthTexture : register(t0);
+SamplerState DepthSampler : register(s0);
+Texture2D DepthTexture : register(t0);
 
 PS_IN VS(VS_IN input)
 {
@@ -44,15 +44,11 @@ PS_IN VS(VS_IN input)
     return output;
 }
 
+
 float4 PS(PS_IN input) : SV_Target
 {
-    //float3 depth = DepthTexture.Sample(DepthSampler, input.Position.xy).xxx;
-    //return float4(depth, 1);
-    
-    
-    
-    
-    
+    //float depth = (DepthTexture.Sample(DepthSampler, input.Position.xy / Size) / input.Position.w);
+    //return float4(depth, depth, depth, 1);
     
     float3 tangent = normalize(input.Tangent);
     float3 biTangent = normalize(input.Bitangent);

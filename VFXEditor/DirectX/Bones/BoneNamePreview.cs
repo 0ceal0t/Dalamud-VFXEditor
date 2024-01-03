@@ -1,11 +1,12 @@
+using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.DirectX.Drawable;
 using VfxEditor.FileManager;
 using VfxEditor.SklbFormat;
 using VfxEditor.SklbFormat.Bones;
@@ -67,11 +68,12 @@ namespace VfxEditor.DirectX {
             UpdateDraw();
         }
 
-        public override void OnDraw() {
+        protected override void DrawPasses() {
             if( Model.ShaderError ) return;
             if( Model.Count == 0 && NumWireframe == 0 ) return;
 
-            Model.SetupCtx( Ctx, new List<Buffer>() { VertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer } );
+            Model.SetupPass( Ctx, PassType.Draw );
+            Model.SetConstantBuffers( Ctx, VertexShaderBuffer, PixelShaderBuffer );
 
             if( Model.Count > 0 ) {
                 Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Model.Data, Utilities.SizeOf<Vector4>() * Model.Span, 0 ) );
@@ -113,9 +115,9 @@ namespace VfxEditor.DirectX {
             CurrentFile = null;
         }
 
-        public override void OnDispose() {
+        public override void Dispose() {
+            base.Dispose();
             WireframeVertices?.Dispose();
-            base.OnDispose();
         }
 
         protected virtual void DrawInlineExtra() { }

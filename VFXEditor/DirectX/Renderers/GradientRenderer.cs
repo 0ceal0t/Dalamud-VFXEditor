@@ -1,18 +1,16 @@
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX.Drawable;
-using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
-    public class GradientView : Renderer {
+namespace VfxEditor.DirectX.Renderers {
+    public class GradientRenderer : Renderer {
         public AvfxCurve CurrentCurve { get; private set; }
-        public IntPtr Output => ShaderView.NativePointer;
+        public nint Output => ShaderView.NativePointer;
 
         private readonly int Width = 900;
         private readonly int Height = 100;
@@ -24,17 +22,18 @@ namespace VfxEditor.DirectX {
         private ShaderResourceView ShaderView;
         private RenderTargetView RenderView;
 
-        private readonly DirectXDrawable Gradient;
+        private readonly D3dDrawable Gradient;
 
-        public GradientView( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
+        public GradientRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             RefreshRasterizeState();
             ResizeResources();
 
-            Gradient = new( device, Path.Combine( shaderPath, "Gradient.fx" ), 2, false, false,
+            Gradient = new( 2, false,
                 new InputElement[] {
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
                 } );
+            Gradient.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "gradient.fx" ), ShaderPassFlags.Pixel );
         }
 
         public void SetGradient( AvfxCurve curve ) {
@@ -48,14 +47,14 @@ namespace VfxEditor.DirectX {
 
                 float startTime = curve.Keys[0].Time.Value;
                 float endTime = curve.Keys[numPoints - 1].Time.Value;
-                var timeDiff = ( endTime - startTime );
+                var timeDiff = endTime - startTime;
 
                 for( var i = 0; i < numPoints - 1; i++ ) {
                     var left = curve.KeyList.Keys[i];
                     var right = curve.KeyList.Keys[i + 1];
 
-                    var leftPosition = ( ( left.Time.Value - startTime ) / timeDiff ) * 2 - 1;
-                    var rightPosition = ( ( right.Time.Value - startTime ) / timeDiff ) * 2 - 1;
+                    var leftPosition = ( left.Time.Value - startTime ) / timeDiff * 2 - 1;
+                    var rightPosition = ( right.Time.Value - startTime ) / timeDiff * 2 - 1;
                     var _leftColor = left.Color;
                     var _rightColor = right.Color;
                     var leftColor = new Vector4( _leftColor.X, _leftColor.Y, _leftColor.Z, 1 );
@@ -151,7 +150,9 @@ namespace VfxEditor.DirectX {
             Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
             Ctx.Rasterizer.State = State;
 
-            Gradient.Draw( Ctx, new List<Buffer>(), new List<Buffer>() );
+            Gradient.SetupPass( Ctx, PassType.Draw );
+            Gradient.Draw( Ctx );
+
             Ctx.Flush();
 
             AfterDraw( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
@@ -164,7 +165,6 @@ namespace VfxEditor.DirectX {
             RenderView?.Dispose();
             DepthTexture?.Dispose();
             DepthView?.Dispose();
-
             Gradient?.Dispose();
         }
     }

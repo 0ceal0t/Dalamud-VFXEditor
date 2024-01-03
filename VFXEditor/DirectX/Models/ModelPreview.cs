@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX.Drawable;
+using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -18,26 +19,28 @@ namespace VfxEditor.DirectX {
             Normal
         }
 
-        private readonly DirectXDrawable Model;
-        private readonly DirectXDrawable Emitters;
+        private readonly D3dDrawable Model;
+        private readonly D3dDrawable Emitters;
 
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            Model = new( Device, Path.Combine( shaderPath, "Model.fx" ), 3, true, false,
+            Model = new( 3, false,
                 new InputElement[] {
-                    new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
-                    new InputElement( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
-                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
+                    new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
+                    new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
+                    new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
                 } );
+            Model.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
 
-            Emitters = new( Device, Path.Combine( shaderPath, "Emitter.fx" ), 2, false, true,
+            Emitters = new( 2, true,
                 new InputElement[] {
-                    new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
-                    new InputElement("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
-                    new InputElement("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1),
-                    new InputElement("INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
-                    new InputElement("INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
-                    new InputElement("INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1)
+                    new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
+                    new("NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0),
+                    new("INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1),
+                    new("INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
+                    new("INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1),
+                    new("INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1)
                 } );
+            Emitters.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
             builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
@@ -113,12 +116,13 @@ namespace VfxEditor.DirectX {
             return Quaternion.RotationAxis( rotationAxis, ( float )rotationAngle );
         }
 
-        public override void OnDraw() {
-            Model.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
-            Emitters.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
+        protected override void DrawPasses() {
+            Model.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
+            Emitters.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
         }
 
-        public override void OnDispose() {
+        public override void Dispose() {
+            base.Dispose();
             Model?.Dispose();
             Emitters?.Dispose();
         }

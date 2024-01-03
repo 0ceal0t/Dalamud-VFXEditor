@@ -4,13 +4,14 @@ using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Drawable;
+using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Material {
-    public class MeshPreview : ModelRenderer {
-        private readonly DirectXDrawable Model;
+    public class MeshPreview : ModelDeferredRenderer {
+        private readonly D3dDrawable Model;
 
         public MdlFile CurrentFile { get; private set; }
         public MdlMeshDrawable CurrentMesh { get; private set; }
@@ -29,15 +30,16 @@ namespace VfxEditor.DirectX.Material {
             PSBufferData = new() { };
             VSBufferData = new() { };
 
-            // Need to calculate bitangent in the shader
-            Model = new( Device, Path.Combine( shaderPath, "Mesh.fx" ), 5, false, false,
+            Model = new( 5, false,
                 new InputElement[] {
-                    new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
-                    new InputElement( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
-                    new InputElement( "UV", 0, Format.R32G32B32A32_Float, 32, 0 ),
-                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 48, 0 ),
-                    new InputElement( "COLOR", 0, Format.R32G32B32A32_Float, 64, 0 )
+                    new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
+                    new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new( "UV", 0, Format.R32G32B32A32_Float, 32, 0 ),
+                    new( "NORMAL", 0, Format.R32G32B32A32_Float, 48, 0 ),
+                    new( "COLOR", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
+            Model.AddPass( Device, PassType.Depth, Path.Combine( shaderPath, "MeshDepth.fx" ), ShaderPassFlags.None );
+            Model.AddPass( Device, PassType.Draw, Path.Combine( shaderPath, "Mesh.fx" ), ShaderPassFlags.Pixel );
         }
 
         public void RefreshMesh() {
@@ -62,7 +64,7 @@ namespace VfxEditor.DirectX.Material {
             CurrentMesh = null;
         }
 
-        public override void OnDraw() {
+        protected override void OnDraw() {
             var psBuffer = PSBufferData with {
                 AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
                 Roughness = Plugin.Configuration.MaterialRoughness,
@@ -86,11 +88,27 @@ namespace VfxEditor.DirectX.Material {
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
-
-            Model.Draw( Ctx, new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
-        public override void OnDispose() {
+        protected override void DepthPass() {
+            Model.Draw(
+                Ctx, PassType.Depth,
+                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+        }
+
+        protected override void FinalPass() {
+            Ctx.PixelShader.SetSampler( 0, Sampler );
+            Ctx.PixelShader.SetShaderResource( 0, ShadowDepthResource );
+
+            Model.Draw(
+                Ctx, PassType.Draw,
+                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+        }
+
+        public override void Dispose() {
+            base.Dispose();
             Model?.Dispose();
             MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();

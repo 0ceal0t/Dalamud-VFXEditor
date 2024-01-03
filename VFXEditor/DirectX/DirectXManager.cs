@@ -3,6 +3,7 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Material;
+using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -11,7 +12,7 @@ namespace VfxEditor.DirectX {
         private DeviceContext Ctx;
 
         public readonly ModelPreview ModelPreview;
-        public readonly GradientView GradientView;
+        public readonly GradientRenderer GradientView;
         public readonly PapPreview PapPreview;
         public readonly BoneNamePreview PhybPreview;
         public readonly BoneNamePreview SklbPreview;

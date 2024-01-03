@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
+using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MtrlFormat;
 using VfxEditor.Formats.MtrlFormat.Table;
 using Device = SharpDX.Direct3D11.Device;
@@ -61,8 +62,8 @@ namespace VfxEditor.DirectX {
         public LightData Light2;
     }
 
-    public class MaterialPreview : ModelRenderer {
-        private readonly DirectXDrawable Model;
+    public class MaterialPreview : ModelDeferredRenderer {
+        private readonly D3dDrawable Model;
 
         public MtrlFile CurrentFile { get; private set; }
         public MtrlColorTableRow CurrentColorRow { get; private set; }
@@ -72,48 +73,35 @@ namespace VfxEditor.DirectX {
         protected Buffer MaterialVertexShaderBuffer;
         protected VSMaterialBuffer VSBufferData;
 
-        protected SamplerState Sampler;
         protected ShaderResourceView DiffuseView;
         protected ShaderResourceView NormalView;
         protected Texture2D DiffuseTexture;
         protected Texture2D NormalTexture;
+
+        private bool SkipDraw => DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed;
 
         public MaterialPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             PSBufferData = new() { };
-
             VSBufferData = new() { };
 
-            Model = new( Device, Path.Combine( shaderPath, "Material.fx" ), 5, false, false,
+            Model = new( 5, false,
                 new InputElement[] {
-                    new InputElement( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
-                    new InputElement( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
-                    new InputElement( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
-                    new InputElement( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
-                    new InputElement( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
+                    new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
+                    new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
+                    new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
+                    new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
+            Model.AddPass( Device, PassType.Depth, Path.Combine( shaderPath, "MaterialDepth.fx" ), ShaderPassFlags.None );
+            Model.AddPass( Device, PassType.Draw, Path.Combine( shaderPath, "Material.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
             var data = FromMeshBuilder( builder, null, true, true, true, out var count );
             Model.SetVertexes( Device, data, count );
-
-            // ================
-
-            Sampler = new( Device, new() {
-                Filter = Filter.MinMagMipLinear,
-                AddressU = TextureAddressMode.Wrap,
-                AddressV = TextureAddressMode.Wrap,
-                AddressW = TextureAddressMode.Wrap,
-                BorderColor = Color.Black,
-                ComparisonFunction = Comparison.Never,
-                MaximumAnisotropy = 16,
-                MipLodBias = 0,
-                MinimumLod = -float.MaxValue,
-                MaximumLod = float.MaxValue
-            } );
         }
 
         public void RefreshColorRow() => LoadColorRow( CurrentFile, CurrentColorRow );
@@ -161,8 +149,8 @@ namespace VfxEditor.DirectX {
             CurrentColorRow = null;
         }
 
-        public override void OnDraw() {
-            if( DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed ) return;
+        protected override void OnDraw() {
+            if( SkipDraw ) return;
 
             var psBuffer = PSBufferData with {
                 AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
@@ -177,12 +165,29 @@ namespace VfxEditor.DirectX {
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
+        }
+
+        protected override void DepthPass() {
+            if( SkipDraw ) return;
+
+            Model.Draw(
+                Ctx, PassType.Depth,
+                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+        }
+
+        protected override void FinalPass() {
+            if( SkipDraw ) return;
 
             Ctx.PixelShader.SetSampler( 0, Sampler );
             Ctx.PixelShader.SetShaderResource( 0, DiffuseView );
             Ctx.PixelShader.SetShaderResource( 1, NormalView );
+            Ctx.PixelShader.SetShaderResource( 2, ShadowDepthResource );
 
-            Model.Draw( Ctx, new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer }, new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+            Model.Draw(
+                Ctx, PassType.Draw,
+                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
         private ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {
@@ -204,12 +209,12 @@ namespace VfxEditor.DirectX {
             return new ShaderResourceView( Device, texture );
         }
 
-        public override void OnDispose() {
+        public override void Dispose() {
+            base.Dispose();
             Model?.Dispose();
             MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();
 
-            Sampler?.Dispose();
             DiffuseView?.Dispose();
             DiffuseTexture?.Dispose();
             NormalView?.Dispose();

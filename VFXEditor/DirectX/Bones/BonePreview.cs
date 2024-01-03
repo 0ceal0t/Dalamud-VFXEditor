@@ -6,19 +6,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.DirectX.Drawable;
+using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class BonePreview : ModelRenderer {
-        protected DirectXDrawable Model;
+        protected D3dDrawable Model;
 
         public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            Model = new( Device, Path.Combine( shaderPath, "Model.fx" ), 3, true, false,
+            Model = new( 3, false,
                 new InputElement[] {
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
                 } );
+            Model.AddPass( device, PassType.Draw, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
         }
 
         public void LoadSkeleton( BoneSkinnedMeshGeometry3D mesh ) {
@@ -71,11 +73,12 @@ namespace VfxEditor.DirectX {
 
         protected override bool ShowEdges() => false;
 
-        public override void OnDraw() {
-            Model.Draw( Ctx, VertexShaderBuffer, PixelShaderBuffer );
+        protected override void DrawPasses() {
+            Model.Draw( Ctx, PassType.Draw, VertexShaderBuffer, PixelShaderBuffer );
         }
 
-        public override void OnDispose() {
+        public override void Dispose() {
+            base.Dispose();
             Model?.Dispose();
         }
     }

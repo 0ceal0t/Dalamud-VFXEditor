@@ -199,6 +199,12 @@
         <None Update="Shaders\Gradient.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Shaders\MaterialDepth.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Shaders\MeshDepth.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Shaders\Mesh.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
