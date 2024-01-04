@@ -5,9 +5,15 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Renderers {
     public class DeferredTexture {
+        public readonly Format Format;
+
         public Texture2D Texture { get; private set; }
         public ShaderResourceView Resource { get; private set; }
         public RenderTargetView RenderTarget { get; private set; }
+
+        public DeferredTexture( Format format = Format.R32G32B32A32_Float ) {
+            Format = format;
+        }
 
         public void Resize( Device device, int width, int height ) {
             Texture?.Dispose();
@@ -15,7 +21,7 @@ namespace VfxEditor.DirectX.Renderers {
             RenderTarget?.Dispose();
 
             Texture = new Texture2D( device, new() {
-                Format = Format.B8G8R8A8_UNorm,
+                Format = Format,
                 ArraySize = 1,
                 MipLevels = 1,
                 Width = width,

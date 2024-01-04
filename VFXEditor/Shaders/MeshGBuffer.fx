@@ -62,17 +62,14 @@ GBUFFER PS(PS_IN input)
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
-    color += AmbientColor;
     color += DiffuseColor * input.Color * diffuse * 0.6f;
     color += SpecularColor * input.Color * specular * 0.5f;
     
-    color = toGamma(color);
-    
-    float4 finalColor = float4(saturate(color), 1);
+    float4 finalColor = float4(color, 1);
     
     GBUFFER result = (GBUFFER) 0;
-    result.Position = input.Position;
-    result.Normal = float4(N, 1);
+    result.Position.xy = input.Position.xy;
+    result.Normal = ( float4(N, 1) + 1.0f ) / 2.0f;
     result.Color = finalColor;
     result.UV = float4(input.TexCoords, 0, 0);
 
