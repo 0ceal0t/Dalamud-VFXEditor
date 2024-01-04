@@ -8,12 +8,12 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
-    public class ListView<T> where T : class, IUiItem {
+    public class CommandListView<T> where T : class, IUiItem {
         private readonly List<T> Items;
         private readonly Func<T> NewAction;
         private readonly bool DeleteButtonFirst;
 
-        public ListView( List<T> items, Func<T> newAction, bool deleteButtonFirst = false ) {
+        public CommandListView( List<T> items, Func<T> newAction, bool deleteButtonFirst = false ) {
             Items = items;
             NewAction = newAction;
             DeleteButtonFirst = deleteButtonFirst;

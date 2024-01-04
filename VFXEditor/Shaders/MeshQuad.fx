@@ -51,7 +51,6 @@ float4 PS(PS_IN input) : SV_Target
     
     if (N.w > 0.0f)
     {
-        // x * 2 - 1 = N >> ( N + 1 ) / 2
         float3 position = PositionTexture.Sample(Sampler, coords);
         float3 normal = N.xyz * 2.0f - 1.0f;
         

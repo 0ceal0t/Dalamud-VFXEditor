@@ -67,12 +67,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             return data.ToArray();
         }
 
-        public void Populate( List<MdlTerrainShadowSubmesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+        public void Populate(
+            List<MdlTerrainShadowSubmesh> submeshes, BinaryReader reader,
+            uint vertexBufferPos, uint indexBufferPos ) {
+
             Populate( reader, indexBufferPos );
 
             reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffset;
             RawVertexData = reader.ReadBytes( VertexCount * 8 );
-
 
             Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
             foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );

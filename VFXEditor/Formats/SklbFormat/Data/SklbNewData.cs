@@ -12,7 +12,7 @@ namespace VfxEditor.SklbFormat.Data {
         private readonly int DataSize;
         private readonly List<ParsedBase> Parsed;
         private readonly List<SklbDataParent> Parents = new();
-        private readonly ListView<SklbDataParent> ParentsView;
+        private readonly CommandListView<SklbDataParent> ParentsView;
 
         public SklbNewData( BinaryReader reader ) {
             DataSize = reader.ReadInt32();

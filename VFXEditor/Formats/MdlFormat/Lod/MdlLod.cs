@@ -2,6 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 using VfxEditor.Parsing;
@@ -112,25 +113,29 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate( List<MdlMesh> meshes, List<MdlTerrainShadowMesh> terrainShadows,
-            List<MdlSubMesh> submeshes, List<MdlTerrainShadowSubmesh> terrainShadowSubmeshes,
+        public void Populate(
+            List<MdlMesh> meshes,
+            List<MdlTerrainShadowMesh> terrainShadows,
+            List<MdlSubMesh> submeshes,
+            List<MdlTerrainShadowSubmesh> terrainShadowSubmeshes,
             BinaryReader reader, uint vertexBufferPos, uint indexBufferPos,
-            List<string> attributeStrings, List<string> materialStrings, List<string> boneStrings ) {
+            List<string> attributeStrings, List<string> materialStrings, List<string> boneStrings,
+            List<MdlBoneTable> boneTables ) {
 
             Meshes.AddRange( meshes.GetRange( _MeshIndex, _MeshCount ) );
-            foreach( var mesh in Meshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos );
+            foreach( var mesh in Meshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
 
             TerrainShadows.AddRange( terrainShadows.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
             foreach( var mesh in TerrainShadows ) mesh.Populate( terrainShadowSubmeshes, reader, vertexBufferPos, indexBufferPos );
 
             WaterMeshes.AddRange( meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
-            foreach( var mesh in WaterMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos );
+            foreach( var mesh in WaterMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
 
             ShadowMeshes.AddRange( meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
-            foreach( var mesh in ShadowMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos );
+            foreach( var mesh in ShadowMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
 
             VerticalFogMeshes.AddRange( meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
-            foreach( var mesh in VerticalFogMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos );
+            foreach( var mesh in VerticalFogMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
         }
     }
 }

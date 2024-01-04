@@ -62,7 +62,7 @@ namespace VfxEditor.DirectX {
         public LightData Light2;
     }
 
-    public class MaterialPreview : ModelDepthRenderer {
+    public class MaterialPreview : ModelRenderer {
         private readonly D3dDrawable Model;
 
         public MtrlFile CurrentFile { get; private set; }
@@ -95,7 +95,6 @@ namespace VfxEditor.DirectX {
                     new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
                 } );
-            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialDepth.fx" ), ShaderPassFlags.None );
             Model.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "Material.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, true, true );
@@ -149,7 +148,7 @@ namespace VfxEditor.DirectX {
             CurrentColorRow = null;
         }
 
-        protected override void OnDraw() {
+        protected override void DrawPasses() {
             if( SkipDraw ) return;
 
             var psBuffer = PSBufferData with {
@@ -165,24 +164,10 @@ namespace VfxEditor.DirectX {
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
-        }
-
-        protected override void DepthPass() {
-            if( SkipDraw ) return;
-
-            Model.Draw(
-                Ctx, PassType.GBuffer,
-                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
-        }
-
-        protected override void FinalPass() {
-            if( SkipDraw ) return;
 
             Ctx.PixelShader.SetSampler( 0, Sampler );
             Ctx.PixelShader.SetShaderResource( 0, DiffuseView );
             Ctx.PixelShader.SetShaderResource( 1, NormalView );
-            Ctx.PixelShader.SetShaderResource( 2, ShadowDepthResource );
 
             Model.Draw(
                 Ctx, PassType.Final,

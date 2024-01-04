@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
@@ -24,9 +25,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private readonly ushort _SubmeshIndex;
         private readonly ushort _SubmeshCount;
         private readonly uint[] _VertexBufferOffsets;
+        private readonly ushort _BoneTableIndex;
 
         private readonly ParsedString Material = new( "Material" );
-        private readonly ParsedShort BoneTableIndex = new( "Bone Table Index" ); // TODO
+
+        private MdlBoneTable BoneTable;
 
         private ushort VertexCount; // Maxes out at ushort.MaxValue
 
@@ -49,7 +52,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             _MaterialStringIdx = reader.ReadUInt16();
             _SubmeshIndex = reader.ReadUInt16();
             _SubmeshCount = reader.ReadUInt16();
-            BoneTableIndex.Read( reader );
+            _BoneTableIndex = reader.ReadUInt16();
             _IndexOffset = 2 * reader.ReadUInt32();
 
             _VertexBufferOffsets = new[] { reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32() };
@@ -59,7 +62,12 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
 
-        public void Populate( List<MdlSubMesh> submeshes, BinaryReader reader, uint vertexBufferPos, uint indexBufferPos ) {
+        public void Populate(
+            List<MdlSubMesh> submeshes, BinaryReader reader,
+            uint vertexBufferPos, uint indexBufferPos,
+            List<string> materialStrings, List<string> boneStrings,
+            List<MdlBoneTable> boneTables ) {
+
             Populate( reader, indexBufferPos );
 
             RawVertexData = new();
@@ -71,25 +79,32 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             }
 
             Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
-            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos, boneStrings );
+
+            Material.Value = materialStrings[_MaterialStringIdx];
+
+            BoneTable = boneTables[_BoneTableIndex];
         }
 
         public override void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Mesh" ) ) {
+            using( var tab = ImRaii.TabItem( "Preview" ) ) {
                 if( tab ) DrawMesh();
             }
 
             using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
                 if( tab ) SubmeshView.Draw();
             }
+
+            using( var tab = ImRaii.TabItem( "Bone Table" ) ) {
+                if( tab ) BoneTable.Draw();
+            }
         }
 
         private void DrawMesh() {
             Material.Draw();
-            BoneTableIndex.Draw();
             DrawPreview();
         }
     }

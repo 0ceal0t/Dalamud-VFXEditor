@@ -19,7 +19,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         private readonly ushort TempOffset;
         private readonly ushort TempSize;
 
-        private readonly ListView<ParsedFloat> ValueView;
+        private readonly CommandListView<ParsedFloat> ValueView;
 
         public MtrlMaterialParameter( MtrlFile file ) {
             File = file;

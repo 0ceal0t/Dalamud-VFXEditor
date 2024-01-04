@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;
@@ -78,8 +79,6 @@ namespace VfxEditor.Formats.MdlFormat {
         // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
-            // ===== HEADER =====
-
             Version = reader.ReadUInt32();
             reader.ReadUInt32(); // stack size
             reader.ReadUInt32(); // runtime size
@@ -172,7 +171,7 @@ namespace VfxEditor.Formats.MdlFormat {
 
             if( ExtraLodEnabled ) {
                 Dalamud.Error( "Extra LoD" );
-                for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( reader ) );
+                for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( this, reader ) );
             }
             ExtraLodView = new( "Level of Detail", ExtraLods, null, null, null, false ); ;
 
@@ -181,7 +180,7 @@ namespace VfxEditor.Formats.MdlFormat {
             var meshes = new List<MdlMesh>();
             for( var i = 0; i < meshCount; i++ ) meshes.Add( new( this, vertexFormats[i], reader ) );
 
-            var attributeStrings = new List<string>( 0 );
+            var attributeStrings = new List<string>();
             for( var i = 0; i < attributeCount; i++ ) {
                 attributeStrings.Add( stringOffsets[reader.ReadUInt32()] );
             }
@@ -195,17 +194,20 @@ namespace VfxEditor.Formats.MdlFormat {
             var terrainShadowSubmeshes = new List<MdlTerrainShadowSubmesh>();
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) terrainShadowSubmeshes.Add( new( reader ) );
 
-            var materialStrings = new List<string>( 0 );
+            var materialStrings = new List<string>();
             for( var i = 0; i < materialCount; i++ ) {
                 materialStrings.Add( stringOffsets[reader.ReadUInt32()] );
             }
 
-            var boneStrings = new List<string>( 0 );
+            var boneStrings = new List<string>();
             for( var i = 0; i < boneCount; i++ ) {
-                attributeStrings.Add( stringOffsets[reader.ReadUInt32()] );
+                boneStrings.Add( stringOffsets[reader.ReadUInt32()] );
             }
 
-            // TODO: Bone Tables
+            var boneTables = new List<MdlBoneTable>();
+            for( var i = 0; i < boneTableCount; i++ ) {
+                boneTables.Add( new( reader, boneStrings ) );
+            }
 
             // TODO: Shapes
 
@@ -222,7 +224,16 @@ namespace VfxEditor.Formats.MdlFormat {
             // ===== POPULATE =======
 
             for( var i = 0; i < Lods.Count; i++ ) {
-                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, terrainShadowSubmeshes, reader, vertexOffsets[i], indexOffsets[i], attributeStrings, materialStrings, boneStrings );
+                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, terrainShadowSubmeshes,
+                    reader, vertexOffsets[i], indexOffsets[i],
+                    attributeStrings, materialStrings, boneStrings, boneTables );
+            }
+
+            for( var i = 0; i < ExtraLods.Count; i++ ) {
+                // TODO: should this use vertexOffsets[i]?
+                ExtraLods[i].Populate( meshes, submeshes, reader,
+                    vertexOffsets[i], indexOffsets[i],
+                    attributeStrings, materialStrings, boneStrings, boneTables );
             }
         }
 
@@ -234,16 +245,16 @@ namespace VfxEditor.Formats.MdlFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
+            using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
+                if( tab ) LodView.Draw();
+            }
+
             using( var tab = ImRaii.TabItem( "Parameters" ) ) {
                 if( tab ) DrawParameters();
             }
 
             using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
                 if( tab ) EidView.Draw();
-            }
-
-            using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
-                if( tab ) LodView.Draw();
             }
 
             if( ExtraLodEnabled ) {
@@ -262,7 +273,7 @@ namespace VfxEditor.Formats.MdlFormat {
             using( var edited = new Edited() ) {
                 Flags2.Draw();
                 if( edited.IsEdited && ExtraLodEnabled && ExtraLods.Count == 0 ) {
-                    for( var i = 0; i < 3; i++ ) ExtraLods.Add( new() ); // Init extra LoD information
+                    for( var i = 0; i < 3; i++ ) ExtraLods.Add( new( this ) ); // Init extra LoD information
                 }
             }
             ModelClipOutDistance.Draw();

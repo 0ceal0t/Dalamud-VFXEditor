@@ -1,9 +1,17 @@
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.MdlFormat.Bone;
+using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Parsing;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Lod {
     public class MdlExtraLod : IUiItem {
+        public readonly MdlFile File;
+
         private readonly ushort _LightShaftMeshIndex;
         private readonly ushort _LightShaftMeshCount;
         private readonly ushort _GlassMeshIndex;
@@ -26,9 +34,28 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ParsedShort Unknown11 = new( "Unknown 11" );
         private readonly ParsedShort Unknown12 = new( "Unknown 12" );
 
-        public MdlExtraLod() { }
+        private readonly List<MdlMesh> LightShaftMeshes = new();
+        private readonly CommandDropdown<MdlMesh> LightShaftMeshView;
 
-        public MdlExtraLod( BinaryReader reader ) : this() {
+        private readonly List<MdlMesh> GlassMeshes = new();
+        private readonly CommandDropdown<MdlMesh> GlassMeshView;
+
+        private readonly List<MdlMesh> MaterialChangeMeshes = new();
+        private readonly CommandDropdown<MdlMesh> MaterialChangeMeshView;
+
+        private readonly List<MdlMesh> CrestChangeMeshes = new();
+        private readonly CommandDropdown<MdlMesh> CrestChangeMeshView;
+
+        public MdlExtraLod( MdlFile file ) {
+            File = file;
+
+            LightShaftMeshView = new( "Light Shaft Mesh", LightShaftMeshes, null, () => new( File ) );
+            GlassMeshView = new( "Glass Mesh", GlassMeshes, null, () => new( File ) );
+            MaterialChangeMeshView = new( "Material Change Mesh", MaterialChangeMeshes, null, () => new( File ) );
+            CrestChangeMeshView = new( "Crest Change Mesh", CrestChangeMeshes, null, () => new( File ) );
+        }
+
+        public MdlExtraLod( MdlFile file, BinaryReader reader ) : this( file ) {
             _LightShaftMeshIndex = reader.ReadUInt16();
             _LightShaftMeshCount = reader.ReadUInt16();
             _GlassMeshIndex = reader.ReadUInt16();
@@ -53,6 +80,53 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Draw() {
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) DrawParameters();
+            }
+
+            using( var tab = ImRaii.TabItem( "Light Shafts" ) ) {
+                if( tab ) LightShaftMeshView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Glass" ) ) {
+                if( tab ) GlassMeshView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Material Change" ) ) {
+                if( tab ) MaterialChangeMeshView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Crest Change" ) ) {
+                if( tab ) CrestChangeMeshView.Draw();
+            }
+        }
+
+        public void Populate(
+            List<MdlMesh> meshes,
+            List<MdlSubMesh> submeshes,
+            BinaryReader reader, uint vertexBufferPos, uint indexBufferPos,
+            List<string> attributeStrings, List<string> materialStrings, List<string> boneStrings,
+            List<MdlBoneTable> boneTables ) {
+
+            LightShaftMeshes.AddRange( meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
+            foreach( var mesh in LightShaftMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+
+            GlassMeshes.AddRange( meshes.GetRange( _GlassMeshIndex, _GlassMeshCount ) );
+            foreach( var mesh in GlassMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+
+            MaterialChangeMeshes.AddRange( meshes.GetRange( _MaterialChangeMeshIndex, _MaterialChangeMeshCount ) );
+            foreach( var mesh in MaterialChangeMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+
+            CrestChangeMeshes.AddRange( meshes.GetRange( _CrestChangetMeshIndex, _CrestChangeMeshCount ) );
+            foreach( var mesh in CrestChangeMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+        }
+
+        public void DrawParameters() {
+            using var child = ImRaii.Child( "Child" );
+
             Unknown1.Draw();
             Unknown2.Draw();
             Unknown3.Draw();

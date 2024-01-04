@@ -22,10 +22,10 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
 
         private readonly CommandSplitView<ShpkPass> PassView;
 
-        private readonly ListView<ShpkNodeKey> SystemKeyView;
-        private readonly ListView<ShpkNodeKey> SceneKeyView;
-        private readonly ListView<ShpkNodeKey> MaterialKeyView;
-        private readonly ListView<ShpkNodeKey> SubViewKeyView;
+        private readonly CommandListView<ShpkNodeKey> SystemKeyView;
+        private readonly CommandListView<ShpkNodeKey> SceneKeyView;
+        private readonly CommandListView<ShpkNodeKey> MaterialKeyView;
+        private readonly CommandListView<ShpkNodeKey> SubViewKeyView;
 
         public ShpkNode() {
             for( var i = 0; i < 16; i++ ) {
