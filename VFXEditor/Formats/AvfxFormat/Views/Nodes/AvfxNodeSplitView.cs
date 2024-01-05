@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.IO;
 using VfxEditor.Utils;
 
@@ -41,8 +41,6 @@ namespace VfxEditor.AvfxFormat {
         public NodeGroup<T> GetGroup() => Group;
 
         public string GetDefaultPath() => DefaultPath;
-
-        public T GetSelected() => Selected;
 
         public bool IsAllowedNew() => ShowControls;
 

@@ -6,6 +6,10 @@ namespace VfxEditor.DirectX {
         protected readonly Device Device;
         protected readonly DeviceContext Ctx;
 
+        private static int _Id = 0;
+        public static int NewId => _Id++;
+        public int CurrentRenderId { get; protected set; } = -1;
+
         public Renderer( Device device, DeviceContext ctx ) {
             Device = device;
             Ctx = ctx;

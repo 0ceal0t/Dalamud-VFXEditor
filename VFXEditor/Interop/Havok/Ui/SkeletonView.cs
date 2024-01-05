@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.IO;
 using System.Numerics;
@@ -10,8 +10,9 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Havok.Ui {
     public abstract class SkeletonView {
-        private readonly string Extension;
+        public readonly int RenderId = Renderer.NewId;
         private readonly FileManagerFile File;
+        private readonly string Extension;
 
         protected readonly BoneNamePreview Preview;
         protected HavokBones Bones;
@@ -26,7 +27,7 @@ namespace VfxEditor.Interop.Havok.Ui {
         }
 
         public void Draw() {
-            if( Bones != null && Preview.CurrentFile != File ) {
+            if( Bones != null && Preview.CurrentRenderId != RenderId ) {
                 UpdatePreview();
                 UpdateData();
             }
@@ -82,12 +83,8 @@ namespace VfxEditor.Interop.Havok.Ui {
         protected abstract void UpdateData();
 
         private void UpdatePreview() {
-            if( Bones?.BoneList.Count == 0 ) Preview.LoadEmpty( File );
-            else Preview.LoadSkeleton( File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList ).Build() );
-        }
-
-        public void Dispose() {
-            if( Preview.CurrentFile == File ) Preview.ClearFile();
+            if( Bones?.BoneList.Count == 0 ) Preview.LoadEmpty( RenderId, File );
+            else Preview.LoadSkeleton( RenderId, File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList ).Build() );
         }
     }
 }

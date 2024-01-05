@@ -1,7 +1,7 @@
+using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -128,11 +128,6 @@ namespace VfxEditor.PhybFormat {
 
         public override void OnChange() {
             PhysicsUpdated = true;
-        }
-
-        public override void Dispose() {
-            base.Dispose();
-            Skeleton.Dispose();
         }
     }
 }

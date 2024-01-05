@@ -9,7 +9,6 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Renderers {
     public class GradientRenderer : Renderer {
-        public AvfxCurve CurrentCurve { get; private set; }
         public nint Output => ShaderView.NativePointer;
 
         private readonly int Width = 900;
@@ -37,7 +36,8 @@ namespace VfxEditor.DirectX.Renderers {
         }
 
         public void SetGradient( AvfxCurve curve ) {
-            CurrentCurve = curve;
+            CurrentRenderId = curve.RenderId;
+
             var numPoints = curve.KeyList.Keys.Count;
             if( numPoints < 2 ) {
                 Gradient.ClearVertexes();

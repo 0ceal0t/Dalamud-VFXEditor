@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
-using VfxEditor.Formats.MtrlFormat;
 using VfxEditor.Formats.MtrlFormat.Table;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -65,9 +64,6 @@ namespace VfxEditor.DirectX {
     public class MaterialPreview : ModelRenderer {
         private readonly D3dDrawable Model;
 
-        public MtrlFile CurrentFile { get; private set; }
-        public MtrlColorTableRow CurrentColorRow { get; private set; }
-
         protected Buffer MaterialPixelShaderBuffer;
         protected PSMaterialBuffer PSBufferData;
         protected Buffer MaterialVertexShaderBuffer;
@@ -103,28 +99,24 @@ namespace VfxEditor.DirectX {
             Model.SetVertexes( Device, data, count );
         }
 
-        public void RefreshColorRow() => LoadColorRow( CurrentFile, CurrentColorRow );
-
-        public void LoadColorRow( MtrlFile file, MtrlColorTableRow row ) {
-            CurrentFile = file;
-            CurrentColorRow = row;
-
-            if( CurrentColorRow == null ) return;
+        public void LoadColorRow( MtrlColorTableRow row ) {
+            CurrentRenderId = row.RenderId;
+            if( row == null ) return;
 
             VSBufferData = VSBufferData with {
                 Repeat = new( row.MaterialRepeatX.Value, row.MaterialRepeatY.Value ),
                 Skew = new( row.MaterialSkew.Value.X, row.MaterialSkew.Value.Y ),
             };
 
-            var applyDye = CurrentColorRow.DyeData != null;
-            var dyeRow = CurrentColorRow.DyeRow;
+            var applyDye = row.DyeData != null;
+            var dyeRow = row.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? CurrentColorRow.DyeData.Diffuse : row.Diffuse.Value ),
-                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? CurrentColorRow.DyeData.Emissive : row.Emissive.Value ),
-                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? CurrentColorRow.DyeData.Specular : row.Specular.Value ),
-                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? CurrentColorRow.DyeData.Power : row.SpecularStrength.Value,
-                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? CurrentColorRow.DyeData.Gloss : row.GlossStrength.Value,
+                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? row.DyeData.Diffuse : row.Diffuse.Value ),
+                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? row.DyeData.Emissive : row.Emissive.Value ),
+                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? row.DyeData.Specular : row.Specular.Value ),
+                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? row.DyeData.Power : row.SpecularStrength.Value,
+                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? row.DyeData.Gloss : row.GlossStrength.Value,
             };
 
             // Clear out the old
@@ -141,11 +133,6 @@ namespace VfxEditor.DirectX {
             NormalView = GetTexture( normal.Layers[tileIdx], normal.Header.Height, normal.Header.Width, out NormalTexture );
 
             UpdateDraw();
-        }
-
-        public void ClearFile() {
-            CurrentFile = null;
-            CurrentColorRow = null;
         }
 
         protected override void DrawPasses() {

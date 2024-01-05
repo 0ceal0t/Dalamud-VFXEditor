@@ -1,9 +1,10 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.DirectX;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -15,6 +16,8 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public partial class AvfxCurve : AvfxOptional {
+        public readonly int RenderId = Renderer.NewId;
+
         private static int EDITOR_ID = 0;
         private readonly CurveType Type;
         private readonly int Id;

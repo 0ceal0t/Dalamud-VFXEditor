@@ -16,7 +16,7 @@ using Vec2 = System.Numerics.Vector2;
 
 namespace VfxEditor.DirectX {
     public class BoneNamePreview : BonePreview {
-        public FileManagerFile CurrentFile { get; private set; }
+        private bool IsSklb = false;
         private List<Bone> BoneList;
         private int NumWireframe = 0;
         private Buffer WireframeVertices;
@@ -25,9 +25,10 @@ namespace VfxEditor.DirectX {
 
         public BoneNamePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
 
-        public void LoadSkeleton( FileManagerFile file, List<Bone> boneList, BoneSkinnedMeshGeometry3D mesh ) {
+        public void LoadSkeleton( int renderId, FileManagerFile file, List<Bone> boneList, BoneSkinnedMeshGeometry3D mesh ) {
+            CurrentRenderId = renderId;
+            IsSklb = file is SklbFile;
             BoneList = boneList;
-            CurrentFile = file;
             LoadSkeleton( mesh );
         }
 
@@ -59,8 +60,9 @@ namespace VfxEditor.DirectX {
             Dalamud.Log( $"Loaded wireframe {NumWireframe}" );
         }
 
-        public void LoadEmpty( FileManagerFile file ) {
-            CurrentFile = file;
+        public void LoadEmpty( int renderId, FileManagerFile file ) {
+            CurrentRenderId = renderId;
+            IsSklb = file is SklbFile;
             NumWireframe = 0;
             BoneList = new();
             WireframeVertices?.Dispose();
@@ -111,10 +113,6 @@ namespace VfxEditor.DirectX {
             Ctx.GeometryShader.Set( null );
         }
 
-        public void ClearFile() {
-            CurrentFile = null;
-        }
-
         public override void Dispose() {
             base.Dispose();
             WireframeVertices?.Dispose();
@@ -154,7 +152,7 @@ namespace VfxEditor.DirectX {
 
             // ===== CONNECTION LINES =======
 
-            if( CurrentFile != null && CurrentFile is SklbFile && Plugin.Configuration.SklbBoneDisplay != BoneDisplay.Connected ) {
+            if( CurrentRenderId != -1 && IsSklb && Plugin.Configuration.SklbBoneDisplay != BoneDisplay.Connected ) {
                 foreach( var bone in BoneList ) {
                     if( bone.ParentIndex == -1 ) continue;
                     if( !ValidDepth( boneDepthMap[bone.Name] ) || !ValidDepth( boneDepthList[bone.ParentIndex] ) ) continue;

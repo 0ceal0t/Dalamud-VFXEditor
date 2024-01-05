@@ -3,12 +3,14 @@ using ImGuiNET;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Command;
+using VfxEditor.DirectX;
 using VfxEditor.Formats.MtrlFormat.Stm;
 using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTableRow : IUiItem {
+        public readonly int RenderId = Renderer.NewId;
         private readonly MtrlFile File;
 
         public MtrlDyeTableRow DyeRow { get; private set; }
@@ -123,9 +125,9 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
                 }
             }
 
-            if( Plugin.DirectXManager.MaterialPreview.CurrentColorRow != this || editing.IsEdited ) {
+            if( Plugin.DirectXManager.MaterialPreview.CurrentRenderId != RenderId || editing.IsEdited ) {
                 RefreshDye();
-                Plugin.DirectXManager.MaterialPreview.LoadColorRow( File, this );
+                Plugin.DirectXManager.MaterialPreview.LoadColorRow( this );
             }
             Plugin.DirectXManager.MaterialPreview.DrawInline();
         }

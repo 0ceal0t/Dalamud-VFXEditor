@@ -262,7 +262,7 @@ namespace VfxEditor.AvfxFormat {
 
         private void DrawGradient() {
             if( !IsColor || Keys.Count < 2 ) return;
-            if( Plugin.DirectXManager.GradientView.CurrentCurve != this ) Plugin.DirectXManager.GradientView.SetGradient( this );
+            if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) Plugin.DirectXManager.GradientView.SetGradient( this );
 
             var topLeft = new ImPlotPoint { x = Keys[0].DisplayX, y = 1 };
             var bottomRight = new ImPlotPoint { x = Keys[^1].DisplayX, y = -1 };

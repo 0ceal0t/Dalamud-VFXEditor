@@ -26,8 +26,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
         protected void DrawPreview() {
             if( Parent == null ) return;
 
-            if( Plugin.DirectXManager.MeshPreview.CurrentMesh != this ) {
-                Plugin.DirectXManager.MeshPreview.LoadMesh( Parent.File, this );
+            if( Plugin.DirectXManager.MeshPreview.CurrentRenderId != RenderId ) {
+                Plugin.DirectXManager.MeshPreview.LoadMesh( this );
             }
             Plugin.DirectXManager.MeshPreview.DrawInline();
         }

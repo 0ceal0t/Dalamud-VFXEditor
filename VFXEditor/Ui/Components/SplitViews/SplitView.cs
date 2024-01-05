@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Numerics;
 
 namespace VfxEditor.Ui.Components.SplitViews {
@@ -45,5 +45,7 @@ namespace VfxEditor.Ui.Components.SplitViews {
 
             ImGui.Columns( 1 );
         }
+
+        public T GetSelected() => Selected;
     }
 }

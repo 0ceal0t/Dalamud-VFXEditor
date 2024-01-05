@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -150,8 +150,7 @@ namespace VfxEditor.SklbFormat {
         }
 
         public override void Dispose() {
-            Bones?.Dispose();
-
+            base.Dispose();
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );
             Handles.Clear();
         }

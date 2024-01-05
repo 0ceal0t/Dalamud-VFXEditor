@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -193,11 +193,8 @@ namespace VfxEditor.PapFormat {
         }
 
         public override void Dispose() {
+            base.Dispose();
             MotionData?.Dispose();
-            if( Plugin.DirectXManager.PapPreview.CurrentFile == this ) {
-                Plugin.DirectXManager.PapPreview.ClearFile();
-            }
-
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );
             Handles.Clear();
         }

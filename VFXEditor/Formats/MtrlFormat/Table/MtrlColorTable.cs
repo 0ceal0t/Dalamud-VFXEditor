@@ -5,6 +5,7 @@ using System.IO;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTable {
+        public readonly MtrlFile File;
         public const int Size = 16 * MtrlColorTableRow.Size;
 
         public readonly List<MtrlColorTableRow> Rows = new();
@@ -53,7 +54,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             if( ImGui.Selectable( dye == null ? "[NONE]" : dye.Name, PreviewDye == dye ) ) {
                 PreviewDye = dye;
                 foreach( var item in Rows ) item.SetPreviewDye( dye );
-                Plugin.DirectXManager.MaterialPreview.RefreshColorRow();
+                Plugin.DirectXManager.MaterialPreview.LoadColorRow( RowView.GetSelected() );
             }
 
             if( PreviewDye == dye ) ImGui.SetItemDefaultFocus();

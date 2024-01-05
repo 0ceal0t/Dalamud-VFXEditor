@@ -345,12 +345,5 @@ namespace VfxEditor.Formats.MtrlFormat {
         }
 
         private static uint Masked( uint flags ) => flags & ( ~0x11u );
-
-        public override void Dispose() {
-            base.Dispose();
-            if( Plugin.DirectXManager.MaterialPreview.CurrentFile == this ) {
-                Plugin.DirectXManager.MaterialPreview.ClearFile();
-            }
-        }
     }
 }

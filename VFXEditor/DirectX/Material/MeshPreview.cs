@@ -5,16 +5,12 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
-using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Material {
     public class MeshPreview : ModelDeferredRenderer {
         private readonly D3dDrawable Model;
-
-        public MdlFile CurrentFile { get; private set; }
-        public MdlMeshDrawable CurrentMesh { get; private set; }
 
         private readonly HashSet<Buffer> ToCleanUp = new();
 
@@ -43,26 +39,14 @@ namespace VfxEditor.DirectX.Material {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "MeshQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void RefreshMesh() {
-            CurrentMesh.RefreshBuffer( Device );
-            LoadMesh( CurrentFile, CurrentMesh );
-        }
-
-        public void LoadMesh( MdlFile file, MdlMeshDrawable mesh ) {
-            CurrentFile = file;
-            CurrentMesh = mesh;
-
-            if( CurrentMesh == null ) return;
+        public void LoadMesh( MdlMeshDrawable mesh ) {
+            CurrentRenderId = mesh.RenderId;
+            if( mesh == null ) return;
             var buffer = mesh.GetBuffer( Device );
             Model.SetVertexes( buffer, ( int )mesh.GetIndexCount() );
             ToCleanUp.Add( buffer );
 
             UpdateDraw();
-        }
-
-        public void ClearFile() {
-            CurrentFile = null;
-            CurrentMesh = null;
         }
 
         protected override void OnDrawUpdate() {

@@ -1,10 +1,12 @@
 using SharpDX.Direct3D11;
 using System;
 using System.IO;
+using VfxEditor.DirectX;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
     public abstract class MdlMeshDrawable {
+        public readonly int RenderId = Renderer.NewId;
         protected Buffer Data; // starts as null
 
         protected uint _IndexOffset;

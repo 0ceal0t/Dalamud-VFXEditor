@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using VfxEditor.Data.Command.ListCommands;
@@ -38,8 +38,6 @@ namespace VfxEditor.Ui.Components.SplitViews {
         }
 
         protected override string GetText( T item, int idx ) => GetTextAction == null ? base.GetText( item, idx ) : GetTextAction.Invoke( item, idx );
-
-        public T GetSelected() => Selected;
 
         public void SetSelected( T item ) => Selected = item;
     }

@@ -1,8 +1,8 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -29,6 +29,7 @@ namespace VfxEditor.PapFormat.Motion {
     }
 
     public unsafe class PapMotion {
+        public readonly int RenderId = Renderer.NewId;
         public readonly PapFile File;
         public readonly hkaAnimatedSkeleton* AnimatedSkeleton;
         public readonly hkaAnimationControl* AnimationControl;
@@ -70,7 +71,7 @@ namespace VfxEditor.PapFormat.Motion {
             if( Data == null ) {
                 UpdateFrameData();
             }
-            else if( PapPreview.CurrentMotion != this ) {
+            else if( PapPreview.CurrentRenderId != RenderId ) {
                 Frame = 0;
                 Playing = false;
                 UpdateFrameData();
@@ -247,10 +248,10 @@ namespace VfxEditor.PapFormat.Motion {
 
         private void UpdatePreview() {
             if( Data == null || Data.Count == 0 || TotalFrames == 0 ) {
-                PapPreview.LoadEmpty( File, this );
+                PapPreview.LoadEmpty( this );
             }
             else {
-                PapPreview.LoadSkeleton( File, this, new ConnectedSkeletonMeshBuilder( Data, -1, GetUnanimatedBones() ).Build() );
+                PapPreview.LoadSkeleton( this, new ConnectedSkeletonMeshBuilder( Data, -1, GetUnanimatedBones() ).Build() );
             }
         }
 
@@ -258,7 +259,6 @@ namespace VfxEditor.PapFormat.Motion {
             AnimatedSkeleton->removeAnimationControl( AnimationControl );
             Marshal.FreeHGlobal( ( nint )AnimatedSkeleton );
             Marshal.FreeHGlobal( ( nint )AnimationControl );
-            if( PapPreview.CurrentMotion == this ) PapPreview.ClearAnimation();
         }
     }
 }
