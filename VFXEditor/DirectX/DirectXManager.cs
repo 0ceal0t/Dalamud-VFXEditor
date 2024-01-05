@@ -18,7 +18,7 @@ namespace VfxEditor.DirectX {
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
         public readonly MaterialPreview MaterialPreview;
-        public readonly MeshPreview MeshPreview;
+        public readonly SsaoPreview MeshPreview;
 
         private readonly List<ModelRenderer> Renderers = new();
 

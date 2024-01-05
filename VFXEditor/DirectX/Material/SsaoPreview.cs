@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
-using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Material {
-    public class MeshPreview : ModelDeferredRenderer {
+    public class SsaoPreview : ModelDeferredRenderer {
         private readonly D3dDrawable Model;
 
         private readonly HashSet<Buffer> ToCleanUp = new();
@@ -19,7 +18,7 @@ namespace VfxEditor.DirectX.Material {
         protected Buffer MaterialVertexShaderBuffer;
         protected VSMaterialBuffer VSBufferData;
 
-        public MeshPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
+        public SsaoPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
@@ -39,15 +38,15 @@ namespace VfxEditor.DirectX.Material {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "MeshQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadMesh( MdlMeshDrawable mesh ) {
-            CurrentRenderId = mesh.RenderId;
-            if( mesh == null ) return;
-            var buffer = mesh.GetBuffer( Device );
-            Model.SetVertexes( buffer, ( int )mesh.GetIndexCount() );
-            ToCleanUp.Add( buffer );
+        //public void LoadMesh( MdlMeshDrawable mesh ) {
+        //    CurrentRenderId = mesh.RenderId;
+        //    if( mesh == null ) return;
+        //    var buffer = mesh.GetBuffer( Device );
+        //    Model.SetVertexes( buffer, ( int )mesh.GetIndexCount() );
+        //    ToCleanUp.Add( buffer );
 
-            UpdateDraw();
-        }
+        //    UpdateDraw();
+        //}
 
         protected override void OnDrawUpdate() {
             var psBuffer = PSBufferData with {
