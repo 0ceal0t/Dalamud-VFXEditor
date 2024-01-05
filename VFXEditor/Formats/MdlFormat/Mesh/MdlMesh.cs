@@ -3,9 +3,11 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
@@ -62,28 +64,28 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
 
-        public void Populate(
-            List<MdlSubMesh> submeshes, BinaryReader reader,
-            uint vertexBufferPos, uint indexBufferPos,
-            List<string> materialStrings, List<string> boneStrings,
-            List<MdlBoneTable> boneTables ) {
-
-            Populate( reader, indexBufferPos );
+        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
+            Populate( reader, data.IndexBufferOffsets[lod] );
 
             RawVertexData = new();
             for( var i = 0; i < 3; i++ ) {
                 var stride = Format.GetStride( i );
                 if( stride == 0 ) continue;
-                reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffsets[i];
+                reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffsets[i];
                 RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );
             }
 
-            Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
-            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos, boneStrings );
+            Submeshes.AddRange( data.SubMeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, data, reader, data.IndexBufferOffsets[lod] );
 
-            Material.Value = materialStrings[_MaterialStringIdx];
+            Material.Value = data.MaterialStrings[_MaterialStringIdx];
 
-            BoneTable = boneTables[_BoneTableIndex];
+            // Skip bone table if no bones
+            BoneTable = _BoneTableIndex == 255 ? new() : data.BoneTables[_BoneTableIndex];
+
+            foreach( var shape in data.Shapes ) {
+                var shapeMeshes = shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 );
+            }
         }
 
         public override void Draw() {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
@@ -67,17 +68,15 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             return data.ToArray();
         }
 
-        public void Populate(
-            List<MdlTerrainShadowSubmesh> submeshes, BinaryReader reader,
-            uint vertexBufferPos, uint indexBufferPos ) {
+        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
 
-            Populate( reader, indexBufferPos );
+            Populate( reader, data.IndexBufferOffsets[lod] );
 
-            reader.BaseStream.Position = vertexBufferPos + _VertexBufferOffset;
+            reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffset;
             RawVertexData = reader.ReadBytes( VertexCount * 8 );
 
-            Submeshes.AddRange( submeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
-            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, indexBufferPos );
+            Submeshes.AddRange( data.TerrainShadowSubmeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, data.IndexBufferOffsets[lod] );
         }
 
         public override void Draw() {

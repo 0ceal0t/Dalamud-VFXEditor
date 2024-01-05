@@ -8,6 +8,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
         protected Buffer Data; // starts as null
 
         protected uint _IndexOffset;
+
+        protected uint StartOffset => _IndexOffset / 2;
+
         protected uint IndexCount;
 
         protected byte[] RawIndexData = Array.Empty<byte>();

@@ -2,8 +2,8 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
@@ -104,24 +104,19 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate(
-            List<MdlMesh> meshes,
-            List<MdlSubMesh> submeshes,
-            BinaryReader reader, uint vertexBufferPos, uint indexBufferPos,
-            List<string> attributeStrings, List<string> materialStrings, List<string> boneStrings,
-            List<MdlBoneTable> boneTables ) {
+        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
 
-            LightShaftMeshes.AddRange( meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
-            foreach( var mesh in LightShaftMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+            LightShaftMeshes.AddRange( data.Meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
+            foreach( var mesh in LightShaftMeshes ) mesh.Populate( data, reader, lod );
 
-            GlassMeshes.AddRange( meshes.GetRange( _GlassMeshIndex, _GlassMeshCount ) );
-            foreach( var mesh in GlassMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+            GlassMeshes.AddRange( data.Meshes.GetRange( _GlassMeshIndex, _GlassMeshCount ) );
+            foreach( var mesh in GlassMeshes ) mesh.Populate( data, reader, lod );
 
-            MaterialChangeMeshes.AddRange( meshes.GetRange( _MaterialChangeMeshIndex, _MaterialChangeMeshCount ) );
-            foreach( var mesh in MaterialChangeMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+            MaterialChangeMeshes.AddRange( data.Meshes.GetRange( _MaterialChangeMeshIndex, _MaterialChangeMeshCount ) );
+            foreach( var mesh in MaterialChangeMeshes ) mesh.Populate( data, reader, lod );
 
-            CrestChangeMeshes.AddRange( meshes.GetRange( _CrestChangetMeshIndex, _CrestChangeMeshCount ) );
-            foreach( var mesh in CrestChangeMeshes ) mesh.Populate( submeshes, reader, vertexBufferPos, indexBufferPos, materialStrings, boneStrings, boneTables );
+            CrestChangeMeshes.AddRange( data.Meshes.GetRange( _CrestChangetMeshIndex, _CrestChangeMeshCount ) );
+            foreach( var mesh in CrestChangeMeshes ) mesh.Populate( data, reader, lod );
         }
 
         public void DrawParameters() {

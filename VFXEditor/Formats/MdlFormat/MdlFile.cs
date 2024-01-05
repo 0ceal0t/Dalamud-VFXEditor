@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command;
 using VfxEditor.FileManager;
-using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
-using VfxEditor.Formats.MdlFormat.Mesh;
-using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
@@ -79,23 +77,21 @@ namespace VfxEditor.Formats.MdlFormat {
         // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
+            var data = new MdlReaderData();
+
             Version = reader.ReadUInt32();
             reader.ReadUInt32(); // stack size
             reader.ReadUInt32(); // runtime size
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
 
-            var vertexOffsets = new List<uint>();
-            for( var i = 0; i < 3; i++ ) vertexOffsets.Add( reader.ReadUInt32() );
+            for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
 
-            var indexOffsets = new List<uint>();
-            for( var i = 0; i < 3; i++ ) indexOffsets.Add( reader.ReadUInt32() );
+            for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
 
-            var vertexBufferSizes = new List<uint>();
-            for( var i = 0; i < 3; i++ ) vertexBufferSizes.Add( reader.ReadUInt32() );
+            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // vertex buffer sizes
 
-            var indexBufferSizes = new List<uint>();
-            for( var i = 0; i < 3; i++ ) indexBufferSizes.Add( reader.ReadUInt32() );
+            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // index buffer sizes
 
             var _lodCount = reader.ReadByte();
             IndexBufferStreaming.Read( reader );
@@ -115,12 +111,11 @@ namespace VfxEditor.Formats.MdlFormat {
             var stringStartPos = reader.BaseStream.Position;
             var stringEndPos = reader.BaseStream.Position + stringSize;
 
-            var stringOffsets = new Dictionary<uint, string>();
             for( var i = 0; i < stringCount; i++ ) {
                 var pos = reader.BaseStream.Position - stringStartPos;
                 var value = FileUtils.ReadString( reader );
                 Dalamud.Log( $"string: {pos} {value}" );
-                stringOffsets[( uint )pos] = value;
+                data.StringOffsets[( uint )pos] = value;
             }
 
             reader.BaseStream.Position = stringEndPos;
@@ -161,7 +156,7 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ====== DATA ========
 
-            for( var i = 0; i < elementIdCount; i++ ) Eids.Add( new( stringOffsets, reader ) );
+            for( var i = 0; i < elementIdCount; i++ ) Eids.Add( new( data.StringOffsets, reader ) );
             EidView = new( "Bind Point", Eids, false, null, () => new() );
 
             // ====== LOD ========
@@ -177,45 +172,33 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ===== MESHES ========
 
-            var meshes = new List<MdlMesh>();
-            for( var i = 0; i < meshCount; i++ ) meshes.Add( new( this, vertexFormats[i], reader ) );
+            for( var i = 0; i < meshCount; i++ ) data.Meshes.Add( new( this, vertexFormats[i], reader ) );
 
-            var attributeStrings = new List<string>();
-            for( var i = 0; i < attributeCount; i++ ) {
-                attributeStrings.Add( stringOffsets[reader.ReadUInt32()] );
-            }
+            for( var i = 0; i < attributeCount; i++ ) data.AttributeStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
 
-            var terrainShadowMeshes = new List<MdlTerrainShadowMesh>();
-            for( var i = 0; i < terrainShadowMeshCount; i++ ) terrainShadowMeshes.Add( new( this, reader ) );
+            for( var i = 0; i < terrainShadowMeshCount; i++ ) data.TerrainShadowMeshes.Add( new( this, reader ) );
 
-            var submeshes = new List<MdlSubMesh>();
-            for( var i = 0; i < submeshCount; i++ ) submeshes.Add( new( reader ) );
+            for( var i = 0; i < submeshCount; i++ ) data.SubMeshes.Add( new( reader ) );
 
-            var terrainShadowSubmeshes = new List<MdlTerrainShadowSubmesh>();
-            for( var i = 0; i < terrainShadowSubmeshCount; i++ ) terrainShadowSubmeshes.Add( new( reader ) );
+            for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
 
-            var materialStrings = new List<string>();
-            for( var i = 0; i < materialCount; i++ ) {
-                materialStrings.Add( stringOffsets[reader.ReadUInt32()] );
-            }
+            for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
 
-            var boneStrings = new List<string>();
-            for( var i = 0; i < boneCount; i++ ) {
-                boneStrings.Add( stringOffsets[reader.ReadUInt32()] );
-            }
+            for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
 
-            var boneTables = new List<MdlBoneTable>();
-            for( var i = 0; i < boneTableCount; i++ ) {
-                boneTables.Add( new( reader, boneStrings ) );
-            }
+            for( var i = 0; i < boneTableCount; i++ ) data.BoneTables.Add( new( reader, data.BoneStrings ) );
 
-            // TODO: Shapes
+            // // ======== SHAPES ============
 
-            // TODO: Shape Meshes
+            for( var i = 0; i < shapeCount; i++ ) data.Shapes.Add( new( reader, data.StringOffsets ) );
 
-            // TODO: Shape Values
+            for( var i = 0; i < shapeMeshCount; i++ ) data.ShapesMeshes.Add( new( reader ) );
 
-            // TODO: Submesh bone map
+            for( var i = 0; i < shapeValueCount; i++ ) data.ShapeValues.Add( new( reader ) );
+
+            var submeshBoneMapSize = reader.ReadUInt32();
+            for( var i = 0; i < submeshBoneMapSize / 2; i++ ) data.SubmeshBoneMap.Add( reader.ReadUInt16() );
+
 
             // TODO: Padding
 
@@ -223,18 +206,11 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ===== POPULATE =======
 
-            for( var i = 0; i < Lods.Count; i++ ) {
-                Lods[i].Populate( meshes, terrainShadowMeshes, submeshes, terrainShadowSubmeshes,
-                    reader, vertexOffsets[i], indexOffsets[i],
-                    attributeStrings, materialStrings, boneStrings, boneTables );
-            }
+            foreach( var shape in data.Shapes ) shape.Populate( data );
 
-            for( var i = 0; i < ExtraLods.Count; i++ ) {
-                // TODO: should this use vertexOffsets[i]?
-                ExtraLods[i].Populate( meshes, submeshes, reader,
-                    vertexOffsets[i], indexOffsets[i],
-                    attributeStrings, materialStrings, boneStrings, boneTables );
-            }
+            for( var i = 0; i < Lods.Count; i++ ) Lods[i].Populate( data, reader, i );
+
+            for( var i = 0; i < ExtraLods.Count; i++ ) ExtraLods[i].Populate( data, reader, i ); // TODO: should this use vertexOffsets[i]?
         }
 
         public override void Write( BinaryWriter writer ) {
