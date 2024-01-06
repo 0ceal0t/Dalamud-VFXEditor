@@ -30,6 +30,9 @@ namespace VfxEditor.DirectX.Renderers {
         public int ShowEdges;
         public Vector2 Size;
         public float _Pad0;
+
+        public Vector3 CameraPosition;
+        public float _Pad1;
     }
 
     public abstract class ModelRenderer : Renderer {
@@ -241,6 +244,7 @@ namespace VfxEditor.DirectX.Renderers {
             var psBuffer = new PSBufferStruct {
                 ShowEdges = ShowEdges() ? 1 : 0,
                 Size = new( Width, Height ),
+                CameraPosition = CameraPosition
             };
 
             Ctx.UpdateSubresource( ref vsBuffer, VertexShaderBuffer );

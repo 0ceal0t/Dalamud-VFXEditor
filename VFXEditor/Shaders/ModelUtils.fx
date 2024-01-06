@@ -12,4 +12,5 @@ cbuffer PSConstants : register(b0)
 {
     int ShowEdges;
     float2 Size;
+    float3 CameraPosition;
 }

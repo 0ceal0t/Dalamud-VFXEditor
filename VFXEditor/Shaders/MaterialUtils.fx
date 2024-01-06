@@ -91,11 +91,12 @@ float computeSpecular(float3 viewDirection, float3 worldPos, float radius, float
     float3 V = normalize(viewDirection - worldPos);
     
     float df = dot(-lightDir, N);
-    if (df < 0.0f)
+    float result = phongSpecular(L, V, N, SpecularIntensity * 10) * SpecularPower * falloff;
+    if (df > 0.0f)
     {
-        return phongSpecular(L, V, N, SpecularIntensity * 10) * SpecularPower * falloff;
+        result = 0;
     }
-    return 0.0f;
+    return result;
 }
 
 float3 computeSpecular(LightData data, float3 worldPos, float3 N)

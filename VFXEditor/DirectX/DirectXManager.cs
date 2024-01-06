@@ -2,7 +2,6 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.DirectX.Material;
 using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -18,7 +17,6 @@ namespace VfxEditor.DirectX {
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
         public readonly MaterialPreview MaterialPreview;
-        public readonly SsaoPreview MeshPreview;
 
         private readonly List<ModelRenderer> Renderers = new();
 
@@ -37,7 +35,6 @@ namespace VfxEditor.DirectX {
             SklbPreview = new( Device, Ctx, shaderPath );
             EidPreview = new( Device, Ctx, shaderPath );
             MaterialPreview = new( Device, Ctx, shaderPath );
-            MeshPreview = new( Device, Ctx, shaderPath );
 
             Renderers = new() {
                 ModelPreview,
@@ -46,13 +43,11 @@ namespace VfxEditor.DirectX {
                 SklbPreview,
                 EidPreview,
                 MaterialPreview,
-                MeshPreview,
             };
         }
 
         public void RedrawMaterials() {
             MaterialPreview.Redraw();
-            MeshPreview.Redraw();
         }
 
         public void Redraw() => Renderers.ForEach( x => x.Redraw() );
