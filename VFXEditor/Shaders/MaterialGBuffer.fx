@@ -41,10 +41,10 @@ PS_IN VS(VS_IN input)
     output.Position = mul(ProjectionMatrix, viewModelPosition);
     output.WorldPos = worldPosition.xyz;
     
-    float3x3 normalMatrix = transpose((float3x3) NormalMatrix);
-    output.Normal = mul(normalMatrix, input.norm.xyz);
-    output.Tangent = mul(normalMatrix, input.tangent.xyz);
-    output.Bitangent = mul(normalMatrix, input.bitangent.xyz);
+    float3x3 normalMatrix = (float3x3) NormalMatrix;
+    output.Normal = mul(normalMatrix, normalize(input.norm.xyz));
+    output.Tangent = mul(normalMatrix, normalize(input.tangent.xyz));
+    output.Bitangent = mul(normalMatrix, normalize(input.bitangent.xyz));
     
     output.TexCoords = input.uv.xy * Repeat + (float2(input.uv.y, input.uv.x) * Skew);
 
@@ -55,11 +55,12 @@ PS_IN VS(VS_IN input)
 GBUFFER PS(PS_IN input)
 {
     float3 tangent = normalize(input.Tangent);
-    float3 biTangent = normalize(input.Bitangent);
     float3 bumpMap = NormalTexture.Sample(Sampler, input.TexCoords).xyz;
     float3 N = normalize(input.Normal);
+    
+    float3 biTangent = normalize(cross(N, tangent));
     bumpMap = mad(2.0f, bumpMap, -1.0f);
-    N += mad(bumpMap.z, tangent, bumpMap.y * biTangent);
+    N -= mad(bumpMap.z, tangent, bumpMap.y * biTangent);
     N = normalize(N);
     
     float3 specular = computeSpecular(Light1, input.WorldPos, N) + computeSpecular(Light2, input.WorldPos, N);
@@ -71,7 +72,7 @@ GBUFFER PS(PS_IN input)
     color += EmissiveColor;
     color += DiffuseColor * sampledDiffuse * diffuse * 0.6f;
     color += SpecularColor * specular * 0.5f;
-    
+
     float4 finalColor = float4(color, 1);
     
     GBUFFER result = (GBUFFER) 0;

@@ -22,10 +22,8 @@ cbuffer PSMaterialConstants : register(b1)
     float SpecularIntensity;
     
     float3 AmbientColor;
-    float Roughness;
-    float Albedo;
     
-    float3 ViewDirection;
+    float3 EyePosition;
     LightData Light1;
     LightData Light2;
 }
@@ -38,68 +36,47 @@ float attenuation(float r, float f, float d)
     return max(t, 0.0f);
 }
 
-float phongSpecular(float3 lightDirection, float3 viewDirection, float3 surfaceNormal, float shininess)
-{
-    float3 R = -reflect(lightDirection, surfaceNormal); // Should be negative?
-    return pow(max(0.0f, dot(viewDirection, R)), shininess);
-}
-
 float3 toGamma(float3 v)
 {
     float gamma = 1.0f / 2.2f;
     return float3(pow(v.x, gamma), pow(v.y, gamma), pow(v.z, gamma));
 }
 
-float orenNayarDiffuse(float3 lightDirection, float3 viewDirection, float3 surfaceNormal, float roughness, float albedo)
+float3 computeDiffuse(LightData light, float3 worldPos, float3 N)
 {
-    float LdotV = dot(lightDirection, viewDirection);
-    float NdotL = dot(lightDirection, surfaceNormal);
-    float NdotV = dot(surfaceNormal, viewDirection);
-
-    float s = LdotV - NdotL * NdotV;
-    float t = lerp(1.0f, max(NdotL, NdotV), step(0.0f, s));
-
-    float sigma2 = roughness * roughness;
-    float A = 1.0f + sigma2 * (albedo / (sigma2 + 0.13f) + 0.5f / (sigma2 + 0.33f));
-    float B = 0.45f * sigma2 / (sigma2 + 0.09f);
-
-    return albedo * max(0.0f, NdotL) * (A + B * s / t) / 3.14159265f;
-}
-
-float computeDiffuse(float3 viewDirection, float3 worldPos, float radius, float lightFalloff, float3 lightPos, float3 N)
-{
-    float3 lightDir = lightPos - worldPos;
-    float lightDistance = length(lightDir);
-    float falloff = attenuation(radius, lightFalloff, lightDistance);
-    float3 L = normalize(lightDir);
-    float3 V = normalize(viewDirection - worldPos);
+    float3 L = light.Position - worldPos;
+    float distance = length(L);
+    L = L / distance;
+    float att = attenuation(light.Radius, light.Falloff, distance);
     
-    return orenNayarDiffuse(L, V, N, Roughness, Albedo) * falloff;
-}
-
-float3 computeDiffuse(LightData data, float3 worldPos, float3 N)
-{
-    return data.Color * computeDiffuse(ViewDirection, worldPos, data.Radius, data.Falloff, data.Position, N);
-}
-
-float computeSpecular(float3 viewDirection, float3 worldPos, float radius, float lightFalloff, float3 lightPos, float3 N)
-{
-    float3 lightDir = lightPos - worldPos;
-    float lightDistance = length(lightDir);
-    float falloff = attenuation(radius, lightFalloff, lightDistance);
-    float3 L = normalize(lightDir);
-    float3 V = normalize(viewDirection - worldPos);
-    
-    float df = dot(-lightDir, N);
-    float result = phongSpecular(L, V, N, SpecularIntensity * 10) * SpecularPower * falloff;
-    if (df > 0.0f)
+    float NdotL = max(0, dot(N, L));
+    float diffuse = NdotL * att;
+    if (diffuse < 0)
     {
-        result = 0;
+        diffuse = 0;
     }
-    return result;
+    return light.Color * diffuse;
 }
 
-float3 computeSpecular(LightData data, float3 worldPos, float3 N)
+float3 computeSpecular(LightData light, float3 worldPos, float3 N)
 {
-    return data.Color * computeSpecular(ViewDirection, worldPos, data.Radius, data.Falloff, data.Position, N);
+    float3 L = light.Position - worldPos;
+    float distance = length(L);
+    L = L / distance;
+    float att = attenuation(light.Radius, light.Falloff, distance);
+    
+    float3 V = normalize(EyePosition - worldPos);
+    float3 R = normalize(reflect(-L, N));
+    float RdotV = max(0, dot(R, V));
+    
+    float3 H = normalize(L + V);
+    float NdotH = max(0, dot(N, H));
+    
+    float specular = pow(RdotV, SpecularIntensity * 10) * SpecularPower * att;
+    if (specular < 0)
+    {
+        specular = 0;
+    }
+    
+    return light.Color * specular;
 }

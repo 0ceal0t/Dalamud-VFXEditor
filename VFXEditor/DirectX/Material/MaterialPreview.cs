@@ -48,14 +48,10 @@ namespace VfxEditor.DirectX {
         public float SpecularIntensity; // 0x30
         public Vector3 AmbientColor; // 0x34
 
-        public float Roughness; // 0x40
-        public float Albedo; // 0x44
-        public Vector2 _Pad2; // 0x48
+        public Vector3 EyePosition; // 0x40
+        public float _Pad3; // 0x4C
 
-        public Vector3 ViewDirection; // 0x50
-        public float _Pad3; // 0x5C
-
-        // ----- 0x60 ------
+        // ----- 0x50 ------
 
         public LightData Light1;
         public LightData Light2;
@@ -144,9 +140,7 @@ namespace VfxEditor.DirectX {
 
             var psBuffer = PSBufferData with {
                 AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
-                Roughness = Plugin.Configuration.MaterialRoughness,
-                Albedo = Plugin.Configuration.MaterialAlbedo,
-                ViewDirection = CameraPosition,
+                EyePosition = CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
             };

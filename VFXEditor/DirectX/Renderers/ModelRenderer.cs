@@ -30,9 +30,6 @@ namespace VfxEditor.DirectX.Renderers {
         public int ShowEdges;
         public Vector2 Size;
         public float _Pad0;
-
-        public Vector3 CameraPosition;
-        public float _Pad1;
     }
 
     public abstract class ModelRenderer : Renderer {
@@ -43,7 +40,7 @@ namespace VfxEditor.DirectX.Renderers {
         private Vector2 LastMousePos;
         private float Yaw;
         private float Pitch;
-        private Vector3 Position = new( 0, 0, 0 );
+        private Vector3 EyePosition = new( 0, 0, 0 );
         protected Vector3 CameraPosition;
         private float Distance = 5;
         protected Matrix LocalMatrix = Matrix.Scaling( new Vector3( -1, 1, 1 ) );
@@ -78,7 +75,7 @@ namespace VfxEditor.DirectX.Renderers {
         public ModelRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx ) {
             VertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             PixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSBufferStruct>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), Position, Vector3.UnitY );
+            ViewMatrix = Matrix.LookAtLH( new Vector3( 0, 0, -Distance ), EyePosition, Vector3.UnitY );
             RefreshRasterizeState();
             ResizeResources();
 
@@ -238,13 +235,12 @@ namespace VfxEditor.DirectX.Renderers {
                 CubeMatrix = cubeProj,
                 ProjectionMatrix = ProjMatrix,
                 ViewMatrix = ViewMatrix,
-                NormalMatrix = Matrix.Invert( LocalMatrix )
+                NormalMatrix = Matrix.Transpose( Matrix.Invert( LocalMatrix ) )
             };
 
             var psBuffer = new PSBufferStruct {
                 ShowEdges = ShowEdges() ? 1 : 0,
                 Size = new( Width, Height ),
-                CameraPosition = CameraPosition
             };
 
             Ctx.UpdateSubresource( ref vsBuffer, VertexShaderBuffer );
@@ -317,7 +313,7 @@ namespace VfxEditor.DirectX.Renderers {
                 LastMousePos = default;
                 Yaw = default;
                 Pitch = default;
-                Position = new( 0, 0, 0 );
+                EyePosition = new( 0, 0, 0 );
                 Distance = 5;
                 UpdateViewMatrix();
             }
@@ -374,7 +370,7 @@ namespace VfxEditor.DirectX.Renderers {
                     Pitch = Clamp( Pitch, -1.55f, 1.55f );
                 }
                 else {
-                    Position.Y += ( newPos.Y - LastMousePos.Y ) * 0.01f;
+                    EyePosition.Y += ( newPos.Y - LastMousePos.Y ) * 0.01f;
                 }
                 UpdateViewMatrix();
             }
@@ -393,9 +389,9 @@ namespace VfxEditor.DirectX.Renderers {
         public void UpdateViewMatrix() {
             var lookRotation = Quaternion.RotationYawPitchRoll( Yaw, Pitch, 0f );
             var lookDirection = Vector3.Transform( -Vector3.UnitZ, lookRotation );
-            CameraPosition = Position - Distance * lookDirection;
+            CameraPosition = EyePosition - Distance * lookDirection;
 
-            ViewMatrix = Matrix.LookAtLH( CameraPosition, Position, Vector3.UnitY );
+            ViewMatrix = Matrix.LookAtLH( CameraPosition, EyePosition, Vector3.UnitY );
             CubeMatrix = Matrix.LookAtLH( new Vector3( 0 ) - 1 * lookDirection, new Vector3( 0 ), Vector3.UnitY );
             Draw();
         }

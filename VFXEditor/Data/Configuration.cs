@@ -125,8 +125,6 @@ namespace VfxEditor {
 
         public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
         public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
-        public float MaterialRoughness = 0.2f;
-        public float MaterialAlbedo = 0.5f;
         public LightConfiguration Light1 = new( new( 2, 2, 2 ), new( 0.9153226f, 0.8648891f, 0.76768994f ), 10f, 0.1f );
         public LightConfiguration Light2 = new( new( -2, -2, -2 ), new( 0.39516127f, 0.28755587f, 0.2692833f ), 10f, 0.1f );
 
@@ -408,8 +406,6 @@ namespace VfxEditor {
         public void DrawDirectXMaterials() {
             var updated = false;
             updated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
-            updated |= ImGui.InputFloat( "Roughness", ref MaterialRoughness );
-            updated |= ImGui.InputFloat( "Albedo", ref MaterialAlbedo );
 
             if( ImGui.CollapsingHeader( "Light 1" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
