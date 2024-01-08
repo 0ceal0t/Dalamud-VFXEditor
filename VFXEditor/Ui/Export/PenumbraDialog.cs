@@ -4,16 +4,36 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Ui.Export.Categories;
 
 namespace VfxEditor.Ui.Export {
     [Serializable]
-    public class PenumbraMod {
+    public class PenumbraNamedItem {
         public string Name = "";
+        public string Description = "";
         public int Priority = 0;
+    }
+
+    [Serializable]
+    public class PenumbraMod : PenumbraNamedItem {
         public Dictionary<string, string> Files = new();
         public Dictionary<string, string> FileSwaps = new();
         public List<object> Manipulations = new();
-        public List<PenumbraMod> Options;
+    }
+
+    [Serializable]
+    public class PenumbraGroup : PenumbraNamedItem {
+        public string Type = "Single"; // Single / Multi
+        public uint DefaultSettings = 0; // Bitmask of 32 defaults
+        public List<PenumbraOption> Options = new();
+    }
+
+    [Serializable]
+    public class PenumbraOption : PenumbraNamedItem {
+        public Dictionary<string, string> Files = new();
+        public Dictionary<string, string> FileSwaps = new();
+        public List<object> Manipulations = new();
     }
 
     [Serializable]
@@ -28,6 +48,12 @@ namespace VfxEditor.Ui.Export {
     }
 
     public class PenumbraDialog : ExportDialog {
+        // Temp
+        private readonly ExportDialogCategorySet ToExport = new();
+
+
+
+
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
@@ -38,6 +64,17 @@ namespace VfxEditor.Ui.Export {
             } );
         }
 
+        // Temp
+        protected override void OnDraw() => ToExport.Draw();
+
+        protected override void OnRemoveDocument( IFileDocument document ) => ToExport.RemoveDocument( document );
+
+        protected override void OnReset() => ToExport.Reset();
+
+
+
+
+
         private void Export( string saveFile ) {
             try {
                 var saveDir = Path.GetDirectoryName( saveFile );
@@ -46,9 +83,13 @@ namespace VfxEditor.Ui.Export {
 
                 var filesOut = new Dictionary<string, string>();
 
-                foreach( var category in Categories ) {
-                    foreach( var item in category.GetItemsToExport() ) item.PenumbraExport( tempDir, filesOut );
+                // Temp
+                foreach( var category in ToExport.Categories ) {
+                    foreach( var item in category.GetItemsToExport() ) item.PenumbraExport( tempDir, "", filesOut );
                 }
+
+
+
 
                 var meta = new PenumbraMeta {
                     Name = ModName,

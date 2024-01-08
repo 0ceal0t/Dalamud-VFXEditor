@@ -26,9 +26,6 @@ namespace VfxEditor {
 
             CheckWorkspaceKeybinds();
 
-            TexToolsDialog.Tick();
-            PenumbraDialog.Tick();
-
             WindowSystem.Draw();
             TrackerManager.Draw();
 

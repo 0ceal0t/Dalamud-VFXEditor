@@ -1,7 +1,6 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
-using System.Collections.Generic;
-using System.Numerics;
+using ImGuiNET;
+using VfxEditor.FileManager.Interfaces;
 
 namespace VfxEditor.Ui.Export {
     public abstract class ExportDialog : DalamudWindow {
@@ -9,37 +8,54 @@ namespace VfxEditor.Ui.Export {
         protected string Author = "";
         protected string Version = "1.0.0";
 
-        protected readonly Dictionary<string, bool> ToExport = new();
-
-        protected readonly List<ExportDialogCategory> Categories = new();
-
-        public ExportDialog( string id ) : base( id, false, new( 600, 500 ), Plugin.WindowSystem ) {
-            foreach( var manager in Plugin.Managers ) {
-                if( manager == null ) continue;
-                ToExport[manager.GetId()] = false;
-
-                Categories.Add( new ExportDialogCategory( manager ) );
-            }
-        }
+        public ExportDialog( string id ) : base( id, false, new( 600, 500 ), Plugin.WindowSystem ) { }
 
         public override void DrawBody() {
             using var _ = ImRaii.PushId( WindowName );
 
-            ImGui.InputText( "Mod Name", ref ModName, 255 );
-            ImGui.InputText( "Author", ref Author, 255 );
-            ImGui.InputText( "Version", ref Version, 255 );
+            var width = ImGui.GetContentRegionAvail().X;
+            var inputWidth = width / 3.0f - ImGui.GetStyle().ItemInnerSpacing.X;
+
+            using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SetNextItemWidth( inputWidth );
+                ImGui.InputTextWithHint( "##Name", "Mod Name", ref ModName, 255 );
+
+                ImGui.SameLine();
+                ImGui.SetNextItemWidth( inputWidth );
+                ImGui.InputTextWithHint( "##Author", "Author", ref Author, 255 );
+
+                ImGui.SameLine();
+                ImGui.SetNextItemWidth( inputWidth );
+                ImGui.InputTextWithHint( "##Version", "Version", ref Version, 255 );
+
+                ImGui.SameLine();
+                if( ImGui.Button( "Export" ) ) OnExport();
+            }
+
+            ImGui.Separator();
 
             var footerHeight = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
-            using( var child = ImRaii.Child( "Child", new Vector2( 0, -footerHeight ), true ) ) {
-                foreach( var category in Categories ) category.Draw();
-            }
-
-            if( ImGui.Button( "Export" ) ) OnExport();
+            using var child = ImRaii.Child( "Child" );
+            OnDraw();
         }
+
+        protected abstract void OnDraw();
 
         protected abstract void OnExport();
 
-        public void Tick() => Categories.ForEach( x => x.Tick() );
+        protected abstract void OnReset();
+
+        protected abstract void OnRemoveDocument( IFileDocument document );
+
+        public static void Reset() {
+            Plugin.PenumbraDialog.OnReset();
+            Plugin.TexToolsDialog.OnReset();
+        }
+
+        public static void RemoveDocument( IFileDocument document ) {
+            Plugin.PenumbraDialog.OnRemoveDocument( document );
+            Plugin.TexToolsDialog.OnRemoveDocument( document );
+        }
     }
 }

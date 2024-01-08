@@ -179,6 +179,7 @@ namespace VfxEditor {
             VfxSpawn.Dispose();
             TmbSpawn.Dispose();
             FileBrowserManager.Dispose();
+            ExportDialog.Reset();
         }
     }
 }

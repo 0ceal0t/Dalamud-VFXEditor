@@ -9,7 +9,7 @@ namespace VfxEditor.FileManager.Interfaces {
         public bool CanExport();
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset );
-        public void PenumbraExport( string modFolder, Dictionary<string, string> filesOut );
+        public void PenumbraExport( string modFolder, string group, Dictionary<string, string> filesOut );
 
         public bool GetReplacePath( string path, out string replacePath );
     }

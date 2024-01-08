@@ -5,6 +5,7 @@ using System.IO;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
@@ -65,6 +66,8 @@ namespace VfxEditor.FileManager {
 
             DraggingItem = null;
             DocumentWindow.Reset();
+
+            ExportDialog.RemoveDocument( document );
 
             if( document == ActiveDocument ) {
                 ActiveDocument = Documents[0];

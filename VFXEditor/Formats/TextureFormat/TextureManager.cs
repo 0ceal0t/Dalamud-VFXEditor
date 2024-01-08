@@ -10,6 +10,7 @@ using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
 using VfxEditor.Select;
 using VfxEditor.Ui;
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat {
@@ -50,6 +51,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public void RemoveReplace( TextureReplace replace ) {
             Textures.Remove( replace );
             View.ClearSelected();
+            ExportDialog.RemoveDocument( replace );
         }
 
         public void Import( SelectResult result ) {

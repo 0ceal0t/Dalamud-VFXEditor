@@ -40,20 +40,22 @@ namespace VfxEditor.Select {
                 foreach( var file in files ) {
                     try {
                         var fileName = Path.GetFileName( file ).Replace( ".json", "" );
-                        var mod = JsonConvert.DeserializeObject<PenumbraMod>( File.ReadAllText( file ) );
-
-                        if( fileName == "default_mod" && mod.Files != null ) { // Default mod
-                            var defaultFiles = new List<(string, string)>();
-                            AddToFiles( mod, defaultFiles, modPath );
-                            loaded[fileName] = defaultFiles;
+                        if( fileName == "default_mod" ) {
+                            var mod = JsonConvert.DeserializeObject<PenumbraMod>( File.ReadAllText( file ) );
+                            if( mod.Files != null ) {
+                                var defaultFiles = new List<(string, string)>();
+                                AddToFiles( mod?.Files, defaultFiles, modPath );
+                                loaded[fileName] = defaultFiles;
+                            }
                         }
-                        else if( mod.Options != null ) { // Option group
-                            var groupName = mod.Name;
-
-                            foreach( var option in mod.Options.Where( x => x.Files != null ) ) {
-                                var optionFiles = new List<(string, string)>();
-                                AddToFiles( option, optionFiles, modPath );
-                                loaded[$"{groupName} / {option.Name}"] = optionFiles;
+                        else {
+                            var group = JsonConvert.DeserializeObject<PenumbraGroup>( File.ReadAllText( file ) );
+                            if( group.Options != null ) {
+                                foreach( var option in group.Options.Where( x => x.Files != null ) ) {
+                                    var optionFiles = new List<(string, string)>();
+                                    AddToFiles( option?.Files, optionFiles, modPath );
+                                    loaded[$"{group.Name} / {option.Name}"] = optionFiles;
+                                }
                             }
                         }
                     }
@@ -67,13 +69,11 @@ namespace VfxEditor.Select {
             }
         }
 
-        private void AddToFiles( PenumbraMod mod, List<(string, string)> files, string modPath ) {
-            if( mod == null || mod.Files == null ) return;
+        private void AddToFiles( Dictionary<string, string> filesToAdd, List<(string, string)> files, string modPath ) {
+            if( filesToAdd == null ) return;
 
-            foreach( var modFile in mod.Files ) {
-                var (gamePath, localFile) = modFile;
+            foreach( var (gamePath, localFile) in filesToAdd ) {
                 if( !gamePath.EndsWith( Dialog.Extension ) ) continue;
-
                 files.Add( (gamePath, Path.Join( modPath, localFile )) );
             }
         }

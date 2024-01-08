@@ -3,22 +3,22 @@ using System.IO;
 
 namespace VfxEditor.Utils {
     public static class PenumbraUtils {
-        public static void WriteBytes( byte[] data, string modFolder, string path, Dictionary<string, string> files ) {
-            var modFile = Path.Combine( modFolder, path );
-            var modFileFolder = Path.GetDirectoryName( modFile );
-            Directory.CreateDirectory( modFileFolder );
-            File.WriteAllBytes( modFile, data );
+        public static void WriteBytes( byte[] data, string modRootFolder, string group, string gamePath, Dictionary<string, string> files ) {
+            var filePath = string.IsNullOrEmpty( group ) ? gamePath : Path.Combine( group, gamePath );
+            var path = Path.Combine( modRootFolder, filePath );
+            Directory.CreateDirectory( Path.GetDirectoryName( path ) );
+            File.WriteAllBytes( path, data );
 
-            files[path] = path.Replace( '/', '\\' );
+            files[gamePath] = filePath.Replace( '/', '\\' );
         }
 
-        public static void CopyFile( string localPath, string modFolder, string path, Dictionary<string, string> files ) {
-            var modFile = Path.Combine( modFolder, path );
-            var modFileFolder = Path.GetDirectoryName( modFile );
-            Directory.CreateDirectory( modFileFolder );
-            File.Copy( localPath, modFile, true );
+        public static void CopyFile( string localPath, string modRootFolder, string group, string gamePath, Dictionary<string, string> files ) {
+            var filePath = string.IsNullOrEmpty( group ) ? gamePath : Path.Combine( group, gamePath );
+            var path = Path.Combine( modRootFolder, filePath );
+            Directory.CreateDirectory( Path.GetDirectoryName( path ) );
+            File.Copy( localPath, path, true );
 
-            files[path] = path.Replace( '/', '\\' );
+            files[gamePath] = filePath.Replace( '/', '\\' );
         }
     }
 }

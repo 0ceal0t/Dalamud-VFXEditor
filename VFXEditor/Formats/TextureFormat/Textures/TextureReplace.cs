@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -204,10 +204,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        public void PenumbraExport( string modFolder, Dictionary<string, string> filesOut ) {
+        public void PenumbraExport( string modFolder, string group, Dictionary<string, string> filesOut ) {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
-
-            PenumbraUtils.CopyFile( WriteLocation, modFolder, GamePath, filesOut );
+            PenumbraUtils.CopyFile( WriteLocation, modFolder, group, GamePath, filesOut );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {

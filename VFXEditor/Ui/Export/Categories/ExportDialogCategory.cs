@@ -1,11 +1,11 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui.Export {
+namespace VfxEditor.Ui.Export.Categories {
     public class ExportDialogCategory {
         public readonly IFileManager Manager;
 
@@ -73,11 +73,9 @@ namespace VfxEditor.Ui.Export {
 
         public IEnumerable<IFileDocument> GetItemsToExport() => Manager.GetDocuments().Where( DoExport );
 
-        public void Tick() {
-            var items = Manager.GetDocuments();
-            // Remove items there are no longer there
-            ToExport = ToExport.Where( x => items.Contains( x.Key ) ).ToDictionary( x => x.Key, x => x.Value );
-        }
+        public void Reset() => ToExport.Clear();
+
+        public void RemoveDocument( IFileDocument document ) => ToExport.Remove( document );
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
     }

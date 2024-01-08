@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Ui.Export.Categories;
 
 namespace VfxEditor.Ui.Export {
     public struct TTMPL {
@@ -32,6 +34,8 @@ namespace VfxEditor.Ui.Export {
     }
 
     public class TexToolsDialog : ExportDialog {
+        private readonly ExportDialogCategorySet ToExport = new();
+
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
@@ -42,6 +46,12 @@ namespace VfxEditor.Ui.Export {
             } );
         }
 
+        protected override void OnDraw() => ToExport.Draw();
+
+        protected override void OnRemoveDocument( IFileDocument document ) => ToExport.RemoveDocument( document );
+
+        protected override void OnReset() => ToExport.Reset();
+
         private void Export( string saveFile ) {
             try {
                 var simpleParts = new List<TTMPL_Simple>();
@@ -50,7 +60,7 @@ namespace VfxEditor.Ui.Export {
                 using var ms = new MemoryStream();
                 using var writer = new BinaryWriter( ms );
 
-                foreach( var category in Categories ) {
+                foreach( var category in ToExport.Categories ) {
                     foreach( var item in category.GetItemsToExport() ) item.TextoolsExport( writer, simpleParts, ref modOffset );
                 }
 

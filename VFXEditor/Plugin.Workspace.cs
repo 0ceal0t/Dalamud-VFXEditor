@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor {
@@ -81,6 +82,8 @@ namespace VfxEditor {
                 WorkspaceFileCount = Managers.Count - 1;
                 foreach( var manager in Managers.Where( x => x != null ) ) { manager.Reset( ResetType.ToDefault ); }
                 FileBrowserManager.Dispose();
+                ExportDialog.Reset();
+
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
@@ -143,6 +146,7 @@ namespace VfxEditor {
                 manager.WorkspaceImport( meta, loadLocation );
             }
             FileBrowserManager.Dispose();
+            ExportDialog.Reset();
 
             return true;
         }
