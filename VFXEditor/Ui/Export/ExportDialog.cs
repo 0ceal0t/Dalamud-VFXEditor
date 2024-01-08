@@ -13,7 +13,7 @@ namespace VfxEditor.Ui.Export {
         public override void DrawBody() {
             using var _ = ImRaii.PushId( WindowName );
 
-            var width = ImGui.GetContentRegionAvail().X;
+            var width = ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize( "Export" ).X - ImGui.GetStyle().ItemInnerSpacing.X - ImGui.GetStyle().FramePadding.X * 2;
             var inputWidth = width / 3.0f - ImGui.GetStyle().ItemInnerSpacing.X;
 
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {

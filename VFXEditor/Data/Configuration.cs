@@ -12,6 +12,7 @@ using VfxEditor.Library;
 using VfxEditor.Select;
 using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui;
+using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor {
     [Serializable]
@@ -146,6 +147,8 @@ namespace VfxEditor {
         public Vector4 LuaFunctionColor = new( 0f, 0.439f, 1f, 1f );
         public Vector4 LuaLiteralColor = new( 0.639f, 0.207f, 0.933f, 1f );
         public Vector4 LuaVariableColor = new( 0.125f, 0.67058f, 0.45098f, 1f );
+
+        public List<ExcludedBonesConfiguration> ExcludedBones = new();
 
         public int PngMips = 9;
         public TextureFormat PngFormat = TextureFormat.DXT5;

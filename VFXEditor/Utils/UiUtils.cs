@@ -39,6 +39,8 @@ namespace VfxEditor.Utils {
 
         public static Vector4 DALAMUD_YELLOW => StyleModel.GetFromCurrent().BuiltInColors.DalamudYellow.Value;
 
+        public static Vector4 DALAMUD_ORANGE => StyleModel.GetFromCurrent().BuiltInColors.DalamudOrange.Value;
+
         public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
 
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";

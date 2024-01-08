@@ -141,6 +141,8 @@ namespace VfxEditor.Utils.Gltf {
             int havokIndex,
             int gltfAnimationIndex,
             bool compress,
+            bool skipUnanimated,
+            List<string> excludeBones,
             string path
          ) {
             var model = ModelRoot.Load( path );
@@ -157,11 +159,16 @@ namespace VfxEditor.Utils.Gltf {
                 refPoses[name] = skeleton->ReferencePose[i];
             }
 
-            var tracks = new List<string>();
+            var skipBones = new List<string>();
+            skipBones.AddRange( excludeBones );
+            if( skipUnanimated ) {
+                skipBones.AddRange( motion.GetUnanimatedBones().Select( x => boneNames[x] ) );
+            }
 
+            var tracks = new List<string>();
             foreach( var node in nodes ) {
                 if( string.IsNullOrEmpty( node.Name ) ) continue;
-                if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) {
+                if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated || skipBones.Contains( node.Name ) ) {
                     Dalamud.Log( $"Skipped gLTF node: {node.Name}" );
                     continue;
                 }
