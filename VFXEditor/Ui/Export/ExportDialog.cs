@@ -8,7 +8,7 @@ namespace VfxEditor.Ui.Export {
         protected string Author = "";
         protected string Version = "1.0.0";
 
-        public ExportDialog( string id ) : base( id, false, new( 600, 500 ), Plugin.WindowSystem ) { }
+        public ExportDialog( string id ) : base( id, false, new( 800, 600 ), Plugin.WindowSystem ) { }
 
         public override void DrawBody() {
             using var _ = ImRaii.PushId( WindowName );

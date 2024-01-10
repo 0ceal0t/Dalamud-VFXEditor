@@ -41,7 +41,7 @@ namespace VfxEditor.Select {
                     try {
                         var fileName = Path.GetFileName( file ).Replace( ".json", "" );
                         if( fileName == "default_mod" ) {
-                            var mod = JsonConvert.DeserializeObject<PenumbraMod>( File.ReadAllText( file ) );
+                            var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( file ) );
                             if( mod.Files != null ) {
                                 var defaultFiles = new List<(string, string)>();
                                 AddToFiles( mod?.Files, defaultFiles, modPath );
@@ -49,7 +49,7 @@ namespace VfxEditor.Select {
                             }
                         }
                         else {
-                            var group = JsonConvert.DeserializeObject<PenumbraGroup>( File.ReadAllText( file ) );
+                            var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( file ) );
                             if( group.Options != null ) {
                                 foreach( var option in group.Options.Where( x => x.Files != null ) ) {
                                     var optionFiles = new List<(string, string)>();

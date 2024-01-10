@@ -118,7 +118,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void DrawAssignedCurves( List<AvfxCurve> curves ) {
-            using var tabBar = ImRaii.TabBar( $"Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             foreach( var curve in curves.Where( x => x.IsAssigned() ) ) {

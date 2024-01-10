@@ -204,9 +204,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        public void PenumbraExport( string modFolder, string group, Dictionary<string, string> filesOut ) {
+        public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
-            PenumbraUtils.CopyFile( WriteLocation, modFolder, group, GamePath, filesOut );
+            PenumbraUtils.CopyFile( WriteLocation, modFolder, groupOption, GamePath, filesOut );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {

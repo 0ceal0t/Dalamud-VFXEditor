@@ -172,12 +172,12 @@ namespace VfxEditor.FileManager {
 
         public bool CanExport() => File != null && !string.IsNullOrEmpty( ReplacePath );
 
-        public void PenumbraExport( string modFolder, string group, Dictionary<string, string> filesOut ) {
+        public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || File == null ) return;
             var data = File.ToBytes();
 
-            PenumbraUtils.WriteBytes( data, modFolder, group, path, filesOut );
+            PenumbraUtils.WriteBytes( data, modFolder, groupOption, path, filesOut );
         }
 
         public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset ) {

@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;

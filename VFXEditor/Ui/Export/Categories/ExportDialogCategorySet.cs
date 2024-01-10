@@ -15,5 +15,13 @@ namespace VfxEditor.Ui.Export.Categories {
         public void Reset() => Categories.ForEach( x => x.Reset() );
 
         public void RemoveDocument( IFileDocument document ) => Categories.ForEach( x => x.RemoveDocument( document ) );
+
+        public Dictionary<string, string> Export( string modFolder, string groupOption ) {
+            var ret = new Dictionary<string, string>();
+            foreach( var category in Categories ) {
+                foreach( var item in category.GetItemsToExport() ) item.PenumbraExport( modFolder, groupOption, ret );
+            }
+            return ret;
+        }
     }
 }

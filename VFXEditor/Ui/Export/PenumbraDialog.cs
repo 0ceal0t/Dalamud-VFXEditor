@@ -1,3 +1,6 @@
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,31 +9,33 @@ using System.IO.Compression;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Export.Categories;
+using VfxEditor.Ui.Export.Penumbra;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Export {
     [Serializable]
-    public class PenumbraNamedItem {
+    public class PenumbraItemStruct {
         public string Name = "";
         public string Description = "";
         public int Priority = 0;
     }
 
     [Serializable]
-    public class PenumbraMod : PenumbraNamedItem {
+    public class PenumbraModStruct : PenumbraItemStruct {
         public Dictionary<string, string> Files = new();
         public Dictionary<string, string> FileSwaps = new();
         public List<object> Manipulations = new();
     }
 
     [Serializable]
-    public class PenumbraGroup : PenumbraNamedItem {
+    public class PenumbraGroupStruct : PenumbraItemStruct {
         public string Type = "Single"; // Single / Multi
         public uint DefaultSettings = 0; // Bitmask of 32 defaults
-        public List<PenumbraOption> Options = new();
+        public List<PenumbraOptionStruct> Options = new();
     }
 
     [Serializable]
-    public class PenumbraOption : PenumbraNamedItem {
+    public class PenumbraOptionStruct : PenumbraItemStruct {
         public Dictionary<string, string> Files = new();
         public Dictionary<string, string> FileSwaps = new();
         public List<object> Manipulations = new();
@@ -48,10 +53,9 @@ namespace VfxEditor.Ui.Export {
     }
 
     public class PenumbraDialog : ExportDialog {
-        // Temp
-        private readonly ExportDialogCategorySet ToExport = new();
-
-
+        private readonly ExportDialogCategorySet DefaultMod = new();
+        private readonly List<PenumbraGroupView> Groups = new();
+        private PenumbraGroupView Selected;
 
 
         public PenumbraDialog() : base( "Penumbra" ) { }
@@ -64,16 +68,54 @@ namespace VfxEditor.Ui.Export {
             } );
         }
 
-        // Temp
-        protected override void OnDraw() => ToExport.Draw();
+        protected override void OnDraw() {
+            if( ImGui.BeginCombo( "##Group", Selected == null ? "Default Mod" : Selected.GetName() ) ) {
+                using( var color = ImRaii.PushColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) ) ) {
+                    if( ImGui.Selectable( "Default Mod" ) ) Selected = null;
+                }
 
-        protected override void OnRemoveDocument( IFileDocument document ) => ToExport.RemoveDocument( document );
+                foreach( var (group, idx) in Groups.WithIndex() ) {
+                    if( ImGui.Selectable( $"{group.GetName()}###{idx}" ) ) Selected = group;
+                }
+                ImGui.EndCombo();
+            }
 
-        protected override void OnReset() => ToExport.Reset();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( $"{FontAwesomeIcon.Plus.ToIconString()}" ) ) {
+                    var newGroup = new PenumbraGroupView();
+                    Selected = newGroup;
+                    Groups.Add( newGroup );
+                }
 
+                if( Selected != null ) {
+                    ImGui.SameLine();
+                    if( UiUtils.RemoveButton( $"{FontAwesomeIcon.Trash.ToIconString()}" ) ) {
+                        Selected.Reset();
+                        Groups.Remove( Selected );
+                        Selected = null;
+                    }
+                }
+            }
 
+            ImGui.Separator();
 
+            if( Selected == null ) DefaultMod.Draw();
+            else Selected.Draw();
+        }
 
+        protected override void OnRemoveDocument( IFileDocument document ) {
+            Groups.ForEach( x => x.RemoveDocument( document ) );
+            DefaultMod.RemoveDocument( document );
+        }
+
+        protected override void OnReset() {
+            Groups.ForEach( x => x.Reset() );
+            Groups.Clear();
+            Selected = null;
+            DefaultMod.Reset();
+        }
 
         private void Export( string saveFile ) {
             try {
@@ -81,29 +123,26 @@ namespace VfxEditor.Ui.Export {
                 var tempDir = Path.Combine( saveDir, "VFXEDITOR_PENUMBRA_TEMP" );
                 Directory.CreateDirectory( tempDir );
 
-                var filesOut = new Dictionary<string, string>();
-
-                // Temp
-                foreach( var category in ToExport.Categories ) {
-                    foreach( var item in category.GetItemsToExport() ) item.PenumbraExport( tempDir, "", filesOut );
-                }
-
-
-
-
+                // Meta
                 var meta = new PenumbraMeta {
                     Name = ModName,
                     Author = Author,
                     Description = "Exported from VFXEditor",
                     Version = Version
                 };
-
-                var mod = new PenumbraMod {
-                    Files = filesOut
-                };
-
                 File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( meta ) );
+
+                // Default Mod
+                var mod = new PenumbraModStruct {
+                    Files = DefaultMod.Export( tempDir, "" )
+                };
                 File.WriteAllText( Path.Combine( tempDir, "default_mod.json" ), JsonConvert.SerializeObject( mod ) );
+
+                // Groups
+                foreach( var (group, idx) in Groups.WithIndex() ) {
+                    var groupData = group.Export( tempDir );
+                    File.WriteAllText( Path.Combine( tempDir, $"group_{idx + 1:D3}_{group.GetName().ToLower()}.json" ), JsonConvert.SerializeObject( groupData ) );
+                }
 
                 if( File.Exists( saveFile ) ) File.Delete( saveFile );
                 ZipFile.CreateFromDirectory( tempDir, saveFile );

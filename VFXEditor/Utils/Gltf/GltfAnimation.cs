@@ -176,8 +176,6 @@ namespace VfxEditor.Utils.Gltf {
                 tracks.Add( node.Name );
             }
 
-            // For now, limit to just 1 animation
-
             if( animations.Count == 0 ) {
                 Dalamud.Error( "File has no animations" );
                 return;
