@@ -4,14 +4,22 @@ using VfxEditor.Ui.Export.Categories;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Ui.Export.Penumbra {
-    public class PenumbraOptionView : IUiItem {
+    public class PenumbraOption : IUiItem {
         private string Name = "New Option";
         private bool Default = false;
         private int Priority = 0;
 
         private readonly ExportDialogCategorySet CategorySet = new();
 
-        public PenumbraOptionView() { }
+        public PenumbraOption() { }
+
+        // Used for workspace imports
+        public PenumbraOption( PenumbraOptionStruct workspaceOption, bool isDefault ) : this() {
+            Name = workspaceOption.Name;
+            Default = isDefault;
+            Priority = workspaceOption.Priority;
+            CategorySet.WorkspaceImport( workspaceOption.Files );
+        }
 
         public void Draw() {
             ImGui.InputTextWithHint( "##Name", "Name", ref Name, 255 );
@@ -24,15 +32,17 @@ namespace VfxEditor.Ui.Export.Penumbra {
 
         public void Reset() => CategorySet.Reset();
 
-        public PenumbraOptionStruct Export( string modFolder, string group ) {
-            var option = new PenumbraOptionStruct {
-                Name = Name,
-                Priority = Priority,
-                Files = CategorySet.Export( modFolder, $"{group}/{Name}" )
-            };
+        public PenumbraOptionStruct Export( string modFolder, string group ) => new() {
+            Name = Name,
+            Priority = Priority,
+            Files = CategorySet.Export( modFolder, $"{group}/{Name}" )
+        };
 
-            return option;
-        }
+        public PenumbraOptionStruct WorkspaceExport() => new() {
+            Name = Name,
+            Priority = Priority,
+            Files = CategorySet.WorkspaceExport()
+        };
 
         public bool GetDefault() => Default;
 

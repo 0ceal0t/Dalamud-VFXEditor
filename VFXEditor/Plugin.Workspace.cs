@@ -145,8 +145,11 @@ namespace VfxEditor {
                 manager.Reset( ResetType.Reset );
                 manager.WorkspaceImport( meta, loadLocation );
             }
-            FileBrowserManager.Dispose();
+
             ExportDialog.Reset();
+            PenumbraDialog.WorkspaceImport( meta );
+
+            FileBrowserManager.Dispose();
 
             return true;
         }
@@ -204,6 +207,7 @@ namespace VfxEditor {
 
                     var meta = new Dictionary<string, string>();
                     Managers.ForEach( x => x?.WorkspaceExport( meta, saveLocation ) );
+                    PenumbraDialog.WorkspaceExport( meta );
 
                     var metaPath = Path.Combine( saveLocation, "vfx_workspace.json" );
                     var metaString = JsonConvert.SerializeObject( meta );

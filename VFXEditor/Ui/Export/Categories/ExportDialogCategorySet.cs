@@ -23,5 +23,15 @@ namespace VfxEditor.Ui.Export.Categories {
             }
             return ret;
         }
+
+        public Dictionary<string, string> WorkspaceExport() {
+            var ret = new Dictionary<string, string>();
+            foreach( var category in Categories ) category.WorkspaceExport( ret );
+            return ret;
+        }
+
+        public void WorkspaceImport( Dictionary<string, string> files ) {
+            foreach( var category in Categories ) category.WorkspaceImport( files );
+        }
     }
 }

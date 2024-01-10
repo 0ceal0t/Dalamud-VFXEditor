@@ -2,10 +2,12 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Export.Categories;
@@ -13,6 +15,8 @@ using VfxEditor.Ui.Export.Penumbra;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Export {
+    // ==== FOR READING PENUMBRA JSONS =====
+
     [Serializable]
     public class PenumbraItemStruct {
         public string Name = "";
@@ -52,10 +56,21 @@ namespace VfxEditor.Ui.Export {
         public List<string> ModTags = new();
     }
 
+    // ======= FOR WORKSPACE =======
+
+    [Serializable]
+    public class PenumbraWorkspace {
+        // Exactly the same, except the `Files` dictionaries just store the indexes of which documents to use
+        // Like "vfx": "Array[int]{0,1,2}"
+        public PenumbraMeta Meta = new();
+        public PenumbraModStruct DefaultMod = new();
+        public List<PenumbraGroupStruct> Groups = new();
+    }
+
     public class PenumbraDialog : ExportDialog {
         private readonly ExportDialogCategorySet DefaultMod = new();
-        private readonly List<PenumbraGroupView> Groups = new();
-        private PenumbraGroupView Selected;
+        private readonly List<PenumbraGroup> Groups = new();
+        private PenumbraGroup Selected;
 
 
         public PenumbraDialog() : base( "Penumbra" ) { }
@@ -84,7 +99,7 @@ namespace VfxEditor.Ui.Export {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
                 if( ImGui.Button( $"{FontAwesomeIcon.Plus.ToIconString()}" ) ) {
-                    var newGroup = new PenumbraGroupView();
+                    var newGroup = new PenumbraGroup();
                     Selected = newGroup;
                     Groups.Add( newGroup );
                 }
@@ -117,6 +132,13 @@ namespace VfxEditor.Ui.Export {
             DefaultMod.Reset();
         }
 
+        private PenumbraMeta GetMeta() => new() {
+            Name = ModName,
+            Author = Author,
+            Description = "Exported from VFXEditor",
+            Version = Version
+        };
+
         private void Export( string saveFile ) {
             try {
                 var saveDir = Path.GetDirectoryName( saveFile );
@@ -124,13 +146,7 @@ namespace VfxEditor.Ui.Export {
                 Directory.CreateDirectory( tempDir );
 
                 // Meta
-                var meta = new PenumbraMeta {
-                    Name = ModName,
-                    Author = Author,
-                    Description = "Exported from VFXEditor",
-                    Version = Version
-                };
-                File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( meta ) );
+                File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( GetMeta() ) );
 
                 // Default Mod
                 var mod = new PenumbraModStruct {
@@ -152,6 +168,31 @@ namespace VfxEditor.Ui.Export {
             catch( Exception e ) {
                 Dalamud.Error( e, "Could not export to Penumbra" );
             }
+        }
+
+        // =====================
+
+        public void WorkspaceExport( Dictionary<string, string> meta ) {
+            var data = new PenumbraWorkspace {
+                Meta = GetMeta(),
+                DefaultMod = new() {
+                    Files = DefaultMod.WorkspaceExport()
+                },
+                Groups = Groups.Select( x => x.WorkspaceExport() ).ToList()
+            };
+            meta["penumbra"] = JsonConvert.SerializeObject( data );
+        }
+
+        public void WorkspaceImport( JObject meta ) {
+            if( !meta.ContainsKey( "penumbra" ) ) return;
+            var data = JsonConvert.DeserializeObject<PenumbraWorkspace>( meta["penumbra"].ToString() );
+
+            ModName = data.Meta.Name;
+            Author = data.Meta.Author;
+            Version = data.Meta.Version;
+
+            DefaultMod.WorkspaceImport( data.DefaultMod.Files );
+            Groups.AddRange( data.Groups.Select( x => new PenumbraGroup( x ) ) );
         }
     }
 }

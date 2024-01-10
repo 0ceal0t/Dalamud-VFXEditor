@@ -16,6 +16,18 @@ namespace VfxEditor.Ui.Export.Penumbra {
             OptionView = new( Options );
         }
 
+        // Used for workspace imports
+        public PenumbraGroup( PenumbraGroupStruct workspaceGroup ) : this() {
+            Name = workspaceGroup.Name;
+            Type = workspaceGroup.Type;
+            Priority = workspaceGroup.Priority;
+
+            foreach( var (option, idx) in workspaceGroup.Options.WithIndex() ) {
+                var isDefault = ( ( workspaceGroup.DefaultSettings >> idx ) & 1u ) == 1u;
+                Options.Add( new( option, isDefault ) );
+            }
+        }
+
         public void Draw() {
             ImGui.InputTextWithHint( "##Name", "Name", ref Name, 255 );
             ImGui.InputInt( "Priority", ref Priority );
@@ -33,19 +45,28 @@ namespace VfxEditor.Ui.Export.Penumbra {
 
         public void RemoveDocument( IFileDocument document ) => Options.ForEach( x => x.RemoveDocument( document ) );
 
-        public PenumbraGroupStruct Export( string modFolder ) {
+        public PenumbraGroupStruct Export( string modFolder ) => new() {
+            Name = Name,
+            Priority = Priority,
+            Type = Type,
+            DefaultSettings = GetDefault(),
+            Options = Options.Select( x => x.Export( modFolder, Name ) ).ToList()
+        };
+
+        public PenumbraGroupStruct WorkspaceExport() => new() {
+            Name = Name,
+            Priority = Priority,
+            Type = Type,
+            DefaultSettings = GetDefault(),
+            Options = Options.Select( x => x.WorkspaceExport() ).ToList()
+        };
+
+        private uint GetDefault() {
             var defaultSettings = 0u;
             foreach( var (option, idx) in Options.WithIndex() ) {
                 if( option.GetDefault() ) defaultSettings |= ( 1u << idx );
             }
-
-            return new PenumbraGroupStruct {
-                Name = Name,
-                Priority = Priority,
-                Type = Type,
-                DefaultSettings = defaultSettings,
-                Options = Options.Select( x => x.Export( modFolder, Name ) ).ToList()
-            };
+            return defaultSettings;
         }
 
         public void Reset() {
@@ -54,5 +75,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
         }
 
         public string GetName() => Name;
+
+
     }
 }

@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager.Interfaces;
@@ -10,7 +11,7 @@ namespace VfxEditor.Ui.Export.Categories {
         public readonly IFileManager Manager;
 
         private bool ExportAll = false;
-        private Dictionary<IFileDocument, bool> ToExport = new();
+        private readonly Dictionary<IFileDocument, bool> ToExport = new();
 
         public ExportDialogCategory( IFileManager manager ) {
             Manager = manager;
@@ -78,5 +79,20 @@ namespace VfxEditor.Ui.Export.Categories {
         public void RemoveDocument( IFileDocument document ) => ToExport.Remove( document );
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
+
+        public void WorkspaceImport( Dictionary<string, string> files ) {
+            if( !files.TryGetValue( Manager.GetId(), out var data ) ) return;
+            var indexes = JsonConvert.DeserializeObject<int[]>( data );
+            var documents = Manager.GetDocuments().ToList();
+            foreach( var index in indexes ) ToExport[documents[index]] = true;
+        }
+
+        public void WorkspaceExport( Dictionary<string, string> files ) {
+            var indexes = new List<int>();
+            foreach( var (item, idx) in Manager.GetDocuments().WithIndex() ) {
+                if( DoExport( item ) ) indexes.Add( idx );
+            }
+            files[Manager.GetId()] = JsonConvert.SerializeObject( indexes.ToArray() );
+        }
     }
 }
