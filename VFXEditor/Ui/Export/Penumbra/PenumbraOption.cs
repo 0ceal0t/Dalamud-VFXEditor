@@ -24,8 +24,15 @@ namespace VfxEditor.Ui.Export.Penumbra {
 
         public void Draw() {
             ImGui.InputTextWithHint( "##Name", "Name", ref Name, 255 );
+
             ImGui.Checkbox( "Default", ref Default );
-            ImGui.InputInt( "Priority", ref Priority );
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 30 );
+            ImGui.InputInt( "Priority", ref Priority, 0 );
+
+            ImGui.Separator();
+
             CategorySet.Draw();
         }
 
