@@ -80,11 +80,11 @@ namespace VfxEditor.Ui.Export.Categories {
 
         private bool DoExport( IFileDocument item ) => item.CanExport() && ( ToExport.TryGetValue( item, out var _checked ) ? _checked : ExportAll );
 
-        public void WorkspaceImport( Dictionary<string, string> files ) {
+        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManager, int> offsets ) {
             if( !files.TryGetValue( Manager.GetId(), out var data ) ) return;
             var indexes = JsonConvert.DeserializeObject<int[]>( data );
             var documents = Manager.GetDocuments().ToList();
-            foreach( var index in indexes ) ToExport[documents[index]] = true;
+            foreach( var index in indexes ) ToExport[documents[index + ( offsets.TryGetValue( Manager, out var offset ) ? offset : 0 )]] = true;
         }
 
         public void WorkspaceExport( Dictionary<string, string> files ) {

@@ -39,7 +39,7 @@ namespace VfxEditor {
         }
 
         private static void CheckWorkspaceKeybinds() {
-            if( Configuration.OpenKeybind.KeyPressed() ) OpenWorkspace();
+            if( Configuration.OpenKeybind.KeyPressed() ) OpenWorkspace( true );
             if( Configuration.SaveKeybind.KeyPressed() ) SaveWorkspace();
             if( Configuration.SaveAsKeybind.KeyPressed() ) SaveAsWorkspace();
         }
@@ -49,12 +49,12 @@ namespace VfxEditor {
 
             if( ImGui.BeginMenu( "File" ) ) {
                 if( ImGui.MenuItem( "New" ) ) NewWorkspace();
-                if( ImGui.MenuItem( "Open" ) ) OpenWorkspace();
+                if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
                             if( File.Exists( recent.Item2 ) ) {
-                                OpenWorkspaceAsync( recent.Item2 );
+                                OpenWorkspaceAsync( recent.Item2, true );
                             }
                             else {
                                 Dalamud.Error( $"{recent.Item2} does not exist" );
@@ -64,6 +64,7 @@ namespace VfxEditor {
                     }
                     ImGui.EndMenu();
                 }
+                if( ImGui.MenuItem( "Append" ) ) OpenWorkspace( false );
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
 

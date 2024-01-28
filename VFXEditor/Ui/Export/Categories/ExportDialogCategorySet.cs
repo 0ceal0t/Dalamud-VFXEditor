@@ -30,8 +30,8 @@ namespace VfxEditor.Ui.Export.Categories {
             return ret;
         }
 
-        public void WorkspaceImport( Dictionary<string, string> files ) {
-            foreach( var category in Categories ) category.WorkspaceImport( files );
+        public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManager, int> offsets ) {
+            foreach( var category in Categories ) category.WorkspaceImport( files, offsets );
         }
     }
 }

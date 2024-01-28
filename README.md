@@ -60,9 +60,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
-- [ ] Save Penumbra settings with workspace
-- [ ] ~~`.mdl` editor~~
-- [ ] ~~`.sgb` editor~~
 - [ ] More investigation into `.pap` _Type_ and animation names
 - [ ] C192
 - [ ] `.uld` update component type
@@ -106,7 +103,6 @@ bg/ffxiv/fst_f1/shared/timelines/for_bg/tlbg_f1t1_t1_sui00d_loop.tmb
 
 chara/xls/animation/papLoadTable.plt
 chara/xls/boneDeformer/human.pbd
-chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.skp
 chara/xls/equipmentParameter/equipmentVfxParameter.evp
 chara/xls/animation/animation_work_table-demihuman.awt
 chara/xls/animation/AnimationExchangeTable.aet

@@ -20,7 +20,7 @@ namespace VfxEditor.UldFormat {
         }
 
         protected void AddUnknown( int count, string prefix ) {
-            for( var i = 1; i <= count + 1; i++ ) Parsed.Add( new ParsedUInt( $"{prefix} {i}" ) );
+            for( var i = 0; i < count; i++ ) Parsed.Add( new ParsedUInt( $"{prefix} {i + 1}" ) );
         }
 
         public void Enable() { }

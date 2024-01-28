@@ -17,14 +17,14 @@ namespace VfxEditor.Ui.Export.Penumbra {
         }
 
         // Used for workspace imports
-        public PenumbraGroup( PenumbraGroupStruct workspaceGroup ) : this() {
+        public PenumbraGroup( PenumbraGroupStruct workspaceGroup, Dictionary<IFileManager, int> offsets ) : this() {
             Name = workspaceGroup.Name;
             Type = workspaceGroup.Type;
             Priority = workspaceGroup.Priority;
 
             foreach( var (option, idx) in workspaceGroup.Options.WithIndex() ) {
                 var isDefault = ( ( workspaceGroup.DefaultSettings >> idx ) & 1u ) == 1u;
-                Options.Add( new( option, isDefault ) );
+                Options.Add( new( option, isDefault, offsets ) );
             }
         }
 

@@ -126,6 +126,9 @@ namespace VfxEditor.Ui.Export {
         }
 
         protected override void OnReset() {
+            ModName = "";
+            Author = "";
+            Version = "1.0.0";
             Groups.ForEach( x => x.Reset() );
             Groups.Clear();
             Selected = null;
@@ -183,7 +186,7 @@ namespace VfxEditor.Ui.Export {
             meta["penumbra"] = JsonConvert.SerializeObject( data );
         }
 
-        public void WorkspaceImport( JObject meta ) {
+        public void WorkspaceImport( JObject meta, Dictionary<IFileManager, int> offsets ) {
             if( !meta.ContainsKey( "penumbra" ) ) return;
             var data = JsonConvert.DeserializeObject<PenumbraWorkspace>( meta["penumbra"].ToString() );
 
@@ -191,8 +194,8 @@ namespace VfxEditor.Ui.Export {
             Author = data.Meta.Author;
             Version = data.Meta.Version;
 
-            DefaultMod.WorkspaceImport( data.DefaultMod.Files );
-            Groups.AddRange( data.Groups.Select( x => new PenumbraGroup( x ) ) );
+            DefaultMod.WorkspaceImport( data.DefaultMod.Files, offsets );
+            Groups.AddRange( data.Groups.Select( x => new PenumbraGroup( x, offsets ) ) );
         }
     }
 }

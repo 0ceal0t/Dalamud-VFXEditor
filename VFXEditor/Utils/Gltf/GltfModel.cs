@@ -92,6 +92,8 @@ namespace VfxEditor.Utils.Gltf {
                     var hasUv2 = properties.ContainsKey( "TEXCOORD_1" );
                     Dalamud.Log( $"Color: {hasColor} UV2: {hasUv2}" );
 
+                    if( !properties.ContainsKey( "TANGENT" ) ) Dalamud.Error( "Tangents are missing" );
+
                     var positions = primitive.GetVertices( "POSITION" ).AsVector3Array();
                     var normals = primitive.GetVertices( "NORMAL" ).AsVector3Array();
                     var tangents = primitive.GetVertices( "TANGENT" ).AsVector4Array();

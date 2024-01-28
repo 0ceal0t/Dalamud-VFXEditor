@@ -89,17 +89,17 @@ namespace VfxEditor {
             } );
         }
 
-        private static void OpenWorkspace() {
+        private static void OpenWorkspace( bool reset ) {
             FileBrowserManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     var extension = new FileInfo( res ).Extension;
                     if( extension == ".json" ) { // OLD
                         var directory = Path.GetDirectoryName( res );
-                        OpenWorkspaceAsync( directory.TrimEnd( Path.DirectorySeparatorChar ) + ".vfxworkspace", Path.GetDirectoryName( res ), false ); // Move to new format
+                        OpenWorkspaceAsync( directory.TrimEnd( Path.DirectorySeparatorChar ) + ".vfxworkspace", Path.GetDirectoryName( res ), false, reset ); // Move to new format
                     }
                     else if( extension == ".vfxworkspace" ) { // NEW
-                        OpenWorkspaceAsync( res );
+                        OpenWorkspaceAsync( res, reset );
                     }
                 }
                 catch( Exception e ) {
@@ -108,15 +108,15 @@ namespace VfxEditor {
             } );
         }
 
-        private static void OpenWorkspaceAsync( string loadLocation ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_IN" ), true );
+        private static void OpenWorkspaceAsync( string loadLocation, bool reset ) => OpenWorkspaceAsync( loadLocation, Path.Combine( Path.GetDirectoryName( loadLocation ), "VFX_WORKSPACE_IN" ), true, reset );
 
-        private static void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip ) {
+        private static void OpenWorkspaceAsync( string loadLocation, string tempDir, bool unzip, bool reset ) {
             State = WorkspaceState.Loading;
             Task.Run( async () => {
                 await Task.Delay( 100 );
                 if( unzip ) ZipFile.ExtractToDirectory( loadLocation, tempDir, true );
 
-                if( OpenWorkspaceFolder( tempDir ) ) {
+                if( OpenWorkspaceFolder( tempDir, reset ) ) {
                     CurrentWorkspaceLocation = loadLocation;
                     BackupId = 0;
                     Configuration.AddRecentWorkspace( loadLocation );
@@ -130,7 +130,7 @@ namespace VfxEditor {
             } );
         }
 
-        private static bool OpenWorkspaceFolder( string loadLocation ) {
+        private static bool OpenWorkspaceFolder( string loadLocation, bool reset ) {
             WorkspaceFileCount = Directory.GetFiles( loadLocation, "*.*", SearchOption.AllDirectories ).Length;
             Dalamud.Log( $"Loading {WorkspaceFileCount} files from {loadLocation}" );
 
@@ -140,14 +140,16 @@ namespace VfxEditor {
                 return false;
             }
 
+            var offsets = new Dictionary<IFileManager, int>(); // Number of documents before import
             var meta = JObject.Parse( File.ReadAllText( metaPath ) );
             foreach( var manager in Managers.Where( x => x != null ) ) {
-                manager.Reset( ResetType.Reset );
+                if( reset ) manager.Reset( ResetType.Reset );
+                offsets[manager] = manager.GetDocuments().Count();
                 manager.WorkspaceImport( meta, loadLocation );
             }
 
-            ExportDialog.Reset();
-            PenumbraDialog.WorkspaceImport( meta );
+            if( reset ) ExportDialog.Reset();
+            PenumbraDialog.WorkspaceImport( meta, offsets );
 
             FileBrowserManager.Dispose();
 

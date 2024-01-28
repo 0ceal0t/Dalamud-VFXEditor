@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Export.Categories;
 using VfxEditor.Ui.Interfaces;
@@ -14,11 +15,11 @@ namespace VfxEditor.Ui.Export.Penumbra {
         public PenumbraOption() { }
 
         // Used for workspace imports
-        public PenumbraOption( PenumbraOptionStruct workspaceOption, bool isDefault ) : this() {
+        public PenumbraOption( PenumbraOptionStruct workspaceOption, bool isDefault, Dictionary<IFileManager, int> offsets ) : this() {
             Name = workspaceOption.Name;
             Default = isDefault;
             Priority = workspaceOption.Priority;
-            CategorySet.WorkspaceImport( workspaceOption.Files );
+            CategorySet.WorkspaceImport( workspaceOption.Files, offsets );
         }
 
         public void Draw() {

@@ -9,6 +9,7 @@ namespace VfxEditor.UldFormat.Component.Data {
             Parsed.AddRange( new ParsedBase[] {
                 new ParsedSheetColor( "Color" ),
                 new ParsedSheetColor( "IME Color" ),
+                new ParsedUInt( "Uknown" ),
             } );
         }
     }
