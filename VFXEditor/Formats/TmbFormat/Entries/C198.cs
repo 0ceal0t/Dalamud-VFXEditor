@@ -19,7 +19,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
         private readonly ParsedShort ModelId = new( "Model Id" );
         private readonly ParsedShort BodyId = new( "Body Id" );
-        private readonly ParsedInt Unk5 = new( "Unknown 5" );
+        private readonly ParsedInt Variant = new( "Variant" );
 
         public C198( TmbFile file ) : base( file ) { }
 
@@ -33,7 +33,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk4,
             ModelId,
             BodyId,
-            Unk5
+            Variant
         };
     }
 }

@@ -426,7 +426,6 @@ namespace VfxEditor.FileManager {
         public virtual void Dispose() {
             File?.Dispose();
             File = null;
-            System.IO.File.Delete( WriteLocation );
         }
 
         // ========================
