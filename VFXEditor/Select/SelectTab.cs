@@ -105,7 +105,7 @@ namespace VfxEditor.Select {
             if( ImGui.Button( "SELECT" ) ) Dialog.Invoke( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
             ImGui.SameLine();
             SelectUiUtils.Copy( path );
-            if( play ) Dialog.Play( path );
+            if( play ) Dialog.PlayButton( path );
         }
 
         protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {

@@ -9,6 +9,8 @@ namespace VfxEditor.Select.Lists {
         protected readonly List<SelectResult> Items;
         protected readonly string Name;
 
+        protected Vector2 DefaultWindowPadding = new();
+
         public SelectListTab( SelectDialog dialog, string name, List<SelectResult> items ) {
             Dialog = dialog;
             Name = name;
@@ -22,6 +24,8 @@ namespace VfxEditor.Select.Lists {
 
             using var tabItem = ImRaii.TabItem( Name );
             if( !tabItem ) return;
+
+            DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );

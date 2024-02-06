@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxVertexes : AvfxBase {
@@ -21,31 +22,58 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public class AvfxVertex {
-        public float[] Position = new float[4];
+        public Vector4 Position = new();
+
         public int[] Normal = new int[4];
         public int[] Tangent = new int[4];
         public int[] Color = new int[4];
-        public float[] Uv1 = new float[4];
-        public float[] Uv2 = new float[4];
+
+        public Vector2 Uv1 = new();
+        public Vector2 Uv2 = new();
+        public Vector2 Uv3 = new();
+        public Vector2 Uv4 = new();
 
         public AvfxVertex() { }
 
         public AvfxVertex( BinaryReader reader ) {
-            for( var i = 0; i < 4; i++ ) Position[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
+            Position = new(
+                AvfxBase.Bytes2ToFloat( reader ),
+                AvfxBase.Bytes2ToFloat( reader ),
+                AvfxBase.Bytes2ToFloat( reader ),
+                AvfxBase.Bytes2ToFloat( reader )
+            );
+
             for( var i = 0; i < 4; i++ ) Normal[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Tangent[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Color[i] = reader.ReadByte();
-            for( var i = 0; i < 4; i++ ) Uv1[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
-            for( var i = 0; i < 4; i++ ) Uv2[i] = AvfxBase.Bytes2ToFloat( reader.ReadBytes( 2 ) );
+
+            Uv1 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
+            Uv2 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
+            Uv3 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
+            Uv4 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
         }
 
         public void Write( BinaryWriter writer ) {
-            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( Position[i] ) );
+            AvfxBase.FloatTo2Bytes( Position.X, writer );
+            AvfxBase.FloatTo2Bytes( Position.Y, writer );
+            AvfxBase.FloatTo2Bytes( Position.Z, writer );
+            AvfxBase.FloatTo2Bytes( Position.W, writer );
+
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Normal[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Tangent[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )Color[i] );
-            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( Uv1[i] ) );
-            for( var i = 0; i < 4; i++ ) writer.Write( AvfxBase.FloatTo2Bytes( Uv2[i] ) );
+
+            AvfxBase.FloatTo2Bytes( Uv1.X, writer );
+            AvfxBase.FloatTo2Bytes( Uv1.Y, writer );
+
+            AvfxBase.FloatTo2Bytes( Uv2.X, writer );
+            AvfxBase.FloatTo2Bytes( Uv2.Y, writer );
+
+            AvfxBase.FloatTo2Bytes( Uv3.X, writer );
+            AvfxBase.FloatTo2Bytes( Uv3.Y, writer );
+
+            AvfxBase.FloatTo2Bytes( Uv4.X, writer );
+            AvfxBase.FloatTo2Bytes( Uv4.Y, writer );
         }
     }
 }

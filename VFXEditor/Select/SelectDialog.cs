@@ -63,7 +63,7 @@ namespace VfxEditor.Select {
 
         protected readonly List<SelectTab> GameTabs = new();
         protected readonly List<SelectResult> Favorites;
-        protected readonly SelectListTab RecentTab;
+        protected readonly SelectRecentTab RecentTab;
         protected readonly SelectFavoriteTab FavoritesTab;
         protected readonly SelectPenumbraTab PenumbraTab;
 
@@ -88,7 +88,9 @@ namespace VfxEditor.Select {
 
         public void Invoke( SelectResult result ) => Action?.Invoke( result );
 
-        public virtual void Play( string path ) { }
+        public virtual void PlayButton( string path ) { }
+
+        public virtual void PlayPopupItems( string path ) { }
 
         public override void DrawBody() {
             using var _ = ImRaii.PushId( $"{Manager.GetId()}/{WindowName}" );

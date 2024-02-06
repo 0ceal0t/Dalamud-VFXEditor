@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
@@ -35,11 +35,17 @@ namespace VfxEditor.Select.Formats {
             } );
         }
 
-        public override void Play( string path ) {
+        public override void PlayButton( string path ) {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();
             VfxSpawn.DrawButton( path, false );
+        }
+
+        public override void PlayPopupItems( string path ) {
+            ImGui.Separator();
+
+            if( ImGui.Selectable( "Spawn" ) ) VfxSpawn.OnSelf( path, false );
         }
     }
 }

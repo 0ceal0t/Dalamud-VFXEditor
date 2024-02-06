@@ -38,7 +38,7 @@ namespace VfxEditor {
         public bool UpdateWriteLocation = true;
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
-        public int SaveRecentLimit = 10;
+        public int SaveRecentLimit = 100;
         public bool AutosaveBackups = true;
         public int BackupCount = 20;
 

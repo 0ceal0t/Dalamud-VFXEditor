@@ -52,7 +52,7 @@ namespace VfxEditor.Ui.Components.Tables {
             }
 
             if( ShowRow ) {
-                ImGui.TableSetupColumn( "Row", ImGuiTableColumnFlags.None, -1 );
+                ImGui.TableSetupColumn( "##Row", ImGuiTableColumnFlags.None, -1 );
             }
 
             foreach( var (name, flags, size) in Columns ) {
@@ -77,8 +77,8 @@ namespace VfxEditor.Ui.Components.Tables {
                 }
 
                 if( ShowRow ) {
+                    using var font = ImRaii.PushFont( UiBuilder.MonoFont );
                     ImGui.TableNextColumn();
-                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
                     ImGui.TextDisabled( $"{idx}" );
                 }
 

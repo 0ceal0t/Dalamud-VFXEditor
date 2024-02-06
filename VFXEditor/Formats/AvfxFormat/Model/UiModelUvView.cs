@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
-using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +14,11 @@ namespace VfxEditor.AvfxFormat {
         private bool DrawOnce = false;
         private int UvMode = 1;
 
-        private float[] Uv1_X = Array.Empty<float>();
-        private float[] Uv1_Y = Array.Empty<float>();
-        private float[] Uv2_X = Array.Empty<float>();
-        private float[] Uv2_Y = Array.Empty<float>();
+        private (float[], float[]) Uv1 = (Array.Empty<float>(), Array.Empty<float>());
+        private (float[], float[]) Uv2 = (Array.Empty<float>(), Array.Empty<float>());
+        private (float[], float[]) Uv3 = (Array.Empty<float>(), Array.Empty<float>());
+        private (float[], float[]) Uv4 = (Array.Empty<float>(), Array.Empty<float>());
+
         private int NumPoints = 0;
 
         public UiModelUvView() { }
@@ -43,18 +44,26 @@ namespace VfxEditor.AvfxFormat {
             }
 
             NumPoints = orderedVertexes.Count;
-            Uv1_X = orderedVertexes.Select( x => x.Uv1[0] ).ToArray();
-            Uv1_Y = orderedVertexes.Select( x => x.Uv1[1] ).ToArray();
-            Uv2_X = orderedVertexes.Select( x => x.Uv2[2] ).ToArray();
-            Uv2_Y = orderedVertexes.Select( x => x.Uv2[3] ).ToArray();
+
+            Uv1 = (orderedVertexes.Select( x => x.Uv1.X ).ToArray(), orderedVertexes.Select( x => x.Uv1.Y ).ToArray());
+            Uv2 = (orderedVertexes.Select( x => x.Uv2.X ).ToArray(), orderedVertexes.Select( x => x.Uv2.Y ).ToArray());
+            Uv3 = (orderedVertexes.Select( x => x.Uv3.X ).ToArray(), orderedVertexes.Select( x => x.Uv3.Y ).ToArray());
+            Uv4 = (orderedVertexes.Select( x => x.Uv4.X ).ToArray(), orderedVertexes.Select( x => x.Uv4.Y ).ToArray());
         }
 
         public void Draw() {
             using var _ = ImRaii.PushId( "UV" );
 
             ImGui.RadioButton( "UV 1", ref UvMode, 1 );
+
             ImGui.SameLine();
             ImGui.RadioButton( "UV 2", ref UvMode, 2 );
+
+            ImGui.SameLine();
+            ImGui.RadioButton( "UV 3", ref UvMode, 3 );
+
+            ImGui.SameLine();
+            ImGui.RadioButton( "UV 4", ref UvMode, 4 );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
@@ -69,11 +78,16 @@ namespace VfxEditor.AvfxFormat {
                 ImPlot.PushStyleColor( ImPlotCol.Line, LINE_COLOR );
                 ImPlot.PushStyleVar( ImPlotStyleVar.LineWeight, 2 );
 
-                var x = UvMode == 1 ? Uv1_X : Uv2_X;
-                var y = UvMode == 1 ? Uv1_Y : Uv2_Y;
+                var coords = UvMode switch {
+                    1 => Uv1,
+                    2 => Uv2,
+                    3 => Uv3,
+                    4 => Uv4,
+                    _ => Uv1
+                };
 
                 for( var i = 0; i < NumPoints; i += 2 ) { // draw them 2 at a time
-                    ImPlot.PlotLine( "UV", ref x[i], ref y[i], 2 );
+                    ImPlot.PlotLine( "UV", ref coords.Item1[i], ref coords.Item2[i], 2 );
                 }
 
                 ImPlot.PopStyleColor();

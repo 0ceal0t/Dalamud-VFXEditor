@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Formats {
             } );
         }
 
-        public override void Play( string path ) {
+        public override void PlayButton( string path ) {
             using var _ = ImRaii.PushId( "Spawn" );
 
             ImGui.SameLine();

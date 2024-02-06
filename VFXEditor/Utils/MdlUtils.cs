@@ -58,12 +58,12 @@ namespace VfxEditor.Utils {
             return true;
         }
 
-        private static AvfxVertex GetAvfxVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 tex1, Vector2 tex2 ) {
+        private static AvfxVertex GetAvfxVert( Vector4 pos, Vector3 normal, Vector4 tangent, Vector4 color, Vector2 uv1, Vector2 uv2 ) {
             var ret = new AvfxVertex();
             color *= 255;
             normal *= 128;
             tangent *= 128;
-            ret.Position = new float[] { pos.X, pos.Y, pos.Z, 1 };
+            ret.Position = new( pos.X, pos.Y, pos.Z, 1 );
 
             var normalAdjusted = Vector3.Normalize( new Vector3( normal.X, normal.Y, normal.Z ) ) * 127f;
             var tangentAdjusted = Vector3.Normalize( new Vector3( tangent.X, tangent.Y, tangent.Z ) ) * 127f;
@@ -72,8 +72,10 @@ namespace VfxEditor.Utils {
             ret.Tangent = new int[] { ( int )tangentAdjusted.X, ( int )tangentAdjusted.Y, ( int )tangentAdjusted.Z, -1 };
             ret.Color = new int[] { ( int )color.X, ( int )color.Y, ( int )color.Z, ( int )color.W };
 
-            ret.Uv1 = new float[] { tex1.X, tex1.Y, tex1.X, tex1.Y };
-            ret.Uv2 = new float[] { tex1.X, tex1.Y, tex2.X, tex2.Y };
+            ret.Uv1 = uv1;
+            ret.Uv2 = uv2;
+            ret.Uv3 = uv1;
+            ret.Uv4 = uv2;
 
             return ret;
         }

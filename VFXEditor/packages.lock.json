@@ -100,11 +100,11 @@
       },
       "SharpGLTF.Toolkit": {
         "type": "Direct",
-        "requested": "[1.0.0-alpha0030, )",
-        "resolved": "1.0.0-alpha0030",
-        "contentHash": "nsoJWAFhXgEky9bVCY0zLeZVDx+S88u7VjvuebvMb6dJiNyFOGF6FrrMHiJe+x5pcVBxxlc3VoXliBF7r/EqYA==",
+        "requested": "[1.0.0-alpha0031, )",
+        "resolved": "1.0.0-alpha0031",
+        "contentHash": "oLX3oHz3ybpEhkz/LSC2QToLhnGAAEucQSNyaac5UiZtlPwgPsDMvbJ0gE6TLOr0Ao1NUv1ZN1ZXHeJt1zeGfg==",
         "dependencies": {
-          "SharpGLTF.Runtime": "1.0.0-alpha0030"
+          "SharpGLTF.Runtime": "1.0.0-alpha0031"
         }
       },
       "TeximpNet": {
@@ -120,19 +120,6 @@
         "type": "Transitive",
         "resolved": "2.0.0",
         "contentHash": "t6vYF0sXgNb6dP9QNbJxJWw3RdCEWC6Llv47oPYpobYAhmKcgmAZJv6HXK03DEUmo7ff6yPvsyEWTkia+UAONw=="
-      },
-      "Microsoft.Extensions.DependencyInjection": {
-        "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "elNeOmkeX3eDVG6pYVeV82p29hr+UKDaBhrZyWvWLw/EVZSYEkZlQdkp0V39k/Xehs2Qa0mvoCvkVj3eQxNQ1Q==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0"
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions": {
-        "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "h3j/QfmFN4S0w4C2A6X7arXij/M/OVw3uQHSOFxnND4DyAzO1F9eMX7Eti7lU/OkSthEE0WzRsfT/Dmx86jzCw=="
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
@@ -383,15 +370,15 @@
       },
       "SharpGLTF.Core": {
         "type": "Transitive",
-        "resolved": "1.0.0-alpha0030",
-        "contentHash": "HVL6PcrM0H/uEk96nRZfhtPeYvSFGHnni3g1aIckot2IWVp0jLMH5KWgaWfsatEz4Yds3XcdSLUWmJZivDBUPA=="
+        "resolved": "1.0.0-alpha0031",
+        "contentHash": "lFJ/0UrYNVuKl4Cty0xvzAiAZd6GYZw57qi5es/EQbd1Ic+XpbVMV1566aXxxlJFQ0LkTvmI5PhKUjiHNdpmqA=="
       },
       "SharpGLTF.Runtime": {
         "type": "Transitive",
-        "resolved": "1.0.0-alpha0030",
-        "contentHash": "Ysn+fyj9EVXj6mfG0BmzSTBGNi/QvcnTrMd54dBMOlI/TsMRvnOY3JjTn0MpeH2CgHXX4qogzlDt4m+rb3n4Og==",
+        "resolved": "1.0.0-alpha0031",
+        "contentHash": "swop7opkvkw8EfLjL1R98jWYAyowf2L3hlHQZnLTFXRFaN2DIF6vkfi8qdik5pFEI6T/xAAeZjAvsmYktdk2Mg==",
         "dependencies": {
-          "SharpGLTF.Core": "1.0.0-alpha0030"
+          "SharpGLTF.Core": "1.0.0-alpha0031"
         }
       },
       "System.AppContext": {
@@ -1322,12 +1309,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0",
           "System.Xml.XmlDocument": "4.3.0"
-        }
-      },
-      "ottergui": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "[7.0.0, )"
         }
       },
       "penumbra.string": {

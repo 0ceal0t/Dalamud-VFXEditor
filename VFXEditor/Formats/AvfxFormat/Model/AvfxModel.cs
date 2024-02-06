@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -177,24 +177,22 @@ namespace VfxEditor.AvfxFormat {
                 Plugin.Configuration.Save();
             }
 
-            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
-            }
+            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv1 );
-            }
+            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv1 );
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv2 );
-            }
+            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv2 );
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) {
-                Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
-            }
+            if( ImGui.RadioButton( "UV 3", ref Mode, ( int )RenderMode.Uv3 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv3 );
+
+            ImGui.SameLine();
+            if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv4 );
+
+            ImGui.SameLine();
+            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
 
             CheckRefresh();
             Plugin.DirectXManager.ModelPreview.DrawInline();

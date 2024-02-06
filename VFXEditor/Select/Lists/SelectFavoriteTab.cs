@@ -1,7 +1,6 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
-using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Lists {
@@ -18,13 +17,16 @@ namespace VfxEditor.Select.Lists {
 
             if( base.PostRow( item, idx ) ) return true;
 
+            // ======== POPUP ============
+
             using var _ = ImRaii.PushId( idx );
 
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RenameFavorite" );
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "FavoritePopup" );
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 4, 6 ) );
-            if( ImGui.BeginPopup( "RenameFavorite" ) ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );
+            if( ImGui.BeginPopup( "FavoritePopup" ) ) {
                 if( ImGui.InputText( "##Rename", ref item.DisplayString, 128, ImGuiInputTextFlags.AutoSelectAll ) ) Plugin.Configuration.Save();
+                Dialog.PlayPopupItems( item.Path );
                 ImGui.EndPopup();
             }
 

@@ -16,6 +16,8 @@ namespace VfxEditor.DirectX {
             Color,
             Uv1,
             Uv2,
+            Uv3,
+            Uv4,
             Normal
         }
 
@@ -62,15 +64,14 @@ namespace VfxEditor.DirectX {
                     for( var j = 0; j < indexes.Length; j++ ) { // push all 3 vertices per face
                         var vertex = modelVertexes[indexes[j]];
                         var normal = new Vector3( vertex.Normal[0], vertex.Normal[1], vertex.Normal[2] );
-                        var color = new Vector3( vertex.Color[0], vertex.Color[1], vertex.Color[2] );
-                        var uv1 = new Vector4( vertex.Uv1[0] + 0.5f, 0, vertex.Uv1[1] + 0.5f, 1.0f );
-                        var uv2 = new Vector4( vertex.Uv2[2] + 0.5f, 0, vertex.Uv2[3] + 0.5f, 1.0f );
 
                         data.Add( new Vector4( vertex.Position[0], vertex.Position[1], vertex.Position[2], 1.0f ) );
                         data.Add( mode switch {
-                            RenderMode.Color => new Vector4( color / 255, 1.0f ),
-                            RenderMode.Uv1 => uv1,
-                            RenderMode.Uv2 => uv2,
+                            RenderMode.Color => new Vector4( new Vector3( vertex.Color[0], vertex.Color[1], vertex.Color[2] ) / 255, 1.0f ),
+                            RenderMode.Uv1 => new Vector4( vertex.Uv1.X + 0.5f, 0, vertex.Uv1.Y + 0.5f, 1.0f ),
+                            RenderMode.Uv2 => new Vector4( vertex.Uv2.X + 0.5f, 0, vertex.Uv2.Y + 0.5f, 1.0f ),
+                            RenderMode.Uv3 => new Vector4( vertex.Uv3.X + 0.5f, 0, vertex.Uv3.Y + 0.5f, 1.0f ),
+                            RenderMode.Uv4 => new Vector4( vertex.Uv4.X + 0.5f, 0, vertex.Uv4.Y + 0.5f, 1.0f ),
                             RenderMode.Normal => new Vector4( normal.Normalized(), 1.0f ),
                             _ => throw new NotImplementedException()
                         } );
