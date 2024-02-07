@@ -72,13 +72,9 @@ namespace VfxEditor.AvfxFormat {
             for( var i = 0; i < count; i++ ) writer.Write( ( byte )0 );
         }
 
-        public static void FloatTo2Bytes( float val, BinaryWriter writer ) => writer.Write( FloatTo2Bytes( val ) );
+        public static byte[] HalfToBytes( float val ) => BitConverter.GetBytes( Pack( val ) );
 
-        public static byte[] FloatTo2Bytes( float val ) => BitConverter.GetBytes( Pack( val ) );
-
-        public static float Bytes2ToFloat( BinaryReader reader ) => Bytes2ToFloat( reader.ReadBytes( 2 ) );
-
-        public static float Bytes2ToFloat( byte[] bytes ) => Unpack( bytes, 0 );
+        public static float BytesToHalf( byte[] bytes ) => Unpack( bytes, 0 );
 
         public static unsafe ushort Pack( float value ) {
             var num5 = *( uint* )&value;

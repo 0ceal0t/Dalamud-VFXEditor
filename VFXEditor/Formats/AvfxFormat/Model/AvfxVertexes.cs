@@ -36,44 +36,49 @@ namespace VfxEditor.AvfxFormat {
         public AvfxVertex() { }
 
         public AvfxVertex( BinaryReader reader ) {
-            Position = new(
-                AvfxBase.Bytes2ToFloat( reader ),
-                AvfxBase.Bytes2ToFloat( reader ),
-                AvfxBase.Bytes2ToFloat( reader ),
-                AvfxBase.Bytes2ToFloat( reader )
-            );
+            Position = ReadHalf4( reader );
 
             for( var i = 0; i < 4; i++ ) Normal[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Tangent[i] = reader.ReadByte() - 128;
             for( var i = 0; i < 4; i++ ) Color[i] = reader.ReadByte();
 
-            Uv1 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
-            Uv2 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
-            Uv3 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
-            Uv4 = new( AvfxBase.Bytes2ToFloat( reader ), AvfxBase.Bytes2ToFloat( reader ) );
+            Uv1 = ReadHalf2( reader );
+            Uv2 = ReadHalf2( reader );
+            Uv3 = ReadHalf2( reader );
+            Uv4 = ReadHalf2( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            AvfxBase.FloatTo2Bytes( Position.X, writer );
-            AvfxBase.FloatTo2Bytes( Position.Y, writer );
-            AvfxBase.FloatTo2Bytes( Position.Z, writer );
-            AvfxBase.FloatTo2Bytes( Position.W, writer );
+            WriteHalf4( Position, writer );
 
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Normal[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )( Tangent[i] + 128 ) );
             for( var i = 0; i < 4; i++ ) writer.Write( ( byte )Color[i] );
 
-            AvfxBase.FloatTo2Bytes( Uv1.X, writer );
-            AvfxBase.FloatTo2Bytes( Uv1.Y, writer );
-
-            AvfxBase.FloatTo2Bytes( Uv2.X, writer );
-            AvfxBase.FloatTo2Bytes( Uv2.Y, writer );
-
-            AvfxBase.FloatTo2Bytes( Uv3.X, writer );
-            AvfxBase.FloatTo2Bytes( Uv3.Y, writer );
-
-            AvfxBase.FloatTo2Bytes( Uv4.X, writer );
-            AvfxBase.FloatTo2Bytes( Uv4.Y, writer );
+            WriteHalf2( Uv1, writer );
+            WriteHalf2( Uv2, writer );
+            WriteHalf2( Uv3, writer );
+            WriteHalf2( Uv4, writer );
         }
+
+        private static Vector2 ReadHalf2( BinaryReader reader ) => new( ReadHalf( reader ), ReadHalf( reader ) );
+
+        private static Vector4 ReadHalf4( BinaryReader reader ) => new( ReadHalf( reader ), ReadHalf( reader ), ReadHalf( reader ), ReadHalf( reader ) );
+
+        private static float ReadHalf( BinaryReader reader ) => AvfxBase.BytesToHalf( reader.ReadBytes( 2 ) );
+
+        private static void WriteHalf2( Vector2 data, BinaryWriter writer ) {
+            WriteHalf( data.X, writer );
+            WriteHalf( data.Y, writer );
+        }
+
+        private static void WriteHalf4( Vector4 data, BinaryWriter writer ) {
+            WriteHalf( data.X, writer );
+            WriteHalf( data.Y, writer );
+            WriteHalf( data.Z, writer );
+            WriteHalf( data.W, writer );
+        }
+
+        private static void WriteHalf( float val, BinaryWriter writer ) => writer.Write( AvfxBase.HalfToBytes( val ) );
     }
 }
