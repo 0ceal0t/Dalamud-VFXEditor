@@ -4,14 +4,15 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxNodeSelectListAddCommand( AvfxNodeSelectList<T> item ) {
             Item = item;
-        }
 
-        public void Execute() {
             Item.Selected.Add( null );
             Item.UpdateLiteral();
         }
 
-        public void Redo() => Execute();
+        public void Redo() {
+            Item.Selected.Add( null );
+            Item.UpdateLiteral();
+        }
 
         public void Undo() {
             Item.Selected.RemoveAt( Item.Selected.Count - 1 );

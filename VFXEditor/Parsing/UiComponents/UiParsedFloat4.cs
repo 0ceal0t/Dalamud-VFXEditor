@@ -25,22 +25,22 @@ namespace VfxEditor.Parsing {
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<Vector4>( this, Name, out var val ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
-                command.Add( new ParsedSimpleCommand<float>( P3, val.Z ) );
-                command.Add( new ParsedSimpleCommand<float>( P4, val.W ) );
-                CommandManager.Paste( command );
+                CommandManager.Paste( new CompoundCommand( new[] {
+                     new ParsedSimpleCommand<float>( P1, val.X ),
+                     new ParsedSimpleCommand<float>( P2, val.Y ),
+                     new ParsedSimpleCommand<float>( P3, val.Z ),
+                     new ParsedSimpleCommand<float>( P4, val.W )
+                } ) );
             }
 
             var value = Value;
             if( ImGui.InputFloat4( Name, ref value ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
-                command.Add( new ParsedSimpleCommand<float>( P3, value.Z ) );
-                command.Add( new ParsedSimpleCommand<float>( P4, value.W ) );
-                CommandManager.Add( command );
+                CommandManager.Add( new CompoundCommand( new[] {
+                     new ParsedSimpleCommand<float>( P1, value.X ),
+                     new ParsedSimpleCommand<float>( P2, value.Y ),
+                     new ParsedSimpleCommand<float>( P3, value.Z ),
+                     new ParsedSimpleCommand<float>( P4, value.W )
+                } ) );
             }
         }
     }

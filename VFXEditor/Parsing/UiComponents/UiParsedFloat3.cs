@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
@@ -23,20 +24,22 @@ namespace VfxEditor.Parsing {
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<Vector3>( this, Name, out var val ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
-                command.Add( new ParsedSimpleCommand<float>( P3, val.Z ) );
-                CommandManager.Paste( command );
+                var commands = new List<ICommand> {
+                    new ParsedSimpleCommand<float>( P1, val.X ),
+                    new ParsedSimpleCommand<float>( P2, val.Y ),
+                    new ParsedSimpleCommand<float>( P3, val.Z )
+                };
+                CommandManager.Paste( new CompoundCommand( commands ) );
             }
 
             var value = Value;
             if( ImGui.InputFloat3( Name, ref value ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
-                command.Add( new ParsedSimpleCommand<float>( P3, value.Z ) );
-                CommandManager.Add( command );
+                var commands = new List<ICommand> {
+                    new ParsedSimpleCommand<float>( P1, value.X ),
+                    new ParsedSimpleCommand<float>( P2, value.Y ),
+                    new ParsedSimpleCommand<float>( P3, value.Z )
+                };
+                CommandManager.Add( new CompoundCommand( commands ) );
             }
         }
     }

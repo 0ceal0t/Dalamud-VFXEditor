@@ -3,16 +3,14 @@ namespace VfxEditor.AvfxFormat {
         private readonly AvfxNodeSelectList<T> Item;
         private readonly int Idx;
         private readonly T State;
-        private T PrevState;
+        private readonly T PrevState;
 
         public AvfxNodeSelectListCommand( AvfxNodeSelectList<T> item, T state, int idx ) {
             Item = item;
             State = state;
             Idx = idx;
-        }
-
-        public void Execute() {
             PrevState = Item.Selected[Idx];
+
             Item.Select( State, Idx );
         }
 

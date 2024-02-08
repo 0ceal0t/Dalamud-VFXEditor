@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxExport ExportUi;
 
-        private readonly HashSet<IUiItem> ForceOpenTabs = new();
+        private readonly HashSet<IUiItem> ForceOpenTabs = [];
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );
@@ -104,31 +104,31 @@ namespace VfxEditor.AvfxFormat {
 
         public void Cleanup() {
             var removedNodes = new List<AvfxNode>();
-            var command = new CompoundCommand();
-            CleanupInternalView( TimelineView, command, removedNodes );
-            CleanupInternalView( EmitterView, command, removedNodes );
-            CleanupInternalView( ParticleView, command, removedNodes );
-            CleanupInternalView( EffectorView, command, removedNodes );
-            CleanupInternalView( BinderView, command, removedNodes );
-            CleanupInternalView( TextureView, command, removedNodes );
-            CleanupInternalView( ModelView, command, removedNodes );
-            Command.AddAndExecute( command );
+            var commands = new List<ICommand>();
+            CleanupInternalView( TimelineView, commands, removedNodes );
+            CleanupInternalView( EmitterView, commands, removedNodes );
+            CleanupInternalView( ParticleView, commands, removedNodes );
+            CleanupInternalView( EffectorView, commands, removedNodes );
+            CleanupInternalView( BinderView, commands, removedNodes );
+            CleanupInternalView( TextureView, commands, removedNodes );
+            CleanupInternalView( ModelView, commands, removedNodes );
+            Command.AddAndExecute( new CompoundCommand( commands ) );
         }
 
-        private void CleanupInternalView<T>( IUiNodeView<T> view, CompoundCommand command, List<AvfxNode> removedNodes ) where T : AvfxNode {
+        private void CleanupInternalView<T>( IUiNodeView<T> view, List<ICommand> commands, List<AvfxNode> removedNodes ) where T : AvfxNode {
             foreach( var node in view.GetGroup().Items ) {
-                CleanupInternal( node, command, removedNodes );
+                CleanupInternal( node, commands, removedNodes );
             }
         }
 
-        private void CleanupInternal( AvfxNode node, CompoundCommand command, List<AvfxNode> removedNodes ) {
+        private void CleanupInternal( AvfxNode node, List<ICommand> commands, List<AvfxNode> removedNodes ) {
             if( removedNodes.Contains( node ) ) return;
 
             if( !node.Parents.Select( x => x.Node ).Where( x => !removedNodes.Contains( x ) ).Any() ) {
                 removedNodes.Add( node );
-                command.Add( GetRemoveCommand( node ) );
+                commands.Add( GetRemoveCommand( node ) );
                 foreach( var child in node.ChildNodes ) {
-                    CleanupInternal( child, command, removedNodes );
+                    CleanupInternal( child, commands, removedNodes );
                 }
             }
         }

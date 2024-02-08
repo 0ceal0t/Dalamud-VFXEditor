@@ -38,7 +38,7 @@ namespace VfxEditor.SklbFormat.Bones {
         private SklbBone DraggingBone;
         private string SearchText = "";
 
-        public readonly List<SklbMapping> Mappings = new();
+        public readonly List<SklbMapping> Mappings = [];
         public readonly SklbMappingDropdown MappingView;
         public readonly SklbBoneListView ListView;
 
@@ -293,10 +293,11 @@ namespace VfxEditor.SklbFormat.Bones {
                     var newId = BONE_ID++;
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
-                    var command = new CompoundCommand();
-                    command.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
-                    command.Add( new SklbBoneParentCommand( newBone, bone ) );
-                    CommandManager.Add( command );
+                    var commands = new List<ICommand> {
+                        new ListAddCommand<SklbBone>( Bones, newBone ),
+                        new SklbBoneParentCommand( newBone, bone )
+                    };
+                    CommandManager.Add( new CompoundCommand( commands ) );
                 }
 
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
@@ -443,11 +444,11 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( toDelete.Contains( Selected ) ) ClearSelected();
 
-            var command = new CompoundCommand();
+            var commands = new List<ICommand>();
             foreach( var item in toDelete ) {
-                command.Add( new ListRemoveCommand<SklbBone>( Bones, item ) );
+                commands.Add( new ListRemoveCommand<SklbBone>( Bones, item ) );
             }
-            CommandManager.Add( command );
+            CommandManager.Add( new CompoundCommand( commands ) );
         }
 
         public void PopulateChildren( SklbBone parent, List<SklbBone> children ) {

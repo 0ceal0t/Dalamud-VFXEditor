@@ -374,12 +374,7 @@ namespace VfxEditor.Utils {
 
             if( draggingItem != destination && items.Contains( draggingItem ) && items.Contains( destination ) ) {
                 var command = new ListMoveCommand<T>( items, draggingItem, destination );
-                if( !record ) {
-                    command.Execute();
-                }
-                else {
-                    CommandManager.Add( command );
-                }
+                if( record ) CommandManager.Add( command );
             }
             draggingItem = null;
             return true;

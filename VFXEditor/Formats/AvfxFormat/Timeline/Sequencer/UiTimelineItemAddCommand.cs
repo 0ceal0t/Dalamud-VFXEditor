@@ -1,21 +1,17 @@
 namespace VfxEditor.AvfxFormat {
     public class UiTimelineItemAddCommand : ICommand {
         private readonly UiTimelineItemSequencer View;
-        private AvfxTimelineItem Item;
-        private int Idx;
+        private readonly AvfxTimelineItem Item;
+        private readonly int Idx;
 
         public UiTimelineItemAddCommand( UiTimelineItemSequencer view ) {
             View = view;
-        }
-
-        public void Execute() {
             Idx = View.Items.Count;
-
             Item = new AvfxTimelineItem( View.Timeline, true );
+
             Item.BinderSelect.Select( null );
             Item.EffectorSelect.Select( null );
             Item.EmitterSelect.Select( null );
-
             Item.Enabled.Value = false;
             Item.EmitterIdx.Value = -1;
             Item.EffectorIdx.Value = -1;
@@ -23,13 +19,14 @@ namespace VfxEditor.AvfxFormat {
             Item.Platform.Value = 0;
             Item.EndTime.Value = 1;
             Item.StartTime.Value = 0;
-
-            Add();
+            View.Items.Insert( Idx, Item );
+            View.UpdateIdx();
             View.Selected = Item;
         }
 
         public void Redo() {
-            Add();
+            View.Items.Insert( Idx, Item );
+            View.UpdateIdx();
             Item.BinderSelect.Enable();
             Item.EmitterSelect.Enable();
             Item.EffectorSelect.Enable();
@@ -43,11 +40,6 @@ namespace VfxEditor.AvfxFormat {
             Item.BinderSelect.Disable();
             Item.EmitterSelect.Disable();
             Item.EffectorSelect.Disable();
-        }
-
-        private void Add() {
-            View.Items.Insert( Idx, Item );
-            View.UpdateIdx();
         }
     }
 }

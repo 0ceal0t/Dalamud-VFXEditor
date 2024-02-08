@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Copy;
@@ -71,20 +71,22 @@ namespace VfxEditor.AvfxFormat {
             if( IsAssigned() ) return false;
 
             if( ImGui.SmallButton( $"+ {name}" ) ) {
-                var command = new CompoundCommand();
-                command.Add( new AvfxAssignCommand( this, true, false, true ) );
-                foreach( var item in items ) command.Add( new AvfxAssignCommand( item, true, false, true ) );
-                CommandManager.Add( command );
+                var commands = new List<ICommand> {
+                    new AvfxAssignCommand( this, true, false, true )
+                };
+                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, true, false, true ) );
+                CommandManager.Add( new CompoundCommand( commands ) );
             }
             return true;
         }
 
         public void DrawUnassignPopup<T>( List<T> items, string name ) where T : AvfxBase {
             if( UnassignPopup( name ) ) {
-                var command = new CompoundCommand();
-                command.Add( new AvfxAssignCommand( this, false, false, true ) );
-                foreach( var item in items ) command.Add( new AvfxAssignCommand( item, false, false, true ) );
-                CommandManager.Add( command );
+                var commands = new List<ICommand> {
+                    new AvfxAssignCommand( this, false, false, true )
+                };
+                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, false, false, true ) );
+                CommandManager.Add( new CompoundCommand( commands ) );
             }
         }
 

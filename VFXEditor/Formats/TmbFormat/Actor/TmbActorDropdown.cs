@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.TmbFormat.Actor {
@@ -17,20 +17,19 @@ namespace VfxEditor.TmbFormat.Actor {
         protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 
         protected override void OnDelete( Tmac item ) {
-            var command = new TmbRefreshIdsCommand( File );
-            command.Add( new ListRemoveCommand<Tmac>( Items, item ) );
-            command.Add( new ListRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
-            item.DeleteChildren( command, File );
-            CommandManager.Add( command );
+            var commands = new List<ICommand>();
+            commands.Add( new ListRemoveCommand<Tmac>( Items, item ) );
+            commands.Add( new ListRemoveCommand<Tmac>( File.HeaderTmal.Actors, item ) );
+            item.DeleteChildren( commands, File );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         protected override void OnNew() {
             var newActor = new Tmac( File );
-
-            var command = new TmbRefreshIdsCommand( File );
-            command.Add( new ListAddCommand<Tmac>( Items, newActor ) );
-            command.Add( new ListAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
-            CommandManager.Add( command );
+            var commands = new List<ICommand>();
+            commands.Add( new ListAddCommand<Tmac>( Items, newActor ) );
+            commands.Add( new ListAddCommand<Tmac>( File.HeaderTmal.Actors, newActor ) );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         protected override void DrawSelected() => Selected.Draw();

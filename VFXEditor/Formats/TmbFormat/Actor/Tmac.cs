@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Data.Command.ListCommands;
@@ -66,20 +66,22 @@ namespace VfxEditor.TmbFormat.Actor {
                         var newTrack = new Tmtr( File );
                         var idx = Tracks.Count == 0 ? 0 : File.Tracks.IndexOf( Tracks.Last() ) + 1;
 
-                        var command = new TmbRefreshIdsCommand( File );
-                        command.Add( new ListAddCommand<Tmtr>( Tracks, newTrack ) );
-                        command.Add( new ListAddCommand<Tmtr>( File.Tracks, newTrack, idx ) );
-                        CommandManager.Add( command );
+                        var commands = new List<ICommand> {
+                            new ListAddCommand<Tmtr>( Tracks, newTrack ),
+                            new ListAddCommand<Tmtr>( File.Tracks, newTrack, idx )
+                        };
+                        CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
                     }
 
                     if( SelectedTrack != null ) {
                         ImGui.SameLine();
                         if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) { // REMOVE
-                            var command = new TmbRefreshIdsCommand( File );
-                            command.Add( new ListRemoveCommand<Tmtr>( Tracks, SelectedTrack ) );
-                            command.Add( new ListRemoveCommand<Tmtr>( File.Tracks, SelectedTrack ) );
-                            SelectedTrack.DeleteAllEntries( command );
-                            CommandManager.Add( command );
+                            var commands = new List<ICommand> {
+                                new ListRemoveCommand<Tmtr>( Tracks, SelectedTrack ),
+                                new ListRemoveCommand<Tmtr>( File.Tracks, SelectedTrack )
+                            };
+                            SelectedTrack.DeleteAllEntries( commands );
+                            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
 
                             SelectedTrack = null;
                         }
@@ -121,11 +123,11 @@ namespace VfxEditor.TmbFormat.Actor {
             ImGui.Columns( 1 );
         }
 
-        public void DeleteChildren( TmbRefreshIdsCommand command, TmbFile file ) {
+        public void DeleteChildren( List<ICommand> commands, TmbFile file ) { // file.RefreshIds();
             foreach( var track in Tracks ) {
-                command.Add( new ListRemoveCommand<Tmtr>( Tracks, track ) );
-                command.Add( new ListRemoveCommand<Tmtr>( file.Tracks, track ) );
-                track.DeleteAllEntries( command );
+                commands.Add( new ListRemoveCommand<Tmtr>( Tracks, track ) );
+                commands.Add( new ListRemoveCommand<Tmtr>( file.Tracks, track ) );
+                track.DeleteAllEntries( commands );
             }
         }
     }

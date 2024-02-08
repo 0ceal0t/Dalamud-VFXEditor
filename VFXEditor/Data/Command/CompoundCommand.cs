@@ -1,24 +1,27 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor {
     public class CompoundCommand : ICommand {
-        private readonly List<ICommand> Commands = new();
+        private readonly Action OnChangeAction;
+        private readonly List<ICommand> Commands = [];
 
-        public CompoundCommand() { }
-
-        public CompoundCommand( IEnumerable<ICommand> commands ) {
+        public CompoundCommand( IEnumerable<ICommand> commands, Action onChangeAction = null ) {
             Commands.AddRange( commands );
+            OnChangeAction = onChangeAction;
+
+            OnChangeAction?.Invoke();
         }
 
-        public void Add( ICommand command ) => Commands.Add( command );
+        public virtual void Redo() {
+            Commands.ForEach( x => x.Redo() );
+            OnChangeAction?.Invoke();
+        }
 
-        public void Clear() => Commands.Clear();
-
-        public virtual void Execute() => Commands.ForEach( x => x.Execute() );
-
-        public virtual void Redo() => Commands.ForEach( x => x.Redo() );
-
-        public virtual void Undo() => Commands.AsEnumerable().Reverse().ToList().ForEach( x => x.Undo() );
+        public virtual void Undo() {
+            Commands.AsEnumerable().Reverse().ToList().ForEach( x => x.Undo() );
+            OnChangeAction?.Invoke();
+        }
     }
 }

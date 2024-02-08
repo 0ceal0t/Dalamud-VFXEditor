@@ -1,12 +1,12 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
-using Dalamud.Interface.Utility.Raii;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
-using VfxEditor.Formats.AvfxFormat.Curve.Editor;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
@@ -87,9 +87,9 @@ namespace VfxEditor.AvfxFormat {
             StateBeforeEditing = (Time.Value, Data.Value);
         }
 
-        public void StopDragging( AvfxCurveCompoundCommand command ) {
-            command.Add( new ParsedSimpleCommand<int>( Time, StateBeforeEditing.Item1, Time.Value ) );
-            command.Add( new ParsedSimpleCommand<Vector3>( Data, StateBeforeEditing.Item2, Data.Value ) );
+        public void StopDragging( List<ICommand> commands ) {
+            commands.Add( new ParsedSimpleCommand<int>( Time, StateBeforeEditing.Item1, Time.Value ) );
+            commands.Add( new ParsedSimpleCommand<Vector3>( Data, StateBeforeEditing.Item2, Data.Value ) );
         }
 
         // ======= DRAWING =========
@@ -130,9 +130,9 @@ namespace VfxEditor.AvfxFormat {
             else {
                 var data = Converted;
                 if( ImGui.InputFloat3( "Value", ref data ) ) {
-                    CommandManager.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
+                    CommandManager.Add( new CompoundCommand( new[] {
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
-                    } ) );
+                    }, onChangeAction: () => Curve.Update() ) );
                 }
             }
         }
@@ -175,9 +175,9 @@ namespace VfxEditor.AvfxFormat {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) { // Only actually commit the changes if 200ms have passed since the last one
                 Editing = false;
-                CommandManager.Add( new AvfxCurveCompoundCommand( Curve, new ICommand[] {
-                    new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color ),
-                } ) );
+                CommandManager.Add( new CompoundCommand( new[] {
+                    new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color )
+                }, onChangeAction: () => Curve.Update() ) );
             }
         }
 

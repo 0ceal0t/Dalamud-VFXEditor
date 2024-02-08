@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -161,12 +161,12 @@ namespace VfxEditor.TmbFormat {
             var payload = ImGui.AcceptDragDropPayload( "TMB_ENTRY" );
             if( payload.NativePtr == null ) return;
 
-            var command = new TmbRefreshIdsCommand( this );
+            var commands = new List<ICommand>();
             foreach( var track in Tracks ) {
-                track.DeleteEntry( command, DraggingEntry ); // will add to command
+                track.DeleteEntry( commands, DraggingEntry ); // will add to command
             }
-            destination.AddEntry( command, DraggingEntry );
-            CommandManager.Add( command );
+            destination.AddEntry( commands, DraggingEntry );
+            CommandManager.Add( new CompoundCommand( commands, RefreshIds ) );
 
             DraggingEntry = null;
         }

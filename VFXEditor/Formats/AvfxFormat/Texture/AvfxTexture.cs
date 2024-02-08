@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -60,9 +60,9 @@ namespace VfxEditor.AvfxFormat {
 
         public bool CanConvertToCustom() => Plugin.TextureManager.CanConvertToCustom( PathTrimmed );
 
-        public void ConvertToCustom( CompoundCommand command ) {
+        public void ConvertToCustom( List<ICommand> commands ) {
             if( Plugin.TextureManager.ConvertToCustom( PathTrimmed, out var newPath ) ) {
-                command.Add( new ParsedSimpleCommand<string>( Path.Parsed, Path.Value, newPath ) );
+                commands.Add( new ParsedSimpleCommand<string>( Path.Parsed, Path.Value, newPath ) );
             }
         }
 

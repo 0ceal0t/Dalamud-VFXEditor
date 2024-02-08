@@ -7,34 +7,31 @@ namespace VfxEditor.Data.Command.ListCommands {
         protected readonly List<T> Items;
         protected readonly T Item;
         protected readonly T Destination;
-        protected int ItemIdx;
-        protected int DestinationIdx;
+        protected readonly int Idx;
+        protected readonly int NewIdx;
 
         public ListMoveCommand( List<T> items, T item, T destination, Action<T> onChangeAction = null ) {
             OnChangeAction = onChangeAction;
             Items = items;
             Item = item;
             Destination = destination;
-        }
-
-        public virtual void Execute() {
-            ItemIdx = Items.IndexOf( Item );
-            DestinationIdx = Items.IndexOf( Destination );
+            Idx = Items.IndexOf( Item );
+            NewIdx = Items.IndexOf( Destination );
 
             Items.Remove( Item );
-            Items.Insert( DestinationIdx, Item );
+            Items.Insert( NewIdx, Item );
             OnChangeAction?.Invoke( Item );
         }
 
         public virtual void Redo() {
             Items.Remove( Item );
-            Items.Insert( DestinationIdx, Item );
+            Items.Insert( NewIdx, Item );
             OnChangeAction?.Invoke( Item );
         }
 
         public virtual void Undo() {
             Items.Remove( Item );
-            Items.Insert( ItemIdx, Item );
+            Items.Insert( Idx, Item );
             OnChangeAction?.Invoke( Item );
         }
     }

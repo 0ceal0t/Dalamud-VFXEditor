@@ -25,7 +25,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         public readonly SklbBones Bones;
         public readonly SkeletonMapper* Mapper;
 
-        public readonly List<SklbSimpleMapping> SimpleMappings = new();
+        public readonly List<SklbSimpleMapping> SimpleMappings = [];
         public readonly SklbSimpleMappingSplitView SimpleMappingView;
 
         public hkaSkeleton* MappedSkeleton => Mapper->Mapping.SkeletonA.ptr;
@@ -136,7 +136,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         }
 
         public void GenerateMapping( int idx, bool updateExisting ) {
-            var command = new CompoundCommand();
+            var commands = new List<ICommand>();
 
             var mappedBoneNames = new Dictionary<string, int>();
             for( var i = 0; i < MappedSkeleton->Bones.Length; i++ ) {
@@ -162,7 +162,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 newSimple.BoneB.Value = boneIdx;
 
                 allMappings.Add( newSimple );
-                command.Add( new ListAddCommand<SklbSimpleMapping>( SimpleMappings, newSimple ) );
+                commands.Add( new ListAddCommand<SklbSimpleMapping>( SimpleMappings, newSimple ) );
             }
 
             foreach( var simple in allMappings ) {
@@ -193,12 +193,12 @@ namespace VfxEditor.SklbFormat.Mapping {
                 if( resultRot.W < 0 ) resultRot *= -1f;
                 if( idx % 2 == 0 ) resultRot = new( 0f, 0f, 0f, 1f );
 
-                command.Add( new ParsedSimpleCommand<Vector4>( simple.Translation, new( resultPos, 0 ) ) );
-                command.Add( new ParsedSimpleCommand<Vector3>( simple.Rotation, ParsedQuat.ToEuler( resultRot ) ) );
-                command.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
+                commands.Add( new ParsedSimpleCommand<Vector4>( simple.Translation, new( resultPos, 0 ) ) );
+                commands.Add( new ParsedSimpleCommand<Vector3>( simple.Rotation, ParsedQuat.ToEuler( resultRot ) ) );
+                commands.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
             }
 
-            CommandManager.Add( command );
+            CommandManager.Add( new CompoundCommand( commands ) );
         }
     }
 }

@@ -6,16 +6,14 @@ namespace VfxEditor.AvfxFormat {
         private readonly AvfxItemSplitView<T> View;
         private readonly List<T> Group;
         private readonly T Item;
-        private int Idx;
+        private readonly int Idx;
 
         public AvfxItemSplitViewRemoveCommand( AvfxItemSplitView<T> view, List<T> group, T item ) {
             View = view;
             Group = group;
             Item = item;
-        }
-
-        public void Execute() {
             Idx = Group.IndexOf( Item );
+
             Redo();
         }
 

@@ -6,8 +6,6 @@ namespace VfxEditor.AvfxFormat {
             Remover = new( view, group, item ); // Already added, just need to prep the remover
         }
 
-        public void Execute() => Remover.Execute();
-
         public void Redo() => Remover.Add();
 
         public void Undo() => Remover.Remove();

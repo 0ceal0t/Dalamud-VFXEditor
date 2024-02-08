@@ -6,15 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
-using VfxEditor.Formats.AvfxFormat.Curve.Editor;
 using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxCurve {
-        private static readonly List<(KeyType, Vector4)> CopiedKeys = new();
+        private static readonly List<(KeyType, Vector4)> CopiedKeys = [];
 
-        private readonly List<AvfxCurveKey> Selected = new();
+        private readonly List<AvfxCurveKey> Selected = [];
         private AvfxCurveKey SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
 
         private bool DrawOnce = false;
@@ -97,9 +96,9 @@ namespace VfxEditor.AvfxFormat {
 
                     if( Editing && !draggingAnyPoint && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                         Editing = false;
-                        var command = new AvfxCurveCompoundCommand( this );
-                        Selected.ForEach( x => x.StopDragging( command ) );
-                        CommandManager.Add( command );
+                        var commands = new List<ICommand>();
+                        Selected.ForEach( x => x.StopDragging( commands ) );
+                        CommandManager.Add( new CompoundCommand( commands, Update ) );
                     }
 
                     // Selecting point [Left Click]
@@ -190,9 +189,9 @@ namespace VfxEditor.AvfxFormat {
 
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) {
-                    var command = new AvfxCurveCompoundCommand( this );
-                    foreach( var key in CopiedKeys ) command.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
-                    CommandManager.Add( command );
+                    var commands = new List<ICommand>();
+                    foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
+                    CommandManager.Add( new CompoundCommand( commands, Update ) );
                 }
 
                 ImGui.SameLine();
@@ -272,8 +271,8 @@ namespace VfxEditor.AvfxFormat {
         // ======== UTILS ===========
 
         private static void GetDrawLine( List<AvfxCurveKey> points, bool color, out List<double> xs, out List<double> ys ) {
-            xs = new();
-            ys = new();
+            xs = [];
+            ys = [];
 
             if( points.Count > 0 ) {
                 xs.Add( points[0].DisplayX );

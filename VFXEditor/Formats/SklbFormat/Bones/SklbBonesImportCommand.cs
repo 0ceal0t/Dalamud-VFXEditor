@@ -3,27 +3,25 @@ using System.Collections.Generic;
 namespace VfxEditor.SklbFormat.Bones {
     public class SklbBonesImportCommand : ICommand {
         public readonly SklbBones Bones;
-        public readonly List<SklbBone> OldBones = new();
-        public readonly List<SklbBone> NewBones;
+        public readonly List<SklbBone> State;
+        public readonly List<SklbBone> PrevState;
 
-        public SklbBonesImportCommand( SklbBones bones, List<SklbBone> newBones ) {
+        public SklbBonesImportCommand( SklbBones bones, List<SklbBone> state ) {
             Bones = bones;
-            NewBones = newBones;
+            State = state;
+            PrevState = new( Bones.Bones );
+
+            SetState( State );
         }
 
-        public void Execute() {
-            OldBones.AddRange( Bones.Bones );
-            Set( NewBones );
-        }
+        public void Redo() => SetState( State );
 
-        public void Redo() => Set( NewBones );
+        public void Undo() => SetState( PrevState );
 
-        public void Undo() => Set( OldBones );
-
-        public void Set( List<SklbBone> bones ) {
+        public void SetState( List<SklbBone> state ) {
             Bones.ClearSelected();
             Bones.Bones.Clear();
-            Bones.Bones.AddRange( bones );
+            Bones.Bones.AddRange( state );
             Bones.Updated();
         }
     }

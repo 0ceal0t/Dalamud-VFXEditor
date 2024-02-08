@@ -5,18 +5,16 @@ namespace VfxEditor.Formats.AvfxFormat.Assign {
         private readonly AvfxBase Item;
         private readonly bool Assigned;
         private readonly bool Recurse;
-        private readonly bool Toggle;
-        private bool PrevState;
+        private readonly bool ToggleState;
+        private readonly bool PrevState;
 
-        public AvfxAssignCommand( AvfxBase item, bool assigned, bool recurse, bool toggle ) {
+        public AvfxAssignCommand( AvfxBase item, bool assigned, bool recurse, bool toggleState ) {
             Item = item;
             Assigned = assigned;
             Recurse = recurse;
-            Toggle = toggle;
-        }
+            ToggleState = toggleState;
+            PrevState = ToggleState ? !Assigned : Item.IsAssigned();
 
-        public void Execute() {
-            PrevState = Toggle ? !Assigned : Item.IsAssigned();
             Item.SetAssigned( Assigned, Recurse );
         }
 

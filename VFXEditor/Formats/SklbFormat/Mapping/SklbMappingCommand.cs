@@ -4,25 +4,23 @@ using VfxEditor.Interop.Structs.Animation;
 namespace VfxEditor.Formats.SklbFormat.Mapping {
     public unsafe class SklbMappingCommand : ICommand {
         private readonly SkeletonMapper* Mapper;
-        private readonly hkaSkeleton* NewSkeleton;
-        private hkaSkeleton* OldSkeleton;
+        private readonly hkaSkeleton* State;
+        private readonly hkaSkeleton* PrevState;
 
-        public SklbMappingCommand( SkeletonMapper* mapper, hkaSkeleton* newSkeleton ) {
+        public SklbMappingCommand( SkeletonMapper* mapper, hkaSkeleton* state ) {
             Mapper = mapper;
-            NewSkeleton = newSkeleton;
-        }
+            State = state;
+            PrevState = Mapper->Mapping.SkeletonA.ptr;
 
-        public void Execute() {
-            OldSkeleton = Mapper->Mapping.SkeletonA.ptr;
-            Mapper->Mapping.SkeletonA.ptr = NewSkeleton;
+            Mapper->Mapping.SkeletonA.ptr = State;
         }
 
         public void Redo() {
-            Mapper->Mapping.SkeletonA.ptr = NewSkeleton;
+            Mapper->Mapping.SkeletonA.ptr = State;
         }
 
         public void Undo() {
-            Mapper->Mapping.SkeletonA.ptr = OldSkeleton;
+            Mapper->Mapping.SkeletonA.ptr = PrevState;
         }
     }
 }

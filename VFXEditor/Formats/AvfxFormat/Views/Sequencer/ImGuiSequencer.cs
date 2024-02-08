@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -478,7 +478,7 @@ namespace VfxEditor.AvfxFormat {
         public abstract int GetStart( T item );
         public abstract int GetEnd( T item );
         public abstract void SetPos( T item, int start, int end );
-        public abstract void OnDragEnd( T item, int startBegin, int startFinish, int endBegin, int endFinish );
+        public abstract void OnDragEnd( T item, int prevStart, int start, int prevEnd, int end );
         public abstract void OnDelete( T item );
         public abstract void OnNew();
         public abstract bool IsEnabled( T item );

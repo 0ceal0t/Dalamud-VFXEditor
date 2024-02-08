@@ -18,8 +18,8 @@ namespace VfxEditor {
         public static void Pop() {
             var item = Stack.Pop();
             if( item != null && CopyManager.IsPasting ) {
-                item.AddAndExecute( item.PasteCommand ); // Commit the changes
-                item.PasteCommand = new();
+                item.AddAndExecute( new CompoundCommand( item.PasteCommands ) ); // Commit the changes
+                item.PasteCommands.Clear();
             }
         }
 
@@ -43,7 +43,7 @@ namespace VfxEditor {
         public static void Paste( ICommand command ) {
             if( Current == null ) return;
             if( !CopyManager.IsPasting ) return;
-            Current.PasteCommand.Add( command );
+            Current.PasteCommands.Add( command );
         }
 
         // ======================
@@ -52,14 +52,13 @@ namespace VfxEditor {
 
         private readonly FileManagerFile File;
 
-        protected CompoundCommand PasteCommand = new();
+        private readonly List<ICommand> PasteCommands = [];
 
         public CommandManager( FileManagerFile file ) {
             File = file;
         }
 
         public void AddAndExecute( ICommand command ) {
-            command.Execute();
             Commands.Add( command );
             File.OnChange();
             Edited.SetEdited();

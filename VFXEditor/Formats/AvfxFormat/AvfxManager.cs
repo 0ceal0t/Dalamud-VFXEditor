@@ -1,5 +1,6 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AvfxFormat.Dialogs;
@@ -36,9 +37,9 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( "Apply" ) ) {
                     foreach( var file in Documents.Where( x => x.File != null ).Select( x => x.File ) ) {
-                        var command = new CompoundCommand();
-                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( command ) );
-                        file.Command.AddAndExecute( command );
+                        var commands = new List<ICommand>();
+                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( commands ) );
+                        file.Command.AddAndExecute( new CompoundCommand( commands ) );
                     }
                 }
                 ImGui.EndMenu();

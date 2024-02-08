@@ -6,16 +6,14 @@ namespace VfxEditor.Data.Command.ListCommands {
         protected readonly Action OnChangeAction;
         protected readonly List<T> Items;
         protected readonly List<T> State;
-        protected List<T> PrevState;
+        protected readonly List<T> PrevState;
 
         public ListSetCommand( List<T> items, IEnumerable<T> state, Action onChangeAction = null ) {
             OnChangeAction = onChangeAction;
             Items = items;
             State = new List<T>( state );
-        }
-
-        public virtual void Execute() {
             PrevState = new List<T>( Items );
+
             Items.Clear();
             Items.AddRange( State );
             OnChangeAction?.Invoke();

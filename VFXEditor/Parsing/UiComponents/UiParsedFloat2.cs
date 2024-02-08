@@ -21,18 +21,18 @@ namespace VfxEditor.Parsing {
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<Vector2>( this, Name, out var val ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, val.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, val.Y ) );
-                CommandManager.Paste( command );
+                CommandManager.Paste( new CompoundCommand( new[] {
+                    new ParsedSimpleCommand<float>( P1, val.X ),
+                    new ParsedSimpleCommand<float>( P2, val.Y )
+                } ) );
             }
 
             var value = Value;
             if( ImGui.InputFloat2( Name, ref value ) ) {
-                var command = new CompoundCommand();
-                command.Add( new ParsedSimpleCommand<float>( P1, value.X ) );
-                command.Add( new ParsedSimpleCommand<float>( P2, value.Y ) );
-                CommandManager.Add( command );
+                CommandManager.Add( new CompoundCommand( new[] {
+                    new ParsedSimpleCommand<float>( P1, value.X ),
+                    new ParsedSimpleCommand<float>( P2, value.Y )
+                } ) );
             }
         }
     }

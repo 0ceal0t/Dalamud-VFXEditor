@@ -1,29 +1,24 @@
 namespace VfxEditor.AvfxFormat {
     public class UiTimelineItemDragCommand : ICommand {
         private readonly AvfxTimelineItem Item;
-        private readonly int StartBegin;
-        private readonly int StartFinish;
-        private readonly int EndBegin;
-        private readonly int EndFinish;
+        private readonly (int, int) State;
+        private readonly (int, int) PrevState;
 
-        public UiTimelineItemDragCommand( AvfxTimelineItem item, int startBegin, int startFinish, int endBegin, int endFinish ) {
+        public UiTimelineItemDragCommand( AvfxTimelineItem item, int prevStart, int start, int prevEnd, int end ) {
             Item = item;
-            StartBegin = startBegin;
-            StartFinish = startFinish;
-            EndBegin = endBegin;
-            EndFinish = endFinish;
+            State = (start, end);
+            PrevState = (prevStart, prevEnd);
+            // Already dragged, don't need to update here
         }
 
-        public void Execute() { }
-
         public void Redo() {
-            Item.StartTime.Value = StartFinish;
-            Item.EndTime.Value = EndFinish;
+            Item.StartTime.Value = State.Item1;
+            Item.EndTime.Value = State.Item2;
         }
 
         public void Undo() {
-            Item.StartTime.Value = StartBegin;
-            Item.EndTime.Value = EndBegin;
+            Item.StartTime.Value = PrevState.Item1;
+            Item.EndTime.Value = PrevState.Item2;
         }
     }
 }

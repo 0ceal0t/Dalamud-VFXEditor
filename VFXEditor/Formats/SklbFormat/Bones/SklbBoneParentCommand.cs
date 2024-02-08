@@ -8,9 +8,7 @@ namespace VfxEditor.SklbFormat.Bones {
             Item = item;
             State = parent;
             PrevState = item.Parent;
-        }
 
-        public void Execute() {
             Item.MakeChildOf( State );
         }
 

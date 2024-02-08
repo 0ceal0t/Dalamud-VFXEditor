@@ -4,10 +4,6 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxNodeViewRemoveCommand( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
             Remover = new( view, group, item );
-        }
-
-        public void Execute() {
-            Remover.Execute();
             Remover.Remove();
         }
 

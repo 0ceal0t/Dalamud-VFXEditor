@@ -7,8 +7,8 @@ namespace VfxEditor.PapFormat {
         private readonly Action ChangeAction;
         private readonly hkArray<hkRefPtr<hkaAnimation>> OldAnimations;
         private readonly hkArray<hkRefPtr<hkaAnimationBinding>> OldBindings;
-        private hkArray<hkRefPtr<hkaAnimation>> NewAnimations;
-        private hkArray<hkRefPtr<hkaAnimationBinding>> NewBindings;
+        private readonly hkArray<hkRefPtr<hkaAnimation>> NewAnimations;
+        private readonly hkArray<hkRefPtr<hkaAnimationBinding>> NewBindings;
 
         public PapHavokCommand( PapFile file, Action changeAction ) {
             File = file;
@@ -17,9 +17,7 @@ namespace VfxEditor.PapFormat {
             // Back up data
             OldAnimations = File.MotionData.AnimationContainer->Animations;
             OldBindings = File.MotionData.AnimationContainer->Bindings;
-        }
 
-        public void Execute() {
             ChangeAction.Invoke();
             NewAnimations = File.MotionData.AnimationContainer->Animations;
             NewBindings = File.MotionData.AnimationContainer->Bindings;

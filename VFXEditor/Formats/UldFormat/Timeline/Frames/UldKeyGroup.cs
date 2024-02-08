@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly ParsedEnum<KeyUsage> Usage = new( "Usage", size: 2 );
         public readonly ParsedDataListEnum<KeyGroupType, UldKeyframe> Type;
 
-        public readonly List<UldKeyframe> Keyframes = new();
+        public readonly List<UldKeyframe> Keyframes = [];
 
         public UldKeyGroup() {
             Type = new( Keyframes, "Type", size: 2 );

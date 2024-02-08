@@ -5,17 +5,15 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxItemSplitViewAddCommand<T> : ICommand where T : class, IIndexUiItem {
         private readonly AvfxItemSplitView<T> View;
         private readonly List<T> Group;
-        private int Idx;
-        private T Item;
+        private readonly int Idx;
+        private readonly T Item;
 
         public AvfxItemSplitViewAddCommand( AvfxItemSplitView<T> view, List<T> group ) {
             View = view;
             Group = group;
-        }
-
-        public void Execute() {
             Idx = Group.Count;
             Item = View.CreateNewAvfx();
+
             Add();
         }
 

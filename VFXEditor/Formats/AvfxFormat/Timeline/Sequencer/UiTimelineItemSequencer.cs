@@ -26,9 +26,9 @@ namespace VfxEditor.AvfxFormat {
             item.EndTime.Value = end;
         }
 
-        public override void OnDragEnd( AvfxTimelineItem item, int startBegin, int startFinish, int endBegin, int endFinish ) {
-            if( startBegin == startFinish && endBegin == endFinish ) return;
-            CommandManager.Add( new UiTimelineItemDragCommand( item, startBegin, startFinish, endBegin, endFinish ) );
+        public override void OnDragEnd( AvfxTimelineItem item, int prevStart, int start, int prevEnd, int end ) {
+            if( prevStart == start && prevEnd == end ) return;
+            CommandManager.Add( new UiTimelineItemDragCommand( item, prevStart, start, prevEnd, end ) );
         }
 
         public override void OnDoubleClick( AvfxTimelineItem item ) {

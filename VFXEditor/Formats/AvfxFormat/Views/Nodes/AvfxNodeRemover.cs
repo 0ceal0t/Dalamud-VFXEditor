@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly NodeGroup<T> Group;
         private readonly IUiNodeView<T> View;
         private readonly T Item;
-        private int Idx;
+        private readonly int Idx;
 
         private readonly Dictionary<AvfxNode, List<AvfxNodeSelect>> ChildToRemovedSelectors = new();
         private readonly Dictionary<AvfxNodeSelect, List<AvfxNode>> RemovedFromParents = new();
@@ -16,9 +16,6 @@ namespace VfxEditor.AvfxFormat {
             View = view;
             Group = group;
             Item = item;
-        }
-
-        public void Execute() {
             Idx = Group.Items.IndexOf( Item );
         }
 

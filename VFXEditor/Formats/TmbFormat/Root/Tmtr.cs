@@ -22,13 +22,13 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x18;
         public override int ExtraSize => !LuaAssigned.Value ? 0 : 8 + ( 12 * LuaEntries.Count );
 
-        public readonly List<TmbEntry> Entries = new();
+        public readonly List<TmbEntry> Entries = [];
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private TmtrLuaEntry DraggingItem;
         private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
-        public readonly List<TmtrLuaEntry> LuaEntries = new();
+        public readonly List<TmtrLuaEntry> LuaEntries = [];
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
 
@@ -133,33 +133,33 @@ namespace VfxEditor.TmbFormat {
             tmbReader.ParseItem( File, actors, tracks, entries, tmfcs, ref verified );
             var newEntry = entries[0];
 
-            var command = new TmbRefreshIdsCommand( File );
-            AddEntry( command, newEntry );
-            CommandManager.Add( command );
+            var commands = new List<ICommand>();
+            AddEntry( commands, newEntry );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
-        public void AddEntry( CompoundCommand command, TmbEntry entry ) {
-            command.Add( new ListAddCommand<TmbEntry>( Entries, entry ) );
-            command.Add( new ListAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
+        public void AddEntry( List<ICommand> commands, TmbEntry entry ) {
+            commands.Add( new ListAddCommand<TmbEntry>( Entries, entry ) );
+            commands.Add( new ListAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
         }
 
         public void DeleteEntry( TmbEntry entry ) {
             if( !Entries.Contains( entry ) ) return;
-            var command = new TmbRefreshIdsCommand( File );
-            DeleteEntry( command, entry );
-            CommandManager.Add( command );
+            var commands = new List<ICommand>();
+            DeleteEntry( commands, entry );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
-        public void DeleteEntry( CompoundCommand command, TmbEntry entry ) {
+        public void DeleteEntry( List<ICommand> commands, TmbEntry entry ) {
             if( !Entries.Contains( entry ) ) return;
-            command.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
-            command.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+            commands.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
+            commands.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
         }
 
-        public void DeleteAllEntries( TmbRefreshIdsCommand command ) {
+        public void DeleteAllEntries( List<ICommand> commands ) {
             foreach( var entry in Entries ) {
-                command.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
-                command.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
+                commands.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
+                commands.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
             }
         }
 
@@ -203,9 +203,9 @@ namespace VfxEditor.TmbFormat {
             var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ) } );
             var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
 
-            var command = new TmbRefreshIdsCommand( File );
-            AddEntry( command, newEntry );
-            CommandManager.Add( command );
+            var commands = new List<ICommand>();
+            AddEntry( commands, newEntry );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         private void ImportDialog() {

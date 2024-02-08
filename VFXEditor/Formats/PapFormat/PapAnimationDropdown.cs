@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
@@ -17,19 +18,20 @@ namespace VfxEditor.PapFormat {
         protected override void OnDelete( PapAnimation item ) {
             var index = Items.IndexOf( item );
 
-            var command = new CompoundCommand();
-            command.Add( new PapAnimationRemoveCommand( File, Items, item ) );
-            command.Add( new PapHavokCommand( File, () => {
-                var container = File.MotionData.AnimationContainer;
+            var command = new CompoundCommand( new ICommand[]{
+                new ListRemoveCommand<PapAnimation>( Items, item, ( PapAnimation item, bool remove ) => item.File.RefreshHavokIndexes() ),
+                new PapHavokCommand( File, () => {
+                    var container = File.MotionData.AnimationContainer;
 
-                var anims = HavokData.ToList( container->Animations );
-                var bindings = HavokData.ToList( container->Bindings );
-                anims.RemoveAt( index );
-                bindings.RemoveAt( index );
+                    var anims = HavokData.ToList( container->Animations );
+                    var bindings = HavokData.ToList( container->Bindings );
+                    anims.RemoveAt( index );
+                    bindings.RemoveAt( index );
 
-                container->Animations = HavokData.CreateArray( File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
-                container->Bindings = HavokData.CreateArray( File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
-            } ) );
+                    container->Animations = HavokData.CreateArray( File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
+                    container->Bindings = HavokData.CreateArray( File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
+                } )
+            } );
             CommandManager.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );
