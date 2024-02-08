@@ -12,7 +12,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
 
         public AvfxExport( AvfxFile file ) {
             File = file;
-            Categories = new() {
+            Categories = [
                 new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "Timelines" ),
                 new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "Emitters" ),
                 new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "Particles" ),
@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
                 new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "Binders" ),
                 new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "Textures" ),
                 new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "Models" )
-            };
+            ];
         }
 
         public void Reset() => Categories.ForEach( cat => cat.Reset() );

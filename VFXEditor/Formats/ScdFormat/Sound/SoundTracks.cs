@@ -8,7 +8,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class SoundTracks {
-        public List<SoundTrackInfo> Tracks = new();
+        public List<SoundTrackInfo> Tracks = [];
 
         public void Read( BinaryReader reader, byte trackCount ) {
             for( var i = 0; i < trackCount; i++ ) {

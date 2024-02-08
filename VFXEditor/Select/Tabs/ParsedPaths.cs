@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace VfxEditor.Select.Tabs {
     public class ParsedPaths {
         public readonly string OriginalPath;
-        public readonly List<string> Paths = new();
+        public readonly List<string> Paths = [];
 
         public ParsedPaths() { }
 
@@ -52,7 +52,7 @@ namespace VfxEditor.Select.Tabs {
         }
 
         public static void ReadFile( List<string> paths, Regex regex, out List<ParsedPaths> loaded ) {
-            loaded = new();
+            loaded = [];
             try {
                 foreach( var path in paths.Where( x => !string.IsNullOrEmpty( x ) ) ) {
                     if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( new ParsedPaths( Dalamud.DataManager.GetFile( path ), regex ) );

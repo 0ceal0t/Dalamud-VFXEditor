@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxIntList : AvfxDrawable {
         public readonly string Name;
         private int Size;
-        private readonly List<int> Items = new() { 0 };
+        private readonly List<int> Items = [0];
 
         public AvfxIntList( string name, string avfxName, int value, int size = 1 ) : this( name, avfxName, size ) {
             SetItems( value );
@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             Size = Items.Count;
         }
 
-        public void SetItems( int value ) => SetItems( new List<int> { value } );
+        public void SetItems( int value ) => SetItems( [value] );
 
         public void SetItem( int value, int idx ) {
             SetAssigned( true );

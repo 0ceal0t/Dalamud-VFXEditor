@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 UseScreenCopy,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 Rate,
                 RPow
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );

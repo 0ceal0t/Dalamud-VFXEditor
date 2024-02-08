@@ -6,12 +6,12 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
 
         public AvfxEffectorDataDirectionalLight() : base() {
-            Parsed = new() {
+            Parsed = [
                 Ambient,
                 Color,
                 Power,
                 Rotation
-            };
+            ];
 
             DisplayTabs.Add( Ambient );
             DisplayTabs.Add( Color );

@@ -8,7 +8,7 @@ namespace VfxEditor.AvfxFormat {
     public unsafe partial class AvfxBase {
         public static int CalculatePadding( int size ) => size % 4 == 0 ? 0 : 4 - size % 4;
 
-        public static void Peek( BinaryReader reader, AvfxBase item, int size ) => Peek( reader, new List<AvfxBase> { item }, size );
+        public static void Peek( BinaryReader reader, AvfxBase item, int size ) => Peek( reader, [item], size );
 
         public static void Peek( BinaryReader reader, List<AvfxBase> items, int size ) {
             var startPosition = reader.BaseStream.Position;

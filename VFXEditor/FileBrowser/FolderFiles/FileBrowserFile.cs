@@ -83,7 +83,7 @@ namespace VfxEditor.FileBrowser.FolderFiles {
 
         private static bool GetIcon( string ext, out (FontAwesomeIcon, FilePickerFileColor) result ) {
             if( ICON_MAP == null ) {
-                ICON_MAP = new();
+                ICON_MAP = [];
                 AddToIconMap( new string[] {
                     "mp4",
                     "gif",

@@ -54,14 +54,14 @@ namespace VfxEditor.Select {
 
     public abstract class SelectDialog : DalamudWindow {
         public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
-        public static readonly List<string> LoggedFiles = new();
+        public static readonly List<string> LoggedFiles = [];
 
         public readonly IFileManagerSelect Manager;
         public readonly string Extension;
         public readonly bool ShowLocal;
         private readonly Action<SelectResult> Action;
 
-        protected readonly List<SelectTab> GameTabs = new();
+        protected readonly List<SelectTab> GameTabs = [];
         protected readonly List<SelectResult> Favorites;
         protected readonly SelectRecentTab RecentTab;
         protected readonly SelectFavoriteTab FavoritesTab;

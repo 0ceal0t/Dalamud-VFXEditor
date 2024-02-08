@@ -4,7 +4,7 @@ using VfxEditor.Parsing;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEmitVertexNumbers : AvfxBase {
-        public readonly List<AvfxVertexNumber> VertexNumbers = new();
+        public readonly List<AvfxVertexNumber> VertexNumbers = [];
 
         public AvfxEmitVertexNumbers() : base( "VNum" ) { }
 

@@ -11,7 +11,7 @@ namespace VfxEditor.Ui.Export.Categories {
         public readonly IFileManager Manager;
 
         private bool ExportAll = false;
-        private readonly Dictionary<IFileDocument, bool> ToExport = new();
+        private readonly Dictionary<IFileDocument, bool> ToExport = [];
 
         public ExportDialogCategory( IFileManager manager ) {
             Manager = manager;

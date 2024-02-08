@@ -83,7 +83,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             Components = components;
             Type = new( this, "Type" );
 
-            Parsed = new() {
+            Parsed = [
                 TabIndex,
                 Unk1,
                 Unk2,
@@ -109,7 +109,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 Alpha,
                 ClipCount,
                 TimelineId
-            };
+            ];
         }
 
         public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {

@@ -19,13 +19,13 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 TextureFilter,
                 TextureBorder,
                 TextureIdx,
                 Offset
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( TextureFilter );

@@ -9,12 +9,12 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public class UiNodeGraph {
-        public Dictionary<AvfxNode, UiNodeGraphItem> Graph = new();
+        public Dictionary<AvfxNode, UiNodeGraphItem> Graph = [];
         public bool Outdated = false;
         public bool Cycle = false;
 
         public UiNodeGraph( AvfxNode node ) {
-            ParseGraph( 0, node, new HashSet<AvfxNode>() );
+            ParseGraph( 0, node, [] );
             var level2Dict = new Dictionary<int, int>();
             foreach( var val in Graph.Values ) {
                 if( level2Dict.ContainsKey( val.Level ) ) {
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 visited.Add( node );
                 var item = new UiNodeGraphItem {
                     Level = level,
-                    Next = new List<AvfxNode>()
+                    Next = []
                 };
                 foreach( var n in node.Parents ) {
                     item.Next.Add( n.Node );

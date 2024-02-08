@@ -157,7 +157,7 @@ namespace VfxEditor.FileBrowser.SideBar {
         }
 
         private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
-            folders = new();
+            folders = [];
             try {
                 var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
                 if( shellAppType == null ) return false;

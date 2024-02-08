@@ -36,7 +36,7 @@ namespace VfxEditor.DirectX {
 
 
         public HLSLFileIncludeHandler( string initialDirectory ) {
-            IncludeDirectories = new List<string>();
+            IncludeDirectories = [];
             CurrentDirectory = new Stack<string>();
             CurrentDirectory.Push( initialDirectory );
         }

@@ -40,7 +40,7 @@ namespace VfxEditor.Library {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
-                    var newFolder = new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), new List<LibraryProps>() );
+                    var newFolder = new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), [] );
                     LastDrawnRoot.Add( newFolder );
                     Save();
                 }

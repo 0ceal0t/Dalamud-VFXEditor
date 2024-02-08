@@ -8,7 +8,7 @@ namespace VfxEditor.Data {
         // ==== UI COLORS =====
 
         private static bool UiColorsInitialized = false;
-        public static readonly Dictionary<uint, Vector4> UiColors = new();
+        public static readonly Dictionary<uint, Vector4> UiColors = [];
 
         public static void InitUiColors() {
             if( UiColorsInitialized ) return;
@@ -23,7 +23,7 @@ namespace VfxEditor.Data {
         // ==== WEAPON TIMELINES ====
 
         private static bool WeaponTimelinesInitialized = false;
-        public static readonly Dictionary<ushort, string> WeaponTimelines = new();
+        public static readonly Dictionary<ushort, string> WeaponTimelines = [];
 
         public static void InitWeaponTimelines() {
             if( WeaponTimelinesInitialized ) return;
@@ -37,7 +37,7 @@ namespace VfxEditor.Data {
         // ==== MOTION TIMELINES ====
 
         private static bool MotionTimelinesInitialized = false;
-        public static readonly Dictionary<string, MotionTimelineData> MotionTimelines = new();
+        public static readonly Dictionary<string, MotionTimelineData> MotionTimelines = [];
 
         public struct MotionTimelineData {
             public int Group;

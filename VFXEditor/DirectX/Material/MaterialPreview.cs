@@ -157,15 +157,15 @@ namespace VfxEditor.DirectX {
 
             Model.Draw(
                 Ctx, PassType.GBuffer,
-                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+                [VertexShaderBuffer, MaterialVertexShaderBuffer],
+                [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
         protected override void QuadPass() {
             Quad.Draw(
                 Ctx, PassType.Final,
-                    new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                    new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+                    [VertexShaderBuffer, MaterialVertexShaderBuffer],
+                    [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
         private ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {

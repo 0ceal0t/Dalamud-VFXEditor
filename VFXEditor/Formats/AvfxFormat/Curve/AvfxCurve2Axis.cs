@@ -27,21 +27,21 @@ namespace VfxEditor.AvfxFormat {
             RX = new( "Random X", "XR", type );
             RY = new( "Random Y", "YR", type );
 
-            Parsed = new() {
+            Parsed = [
                 AxisConnectType,
                 AxisConnectRandomType,
                 X,
                 Y,
                 RX,
                 RY
-            };
+            ];
 
-            Curves = new() {
+            Curves = [
                 X,
                 Y,
                 RX,
                 RY
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

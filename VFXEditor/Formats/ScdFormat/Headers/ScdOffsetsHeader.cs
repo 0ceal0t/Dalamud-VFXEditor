@@ -17,11 +17,11 @@ namespace VfxEditor.ScdFormat {
         // padded to 0x20
 
         public long SoundOffset;
-        public readonly List<int> SoundOffsets = new();
-        public readonly List<int> TrackOffsets = new();
-        public readonly List<int> AudioOffsets = new();
-        public readonly List<int> LayoutOffsets = new();
-        public readonly List<int> AttributeOffsets = new();
+        public readonly List<int> SoundOffsets = [];
+        public readonly List<int> TrackOffsets = [];
+        public readonly List<int> AudioOffsets = [];
+        public readonly List<int> LayoutOffsets = [];
+        public readonly List<int> AttributeOffsets = [];
 
         public readonly bool Modded = false;
 

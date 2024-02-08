@@ -165,7 +165,7 @@ namespace VfxEditor.Formats.TextureFormat {
                     DecompressA8( data, writer, width, height * layers );
                     break;
                 default:
-                    return new() { Array.Empty<byte>() };
+                    return [Array.Empty<byte>()];
             }
 
             var output = ms.ToArray();

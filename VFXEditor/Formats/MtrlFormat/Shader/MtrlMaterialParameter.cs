@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         private readonly MtrlFile File;
 
         public readonly ParsedUIntPicker<ShpkMaterialParmeter> Id;
-        public readonly List<ParsedFloat> Values = new();
+        public readonly List<ParsedFloat> Values = [];
 
         private readonly ushort TempOffset;
         private readonly ushort TempSize;

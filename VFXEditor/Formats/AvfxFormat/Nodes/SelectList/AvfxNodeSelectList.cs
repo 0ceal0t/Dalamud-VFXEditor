@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Data.Copy;
@@ -8,7 +8,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxNodeSelectList<T> : AvfxNodeSelect where T : AvfxNode {
-        public List<T> Selected = new();
+        public List<T> Selected = [];
         public readonly AvfxIntList Literal;
         public readonly NodeGroup<T> Group; // the group being selected from
         public readonly string Name;
@@ -108,7 +108,7 @@ namespace VfxEditor.AvfxFormat {
         // For when something happens to the selected node
 
         public override List<int> GetSelectedIdx( AvfxNode node ) {
-            List<int> idx = new();
+            List<int> idx = [];
             for( var i = 0; i < Selected.Count; i++ ) {
                 if( Selected[i] == node ) idx.Add( i );
             }

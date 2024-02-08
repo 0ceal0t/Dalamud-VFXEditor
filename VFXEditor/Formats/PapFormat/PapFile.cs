@@ -26,7 +26,7 @@ namespace VfxEditor.PapFormat {
         public readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", size: 1 );
         public readonly ParsedInt Variant = new( "Variant", size: 1 );
 
-        public readonly List<PapAnimation> Animations = new();
+        public readonly List<PapAnimation> Animations = [];
         public readonly PapAnimationDropdown AnimationsDropdown;
         public readonly PapMotions MotionData;
 
@@ -36,7 +36,7 @@ namespace VfxEditor.PapFormat {
 
         private readonly bool EmptyHavok = false;
 
-        public readonly HashSet<nint> Handles = new();
+        public readonly HashSet<nint> Handles = [];
 
         public PapFile( BinaryReader reader, string sourcePath, string hkxTemp, bool init, bool verify ) : base() {
             SourcePath = sourcePath;

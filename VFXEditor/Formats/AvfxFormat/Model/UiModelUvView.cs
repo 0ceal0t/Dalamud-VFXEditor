@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             var indexes = model.Indexes.Indexes;
             var vertexes = model.Vertexes.Vertexes;
 
-            List<AvfxVertex> orderedVertexes = new();
+            List<AvfxVertex> orderedVertexes = [];
             foreach( var index in indexes ) {
                 var v1 = vertexes[index.I1];
                 var v2 = vertexes[index.I2];

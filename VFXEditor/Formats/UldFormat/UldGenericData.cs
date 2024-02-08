@@ -5,7 +5,7 @@ using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.UldFormat {
     public abstract class UldGenericData : IData {
-        protected List<ParsedBase> Parsed = new();
+        protected List<ParsedBase> Parsed = [];
 
         public virtual void Read( BinaryReader reader ) {
             foreach( var parsed in Parsed ) parsed.Read( reader );

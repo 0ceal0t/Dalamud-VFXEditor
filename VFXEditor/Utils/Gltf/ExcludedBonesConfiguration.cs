@@ -9,7 +9,7 @@ namespace VfxEditor.Utils.Gltf {
     [Serializable]
     public class ExcludedBonesConfiguration {
         public string Name = "New Exclude List";
-        public List<ExcludedBoneConfiguration> Bones = new();
+        public List<ExcludedBoneConfiguration> Bones = [];
 
         public void Draw() {
             using var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );

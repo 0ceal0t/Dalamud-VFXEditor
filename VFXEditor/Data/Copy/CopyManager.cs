@@ -56,8 +56,8 @@ namespace VfxEditor.Data.Copy {
         protected bool Copying = false;
         protected bool Pasting = false;
 
-        protected readonly Dictionary<(Type, string), bool> AvfxAssigned = new();
-        protected readonly Dictionary<(Type, string), object> Data = new();
+        protected readonly Dictionary<(Type, string), bool> AvfxAssigned = [];
+        protected readonly Dictionary<(Type, string), object> Data = [];
 
         public CopyManager() { }
 

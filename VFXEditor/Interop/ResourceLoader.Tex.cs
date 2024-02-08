@@ -7,7 +7,7 @@ using VfxEditor.Structs;
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
         public static readonly IntPtr CustomFileFlag = new( 0xDEADBEEE );
-        private readonly HashSet<ulong> CustomCrc = new();
+        private readonly HashSet<ulong> CustomCrc = [];
 
         // ======= CRC =========
 

@@ -26,23 +26,23 @@ namespace VfxEditor.Ui.Export {
 
     [Serializable]
     public class PenumbraModStruct : PenumbraItemStruct {
-        public Dictionary<string, string> Files = new();
-        public Dictionary<string, string> FileSwaps = new();
-        public List<object> Manipulations = new();
+        public Dictionary<string, string> Files = [];
+        public Dictionary<string, string> FileSwaps = [];
+        public List<object> Manipulations = [];
     }
 
     [Serializable]
     public class PenumbraGroupStruct : PenumbraItemStruct {
         public string Type = "Single"; // Single / Multi
         public uint DefaultSettings = 0; // Bitmask of 32 defaults
-        public List<PenumbraOptionStruct> Options = new();
+        public List<PenumbraOptionStruct> Options = [];
     }
 
     [Serializable]
     public class PenumbraOptionStruct : PenumbraItemStruct {
-        public Dictionary<string, string> Files = new();
-        public Dictionary<string, string> FileSwaps = new();
-        public List<object> Manipulations = new();
+        public Dictionary<string, string> Files = [];
+        public Dictionary<string, string> FileSwaps = [];
+        public List<object> Manipulations = [];
     }
 
     [Serializable]
@@ -53,7 +53,7 @@ namespace VfxEditor.Ui.Export {
         public string Description = "";
         public string Version = "";
         public string Website = "";
-        public List<string> ModTags = new();
+        public List<string> ModTags = [];
     }
 
     // ======= FOR WORKSPACE =======
@@ -64,12 +64,12 @@ namespace VfxEditor.Ui.Export {
         // Like "vfx": "Array[int]{0,1,2}"
         public PenumbraMeta Meta = new();
         public PenumbraModStruct DefaultMod = new();
-        public List<PenumbraGroupStruct> Groups = new();
+        public List<PenumbraGroupStruct> Groups = [];
     }
 
     public class PenumbraDialog : ExportDialog {
         private readonly ExportDialogCategorySet DefaultMod = new();
-        private readonly List<PenumbraGroup> Groups = new();
+        private readonly List<PenumbraGroup> Groups = [];
         private PenumbraGroup Selected;
 
 

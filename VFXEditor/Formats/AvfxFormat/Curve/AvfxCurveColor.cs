@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Locked = locked;
 
-            Curves = new() {
+            Curves = [
                 RGB,
                 A,
                 SclR,
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
                 RanB,
                 RanA,
                 RBri
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );

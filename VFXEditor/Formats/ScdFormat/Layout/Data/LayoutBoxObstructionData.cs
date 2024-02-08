@@ -17,7 +17,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved2 = new( 4 );
 
         public LayoutBoxObstructionData() {
-            Parsed = new() {
+            Parsed = [
                 Position1,
                 Position2,
                 Position3,
@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
                 OpenTime,
                 CloseTime,
                 Reserved2
-            };
+            ];
         }
     }
 }

@@ -14,11 +14,11 @@ namespace VfxEditor.Select {
     }
 
     public class RacialOptions {
-        public readonly SortedSet<int> Face = new();
-        public readonly SortedSet<int> Hair = new();
-        public readonly SortedSet<int> Tail = new();
-        public readonly SortedSet<int> Ear = new();
-        public readonly SortedSet<int> Body = new();
+        public readonly SortedSet<int> Face = [];
+        public readonly SortedSet<int> Hair = [];
+        public readonly SortedSet<int> Tail = [];
+        public readonly SortedSet<int> Ear = [];
+        public readonly SortedSet<int> Body = [];
     }
 
     public partial class SelectDataUtils {
@@ -52,7 +52,7 @@ namespace VfxEditor.Select {
 
         private static void PopulateRacialOptions() {
             if( OptionsInternal != null ) return;
-            OptionsInternal = new();
+            OptionsInternal = [];
 
             // chara/human/c0804/obj/face/f0101/material/mt_c0804f0101_etc_a.mtrl
             // chara/human/c0601/skeleton/face/f0092/skl_c0601f0092.sklb
@@ -142,19 +142,19 @@ namespace VfxEditor.Select {
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, string>();
+            if( string.IsNullOrEmpty( path ) ) return [];
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetSkeletonPath( x.Value.SkeletonId, path ) );
         }
 
         public static Dictionary<string, string> GetAllJobPaps( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
 
         public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
+            if( string.IsNullOrEmpty( path ) ) return [];
             return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
         }
 
         public static Dictionary<string, string> GetAllFacePaps( string modelId, string path ) {
-            Dictionary<string, string> ret = new();
+            Dictionary<string, string> ret = [];
             if( RacialOptions.TryGetValue( modelId, out var data ) ) {
                 foreach( var face in data.Face ) {
                     ret.Add( $"Face {face}", $"chara/human/{modelId}/animation/f{face:D4}/nonresident/{path}.pap" );
@@ -165,7 +165,7 @@ namespace VfxEditor.Select {
         }
 
         public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new Dictionary<string, Dictionary<string, string>>();
+            if( string.IsNullOrEmpty( path ) ) return [];
             return RaceAnimationIds.ToDictionary( x => x.Key, x => GetAllFacePaps( x.Value.SkeletonId, path ) );
         }
 

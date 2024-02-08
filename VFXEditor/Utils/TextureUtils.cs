@@ -186,8 +186,8 @@ namespace VfxEditor.Utils {
             using var compressedMs = new MemoryStream();
             using var writer = new BinaryWriter( compressedMs );
 
-            mipPartOffsets = new();
-            mipPartCounts = new();
+            mipPartOffsets = [];
+            mipPartCounts = [];
 
             var mipLength = GetMipSize( format, width, height );
 

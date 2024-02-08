@@ -10,14 +10,14 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved = new( 4 );
 
         public LayoutAmbientData() {
-            Parsed = new() {
+            Parsed = [
                 Volume,
                 Pitch,
                 ReverbFac,
                 DirectVolume1,
                 DirectVolume2,
                 Reserved
-            };
+            ];
         }
     }
 }

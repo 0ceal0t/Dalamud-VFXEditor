@@ -7,8 +7,8 @@ using VfxEditor.UldFormat.Timeline.Frames;
 
 namespace VfxEditor.UldFormat.Timeline {
     public class UldTimeline : UldWorkspaceItem {
-        public readonly List<UldFrame> Frames1 = new();
-        public readonly List<UldFrame> Frames2 = new();
+        public readonly List<UldFrame> Frames1 = [];
+        public readonly List<UldFrame> Frames2 = [];
 
         public readonly CommandSplitView<UldFrame> FramesView1;
         public readonly CommandSplitView<UldFrame> FramesView2;

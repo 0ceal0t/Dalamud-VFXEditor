@@ -18,24 +18,24 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<IUiItem> Display;
 
         public AvfxParticleUvSet() : base( "UvSt" ) {
-            Parsed = new() {
+            Parsed = [
                 CalculateUVType,
                 Scale,
                 Scroll,
                 Rot,
                 RotRandom
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 CalculateUVType
-            };
+            ];
 
-            Curves = new() {
+            Curves = [
                 Scale,
                 Scroll,
                 Rot,
                 RotRandom
-            };
+            ];
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

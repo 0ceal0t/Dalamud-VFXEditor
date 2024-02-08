@@ -15,7 +15,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.Preview {
     public class FileBrowserPreview {
-        public static readonly List<string> ImageExtensions = new() { "jpeg", "jpg", "png", "dds", "atex", "tex" };
+        public static readonly List<string> ImageExtensions = ["jpeg", "jpg", "png", "dds", "atex", "tex"];
 
         private static readonly SemaphoreSlim Lock = new( 1, 1 );
         private IDalamudTextureWrap Texture;

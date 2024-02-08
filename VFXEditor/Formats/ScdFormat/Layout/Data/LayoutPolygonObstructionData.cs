@@ -11,7 +11,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedShort CloseTime = new( "Close Time" );
 
         public LayoutPolygonObstructionData() {
-            Parsed = new() {
+            Parsed = [
                 ObstacleFac,
                 HiCutFac,
                 Flags,
@@ -19,7 +19,7 @@ namespace VfxEditor.ScdFormat {
                 Reserved1,
                 OpenTime,
                 CloseTime
-            };
+            ];
 
             for( var i = 0; i < 32; i++ ) Parsed.Insert( 0, new ParsedFloat4( $"Position {15 - i}" ) );
         }

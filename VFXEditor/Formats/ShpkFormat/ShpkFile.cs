@@ -28,21 +28,21 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly uint DxMagic;
         public DX DxVersion => GetDxVersion( DxMagic );
 
-        private readonly List<ShpkShader> VertexShaders = new();
-        private readonly List<ShpkShader> PixelShaders = new();
+        private readonly List<ShpkShader> VertexShaders = [];
+        private readonly List<ShpkShader> PixelShaders = [];
 
-        public readonly List<ShpkMaterialParmeter> MaterialParameters = new();
-        public readonly List<ShpkParameterInfo> Constants = new();
-        public readonly List<ShpkParameterInfo> Samplers = new();
-        public readonly List<ShpkParameterInfo> Resources = new();
+        public readonly List<ShpkMaterialParmeter> MaterialParameters = [];
+        public readonly List<ShpkParameterInfo> Constants = [];
+        public readonly List<ShpkParameterInfo> Samplers = [];
+        public readonly List<ShpkParameterInfo> Resources = [];
 
-        public readonly List<ShpkKey> SystemKeys = new();
-        public readonly List<ShpkKey> SceneKeys = new();
-        public readonly List<ShpkKey> MaterialKeys = new();
-        public readonly List<ShpkKey> SubViewKeys = new();
+        public readonly List<ShpkKey> SystemKeys = [];
+        public readonly List<ShpkKey> SceneKeys = [];
+        public readonly List<ShpkKey> MaterialKeys = [];
+        public readonly List<ShpkKey> SubViewKeys = [];
 
-        private readonly List<ShpkNode> Nodes = new();
-        private readonly List<ShpkAlias> Aliases = new();
+        private readonly List<ShpkNode> Nodes = [];
+        private readonly List<ShpkAlias> Aliases = [];
 
         private readonly CommandDropdown<ShpkShader> VertexView;
         private readonly CommandDropdown<ShpkShader> PixelView;

@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         private readonly ParsedInt Unk1 = new( "Unknown 2" );
         private readonly ParsedInt Unk2 = new( "Unknown 3" );
 
-        public readonly List<TmfcData> Data = new();
+        public readonly List<TmfcData> Data = [];
         private readonly UiSplitView<TmfcData> DataSplitView;
 
         public Tmfc( TmbFile file ) : base( file ) { }

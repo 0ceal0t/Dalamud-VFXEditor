@@ -4,7 +4,7 @@ using System.IO;
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveKeys : AvfxBase {
         private readonly AvfxCurve Curve;
-        public readonly List<AvfxCurveKey> Keys = new();
+        public readonly List<AvfxCurveKey> Keys = [];
 
         public AvfxCurveKeys( AvfxCurve curve ) : base( "Keys" ) {
             Curve = curve;

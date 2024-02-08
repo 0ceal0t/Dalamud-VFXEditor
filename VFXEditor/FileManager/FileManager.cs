@@ -17,7 +17,7 @@ namespace VfxEditor.FileManager {
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );
 
         private readonly FileManagerDocumentWindow<T, R, S> DocumentWindow;
-        public readonly List<T> Documents = new();
+        public readonly List<T> Documents = [];
 
         public FileManager( string title, string id ) : this( title, id, id.ToLower(), id, id ) { }
 
@@ -99,7 +99,7 @@ namespace VfxEditor.FileManager {
             var rootPath = Path.Combine( saveLocation, WorkspacePath );
             Directory.CreateDirectory( rootPath );
 
-            List<S> documentMeta = new();
+            List<S> documentMeta = [];
             foreach( var (document, idx) in Documents.WithIndex() ) {
                 document.WorkspaceExport( documentMeta, rootPath, $"{Id}Temp{idx}.{Extension}" );
             }

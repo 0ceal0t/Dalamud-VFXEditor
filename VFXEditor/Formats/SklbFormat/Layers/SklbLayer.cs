@@ -10,7 +10,7 @@ namespace VfxEditor.SklbFormat.Layers {
         public readonly SklbFile File;
 
         public readonly ParsedInt Id = new( "Id" );
-        public readonly List<SklbLayerBone> Bones = new();
+        public readonly List<SklbLayerBone> Bones = [];
         private readonly CommandListView<SklbLayerBone> BonesView;
 
         public int Size => 4 + 2 + 2 * Bones.Count; // Id + numBones + boneIndices

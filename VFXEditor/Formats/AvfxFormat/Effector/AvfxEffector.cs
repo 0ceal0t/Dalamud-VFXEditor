@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor, "EfVT" ) {
-            Parsed = new() {
+            Parsed = [
                 Type,
                 RotationOrder,
                 CoordComputeOrder,
@@ -29,9 +29,9 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            };
+            ];
 
-            Parameters = new( "Parameters", new() {
+            Parameters = new( "Parameters", [
                 new UiNodeGraphView( this ),
                 RotationOrder,
                 CoordComputeOrder,
@@ -39,7 +39,7 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            } );
+            ] );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

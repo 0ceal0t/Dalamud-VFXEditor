@@ -19,10 +19,10 @@ namespace VfxEditor.TmbFormat {
         public readonly Tmpp HeaderTmpp;
         public readonly Tmal HeaderTmal;
 
-        public readonly List<Tmfc> Tmfcs = new();
-        public readonly List<Tmac> Actors = new();
-        public readonly List<Tmtr> Tracks = new();
-        public readonly List<TmbEntry> AllEntries = new();
+        public readonly List<Tmfc> Tmfcs = [];
+        public readonly List<Tmac> Actors = [];
+        public readonly List<Tmtr> Tracks = [];
+        public readonly List<TmbEntry> AllEntries = [];
 
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;
@@ -76,12 +76,15 @@ namespace VfxEditor.TmbFormat {
 
             var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum();
 
-            List<TmbItem> items = new() { HeaderTmdh };
-            if( HeaderTmpp.IsAssigned ) items.Add( HeaderTmpp );
-            items.Add( HeaderTmal );
-            items.AddRange( Actors );
-            items.AddRange( Tracks );
-            items.AddRange( AllEntries );
+            List<TmbItem> items =
+            [
+                HeaderTmdh,
+                .. ( List<TmbItem> )( HeaderTmpp.IsAssigned ? [HeaderTmpp] : [] ),
+                HeaderTmal,
+                .. Actors,
+                .. Tracks,
+                .. AllEntries,
+            ];
 
             var itemLength = items.Sum( x => x.Size );
             var extraLength = items.Sum( x => x.ExtraSize );

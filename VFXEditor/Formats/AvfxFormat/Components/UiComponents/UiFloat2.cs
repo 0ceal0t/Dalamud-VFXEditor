@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
 
         public UiFloat2( string name, AvfxFloat x, AvfxFloat y ) {
             Literal = x;
-            Extra = new() { y };
+            Extra = [y];
             Parsed = new( name, x.Parsed, y.Parsed );
         }
 

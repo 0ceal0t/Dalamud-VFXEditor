@@ -18,7 +18,7 @@ namespace VfxEditor.DirectX {
         public readonly BoneNamePreview EidPreview;
         public readonly MaterialPreview MaterialPreview;
 
-        private readonly List<ModelRenderer> Renderers = new();
+        private readonly List<ModelRenderer> Renderers = [];
 
         public static Include IncludeHandler { get; private set; }
 
@@ -36,14 +36,14 @@ namespace VfxEditor.DirectX {
             EidPreview = new( Device, Ctx, shaderPath );
             MaterialPreview = new( Device, Ctx, shaderPath );
 
-            Renderers = new() {
+            Renderers = [
                 ModelPreview,
                 PapPreview,
                 PhybPreview,
                 SklbPreview,
                 EidPreview,
                 MaterialPreview,
-            };
+            ];
         }
 
         public void RedrawMaterials() {

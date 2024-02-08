@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
     public abstract class AvfxData : AvfxItem, IData {
         protected List<AvfxBase> Parsed;
 
-        public readonly List<AvfxItem> DisplayTabs = new();
+        public readonly List<AvfxItem> DisplayTabs = [];
         public readonly AvfxDisplaySplitView<AvfxItem> SplitView;
 
         public AvfxData() : base( "Data" ) {

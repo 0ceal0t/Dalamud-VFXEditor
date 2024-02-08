@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 ColorToAlpha,
                 UseScreenCopy,
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 MaskTextureIdx,
                 TexN,
                 TexNRandom
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );

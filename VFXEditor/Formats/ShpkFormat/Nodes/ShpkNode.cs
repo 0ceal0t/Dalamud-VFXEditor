@@ -12,13 +12,13 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
     public class ShpkNode : IUiItem {
         public readonly ParsedUIntHex Selector = new( "Selector" );
 
-        private readonly List<ParsedSByte> PassIndexes = new();
-        private readonly List<ShpkPass> Passes = new();
+        private readonly List<ParsedSByte> PassIndexes = [];
+        private readonly List<ShpkPass> Passes = [];
 
-        private readonly List<ShpkNodeKey> SystemKeys = new();
-        private readonly List<ShpkNodeKey> SceneKeys = new();
-        private readonly List<ShpkNodeKey> MaterialKeys = new();
-        private readonly List<ShpkNodeKey> SubViewKeys = new();
+        private readonly List<ShpkNodeKey> SystemKeys = [];
+        private readonly List<ShpkNodeKey> SceneKeys = [];
+        private readonly List<ShpkNodeKey> MaterialKeys = [];
+        private readonly List<ShpkNodeKey> SubViewKeys = [];
 
         private readonly CommandSplitView<ShpkPass> PassView;
 

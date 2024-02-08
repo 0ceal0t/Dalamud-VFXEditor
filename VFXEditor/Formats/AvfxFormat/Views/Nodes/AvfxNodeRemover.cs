@@ -8,9 +8,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly T Item;
         private readonly int Idx;
 
-        private readonly Dictionary<AvfxNode, List<AvfxNodeSelect>> ChildToRemovedSelectors = new();
-        private readonly Dictionary<AvfxNodeSelect, List<AvfxNode>> RemovedFromParents = new();
-        private readonly Dictionary<AvfxNodeSelect, List<int>> ParentsSelectIdx = new();
+        private readonly Dictionary<AvfxNode, List<AvfxNodeSelect>> ChildToRemovedSelectors = [];
+        private readonly Dictionary<AvfxNodeSelect, List<AvfxNode>> RemovedFromParents = [];
+        private readonly Dictionary<AvfxNodeSelect, List<int>> ParentsSelectIdx = [];
 
         public AvfxNodeRemover( IUiNodeView<T> view, NodeGroup<T> group, T item ) {
             View = view;

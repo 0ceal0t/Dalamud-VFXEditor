@@ -53,8 +53,8 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly List<AvfxEmitterItem> Particles = new();
-        public readonly List<AvfxEmitterItem> Emitters = new();
+        public readonly List<AvfxEmitterItem> Particles = [];
+        public readonly List<AvfxEmitterItem> Emitters = [];
 
         private readonly UiNodeGraphView NodeView;
         public readonly AvfxNodeGroupSet NodeGroups;
@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
             NodeGroups = groupSet;
 
-            Parsed = new() {
+            Parsed = [
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -106,10 +106,10 @@ namespace VfxEditor.AvfxFormat {
                 VelocityRandomX,
                 VelocityRandomY,
                 VelocityRandomZ
-            };
+            ];
             Sound.SetAssigned( false );
 
-            AnimationSplitDisplay = new( "Animation", new() {
+            AnimationSplitDisplay = new( "Animation", [
                 Life,
                 CreateCount,
                 CreateCountRandom,
@@ -132,7 +132,7 @@ namespace VfxEditor.AvfxFormat {
                 VelocityRandomX,
                 VelocityRandomY,
                 VelocityRandomZ
-            } );
+            ] );
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
@@ -140,7 +140,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView = new UiNodeGraphView( this );
 
-            Parameters = new() {
+            Parameters = [
                 LoopStart,
                 LoopEnd,
                 ChildLimit,
@@ -148,7 +148,7 @@ namespace VfxEditor.AvfxFormat {
                 RotationDirectionBaseType,
                 CoordComputeOrderType,
                 RotationOrderType
-            };
+            ];
 
             Sound.Parsed.Icons.Insert( 0, new() {
                 Icon = () => FontAwesomeIcon.VolumeUp,

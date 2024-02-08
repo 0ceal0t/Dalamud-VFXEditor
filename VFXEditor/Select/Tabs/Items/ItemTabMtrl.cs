@@ -21,8 +21,8 @@ namespace VfxEditor.Select.Tabs.Items {
             loaded = new() {
                 ImcPath = null,
                 IsWeapon = false,
-                WeaponPaths = new(),
-                ArmorPaths = new(),
+                WeaponPaths = [],
+                ArmorPaths = [],
             };
 
             var imcPath = item.ImcPath;
