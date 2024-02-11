@@ -64,7 +64,7 @@ namespace VfxEditor.TmbFormat {
             binaryReader.BaseStream.Position = startPos + size;
 
             UnusedTracks = Tracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
-            UnusedTrackView = new( "Track", UnusedTracks, false, false );
+            UnusedTrackView = new( "Track", UnusedTracks, false );
         }
 
         public override void Write( BinaryWriter writer ) {

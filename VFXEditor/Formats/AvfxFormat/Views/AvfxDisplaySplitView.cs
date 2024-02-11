@@ -1,13 +1,12 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxDisplaySplitView<T> : AvfxGenericSplitView<T> where T : AvfxItem {
-        public AvfxDisplaySplitView( string id, List<T> items ) : base( id, items, false, false ) { }
-
-        protected override void DrawControls() { }
+    public class AvfxDisplaySplitView<T> : ItemSplitView<T> where T : AvfxItem {
+        public AvfxDisplaySplitView( string id, List<T> items ) : base( id, items ) { }
 
         protected override void DrawLeftColumn() {
             var idx = 0;

@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,7 +70,7 @@ namespace VfxEditor.ScdFormat {
             LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry() );
             SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
             TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry() );
-            AttributeView = new( "Attribute", Attributes, false, false );
+            AttributeView = new( "Attribute", Attributes, false );
         }
 
         public override void Draw() {

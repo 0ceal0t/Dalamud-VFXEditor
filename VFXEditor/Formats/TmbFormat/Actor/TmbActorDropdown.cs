@@ -8,7 +8,7 @@ namespace VfxEditor.TmbFormat.Actor {
     public class TmbActorDropdown : Dropdown<Tmac> {
         private readonly TmbFile File;
 
-        public TmbActorDropdown( TmbFile file ) : base( "Actor", file.Actors, true, true ) {
+        public TmbActorDropdown( TmbFile file ) : base( "Actor", file.Actors ) {
             File = file;
         }
 
@@ -16,21 +16,23 @@ namespace VfxEditor.TmbFormat.Actor {
 
         protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 
-        protected override void OnDelete( Tmac item ) {
-            var commands = new List<ICommand> {
-                new ListRemoveCommand<Tmac>( Items, item ),
-                new ListRemoveCommand<Tmac>( File.HeaderTmal.Actors, item )
-            };
-            item.DeleteChildren( commands, File );
-            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
-        }
+        protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
-        protected override void OnNew() {
+        private void OnNew() {
             var newActor = new Tmac( File );
             var commands = new List<ICommand> {
                 new ListAddCommand<Tmac>( Items, newActor ),
                 new ListAddCommand<Tmac>( File.HeaderTmal.Actors, newActor )
             };
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
+        }
+
+        private void OnDelete( Tmac item ) {
+            var commands = new List<ICommand> {
+                new ListRemoveCommand<Tmac>( Items, item ),
+                new ListRemoveCommand<Tmac>( File.HeaderTmal.Actors, item )
+            };
+            item.DeleteChildren( commands, File );
             CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 

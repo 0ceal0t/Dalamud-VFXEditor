@@ -13,13 +13,15 @@ namespace VfxEditor.SklbFormat.Mapping {
     public class SklbMappingDropdown : Dropdown<SklbMapping> {
         private readonly SklbFile File;
 
-        public SklbMappingDropdown( SklbFile file, List<SklbMapping> items ) : base( "Mappings", items, true, true ) {
+        public SklbMappingDropdown( SklbFile file, List<SklbMapping> items ) : base( "Mappings", items ) {
             File = file;
         }
 
         protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
-        protected override unsafe void OnNew() {
+        protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
+
+        private unsafe void OnNew() {
             FileBrowserManager.OpenFileDialog( "Select a Skeleton", "Skeleton{.hkx,.sklb},.*", ( ok, res ) => {
                 if( !ok ) return;
 
@@ -76,7 +78,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             } );
         }
 
-        protected override void OnDelete( SklbMapping item ) => CommandManager.Add( new ListRemoveCommand<SklbMapping>( Items, item ) );
+        private void OnDelete( SklbMapping item ) => CommandManager.Add( new ListRemoveCommand<SklbMapping>( Items, item ) );
 
         protected override void DrawSelected() => Selected.Draw( Items.IndexOf( Selected ) );
     }

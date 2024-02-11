@@ -1,13 +1,17 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxItemSplitView<T> : AvfxGenericSplitView<T> where T : class, IIndexUiItem {
-        public AvfxItemSplitView( string id, List<T> items ) : base( id, items, true, true ) {
+    public abstract class AvfxItemSplitView<T> : ItemSplitView<T> where T : class, IIndexUiItem {
+        protected bool AllowNew = true;
+        protected bool AllowDelete = true;
+
+        public AvfxItemSplitView( string id, List<T> items ) : base( id, items ) {
             UpdateIdx();
         }
 
@@ -23,12 +27,12 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawControls() {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( ShowControls && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
+            if( AllowNew && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
                 CommandManager.Add( new AvfxItemSplitViewAddCommand<T>( this, Items ) );
             }
 
             if( Selected != null && AllowDelete ) {
-                if( ShowControls ) ImGui.SameLine();
+                if( AllowNew ) ImGui.SameLine();
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
                     CommandManager.Add( new AvfxItemSplitViewRemoveCommand<T>( this, Items, Selected ) );
                 }

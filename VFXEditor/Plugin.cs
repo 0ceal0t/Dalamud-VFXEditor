@@ -11,6 +11,7 @@ using VfxEditor.EidFormat;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
@@ -59,6 +60,7 @@ namespace VfxEditor {
             ShpkManager,
             ShcdManager,
             MtrlManager,
+            MdlManager,
         } );
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -75,6 +77,7 @@ namespace VfxEditor {
         public static ShpkManager ShpkManager { get; private set; }
         public static ShcdManager ShcdManager { get; private set; }
         public static MtrlManager MtrlManager { get; private set; }
+        public static MdlManager MdlManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -116,6 +119,7 @@ namespace VfxEditor {
             ShpkManager = new();
             ShcdManager = new();
             MtrlManager = new();
+            MdlManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();

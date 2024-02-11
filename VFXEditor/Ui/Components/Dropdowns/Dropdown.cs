@@ -1,6 +1,7 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -10,24 +11,16 @@ namespace VfxEditor.Ui.Components {
         protected readonly string Id;
 
         protected T Selected = null;
-        protected readonly bool AllowNew;
-        protected readonly bool AllowDelete;
         protected readonly List<T> Items;
 
-        public Dropdown( string id, List<T> items, bool allowNew, bool allowDelete ) {
+        public Dropdown( string id, List<T> items ) {
             Id = id;
             Items = items;
-            AllowNew = allowNew;
-            AllowDelete = allowDelete;
         }
 
         protected abstract void DrawSelected();
 
         protected abstract string GetText( T item, int idx );
-
-        protected abstract void OnNew();
-
-        protected abstract void OnDelete( T item );
 
         public void ClearSelected() { Selected = null; }
 
@@ -44,6 +37,8 @@ namespace VfxEditor.Ui.Components {
             color = new( 1 );
             return false;
         }
+
+        protected virtual void DrawControls() { }
 
         public void Draw() {
             using var _ = ImRaii.PushId( Id );
@@ -62,8 +57,7 @@ namespace VfxEditor.Ui.Components {
                 DrawCombo();
             }
 
-            if( AllowNew ) DrawNew();
-            if( AllowDelete ) DrawDelete();
+            DrawControls();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             ImGui.Separator();
@@ -100,19 +94,21 @@ namespace VfxEditor.Ui.Components {
             for( var idx = 0; idx < Items.Count; idx++ ) DrawSelectItem( Items[idx], idx );
         }
 
-        private void DrawNew() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            ImGui.SameLine();
-            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
-        }
+        // ===========
 
-        private void DrawDelete() {
-            if( Selected != null ) {
+        protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+            if( onNew != null ) {
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
+            }
+
+            if( onDelete != null && Selected != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) && Items.Contains( Selected ) ) {
-                    OnDelete( Selected );
+                    onDelete( Selected );
                     Selected = null;
                 }
             }

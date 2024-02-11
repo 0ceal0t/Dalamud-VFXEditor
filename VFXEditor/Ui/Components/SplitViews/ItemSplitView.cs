@@ -1,15 +1,16 @@
-using ImGuiNET;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components.SplitViews {
     public abstract class ItemSplitView<T> : SplitView<T> where T : class {
         protected readonly List<T> Items;
-        protected bool ShowControls;
 
-        public ItemSplitView( string id, List<T> items, bool showControls ) : base( id ) {
+        public ItemSplitView( string id, List<T> items ) : base( id ) {
             Items = items;
-            ShowControls = showControls;
         }
 
         protected virtual void DrawControls() { }
@@ -21,18 +22,34 @@ namespace VfxEditor.Ui.Components.SplitViews {
             }
         }
 
+        protected abstract bool DrawLeftItem( T item, int idx );
+
         protected override void DrawRightColumn() {
             if( Selected == null ) ImGui.TextDisabled( "Select an item..." );
             else DrawSelected();
         }
 
-        protected abstract bool DrawLeftItem( T item, int idx );
         protected abstract void DrawSelected();
 
         protected override void DrawPreLeft() {
-            if( !ShowControls ) return;
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             DrawControls();
+        }
+
+        // ===========
+
+        protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+
+            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
+
+            if( Selected != null ) {
+                ImGui.SameLine();
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                    onDelete( Selected );
+                    Selected = null;
+                }
+            }
         }
     }
 }

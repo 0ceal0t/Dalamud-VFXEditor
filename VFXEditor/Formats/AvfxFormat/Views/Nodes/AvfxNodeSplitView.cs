@@ -1,18 +1,24 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
+using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public abstract class AvfxNodeSplitView<T> : AvfxGenericSplitView<T>, IUiNodeView<T> where T : AvfxNode {
+    public abstract class AvfxNodeSplitView<T> : ItemSplitView<T>, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;
         public readonly string DefaultPath;
 
-        public AvfxNodeSplitView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( name, group.Items, allowNew, allowDelete ) {
+        protected bool AllowNew = true;
+        protected bool AllowDelete = true;
+
+        public AvfxNodeSplitView( AvfxFile file, NodeGroup<T> group, string name, bool allowNew, bool allowDelete, string defaultPath ) : base( name, group.Items ) {
             File = file;
             Group = group;
             DefaultPath = Path.Combine( Plugin.RootLocation, "Files", defaultPath );
+            AllowNew = allowNew;
+            AllowDelete = allowDelete;
         }
 
         public abstract void OnSelect( T item );
@@ -42,7 +48,7 @@ namespace VfxEditor.AvfxFormat {
 
         public string GetDefaultPath() => DefaultPath;
 
-        public bool IsAllowedNew() => ShowControls;
+        public bool IsAllowedNew() => AllowNew;
 
         public bool IsAllowedDelete() => AllowDelete;
 

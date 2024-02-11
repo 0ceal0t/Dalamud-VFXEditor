@@ -1,12 +1,12 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public class MtrlColorTableSplitView : UiSplitView<MtrlColorTableRow> {
-        public MtrlColorTableSplitView( List<MtrlColorTableRow> items ) : base( "Row", items, false, false ) { }
+        public MtrlColorTableSplitView( List<MtrlColorTableRow> items ) : base( "Row", items, false ) { }
 
         protected override bool DrawLeftItem( MtrlColorTableRow item, int idx ) {
             using var _ = ImRaii.PushId( idx );

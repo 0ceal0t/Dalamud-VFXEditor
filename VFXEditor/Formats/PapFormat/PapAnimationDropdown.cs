@@ -9,13 +9,21 @@ namespace VfxEditor.PapFormat {
     public unsafe class PapAnimationDropdown : Dropdown<PapAnimation> {
         private readonly PapFile File;
 
-        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items, true, true ) {
+        public PapAnimationDropdown( PapFile file, List<PapAnimation> items ) : base( "Animations", items ) {
             File = file;
         }
 
         protected override string GetText( PapAnimation item, int idx ) => item.GetName();
 
-        protected override void OnDelete( PapAnimation item ) {
+        protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
+
+        private void OnNew() {
+            FileBrowserManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+                if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
+            } );
+        }
+
+        private void OnDelete( PapAnimation item ) {
             var index = Items.IndexOf( item );
 
             var command = new CompoundCommand( new ICommand[]{
@@ -35,12 +43,6 @@ namespace VfxEditor.PapFormat {
             CommandManager.Add( command );
 
             UiUtils.OkNotification( "Havok data removed" );
-        }
-
-        protected override void OnNew() {
-            FileBrowserManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
-                if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
-            } );
         }
 
         protected override void DrawSelected() => Selected.Draw();

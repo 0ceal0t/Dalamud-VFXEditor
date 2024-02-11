@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Lists {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );
             if( ImGui.BeginPopup( "FavoritePopup" ) ) {
                 if( ImGui.InputText( "##Rename", ref item.DisplayString, 128, ImGuiInputTextFlags.AutoSelectAll ) ) Plugin.Configuration.Save();
-                Dialog.PlayPopupItems( item.Path );
+                if( item.Type != SelectResultType.Local ) Dialog.PlayPopupItems( item.Path );
                 ImGui.EndPopup();
             }
 

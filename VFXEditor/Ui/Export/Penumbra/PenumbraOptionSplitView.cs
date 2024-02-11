@@ -3,17 +3,19 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Ui.Export.Penumbra {
     public class PenumbraOptionSplitView : UiSplitView<PenumbraOption> {
-        public PenumbraOptionSplitView( List<PenumbraOption> items ) : base( "Option", items, true, false ) { }
+        public PenumbraOptionSplitView( List<PenumbraOption> items ) : base( "Option", items, false ) { }
 
-        protected override void OnNew() {
+        protected override string GetText( PenumbraOption item, int idx ) => item.GetName();
+
+        protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
+
+        private void OnNew() {
             Items.Add( new() );
         }
 
-        protected override void OnDelete( PenumbraOption item ) {
+        private void OnDelete( PenumbraOption item ) {
             item.Reset();
             Items.Remove( item );
         }
-
-        protected override string GetText( PenumbraOption item, int idx ) => item.GetName();
     }
 }

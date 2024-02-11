@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,7 +43,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
                 foreach( var data in Data ) data.ReadRows( br );
             } );
 
-            DataSplitView = new( "Entry", Data, false, false );
+            DataSplitView = new( "Entry", Data, false );
         }
 
         protected override List<ParsedBase> GetParsed() => new();

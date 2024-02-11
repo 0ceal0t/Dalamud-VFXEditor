@@ -1,4 +1,3 @@
-using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -10,34 +9,18 @@ namespace VfxEditor.Ui.Components.SplitViews {
         protected readonly bool AllowReorder;
         protected T DraggingItem;
 
-        public UiSplitView( string id, List<T> items, bool showControls, bool allowReorder ) : base( id, items, showControls ) {
+        public UiSplitView( string id, List<T> items, bool allowReorder ) : base( id, items ) {
             AllowReorder = allowReorder;
         }
 
-        protected override void DrawControls() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-
-            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) OnNew();
-
-            if( Selected != null ) {
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    OnDelete( Selected );
-                    Selected = null;
-                }
-            }
-        }
-
-        protected virtual void OnNew() { }
-
-        protected virtual void OnDelete( T item ) { }
+        protected virtual bool RecordReorder() => false;
 
         protected override bool DrawLeftItem( T item, int idx ) {
             using( var _ = ImRaii.PushId( idx ) ) {
                 if( ImGui.Selectable( GetText( item, idx ), item == Selected ) ) Selected = item;
             }
 
-            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", false ) ) return true;
+            if( AllowReorder && UiUtils.DrawDragDrop( Items, item, GetText( item, Items.IndexOf( item ) ), ref DraggingItem, $"{Id}-SPLIT", RecordReorder() ) ) return true;
             return false;
         }
 

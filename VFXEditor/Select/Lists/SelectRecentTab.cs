@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Lists {
                     Plugin.Configuration.Save();
                     return true;
                 }
-                Dialog.PlayPopupItems( item.Path );
+                if( item.Type != SelectResultType.Local ) Dialog.PlayPopupItems( item.Path );
                 ImGui.EndPopup();
             }
 
