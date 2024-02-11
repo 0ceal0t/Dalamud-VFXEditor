@@ -115,7 +115,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
             Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
             foreach( var mesh in Meshes ) mesh.Populate( data, reader, lod );
 
@@ -130,6 +130,10 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
 
             VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
             foreach( var mesh in VerticalFogMeshes ) mesh.Populate( data, reader, lod );
+        }
+
+        public void PopulateWrite( MdlWriteData data ) {
+
         }
     }
 }

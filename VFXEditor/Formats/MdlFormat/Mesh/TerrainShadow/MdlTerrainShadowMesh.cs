@@ -64,7 +64,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             return data.ToArray();
         }
 
-        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
 
             Populate( reader, data.IndexBufferOffsets[lod] );
 

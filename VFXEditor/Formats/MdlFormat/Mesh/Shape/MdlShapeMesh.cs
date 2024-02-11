@@ -9,7 +9,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         private readonly uint _ShapeValueCount;
         private readonly uint _ShapeValueOffset;
 
-        // TODO: name
         private readonly List<MdlShapeValue> Values = [];
 
         public MdlShapeMesh( BinaryReader reader ) {
@@ -18,7 +17,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             _ShapeValueOffset = reader.ReadUInt32();
         }
 
-        public void Populate( MdlReaderData data ) {
+        public void Populate( MdlFileData data ) {
             Values.AddRange( data.ShapeValues.GetRange( ( int )_ShapeValueOffset, ( int )_ShapeValueCount ) );
         }
     }

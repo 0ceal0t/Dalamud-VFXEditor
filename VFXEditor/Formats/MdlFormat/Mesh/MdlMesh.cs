@@ -60,7 +60,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
 
-        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
             Populate( reader, data.IndexBufferOffsets[lod] );
 
             RawVertexData = [];

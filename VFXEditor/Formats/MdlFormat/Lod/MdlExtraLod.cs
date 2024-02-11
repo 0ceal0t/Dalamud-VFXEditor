@@ -104,7 +104,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate( MdlReaderData data, BinaryReader reader, int lod ) {
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
 
             LightShaftMeshes.AddRange( data.Meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
             foreach( var mesh in LightShaftMeshes ) mesh.Populate( data, reader, lod );

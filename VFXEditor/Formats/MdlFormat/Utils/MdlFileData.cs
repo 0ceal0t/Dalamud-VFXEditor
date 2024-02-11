@@ -5,7 +5,7 @@ using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 
 namespace VfxEditor.Formats.MdlFormat.Utils {
-    public class MdlReaderData {
+    public class MdlFileData {
         public readonly List<uint> VertexBufferOffsets = [];
         public readonly List<uint> IndexBufferOffsets = [];
 
@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<MdlSubMesh> SubMeshes = [];
         public readonly List<MdlTerrainShadowSubmesh> TerrainShadowSubmeshes = [];
 
-        public readonly Dictionary<uint, string> StringOffsets = [];
+        public readonly Dictionary<uint, string> OffsetToString = [];
         public readonly List<string> AttributeStrings = [];
         public readonly List<string> MaterialStrings = [];
         public readonly List<string> BoneStrings = [];

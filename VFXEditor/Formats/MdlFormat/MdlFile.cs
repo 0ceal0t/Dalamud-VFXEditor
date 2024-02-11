@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.MdlFormat.Box;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
+using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
@@ -60,23 +62,34 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedShort Unknown8 = new( "Unknown 8" );
         private readonly ParsedShort Unknown9 = new( "Unknown 9" );
 
-        private readonly List<MdlEid> Eids = [];
+        public readonly List<MdlEid> Eids = [];
         private readonly UiSplitView<MdlEid> EidView;
 
-        private readonly List<MdlLod> Lods = [];
+        public readonly List<MdlLod> Lods = [];
         private readonly UiDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
-        private readonly List<MdlExtraLod> ExtraLods = [];
+        public readonly List<MdlExtraLod> ExtraLods = [];
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
 
+        public readonly List<MdlShape> Shapes = []; // TODO
+
+        private readonly byte[] Padding;
+
         // TODO
-        // public const uint FileHeaderSize = 0x44;
-        // public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
+        private readonly MdlBoundingBox UnknownBoundingBox;
+        private readonly MdlBoundingBox ModelBoundingBox;
+        private readonly MdlBoundingBox WaterBoundingBox;
+        private readonly MdlBoundingBox VerticalFogBoundingBox;
+        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
+
+        // TODO
+        //public const uint FileHeaderSize = 0x44;
+        //public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
         // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
-            var data = new MdlReaderData();
+            var data = new MdlFileData();
 
             Version = reader.ReadUInt32();
             reader.ReadUInt32(); // stack size
@@ -84,6 +97,7 @@ namespace VfxEditor.Formats.MdlFormat {
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
 
+            // TODO: look at these values <--------
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // vertex buffer sizes
@@ -111,7 +125,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 var pos = reader.BaseStream.Position - stringStartPos;
                 var value = FileUtils.ReadString( reader );
                 Dalamud.Log( $"string: {pos} {value}" );
-                data.StringOffsets[( uint )pos] = value;
+                data.OffsetToString[( uint )pos] = value;
             }
 
             reader.BaseStream.Position = stringEndPos;
@@ -152,7 +166,7 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ====== DATA ========
 
-            for( var i = 0; i < elementIdCount; i++ ) Eids.Add( new( data.StringOffsets, reader ) );
+            for( var i = 0; i < elementIdCount; i++ ) Eids.Add( new( data.OffsetToString, reader ) );
 
             // ====== LOD ========
 
@@ -166,26 +180,31 @@ namespace VfxEditor.Formats.MdlFormat {
             // ===== MESHES ========
 
             for( var i = 0; i < meshCount; i++ ) data.Meshes.Add( new( this, vertexFormats[i], reader ) );
-            for( var i = 0; i < attributeCount; i++ ) data.AttributeStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
+            for( var i = 0; i < attributeCount; i++ ) data.AttributeStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < terrainShadowMeshCount; i++ ) data.TerrainShadowMeshes.Add( new( this, reader ) );
             for( var i = 0; i < submeshCount; i++ ) data.SubMeshes.Add( new( reader ) );
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
-            for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
-            for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.StringOffsets[reader.ReadUInt32()] );
+            for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
+            for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < boneTableCount; i++ ) data.BoneTables.Add( new( reader, data.BoneStrings ) );
 
             // // ======== SHAPES ============
 
-            for( var i = 0; i < shapeCount; i++ ) data.Shapes.Add( new( reader, data.StringOffsets ) );
+            for( var i = 0; i < shapeCount; i++ ) data.Shapes.Add( new( reader, data.OffsetToString ) );
             for( var i = 0; i < shapeMeshCount; i++ ) data.ShapesMeshes.Add( new( reader ) );
             for( var i = 0; i < shapeValueCount; i++ ) data.ShapeValues.Add( new( reader ) );
             var submeshBoneMapSize = reader.ReadUInt32();
             for( var i = 0; i < submeshBoneMapSize / 2; i++ ) data.SubmeshBoneMap.Add( reader.ReadUInt16() );
 
+            Shapes = data.Shapes; // TODO: ????
 
-            // TODO: Padding
+            Padding = reader.ReadBytes( reader.ReadByte() );
 
-            // TODO: Bounding boxes (regular, model, water, vertical fog, bones)
+            UnknownBoundingBox = new( reader );
+            ModelBoundingBox = new( reader );
+            WaterBoundingBox = new( reader );
+            VerticalFogBoundingBox = new( reader );
+            for( var i = 0; i < data.BoneStrings.Count; i++ ) BoneBoundingBoxes.Add( new( data.BoneStrings[i], reader ) );
 
             // ===== POPULATE =======
 

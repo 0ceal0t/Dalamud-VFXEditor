@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -15,6 +16,14 @@ namespace VfxEditor.Formats.SklbFormat.Bones {
 
         public void Draw() {
             using var child = ImRaii.Child( "Child" );
+
+            using( var disabled = ImRaii.Disabled() ) {
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    ImGui.Text( FontAwesomeIcon.InfoCircle.ToIconString() );
+                }
+                ImGui.SameLine();
+                ImGui.Text( "Bones can be re-ordered by dragging them" );
+            }
 
             foreach( var (bone, idx) in Bones.WithIndex() ) {
                 var text = "[" + $"{idx}".PadLeft( 3, '0' ) + $"]  {bone.Name.Value}";

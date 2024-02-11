@@ -7,7 +7,7 @@ namespace VfxEditor.Parsing {
         private readonly S State;
         private readonly S PrevState;
 
-        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S state, Action onChangeAction = null ) : this( item, state, item.Value, onChangeAction ) { }
+        public ParsedSimpleCommand( ParsedSimpleBase<S> item, S state, Action onChangeAction = null ) : this( item, item.Value, state, onChangeAction ) { }
 
         public ParsedSimpleCommand( ParsedSimpleBase<S> item, S prevState, S state, Action onChangeAction = null ) {
             Item = item;

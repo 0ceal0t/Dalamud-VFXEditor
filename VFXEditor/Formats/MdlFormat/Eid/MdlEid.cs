@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -24,6 +25,10 @@ namespace VfxEditor.Formats.MdlFormat.Element {
             ParentBone.Draw();
             Translation.Draw();
             Rotation.Draw();
+        }
+
+        public void PopulateWrite( MdlWriteData data ) {
+            data.AddBone( ParentBone.Value );
         }
     }
 }

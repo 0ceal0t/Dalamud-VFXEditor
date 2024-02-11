@@ -30,7 +30,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             AttributeView = new( Attributes, () => new( "##Attribute" ), true );
         }
 
-        public void Populate( MdlMesh parent, MdlReaderData data, BinaryReader reader, uint indexBufferPos ) {
+        public void Populate( MdlMesh parent, MdlFileData data, BinaryReader reader, uint indexBufferPos ) {
             Populate( parent, reader, indexBufferPos );
 
             for( var i = 0; i < _BoneCount; i++ ) {
