@@ -1,4 +1,5 @@
 using System.IO;
+using VfxEditor.Formats.MdlFormat.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
     public class MdlShapeValue {
@@ -8,6 +9,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         public MdlShapeValue( BinaryReader reader ) {
             _BaseIndicesIndex = reader.ReadUInt16();
             _ReplacingVertexIndex = reader.ReadUInt16();
+        }
+
+        public void PopulateWrite( MdlWriteData data ) {
+            data.ShapeValues.Add( this );
         }
     }
 }

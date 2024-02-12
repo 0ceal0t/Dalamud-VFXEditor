@@ -21,6 +21,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
     public class MdlMesh : MdlMeshData {
         public readonly MdlVertexDeclaration Format;
+        private readonly byte[] Strides;
+        private readonly byte StreamCount;
 
         private readonly ushort _MaterialStringIdx;
         private readonly ushort _SubmeshIndex;
@@ -52,8 +54,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             _IndexOffset = 2 * reader.ReadUInt32();
 
             _VertexBufferOffsets = [reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32()];
-            reader.ReadBytes( 3 ); // strides
-            reader.ReadByte(); // stream count
+            Strides = reader.ReadBytes( 3 );
+            StreamCount = reader.ReadByte();
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
         }

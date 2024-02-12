@@ -30,5 +30,12 @@ namespace VfxEditor.Formats.MdlFormat.Element {
         public void PopulateWrite( MdlWriteData data ) {
             data.AddBone( ParentBone.Value );
         }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            ElementId.Write( writer );
+            writer.Write( data.StringToOffset[ParentBone.Value] );
+            Translation.Write( writer );
+            Rotation.Write( writer );
+        }
     }
 }

@@ -20,5 +20,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         public void Populate( MdlFileData data ) {
             Values.AddRange( data.ShapeValues.GetRange( ( int )_ShapeValueOffset, ( int )_ShapeValueCount ) );
         }
+
+        public void PopulateWrite( MdlWriteData data ) {
+            data.ShapesMeshes.Add( this );
+            foreach( var item in Values ) item.PopulateWrite( data );
+        }
     }
 }

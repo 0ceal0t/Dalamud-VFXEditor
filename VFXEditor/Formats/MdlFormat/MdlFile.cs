@@ -303,6 +303,31 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.SubMeshes.Count );
             writer.Write( ( ushort )data.MaterialStrings.Count );
             writer.Write( ( ushort )data.BoneStrings.Count );
+            writer.Write( ( ushort )data.BoneTables.Count );
+            writer.Write( ( ushort )data.Shapes.Count );
+            writer.Write( ( ushort )data.ShapesMeshes.Count );
+            writer.Write( ( ushort )data.ShapeValues.Count );
+            writer.Write( ( byte )Lods.Count );
+            Flags1.Write( writer );
+            writer.Write( ( ushort )Eids.Count );
+            writer.Write( ( byte )data.TerrainShadowMeshes.Count );
+            Flags2.Write( writer );
+            ModelClipOutDistance.Write( writer );
+            ShadowClipOutDistance.Write( writer );
+            Unknown4.Write( writer );
+            writer.Write( ( ushort )data.TerrainShadowSubmeshes.Count );
+            Unknown5.Write( writer );
+            BgChangeMaterialIndex.Write( writer );
+            BgCrestChangeMaterialIndex.Write( writer );
+            Unknown6.Write( writer );
+            Unknown7.Write( writer );
+            Unknown8.Write( writer );
+            Unknown9.Write( writer );
+            FileUtils.Pad( writer, 6 ); // Padding
+
+            foreach( var item in Eids ) item.Write( writer, data );
+            foreach( var item in Lods ) item.Write( writer, data );
+            foreach( var item in ExtraLods ) item.Write( writer, data );
         }
     }
 }

@@ -142,5 +142,25 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             foreach( var mesh in CrestChangeMeshes ) mesh.PopulateWrite( data, lod );
             foreach( var mesh in LightShaftMeshes ) mesh.PopulateWrite( data, lod );
         }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            data.WriteIndexCount( writer, LightShaftMeshes );
+            data.WriteIndexCount( writer, GlassMeshes );
+            data.WriteIndexCount( writer, MaterialChangeMeshes );
+            data.WriteIndexCount( writer, CrestChangeMeshes );
+
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
+            Unknown3.Write( writer );
+            Unknown4.Write( writer );
+            Unknown5.Write( writer );
+            Unknown6.Write( writer );
+            Unknown7.Write( writer );
+            Unknown8.Write( writer );
+            Unknown9.Write( writer );
+            Unknown10.Write( writer );
+            Unknown11.Write( writer );
+            Unknown12.Write( writer );
+        }
     }
 }

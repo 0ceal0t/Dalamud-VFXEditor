@@ -139,5 +139,27 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             foreach( var mesh in ShadowMeshes ) mesh.PopulateWrite( data, lod );
             foreach( var mesh in VerticalFogMeshes ) mesh.PopulateWrite( data, lod );
         }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            data.WriteIndexCount( writer, Meshes );
+            ModelRange.Write( writer );
+            TextureRange.Write( writer );
+            data.WriteIndexCount( writer, WaterMeshes );
+            data.WriteIndexCount( writer, ShadowMeshes );
+            data.WriteIndexCount( writer, TerrainShadows );
+            data.WriteIndexCount( writer, VerticalFogMeshes );
+
+            writer.Write( 0 ); // Edge Geometry size
+            writer.Write( 0 ); // Edge Geometry offset
+            writer.Write( 0 ); // Polygon count
+            writer.Write( 0 ); // Unknown
+
+            data.LodOffsets[this] = writer.BaseStream.Position;
+            // Placeholders
+            writer.Write( 0 ); // Vertex buffer size
+            writer.Write( 0 ); // Index buffer size
+            writer.Write( 0 ); // Vertex data offset
+            writer.Write( 0 ); // Index data offset
+        }
     }
 }
