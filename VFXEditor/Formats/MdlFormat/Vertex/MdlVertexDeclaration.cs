@@ -41,6 +41,12 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             reader.BaseStream.Position = endPos;
         }
 
+        public void Write( BinaryWriter writer ) {
+            foreach( var element in Elements ) element.Write( writer );
+            writer.Write( ( byte )255 );
+            for( var i = 0; i < 7 + 8 * ( 17 - Elements.Count - 1 ); i++ ) writer.Write( ( byte )0 );
+        }
+
         public int GetStride( int stream ) {
             var elements = GetElements( stream );
             if( elements.Count == 0 ) return 0;
@@ -97,7 +103,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 data.Add( colors.Count == 0 ? new( 0 ) : colors[index] );
             }
 
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

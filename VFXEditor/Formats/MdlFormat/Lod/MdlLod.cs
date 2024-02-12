@@ -132,8 +132,12 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             foreach( var mesh in VerticalFogMeshes ) mesh.Populate( data, reader, lod );
         }
 
-        public void PopulateWrite( MdlWriteData data ) {
-
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            foreach( var mesh in Meshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in TerrainShadows ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in WaterMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in ShadowMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in VerticalFogMeshes ) mesh.PopulateWrite( data, lod );
         }
     }
 }

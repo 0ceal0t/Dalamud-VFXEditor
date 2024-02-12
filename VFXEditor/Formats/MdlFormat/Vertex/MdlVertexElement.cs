@@ -41,5 +41,14 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             VertexType.UInt or VertexType.ByteFloat4 => new( reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() ),
             _ => new( 0 )
         };
+
+        public void Write( BinaryWriter writer ) {
+            writer.Write( Stream );
+            writer.Write( Offset );
+            writer.Write( ( byte )Type );
+            writer.Write( ( byte )Usage );
+            writer.Write( UsageIndex );
+            for( var i = 0; i < 3; i++ ) writer.Write( ( byte )0 ); // padding
+        }
     }
 }

@@ -87,6 +87,7 @@ namespace VfxEditor.Formats.MdlFormat {
         //public const uint FileHeaderSize = 0x44;
         //public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
         // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
+        // var stackSize = vertexDeclarations.Length * 136;
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
             var data = new MdlFileData();
@@ -98,10 +99,16 @@ namespace VfxEditor.Formats.MdlFormat {
             var _materialCount = reader.ReadUInt16();
 
             // TODO: look at these values <--------
+            var a = new List<uint>();
+            var b = new List<uint>();
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
-            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // vertex buffer sizes
-            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // index buffer sizes
+            for( var i = 0; i < 3; i++ ) a.Add( reader.ReadUInt32() ); // vertex buffer sizes
+            for( var i = 0; i < 3; i++ ) b.Add( reader.ReadUInt32() ); // index buffer sizes
+
+            for( var i = 0; i < 3; i++ ) {
+                Dalamud.Log( $">>> {data.VertexBufferOffsets[i]:X4} {data.IndexBufferOffsets[i]:X4} {a[i]:X4} {b[i]:X4}" );
+            }
 
             var _lodCount = reader.ReadByte();
             IndexBufferStreaming.Read( reader );
@@ -216,11 +223,9 @@ namespace VfxEditor.Formats.MdlFormat {
 
             EidView = new( "Bind Point", Eids, false );
             LodView = new( "Level of Detail", Lods );
-            ExtraLodView = new( "Level of Detail", ExtraLods ); ;
-        }
+            ExtraLodView = new( "Level of Detail", ExtraLods );
 
-        public override void Write( BinaryWriter writer ) {
-
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
 
         public override void Draw() {
@@ -263,6 +268,41 @@ namespace VfxEditor.Formats.MdlFormat {
             Unknown7.Draw();
             Unknown8.Draw();
             Unknown9.Draw();
+        }
+
+        public override void Write( BinaryWriter writer ) {
+            var data = new MdlWriteData( this );
+
+            writer.Write( Version );
+            writer.Write( data.Meshes.Count * 136 ); // stack size
+            writer.Write( 0 ); // TODO: runtime size
+            writer.Write( ( ushort )data.Meshes.Count ); // vertex declaration count
+            writer.Write( ( ushort )data.MaterialStrings.Count );
+
+            // TODO
+            for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
+
+            writer.Write( ( byte )Lods.Count );
+            IndexBufferStreaming.Write( writer );
+            EdgeGeometry.Write( writer );
+            writer.Write( ( byte )0 ); // padding
+
+            foreach( var mesh in data.Meshes ) mesh.Format.Write( writer );
+
+            writer.Write( ( ushort )data.AllStrings.Count );
+            writer.Write( ( ushort )0 ); // padding
+
+            var stringPadding = ( uint )FileUtils.NumberToPad( writer.BaseStream.Position + data.TotalStringLength, 4 );
+            writer.Write( data.TotalStringLength + stringPadding );
+            foreach( var item in data.AllStrings ) FileUtils.WriteString( writer, item, true );
+            FileUtils.Pad( writer, stringPadding );
+
+            Radius.Write( writer );
+            writer.Write( ( ushort )data.Meshes.Count );
+            writer.Write( ( ushort )data.AttributeStrings.Count );
+            writer.Write( ( ushort )data.SubMeshes.Count );
+            writer.Write( ( ushort )data.MaterialStrings.Count );
+            writer.Write( ( ushort )data.BoneStrings.Count );
         }
     }
 }

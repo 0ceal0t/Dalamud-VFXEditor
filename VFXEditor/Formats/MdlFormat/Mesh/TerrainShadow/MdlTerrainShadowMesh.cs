@@ -1,6 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -16,7 +15,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         private ushort VertexCount;
 
-        private byte[] RawVertexData = Array.Empty<byte>();
+        private byte[] RawVertexData = [];
 
         private readonly List<MdlTerrainShadowSubmesh> Submeshes = [];
         private readonly UiSplitView<MdlTerrainShadowSubmesh> SubmeshView;
@@ -64,17 +63,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             return data.ToArray();
         }
 
-        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-
-            Populate( reader, data.IndexBufferOffsets[lod] );
-
-            reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffset;
-            RawVertexData = reader.ReadBytes( VertexCount * 8 );
-
-            Submeshes.AddRange( data.TerrainShadowSubmeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
-            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, data.IndexBufferOffsets[lod] );
-        }
-
         public override void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -86,6 +74,22 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
                 if( tab ) SubmeshView.Draw();
             }
+        }
+
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
+            Populate( reader, data.IndexBufferOffsets[lod] );
+
+            reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffset;
+            RawVertexData = reader.ReadBytes( VertexCount * 8 );
+
+            Submeshes.AddRange( data.TerrainShadowSubmeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, reader, data.IndexBufferOffsets[lod] );
+        }
+
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.TerrainShadowMeshes.Add( this );
+            foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
+            // TODO
         }
     }
 }

@@ -104,21 +104,6 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             }
         }
 
-        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-
-            LightShaftMeshes.AddRange( data.Meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
-            foreach( var mesh in LightShaftMeshes ) mesh.Populate( data, reader, lod );
-
-            GlassMeshes.AddRange( data.Meshes.GetRange( _GlassMeshIndex, _GlassMeshCount ) );
-            foreach( var mesh in GlassMeshes ) mesh.Populate( data, reader, lod );
-
-            MaterialChangeMeshes.AddRange( data.Meshes.GetRange( _MaterialChangeMeshIndex, _MaterialChangeMeshCount ) );
-            foreach( var mesh in MaterialChangeMeshes ) mesh.Populate( data, reader, lod );
-
-            CrestChangeMeshes.AddRange( data.Meshes.GetRange( _CrestChangetMeshIndex, _CrestChangeMeshCount ) );
-            foreach( var mesh in CrestChangeMeshes ) mesh.Populate( data, reader, lod );
-        }
-
         public void DrawParameters() {
             using var child = ImRaii.Child( "Child" );
 
@@ -134,6 +119,28 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             Unknown10.Draw();
             Unknown11.Draw();
             Unknown12.Draw();
+        }
+
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
+            LightShaftMeshes.AddRange( data.Meshes.GetRange( _LightShaftMeshIndex, _LightShaftMeshCount ) );
+            foreach( var mesh in LightShaftMeshes ) mesh.Populate( data, reader, lod );
+
+            GlassMeshes.AddRange( data.Meshes.GetRange( _GlassMeshIndex, _GlassMeshCount ) );
+            foreach( var mesh in GlassMeshes ) mesh.Populate( data, reader, lod );
+
+            MaterialChangeMeshes.AddRange( data.Meshes.GetRange( _MaterialChangeMeshIndex, _MaterialChangeMeshCount ) );
+            foreach( var mesh in MaterialChangeMeshes ) mesh.Populate( data, reader, lod );
+
+            CrestChangeMeshes.AddRange( data.Meshes.GetRange( _CrestChangetMeshIndex, _CrestChangeMeshCount ) );
+            foreach( var mesh in CrestChangeMeshes ) mesh.Populate( data, reader, lod );
+        }
+
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            foreach( var mesh in LightShaftMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in GlassMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in MaterialChangeMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in CrestChangeMeshes ) mesh.PopulateWrite( data, lod );
+            foreach( var mesh in LightShaftMeshes ) mesh.PopulateWrite( data, lod );
         }
     }
 }

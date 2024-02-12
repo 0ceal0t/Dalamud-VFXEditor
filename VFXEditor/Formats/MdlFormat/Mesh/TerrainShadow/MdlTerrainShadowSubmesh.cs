@@ -1,5 +1,6 @@
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
@@ -20,6 +21,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             Unknown1.Draw();
             Unknown2.Draw();
             DrawPreview();
+        }
+
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.TerrainShadowSubmeshes.Add( this );
+            // TODO
         }
     }
 }

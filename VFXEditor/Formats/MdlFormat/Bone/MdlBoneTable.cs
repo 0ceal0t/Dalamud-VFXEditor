@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
@@ -35,6 +36,12 @@ namespace VfxEditor.Formats.MdlFormat.Bone {
 
         public void Draw() {
             BoneView.Draw();
+        }
+
+        public void PopulateWrite( MdlWriteData data ) {
+            if( Bones.Count == 0 ) return;
+            data.BoneTables.Add( this );
+            foreach( var item in Bones ) data.AddBone( item.Value );
         }
     }
 }

@@ -36,5 +36,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
                 ShapeMeshes.Add( meshes );
             }
         }
+
+        public void PopulateWrite( MdlWriteData data ) {
+            data.AddShape( Name );
+        }
     }
 }

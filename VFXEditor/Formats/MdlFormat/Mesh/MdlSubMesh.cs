@@ -66,5 +66,12 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
                 if( tab ) AttributeView.Draw();
             }
         }
+
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.SubMeshes.Add( this );
+            foreach( var item in Bones ) data.AddBone( item.Value );
+            foreach( var item in Attributes ) data.AddAttribute( item.Value );
+            // TODO
+        }
     }
 }

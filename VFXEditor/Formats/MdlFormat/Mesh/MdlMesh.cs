@@ -60,30 +60,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
 
-        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-            Populate( reader, data.IndexBufferOffsets[lod] );
-
-            RawVertexData = [];
-            for( var i = 0; i < 3; i++ ) {
-                var stride = Format.GetStride( i );
-                if( stride == 0 ) continue;
-                reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffsets[i];
-                RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );
-            }
-
-            Submeshes.AddRange( data.SubMeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
-            foreach( var submesh in Submeshes ) submesh.Populate( this, data, reader, data.IndexBufferOffsets[lod] );
-
-            Material.Value = data.MaterialStrings[_MaterialStringIdx];
-
-            // Skip bone table if no bones
-            BoneTable = _BoneTableIndex == 255 ? new() : data.BoneTables[_BoneTableIndex];
-
-            foreach( var shape in data.Shapes ) {
-                var shapeMeshes = shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 );
-            }
-        }
-
         public override void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
@@ -104,6 +80,40 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private void DrawMesh() {
             Material.Draw();
             DrawPreview();
+        }
+
+        public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
+            Populate( reader, data.IndexBufferOffsets[lod] );
+
+            RawVertexData = [];
+            for( var i = 0; i < 3; i++ ) {
+                var stride = Format.GetStride( i );
+                if( stride == 0 ) continue;
+                reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffsets[i];
+                RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );
+            }
+
+            Submeshes.AddRange( data.SubMeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
+            foreach( var submesh in Submeshes ) submesh.Populate( this, data, reader, data.IndexBufferOffsets[lod] );
+
+            Material.Value = data.MaterialStrings[_MaterialStringIdx];
+
+            // Skip bone table if no bones
+            BoneTable = _BoneTableIndex == 255 ? new() : data.BoneTables[_BoneTableIndex]; // TODO: check if empty when writing
+
+            foreach( var shape in data.Shapes ) {
+                var shapeMeshes = shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 ); // TODO
+            }
+        }
+
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.Meshes.Add( this );
+            data.AddMaterial( Material.Value );
+            BoneTable.PopulateWrite( data );
+
+            foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
+
+            // TODO
         }
     }
 }
