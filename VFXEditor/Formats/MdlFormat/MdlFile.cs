@@ -65,7 +65,8 @@ namespace VfxEditor.Formats.MdlFormat {
         public readonly List<MdlEid> Eids = [];
         private readonly UiSplitView<MdlEid> EidView;
 
-        public readonly List<MdlLod> Lods = [];
+        public readonly List<MdlLod> AllLods = [];
+        public readonly List<MdlLod> UsedLods = [];
         private readonly UiDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
@@ -98,19 +99,13 @@ namespace VfxEditor.Formats.MdlFormat {
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
 
-            // TODO: look at these values <--------
-            var a = new List<uint>();
-            var b = new List<uint>();
+            // Order of the data is: V1, I1, V2, I2, V3, I3
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
-            for( var i = 0; i < 3; i++ ) a.Add( reader.ReadUInt32() ); // vertex buffer sizes
-            for( var i = 0; i < 3; i++ ) b.Add( reader.ReadUInt32() ); // index buffer sizes
+            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // vertex buffer sizes
+            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // index buffer sizes
 
-            for( var i = 0; i < 3; i++ ) {
-                Dalamud.Log( $">>> {data.VertexBufferOffsets[i]:X4} {data.IndexBufferOffsets[i]:X4} {a[i]:X4} {b[i]:X4}" );
-            }
-
-            var _lodCount = reader.ReadByte();
+            var _lodCount = reader.ReadByte(); // sometimes != 3, such as with bg/ffxiv/zon_z1/chr/z1c4/bgplate/0001.mdl
             IndexBufferStreaming.Read( reader );
             EdgeGeometry.Read( reader );
             reader.ReadByte(); // padding
@@ -177,7 +172,11 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ====== LOD ========
 
-            for( var i = 0; i < 3; i++ ) Lods.Add( new( this, reader ) );
+            for( var i = 0; i < 3; i++ ) {
+                var lod = new MdlLod( this, reader );
+                AllLods.Add( lod );
+                if( i < _lodCount ) UsedLods.Add( lod );
+            }
 
             if( ExtraLodEnabled ) {
                 Dalamud.Error( "Extra LoD" );
@@ -216,13 +215,13 @@ namespace VfxEditor.Formats.MdlFormat {
             // ===== POPULATE =======
 
             foreach( var shape in data.Shapes ) shape.Populate( data );
-            for( var i = 0; i < Lods.Count; i++ ) Lods[i].Populate( data, reader, i );
+            for( var i = 0; i < AllLods.Count; i++ ) AllLods[i].Populate( data, reader, i );
             for( var i = 0; i < ExtraLods.Count; i++ ) ExtraLods[i].Populate( data, reader, i ); // TODO: should this use vertexOffsets[i]?
 
             // ====== VIEWS ============
 
             EidView = new( "Bind Point", Eids, false );
-            LodView = new( "Level of Detail", Lods );
+            LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
@@ -282,7 +281,7 @@ namespace VfxEditor.Formats.MdlFormat {
             // TODO
             for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
 
-            writer.Write( ( byte )Lods.Count );
+            writer.Write( ( byte )AllLods.Count );
             IndexBufferStreaming.Write( writer );
             EdgeGeometry.Write( writer );
             writer.Write( ( byte )0 ); // padding
@@ -307,7 +306,7 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.Shapes.Count );
             writer.Write( ( ushort )data.ShapesMeshes.Count );
             writer.Write( ( ushort )data.ShapeValues.Count );
-            writer.Write( ( byte )Lods.Count );
+            writer.Write( ( byte )UsedLods.Count );
             Flags1.Write( writer );
             writer.Write( ( ushort )Eids.Count );
             writer.Write( ( byte )data.TerrainShadowMeshes.Count );
@@ -326,8 +325,16 @@ namespace VfxEditor.Formats.MdlFormat {
             FileUtils.Pad( writer, 6 ); // Padding
 
             foreach( var item in Eids ) item.Write( writer, data );
-            foreach( var item in Lods ) item.Write( writer, data );
+            foreach( var item in AllLods ) item.Write( writer, data );
             foreach( var item in ExtraLods ) item.Write( writer, data );
+
+            foreach( var item in data.Meshes ) item.Write( writer, data );
+            foreach( var item in data.AttributeStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in data.TerrainShadowMeshes ) item.Write( writer, data );
+
+            // ===============
+
+            data.Dispose();
         }
     }
 }

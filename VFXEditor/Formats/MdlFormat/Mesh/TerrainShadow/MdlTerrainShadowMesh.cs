@@ -88,8 +88,21 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         public void PopulateWrite( MdlWriteData data, int lod ) {
             data.TerrainShadowMeshes.Add( this );
+            data.AddVertexData( this, RawVertexData, RawIndexData, lod );
             foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
-            // TODO
+        }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            writer.Write( IndexCount );
+
+            var offsets = data.TerrainShadowOffsets[this];
+            writer.Write( offsets.Item2 );
+            writer.Write( offsets.Item1 );
+
+            writer.Write( VertexCount );
+            data.WriteIndexCount( writer, Submeshes );
+            writer.Write( ( byte )8 ); // stride
+            writer.Write( ( byte )0 ); // padding
         }
     }
 }

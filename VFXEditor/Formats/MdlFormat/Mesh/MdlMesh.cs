@@ -112,10 +112,26 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             data.Meshes.Add( this );
             data.AddMaterial( Material.Value );
             BoneTable.PopulateWrite( data );
-
+            data.AddVertexData( this, RawVertexData, RawIndexData, lod );
             foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
+        }
 
-            // TODO
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            writer.Write( VertexCount );
+            writer.Write( ( ushort )0 ); // padding
+            writer.Write( IndexCount );
+            writer.Write( ( ushort )data.MaterialStrings.IndexOf( Material.Value ) );
+            data.WriteIndexCount( writer, Submeshes );
+            writer.Write( ( ushort )( BoneTable.Bones.Count == 0 ? 255 : data.BoneTables.IndexOf( BoneTable ) ) );
+
+            var offsets = data.MeshOffsets[this];
+            writer.Write( offsets.Item2 ); // index offset
+            writer.Write( offsets.Item1[0] ); // vertex offsets
+            writer.Write( offsets.Item1[1] );
+            writer.Write( offsets.Item1[2] );
+
+            writer.Write( Strides );
+            writer.Write( StreamCount );
         }
     }
 }

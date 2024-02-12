@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly Dictionary<string, uint> StringToOffset = [];
         public readonly List<string> ShapeStrings = [];
 
-        public readonly Dictionary<MdlLod, long> LodOffsets = [];
+        public readonly Dictionary<MdlLod, long> LodPlaceholders = [];
 
         private int MeshIndex = 0;
         private int SubmeshIndex = 0;
@@ -19,10 +19,30 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         private int TerrainShadowMeshIndex = 0;
         private int TerrainShadowSubmeshIndex = 0;
 
+        private readonly List<MemoryStream> VertexData = [];
+        private readonly List<MemoryStream> IndexData = [];
+        private readonly List<BinaryWriter> VertexWriters = [];
+        private readonly List<BinaryWriter> IndexWriters = [];
+
+        public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = [];
+        public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = [];
+
         public MdlWriteData( MdlFile file ) {
-            for( var i = 0; i < file.Lods.Count; i++ ) file.Lods[i].PopulateWrite( this, i );
+            for( var j = 0; j < 3; j++ ) {
+                var vMs = new MemoryStream();
+                var vWriter = new BinaryWriter( vMs );
+
+                var iMs = new MemoryStream();
+                var iWriter = new BinaryWriter( iMs );
+
+                VertexData.Add( vMs );
+                IndexData.Add( iMs );
+                VertexWriters.Add( vWriter );
+                IndexWriters.Add( iWriter );
+            }
+
+            for( var i = 0; i < file.AllLods.Count; i++ ) file.AllLods[i].PopulateWrite( this, i );
             for( var i = 0; i < file.ExtraLods.Count; i++ ) file.ExtraLods[i].PopulateWrite( this, i );
-            // TODO: get vertex and index buffers
             foreach( var item in file.Eids ) item.PopulateWrite( this );
             foreach( var item in file.Shapes ) item.PopulateWrite( this );
 
@@ -33,18 +53,56 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
             AddStringOffsets( ShapeStrings );
         }
 
-        // ========= MESHES =================
+        public void Dispose() {
+            foreach( var item in VertexWriters ) item.Dispose();
+            foreach( var item in IndexWriters ) item.Dispose();
+            foreach( var item in VertexData ) item.Dispose();
+            foreach( var item in IndexData ) item.Dispose();
+        }
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlMesh> items ) => WriteIndexCount( writer, Meshes, items, ref MeshIndex );
+        // ========= VERTEX + INDEX DATA ===============
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowMesh> items ) => WriteIndexCount( writer, TerrainShadowMeshes, items, ref TerrainShadowMeshIndex );
+        public void AddVertexData( MdlMesh mesh, List<byte[]> vertexData, byte[] indexData, int lod ) {
+            var vWriter = VertexWriters[lod];
+            var iWriter = IndexWriters[lod];
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlSubMesh> items ) => WriteIndexCount( writer, SubMeshes, items, ref SubmeshIndex );
+            var iOffset = ( uint )IndexData[lod].Position / 2;
+            iWriter.Write( indexData );
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowSubmesh> items ) => WriteIndexCount( writer, TerrainShadowSubmeshes, items, ref TerrainShadowSubmeshIndex );
+            var vOffsets = new uint[] { 0, 0, 0 };
+            for( var i = 0; i < vertexData.Count; i++ ) {
+                vOffsets[i] = ( uint )VertexData[lod].Position;
+                vWriter.Write( vertexData[i] );
+            }
 
-        private static void WriteIndexCount<T>( BinaryWriter writer, List<T> allItems, List<T> items, ref int index ) {
-            var offset = items.Count == 0 ? index : allItems.IndexOf( items[0] );
+            MeshOffsets[mesh] = (vOffsets, iOffset);
+        }
+
+        public void AddVertexData( MdlTerrainShadowMesh mesh, byte[] vertexData, byte[] indexData, int lod ) {
+            var vWriter = VertexWriters[lod];
+            var iWriter = IndexWriters[lod];
+
+            var iOffset = ( uint )IndexData[lod].Position / 2;
+            iWriter.Write( indexData );
+
+            var vOffset = ( uint )VertexData[lod].Position;
+            vWriter.Write( vertexData );
+
+            TerrainShadowOffsets[mesh] = (vOffset, iOffset);
+        }
+
+        // ========= MESH OFFSETS =================
+
+        public void WriteIndexCount( BinaryWriter writer, List<MdlMesh> items, bool useIndex = true ) => WriteIndexCount( writer, Meshes, items, useIndex, ref MeshIndex );
+
+        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowMesh> items, bool useIndex = true ) => WriteIndexCount( writer, TerrainShadowMeshes, items, useIndex, ref TerrainShadowMeshIndex );
+
+        public void WriteIndexCount( BinaryWriter writer, List<MdlSubMesh> items, bool useIndex = true ) => WriteIndexCount( writer, SubMeshes, items, useIndex, ref SubmeshIndex );
+
+        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowSubmesh> items, bool useIndex = true ) => WriteIndexCount( writer, TerrainShadowSubmeshes, items, useIndex, ref TerrainShadowSubmeshIndex );
+
+        private static void WriteIndexCount<T>( BinaryWriter writer, List<T> allItems, List<T> items, bool useIndex, ref int index ) {
+            var offset = items.Count == 0 ? ( useIndex ? index : 0 ) : allItems.IndexOf( items[0] );
             writer.Write( ( ushort )offset );
             writer.Write( ( ushort )items.Count );
             index += items.Count;
