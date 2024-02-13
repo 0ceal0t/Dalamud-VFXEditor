@@ -40,8 +40,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         public void PopulateWrite( MdlWriteData data ) {
             data.Shapes.Add( this );
             data.AddShape( Name );
-            for( var i = 0; i < ShapeMeshes.Count; i++ ) {
-                foreach( var item in ShapeMeshes[i] ) item.PopulateWrite( data );
+
+            for( var i = 0; i < 3; i++ ) {
+                foreach( var item in ShapeMeshes[i] ) item.PopulateWrite( data, i );
             }
         }
 

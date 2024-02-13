@@ -21,9 +21,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             Values.AddRange( data.ShapeValues.GetRange( ( int )_ShapeValueOffset, ( int )_ShapeValueCount ) );
         }
 
-        public void PopulateWrite( MdlWriteData data ) {
-            data.ShapesMeshes.Add( this );
-            foreach( var item in Values ) item.PopulateWrite( data );
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.ShapeMeshesPerLod[lod].Add( this );
+
+            foreach( var item in Values ) item.PopulateWrite( data, lod );
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {

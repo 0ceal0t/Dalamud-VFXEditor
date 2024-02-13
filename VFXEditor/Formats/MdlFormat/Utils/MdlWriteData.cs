@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Utils {
     public class MdlWriteData : MdlFileData {
@@ -19,13 +21,16 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         private int TerrainShadowMeshIndex = 0;
         private int TerrainShadowSubmeshIndex = 0;
 
-        private readonly List<MemoryStream> VertexData = [];
-        private readonly List<MemoryStream> IndexData = [];
+        public readonly List<MemoryStream> VertexData = [];
+        public readonly List<MemoryStream> IndexData = [];
         private readonly List<BinaryWriter> VertexWriters = [];
         private readonly List<BinaryWriter> IndexWriters = [];
 
         public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = [];
         public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = [];
+
+        public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = [[], [], []];
+        public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = [[], [], []];
 
         public MdlWriteData( MdlFile file ) {
             for( var j = 0; j < 3; j++ ) {
@@ -47,7 +52,15 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
             foreach( var item in file.Eids ) item.PopulateWrite( this );
             foreach( var item in file.Shapes ) item.PopulateWrite( this );
 
+            for( var i = 0; i < 3; i++ ) {
+                ShapesMeshes.AddRange( ShapeMeshesPerLod[i] );
+                ShapeValues.AddRange( ShapeValuesPerLod[i] );
+            }
+
+            foreach( var item in IndexWriters ) FileUtils.PadTo( item, 16 );
+
             // ======= GENERATE STRING OFFSETS ==========
+
             AddStringOffsets( AttributeStrings );
             AddStringOffsets( BoneStrings );
             AddStringOffsets( MaterialStrings );

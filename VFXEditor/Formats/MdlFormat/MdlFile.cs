@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Box;
@@ -103,11 +104,17 @@ namespace VfxEditor.Formats.MdlFormat {
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
 
+            var a = new List<uint>();
+            var b = new List<uint>();
+
             // Order of the data is: V1, I1, V2, I2, V3, I3
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
-            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // vertex buffer sizes
-            for( var i = 0; i < 3; i++ ) reader.ReadUInt32(); // index buffer sizes
+            for( var i = 0; i < 3; i++ ) a.Add( reader.ReadUInt32() ); // vertex buffer sizes
+            for( var i = 0; i < 3; i++ ) b.Add( reader.ReadUInt32() ); // index buffer sizes
+
+            Dalamud.Log( $"V: {data.VertexBufferOffsets[0]:X4}/{a[0]:X4} {data.VertexBufferOffsets[1]:X4}/{a[1]:X4} {data.VertexBufferOffsets[2]:X4}/{a[2]:X4}" );
+            Dalamud.Log( $"I: {data.IndexBufferOffsets[0]:X4}/{b[0]:X4} {data.IndexBufferOffsets[1]:X4}/{b[1]:X4} {data.IndexBufferOffsets[2]:X4}/{b[2]:X4}" );
 
             var _lodCount = reader.ReadByte(); // sometimes != 3, such as with bg/ffxiv/zon_z1/chr/z1c4/bgplate/0001.mdl
             IndexBufferStreaming.Read( reader );
@@ -283,11 +290,13 @@ namespace VfxEditor.Formats.MdlFormat {
 
             writer.Write( Version );
             writer.Write( data.Meshes.Count * 136 ); // stack size
+            var runtimePlaceholder = writer.BaseStream.Position;
             writer.Write( 0 ); // placeholder: runtime size
             writer.Write( ( ushort )data.Meshes.Count ); // vertex declaration count
             writer.Write( ( ushort )data.MaterialStrings.Count );
 
             // placeholders
+            var placeholders = writer.BaseStream.Position;
             for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
 
             writer.Write( ( byte )AllLods.Count );
@@ -354,6 +363,40 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( uint )data.SubmeshBoneMap.Count * 2 + boneMapPadding );
             foreach( var item in data.SubmeshBoneMap ) writer.Write( item );
             FileUtils.Pad( writer, boneMapPadding );
+
+            writer.Write( ( byte )Padding.Length );
+            writer.Write( Padding );
+
+            UnknownBoundingBox.Write( writer );
+            ModelBoundingBox.Write( writer );
+            WaterBoundingBox.Write( writer );
+            VerticalFogBoundingBox.Write( writer );
+
+            foreach( var bone in data.BoneStrings ) {
+                if( BoneBoundingBoxes.FindFirst( x => x.Name.Value.Equals( bone ), out var box ) ) {
+                    box.Write( writer );
+                    continue;
+                }
+                FileUtils.Pad( writer, 32 ); // Couldn't find one, just skip it
+            }
+
+            // ================
+
+            var vertexSizes = data.VertexData.Select( x => x.Length ).ToList();
+            var indexSizes = data.IndexData.Select( x => x.Length ).ToList();
+            var vertexOffsets = new List<uint>();
+            var indexOffsets = new List<uint>();
+
+            for( var i = 0; i < 3; i++ ) {
+                vertexOffsets.Add( vertexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
+                writer.Write( data.VertexData[i].ToArray() );
+
+                indexOffsets.Add( indexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
+                writer.Write( data.IndexData[i].ToArray() );
+            }
+
+            Dalamud.Log( $">>>V: {vertexOffsets[0]:X4}/{vertexSizes[0]:X4} {vertexOffsets[1]:X4}/{vertexSizes[1]:X4} {vertexOffsets[2]:X4}/{vertexSizes[2]:X4}" );
+            Dalamud.Log( $">>>I: {indexOffsets[0]:X4}/{indexSizes[0]:X4} {indexOffsets[1]:X4}/{indexSizes[1]:X4} {indexOffsets[2]:X4}/{indexSizes[2]:X4}" );
 
             // ===============
 

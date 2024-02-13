@@ -7,7 +7,9 @@ namespace VfxEditor.Formats.MdlFormat.Box {
         public readonly ParsedFloat4 Min = new( "Minimum" );
         public readonly ParsedFloat4 Max = new( "Maximum" );
 
-        public MdlBoundingBox( BinaryReader reader ) {
+        public MdlBoundingBox() { }
+
+        public MdlBoundingBox( BinaryReader reader ) : this() {
             Min.Read( reader );
             Max.Read( reader );
         }
@@ -15,6 +17,11 @@ namespace VfxEditor.Formats.MdlFormat.Box {
         public virtual void Draw() {
             Min.Draw();
             Max.Draw();
+        }
+
+        public void Write( BinaryWriter writer ) {
+            Min.Write( writer );
+            Max.Write( writer );
         }
     }
 }

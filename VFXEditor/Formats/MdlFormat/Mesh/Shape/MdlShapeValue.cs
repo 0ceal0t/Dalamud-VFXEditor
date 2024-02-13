@@ -11,8 +11,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             _ReplacingVertexIndex = reader.ReadUInt16();
         }
 
-        public void PopulateWrite( MdlWriteData data ) {
-            data.ShapeValues.Add( this );
+        public void PopulateWrite( MdlWriteData data, int lod ) {
+            data.ShapeValuesPerLod[lod].Add( this );
         }
 
         public void Write( BinaryWriter writer ) {
