@@ -14,5 +14,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         public void PopulateWrite( MdlWriteData data ) {
             data.ShapeValues.Add( this );
         }
+
+        public void Write( BinaryWriter writer ) {
+            writer.Write( _BaseIndicesIndex );
+            writer.Write( _ReplacingVertexIndex );
+        }
     }
 }

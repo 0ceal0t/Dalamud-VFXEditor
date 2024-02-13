@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
@@ -28,11 +27,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private readonly ushort _SubmeshIndex;
         private readonly ushort _SubmeshCount;
         private readonly uint[] _VertexBufferOffsets;
-        private readonly ushort _BoneTableIndex;
 
         private readonly ParsedString Material = new( "Material" );
-
-        private MdlBoneTable BoneTable;
+        private readonly ParsedInt BoneTableIndex = new( "Bone Table Index" );
 
         private readonly ushort VertexCount; // Maxes out at ushort.MaxValue
 
@@ -50,9 +47,11 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             _MaterialStringIdx = reader.ReadUInt16();
             _SubmeshIndex = reader.ReadUInt16();
             _SubmeshCount = reader.ReadUInt16();
-            _BoneTableIndex = reader.ReadUInt16();
-            _IndexOffset = 2 * reader.ReadUInt32();
 
+            var _boneTableIndex = reader.ReadUInt16();
+            BoneTableIndex.Value = _boneTableIndex == 255 ? -1 : _boneTableIndex;
+
+            _IndexOffset = 2 * reader.ReadUInt32();
             _VertexBufferOffsets = [reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32()];
             Strides = reader.ReadBytes( 3 );
             StreamCount = reader.ReadByte();
@@ -66,20 +65,17 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            using( var tab = ImRaii.TabItem( "Preview" ) ) {
+            using( var tab = ImRaii.TabItem( "Mesh" ) ) {
                 if( tab ) DrawMesh();
             }
 
             using( var tab = ImRaii.TabItem( "Sub-Meshes" ) ) {
                 if( tab ) SubmeshView.Draw();
             }
-
-            using( var tab = ImRaii.TabItem( "Bone Table" ) ) {
-                if( tab ) BoneTable.Draw();
-            }
         }
 
         private void DrawMesh() {
+            BoneTableIndex.Draw();
             Material.Draw();
             DrawPreview();
         }
@@ -100,9 +96,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             Material.Value = data.MaterialStrings[_MaterialStringIdx];
 
-            // Skip bone table if no bones
-            BoneTable = _BoneTableIndex == 255 ? new() : data.BoneTables[_BoneTableIndex]; // TODO: check if empty when writing
-
             foreach( var shape in data.Shapes ) {
                 var shapeMeshes = shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 ); // TODO
             }
@@ -111,9 +104,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         public void PopulateWrite( MdlWriteData data, int lod ) {
             data.Meshes.Add( this );
             data.AddMaterial( Material.Value );
-            BoneTable.PopulateWrite( data );
             data.AddVertexData( this, RawVertexData, RawIndexData, lod );
-            foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
+            foreach( var item in Submeshes ) item.PopulateWrite( data );
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {
@@ -122,7 +114,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             writer.Write( IndexCount );
             writer.Write( ( ushort )data.MaterialStrings.IndexOf( Material.Value ) );
             data.WriteIndexCount( writer, Submeshes );
-            writer.Write( ( ushort )( BoneTable.Bones.Count == 0 ? 255 : data.BoneTables.IndexOf( BoneTable ) ) );
+            writer.Write( ( ushort )( BoneTableIndex.Value == -1 ? 255 : BoneTableIndex.Value ) );
 
             var offsets = data.MeshOffsets[this];
             writer.Write( offsets.Item2 ); // index offset

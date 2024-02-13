@@ -2,6 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
@@ -67,11 +68,35 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             }
         }
 
-        public void PopulateWrite( MdlWriteData data, int lod ) {
+        public void PopulateWrite( MdlWriteData data ) {
             data.SubMeshes.Add( this );
             foreach( var item in Bones ) data.AddBone( item.Value );
             foreach( var item in Attributes ) data.AddAttribute( item.Value );
-            // TODO
+        }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            writer.Write( _IndexOffset / 2 );
+            writer.Write( IndexCount );
+
+            var attributeMask = _AttributeIndexMask;
+            var selected = Attributes.Select( x => x.Value ).ToList();
+            for( var i = 0; i < data.AttributeStrings.Count; i++ ) {
+                var value = 1u << i;
+                if( selected.Contains( data.AttributeStrings[i] ) ) {
+                    attributeMask |= value;
+                }
+                else {
+                    attributeMask &= ~value;
+                }
+            }
+            writer.Write( attributeMask );
+
+            writer.Write( ( ushort )( Bones.Count == 0 ? 0xFFFF : data.SubmeshBoneMap.Count ) );
+            writer.Write( ( ushort )Bones.Count );
+
+            foreach( var bone in Bones ) {
+                data.SubmeshBoneMap.Add( ( ushort )data.BoneStrings.IndexOf( bone.Value ) );
+            }
         }
     }
 }

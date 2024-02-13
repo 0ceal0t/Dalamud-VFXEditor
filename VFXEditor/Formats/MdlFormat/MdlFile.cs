@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Box;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
@@ -72,6 +73,9 @@ namespace VfxEditor.Formats.MdlFormat {
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
         public readonly List<MdlExtraLod> ExtraLods = [];
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
+
+        public readonly List<MdlBoneTable> BoneTables = [];
+        private readonly UiSplitView<MdlBoneTable> BoneTableView;
 
         public readonly List<MdlShape> Shapes = []; // TODO
 
@@ -192,7 +196,7 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
             for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
-            for( var i = 0; i < boneTableCount; i++ ) data.BoneTables.Add( new( reader, data.BoneStrings ) );
+            for( var i = 0; i < boneTableCount; i++ ) BoneTables.Add( new( reader, data.BoneStrings ) );
 
             // // ======== SHAPES ============
 
@@ -223,6 +227,7 @@ namespace VfxEditor.Formats.MdlFormat {
             EidView = new( "Bind Point", Eids, false );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
+            BoneTableView = new( "Bone Table", BoneTables, false );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
@@ -237,6 +242,10 @@ namespace VfxEditor.Formats.MdlFormat {
 
             using( var tab = ImRaii.TabItem( "Bind Points" ) ) {
                 if( tab ) EidView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Bone Tables" ) ) {
+                if( tab ) BoneTableView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
@@ -274,11 +283,11 @@ namespace VfxEditor.Formats.MdlFormat {
 
             writer.Write( Version );
             writer.Write( data.Meshes.Count * 136 ); // stack size
-            writer.Write( 0 ); // TODO: runtime size
+            writer.Write( 0 ); // placeholder: runtime size
             writer.Write( ( ushort )data.Meshes.Count ); // vertex declaration count
             writer.Write( ( ushort )data.MaterialStrings.Count );
 
-            // TODO
+            // placeholders
             for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
 
             writer.Write( ( byte )AllLods.Count );
@@ -302,7 +311,7 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.SubMeshes.Count );
             writer.Write( ( ushort )data.MaterialStrings.Count );
             writer.Write( ( ushort )data.BoneStrings.Count );
-            writer.Write( ( ushort )data.BoneTables.Count );
+            writer.Write( ( ushort )BoneTables.Count );
             writer.Write( ( ushort )data.Shapes.Count );
             writer.Write( ( ushort )data.ShapesMeshes.Count );
             writer.Write( ( ushort )data.ShapeValues.Count );
@@ -331,6 +340,20 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in data.Meshes ) item.Write( writer, data );
             foreach( var item in data.AttributeStrings ) writer.Write( data.StringToOffset[item] );
             foreach( var item in data.TerrainShadowMeshes ) item.Write( writer, data );
+            foreach( var item in data.SubMeshes ) item.Write( writer, data );
+            foreach( var item in data.TerrainShadowSubmeshes ) item.Write( writer );
+            foreach( var item in data.MaterialStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in data.BoneStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in BoneTables ) item.Write( writer, data );
+
+            foreach( var item in data.Shapes ) item.Write( writer, data );
+            foreach( var item in data.ShapesMeshes ) item.Write( writer, data );
+            foreach( var item in data.ShapeValues ) item.Write( writer );
+
+            var boneMapPadding = ( uint )FileUtils.NumberToPad( writer.BaseStream.Position + ( data.SubmeshBoneMap.Count * 2 ), 4 );
+            writer.Write( ( uint )data.SubmeshBoneMap.Count * 2 + boneMapPadding );
+            foreach( var item in data.SubmeshBoneMap ) writer.Write( item );
+            FileUtils.Pad( writer, boneMapPadding );
 
             // ===============
 

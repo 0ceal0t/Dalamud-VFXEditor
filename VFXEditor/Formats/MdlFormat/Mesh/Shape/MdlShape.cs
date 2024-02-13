@@ -44,5 +44,17 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
                 foreach( var item in ShapeMeshes[i] ) item.PopulateWrite( data );
             }
         }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            writer.Write( data.StringToOffset[Name] );
+
+            writer.Write( ( ushort )( ShapeMeshes[0].Count == 0 ? 0 : data.ShapesMeshes.IndexOf( ShapeMeshes[0][0] ) ) );
+            writer.Write( ( ushort )( ShapeMeshes[1].Count == 0 ? 0 : data.ShapesMeshes.IndexOf( ShapeMeshes[1][0] ) ) );
+            writer.Write( ( ushort )( ShapeMeshes[2].Count == 0 ? 0 : data.ShapesMeshes.IndexOf( ShapeMeshes[2][0] ) ) );
+
+            writer.Write( ( ushort )ShapeMeshes[0].Count );
+            writer.Write( ( ushort )ShapeMeshes[1].Count );
+            writer.Write( ( ushort )ShapeMeshes[2].Count );
+        }
     }
 }

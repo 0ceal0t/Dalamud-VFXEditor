@@ -89,7 +89,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
         public void PopulateWrite( MdlWriteData data, int lod ) {
             data.TerrainShadowMeshes.Add( this );
             data.AddVertexData( this, RawVertexData, RawIndexData, lod );
-            foreach( var item in Submeshes ) item.PopulateWrite( data, lod );
+            foreach( var item in Submeshes ) item.PopulateWrite( data );
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {

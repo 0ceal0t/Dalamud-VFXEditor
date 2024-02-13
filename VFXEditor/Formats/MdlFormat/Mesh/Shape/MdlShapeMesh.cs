@@ -25,5 +25,13 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             data.ShapesMeshes.Add( this );
             foreach( var item in Values ) item.PopulateWrite( data );
         }
+
+        public void Write( BinaryWriter writer, MdlWriteData data ) {
+            writer.Write( _MeshIndexOffset );
+
+            // uint for some reason
+            writer.Write( Values.Count == 0 ? 0 : data.ShapeValues.IndexOf( Values[0] ) );
+            writer.Write( Values.Count );
+        }
     }
 }

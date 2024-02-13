@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
@@ -19,7 +18,6 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<string> MaterialStrings = [];
         public readonly List<string> BoneStrings = [];
 
-        public readonly List<MdlBoneTable> BoneTables = [];
         public readonly List<ushort> SubmeshBoneMap = [];
 
         public readonly List<MdlShape> Shapes = [];

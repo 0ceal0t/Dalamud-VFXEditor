@@ -23,9 +23,15 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             DrawPreview();
         }
 
-        public void PopulateWrite( MdlWriteData data, int lod ) {
+        public void PopulateWrite( MdlWriteData data ) {
             data.TerrainShadowSubmeshes.Add( this );
-            // TODO
+        }
+
+        public void Write( BinaryWriter writer ) {
+            writer.Write( _IndexOffset / 2 );
+            writer.Write( IndexCount );
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
         }
     }
 }
