@@ -9,11 +9,13 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
     public class MdlTerrainShadowMesh : MdlMeshData {
+        public int Lod { get; private set; } = -1;
+
         private readonly ushort _SubmeshIndex;
         private readonly ushort _SubmeshCount;
         private readonly uint _VertexBufferOffset;
 
-        private ushort VertexCount;
+        private readonly ushort VertexCount;
 
         private byte[] RawVertexData = [];
 
@@ -60,7 +62,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
                 data.Add( new( 1, 1, 1, 1 ) ); // colot
             }
 
-            return data.ToArray();
+            return [.. data];
         }
 
         public override void Draw() {
@@ -78,6 +80,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
             Populate( reader, data.IndexBufferOffsets[lod] );
+
+            Lod = lod;
 
             reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffset;
             RawVertexData = reader.ReadBytes( VertexCount * 8 );

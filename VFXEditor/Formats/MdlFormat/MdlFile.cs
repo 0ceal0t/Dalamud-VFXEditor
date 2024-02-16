@@ -3,7 +3,6 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Box;
@@ -80,6 +79,7 @@ namespace VfxEditor.Formats.MdlFormat {
 
         public readonly List<MdlShape> Shapes = []; // TODO
 
+        private readonly int[] IndexPadding;
         private readonly byte[] Padding;
 
         // TODO
@@ -87,13 +87,12 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly MdlBoundingBox ModelBoundingBox;
         private readonly MdlBoundingBox WaterBoundingBox;
         private readonly MdlBoundingBox VerticalFogBoundingBox;
-        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
 
-        // TODO
-        //public const uint FileHeaderSize = 0x44;
-        //public unsafe uint StackSize => ( uint )( VertexDeclarations.Length * NumVertices * sizeof( MdlStructs.VertexElement ) );
-        // var runtimeSize = (uint)(totalSize - StackSize - FileHeaderSize);
-        // var stackSize = vertexDeclarations.Length * 136;
+        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
+        private readonly CommandSplitView<MdlBoneBoundingBox> BoneBoxView;
+
+        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = [];
+        private readonly CommandSplitView<MdlBoundingBox> UnknownBoxView;
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
             var data = new MdlFileData();
@@ -104,17 +103,12 @@ namespace VfxEditor.Formats.MdlFormat {
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
 
-            var a = new List<uint>();
-            var b = new List<uint>();
 
             // Order of the data is: V1, I1, V2, I2, V3, I3
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
             for( var i = 0; i < 3; i++ ) data.IndexBufferOffsets.Add( reader.ReadUInt32() );
-            for( var i = 0; i < 3; i++ ) a.Add( reader.ReadUInt32() ); // vertex buffer sizes
-            for( var i = 0; i < 3; i++ ) b.Add( reader.ReadUInt32() ); // index buffer sizes
-
-            Dalamud.Log( $"V: {data.VertexBufferOffsets[0]:X4}/{a[0]:X4} {data.VertexBufferOffsets[1]:X4}/{a[1]:X4} {data.VertexBufferOffsets[2]:X4}/{a[2]:X4}" );
-            Dalamud.Log( $"I: {data.IndexBufferOffsets[0]:X4}/{b[0]:X4} {data.IndexBufferOffsets[1]:X4}/{b[1]:X4} {data.IndexBufferOffsets[2]:X4}/{b[2]:X4}" );
+            for( var i = 0; i < 3; i++ ) data.VertexBufferSizes.Add( reader.ReadUInt32() );
+            for( var i = 0; i < 3; i++ ) data.IndexBufferSizes.Add( reader.ReadUInt32() );
 
             var _lodCount = reader.ReadByte(); // sometimes != 3, such as with bg/ffxiv/zon_z1/chr/z1c4/bgplate/0001.mdl
             IndexBufferStreaming.Read( reader );
@@ -137,7 +131,6 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < stringCount; i++ ) {
                 var pos = reader.BaseStream.Position - stringStartPos;
                 var value = FileUtils.ReadString( reader );
-                Dalamud.Log( $"string: {pos} {value}" );
                 data.OffsetToString[( uint )pos] = value;
             }
 
@@ -217,11 +210,14 @@ namespace VfxEditor.Formats.MdlFormat {
 
             Padding = reader.ReadBytes( reader.ReadByte() );
 
+            // ======== BOXES ===============
+
             UnknownBoundingBox = new( reader );
             ModelBoundingBox = new( reader );
             WaterBoundingBox = new( reader );
             VerticalFogBoundingBox = new( reader );
             for( var i = 0; i < data.BoneStrings.Count; i++ ) BoneBoundingBoxes.Add( new( data.BoneStrings[i], reader ) );
+            for( var i = 0; i < Unknown4.Value; i++ ) UnknownBoundingBoxes.Add( new( reader ) );
 
             // ===== POPULATE =======
 
@@ -229,12 +225,18 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < AllLods.Count; i++ ) AllLods[i].Populate( data, reader, i );
             for( var i = 0; i < ExtraLods.Count; i++ ) ExtraLods[i].Populate( data, reader, i ); // TODO: should this use vertexOffsets[i]?
 
+            IndexPadding = [data.GetIndexPadding( 0 ), data.GetIndexPadding( 1 ), data.GetIndexPadding( 2 )];
+
             // ====== VIEWS ============
 
             EidView = new( "Bind Point", Eids, false );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
             BoneTableView = new( "Bone Table", BoneTables, false );
+            UnknownBoxView = new( "Bounding Box", UnknownBoundingBoxes, false, null, () => new() );
+            BoneBoxView = new( "Bounding Box", BoneBoundingBoxes, false,
+                ( MdlBoneBoundingBox item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
+                () => new() );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
         }
@@ -263,6 +265,10 @@ namespace VfxEditor.Formats.MdlFormat {
                 using var tab = ImRaii.TabItem( "Extra LoD" );
                 if( tab ) ExtraLodView.Draw();
             }
+
+            using( var tab = ImRaii.TabItem( "Bounding Boxes" ) ) {
+                if( tab ) DrawBoxes();
+            }
         }
 
         private void DrawParameters() {
@@ -285,6 +291,34 @@ namespace VfxEditor.Formats.MdlFormat {
             Unknown9.Draw();
         }
 
+        private void DrawBoxes() {
+            using var id = ImRaii.PushId( "Boxes" );
+            using var child = ImRaii.Child( "Child" );
+
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Unknown" ) ) {
+                if( tab ) UnknownBoundingBox.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Model" ) ) {
+                if( tab ) ModelBoundingBox.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Vertical Fog" ) ) {
+                if( tab ) VerticalFogBoundingBox.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Bones" ) ) {
+                if( tab ) BoneBoxView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Unknown Boxes" ) ) {
+                if( tab ) UnknownBoxView.Draw();
+            }
+        }
+
         public override void Write( BinaryWriter writer ) {
             var data = new MdlWriteData( this );
 
@@ -295,16 +329,19 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.Meshes.Count ); // vertex declaration count
             writer.Write( ( ushort )data.MaterialStrings.Count );
 
-            // placeholders
             var placeholders = writer.BaseStream.Position;
             for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
 
-            writer.Write( ( byte )AllLods.Count );
+            writer.Write( ( byte )UsedLods.Count );
             IndexBufferStreaming.Write( writer );
             EdgeGeometry.Write( writer );
             writer.Write( ( byte )0 ); // padding
 
+            Dalamud.Log( $"1 >>> {writer.BaseStream.Position}" );
+
             foreach( var mesh in data.Meshes ) mesh.Format.Write( writer );
+
+            Dalamud.Log( $"2 >>> {writer.BaseStream.Position}" );
 
             writer.Write( ( ushort )data.AllStrings.Count );
             writer.Write( ( ushort )0 ); // padding
@@ -313,6 +350,8 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( data.TotalStringLength + stringPadding );
             foreach( var item in data.AllStrings ) FileUtils.WriteString( writer, item, true );
             FileUtils.Pad( writer, stringPadding );
+
+            Dalamud.Log( $"3 >>> {writer.BaseStream.Position}" );
 
             Radius.Write( writer );
             writer.Write( ( ushort )data.Meshes.Count );
@@ -380,23 +419,51 @@ namespace VfxEditor.Formats.MdlFormat {
                 FileUtils.Pad( writer, 32 ); // Couldn't find one, just skip it
             }
 
+            foreach( var item in UnknownBoundingBoxes ) item.Write( writer );
+
             // ================
 
-            var vertexSizes = data.VertexData.Select( x => x.Length ).ToList();
-            var indexSizes = data.IndexData.Select( x => x.Length ).ToList();
+            var vertexSizes = new List<uint>();
+            var indexSizes = new List<uint>();
             var vertexOffsets = new List<uint>();
             var indexOffsets = new List<uint>();
 
             for( var i = 0; i < 3; i++ ) {
+                vertexSizes.Add( ( uint )data.VertexData[i].Length );
                 vertexOffsets.Add( vertexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
                 writer.Write( data.VertexData[i].ToArray() );
 
+                indexSizes.Add( ( uint )( data.IndexData[i].Length + IndexPadding[i] ) );
                 indexOffsets.Add( indexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
                 writer.Write( data.IndexData[i].ToArray() );
+
+                FileUtils.Pad( writer, IndexPadding[i] );
             }
 
-            Dalamud.Log( $">>>V: {vertexOffsets[0]:X4}/{vertexSizes[0]:X4} {vertexOffsets[1]:X4}/{vertexSizes[1]:X4} {vertexOffsets[2]:X4}/{vertexSizes[2]:X4}" );
-            Dalamud.Log( $">>>I: {indexOffsets[0]:X4}/{indexSizes[0]:X4} {indexOffsets[1]:X4}/{indexSizes[1]:X4} {indexOffsets[2]:X4}/{indexSizes[2]:X4}" );
+            // ===== FILL IN PLACEHOLDERS =======
+
+            writer.BaseStream.Position = runtimePlaceholder;
+            var runtimeSize = vertexOffsets[0] - 68u - ( uint )( data.Meshes.Count * 136u );
+            writer.Write( runtimeSize );
+
+            writer.BaseStream.Position = placeholders;
+            foreach( var item in vertexOffsets ) writer.Write( item );
+            foreach( var item in indexOffsets ) writer.Write( item );
+            foreach( var item in vertexSizes ) writer.Write( item );
+            foreach( var item in indexSizes ) writer.Write( item );
+
+            foreach( var (item, idx) in UsedLods.WithIndex() ) {
+                writer.BaseStream.Position = data.LodPlaceholders[item];
+                writer.Write( 0 );
+                writer.Write( vertexOffsets[idx] + vertexSizes[idx] );
+                writer.Write( 0 );
+                writer.Write( 0 );
+
+                writer.Write( vertexSizes[idx] );
+                writer.Write( indexSizes[idx] );
+                writer.Write( vertexOffsets[idx] );
+                writer.Write( indexOffsets[idx] );
+            }
 
             // ===============
 

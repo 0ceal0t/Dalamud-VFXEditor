@@ -16,6 +16,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
 
         protected byte[] RawIndexData = [];
 
+        public int RawIndexDataSize => RawIndexData.Length;
+
         public uint GetIndexCount() => IndexCount;
 
         public abstract void RefreshBuffer( Device device );

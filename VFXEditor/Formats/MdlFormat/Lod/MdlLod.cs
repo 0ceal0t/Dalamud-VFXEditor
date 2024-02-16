@@ -149,13 +149,13 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             data.WriteIndexCount( writer, TerrainShadows, File.UsedLods.Contains( this ) );
             data.WriteIndexCount( writer, VerticalFogMeshes, File.UsedLods.Contains( this ) );
 
+            data.LodPlaceholders[this] = writer.BaseStream.Position; // Placeholders
+
             writer.Write( 0 ); // Edge Geometry size
             writer.Write( 0 ); // Edge Geometry offset
             writer.Write( 0 ); // Polygon count
             writer.Write( 0 ); // Unknown
 
-            data.LodPlaceholders[this] = writer.BaseStream.Position;
-            // Placeholders
             writer.Write( 0 ); // Vertex buffer size
             writer.Write( 0 ); // Index buffer size
             writer.Write( 0 ); // Vertex data offset

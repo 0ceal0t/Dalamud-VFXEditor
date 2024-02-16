@@ -19,7 +19,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
     }
 
     public class MdlMesh : MdlMeshData {
+        public int Lod { get; private set; } = -1;
         public readonly MdlVertexDeclaration Format;
+
         private readonly byte[] Strides;
         private readonly byte StreamCount;
 
@@ -82,6 +84,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
             Populate( reader, data.IndexBufferOffsets[lod] );
+
+            Lod = lod;
 
             RawVertexData = [];
             for( var i = 0; i < 3; i++ ) {
