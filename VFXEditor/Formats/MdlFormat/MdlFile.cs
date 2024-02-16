@@ -337,11 +337,7 @@ namespace VfxEditor.Formats.MdlFormat {
             EdgeGeometry.Write( writer );
             writer.Write( ( byte )0 ); // padding
 
-            Dalamud.Log( $"1 >>> {writer.BaseStream.Position}" );
-
             foreach( var mesh in data.Meshes ) mesh.Format.Write( writer );
-
-            Dalamud.Log( $"2 >>> {writer.BaseStream.Position}" );
 
             writer.Write( ( ushort )data.AllStrings.Count );
             writer.Write( ( ushort )0 ); // padding
@@ -350,8 +346,6 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( data.TotalStringLength + stringPadding );
             foreach( var item in data.AllStrings ) FileUtils.WriteString( writer, item, true );
             FileUtils.Pad( writer, stringPadding );
-
-            Dalamud.Log( $"3 >>> {writer.BaseStream.Position}" );
 
             Radius.Write( writer );
             writer.Write( ( ushort )data.Meshes.Count );

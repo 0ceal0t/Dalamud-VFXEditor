@@ -31,8 +31,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             writer.Write( _MeshIndexOffset );
 
             // uint for some reason
-            writer.Write( Values.Count == 0 ? 0 : data.ShapeValues.IndexOf( Values[0] ) );
             writer.Write( Values.Count );
+            writer.Write( Values.Count == 0 ? 0 : data.ShapeValues.IndexOf( Values[0] ) );
         }
     }
 }
