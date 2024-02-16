@@ -141,13 +141,13 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {
-            data.WriteIndexCount( writer, Meshes, File.UsedLods.Contains( this ) );
+            data.WriteIndexCount( writer, Meshes, _MeshIndex );
             ModelRange.Write( writer );
             TextureRange.Write( writer );
-            data.WriteIndexCount( writer, WaterMeshes, File.UsedLods.Contains( this ) );
-            data.WriteIndexCount( writer, ShadowMeshes, File.UsedLods.Contains( this ) );
-            data.WriteIndexCount( writer, TerrainShadows, File.UsedLods.Contains( this ) );
-            data.WriteIndexCount( writer, VerticalFogMeshes, File.UsedLods.Contains( this ) );
+            data.WriteIndexCount( writer, WaterMeshes, _WaterMeshIndex );
+            data.WriteIndexCount( writer, ShadowMeshes, _ShadowMeshIndex );
+            data.WriteIndexCount( writer, TerrainShadows, _TerrainShadowMeshIndex );
+            data.WriteIndexCount( writer, VerticalFogMeshes, _VerticalFogMeshIndex );
 
             data.LodPlaceholders[this] = writer.BaseStream.Position; // Placeholders
 

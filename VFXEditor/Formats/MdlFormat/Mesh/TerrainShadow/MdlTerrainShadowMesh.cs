@@ -104,7 +104,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             writer.Write( offsets.Item1 );
 
             writer.Write( VertexCount );
-            data.WriteIndexCount( writer, Submeshes );
+            data.WriteIndexCount( writer, Submeshes, _SubmeshIndex );
             writer.Write( ( byte )8 ); // stride
             writer.Write( ( byte )0 ); // padding
         }

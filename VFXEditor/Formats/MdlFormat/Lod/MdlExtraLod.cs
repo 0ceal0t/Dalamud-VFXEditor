@@ -144,10 +144,10 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {
-            data.WriteIndexCount( writer, LightShaftMeshes );
-            data.WriteIndexCount( writer, GlassMeshes );
-            data.WriteIndexCount( writer, MaterialChangeMeshes );
-            data.WriteIndexCount( writer, CrestChangeMeshes );
+            data.WriteIndexCount( writer, LightShaftMeshes, _LightShaftMeshIndex );
+            data.WriteIndexCount( writer, GlassMeshes, _GlassMeshIndex );
+            data.WriteIndexCount( writer, MaterialChangeMeshes, _MaterialChangeMeshIndex );
+            data.WriteIndexCount( writer, CrestChangeMeshes, _CrestChangetMeshIndex );
 
             Unknown1.Write( writer );
             Unknown2.Write( writer );

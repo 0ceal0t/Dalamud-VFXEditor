@@ -117,7 +117,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             writer.Write( ( ushort )0 ); // padding
             writer.Write( IndexCount );
             writer.Write( ( ushort )data.MaterialStrings.IndexOf( Material.Value ) );
-            data.WriteIndexCount( writer, Submeshes );
+            data.WriteIndexCount( writer, Submeshes, _SubmeshIndex );
             writer.Write( ( ushort )( BoneTableIndex.Value == -1 ? 255 : BoneTableIndex.Value ) );
 
             var offsets = data.MeshOffsets[this];

@@ -54,7 +54,6 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedFlag<ModelFlags2> Flags2 = new( "Flags 2", size: 1 );
         private readonly ParsedFloat ModelClipOutDistance = new( "Model Clip Out Distance" );
         private readonly ParsedFloat ShadowClipOutDistance = new( "Shadow Clip Out Distance" );
-        private readonly ParsedShort Unknown4 = new( "Unknown 4" );
         private readonly ParsedByte Unknown5 = new( "Unknown 5" );
         private readonly ParsedByte BgChangeMaterialIndex = new( "Background Change Material Index" );
         private readonly ParsedByte BgCrestChangeMaterialIndex = new( "Background Crest Change Material Index" );
@@ -155,7 +154,7 @@ namespace VfxEditor.Formats.MdlFormat {
             Flags2.Read( reader );
             ModelClipOutDistance.Read( reader );
             ShadowClipOutDistance.Read( reader );
-            Unknown4.Read( reader );
+            var unknownCount = reader.ReadUInt16();
             var terrainShadowSubmeshCount = reader.ReadUInt16();
             Unknown5.Read( reader );
             BgChangeMaterialIndex.Read( reader );
@@ -217,7 +216,7 @@ namespace VfxEditor.Formats.MdlFormat {
             WaterBoundingBox = new( reader );
             VerticalFogBoundingBox = new( reader );
             for( var i = 0; i < data.BoneStrings.Count; i++ ) BoneBoundingBoxes.Add( new( data.BoneStrings[i], reader ) );
-            for( var i = 0; i < Unknown4.Value; i++ ) UnknownBoundingBoxes.Add( new( reader ) );
+            for( var i = 0; i < unknownCount; i++ ) UnknownBoundingBoxes.Add( new( reader ) );
 
             // ===== POPULATE =======
 
@@ -281,7 +280,6 @@ namespace VfxEditor.Formats.MdlFormat {
             Flags2.Draw(); // Not gonna handle if ExtraLoD is checked :/
             ModelClipOutDistance.Draw();
             ShadowClipOutDistance.Draw();
-            Unknown4.Draw();
             Unknown5.Draw();
             BgChangeMaterialIndex.Draw();
             BgCrestChangeMaterialIndex.Draw();
@@ -364,7 +362,7 @@ namespace VfxEditor.Formats.MdlFormat {
             Flags2.Write( writer );
             ModelClipOutDistance.Write( writer );
             ShadowClipOutDistance.Write( writer );
-            Unknown4.Write( writer );
+            writer.Write( ( ushort )UnknownBoundingBoxes.Count );
             writer.Write( ( ushort )data.TerrainShadowSubmeshes.Count );
             Unknown5.Write( writer );
             BgChangeMaterialIndex.Write( writer );

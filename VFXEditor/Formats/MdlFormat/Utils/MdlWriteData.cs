@@ -14,12 +14,6 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
         public readonly Dictionary<MdlLod, long> LodPlaceholders = [];
 
-        private int MeshIndex = 0;
-        private int SubmeshIndex = 0;
-
-        private int TerrainShadowMeshIndex = 0;
-        private int TerrainShadowSubmeshIndex = 0;
-
         public readonly List<MemoryStream> VertexData = [];
         public readonly List<MemoryStream> IndexData = [];
         private readonly List<BinaryWriter> VertexWriters = [];
@@ -104,19 +98,18 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
         // ========= MESH OFFSETS =================
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlMesh> items, bool useIndex = true ) => WriteIndexCount( writer, Meshes, items, useIndex, ref MeshIndex );
+        public void WriteIndexCount( BinaryWriter writer, List<MdlMesh> items, int defaultOffset ) => WriteIndexCount( writer, Meshes, items, defaultOffset );
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowMesh> items, bool useIndex = true ) => WriteIndexCount( writer, TerrainShadowMeshes, items, useIndex, ref TerrainShadowMeshIndex );
+        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowMesh> items, int defaultOffset ) => WriteIndexCount( writer, TerrainShadowMeshes, items, defaultOffset );
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlSubMesh> items, bool useIndex = true ) => WriteIndexCount( writer, SubMeshes, items, useIndex, ref SubmeshIndex );
+        public void WriteIndexCount( BinaryWriter writer, List<MdlSubMesh> items, int defaultOffset ) => WriteIndexCount( writer, SubMeshes, items, defaultOffset );
 
-        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowSubmesh> items, bool useIndex = true ) => WriteIndexCount( writer, TerrainShadowSubmeshes, items, useIndex, ref TerrainShadowSubmeshIndex );
+        public void WriteIndexCount( BinaryWriter writer, List<MdlTerrainShadowSubmesh> items, int defaultOffset ) => WriteIndexCount( writer, TerrainShadowSubmeshes, items, defaultOffset );
 
-        private static void WriteIndexCount<T>( BinaryWriter writer, List<T> allItems, List<T> items, bool useIndex, ref int index ) {
-            var offset = items.Count == 0 ? ( useIndex ? index : 0 ) : allItems.IndexOf( items[0] );
+        private static void WriteIndexCount<T>( BinaryWriter writer, List<T> allItems, List<T> items, int defaultOffset ) {
+            var offset = items.Count == 0 ? defaultOffset : allItems.IndexOf( items[0] );
             writer.Write( ( ushort )offset );
             writer.Write( ( ushort )items.Count );
-            index += items.Count;
         }
 
         // ========= STRINGS =================
