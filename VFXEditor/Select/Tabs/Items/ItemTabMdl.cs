@@ -8,8 +8,8 @@ namespace VfxEditor.Select.Tabs.Items {
         public Dictionary<string, string> ArmorPaths;
     }
 
-    public class ItemtabMdl : ItemTab<SelectedMdl> {
-        public ItemtabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mdl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Acc ) { }
+    public class ItemTabMdl : ItemTab<SelectedMdl> {
+        public ItemTabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mdl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Acc ) { }
 
         // ===== LOADING =====
 
