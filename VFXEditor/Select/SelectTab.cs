@@ -26,78 +26,67 @@ namespace VfxEditor.Select {
 
         protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
 
-        protected void DrawWithHeader( Dictionary<string, Dictionary<string, string>> items, string name ) {
+        protected void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
+
+        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) { // With headers and icons
             if( items == null ) return;
 
-            foreach( var (subName, subItems) in items ) {
-                if( subItems.Count == 0 ) continue;
+            foreach( var ((name, icon), paths) in items ) {
+                if( paths.Count == 0 ) continue;
 
-                using var _ = ImRaii.PushId( subName );
-
-                if( ImGui.CollapsingHeader( subName, ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                using var _ = ImRaii.PushId( name );
+                if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaps( subItems, $"{name} {subName}" );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
+                    DrawIcon( icon );
+                    DrawPaths( paths, $"{resultName} {name}" );
+                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 }
             }
         }
 
-        protected void DrawPaps( Dictionary<string, string> items, string name ) {
-            if( items == null ) return;
+        protected void DrawPaths( string label, IEnumerable<string> paths, string resultName ) => DrawPaths( label, paths.Select( x => (x, 0u) ), resultName );
 
-            using var _ = ImRaii.PushId( name );
-            foreach( var (suffix, path) in items ) {
-                using var __ = ImRaii.PushId( suffix );
-
-                DrawFavorite( path, $"{name} ({suffix})" );
-
-                ImGui.Text( $"{suffix}:" );
-
-                ImGui.SameLine();
-                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
-                    SelectUiUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
-                }
-                else SelectUiUtils.DisplayPath( path );
-
-                DrawPath( "", path, $"{name} ({suffix})" );
-            }
-        }
-
-        protected void DrawPaths( string label, IEnumerable<string> paths, string resultName, bool play = false ) {
+        protected void DrawPaths( string label, IEnumerable<(string, uint)> paths, string resultName ) {
             if( paths == null ) return;
 
-            foreach( var (path, idx) in paths.WithIndex() ) {
+            foreach( var ((path, icon), idx) in paths.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
-                DrawPath( $"{label} #{idx}", path, $"{resultName} #{idx}", play );
+                DrawIcon( icon );
+                DrawPath( $"{label} #{idx}", path, $"{resultName} #{idx}" );
             }
         }
 
-        protected void DrawPaths( Dictionary<string, string> paths, string resultName, bool play = false ) {
+        protected void DrawPaths( Dictionary<string, string> paths, string resultName ) => DrawPaths( paths.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
+
+        protected void DrawPaths( Dictionary<(string, uint), string> paths, string resultName ) {
             if( paths == null ) return;
 
-            foreach( var item in paths ) {
-                DrawPath( item.Key, item.Value, $"{resultName} ({item.Key})", play );
+            using var _ = ImRaii.PushId( resultName );
+            foreach( var ((name, icon), path) in paths ) {
+                DrawIcon( icon );
+                DrawPath( name, path, $"{resultName} ({name})" );
             }
         }
 
-        protected void DrawPath( string label, string path, string resultName, bool play = false ) => DrawPath( label, path, path, resultName, play );
+        protected void DrawPath( string label, string path, string resultName ) => DrawPath( label, path, path, resultName );
 
-        protected void DrawPath( string label, string path, string displayPath, string resultName, bool play = false ) {
+        protected void DrawPath( string label, string path, string displayPath, string resultName ) {
             if( string.IsNullOrEmpty( path ) ) return;
             if( path.Contains( "BGM_Null" ) ) return;
 
             using var _ = ImRaii.PushId( label );
 
-            if( !string.IsNullOrEmpty( label ) ) { // if this is blank, assume there is some custom logic to draw the path
-                DrawFavorite( path, resultName );
-                if( string.IsNullOrEmpty( displayPath ) ) {
-                    ImGui.Text( label );
+            DrawFavorite( path, resultName );
+            if( string.IsNullOrEmpty( displayPath ) ) {
+                ImGui.Text( label );
+            }
+            else {
+                ImGui.Text( $"{label}:" );
+                ImGui.SameLine();
+                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
+                    SelectUiUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
                 }
-                else {
-                    ImGui.Text( $"{label}:" );
-                    ImGui.SameLine();
-                    SelectUiUtils.DisplayPath( displayPath );
-                }
+                else SelectUiUtils.DisplayPath( path );
             }
 
             using var indent = ImRaii.PushIndent( 25f );
@@ -105,7 +94,8 @@ namespace VfxEditor.Select {
             if( ImGui.Button( "SELECT" ) ) Dialog.Invoke( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
             ImGui.SameLine();
             SelectUiUtils.Copy( path );
-            if( play ) Dialog.PlayButton( path );
+
+            if( Dialog.CanPlay && ResultType != SelectResultType.Local ) Dialog.PlayButton( path );
         }
 
         protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
@@ -116,6 +106,16 @@ namespace VfxEditor.Select {
                 DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{name} / Break" );
             }
             else DrawPath( "Bgm", situation.Path, name );
+        }
+
+        protected static void DrawIcon( uint iconId ) {
+            if( iconId <= 0 ) return;
+
+            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            }
         }
     }
 
@@ -153,7 +153,6 @@ namespace VfxEditor.Select {
             }
         }
 
-        // Drawing
         protected abstract string GetName( T item );
 
         protected virtual bool CheckMatch( T item, string searchInput ) => SelectUiUtils.Matches( GetName( item ), searchInput );
@@ -172,9 +171,7 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            if( Searched == null ) {
-                Searched = [.. Items];
-            }
+            Searched ??= [.. Items];
 
             var resetScroll = false;
             DrawExtra();
@@ -237,18 +234,6 @@ namespace VfxEditor.Select {
         protected virtual void Select( T item ) {
             Selected = item;
         }
-
-        protected void DrawIcon( uint iconId ) {
-            if( iconId <= 0 ) return;
-
-            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            }
-        }
-
-        // Loading
 
         public virtual async void Load() {
             if( WaitingForItems || ItemsLoaded ) return;

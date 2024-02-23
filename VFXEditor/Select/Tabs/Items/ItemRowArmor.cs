@@ -38,5 +38,7 @@ namespace VfxEditor.Select.Tabs.Items {
         }
 
         public string GetMtrlPath( int id, string race, string suffix ) => $"chara/{Prefix}/{ModelString}/material/v" + id.ToString().PadLeft( 4, '0' ) + $"/mt_{race}{ModelString}_{Suffix}_{suffix}.mtrl";
+
+        public string GetMdlPath( string race ) => $"chara/{Prefix}/{ModelString}/model/{race}{ModelString}_{Suffix}.mdl";
     }
 }

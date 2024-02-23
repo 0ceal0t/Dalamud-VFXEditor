@@ -10,8 +10,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         public readonly string Name;
         public readonly List<List<MdlShapeMesh>> ShapeMeshes = []; // per LoD
 
-        // TODO: drawing
-
         public MdlShape( BinaryReader reader, Dictionary<uint, string> strings ) {
             Name = strings[reader.ReadUInt32()];
 
@@ -32,7 +30,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             for( var i = 0; i < 3; i++ ) {
                 var meshes = new List<MdlShapeMesh>();
                 meshes.AddRange( data.ShapesMeshes.GetRange( _ShapeMeshIndexes[i], _ShapeMeshCounts[i] ) );
-                foreach( var mesh in meshes ) mesh.Populate( data );
+                foreach( var mesh in meshes ) mesh.Populate( this, data );
                 ShapeMeshes.Add( meshes );
             }
         }

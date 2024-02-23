@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
 
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaths( "VFX", Loaded[idx].Paths, $"{Selected.Name} {idx}", true );
+                    DrawPaths( "VFX", Loaded[idx].Paths, $"{Selected.Name} {idx}" );
                 }
             }
         }

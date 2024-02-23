@@ -1,5 +1,6 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
+using System.Linq;
 using VfxEditor.Select.Tabs.Items;
 
 namespace VfxEditor.Select.Tabs.Skeleton {
@@ -27,10 +28,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
             var suffix = item.Suffix;
             var itemString = $"{suffix[0]}{item.Ids.Id:D4}";
 
-            var paths = new Dictionary<string, string>();
-            foreach( var race in SelectDataUtils.RaceAnimationIds ) {
-                paths[race.Key] = $"chara/human/{race.Value.SkeletonId}/skeleton/{suffix}/{itemString}/{Prefix}_{race.Value.SkeletonId}{itemString}.{Extension}";
-            }
+            var paths = SelectDataUtils.CharacterRaces.ToDictionary( x => x.Name, x => $"chara/human/{x.Id}/skeleton/{suffix}/{itemString}/{Prefix}_{x.Id}{itemString}.{Extension}" );
             loaded = SelectDataUtils.FileExistsFilter( paths );
         }
 

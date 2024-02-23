@@ -22,15 +22,15 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Start", Selected.StartPath, $"{Selected.Name} Start", true );
+            DrawPath( "Start", Selected.StartPath, $"{Selected.Name} Start" );
             DrawMovementCancel( Selected.StartMotion );
 
-            DrawPath( "End", Selected.EndPath, $"{Selected.Name} End", true );
+            DrawPath( "End", Selected.EndPath, $"{Selected.Name} End" );
             DrawMovementCancel( Selected.EndMotion );
 
-            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit", true );
+            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit" );
 
-            DrawPath( "Weapon", Selected.WeaponPath, $"{Selected.Name} Weapon", true );
+            DrawPath( "Weapon", Selected.WeaponPath, $"{Selected.Name} Weapon" );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

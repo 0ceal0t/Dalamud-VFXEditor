@@ -88,6 +88,8 @@ namespace VfxEditor.Select {
 
         public void Invoke( SelectResult result ) => Action?.Invoke( result );
 
+        public virtual bool CanPlay => false;
+
         public virtual void PlayButton( string path ) { }
 
         public virtual void PlayPopupItems( string path ) { }

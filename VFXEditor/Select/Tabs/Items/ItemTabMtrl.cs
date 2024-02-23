@@ -7,7 +7,6 @@ using System.Linq;
 namespace VfxEditor.Select.Tabs.Items {
     public class SelectedMtrl {
         public bool IsWeapon;
-        public string ImcPath;
         public Dictionary<string, string> WeaponPaths;
         public Dictionary<string, Dictionary<string, string>> ArmorPaths;
     }
@@ -19,7 +18,6 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public override void LoadSelection( ItemRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                ImcPath = null,
                 IsWeapon = false,
                 WeaponPaths = [],
                 ArmorPaths = [],
@@ -36,21 +34,24 @@ namespace VfxEditor.Select.Tabs.Items {
 
                 if( item is ItemRowWeapon weapon ) {
                     loaded = new() {
-                        ImcPath = imcPath,
                         IsWeapon = true,
-                        WeaponPaths = GetPaths( weapon.GetMtrlPath( id, "a" ), weapon.GetMtrlPath( id, "b" ), weapon.GetMtrlPath( id, "c" ) )
+                        WeaponPaths = GetPaths(
+                            weapon.GetMtrlPath( id, "a" ),
+                            weapon.GetMtrlPath( id, "b" ),
+                            weapon.GetMtrlPath( id, "c" ) )
                     };
                 }
                 else if( item is ItemRowArmor armor ) {
                     var paths = new Dictionary<string, Dictionary<string, string>>();
 
-                    foreach( var race in SelectDataUtils.RaceAnimationIds ) {
-                        var skeleton = race.Value.SkeletonId;
-                        paths[race.Key] = GetPaths( armor.GetMtrlPath( id, skeleton, "a" ), armor.GetMtrlPath( id, skeleton, "b" ), armor.GetMtrlPath( id, skeleton, "c" ) );
+                    foreach( var race in SelectDataUtils.CharacterRaces ) {
+                        paths[race.Name] = GetPaths(
+                            armor.GetMtrlPath( id, race.Id, "a" ),
+                            armor.GetMtrlPath( id, race.Id, "b" ),
+                            armor.GetMtrlPath( id, race.Id, "c" ) );
                     }
 
                     loaded = new() {
-                        ImcPath = imcPath,
                         IsWeapon = false,
                         ArmorPaths = paths
                     };
@@ -67,17 +68,17 @@ namespace VfxEditor.Select.Tabs.Items {
             DrawIcon( Selected.Icon );
             ImGui.Text( $"Variant: {Selected.Variant}" );
 
-            if( string.IsNullOrEmpty( Loaded.ImcPath ) ) return;
+            if( string.IsNullOrEmpty( Selected.ImcPath ) ) return;
 
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
-            SelectUiUtils.DisplayPath( Loaded.ImcPath );
+            SelectUiUtils.DisplayPath( Selected.ImcPath );
 
             if( Loaded.IsWeapon ) {
                 DrawPaths( Loaded.WeaponPaths, Selected.Name );
             }
             else {
-                DrawWithHeader( Loaded.ArmorPaths, Selected.Name );
+                DrawPaths( Loaded.ArmorPaths, Selected.Name );
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public abstract class CharacterTab : SelectTab<CharacterRow> {
@@ -11,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // =====================
 
         public static void Load( List<CharacterRow> items ) {
-            foreach( var item in SelectDataUtils.RaceAnimationIds ) items.Add( new( item.Key, item.Value ) );
+            items.AddRange( SelectDataUtils.CharacterRaces.Select( x => new CharacterRow( x ) ) );
         }
     }
 }

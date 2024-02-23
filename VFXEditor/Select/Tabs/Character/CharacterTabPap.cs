@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Character {
@@ -35,6 +35,7 @@ namespace VfxEditor.Select.Tabs.Character {
             if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
             // ===== STAND =======
+
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i, "" );
@@ -65,8 +66,9 @@ namespace VfxEditor.Select.Tabs.Character {
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
 
             // ====== FACES ========
+
             var facePaths = new Dictionary<string, string>();
-            foreach( var face in item.GetOptions().Face ) {
+            foreach( var face in item.Data.FaceOptions ) {
                 facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
             }
 
@@ -87,17 +89,17 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                DrawPaps( Loaded.General, Selected.Name );
+                DrawPaths( Loaded.General, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                DrawWithHeader( Loaded.Poses, Selected.Name );
+                DrawPaths( Loaded.Poses, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Ground Sit" ) ) {
                 DrawPath( "Ground Start", Loaded.GroundStart, Selected.Name );
                 DrawPath( "Jmn", Loaded.Jmn, Selected.Name );
-                DrawWithHeader( Loaded.SitPoses, Selected.Name );
+                DrawPaths( Loaded.SitPoses, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Faces" ) ) {

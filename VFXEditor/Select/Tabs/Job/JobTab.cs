@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 
 namespace VfxEditor.Select.Tabs.Job {
@@ -29,8 +29,8 @@ namespace VfxEditor.Select.Tabs.Job {
             var drawJobId = SelectDataUtils.JobDrawOverride.TryGetValue( item.Name, out var _draw ) ? _draw : jobId;
             var autoJobId = SelectDataUtils.JobAutoOverride.TryGetValue( item.Name, out var _auto ) ? _auto : jobId;
 
-            foreach( var (raceName, raceData) in SelectDataUtils.RaceAnimationIds ) {
-                var skeleton = raceData.SkeletonId;
+            foreach( var race in SelectDataUtils.CharacterRaces ) {
+                var skeleton = race.Id;
 
                 // General
 
@@ -44,7 +44,7 @@ namespace VfxEditor.Select.Tabs.Job {
                 if( Dalamud.DataManager.FileExists( movePathA ) ) raceGeneral.Add( "Move A", movePathA );
                 if( Dalamud.DataManager.FileExists( movePathB ) ) raceGeneral.Add( "Move B", movePathB );
                 if( Dalamud.DataManager.FileExists( drawPath ) ) raceGeneral.Add( "Draw Weapon", drawPath );
-                general.Add( raceName, raceGeneral );
+                general.Add( race.Name, raceGeneral );
 
                 // Pose
 
@@ -52,7 +52,7 @@ namespace VfxEditor.Select.Tabs.Job {
                 var loop = SelectDataUtils.GetSkeletonPath( skeleton, $"{jobId}/emote/b_pose01_loop.pap" );
 
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    poses.Add( raceName, new Dictionary<string, string>() {
+                    poses.Add( race.Name, new Dictionary<string, string>() {
                         { "Start", start },
                         { "Loop", loop }
                     } );
@@ -74,7 +74,7 @@ namespace VfxEditor.Select.Tabs.Job {
                     raceAutos.Add( $"Auto-Attack {i + 1}", autoPaths[i] );
                 }
 
-                autoAttack.Add( raceName, raceAutos );
+                autoAttack.Add( race.Name, raceAutos );
             }
 
             loaded = new() {
@@ -89,15 +89,15 @@ namespace VfxEditor.Select.Tabs.Job {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                DrawWithHeader( Loaded.General, Selected.Name );
+                DrawPaths( Loaded.General, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                DrawWithHeader( Loaded.Poses, Selected.Name );
+                DrawPaths( Loaded.Poses, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Auto-Attack" ) ) {
-                DrawWithHeader( Loaded.AutoAttack, Selected.Name );
+                DrawPaths( Loaded.AutoAttack, Selected.Name );
                 ImGui.EndTabItem();
             }
         }

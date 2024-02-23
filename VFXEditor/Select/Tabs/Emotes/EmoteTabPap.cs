@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -49,10 +49,10 @@ namespace VfxEditor.Select.Tabs.Emotes {
                 using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
                 if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
-                    DrawPaps( actionPaths, $"{Selected.Name} {subAction}" );
+                    DrawPaths( actionPaths, $"{Selected.Name} {subAction}" );
                 }
                 else {
-                    DrawWithHeader( subActionPaths, $"{Selected.Name} {subAction}" );
+                    DrawPaths( subActionPaths, $"{Selected.Name} {subAction}" );
                 }
             }
         }

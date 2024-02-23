@@ -1,12 +1,13 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedSkeleton {
         public string BodyPath;
         public Dictionary<string, string> FacePaths;
-        public Dictionary<string, string> HairPaths;
+        public Dictionary<(string, uint), string> HairPaths;
     }
 
     public class CharacterTabSkeleton : SelectTab<CharacterRow, SelectedSkeleton> {
@@ -25,27 +26,21 @@ namespace VfxEditor.Select.Tabs.Character {
         public override void LoadData() => CharacterTab.Load( Items );
 
         public override void LoadSelection( CharacterRow item, out SelectedSkeleton loaded ) {
-            var bodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/{Prefix}_{item.SkeletonId}b0001.{Extension}";
-
             loaded = new() {
-                BodyPath = bodyPath
+                BodyPath = $"chara/human/{item.SkeletonId}/skeleton/base/b0001/{Prefix}_{item.SkeletonId}b0001.{Extension}"
             };
 
             if( !HairFace ) return;
 
-            var facePaths = new Dictionary<string, string>();
-            var hairPaths = new Dictionary<string, string>();
+            loaded.FacePaths = item.Data.FaceOptions
+                .Select( face => (face, $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .ToDictionary( x => $"Face {x.Item1}", x => x.Item2 );
 
-            foreach( var face in item.GetOptions().Face ) {
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}";
-            }
-
-            foreach( var hair in item.GetOptions().Hair ) {
-                hairPaths[$"Hair {hair}"] = $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}";
-            }
-
-            loaded.FacePaths = SelectDataUtils.FileExistsFilter( facePaths );
-            loaded.HairPaths = SelectDataUtils.FileExistsFilter( hairPaths );
+            loaded.HairPaths = item.Data.HairOptions
+                .Select( hair => (hair, $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .ToDictionary( x => ($"Hair {x.Item1}", item.Data.HairToIcon.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
         }
 
         // ===== DRAWING ======

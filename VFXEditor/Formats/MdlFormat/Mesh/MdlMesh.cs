@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
@@ -39,6 +40,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         private readonly List<MdlSubMesh> Submeshes = [];
         private readonly UiSplitView<MdlSubMesh> SubmeshView;
+
+        private readonly List<MdlShapeMesh> Shapes = [];
 
         public MdlMesh( MdlFile file, MdlVertexDeclaration format, BinaryReader reader ) : base( file ) {
             Format = format;
@@ -79,6 +82,17 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private void DrawMesh() {
             BoneTableIndex.Draw();
             Material.Draw();
+
+            using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                var names = Shapes.Select( x => x.Name ).Where( x => !string.IsNullOrEmpty( x ) ).ToList();
+                for( var i = 0; i < names.Count; i++ ) {
+                    if( i > 0 ) ImGui.SameLine();
+                    using var _ = ImRaii.PushId( i );
+                    using var disabled = ImRaii.Disabled();
+                    ImGui.SmallButton( names[i] );
+                }
+            }
+
             DrawPreview();
         }
 
@@ -100,9 +114,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             Material.Value = data.MaterialStrings[_MaterialStringIdx];
 
-            foreach( var shape in data.Shapes ) {
-                var shapeMeshes = shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 ); // TODO
-            }
+            foreach( var shape in data.Shapes ) Shapes.AddRange( shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 ) );
         }
 
         public void PopulateWrite( MdlWriteData data, int lod ) {

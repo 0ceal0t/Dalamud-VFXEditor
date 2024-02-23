@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== LOADING =====
 
         public override void LoadData() {
-            Items.AddRange( new List<CommonRow>() {
+            Items.AddRange( [
                 new( 0, "vfx/action/ab_swd_abl020/eff/abi_swd020c1t.avfx", "Passage of Arms", 2515 ),
                 new( 1, "vfx/action/ab_2gn026/eff/ab_2gn026c0c.avfx", "Flamethrower", 3038 ),
                 new( 2, "vfx/action/ab_2kt008/eff/ab_2kt008c1t.avfx", "Meditate", 3172 ),
@@ -26,7 +25,7 @@ namespace VfxEditor.Select.Tabs.Common {
                 new( 13, "vfx/common/eff/m7004sp_05d0t.avfx", "Earthen Fury", 2705 ),
                 new( 14, "vfx/common/eff/m7005sp_32d0t.avfx", "Slipstream", 2716 ),
                 new( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
-            } );
+            ] );
 
             var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
             foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location}.avfx", item.Location.ToString(), 0 ) );
@@ -41,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Path", Selected.Path, Selected.Name, true );
+            DrawPath( "Path", Selected.Path, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

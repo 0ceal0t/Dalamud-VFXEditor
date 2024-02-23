@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +37,7 @@ namespace VfxEditor.Select.Tabs.Gimmick {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.TmbPath );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( GimmickRow item ) => item.Name;

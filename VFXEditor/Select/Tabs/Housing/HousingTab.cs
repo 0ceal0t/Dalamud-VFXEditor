@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Tabs.Housing {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name, true );
+            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

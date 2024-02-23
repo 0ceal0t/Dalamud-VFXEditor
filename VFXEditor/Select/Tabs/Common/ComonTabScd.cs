@@ -1,5 +1,4 @@
 using Lumina.Excel.GeneratedSheets;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Common {
@@ -10,13 +9,13 @@ namespace VfxEditor.Select.Tabs.Common {
 
         public override void LoadData() {
             var idx = 0;
-            Items.AddRange( new List<CommonRow>() {
+            Items.AddRange( [
                 new( idx++, "sound/system/SE_UI.scd", "SE_UI", 0 ),
                 new( idx++, "sound/vfx/SE_VFX_common.scd", "SE_VFX_common", 0 ),
                 new( idx++, "sound/strm/gaya_fate_01.scd", "Gaya_Fate_01", 0 ),
                 new( idx++, "sound/strm/gaya_lestarea_01.scd", "Gaya_Lestarea_01", 0 ),
                 new( idx++, "sound/strm/gaya_village_01.scd", "Gaya_Village_01", 0 ),
-            } );
+            ] );
 
             foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
                 var name = line.Name.ToString();
@@ -28,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.Path, Selected.Name, true );
+            DrawPath( "Path", Selected.Path, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

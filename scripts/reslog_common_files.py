@@ -1,7 +1,7 @@
 import re
 
 
-racial_pattern = re.compile("^chara/human/c(.*).mtrl")
+racial_pattern = re.compile("^chara/human/c(.*).(mdl|mtrl)")
 uld_pattern = re.compile("^ui/uld/(.*).uld$")
 shpk_pattern = re.compile("^shader/shpk/(.*).shpk$") # make sure to exclude shader/sm5/shpk...
 shcd_pattern = re.compile("^shader/(posteffect|shcd)/(.*).shcd$")

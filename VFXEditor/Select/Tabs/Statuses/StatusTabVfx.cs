@@ -19,10 +19,10 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit", true );
-            DrawPath( "Loop 1", Selected.LoopPath1, $"{Selected.Name} Loop 1", true );
-            DrawPath( "Loop 2", Selected.LoopPath2, $"{Selected.Name} Loop 2", true );
-            DrawPath( "Loop 3", Selected.LoopPath3, $"{Selected.Name} Loop 3", true );
+            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit" );
+            DrawPath( "Loop 1", Selected.LoopPath1, $"{Selected.Name} Loop 1" );
+            DrawPath( "Loop 2", Selected.LoopPath2, $"{Selected.Name} Loop 2" );
+            DrawPath( "Loop 3", Selected.LoopPath3, $"{Selected.Name} Loop 3" );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

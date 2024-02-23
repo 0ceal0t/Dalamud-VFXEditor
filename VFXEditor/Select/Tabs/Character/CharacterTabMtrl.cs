@@ -1,13 +1,13 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
-using System;
+using ImGuiNET;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMtrl {
         public Dictionary<string, Dictionary<string, string>> Faces;
         public Dictionary<string, Dictionary<string, string>> Bodies;
-        public Dictionary<string, Dictionary<string, string>> Hairs;
+        public Dictionary<(string, uint), Dictionary<string, string>> Hairs;
         public Dictionary<string, Dictionary<string, string>> Ears;
         public Dictionary<string, Dictionary<string, string>> Tails;
     }
@@ -20,13 +20,12 @@ namespace VfxEditor.Select.Tabs.Character {
         public override void LoadData() => CharacterTab.Load( Items );
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
-            var options = item.GetOptions();
             loaded = new() {
-                Faces = GetDictionary( "Face", item.GetFaceMaterial, options.Face, new[] { "fac_a", "etc_a", "iri_a" } ),
-                Bodies = GetDictionary( "Body", item.GetBodyMaterial, options.Body, new[] { "a" } ),
-                Hairs = GetDictionary( "Hair", item.GetHairMaterial, options.Hair, new[] { "hir_a", "acc_b" } ),
-                Ears = GetDictionary( "Ear", item.GetEarMaterial, options.Ear, new[] { "fac_a", "a" } ),
-                Tails = GetDictionary( "Tail", item.GetTailMaterial, options.Tail, new[] { "a" } )
+                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "etc_a", "iri_a"] ),
+                Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, ["a"] ),
+                Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, ["hir_a", "acc_b"], item.Data.HairToIcon ),
+                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, ["fac_a", "a"] ),
+                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, ["a"] )
             };
         }
 
@@ -37,43 +36,48 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Faces" ) ) {
-                DrawWithHeader( Loaded.Faces, Selected.Name );
+                DrawPaths( Loaded.Faces, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Bodies" ) ) {
-                DrawWithHeader( Loaded.Bodies, Selected.Name );
+                DrawPaths( Loaded.Bodies, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Hairs" ) ) {
-                DrawWithHeader( Loaded.Hairs, Selected.Name );
+                DrawPaths( Loaded.Hairs, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Ears" ) ) {
-                DrawWithHeader( Loaded.Ears, Selected.Name );
+                DrawPaths( Loaded.Ears, Selected.Name );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Tails" ) ) {
-                DrawWithHeader( Loaded.Tails, Selected.Name );
+                DrawPaths( Loaded.Tails, Selected.Name );
                 ImGui.EndTabItem();
             }
         }
 
         protected override string GetName( CharacterRow item ) => item.Name;
 
-        private static Dictionary<string, Dictionary<string, string>> GetDictionary( string name, Func<int, string, string> getMaterial, IEnumerable<int> ids, IEnumerable<string> suffixes ) {
-            var ret = new Dictionary<string, Dictionary<string, string>>();
-            foreach( var id in ids ) {
-                var dict = new Dictionary<string, string>();
+        private static IEnumerable<(int, Dictionary<string, string>)> IdsToPaths( IEnumerable<int> ids, IEnumerable<string> suffixes, CharacterRow item, CharacterPart part ) =>
+            ids.Select( id =>
+                (id, suffixes
+                .Select( suffix => item.GetMtrl( part, id, suffix ) )
+                .Where( path => Dalamud.DataManager.FileExists( path ) )
+                .WithIndex()
+                .ToDictionary(
+                    path => $"Material {path.Index}",
+                    path => path.Value
+                ))
+            )
+            .Where( x => x.Item2.Count > 0 );
 
-                foreach( var suffix in suffixes ) {
-                    var path = getMaterial( id, suffix );
-                    if( !Dalamud.DataManager.FileExists( path ) ) continue;
-                    dict[$"Material {dict.Count}"] = path;
-                }
+        private static Dictionary<string, Dictionary<string, string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes ) =>
+            IdsToPaths( ids, suffixes, item, part )
+            .ToDictionary( x => $"{name} {x.Item1}", x => x.Item2 );
 
-                if( dict.Count > 0 ) ret[$"{name} {id}"] = dict;
-            }
-            return ret;
-        }
+        private static Dictionary<(string, uint), Dictionary<string, string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes, Dictionary<int, uint> iconMap ) =>
+            IdsToPaths( ids, suffixes, item, part )
+            .ToDictionary( x => ($"{name} {x.Item1}", iconMap.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
     }
 }

@@ -89,7 +89,7 @@ namespace VfxEditor.Select {
                         var (gamePath, localPath) = file;
                         if( !Path.Exists( localPath ) ) continue;
 
-                        DrawPath( $"File {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}", false );
+                        DrawPath( $"File {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}" );
                     }
                 }
             }

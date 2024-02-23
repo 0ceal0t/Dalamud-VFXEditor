@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawWithHeader( Loaded, Selected.Name );
+            DrawPaths( Loaded, Selected.Name );
         }
 
         protected override string GetName( ActionRowPap item ) => item.Name;

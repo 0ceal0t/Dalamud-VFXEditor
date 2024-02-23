@@ -4,6 +4,9 @@ using VfxEditor.Formats.MdlFormat.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
     public class MdlShapeMesh {
+        private MdlShape Parent;
+
+        public string Name => Parent?.Name;
         public readonly uint _MeshIndexOffset;
 
         private readonly uint _ShapeValueCount;
@@ -17,7 +20,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
             _ShapeValueOffset = reader.ReadUInt32();
         }
 
-        public void Populate( MdlFileData data ) {
+        public void Populate( MdlShape parent, MdlFileData data ) {
+            Parent = parent;
             Values.AddRange( data.ShapeValues.GetRange( ( int )_ShapeValueOffset, ( int )_ShapeValueCount ) );
         }
 

@@ -34,14 +34,14 @@ namespace VfxEditor.Formats.MdlFormat {
 
     [Flags]
     public enum ModelFlags2 : int {
-        Unknown_2 = 0x80,
+        Unknown_3 = 0x80,
         Background_UV_Scroll = 0x40,
         Force_NonResident = 0x20,
         Extra_LoD = 0x10,
         Shadow_Mask = 0x08,
         Force_LoD_Range = 0x04,
         Edge_Geometry = 0x02,
-        Unknown_3 = 0x01
+        Unknown_2 = 0x01
     }
 
     public class MdlFile : FileManagerFile {
@@ -63,7 +63,7 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedShort Unknown9 = new( "Unknown 9" );
 
         public readonly List<MdlEid> Eids = [];
-        private readonly UiSplitView<MdlEid> EidView;
+        private readonly CommandSplitView<MdlEid> EidView;
 
         public readonly List<MdlLod> AllLods = [];
         public readonly List<MdlLod> UsedLods = [];
@@ -228,7 +228,9 @@ namespace VfxEditor.Formats.MdlFormat {
 
             // ====== VIEWS ============
 
-            EidView = new( "Bind Point", Eids, false );
+            EidView = new( "Bind Point", Eids, false,
+                ( MdlEid item, int idx ) => $"Bind Point {item.ElementId.Value} (" + ( string.IsNullOrEmpty( item.ParentBone.Value ) ? "NONE" : item.ParentBone.Value ) + ")",
+                () => new() );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
             BoneTableView = new( "Bone Table", BoneTables, false );
@@ -252,10 +254,6 @@ namespace VfxEditor.Formats.MdlFormat {
                 if( tab ) EidView.Draw();
             }
 
-            using( var tab = ImRaii.TabItem( "Bone Tables" ) ) {
-                if( tab ) BoneTableView.Draw();
-            }
-
             using( var tab = ImRaii.TabItem( "Levels of Detail" ) ) {
                 if( tab ) LodView.Draw();
             }
@@ -263,6 +261,10 @@ namespace VfxEditor.Formats.MdlFormat {
             if( ExtraLodEnabled ) {
                 using var tab = ImRaii.TabItem( "Extra LoD" );
                 if( tab ) ExtraLodView.Draw();
+            }
+
+            using( var tab = ImRaii.TabItem( "Bone Tables" ) ) {
+                if( tab ) BoneTableView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Bounding Boxes" ) ) {
@@ -296,6 +298,10 @@ namespace VfxEditor.Formats.MdlFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
+            using( var tab = ImRaii.TabItem( "Bones" ) ) {
+                if( tab ) BoneBoxView.Draw();
+            }
+
             using( var tab = ImRaii.TabItem( "Unknown" ) ) {
                 if( tab ) UnknownBoundingBox.Draw();
             }
@@ -306,10 +312,6 @@ namespace VfxEditor.Formats.MdlFormat {
 
             using( var tab = ImRaii.TabItem( "Vertical Fog" ) ) {
                 if( tab ) VerticalFogBoundingBox.Draw();
-            }
-
-            using( var tab = ImRaii.TabItem( "Bones" ) ) {
-                if( tab ) BoneBoxView.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Unknown Boxes" ) ) {

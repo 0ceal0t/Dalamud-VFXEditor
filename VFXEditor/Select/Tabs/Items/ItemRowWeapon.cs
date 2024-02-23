@@ -17,6 +17,8 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public string PapPath => $"chara/weapon/{ModelString}/animation/a0001/wp_common/resident/weapon.pap";
 
+        public string MdlPath => $"chara/weapon/{ModelString}/obj/body/{BodyString}/model/{ModelString}{BodyString}.mdl";
+
         public ItemRowWeapon( Item item, string imcPath = "" ) : base( item ) {
             OverrideImcPath = imcPath;
             HasSubModel = SecondaryIds.Id1 != 0;
