@@ -63,12 +63,12 @@ namespace VfxEditor.Select.Tabs.Character {
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => $"{name} {x.Item1}", x => x.Item2 );
+            .ToDictionary( x => $"{name} {x.id}", x => x.Item2 );
 
         private static Dictionary<(string, uint), string> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => ($"{name} {x.Item1}", iconMap.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
+            .ToDictionary( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0), x => x.Item2 );
     }
 }

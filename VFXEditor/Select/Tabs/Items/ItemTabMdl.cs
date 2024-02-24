@@ -29,7 +29,7 @@ namespace VfxEditor.Select.Tabs.Items {
             else if( item is ItemRowArmor armor ) {
                 loaded = new() {
                     IsWeapon = false,
-                    ArmorPaths = SelectDataUtils.CharacterRaces.ToDictionary( x => x.Name, x => armor.GetMdlPath( x.Id ) )
+                    ArmorPaths = SelectDataUtils.CharacterRaces.Select( x => (x.Name, armor.GetMdlPath( x.Id )) ).Where( x => Dalamud.DataManager.FileExists( x.Item2 ) ).ToDictionary( x => x.Name, x => x.Item2 )
                 };
             }
         }
