@@ -26,9 +26,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly int TempOffset;
         private readonly int TempSize;
 
-        private readonly List<ShpkParameterInfo> Constants = [];
-        private readonly List<ShpkParameterInfo> Samplers = [];
-        private readonly List<ShpkParameterInfo> Resources = [];
+        private readonly List<ShpkParameterInfo> Constants = new();
+        private readonly List<ShpkParameterInfo> Samplers = new();
+        private readonly List<ShpkParameterInfo> Resources = new();
 
         private readonly CommandSplitView<ShpkParameterInfo> ConstantView;
         private readonly CommandSplitView<ShpkParameterInfo> SamplerView;

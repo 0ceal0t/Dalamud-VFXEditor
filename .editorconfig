@@ -28,6 +28,7 @@ dotnet_style_qualification_for_field=false:suggestion
 dotnet_style_qualification_for_method=false:suggestion
 dotnet_style_qualification_for_property=false:suggestion
 dotnet_style_require_accessibility_modifiers=for_non_interface_members:suggestion
+csharp_style_prefer_primary_constructors=false
 
 # ReSharper properties
 resharper_autodetect_indent_settings=true

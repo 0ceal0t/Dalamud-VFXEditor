@@ -129,7 +129,7 @@ namespace VfxEditor.Formats.AtchFormat {
         };
 
         public readonly ushort NumStates;
-        public readonly List<AtchEntry> Entries = [];
+        public readonly List<AtchEntry> Entries = new();
         private readonly AtchEntrySplitView EntryView;
 
         public AtchFile( BinaryReader reader ) : base() {

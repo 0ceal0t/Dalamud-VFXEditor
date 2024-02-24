@@ -20,7 +20,7 @@ namespace VfxEditor.DirectX {
         public readonly MaterialPreview MaterialPreview;
         public readonly MeshPreview MeshPreview;
 
-        private readonly List<ModelRenderer> Renderers = [];
+        private readonly List<ModelRenderer> Renderers = new();
 
         public static Include IncludeHandler { get; private set; }
 
@@ -39,7 +39,7 @@ namespace VfxEditor.DirectX {
             MaterialPreview = new( Device, Ctx, shaderPath );
             MeshPreview = new( Device, Ctx, shaderPath );
 
-            Renderers = [
+            Renderers = new() {
                 ModelPreview,
                 PapPreview,
                 PhybPreview,
@@ -47,7 +47,7 @@ namespace VfxEditor.DirectX {
                 EidPreview,
                 MaterialPreview,
                 MeshPreview,
-            ];
+            };
         }
 
         public void RedrawMaterials() {

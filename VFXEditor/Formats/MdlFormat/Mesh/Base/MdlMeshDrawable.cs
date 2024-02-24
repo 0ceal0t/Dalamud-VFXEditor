@@ -1,4 +1,5 @@
 using SharpDX.Direct3D11;
+using System;
 using System.IO;
 using VfxEditor.DirectX;
 using Buffer = SharpDX.Direct3D11.Buffer;
@@ -14,7 +15,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
 
         protected uint IndexCount;
 
-        protected byte[] RawIndexData = [];
+        protected byte[] RawIndexData = Array.Empty<byte>();
 
         public int RawIndexDataSize => RawIndexData.Length;
 

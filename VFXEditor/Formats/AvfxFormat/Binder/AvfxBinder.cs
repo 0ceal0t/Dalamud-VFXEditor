@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxBinder() : base( NAME, AvfxNodeGroupSet.BinderColor, "BnVr" ) {
-            Parsed = [
+            Parsed = new() {
                 StartToGlobalDirection,
                 VfxScaleEnabled,
                 VfxScaleBias,
@@ -54,9 +54,9 @@ namespace VfxEditor.AvfxFormat {
                 Prop1,
                 Prop2,
                 PropGoal
-            ];
+            };
 
-            Parameters = new( "Parameters", [
+            Parameters = new( "Parameters", new() {
                 new UiNodeGraphView( this ),
                 StartToGlobalDirection,
                 VfxScaleEnabled,
@@ -72,14 +72,14 @@ namespace VfxEditor.AvfxFormat {
                 BET_Unknown,
                 Life,
                 BinderRotationType
-            ] );
+            } );
 
-            PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( "Properties", [
+            PropSplitDisplay = new AvfxDisplaySplitView<AvfxBinderProperties>( "Properties", new() {
                 PropStart,
                 Prop1,
                 Prop2,
                 PropGoal
-            ] );
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

@@ -15,7 +15,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved1 = new( 3 + 4 * 4 );
 
         public LayoutLineExtControllerData() {
-            Parsed = [
+            Parsed = new() {
                 StartPosition,
                 EndPosition,
                 MaxRange,
@@ -27,7 +27,7 @@ namespace VfxEditor.ScdFormat {
                 FunctionNumber,
                 CalcType,
                 Reserved1
-            ];
+            };
         }
     }
 }

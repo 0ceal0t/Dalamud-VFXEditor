@@ -61,7 +61,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {
             Name = name;
 
-            Parsed = [
+            Parsed = new() {
                 BindPointType,
                 BindTargetPointType,
                 BinderName,
@@ -76,16 +76,16 @@ namespace VfxEditor.AvfxFormat {
                 RingRadius,
                 BCT,
                 Position
-            ];
+            };
             BinderName.SetAssigned( false );
             Position.SetAssigned( true );
 
-            DisplayTabs = [
+            DisplayTabs = new() {
                 ( Parameters = new UiDisplayList( "Parameters" ) ),
                 Position
-            ];
+            };
 
-            Parameters.AddRange( [
+            Parameters.AddRange( new() {
                 BindPointType,
                 BindTargetPointType,
                 BinderName,
@@ -97,7 +97,7 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "Ring Position", RingPositionX, RingPositionY, RingPositionZ ),
                 RingRadius,
                 BCT
-            ] );
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

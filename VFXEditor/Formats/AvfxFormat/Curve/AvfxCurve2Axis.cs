@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using static VfxEditor.AvfxFormat.Enums;
@@ -27,21 +27,21 @@ namespace VfxEditor.AvfxFormat {
             RX = new( "Random X", "XR", type );
             RY = new( "Random Y", "YR", type );
 
-            Parsed = [
+            Parsed = new() {
                 AxisConnectType,
                 AxisConnectRandomType,
                 X,
                 Y,
                 RX,
                 RY
-            ];
+            };
 
-            Curves = [
+            Curves = new() {
                 X,
                 Y,
                 RX,
                 RY
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

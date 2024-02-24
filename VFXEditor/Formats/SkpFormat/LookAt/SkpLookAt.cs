@@ -6,8 +6,8 @@ using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.SkpFormat.LookAt {
     public class SkpLookAt {
-        private readonly List<SkpLookAtParam> Params = [];
-        private readonly List<SkpLookAtGroup> Groups = [];
+        private readonly List<SkpLookAtParam> Params = new();
+        private readonly List<SkpLookAtGroup> Groups = new();
 
         private readonly CommandSplitView<SkpLookAtParam> ParamView;
         private readonly CommandSplitView<SkpLookAtGroup> GroupView;

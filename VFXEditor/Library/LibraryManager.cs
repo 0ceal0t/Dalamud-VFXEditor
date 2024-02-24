@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +40,7 @@ namespace VfxEditor.Library {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
-                    var newFolder = new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), [] );
+                    var newFolder = new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), new() );
                     LastDrawnRoot.Add( newFolder );
                     Save();
                 }
@@ -154,7 +154,7 @@ namespace VfxEditor.Library {
             } );
         }
 
-        private void IterateTextures( LibraryFolder folder, Action<TextureLeaf> perTexture ) {
+        private static void IterateTextures( LibraryFolder folder, Action<TextureLeaf> perTexture ) {
             foreach( var child in folder.Children ) {
                 if( child is LibraryFolder f ) {
                     IterateTextures( f, perTexture );

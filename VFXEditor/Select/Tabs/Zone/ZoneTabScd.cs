@@ -8,7 +8,7 @@ using VfxEditor.Select.Tabs.BgmQuest;
 namespace VfxEditor.Select.Tabs.Zone {
     public class SelectedScd {
         public BgmSituationStruct Situation;
-        public Dictionary<string, BgmSituationStruct> Quests = [];
+        public Dictionary<string, BgmSituationStruct> Quests = new();
     }
 
     public class ZoneTabScd : ZoneTab<SelectedScd> {

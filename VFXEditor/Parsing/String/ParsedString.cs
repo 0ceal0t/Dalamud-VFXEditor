@@ -28,7 +28,7 @@ namespace VfxEditor.Parsing {
 
         public ParsedString( string name, List<ParsedStringIcon> icons = null, bool forceLower = false ) : base( name ) {
             Value = "";
-            Icons = icons ?? [];
+            Icons = icons ?? new();
             ForceLowerCase = forceLower;
         }
 

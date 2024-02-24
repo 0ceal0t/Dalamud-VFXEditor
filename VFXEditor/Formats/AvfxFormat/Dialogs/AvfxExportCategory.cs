@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
     }
 
     public class ExportDialogCategory<T> : AvfxExportCategory where T : AvfxNode {
-        public readonly HashSet<T> Selected = [];
+        public readonly HashSet<T> Selected = new();
         public NodeGroup<T> Group;
         public string HeaderText;
 

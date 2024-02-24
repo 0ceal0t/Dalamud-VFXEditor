@@ -16,11 +16,11 @@ namespace VfxEditor.ScdFormat {
         private readonly ScdHeader Header;
         private readonly ScdOffsetsHeader OffsetsHeader;
 
-        public readonly List<ScdAudioEntry> Audio = [];
-        public readonly List<ScdLayoutEntry> Layouts = [];
-        public readonly List<ScdSoundEntry> Sounds = [];
-        public readonly List<ScdTrackEntry> Tracks = [];
-        public readonly List<ScdAttributeEntry> Attributes = [];
+        public readonly List<ScdAudioEntry> Audio = new();
+        public readonly List<ScdLayoutEntry> Layouts = new();
+        public readonly List<ScdSoundEntry> Sounds = new();
+        public readonly List<ScdTrackEntry> Tracks = new();
+        public readonly List<ScdAttributeEntry> Attributes = new();
 
         public readonly ScdAudioEntrySplitView AudioSplitView;
         public readonly CommandSplitView<ScdSoundEntry> SoundView;
@@ -199,7 +199,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private static void UpdateOffsets<T>( BinaryWriter writer, List<T> items, int offsetLocation, Action<BinaryWriter, T> action ) where T : ScdEntry {
-            List<int> positions = [];
+            List<int> positions = new();
             foreach( var item in items ) {
                 positions.Add( ( int )writer.BaseStream.Position );
                 action.Invoke( writer, item );

@@ -27,7 +27,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
     // https://github.com/xivdev/Xande/blob/8fc75ce5192edcdabc4d55ac93ca0199eee18bc9/Xande.GltfImporter/MdlFileBuilder.cs#L127
 
     public class MdlVertexDeclaration {
-        public readonly List<MdlVertexElement> Elements = [];
+        public readonly List<MdlVertexElement> Elements = new();
 
         public MdlVertexDeclaration( BinaryReader reader ) {
             var endPos = reader.BaseStream.Position + ( 8 * 17 );
@@ -103,7 +103,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                 data.Add( colors.Count == 0 ? new( 0 ) : colors[index] );
             }
 
-            return [.. data];
+            return data.ToArray();
         }
     }
 }

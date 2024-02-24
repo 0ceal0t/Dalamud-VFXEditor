@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Assign;
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects ) {
             Timeline = timeline;
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 StartTime,
                 EndTime,
@@ -38,17 +38,17 @@ namespace VfxEditor.AvfxFormat {
                 EmitterIdx,
                 Platform,
                 ClipIdx
-            ];
+            };
             foreach( var item in Parsed ) item.SetAssigned( false );
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = [
+            Display = new() {
                 Enabled,
                 StartTime,
                 EndTime,
                 Platform
-            ];
+            };
         }
 
         public AvfxTimelineItem( AvfxTimeline timeline, bool initNodeSelects, byte[] data ) : this( timeline, initNodeSelects ) {

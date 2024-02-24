@@ -7,9 +7,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataWindmill() : base() {
-            Parsed = [
+            Parsed = new() {
                 WindmillUVType
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( WindmillUVType );

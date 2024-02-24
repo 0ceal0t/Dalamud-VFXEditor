@@ -22,7 +22,7 @@ namespace VfxEditor.TmbFormat.Utils {
         public readonly MemoryStream StringMs;
 
         public long StartPosition;
-        private readonly Dictionary<string, int> WrittenStrings = [];
+        private readonly Dictionary<string, int> WrittenStrings = new();
 
         public TmbWriter( int bodySize, int extraSize, int timelineSize ) : base() {
             BodySize = bodySize;

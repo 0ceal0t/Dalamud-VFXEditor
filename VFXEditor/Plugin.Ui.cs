@@ -18,8 +18,8 @@ namespace VfxEditor {
         public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
         public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
-        private static readonly List<string> ModalsToOpen = [];
-        public static readonly Dictionary<string, Modal> Modals = [];
+        private static readonly List<string> ModalsToOpen = new();
+        public static readonly Dictionary<string, Modal> Modals = new();
 
         public static void Draw() {
             if( CheckLoadState() ) return;

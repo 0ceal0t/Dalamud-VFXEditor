@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
 
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.BookBookmark.ToIconString() ) ) {
-                        file.AddToNodeLibrary( selected );
+                        AvfxFile.AddToNodeLibrary( selected );
                     }
 
                     // Tooltip

@@ -5,7 +5,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile {
-        public void AddToNodeLibrary( AvfxNode node ) {
+        public static void AddToNodeLibrary( AvfxNode node ) {
             var newId = UiUtils.RandomString( 12 );
             var newPath = Plugin.LibraryManager.GetNodePath( newId );
             Export( node, newPath, true );
@@ -13,9 +13,9 @@ namespace VfxEditor.AvfxFormat {
             Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.ActiveDocument.SourceDisplay, newPath );
         }
 
-        public void Export( AvfxNode node, string path, bool exportDependencies ) => Export( [node], path, exportDependencies );
+        public static void Export( AvfxNode node, string path, bool exportDependencies ) => Export( new List<AvfxNode>() { node }, path, exportDependencies );
 
-        public void Export( List<AvfxNode> nodes, string path, bool exportDependencies ) {
+        public static void Export( List<AvfxNode> nodes, string path, bool exportDependencies ) {
             using var writer = new BinaryWriter( File.Open( path, FileMode.Create ) );
 
             writer.Write( 2 ); // Magic :)
@@ -56,7 +56,7 @@ namespace VfxEditor.AvfxFormat {
             writer.BaseStream.Position = finalPos;
         }
 
-        private List<AvfxNode> ExportWithDepedencies( List<AvfxNode> startNodes, BinaryWriter bw ) {
+        private static List<AvfxNode> ExportWithDepedencies( List<AvfxNode> startNodes, BinaryWriter bw ) {
             var visited = new HashSet<AvfxNode>();
             var nodes = new List<AvfxNode>();
             foreach( var startNode in startNodes ) {
@@ -86,7 +86,7 @@ namespace VfxEditor.AvfxFormat {
             return nodes;
         }
 
-        private void RecurseVisit( AvfxNode node, List<AvfxNode> output, HashSet<AvfxNode> visited ) {
+        private static void RecurseVisit( AvfxNode node, List<AvfxNode> output, HashSet<AvfxNode> visited ) {
             if( node == null ) return;
             if( visited.Contains( node ) ) return; // prevents infinite loop
             visited.Add( node );

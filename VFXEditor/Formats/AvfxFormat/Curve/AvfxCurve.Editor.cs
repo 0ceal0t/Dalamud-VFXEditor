@@ -11,9 +11,9 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxCurve {
-        private static readonly List<(KeyType, Vector4)> CopiedKeys = [];
+        private static readonly List<(KeyType, Vector4)> CopiedKeys = new();
 
-        private readonly List<AvfxCurveKey> Selected = [];
+        private readonly List<AvfxCurveKey> Selected = new();
         private AvfxCurveKey SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
 
         private bool DrawOnce = false;
@@ -271,8 +271,8 @@ namespace VfxEditor.AvfxFormat {
         // ======== UTILS ===========
 
         private static void GetDrawLine( List<AvfxCurveKey> points, bool color, out List<double> xs, out List<double> ys ) {
-            xs = [];
-            ys = [];
+            xs = new();
+            ys = new();
 
             if( points.Count > 0 ) {
                 xs.Add( points[0].DisplayX );

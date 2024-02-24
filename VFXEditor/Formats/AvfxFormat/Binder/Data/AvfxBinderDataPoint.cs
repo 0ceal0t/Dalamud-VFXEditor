@@ -3,9 +3,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve SpringStrength = new( "Spring Strength", "SpS" );
 
         public AvfxBinderDataPoint() : base() {
-            Parsed = [
+            Parsed = new() {
                 SpringStrength
-            ];
+            };
 
             DisplayTabs.Add( SpringStrength );
         }

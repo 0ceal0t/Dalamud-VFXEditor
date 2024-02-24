@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -53,8 +53,8 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly List<AvfxEmitterItem> Particles = [];
-        public readonly List<AvfxEmitterItem> Emitters = [];
+        public readonly List<AvfxEmitterItem> Particles = new();
+        public readonly List<AvfxEmitterItem> Emitters = new();
 
         private readonly UiNodeGraphView NodeView;
         public readonly AvfxNodeGroupSet NodeGroups;
@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
             NodeGroups = groupSet;
 
-            Parsed = [
+            Parsed = new() {
                 Sound,
                 SoundNumber,
                 LoopStart,
@@ -106,10 +106,10 @@ namespace VfxEditor.AvfxFormat {
                 VelocityRandomX,
                 VelocityRandomY,
                 VelocityRandomZ
-            ];
+            };
             Sound.SetAssigned( false );
 
-            AnimationSplitDisplay = new( "Animation", [
+            AnimationSplitDisplay = new( "Animation", new() {
                 Life,
                 CreateCount,
                 CreateCountRandom,
@@ -132,7 +132,7 @@ namespace VfxEditor.AvfxFormat {
                 VelocityRandomX,
                 VelocityRandomY,
                 VelocityRandomZ
-            ] );
+            } );
 
             EffectorSelect = new( this, "Effector Select", groupSet.Effectors, EffectorIdx );
             EmitterSplit = new( "Create Emitters", Emitters, this, false );
@@ -140,7 +140,7 @@ namespace VfxEditor.AvfxFormat {
 
             NodeView = new UiNodeGraphView( this );
 
-            Parameters = [
+            Parameters = new() {
                 LoopStart,
                 LoopEnd,
                 ChildLimit,
@@ -148,7 +148,7 @@ namespace VfxEditor.AvfxFormat {
                 RotationDirectionBaseType,
                 CoordComputeOrderType,
                 RotationOrderType
-            ];
+            };
 
             Sound.Parsed.Icons.Insert( 0, new() {
                 Icon = () => FontAwesomeIcon.VolumeUp,

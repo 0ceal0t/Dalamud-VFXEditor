@@ -2,6 +2,7 @@ using HelixToolkit.SharpDX.Core;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
@@ -79,13 +80,13 @@ namespace VfxEditor.DirectX {
             VSBufferData = new() { };
 
             Model = new( 5, false,
-                [
+                new InputElement[] {
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
                     new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
-                ] );
+                } );
             Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialGBuffer.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, true, true );
@@ -156,15 +157,15 @@ namespace VfxEditor.DirectX {
 
             Model.Draw(
                 Ctx, PassType.GBuffer,
-                [VertexShaderBuffer, MaterialVertexShaderBuffer],
-                [PixelShaderBuffer, MaterialPixelShaderBuffer] );
+                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
         protected override void QuadPass() {
             Quad.Draw(
                 Ctx, PassType.Final,
-                    [VertexShaderBuffer, MaterialVertexShaderBuffer],
-                    [PixelShaderBuffer, MaterialPixelShaderBuffer] );
+                    new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
+                    new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
         private ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {

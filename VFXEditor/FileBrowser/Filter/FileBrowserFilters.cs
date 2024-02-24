@@ -8,7 +8,7 @@ namespace VfxEditor.FileBrowser.Filter {
     public partial class FileBrowserFilters {
         private FileBrowserFilter Selected;
         private readonly FileBrowserDialog Dialog;
-        public readonly List<FileBrowserFilter> Filters = [];
+        public readonly List<FileBrowserFilter> Filters = new();
 
         [GeneratedRegex( "[^,{}]+(\\{([^{}]*?)\\})?", RegexOptions.Compiled )]
         private static partial Regex FilterRegexPattern();
@@ -35,7 +35,7 @@ namespace VfxEditor.FileBrowser.Filter {
                 else {
                     Filters.Add( new FileBrowserFilter {
                         Filter = match,
-                        CollectionFilters = []
+                        CollectionFilters = new()
                     } );
                 }
             }

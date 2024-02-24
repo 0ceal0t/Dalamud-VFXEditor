@@ -4,7 +4,7 @@ using VfxEditor.FileManager.Interfaces;
 
 namespace VfxEditor.Ui.Export.Categories {
     public class ExportDialogCategorySet {
-        public readonly List<ExportDialogCategory> Categories = [];
+        public readonly List<ExportDialogCategory> Categories = new();
 
         public ExportDialogCategorySet() {
             Categories.AddRange( Plugin.Managers.Where( x => x != null ).Select( x => new ExportDialogCategory( x ) ) );

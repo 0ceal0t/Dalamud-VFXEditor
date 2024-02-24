@@ -22,19 +22,19 @@ namespace VfxEditor.UldFormat {
         private readonly UldAtkHeader2 OffsetsHeader2;
 
         private readonly UldListHeader TextureList;
-        public readonly List<UldTexture> Textures = [];
+        public readonly List<UldTexture> Textures = new();
 
         private readonly UldListHeader PartList;
-        public readonly List<UldPartList> Parts = [];
+        public readonly List<UldPartList> Parts = new();
 
         private readonly UldListHeader ComponentList;
-        public readonly List<UldComponent> Components = [];
+        public readonly List<UldComponent> Components = new();
 
         private readonly UldListHeader TimelineList;
-        public readonly List<UldTimeline> Timelines = [];
+        public readonly List<UldTimeline> Timelines = new();
 
         private readonly UldListHeader WidgetList;
-        public readonly List<UldWidget> Widgets = [];
+        public readonly List<UldWidget> Widgets = new();
 
         public readonly CommandSplitView<UldTexture> TextureSplitView;
         public readonly CommandSplitView<UldPartList> PartsSplitView;
@@ -209,7 +209,7 @@ namespace VfxEditor.UldFormat {
         // ========== WORKSPACE ==========
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = [];
+            Dictionary<string, string> ret = new();
             Textures.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Parts.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );
             Components.ForEach( x => IWorkspaceUiItem.GetRenamingMap( x, ret ) );

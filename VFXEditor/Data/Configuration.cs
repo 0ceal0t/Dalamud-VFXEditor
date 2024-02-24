@@ -17,8 +17,8 @@ using VfxEditor.Utils.Gltf;
 namespace VfxEditor {
     [Serializable]
     public unsafe class ManagerConfiguration {
-        public List<SelectResult> RecentItems = [];
-        public List<SelectResult> Favorites = [];
+        public List<SelectResult> RecentItems = new();
+        public List<SelectResult> Favorites = new();
         public bool UseCustomWindowColor = false;
         public Vector4 TitleBg = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBg );
         public Vector4 TitleBgActive = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgActive );
@@ -59,24 +59,24 @@ namespace VfxEditor {
             "VFXEditor",
         } );
 
-        public List<(string, string)> RecentWorkspaces = [];
+        public List<(string, string)> RecentWorkspaces = new();
 
         public bool VfxSpawnLoop = false;
         public float VfxSpawnDelay = 0.1f;
         public bool VfxSpawnSplit = false;
 
         // ===== [ OBSOLETE ] =======
-        public List<SelectResult> RecentSelects = [];
-        public List<SelectResult> RecentSelectsTMB = [];
-        public List<SelectResult> RecentSelectsPAP = [];
-        public List<SelectResult> RecentSelectsScd = [];
-        public List<SelectResult> FavoriteVfx = [];
-        public List<SelectResult> FavoriteTmb = [];
-        public List<SelectResult> FavoritePap = [];
-        public List<SelectResult> FavoriteScd = [];
+        public List<SelectResult> RecentSelects = new();
+        public List<SelectResult> RecentSelectsTMB = new();
+        public List<SelectResult> RecentSelectsPAP = new();
+        public List<SelectResult> RecentSelectsScd = new();
+        public List<SelectResult> FavoriteVfx = new();
+        public List<SelectResult> FavoriteTmb = new();
+        public List<SelectResult> FavoritePap = new();
+        public List<SelectResult> FavoriteScd = new();
         // ===========================
 
-        public Dictionary<string, ManagerConfiguration> ManagerConfigs = [];
+        public Dictionary<string, ManagerConfiguration> ManagerConfigs = new();
 
         public KeybindConfiguration SaveKeybind = new();
         public KeybindConfiguration SaveAsKeybind = new();
@@ -90,8 +90,8 @@ namespace VfxEditor {
         public KeybindConfiguration SpawnOnGroundKeybind = new();
         public KeybindConfiguration SpawnOnTargetKeybind = new();
 
-        public List<LibraryProps> VFXNodeLibraryItems = [];
-        public List<LibraryProps> VfxTextureLibraryItems = [];
+        public List<LibraryProps> VFXNodeLibraryItems = new();
+        public List<LibraryProps> VfxTextureLibraryItems = new();
         public bool VfxTextureDefaultLoaded = false;
 
         public bool LoopMusic = true;
@@ -103,7 +103,7 @@ namespace VfxEditor {
         public Vector4 CurveEditorPointColor = new( 1 );
         public Vector4 CurveEditorSelectedColor = new( 1.000f, 0.884f, 0.561f, 1f );
         public Vector4 CurveEditorPrimarySelectedColor = new( 0.984f, 0.726f, 0.011f, 1.0f );
-        public List<Vector4> CurveEditorPalette = [];
+        public List<Vector4> CurveEditorPalette = new();
         public int CurveEditorLineWidth = 2;
         public int CurveEditorColorRingSize = 3;
         public int CurveEditorGrabbingDistance = 25;
@@ -148,7 +148,7 @@ namespace VfxEditor {
         public Vector4 LuaLiteralColor = new( 0.639f, 0.207f, 0.933f, 1f );
         public Vector4 LuaVariableColor = new( 0.125f, 0.67058f, 0.45098f, 1f );
 
-        public List<ExcludedBonesConfiguration> ExcludedBones = [];
+        public List<ExcludedBonesConfiguration> ExcludedBones = new();
 
         public int PngMips = 9;
         public TextureFormat PngFormat = TextureFormat.DXT5;

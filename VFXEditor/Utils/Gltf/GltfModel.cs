@@ -65,8 +65,8 @@ namespace VfxEditor.Utils.Gltf {
         }
 
         public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
-            vertexesOut = [];
-            indexesOut = [];
+            vertexesOut = new();
+            indexesOut = new();
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
             Dalamud.Log( "Importing GLTF model from: " + localPath );
 

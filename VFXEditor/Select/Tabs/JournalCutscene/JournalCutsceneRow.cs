@@ -5,7 +5,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
     public class JournalCutsceneRow {
         public readonly string Name;
         public readonly int RowId;
-        public readonly List<string> Paths = [];
+        public readonly List<string> Paths = new();
 
         public JournalCutsceneRow( CompleteJournal journal ) {
             RowId = ( int )journal.RowId;

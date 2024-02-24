@@ -10,7 +10,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
         private string Type = "Single";
         private int Priority = 0;
 
-        private readonly List<PenumbraOption> Options = [];
+        private readonly List<PenumbraOption> Options = new();
         private readonly PenumbraOptionSplitView OptionView;
 
         public PenumbraGroup() {

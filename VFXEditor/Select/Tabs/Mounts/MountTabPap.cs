@@ -6,7 +6,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
         public MountTabPap( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         public override void LoadSelection( MountRow item, out Dictionary<string, Dictionary<string, string>> loaded ) {
-            loaded = [];
+            loaded = new();
             foreach( var (value, idx) in item.GetSeatPaps().WithIndex() ) {
                 loaded.Add( $"Seat {idx + 1}", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( value ) ) );
             }

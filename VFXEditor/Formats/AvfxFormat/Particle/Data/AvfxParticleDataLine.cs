@@ -9,13 +9,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataLine() : base() {
-            Parsed = [
+            Parsed = new() {
                 LineCount,
                 Length,
                 LengthRandom,
                 ColorBegin,
                 ColorEnd
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( LineCount );

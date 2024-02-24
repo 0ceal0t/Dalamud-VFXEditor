@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -17,9 +18,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         private readonly ushort VertexCount;
 
-        private byte[] RawVertexData = [];
+        private byte[] RawVertexData = Array.Empty<byte>();
 
-        private readonly List<MdlTerrainShadowSubmesh> Submeshes = [];
+        private readonly List<MdlTerrainShadowSubmesh> Submeshes = new();
         private readonly UiSplitView<MdlTerrainShadowSubmesh> SubmeshView;
 
         public MdlTerrainShadowMesh( MdlFile file, BinaryReader reader ) : base( file ) {
@@ -62,7 +63,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
                 data.Add( new( 1, 1, 1, 1 ) ); // colot
             }
 
-            return [.. data];
+            return data.ToArray();
         }
 
         public override void Draw() {

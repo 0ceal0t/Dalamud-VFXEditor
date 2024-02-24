@@ -26,7 +26,7 @@ namespace VfxEditor.UldFormat.Widget {
         public readonly ParsedShort X = new( "X" );
         public readonly ParsedShort Y = new( "Y" );
 
-        public readonly List<UldNode> Nodes = [];
+        public readonly List<UldNode> Nodes = new();
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
         public UldWidget( List<UldComponent> components ) {

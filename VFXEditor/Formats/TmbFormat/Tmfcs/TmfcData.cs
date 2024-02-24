@@ -20,9 +20,9 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public readonly ParsedUInt Unk9 = new( "Unknown 9", size: 1 );
         private readonly uint TempRowCount = 0;
 
-        public readonly List<ParsedBase> Parsed = [];
+        public readonly List<ParsedBase> Parsed = new();
 
-        public readonly List<TmfcRow> Rows = [];
+        public readonly List<TmfcRow> Rows = new();
 
         public int Size => 0x10 + ( 0x18 * Rows.Count );
 

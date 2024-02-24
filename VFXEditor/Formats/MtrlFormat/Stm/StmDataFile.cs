@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
     }
 
     public class StmDataFile : FileResource {
-        public readonly Dictionary<ushort, StmEntry> Entries = [];
+        public readonly Dictionary<ushort, StmEntry> Entries = new();
 
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;

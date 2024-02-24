@@ -6,7 +6,7 @@ namespace VfxEditor.ScdFormat {
     public class TrackExternalAudioData : ScdTrackData {
         public ParsedShort BankNumber = new( "Bank Number" );
         private short Index = 0;
-        private readonly List<short> RandomIndices = [];
+        private readonly List<short> RandomIndices = new();
 
         public override void Read( BinaryReader reader ) {
             BankNumber.Read( reader );

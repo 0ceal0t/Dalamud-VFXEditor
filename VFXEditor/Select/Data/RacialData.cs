@@ -7,13 +7,13 @@ namespace VfxEditor.Select.Data {
     public class RacialData {
         public readonly string Name;
         public readonly string Id;
-        public readonly SortedSet<int> FaceOptions = [];
-        public readonly SortedSet<int> HairOptions = []; // Id, icon
-        public readonly SortedSet<int> TailOptions = [];
-        public readonly SortedSet<int> EarOptions = [];
-        public readonly SortedSet<int> BodyOptions = [];
+        public readonly SortedSet<int> FaceOptions = new();
+        public readonly SortedSet<int> HairOptions = new(); // Id, icon
+        public readonly SortedSet<int> TailOptions = new();
+        public readonly SortedSet<int> EarOptions = new();
+        public readonly SortedSet<int> BodyOptions = new();
 
-        public readonly Dictionary<int, uint> HairToIcon = [];
+        public readonly Dictionary<int, uint> HairToIcon = new();
 
         public RacialData( string name, string id, uint hairOffset ) {
             Name = name;

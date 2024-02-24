@@ -10,7 +10,7 @@ namespace VfxEditor.FileBrowser {
         private static FileBrowserDialog Dialog;
         private static string SavedPath = ".";
         private static Action<bool, string> Callback;
-        private static readonly List<FileBrowserSidebarItem> Recent = [];
+        private static readonly List<FileBrowserSidebarItem> Recent = new();
 
         public static void Dispose() {
             Reset();

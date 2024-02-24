@@ -7,7 +7,7 @@ namespace VfxEditor.SklbFormat.Layers {
         public bool IsSklb => File != null;
         public readonly SklbFile File;
 
-        private readonly List<SklbLayer> Layers = [];
+        private readonly List<SklbLayer> Layers = new();
         private readonly CommandSplitView<SklbLayer> LayerView;
 
         public SklbLayers( SklbFile file ) {

@@ -8,7 +8,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedByte Version = new( "Version" );
         private byte Reserved1;
         private short HeaderSize;
-        private readonly List<TrackVolumeZeroOneData> Channels = [];
+        private readonly List<TrackVolumeZeroOneData> Channels = new();
 
         public override void Read( BinaryReader reader ) {
             Version.Read( reader );

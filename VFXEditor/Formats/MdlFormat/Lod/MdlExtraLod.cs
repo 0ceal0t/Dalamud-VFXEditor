@@ -34,16 +34,16 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ParsedShort Unknown11 = new( "Unknown 11" );
         private readonly ParsedShort Unknown12 = new( "Unknown 12" );
 
-        private readonly List<MdlMesh> LightShaftMeshes = [];
+        private readonly List<MdlMesh> LightShaftMeshes = new();
         private readonly UiDropdown<MdlMesh> LightShaftMeshView;
 
-        private readonly List<MdlMesh> GlassMeshes = [];
+        private readonly List<MdlMesh> GlassMeshes = new();
         private readonly UiDropdown<MdlMesh> GlassMeshView;
 
-        private readonly List<MdlMesh> MaterialChangeMeshes = [];
+        private readonly List<MdlMesh> MaterialChangeMeshes = new();
         private readonly UiDropdown<MdlMesh> MaterialChangeMeshView;
 
-        private readonly List<MdlMesh> CrestChangeMeshes = [];
+        private readonly List<MdlMesh> CrestChangeMeshes = new();
         private readonly UiDropdown<MdlMesh> CrestChangeMeshView;
 
         public MdlExtraLod( MdlFile file, BinaryReader reader ) {

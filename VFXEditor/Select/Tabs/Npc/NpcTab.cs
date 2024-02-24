@@ -11,14 +11,14 @@ namespace VfxEditor.Select.Tabs.Npc {
         public List<string> pap;
 
         public NpcFilesStruct() {
-            vfx = [];
-            tmb = [];
-            pap = [];
+            vfx = new();
+            tmb = new();
+            pap = new();
         }
     }
 
     public abstract class NpcTab : SelectTab<NpcRow, List<string>> {
-        private static Dictionary<string, NpcFilesStruct> NpcFiles = [];
+        private static Dictionary<string, NpcFilesStruct> NpcFiles = new();
 
         public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Npc", resultType ) { }
 

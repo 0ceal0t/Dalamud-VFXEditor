@@ -14,10 +14,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         private readonly ushort _BoneStartIndex;
         private readonly ushort _BoneCount;
 
-        public readonly List<ParsedString> Bones = [];
+        public readonly List<ParsedString> Bones = new();
         public readonly CommandListView<ParsedString> BoneView;
 
-        public readonly List<ParsedString> Attributes = [];
+        public readonly List<ParsedString> Attributes = new();
         public readonly CommandListView<ParsedString> AttributeView;
 
         public MdlSubMesh( BinaryReader reader ) : base( null ) {

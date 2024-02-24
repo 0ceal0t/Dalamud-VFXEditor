@@ -45,8 +45,8 @@ namespace VfxEditor.FileBrowser {
         private string FileNameInput = "";
 
         private FileBrowserFile Selected;
-        private readonly List<FileBrowserFile> Files = [];
-        private readonly List<FileBrowserFile> SearchedFiles = [];
+        private readonly List<FileBrowserFile> Files = new();
+        private readonly List<FileBrowserFile> SearchedFiles = new();
         private SortingField CurrentSortingField = SortingField.FileName;
         private readonly bool[] SortDescending = new bool[] { false, false, false, false };
 
@@ -56,7 +56,7 @@ namespace VfxEditor.FileBrowser {
         private string CurrentPath;
         private readonly UndoRedoStack<(string, string)> PathHistory = new( 25 );
 
-        private readonly List<string> PathParts = [];
+        private readonly List<string> PathParts = new();
         private bool JustDrive => PathParts.Count == 1;
         private bool PathEditing = false;
         private string PathInput = "";

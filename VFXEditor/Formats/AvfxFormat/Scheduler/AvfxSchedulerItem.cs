@@ -20,11 +20,11 @@ namespace VfxEditor.AvfxFormat {
             Scheduler = scheduler;
             Name = name;
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 StartTime,
                 TimelineIdx
-            ];
+            };
 
             if( initNodeSelects ) InitializeNodeSelects();
         }

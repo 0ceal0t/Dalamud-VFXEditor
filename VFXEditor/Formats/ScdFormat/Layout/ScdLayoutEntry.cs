@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,7 +69,7 @@ namespace VfxEditor.ScdFormat {
 
         public ScdLayoutEntry() {
             Type = new( this, "Type", size: 1 );
-            Parsed = [
+            Parsed = new() {
                 Type,
                 Version,
                 Flag1,
@@ -80,7 +80,7 @@ namespace VfxEditor.ScdFormat {
                 ReverbType,
                 AbGroupNumber,
                 Volume
-            ];
+            };
         }
 
         public override void Read( BinaryReader reader ) {

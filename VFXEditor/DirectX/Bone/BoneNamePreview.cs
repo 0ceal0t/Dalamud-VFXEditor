@@ -64,7 +64,7 @@ namespace VfxEditor.DirectX {
             CurrentRenderId = renderId;
             IsSklb = file is SklbFile;
             NumWireframe = 0;
-            BoneList = [];
+            BoneList = new();
             WireframeVertices?.Dispose();
             Model.ClearVertexes();
             UpdateDraw();

@@ -21,12 +21,12 @@ namespace VfxEditor.Formats.MtrlFormat {
     public unsafe class MtrlManager : FileManager<MtrlDocument, MtrlFile, WorkspaceMetaBasic> {
         public readonly TextureDataFile TileDiffuseFile;
         public readonly TextureDataFile TileNormalFile;
-        public readonly List<IDalamudTextureWrap> TileDiffuse = [];
-        public readonly List<IDalamudTextureWrap> TileNormal = [];
+        public readonly List<IDalamudTextureWrap> TileDiffuse = new();
+        public readonly List<IDalamudTextureWrap> TileNormal = new();
 
         public readonly StmDataFile Stm;
         public readonly int[] Templates;
-        public readonly List<MtrlDye> Dyes = [];
+        public readonly List<MtrlDye> Dyes = new();
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
             SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );

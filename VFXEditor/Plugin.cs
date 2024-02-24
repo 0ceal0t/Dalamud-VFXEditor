@@ -45,7 +45,7 @@ namespace VfxEditor {
 
         public static WindowSystem WindowSystem { get; private set; }
 
-        public static List<IFileManager> Managers => new( [
+        public static List<IFileManager> Managers => new() {
             TextureManager,
             AvfxManager,
             TmbManager,
@@ -61,7 +61,7 @@ namespace VfxEditor {
             ShcdManager,
             MtrlManager,
             MdlManager,
-        ] );
+        };
 
         public static AvfxManager AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }

@@ -11,18 +11,18 @@ namespace VfxEditor.SklbFormat.Data {
     public class SklbNewData : SklbData {
         private readonly int DataSize;
         private readonly List<ParsedBase> Parsed;
-        private readonly List<SklbDataParent> Parents = [];
+        private readonly List<SklbDataParent> Parents = new();
         private readonly CommandListView<SklbDataParent> ParentsView;
 
         public SklbNewData( BinaryReader reader ) {
             DataSize = reader.ReadInt32();
             HavokOffset = reader.ReadInt32();
 
-            Parsed = [
+            Parsed = new() {
                 new ParsedShort( "Bone Connect Index" ),
                 new ParsedReserve( 2 ), // Padding
                 Id
-            ];
+            };
             Parsed.ForEach( x => x.Read( reader ) );
 
             var numParents = ( DataSize - 0x18 ) / 0x04;

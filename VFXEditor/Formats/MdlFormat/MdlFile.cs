@@ -62,21 +62,21 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedShort Unknown8 = new( "Unknown 8" );
         private readonly ParsedShort Unknown9 = new( "Unknown 9" );
 
-        public readonly List<MdlEid> Eids = [];
+        public readonly List<MdlEid> Eids = new();
         private readonly CommandSplitView<MdlEid> EidView;
 
-        public readonly List<MdlLod> AllLods = [];
-        public readonly List<MdlLod> UsedLods = [];
+        public readonly List<MdlLod> AllLods = new();
+        public readonly List<MdlLod> UsedLods = new();
         private readonly UiDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
-        public readonly List<MdlExtraLod> ExtraLods = [];
+        public readonly List<MdlExtraLod> ExtraLods = new();
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
 
-        public readonly List<MdlBoneTable> BoneTables = [];
+        public readonly List<MdlBoneTable> BoneTables = new();
         private readonly UiSplitView<MdlBoneTable> BoneTableView;
 
-        public readonly List<MdlShape> Shapes = []; // TODO
+        public readonly List<MdlShape> Shapes = new(); // TODO
 
         private readonly int[] IndexPadding;
         private readonly byte[] Padding;
@@ -87,10 +87,10 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly MdlBoundingBox WaterBoundingBox;
         private readonly MdlBoundingBox VerticalFogBoundingBox;
 
-        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
+        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = new();
         private readonly CommandSplitView<MdlBoneBoundingBox> BoneBoxView;
 
-        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = [];
+        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = new();
         private readonly CommandSplitView<MdlBoundingBox> UnknownBoxView;
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
@@ -224,7 +224,7 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < AllLods.Count; i++ ) AllLods[i].Populate( data, reader, i );
             for( var i = 0; i < ExtraLods.Count; i++ ) ExtraLods[i].Populate( data, reader, i ); // TODO: should this use vertexOffsets[i]?
 
-            IndexPadding = [data.GetIndexPadding( 0 ), data.GetIndexPadding( 1 ), data.GetIndexPadding( 2 )];
+            IndexPadding = new int[] { data.GetIndexPadding( 0 ), data.GetIndexPadding( 1 ), data.GetIndexPadding( 2 ) };
 
             // ====== VIEWS ============
 

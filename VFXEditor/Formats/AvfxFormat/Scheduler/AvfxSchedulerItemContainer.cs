@@ -4,7 +4,7 @@ using System.IO;
 namespace VfxEditor.AvfxFormat {
     public class AvfxSchedulerItemContainer : AvfxBase {
         public readonly AvfxScheduler Scheduler;
-        public readonly List<AvfxSchedulerItem> Items = [];
+        public readonly List<AvfxSchedulerItem> Items = new();
 
         public AvfxSchedulerItemContainer( string name, AvfxScheduler scheduler ) : base( name ) {
             Scheduler = scheduler;

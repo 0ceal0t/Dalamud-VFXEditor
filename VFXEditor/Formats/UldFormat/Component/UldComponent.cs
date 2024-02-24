@@ -48,7 +48,7 @@ namespace VfxEditor.UldFormat.Component {
         public readonly ParsedDataEnum<ComponentType, UldGenericData> Type;
         public UldGenericData Data;
 
-        public readonly List<UldNode> Nodes = [];
+        public readonly List<UldNode> Nodes = new();
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
         public UldComponent( List<UldComponent> components ) {

@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
-        public readonly List<AvfxEmitterItem> Items = [];
+        public readonly List<AvfxEmitterItem> Items = new();
 
         public AvfxEmitterItemContainer( string name, bool isParticle, AvfxEmitter emitter ) : base( name ) {
             IsParticle = isParticle;

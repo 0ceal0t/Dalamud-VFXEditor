@@ -5,7 +5,7 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class ScdTrackEntry : ScdEntry, IUiItem {
-        public readonly List<ScdTrackItem> Items = [];
+        public readonly List<ScdTrackItem> Items = new();
         private readonly CollapsingHeaders<ScdTrackItem> TrackView;
 
         public ScdTrackEntry() {

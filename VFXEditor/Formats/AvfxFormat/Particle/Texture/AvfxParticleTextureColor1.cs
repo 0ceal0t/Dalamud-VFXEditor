@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 ColorToAlpha,
                 UseScreenCopy,
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 MaskTextureIdx,
                 TexN,
                 TexNRandom
-            ];
+            };
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );

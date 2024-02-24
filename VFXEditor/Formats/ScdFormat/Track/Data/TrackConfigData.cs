@@ -12,7 +12,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedEnum<TrackCmdConfigType> Type = new( "Type", size: 2 );
         private ushort Count;
         private ushort DataSingle;
-        private readonly List<ushort> DataList = [];
+        private readonly List<ushort> DataList = new();
 
         public override void Read( BinaryReader reader ) {
             Type.Read( reader );

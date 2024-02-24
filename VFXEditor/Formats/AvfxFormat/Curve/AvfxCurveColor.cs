@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 
@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             Name = name;
             Locked = locked;
 
-            Curves = [
+            Curves = new() {
                 RGB,
                 A,
                 SclR,
@@ -40,7 +40,7 @@ namespace VfxEditor.AvfxFormat {
                 RanB,
                 RanA,
                 RBri
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );

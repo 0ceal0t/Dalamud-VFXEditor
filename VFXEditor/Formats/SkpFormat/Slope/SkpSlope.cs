@@ -9,7 +9,7 @@ namespace VfxEditor.Formats.SkpFormat.Slope {
         private readonly ParsedInt Unknown2 = new( "Unknown 2" );
         private readonly ParsedFloat3 CenterOffset = new( "Center Offset" );
 
-        private readonly List<SkpSlopePoint> Points = [];
+        private readonly List<SkpSlopePoint> Points = new();
         private readonly CollapsingHeaders<SkpSlopePoint> PointView;
 
         public SkpSlope() {

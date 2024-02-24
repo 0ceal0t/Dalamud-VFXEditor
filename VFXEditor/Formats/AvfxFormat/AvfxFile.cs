@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxExport ExportUi;
 
-        private readonly HashSet<IUiItem> ForceOpenTabs = [];
+        private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );

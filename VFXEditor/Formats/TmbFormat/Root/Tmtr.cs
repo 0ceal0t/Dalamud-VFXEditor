@@ -22,13 +22,13 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x18;
         public override int ExtraSize => !LuaAssigned.Value ? 0 : 8 + ( 12 * LuaEntries.Count );
 
-        public readonly List<TmbEntry> Entries = [];
+        public readonly List<TmbEntry> Entries = new();
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private TmtrLuaEntry DraggingItem;
         private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
-        public readonly List<TmtrLuaEntry> LuaEntries = [];
+        public readonly List<TmtrLuaEntry> LuaEntries = new();
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
 

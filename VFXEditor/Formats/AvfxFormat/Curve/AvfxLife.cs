@@ -17,17 +17,17 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<IUiItem> Display;
 
         public AvfxLife() : base( "Life" ) {
-            Parsed = [
+            Parsed = new() {
                 Value,
                 ValRandom,
                 ValRandomType
-            ];
+            };
 
-            Display = [
+            Display = new() {
                 Value,
                 ValRandom,
                 ValRandomType
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

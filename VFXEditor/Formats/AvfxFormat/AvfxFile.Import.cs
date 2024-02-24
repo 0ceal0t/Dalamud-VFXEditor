@@ -41,7 +41,7 @@ namespace VfxEditor.AvfxFormat {
 
                 var dataOffset = reader.BaseStream.Position;
                 reader.BaseStream.Position = renamedOffset;
-                List<string> renames = [];
+                List<string> renames = new();
 
                 for( var i = 0; i < numberOfItems; i++ ) {
                     renames.Add( FileUtils.ReadString( reader ) );
@@ -55,13 +55,13 @@ namespace VfxEditor.AvfxFormat {
         public void Import( BinaryReader reader, int size, bool hasDependencies, List<string> renames ) {
             NodeGroupSet.PreImport( hasDependencies );
 
-            List<NodePosition> models = [];
-            List<NodePosition> textures = [];
-            List<NodePosition> binders = [];
-            List<NodePosition> effectors = [];
-            List<NodePosition> particles = [];
-            List<NodePosition> emitters = [];
-            List<NodePosition> timelines = [];
+            List<NodePosition> models = new();
+            List<NodePosition> textures = new();
+            List<NodePosition> binders = new();
+            List<NodePosition> effectors = new();
+            List<NodePosition> particles = new();
+            List<NodePosition> emitters = new();
+            List<NodePosition> timelines = new();
 
             var idx = 0;
             AvfxBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {

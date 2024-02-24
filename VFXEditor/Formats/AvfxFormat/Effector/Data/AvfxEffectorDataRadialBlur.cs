@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEffectorDataRadialBlur() : base() {
-            Parsed = [
+            Parsed = new() {
                 Length,
                 Strength,
                 Gradation,
@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat {
                 FadeStartDistance,
                 FadeEndDistance,
                 FadeBasePointType
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( FadeStartDistance );

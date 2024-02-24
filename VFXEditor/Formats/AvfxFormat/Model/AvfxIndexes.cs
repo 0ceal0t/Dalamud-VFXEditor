@@ -3,7 +3,7 @@ using System.IO;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxIndexes : AvfxBase {
-        public readonly List<AvfxIndex> Indexes = [];
+        public readonly List<AvfxIndex> Indexes = new();
 
         public AvfxIndexes() : base( "VIdx" ) { }
 

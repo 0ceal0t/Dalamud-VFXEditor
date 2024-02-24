@@ -3,15 +3,15 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxParticleAttribute : AvfxOptional {
         public readonly AvfxParticle Particle;
-        public readonly List<AvfxNodeSelect> NodeSelects = [];
+        public readonly List<AvfxNodeSelect> NodeSelects = new();
         public readonly List<AvfxItem> DisplayTabs;
         public readonly UiDisplayList Display;
 
         public AvfxParticleAttribute( string avfxName, AvfxParticle particle ) : base( avfxName ) {
             Particle = particle;
-            DisplayTabs = [
+            DisplayTabs = new() {
                 ( Display = new UiDisplayList( "Parameters" ) )
-            ];
+            };
         }
 
         protected void InitNodeSelects() {

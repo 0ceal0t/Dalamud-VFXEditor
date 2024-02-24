@@ -19,8 +19,8 @@ namespace VfxEditor.Select.Tabs.Items {
         public override void LoadSelection( ItemRow item, out SelectedMtrl loaded ) {
             loaded = new() {
                 IsWeapon = false,
-                WeaponPaths = [],
-                ArmorPaths = [],
+                WeaponPaths = new(),
+                ArmorPaths = new(),
             };
 
             var imcPath = item.ImcPath;

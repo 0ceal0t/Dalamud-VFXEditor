@@ -11,7 +11,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         public readonly ParsedFloat Acceleration = new( "Acceleration" );
         public readonly ParsedFloat Deceleration = new( "Deceleration" );
 
-        public readonly List<ParsedBase> Data = [];
+        public readonly List<ParsedBase> Data = new();
 
         public UldKeyframe( KeyGroupType groupType ) {
             Data.AddRange( groupType switch {

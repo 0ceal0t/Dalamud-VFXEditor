@@ -19,7 +19,7 @@ namespace VfxEditor.DirectX.Renderers {
         protected readonly DeferredTexture Color = new();
         protected readonly DeferredTexture UV = new();
 
-        protected List<DeferredTexture> DeferredTextures = [];
+        protected List<DeferredTexture> DeferredTextures = new();
 
         protected ModelDeferredRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             // https://github.com/justinstenning/Direct3D-Rendering-Cookbook/blob/672312ae7545c388387a8fec92d8db41cc326804/Ch10_01DeferredRendering/ScreenAlignedQuadRenderer.cs#L20

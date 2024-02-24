@@ -49,8 +49,8 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void SplitUnassigned<T>( List<T> items, out List<T> assigned, out List<T> unassigned ) {
-            assigned = [];
-            unassigned = [];
+            assigned = new();
+            unassigned = new();
             foreach( var item in items ) {
                 if( item is AvfxOptional optionalItem && !optionalItem.IsAssigned() ) unassigned.Add( item );
                 else assigned.Add( item );

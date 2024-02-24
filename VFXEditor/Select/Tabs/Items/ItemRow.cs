@@ -31,13 +31,11 @@ namespace VfxEditor.Select.Tabs.Items {
 
 
         public static ulong ToLong( int id1, int id2, int id3, int id4 ) {
-            List<byte> bytes =
-            [
-                .. BitConverter.GetBytes( ( short )id1 ), 
-                .. BitConverter.GetBytes( ( short )id2 ), 
-                .. BitConverter.GetBytes( ( short )id3 ), 
-                .. BitConverter.GetBytes( ( short )id4 ),
-            ];
+            var bytes = new List<byte>();
+            bytes.AddRange( BitConverter.GetBytes( ( short )id1 ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )id2 ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )id3 ) );
+            bytes.AddRange( BitConverter.GetBytes( ( short )id4 ) );
             return ( ulong )BitConverter.ToInt64( bytes.ToArray() );
         }
     }

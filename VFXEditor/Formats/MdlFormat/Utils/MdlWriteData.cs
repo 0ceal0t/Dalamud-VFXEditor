@@ -8,22 +8,22 @@ using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 namespace VfxEditor.Formats.MdlFormat.Utils {
     public class MdlWriteData : MdlFileData {
         public uint TotalStringLength { get; private set; } = 0;
-        public readonly List<string> AllStrings = [];
-        public readonly Dictionary<string, uint> StringToOffset = [];
-        public readonly List<string> ShapeStrings = [];
+        public readonly List<string> AllStrings = new();
+        public readonly Dictionary<string, uint> StringToOffset = new();
+        public readonly List<string> ShapeStrings = new();
 
-        public readonly Dictionary<MdlLod, long> LodPlaceholders = [];
+        public readonly Dictionary<MdlLod, long> LodPlaceholders = new();
 
-        public readonly List<MemoryStream> VertexData = [];
-        public readonly List<MemoryStream> IndexData = [];
-        private readonly List<BinaryWriter> VertexWriters = [];
-        private readonly List<BinaryWriter> IndexWriters = [];
+        public readonly List<MemoryStream> VertexData = new();
+        public readonly List<MemoryStream> IndexData = new();
+        private readonly List<BinaryWriter> VertexWriters = new();
+        private readonly List<BinaryWriter> IndexWriters = new();
 
-        public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = [];
-        public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = [];
+        public readonly Dictionary<MdlMesh, (uint[], uint)> MeshOffsets = new();
+        public readonly Dictionary<MdlTerrainShadowMesh, (uint, uint)> TerrainShadowOffsets = new();
 
-        public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = [[], [], []];
-        public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = [[], [], []];
+        public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = new() { new(), new(), new() };
+        public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = new() { new(), new(), new() };
 
         public MdlWriteData( MdlFile file ) {
             for( var j = 0; j < 3; j++ ) {

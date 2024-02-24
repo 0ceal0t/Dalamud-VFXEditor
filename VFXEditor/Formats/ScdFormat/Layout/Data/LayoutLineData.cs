@@ -17,7 +17,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedReserve Reserved1 = new( 4 );
 
         public LayoutLineData() {
-            Parsed = [
+            Parsed = new() {
                 StartPosition,
                 EndPosition,
                 MaxRange,
@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
                 InteriorFac,
                 Direction,
                 Reserved1
-            ];
+            };
         }
     }
 }

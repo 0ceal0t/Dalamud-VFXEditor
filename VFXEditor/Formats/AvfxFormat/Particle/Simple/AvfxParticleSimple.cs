@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Parsed = [
+            Parsed = new() {
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -146,7 +146,7 @@ namespace VfxEditor.AvfxFormat {
                 PolyLineTag,
                 Colors,
                 Frames
-            ];
+            };
 
             Display.Add( InjectionPositionType );
             Display.Add( InjectionDirectionType );

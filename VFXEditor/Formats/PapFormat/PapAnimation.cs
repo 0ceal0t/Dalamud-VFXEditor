@@ -13,7 +13,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public class PapAnimation {
-        private readonly List<string> Prefixes = [
+        private readonly List<string> Prefixes = new() {
             "cbfp",
             "cbfa",
             "cbep",
@@ -39,7 +39,7 @@ namespace VfxEditor.PapFormat {
             "cbfm",
             "cbfw",
             "cfxb",
-        ];
+        };
 
         public readonly PapFile File;
 

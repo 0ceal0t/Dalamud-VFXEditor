@@ -26,8 +26,8 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly ParsedFloat3 LastBoneOffset = new( "Last Bone Offset" );
         public readonly ParsedEnum<ChainType> Type = new( "Type" );
 
-        public readonly List<PhybCollisionData> Collisions = [];
-        public readonly List<PhybNode> Nodes = [];
+        public readonly List<PhybCollisionData> Collisions = new();
+        public readonly List<PhybNode> Nodes = new();
 
         private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
         private readonly CommandSplitView<PhybNode> NodeSplitView;

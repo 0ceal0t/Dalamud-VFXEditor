@@ -75,7 +75,7 @@ namespace VfxEditor.Tracker {
 
                 var actorId = item.Value.ActorId;
                 if( actorId > 0 ) {
-                    if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = [];
+                    if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = new();
                     actorToItems[actorId].Add( item.Value.ToItem() );
                 }
                 else {
@@ -94,7 +94,7 @@ namespace VfxEditor.Tracker {
                 var actorId = item.Value.ActorId;
                 if( actorId <= 0 ) continue;
 
-                if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = [];
+                if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = new();
                 actorToItems[actorId].Add( item.Value.ToItem() );
             }
         }

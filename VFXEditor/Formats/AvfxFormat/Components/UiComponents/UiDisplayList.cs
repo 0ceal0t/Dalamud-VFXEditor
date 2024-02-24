@@ -9,7 +9,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
         private readonly List<IUiItem> Display;
 
-        public UiDisplayList( string name ) : this( name, [] ) { }
+        public UiDisplayList( string name ) : this( name, new() ) { }
 
         public UiDisplayList( string name, List<IUiItem> list ) : base( "" ) {
             Name = name;

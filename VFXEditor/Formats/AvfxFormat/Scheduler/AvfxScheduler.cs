@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.Tables;
@@ -10,27 +10,27 @@ namespace VfxEditor.AvfxFormat {
 
         public readonly AvfxInt ItemCount = new( "Item Count", "ItCn" );
         public readonly AvfxInt TriggerCount = new( "Trigger Count", "TrCn" );
-        public readonly List<AvfxSchedulerItem> Items = [];
-        public readonly List<AvfxSchedulerItem> Triggers = [];
+        public readonly List<AvfxSchedulerItem> Items = new();
+        public readonly List<AvfxSchedulerItem> Triggers = new();
         public readonly List<AvfxBase> Parsed;
         public readonly AvfxNodeGroupSet NodeGroups;
 
         private readonly CommandTable<AvfxSchedulerItem> ItemTable;
         private readonly CommandTable<AvfxSchedulerItem> TriggerTable;
 
-        private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = [
+        private static readonly List<(string, ImGuiTableColumnFlags, int)> Columns = new() {
             ( "Timeline", ImGuiTableColumnFlags.None, -1 ),
             ( "Enabled", ImGuiTableColumnFlags.None, -1 ),
             ( "Start Time", ImGuiTableColumnFlags.None, -1 )
-        ];
+        };
 
         public AvfxScheduler( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
-            Parsed = [
+            Parsed = new() {
                 ItemCount,
                 TriggerCount
-            ];
+            };
 
             ItemTable = new( "ItEm", true, true, Items, Columns, () => new( this, "Item", true ),
             ( AvfxSchedulerItem item, bool add ) => {

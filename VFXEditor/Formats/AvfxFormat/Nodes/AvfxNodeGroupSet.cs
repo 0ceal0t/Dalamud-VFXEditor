@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly NodeGroup<AvfxTimeline> Timelines;
         public readonly NodeGroup<AvfxScheduler> Schedulers;
 
-        private readonly List<AvfxNodeGroup> AllGroups = [];
+        private readonly List<AvfxNodeGroup> AllGroups = new();
 
         public AvfxNodeGroupSet( AvfxMain main ) {
             Effectors = new NodeGroup<AvfxEffector>( main.Effectors );
@@ -47,7 +47,7 @@ namespace VfxEditor.AvfxFormat {
         public void Initialize() => AllGroups.ForEach( group => group.Initialize() );
 
         public Dictionary<string, string> GetRenamingMap() {
-            Dictionary<string, string> ret = [];
+            Dictionary<string, string> ret = new();
             AllGroups.ForEach( group => group.GetRenamingMap( ret ) );
             return ret;
         }

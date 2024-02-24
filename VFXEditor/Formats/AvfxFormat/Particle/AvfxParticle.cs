@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -68,7 +68,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxParticleTexturePalette TP;
         public readonly AvfxParticleSimple Simple;
 
-        public readonly List<AvfxParticleUvSet> UvSets = [];
+        public readonly List<AvfxParticleUvSet> UvSets = new();
         public readonly UiUvSetSplitView UvView;
 
         private readonly List<AvfxBase> Parsed;
@@ -99,7 +99,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Parsing
 
-            Parsed = [
+            Parsed = new() {
                 LoopStart,
                 LoopEnd,
                 Type,
@@ -149,9 +149,9 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            ];
+            };
 
-            Parsed2 = [
+            Parsed2 = new() {
                 TC1,
                 TC2,
                 TC3,
@@ -160,11 +160,11 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            ];
+            };
 
             // Drawing
 
-            Parameters = new( "Parameters", [
+            Parameters = new( "Parameters", new() {
                 new UiNodeGraphView( this ),
                 LoopStart,
                 LoopEnd,
@@ -195,9 +195,9 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateLightBuffer,
                 DOTy,
                 DepthOffset
-            ] );
+            } );
 
-            AnimationSplitDisplay = new( "Animation", [
+            AnimationSplitDisplay = new( "Animation", new() {
                 Life,
                 Simple,
                 Gravity,
@@ -214,11 +214,11 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            ] );
+            } );
 
             UvView = new( UvSets );
 
-            TextureDisplaySplit = new( "Textures", [
+            TextureDisplaySplit = new( "Textures", new() {
                 TC1,
                 TC2,
                 TC3,
@@ -227,7 +227,7 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            ] );
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

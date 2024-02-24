@@ -6,12 +6,12 @@ using VfxEditor.SklbFormat.Bones;
 
 namespace VfxEditor.Interop.Havok {
     public unsafe class HavokBones : HavokData {
-        public Dictionary<string, Bone> BoneMatrixes = [];
-        public List<Bone> BoneList = [];
+        public Dictionary<string, Bone> BoneMatrixes = new();
+        public List<Bone> BoneList = new();
         public hkaSkeleton* Skeleton { get; private set; }
 
         protected static int BONE_ID = 0;
-        public readonly List<SklbBone> Bones = [];
+        public readonly List<SklbBone> Bones = new();
 
         public HavokBones( string havokPath, bool init ) : base( havokPath, init ) { }
 
@@ -32,8 +32,8 @@ namespace VfxEditor.Interop.Havok {
         }
 
         public virtual void UpdateBones() {
-            BoneMatrixes = [];
-            BoneList = [];
+            BoneMatrixes = new();
+            BoneList = new();
             if( Resource == null || Skeleton == null ) return;
 
             var parents = new List<int>();

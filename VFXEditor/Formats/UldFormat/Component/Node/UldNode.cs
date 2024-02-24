@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,7 +83,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             Components = components;
             Type = new( this, "Type" );
 
-            Parsed = [
+            Parsed = new() {
                 TabIndex,
                 Unk1,
                 Unk2,
@@ -109,7 +109,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 Alpha,
                 ClipCount,
                 TimelineId
-            ];
+            };
         }
 
         public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {

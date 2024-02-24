@@ -30,7 +30,7 @@ namespace VfxEditor.Select {
         }
 
         public override void LoadSelection( string item, out Dictionary<string, List<(string, string)>> loaded ) {
-            loaded = [];
+            loaded = new();
             var baseModPath = Plugin.PenumbraIpc.GetModDirectory();
             if( string.IsNullOrEmpty( baseModPath ) ) return;
 

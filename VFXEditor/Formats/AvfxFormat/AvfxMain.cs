@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,21 +78,21 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly List<AvfxScheduler> Schedulers = [];
-        public readonly List<AvfxTimeline> Timelines = [];
-        public readonly List<AvfxEmitter> Emitters = [];
-        public readonly List<AvfxParticle> Particles = [];
-        public readonly List<AvfxEffector> Effectors = [];
-        public readonly List<AvfxBinder> Binders = [];
-        public readonly List<AvfxTexture> Textures = [];
-        public readonly List<AvfxModel> Models = [];
+        public readonly List<AvfxScheduler> Schedulers = new();
+        public readonly List<AvfxTimeline> Timelines = new();
+        public readonly List<AvfxEmitter> Emitters = new();
+        public readonly List<AvfxParticle> Particles = new();
+        public readonly List<AvfxEffector> Effectors = new();
+        public readonly List<AvfxBinder> Binders = new();
+        public readonly List<AvfxTexture> Textures = new();
+        public readonly List<AvfxModel> Models = new();
 
         private readonly List<IUiItem> Display;
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
         public AvfxMain() : base( "AVFX" ) {
-            Parsed = [
+            Parsed = new() {
                 Version,
                 IsDelayFastParticle,
                 IsFitGround,
@@ -147,11 +147,11 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
-            ];
+            };
 
             NodeGroupSet = new( this );
 
-            Display = [
+            Display = new() {
                 new UiFloat3( "Revised Scale", RevisedValuesScaleX, RevisedValuesScaleY, RevisedValuesScaleZ ),
                 new UiFloat3( "Revised Position", RevisedValuesPosX, RevisedValuesPosY, RevisedValuesPosZ ),
                 new UiFloat3( "Revised Rotation", RevisedValuesRotX, RevisedValuesRotY, RevisedValuesRotZ ),
@@ -189,7 +189,7 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 LTSEnabled,
                 AGSEnabled,
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

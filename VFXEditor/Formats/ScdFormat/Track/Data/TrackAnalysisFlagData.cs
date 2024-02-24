@@ -3,7 +3,7 @@ using System.IO;
 
 namespace VfxEditor.ScdFormat {
     public class TrackAnalysisFlagData : ScdTrackData {
-        public readonly List<short> Data = [];
+        public readonly List<short> Data = new();
 
         public override void Read( BinaryReader reader ) {
             var size = reader.ReadInt16();

@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,12 +37,12 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         private readonly ushort VertexCount; // Maxes out at ushort.MaxValue
 
-        private List<byte[]> RawVertexData = [[], [], []];
+        private List<byte[]> RawVertexData = new() { Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>() };
 
-        private readonly List<MdlSubMesh> Submeshes = [];
+        private readonly List<MdlSubMesh> Submeshes = new();
         private readonly UiSplitView<MdlSubMesh> SubmeshView;
 
-        private readonly List<MdlShapeMesh> Shapes = [];
+        private readonly List<MdlShapeMesh> Shapes = new();
 
         public MdlMesh( MdlFile file, MdlVertexDeclaration format, BinaryReader reader ) : base( file ) {
             Format = format;
@@ -57,7 +58,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             BoneTableIndex.Value = _boneTableIndex == 255 ? -1 : _boneTableIndex;
 
             _IndexOffset = 2 * reader.ReadUInt32();
-            _VertexBufferOffsets = [reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32()];
+            _VertexBufferOffsets = new uint[] { reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32() };
             Strides = reader.ReadBytes( 3 );
             StreamCount = reader.ReadByte();
 
@@ -101,7 +102,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             Lod = lod;
 
-            RawVertexData = [];
+            RawVertexData = new();
             for( var i = 0; i < 3; i++ ) {
                 var stride = Format.GetStride( i );
                 if( stride == 0 ) continue;

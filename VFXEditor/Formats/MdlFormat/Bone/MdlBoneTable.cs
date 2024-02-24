@@ -9,7 +9,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Bone {
     public class MdlBoneTable : IUiItem {
-        public readonly List<ParsedString> Bones = [];
+        public readonly List<ParsedString> Bones = new();
         public readonly CommandListView<ParsedString> BoneView;
 
         public HashSet<string> BoneStrings => Bones.Select( x => x.Value ).ToHashSet();

@@ -10,7 +10,7 @@ namespace VfxEditor.PhybFormat.Simulator {
     public class PhybSimulation : IPhysicsObject {
         public readonly PhybFile File;
 
-        public readonly List<PhybSimulator> Simulators = [];
+        public readonly List<PhybSimulator> Simulators = new();
 
         private readonly CommandDropdown<PhybSimulator> SimulatorDropdown;
 

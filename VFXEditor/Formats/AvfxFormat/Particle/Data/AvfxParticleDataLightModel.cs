@@ -6,9 +6,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxParticleDataLightModel( AvfxParticle particle ) : base() {
-            Parsed = [
+            Parsed = new() {
                 ModelIdx
-            ];
+            };
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );

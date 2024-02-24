@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
@@ -18,7 +19,7 @@ using VfxEditor.Spawn;
 namespace VfxEditor.Select.Formats {
     public class VfxSelectDialog : SelectDialog {
         public VfxSelectDialog( string id, AvfxManager manager, bool isSourceDialog ) : base( id, "avfx", manager, isSourceDialog ) {
-            GameTabs.AddRange( [
+            GameTabs.AddRange( new List<SelectTab>() {
                 new ItemTabVfx( this, "Item" ),
                 new StatusTabVfx( this, "Status" ),
                 new ActionTabVfx( this, "Action" ),
@@ -32,7 +33,7 @@ namespace VfxEditor.Select.Formats {
                 new CutsceneTab( this, "Cutscene" ),
                 new JournalCutsceneTab( this, "Journal Cutscene" ),
                 new CommonTabVfx( this, "Common" )
-            ] );
+            } );
         }
 
         public override bool CanPlay => true;

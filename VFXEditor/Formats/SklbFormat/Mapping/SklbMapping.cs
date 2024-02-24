@@ -25,7 +25,7 @@ namespace VfxEditor.SklbFormat.Mapping {
         public readonly SklbBones Bones;
         public readonly SkeletonMapper* Mapper;
 
-        public readonly List<SklbSimpleMapping> SimpleMappings = [];
+        public readonly List<SklbSimpleMapping> SimpleMappings = new();
         public readonly SklbSimpleMappingSplitView SimpleMappingView;
 
         public hkaSkeleton* MappedSkeleton => Mapper->Mapping.SkeletonA.ptr;

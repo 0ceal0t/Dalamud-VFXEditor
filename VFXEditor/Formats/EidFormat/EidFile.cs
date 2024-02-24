@@ -14,7 +14,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.EidFormat {
     public class EidFile : FileManagerFile {
-        public readonly List<EidBindPoint> BindPoints = [];
+        public readonly List<EidBindPoint> BindPoints = new();
         public readonly CommandDropdown<EidBindPoint> Dropdown;
 
         private readonly short Version1;

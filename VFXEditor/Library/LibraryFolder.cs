@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -10,7 +10,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Library {
     public unsafe class LibraryFolder : LibraryGeneric {
-        public readonly List<LibraryGeneric> Children = [];
+        public readonly List<LibraryGeneric> Children = new();
         public bool IsRoot => Parent == null;
 
         public LibraryFolder( LibraryFolder parent, string name, string id, List<LibraryProps> items ) : base( parent, name, id ) {
@@ -113,7 +113,7 @@ namespace VfxEditor.Library {
             if( !popup ) return false;
 
             if( UiUtils.IconSelectable( FontAwesomeIcon.FolderPlus, "New Sub-Folder" ) ) {
-                var newFolder = new LibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), [] );
+                var newFolder = new LibraryFolder( this, "New Folder", UiUtils.RandomString( 12 ), new() );
                 Add( newFolder );
                 library.Save();
                 return true;

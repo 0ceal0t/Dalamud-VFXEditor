@@ -4,10 +4,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve DistanceRandom = new( "Distance Random", "DstR" );
 
         public AvfxBinderDataCamera() : base() {
-            Parsed = [
+            Parsed = new() {
                 Distance,
                 DistanceRandom
-            ];
+            };
 
             DisplayTabs.Add( Distance );
             DisplayTabs.Add( DistanceRandom );

@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System.Collections.Generic;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Emotes;
@@ -10,13 +11,13 @@ using VfxEditor.TmbFormat;
 namespace VfxEditor.Select.Formats {
     public class TmbSelectDialog : SelectDialog {
         public TmbSelectDialog( string id, TmbManager manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
-            GameTabs.AddRange( [
+            GameTabs.AddRange( new List<SelectTab>() {
                 new ActionTabTmb( this, "Action" ),
                 new ActionTabTmbNonPlayer( this, "Non-Player Action" ),
                 new EmoteTabTmb( this, "Emote" ),
                 new NpcTabTmb( this, "Npc" ),
                 new CommonTabTmb( this, "Common" )
-            ] );
+            } );
         }
 
         public override bool CanPlay => true;

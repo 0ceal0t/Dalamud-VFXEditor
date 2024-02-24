@@ -50,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
             IsParticle = isParticle;
             Emitter = emitter;
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 TargetIdx,
                 LocalDirection,
@@ -77,26 +77,26 @@ namespace VfxEditor.AvfxFormat {
                 ByInjectionAngleZ,
                 GenerateDelay,
                 GenerateDelayByOne
-            ];
+            };
 
             if( initNodeSelects ) InitializeNodeSelects();
 
-            Display = [
+            Display = new() {
                 Enabled,
                 LocalDirection,
                 CreateTime,
                 CreateCount,
                 CreateProbability,
                 ParentInfluenceColor
-            ];
+            };
 
-            CoordOptionsDisplay = [
+            CoordOptionsDisplay = new() {
                 InfluenceCoordScale,
                 InfluenceCoordRot,
                 InfluenceCoordPos
-            ];
+            };
 
-            Display2 = [
+            Display2 = new() {
                 InfluenceCoordBinderPosition,
                 InfluenceCoordUnstickiness,
                 InheritParentVelocity,
@@ -110,7 +110,7 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "By Injection Angle", ByInjectionAngleX, ByInjectionAngleY, ByInjectionAngleZ ),
                 GenerateDelay,
                 GenerateDelayByOne
-            ];
+            };
         }
 
         public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );

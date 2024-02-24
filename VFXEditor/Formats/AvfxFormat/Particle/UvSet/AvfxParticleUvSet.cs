@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -18,24 +18,24 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<IUiItem> Display;
 
         public AvfxParticleUvSet() : base( "UvSt" ) {
-            Parsed = [
+            Parsed = new() {
                 CalculateUVType,
                 Scale,
                 Scroll,
                 Rot,
                 RotRandom
-            ];
+            };
 
-            Display = [
+            Display = new() {
                 CalculateUVType
-            ];
+            };
 
-            Curves = [
+            Curves = new() {
                 Scale,
                 Scroll,
                 Rot,
                 RotRandom
-            ];
+            };
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

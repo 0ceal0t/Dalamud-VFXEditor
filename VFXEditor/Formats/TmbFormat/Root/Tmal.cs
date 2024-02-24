@@ -8,7 +8,7 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x10;
         public override int ExtraSize => 0;
 
-        public readonly List<Tmac> Actors = [];
+        public readonly List<Tmac> Actors = new();
         private readonly List<int> TempIds;
 
         public Tmal( TmbFile file, TmbReader reader ) : base( file, reader ) {

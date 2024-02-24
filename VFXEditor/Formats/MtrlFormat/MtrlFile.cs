@@ -43,9 +43,9 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly byte[] Version;
         private readonly byte[] ExtraData;
 
-        private readonly List<MtrlTexture> Textures = [];
-        private readonly List<MtrlAttributeSet> UvSets = [];
-        private readonly List<MtrlAttributeSet> ColorSets = [];
+        private readonly List<MtrlTexture> Textures = new();
+        private readonly List<MtrlAttributeSet> UvSets = new();
+        private readonly List<MtrlAttributeSet> ColorSets = new();
 
         public readonly ParsedString Shader;
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
@@ -57,9 +57,9 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
         private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
 
-        private readonly List<MtrlKey> Keys = [];
-        private readonly List<MtrlMaterialParameter> MaterialParameters = [];
-        private readonly List<MtrlSampler> Samplers = [];
+        private readonly List<MtrlKey> Keys = new();
+        private readonly List<MtrlMaterialParameter> MaterialParameters = new();
+        private readonly List<MtrlSampler> Samplers = new();
 
         private readonly CommandSplitView<MtrlTexture> TextureView;
         private readonly CommandSplitView<MtrlAttributeSet> UvSetView;

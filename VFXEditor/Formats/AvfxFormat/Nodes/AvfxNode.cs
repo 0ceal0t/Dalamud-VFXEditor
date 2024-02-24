@@ -3,9 +3,9 @@ using System.Collections.Generic;
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxNode : AvfxWorkspaceItem {
         public uint GraphColor;
-        public List<AvfxNode> ChildNodes = [];
-        public List<AvfxNodeSelect> Parents = [];
-        public List<AvfxNodeSelect> Selectors = [];
+        public List<AvfxNode> ChildNodes = new();
+        public List<AvfxNodeSelect> Parents = new();
+        public List<AvfxNodeSelect> Selectors = new();
         public bool IsDeleted = false;
         public UiNodeGraph Graph = null;
 

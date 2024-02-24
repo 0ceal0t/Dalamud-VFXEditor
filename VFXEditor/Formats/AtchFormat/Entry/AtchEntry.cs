@@ -10,7 +10,7 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
     public class AtchEntry : IUiItem {
         public readonly ParsedString Name = new( "Name" );
         public readonly ParsedBool Accessory = new( "Accessory" );
-        public readonly List<AtchEntryState> States = [];
+        public readonly List<AtchEntryState> States = new();
 
         public string WeaponName => AtchFile.WeaponNames.TryGetValue( Name.Value, out var weaponName ) ? weaponName : "";
 

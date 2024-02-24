@@ -52,7 +52,7 @@ namespace VfxEditor {
 
         private readonly FileManagerFile File;
 
-        private readonly List<ICommand> PasteCommands = [];
+        private readonly List<ICommand> PasteCommands = new();
 
         public CommandManager( FileManagerFile file ) {
             File = file;

@@ -25,7 +25,7 @@ namespace VfxEditor.Select {
 
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
-        public static readonly List<RacialData> CharacterRaces = [
+        public static readonly List<RacialData> CharacterRaces = new() {
             new RacialData( "Midlander M", "c0101", 1 ),
             new RacialData( "Midlander F","c0201", 101 ),
             new RacialData( "Highlander M", "c0301", 201 ),
@@ -44,7 +44,7 @@ namespace VfxEditor.Select {
             // 1601 coming soon (tm) - 25
             new RacialData( "Viera M", "c1701", 1601 ),
             new RacialData( "Viera F", "c1801", 1701 )
-        ];
+        };
 
         public static readonly Dictionary<string, string> JobAnimationIds = new() {
             { "Warrior", "bt_2ax_emp" },
@@ -89,20 +89,20 @@ namespace VfxEditor.Select {
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return [];
+            if( string.IsNullOrEmpty( path ) ) return new();
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }
 
         public static Dictionary<string, string> GetAllJobPaps( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
 
         public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return [];
+            if( string.IsNullOrEmpty( path ) ) return new();
             return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
         }
 
         public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return [];
-            Dictionary<string, Dictionary<string, string>> ret = [];
+            if( string.IsNullOrEmpty( path ) ) return new();
+            Dictionary<string, Dictionary<string, string>> ret = new();
             foreach( var item in CharacterRaces ) {
                 ret[item.Name] = item.FaceOptions.ToDictionary( x => $"Face {x}", x => $"chara/human/{item.Id}/animation/f{x:D4}/nonresident/{path}.pap" );
             }

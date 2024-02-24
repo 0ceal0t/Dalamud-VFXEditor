@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly UiDisplayList Parameters;
 
         public AvfxEffector() : base( NAME, AvfxNodeGroupSet.EffectorColor, "EfVT" ) {
-            Parsed = [
+            Parsed = new() {
                 Type,
                 RotationOrder,
                 CoordComputeOrder,
@@ -29,9 +29,9 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            ];
+            };
 
-            Parameters = new( "Parameters", [
+            Parameters = new( "Parameters", new() {
                 new UiNodeGraphView( this ),
                 RotationOrder,
                 CoordComputeOrder,
@@ -39,7 +39,7 @@ namespace VfxEditor.AvfxFormat {
                 AffectGame,
                 LoopPointStart,
                 LoopPointEnd
-            ] );
+            } );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

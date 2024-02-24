@@ -12,7 +12,7 @@ namespace VfxEditor.PhybFormat.Utils {
         public readonly BinaryWriter ExtraWriter;
         public readonly MemoryStream ExtraMs;
 
-        private readonly List<OffsetStruct> Offsets = [];
+        private readonly List<OffsetStruct> Offsets = new();
 
         public SimulationWriter() : base() {
             ExtraMs = new();

@@ -9,8 +9,8 @@ namespace VfxEditor.Utils {
 
     public static class MdlUtils {
         public static bool ImportModel( string localPath, out List<AvfxVertex> vertexesOut, out List<AvfxIndex> indexesOut ) {
-            vertexesOut = [];
-            indexesOut = [];
+            vertexesOut = new();
+            indexesOut = new();
             if( !Dalamud.DataManager.FileExists( localPath ) ) return false;
 
             Dalamud.Log( "Importing MDL from: " + localPath );

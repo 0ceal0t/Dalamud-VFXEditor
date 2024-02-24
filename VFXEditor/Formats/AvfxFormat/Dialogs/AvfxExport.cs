@@ -1,18 +1,16 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat.Dialogs {
     public class AvfxExport {
-        private readonly AvfxFile File;
         private readonly List<AvfxExportCategory> Categories;
         private bool ExportDependencies = true;
 
         public AvfxExport( AvfxFile file ) {
-            File = file;
-            Categories = [
+            Categories = new() {
                 new ExportDialogCategory<AvfxTimeline>( file.NodeGroupSet.Timelines, "Timelines" ),
                 new ExportDialogCategory<AvfxEmitter>( file.NodeGroupSet.Emitters, "Emitters" ),
                 new ExportDialogCategory<AvfxParticle>( file.NodeGroupSet.Particles, "Particles" ),
@@ -20,7 +18,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
                 new ExportDialogCategory<AvfxBinder>( file.NodeGroupSet.Binders, "Binders" ),
                 new ExportDialogCategory<AvfxTexture>( file.NodeGroupSet.Textures, "Textures" ),
                 new ExportDialogCategory<AvfxModel>( file.NodeGroupSet.Models, "Models" )
-            ];
+            };
         }
 
         public void Reset() => Categories.ForEach( cat => cat.Reset() );
@@ -63,7 +61,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         public void SaveDialog() {
             FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
                 if( !ok ) return;
-                File.Export( GetSelected(), res, ExportDependencies );
+                AvfxFile.Export( GetSelected(), res, ExportDependencies );
                 Plugin.AvfxManager?.ExportDialog.Hide();
             } );
         }

@@ -122,14 +122,14 @@ namespace VfxEditor.Select {
     // ===== LOAD SINGLE ========
 
     public class SelectTabState<T> {
-        public List<T> Items = [];
+        public List<T> Items = new();
         public bool ItemsLoaded = false;
         public bool WaitingForItems = false;
     }
 
     public abstract class SelectTab<T> : SelectTab where T : class {
         // Using this so that we don't have to query for tab entries multiple times
-        private static readonly Dictionary<string, object> States = [];
+        private static readonly Dictionary<string, object> States = new();
 
         private readonly string StateId;
 
@@ -171,7 +171,7 @@ namespace VfxEditor.Select {
 
             if( !ItemsLoaded ) return;
 
-            Searched ??= [.. Items];
+            Searched ??= new List<T>( Items );
 
             var resetScroll = false;
             DrawExtra();

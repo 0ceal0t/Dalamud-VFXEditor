@@ -14,7 +14,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedShort CloseTime = new( "Close Time" );
 
         public LayoutPolylineObstructionData() {
-            Parsed = [
+            Parsed = new() {
                 Height,
                 ObstacleFac,
                 HiCutFac,
@@ -25,7 +25,7 @@ namespace VfxEditor.ScdFormat {
                 FadeRange,
                 OpenTime,
                 CloseTime
-            ];
+            };
 
             for( var i = 0; i < 16; i++ ) Parsed.Insert( 0, new ParsedFloat4( $"Position {15 - i}" ) );
         }

@@ -5,7 +5,7 @@ using System.Linq;
 namespace VfxEditor {
     public class CompoundCommand : ICommand {
         private readonly Action OnChangeAction;
-        private readonly List<ICommand> Commands = [];
+        private readonly List<ICommand> Commands = new();
 
         public CompoundCommand( IEnumerable<ICommand> commands, Action onChangeAction = null ) {
             Commands.AddRange( commands );

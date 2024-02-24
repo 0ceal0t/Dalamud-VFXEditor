@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
@@ -21,7 +21,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
+            Parsed = new() {
                 Enabled,
                 UseScreenCopy,
                 TextureFilter,
@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureIdx,
                 Rate,
                 RPow
-            ];
+            };
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );
