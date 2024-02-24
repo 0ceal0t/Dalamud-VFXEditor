@@ -64,15 +64,16 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawControls() {
-            using var font = ImRaii.PushFont( UiBuilder.IconFont );
-            if( State == PlaybackState.Stopped ) {
-                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
-            }
-            else if( State == PlaybackState.Playing ) {
-                if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) CurrentOutput.Pause();
-            }
-            else if( State == PlaybackState.Paused ) {
-                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) CurrentOutput.Play();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( State == PlaybackState.Stopped ) {
+                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
+                }
+                else if( State == PlaybackState.Playing ) {
+                    if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) CurrentOutput.Pause();
+                }
+                else if( State == PlaybackState.Paused ) {
+                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) CurrentOutput.Play();
+                }
             }
 
             var selectedTime = ( float )CurrentTime;
