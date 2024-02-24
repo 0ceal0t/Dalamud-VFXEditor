@@ -35,6 +35,8 @@ namespace VfxEditor.Interop {
             CheckFileStateHook = Dalamud.Hooks.HookFromSignature<CheckFileStateDelegate>( Constants.CheckFileStateSig, CheckFileStateDetour );
             LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadTexFileLocalSig ) );
             LoadTexFileExternHook = Dalamud.Hooks.HookFromSignature<LoadTexFileExternDelegate>( Constants.LoadTexFileExternSig, LoadTexFileExternDetour );
+            LoadMdlFileLocal = Marshal.GetDelegateForFunctionPointer<LoadMdlFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadMdlFileLocalSig ) );
+            LoadMdlFileExternHook = Dalamud.Hooks.HookFromSignature<LoadMdlFileExternDelegate>( Constants.LoadMdlFileExternSig, LoadMdlFileExternDetour );
 
             PlayActionHook = Dalamud.Hooks.HookFromSignature<PlayActionPrototype>( Constants.PlayActionSig, PlayActionDetour );
 
@@ -74,6 +76,7 @@ namespace VfxEditor.Interop {
             ActorVfxRemoveHook.Enable();
             CheckFileStateHook.Enable();
             LoadTexFileExternHook.Enable();
+            LoadMdlFileExternHook.Enable();
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
@@ -93,6 +96,7 @@ namespace VfxEditor.Interop {
             ActorVfxRemoveHook.Dispose();
             CheckFileStateHook.Dispose();
             LoadTexFileExternHook.Dispose();
+            LoadMdlFileExternHook.Dispose();
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();

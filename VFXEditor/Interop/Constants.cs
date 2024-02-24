@@ -28,6 +28,8 @@ namespace VfxEditor.Interop {
         public const string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 c0 74 ?? 45 0f b6 ce 48 89 44 24";
         public const string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
         public const string LoadTexFileExternSig = "E8 ?? ?? ?? ?? 0F B6 E8 48 8B CB E8";
+        public const string LoadMdlFileLocalSig = "40 55 53 56 57 41 56 41 57 48 8D 6C 24 D1 48 81 EC 98 00 00 00";
+        public const string LoadMdlFileExternSig = "E8 ?? ?? ?? ?? EB 02 B0 F1";
 
         public const string PlayActionSig = "E8 ?? ?? ?? ?? 84 C0 75 04 32 DB EB 14";
 

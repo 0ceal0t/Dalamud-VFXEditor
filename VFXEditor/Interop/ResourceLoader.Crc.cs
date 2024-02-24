@@ -30,12 +30,28 @@ namespace VfxEditor.Interop {
                 ? LoadTexFileLocal.Invoke( resourceHandle, unk1, unk2, unk3 )
                 : LoadTexFileExternHook.Original( resourceHandle, unk1, unk2, unk3, ptr );
 
+        // ========= LOAD MDL ============
+
+        public delegate byte LoadMdlFileLocalDelegate( ResourceHandle* handle, IntPtr unk1, bool unk2 );
+
+        public LoadMdlFileLocalDelegate LoadMdlFileLocal { get; private set; }
+
+        public delegate byte LoadMdlFileExternDelegate( ResourceHandle* handle, IntPtr unk1, bool unk2, IntPtr unk3 );
+
+        public Hook<LoadMdlFileExternDelegate> LoadMdlFileExternHook { get; private set; }
+
+        private byte LoadMdlFileExternDetour( ResourceHandle* resourceHandle, IntPtr unk1, bool unk2, IntPtr ptr )
+        => ptr.Equals( CustomFileFlag )
+            ? LoadMdlFileLocal.Invoke( resourceHandle, unk1, unk2 )
+            : LoadMdlFileExternHook.Original( resourceHandle, unk1, unk2, ptr );
+
+        // ============================
 
         private IntPtr CheckFileStateDetour( IntPtr ptr, ulong crc64 )
             => CustomCrc.Contains( crc64 ) ? CustomFileFlag : CheckFileStateHook.Original( ptr, crc64 );
 
         private void AddCrc( ResourceType resourceType, FullPath? path ) {
-            if( path.HasValue && resourceType is ResourceType.Tex ) {
+            if( path.HasValue && ( resourceType is ResourceType.Tex || resourceType is ResourceType.Mdl ) ) {
                 CustomCrc.Add( path.Value.Crc64 );
             }
         }
