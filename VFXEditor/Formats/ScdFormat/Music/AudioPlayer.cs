@@ -1,7 +1,7 @@
 using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using NAudio.Wave;
-using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;
@@ -54,27 +54,25 @@ namespace VfxEditor.ScdFormat {
             DrawPlayer();
             DrawChannels();
             DrawConverter();
-
-            ProcessQueue();
+            ProcessQueue(); // Loop, etc.
         }
 
-        private void DrawPlayer() {
-            using var tabItem = ImRaii.TabItem( "Music" );
-            if( !tabItem ) return;
-
+        public void DrawMiniPlayer() {
             using var _ = ImRaii.PushId( "Music" );
+            DrawControls();
+            ProcessQueue(); // Loop, etc.
+        }
 
-            // Controls
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( State == PlaybackState.Stopped ) {
-                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
-                }
-                else if( State == PlaybackState.Playing ) {
-                    if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) CurrentOutput.Pause();
-                }
-                else if( State == PlaybackState.Paused ) {
-                    if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) CurrentOutput.Play();
-                }
+        private void DrawControls() {
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            if( State == PlaybackState.Stopped ) {
+                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
+            }
+            else if( State == PlaybackState.Playing ) {
+                if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) CurrentOutput.Pause();
+            }
+            else if( State == PlaybackState.Paused ) {
+                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) CurrentOutput.Play();
             }
 
             var selectedTime = ( float )CurrentTime;
@@ -105,6 +103,15 @@ namespace VfxEditor.ScdFormat {
                 drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
                 drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
             }
+        }
+
+        private void DrawPlayer() {
+            using var tabItem = ImRaii.TabItem( "Music" );
+            if( !tabItem ) return;
+
+            using var _ = ImRaii.PushId( "Music" );
+
+            DrawControls();
 
             // Save
             ImGui.SameLine();
@@ -210,7 +217,6 @@ namespace VfxEditor.ScdFormat {
 
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
                 ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
-                Dalamud.Log( "Looping..." );
                 Play();
                 if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopStartTime > 0 ) {
                     if( QueueSeek == -1 ) {
