@@ -78,7 +78,6 @@ namespace VfxEditor.Formats.MdlFormat {
 
         public readonly List<MdlShape> Shapes = new(); // TODO
 
-        private readonly int[] IndexPadding;
         private readonly byte[] Padding;
 
         // TODO
@@ -101,7 +100,6 @@ namespace VfxEditor.Formats.MdlFormat {
             reader.ReadUInt32(); // runtime size
             var vertexDeclarationCount = reader.ReadUInt16();
             var _materialCount = reader.ReadUInt16();
-
 
             // Order of the data is: V1, I1, V2, I2, V3, I3
             for( var i = 0; i < 3; i++ ) data.VertexBufferOffsets.Add( reader.ReadUInt32() );
@@ -223,8 +221,6 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var shape in data.Shapes ) shape.Populate( data );
             for( var i = 0; i < AllLods.Count; i++ ) AllLods[i].Populate( data, reader, i );
             for( var i = 0; i < ExtraLods.Count; i++ ) ExtraLods[i].Populate( data, reader, i ); // TODO: should this use vertexOffsets[i]?
-
-            IndexPadding = new int[] { data.GetIndexPadding( 0 ), data.GetIndexPadding( 1 ), data.GetIndexPadding( 2 ) };
 
             // ====== VIEWS ============
 
@@ -427,11 +423,9 @@ namespace VfxEditor.Formats.MdlFormat {
                 vertexOffsets.Add( vertexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
                 writer.Write( data.VertexData[i].ToArray() );
 
-                indexSizes.Add( ( uint )( data.IndexData[i].Length + IndexPadding[i] ) );
+                indexSizes.Add( ( uint )( data.IndexData[i].Length ) );
                 indexOffsets.Add( indexSizes[i] == 0 ? 0 : ( uint )writer.BaseStream.Position );
                 writer.Write( data.IndexData[i].ToArray() );
-
-                FileUtils.Pad( writer, IndexPadding[i] );
             }
 
             // ===== FILL IN PLACEHOLDERS =======

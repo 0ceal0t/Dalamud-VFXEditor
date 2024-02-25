@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Mesh;
+using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
@@ -117,18 +118,29 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
             Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
-            foreach( var mesh in Meshes ) mesh.Populate( data, reader, lod );
-
             TerrainShadows.AddRange( data.TerrainShadowMeshes.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
-            foreach( var mesh in TerrainShadows ) mesh.Populate( data, reader, lod );
-
             WaterMeshes.AddRange( data.Meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
-            foreach( var mesh in WaterMeshes ) mesh.Populate( data, reader, lod );
-
             ShadowMeshes.AddRange( data.Meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
-            foreach( var mesh in ShadowMeshes ) mesh.Populate( data, reader, lod );
-
             VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
+
+            var allMeshes = new List<MdlMeshDrawable>();
+            allMeshes.AddRange( Meshes );
+            allMeshes.AddRange( WaterMeshes );
+            allMeshes.AddRange( ShadowMeshes );
+            allMeshes.AddRange( TerrainShadows );
+            allMeshes.AddRange( VerticalFogMeshes );
+
+            foreach( var mesh in allMeshes ) {
+                var indexOffset = mesh.IndexBufferOffset;
+                if( indexOffset == 0 ) continue;
+                data.IndexBufferPositions[lod].Enqueue( indexOffset );
+            }
+            data.IndexBufferPositions[lod].Enqueue( data.IndexBufferSizes[lod] );
+
+            foreach( var mesh in Meshes ) mesh.Populate( data, reader, lod );
+            foreach( var mesh in TerrainShadows ) mesh.Populate( data, reader, lod );
+            foreach( var mesh in WaterMeshes ) mesh.Populate( data, reader, lod );
+            foreach( var mesh in ShadowMeshes ) mesh.Populate( data, reader, lod );
             foreach( var mesh in VerticalFogMeshes ) mesh.Populate( data, reader, lod );
         }
 

@@ -12,7 +12,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
 
         public void Populate( T parent, BinaryReader reader, uint indexBufferPos ) {
             Parent = parent;
-            Populate( reader, indexBufferPos );
+            reader.BaseStream.Position = indexBufferPos + _IndexOffset;
+            RawIndexData = reader.ReadBytes( ( int )( IndexCount * 2 ) );
         }
 
         public override void RefreshBuffer( Device device ) {

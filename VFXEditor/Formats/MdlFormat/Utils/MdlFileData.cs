@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
@@ -27,12 +26,6 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<MdlShapeMesh> ShapesMeshes = new();
         public readonly List<MdlShapeValue> ShapeValues = new();
 
-        public int GetIndexPadding( int lod ) {
-            var expected = ( int )IndexBufferSizes[lod];
-            var actual =
-                Meshes.Where( x => x.Lod == lod ).Select( x => x.RawIndexDataSize ).Sum() +
-                TerrainShadowMeshes.Where( x => x.Lod == lod ).Select( x => x.RawIndexDataSize ).Sum();
-            return expected - actual;
-        }
+        public readonly List<Queue<uint>> IndexBufferPositions = new() { new(), new(), new() };
     }
 }

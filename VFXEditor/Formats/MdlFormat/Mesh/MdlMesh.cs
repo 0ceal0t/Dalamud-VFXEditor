@@ -98,9 +98,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         }
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-            Populate( reader, data.IndexBufferOffsets[lod] );
-
             Lod = lod;
+
+            PopulateIndexData( data, reader, lod );
 
             RawVertexData = new();
             for( var i = 0; i < 3; i++ ) {

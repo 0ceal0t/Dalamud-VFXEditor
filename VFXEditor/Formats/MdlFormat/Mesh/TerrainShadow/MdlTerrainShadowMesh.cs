@@ -36,6 +36,8 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             if( stride != 8 ) Dalamud.Log( $"Terrain Shadow: stride={stride}" );
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
+
+
         }
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) {
@@ -80,9 +82,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
         }
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-            Populate( reader, data.IndexBufferOffsets[lod] );
-
             Lod = lod;
+
+            PopulateIndexData( data, reader, lod );
 
             reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffset;
             RawVertexData = reader.ReadBytes( VertexCount * 8 );
