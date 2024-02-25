@@ -157,6 +157,9 @@
         <None Update="Files\default_pap_tmb.tmb">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Files\default_scd_audio.scd">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Files\default_texture.vfxedit2">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

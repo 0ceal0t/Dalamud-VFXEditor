@@ -44,7 +44,6 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Read( BinaryReader reader ) {
-            Dalamud.Log( $"START > {reader.BaseStream.Position:X4}" );
             DataLength = reader.ReadInt32();
             NumChannels = reader.ReadInt32();
             SampleRate = reader.ReadInt32();
@@ -74,8 +73,6 @@ namespace VfxEditor.ScdFormat {
                 SscfWaveFormat.Vorbis => new ScdVorbis( reader, this ),
                 _ => null
             };
-
-            Dalamud.Log( $"END > {reader.BaseStream.Position:X4}" );
         }
 
         public void Draw() {
@@ -127,6 +124,13 @@ namespace VfxEditor.ScdFormat {
             var ret = reader.ReadBytes( ( int )( end - start ) );
             reader.BaseStream.Position = savePos;
             return ret;
+        }
+
+        public static ScdAudioEntry Default( ScdFile file ) {
+            var audio = new ScdAudioEntry( file );
+            using var reader = new BinaryReader( System.IO.File.Open( Path.Combine( Plugin.RootLocation, "Files", "default_scd_audio.scd" ), FileMode.Open ) );
+            audio.Read( reader );
+            return audio;
         }
     }
 }
