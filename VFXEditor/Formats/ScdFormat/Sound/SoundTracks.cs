@@ -1,14 +1,22 @@
-using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
-using VfxEditor.Utils;
+using VfxEditor.Ui.Components.Tables;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class SoundTracks {
-        public List<SoundTrackInfo> Entries = new();
+        public readonly List<SoundTrackInfo> Entries = new();
+        private readonly CommandTable<SoundTrackInfo> EntryTable;
+
+        public SoundTracks() {
+            EntryTable = new( "Entries", true, false, Entries, new() {
+                ( "Track Index", ImGuiTableColumnFlags.None, -1 ),
+                ( "Audio Index", ImGuiTableColumnFlags.None, -1 ),
+            },
+            () => new() );
+        }
 
         public void Read( BinaryReader reader, byte entryCount ) {
             for( var i = 0; i < entryCount; i++ ) {
@@ -23,33 +31,13 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            using var _ = ImRaii.PushId( "Entries" );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-
-            for( var idx = 0; idx < Entries.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Entry #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    using var __ = ImRaii.PushId( idx );
-                    using var indent = ImRaii.PushIndent();
-
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Add( new ListRemoveCommand<SoundTrackInfo>( Entries, Entries[idx] ) );
-                    }
-
-                    Entries[idx].Draw();
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-                }
-            }
-
-            if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new ListAddCommand<SoundTrackInfo>( Entries, new SoundTrackInfo() ) );
-            }
+            EntryTable.Draw();
         }
     }
 
-    public class SoundTrackInfo {
-        public readonly ParsedShort TrackIdx = new( "Track Index" );
-        public readonly ParsedShort AudioIdx = new( "Audio Index" );
+    public class SoundTrackInfo : IUiItem {
+        public readonly ParsedShort TrackIdx = new( "##Track" );
+        public readonly ParsedShort AudioIdx = new( "##Audio" );
 
         public void Read( BinaryReader reader ) {
             TrackIdx.Read( reader );
@@ -62,7 +50,12 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 100 );
             TrackIdx.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 100 );
             AudioIdx.Draw();
         }
     }

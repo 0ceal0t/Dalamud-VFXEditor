@@ -1,24 +1,35 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
-using VfxEditor.Utils;
+using VfxEditor.Ui.Components.Tables;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class SoundRandomTracks {
-        public List<RandomTrackInfo> Tracks = new();
+        public readonly List<RandomTrackInfo> Entries = new();
+        private readonly CommandTable<RandomTrackInfo> EntryTable;
+
         public readonly ParsedInt CycleInterval = new( "Cycle Interval" );
         public readonly ParsedShort CycleNumPlayTrack = new( "Cycle Play Track" );
         public readonly ParsedShort CycleRange = new( "Cycle Range" );
+
+        public SoundRandomTracks() {
+            EntryTable = new( "Entries", true, false, Entries, new() {
+                ( "Track Index", ImGuiTableColumnFlags.None, -1 ),
+                ( "Audio Index", ImGuiTableColumnFlags.None, -1 ),
+                ( "Limit", ImGuiTableColumnFlags.None, -1 ),
+            },
+            () => new() );
+        }
 
         public void Read( BinaryReader reader, SoundType type, byte trackCount ) {
             for( var i = 0; i < trackCount; i++ ) {
                 var newTrack = new RandomTrackInfo();
                 newTrack.Read( reader );
-                Tracks.Add( newTrack );
+                Entries.Add( newTrack );
             }
 
             if( type == SoundType.Cycle ) {
@@ -29,7 +40,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Write( BinaryWriter writer, SoundType type ) {
-            Tracks.ForEach( x => x.Write( writer ) );
+            Entries.ForEach( x => x.Write( writer ) );
 
             if( type == SoundType.Cycle ) {
                 CycleInterval.Write( writer );
@@ -49,30 +60,13 @@ namespace VfxEditor.ScdFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            for( var idx = 0; idx < Tracks.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Track #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    using var __ = ImRaii.PushId( idx );
-                    using var indent = ImRaii.PushIndent();
-
-                    if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Add( new ListRemoveCommand<RandomTrackInfo>( Tracks, Tracks[idx] ) );
-                        break;
-                    }
-
-                    Tracks[idx].Draw();
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-                }
-            }
-
-            if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new ListAddCommand<RandomTrackInfo>( Tracks, new RandomTrackInfo() ) );
-            }
+            EntryTable.Draw();
         }
     }
 
-    public class RandomTrackInfo {
+    public class RandomTrackInfo : IUiItem {
         public readonly SoundTrackInfo Track = new();
-        public readonly ParsedShort2 Limit = new( "Limit" );
+        public readonly ParsedShort2 Limit = new( "##Limit" );
 
         public void Read( BinaryReader reader ) {
             Track.Read( reader );
@@ -86,6 +80,9 @@ namespace VfxEditor.ScdFormat {
 
         public void Draw() {
             Track.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 150 );
             Limit.Draw();
         }
     }

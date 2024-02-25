@@ -106,7 +106,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            writer.Write( ( byte )( RandomTracksEnabled ? RandomTracks.Tracks.Count : Tracks.Entries.Count ) );
+            writer.Write( ( byte )( RandomTracksEnabled ? RandomTracks.Entries.Count : Tracks.Entries.Count ) );
             BusNumber.Write( writer );
             Priority.Write( writer );
             Type.Write( writer );
