@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
@@ -8,41 +8,41 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
     public class SoundTracks {
-        public List<SoundTrackInfo> Tracks = new();
+        public List<SoundTrackInfo> Entries = new();
 
-        public void Read( BinaryReader reader, byte trackCount ) {
-            for( var i = 0; i < trackCount; i++ ) {
-                var newTrack = new SoundTrackInfo();
-                newTrack.Read( reader );
-                Tracks.Add( newTrack );
+        public void Read( BinaryReader reader, byte entryCount ) {
+            for( var i = 0; i < entryCount; i++ ) {
+                var newEntry = new SoundTrackInfo();
+                newEntry.Read( reader );
+                Entries.Add( newEntry );
             }
         }
 
         public void Write( BinaryWriter writer ) {
-            Tracks.ForEach( x => x.Write( writer ) );
+            Entries.ForEach( x => x.Write( writer ) );
         }
 
         public void Draw() {
-            using var _ = ImRaii.PushId( "Tracks" );
+            using var _ = ImRaii.PushId( "Entries" );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
-            for( var idx = 0; idx < Tracks.Count; idx++ ) {
-                if( ImGui.CollapsingHeader( $"Track #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
+            for( var idx = 0; idx < Entries.Count; idx++ ) {
+                if( ImGui.CollapsingHeader( $"Entry #{idx}", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     using var __ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 
                     if( UiUtils.RemoveButton( "Delete", true ) ) { // REMOVE
-                        CommandManager.Add( new ListRemoveCommand<SoundTrackInfo>( Tracks, Tracks[idx] ) );
+                        CommandManager.Add( new ListRemoveCommand<SoundTrackInfo>( Entries, Entries[idx] ) );
                     }
 
-                    Tracks[idx].Draw();
+                    Entries[idx].Draw();
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 }
             }
 
             if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new ListAddCommand<SoundTrackInfo>( Tracks, new SoundTrackInfo() ) );
+                CommandManager.Add( new ListAddCommand<SoundTrackInfo>( Entries, new SoundTrackInfo() ) );
             }
         }
     }

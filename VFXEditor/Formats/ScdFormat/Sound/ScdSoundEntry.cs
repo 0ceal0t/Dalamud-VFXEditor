@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Formats.ScdFormat.Sound.Data;
@@ -75,6 +75,14 @@ namespace VfxEditor.ScdFormat {
         private bool UnknownEnabled => Attributes.Value.HasFlag( SoundAttribute.Fixed_Volume ) || Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
+        public readonly ScdLayoutEntry Layout;
+
+        public ScdSoundEntry() : this( new() ) { }
+
+        public ScdSoundEntry( ScdLayoutEntry layout ) {
+            Layout = layout;
+        }
+
         public override void Read( BinaryReader reader ) {
             var trackCount = reader.ReadByte();
             BusNumber.Read( reader );
@@ -98,7 +106,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            writer.Write( ( byte )( RandomTracksEnabled ? RandomTracks.Tracks.Count : Tracks.Tracks.Count ) );
+            writer.Write( ( byte )( RandomTracksEnabled ? RandomTracks.Tracks.Count : Tracks.Entries.Count ) );
             BusNumber.Write( writer );
             Priority.Write( writer );
             Type.Write( writer );
@@ -120,26 +128,35 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            ImGui.TextDisabled( "Make sure the number of Sounds and Layouts is the same" );
-
-            BusNumber.Draw();
-            Priority.Draw();
-            Type.Draw();
             Volume.Draw();
-            LocalNumber.Draw();
-            UserId.Draw();
-            PlayHistory.Draw();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            if( ImGui.BeginTabItem( "Attributes" ) ) {
-                Attributes.Draw();
+            if( ImGui.BeginTabItem( "Entries" ) ) {
+                if( RandomTracksEnabled ) RandomTracks.Draw( Type.Value );
+                else Tracks.Draw();
                 ImGui.EndTabItem();
             }
-
+            if( ImGui.BeginTabItem( "Parameters" ) ) {
+                using var child = ImRaii.Child( "Child" );
+                Attributes.Draw();
+                BusNumber.Draw();
+                Priority.Draw();
+                Type.Draw();
+                LocalNumber.Draw();
+                UserId.Draw();
+                PlayHistory.Draw();
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Layout" ) ) {
+                using var _ = ImRaii.PushId( "Layout" );
+                using var child = ImRaii.Child( "Child" );
+                Layout.Draw();
+                ImGui.EndTabItem();
+            }
             if( RoutingEnabled && ImGui.BeginTabItem( "Routing" ) ) {
                 RoutingInfo.Draw();
                 ImGui.EndTabItem();
@@ -162,11 +179,6 @@ namespace VfxEditor.ScdFormat {
             }
             if( UnknownEnabled && ImGui.BeginTabItem( "Unknown" ) ) {
                 Unknown.Draw();
-                ImGui.EndTabItem();
-            }
-            if( ImGui.BeginTabItem( "Tracks" ) ) {
-                if( RandomTracksEnabled ) RandomTracks.Draw( Type.Value );
-                else Tracks.Draw();
                 ImGui.EndTabItem();
             }
         }

@@ -17,14 +17,12 @@ namespace VfxEditor.ScdFormat {
         private readonly ScdOffsetsHeader OffsetsHeader;
 
         public readonly List<ScdAudioEntry> Audio = new();
-        public readonly List<ScdLayoutEntry> Layouts = new();
         public readonly List<ScdSoundEntry> Sounds = new();
         public readonly List<ScdTrackEntry> Tracks = new();
         public readonly List<ScdAttributeEntry> Attributes = new();
 
         public readonly ScdAudioEntrySplitView AudioSplitView;
         public readonly CommandSplitView<ScdSoundEntry> SoundView;
-        public readonly CommandSplitView<ScdLayoutEntry> LayoutView;
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
@@ -34,15 +32,16 @@ namespace VfxEditor.ScdFormat {
 
             // The acutal sound effect/music data
             foreach( var offset in OffsetsHeader.AudioOffsets.Where( x => x != 0 ) ) {
-                var newAudio = new ScdAudioEntry();
+                var newAudio = new ScdAudioEntry( this );
                 newAudio.Read( reader, offset );
                 Audio.Add( newAudio );
             }
 
+            var layouts = new List<ScdLayoutEntry>();
             foreach( var offset in OffsetsHeader.LayoutOffsets.Where( x => x != 0 ) ) {
                 var newLayout = new ScdLayoutEntry();
                 newLayout.Read( reader, offset );
-                Layouts.Add( newLayout );
+                layouts.Add( newLayout );
             }
 
             foreach( var offset in OffsetsHeader.TrackOffsets.Where( x => x != 0 ) ) {
@@ -57,8 +56,8 @@ namespace VfxEditor.ScdFormat {
                 Attributes.Add( newAttribute );
             }
 
-            foreach( var offset in OffsetsHeader.SoundOffsets.Where( x => x != 0 ) ) {
-                var newSound = new ScdSoundEntry();
+            foreach( var (offset, index) in OffsetsHeader.SoundOffsets.Where( x => x != 0 ).WithIndex() ) {
+                var newSound = new ScdSoundEntry( layouts[index] );
                 newSound.Read( reader, offset );
                 Sounds.Add( newSound );
             }
@@ -67,7 +66,6 @@ namespace VfxEditor.ScdFormat {
             if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );
-            LayoutView = new( "Layout", Layouts, true, null, () => new ScdLayoutEntry() );
             SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
             TrackView = new( "Track", Tracks, false, null, () => new ScdTrackEntry() );
             AttributeView = new( "Attribute", Attributes, false );
@@ -79,7 +77,6 @@ namespace VfxEditor.ScdFormat {
 
             DrawAudio();
             DrawSounds();
-            DrawLayouts();
             DrawTracks();
             DrawAttributes();
         }
@@ -119,14 +116,6 @@ namespace VfxEditor.ScdFormat {
             SoundView.Draw();
         }
 
-        private void DrawLayouts() {
-            using var tabItem = ImRaii.TabItem( "Layouts" );
-            if( !tabItem ) return;
-
-            using var _ = ImRaii.PushId( "Layouts" );
-            LayoutView.Draw();
-        }
-
         private void DrawTracks() {
             using var tabItem = ImRaii.TabItem( "Tracks" );
             if( !tabItem ) return;
@@ -147,7 +136,7 @@ namespace VfxEditor.ScdFormat {
             Header.Write( writer );
             OffsetsHeader.Write( writer );
 
-            UpdateOffsets( writer, Layouts, OffsetsHeader.LayoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
+            UpdateOffsets( writer, Sounds.Select( x => x.Layout ).ToList(), OffsetsHeader.LayoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );

@@ -212,7 +212,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             using var readerMs = new MemoryStream( newEntryData );
             using var reader = new BinaryReader( readerMs );
 
-            var newEntry = new ScdAudioEntry();
+            var newEntry = new ScdAudioEntry( Plugin.ScdManager.File );
             newEntry.Read( reader );
 
             if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) ) {

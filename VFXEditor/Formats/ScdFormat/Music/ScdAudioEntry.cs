@@ -1,4 +1,7 @@
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Interfaces;
@@ -16,6 +19,8 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class ScdAudioEntry : ScdEntry, IUiItem {
+        public readonly ScdFile File;
+
         public int DataLength;
         public int NumChannels;
         public int SampleRate;
@@ -33,11 +38,13 @@ namespace VfxEditor.ScdFormat {
 
         public bool NoLoop => LoopStart == 0 && LoopEnd == 0;
 
-        public ScdAudioEntry() {
+        public ScdAudioEntry( ScdFile file ) {
             Player = new( this );
+            File = file;
         }
 
         public override void Read( BinaryReader reader ) {
+            Dalamud.Log( $"START > {reader.BaseStream.Position:X4}" );
             DataLength = reader.ReadInt32();
             NumChannels = reader.ReadInt32();
             SampleRate = reader.ReadInt32();
@@ -67,10 +74,29 @@ namespace VfxEditor.ScdFormat {
                 SscfWaveFormat.Vorbis => new ScdVorbis( reader, this ),
                 _ => null
             };
+
+            Dalamud.Log( $"END > {reader.BaseStream.Position:X4}" );
         }
 
         public void Draw() {
             if( DataLength == 0 ) return;
+
+            var audioIndex = File.Audio.IndexOf( this );
+            var soundIndexes = new List<int>();
+            foreach( var (sound, index) in File.Sounds.WithIndex() ) {
+                if( sound.Tracks.Entries.FindFirst( x => x.AudioIdx.Value == audioIndex, out var _ ) ) soundIndexes.Add( index );
+            }
+
+            if( soundIndexes.Count > 0 ) {
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+                using var disabled = ImRaii.Disabled();
+                ImGui.Text( "Sounds: " );
+                foreach( var idx in soundIndexes ) {
+                    ImGui.SameLine();
+                    ImGui.SmallButton( $"{idx}" );
+                }
+            }
+
             Player.Draw();
         }
 
