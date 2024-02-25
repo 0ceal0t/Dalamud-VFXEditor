@@ -27,7 +27,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone {
 
             for( var i = 0; i < boneCount; i++ ) {
                 var bone = new ParsedString( "##Name" ) {
-                    Value = boneStrings[i]
+                    Value = boneStrings[boneIndexes[i]]
                 };
                 Bones.Add( bone );
             }
