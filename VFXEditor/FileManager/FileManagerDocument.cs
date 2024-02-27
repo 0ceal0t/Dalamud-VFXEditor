@@ -118,7 +118,10 @@ namespace VfxEditor.FileManager {
             Source = null;
         }
 
-        public void SetReplace( SelectResult result ) { Replace = result; }
+        public void SetReplace( SelectResult result ) {
+            Replace = result;
+            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
+        }
 
         protected void RemoveReplace() { Replace = null; }
 
@@ -138,14 +141,10 @@ namespace VfxEditor.FileManager {
 
             File?.Update();
 
-            if( Plugin.Configuration.UpdateWriteLocation ) {
-                var newWriteLocation = Manager.NewWriteLocation;
-                WriteFile( newWriteLocation );
-                WriteLocation = newWriteLocation;
-            }
-            else {
-                WriteFile( WriteLocation );
-            }
+            var newWriteLocation = Manager.NewWriteLocation;
+            WriteFile( newWriteLocation );
+            WriteLocation = newWriteLocation;
+            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
             if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
                 Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );

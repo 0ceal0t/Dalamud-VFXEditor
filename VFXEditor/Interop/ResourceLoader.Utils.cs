@@ -89,7 +89,8 @@ namespace VfxEditor.Interop {
 
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
-            if( Plugin.State != WorkspaceState.None ) return false;
+
+            if( Plugin.State != WorkspaceState.None ) return GetCustomPathBackup( gamePath, out localPath );
 
             foreach( var manager in Plugin.Managers.Where( x => x != null ) ) {
                 if( manager.GetReplacePath( gamePath, out var localFile ) ) {
@@ -97,7 +98,14 @@ namespace VfxEditor.Interop {
                     return true;
                 }
             }
-            return false;
+
+            return GetCustomPathBackup( gamePath, out localPath );
+        }
+
+        private static bool GetCustomPathBackup( string gamePath, out string localPath ) {
+            localPath = null;
+            if( Dalamud.GameFileExists( gamePath ) ) return false; // not custom path
+            return Plugin.CustomPathBackups.TryGetValue( gamePath.ToLower(), out localPath );
         }
 
         public void ReloadPath( string gamePath, string localPath, List<string> papIds, List<short> papTypes ) {

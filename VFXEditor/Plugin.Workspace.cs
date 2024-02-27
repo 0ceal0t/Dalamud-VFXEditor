@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
@@ -22,6 +23,8 @@ namespace VfxEditor {
     }
 
     public partial class Plugin {
+        public static readonly Dictionary<string, string> CustomPathBackups = new(); // Map of lowercase custom game paths to local paths
+
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );
         public static WorkspaceState State { get; private set; } = WorkspaceState.None;
@@ -232,6 +235,21 @@ namespace VfxEditor {
                 SavingLock.Release(); // Make sure to release!
                 Saving = false;
             } );
+        }
+
+        // =======================
+
+        public static void AddCustomBackupLocation( SelectResult result, string localPath ) {
+            if( result == null || !result.IsCustomPath ) return;
+            AddCustomBackupLocation( result.Path, localPath );
+        }
+
+        public static void AddCustomBackupLocation( string gamePath, string localPath ) {
+            CustomPathBackups[gamePath.ToLower()] = localPath;
+            if( Configuration?.LogDebug == true ) {
+                Dalamud.Log( "[CUSTOM]" );
+                foreach( var (game, local) in CustomPathBackups ) Dalamud.Log( $" {game} -> {local}" );
+            }
         }
     }
 }

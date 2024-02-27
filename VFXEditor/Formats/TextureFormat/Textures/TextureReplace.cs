@@ -32,6 +32,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TextureReplace( string gamePath, string writeLocation ) : base( gamePath ) {
             WriteLocation = writeLocation;
+            Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
         }
 
         public void ImportFile( string importPath ) {
@@ -253,9 +254,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected override void OnReplace( string importPath ) { // since already replaced, need to refresh it
-            if( Plugin.Configuration.UpdateWriteLocation ) {
-                WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
-            }
+            WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
+            Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
             ImportFile( importPath );
         }
 

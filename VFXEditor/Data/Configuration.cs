@@ -35,7 +35,6 @@ namespace VfxEditor {
         public bool LogVfxDebug = false;
         public bool LogVfxTriggers = false;
 
-        public bool UpdateWriteLocation = true;
         public bool AutosaveEnabled = false;
         public int AutosaveSeconds = 300;
         public int SaveRecentLimit = 100;
@@ -271,7 +270,6 @@ namespace VfxEditor {
                 using var _ = ImRaii.PushIndent( 10f );
                 ImGui.TextDisabled( "Changes to the temp file location may require a restart to take effect" );
                 if( ImGui.InputText( "Write Location", ref WriteLocation, 255 ) ) Save();
-                if( ImGui.Checkbox( "Refresh on Update", ref UpdateWriteLocation ) ) Save();
 
                 if( ImGui.Checkbox( "Autosave Workspace", ref AutosaveEnabled ) ) Save();
                 using var disabled = ImRaii.Disabled( !AutosaveEnabled );
