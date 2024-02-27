@@ -161,7 +161,7 @@ namespace VfxEditor {
         public Configuration() : base( "Settings", false, new( 300, 200 ), Plugin.WindowSystem ) { }
 
         public void Setup() {
-            Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            UpdateHideSettings();
 
             // Move old configurations over to new
             ProcessOldManagerConfigs( RecentSelects, FavoriteVfx, "Vfx" );
@@ -216,7 +216,14 @@ namespace VfxEditor {
 
         public void Save() {
             Dalamud.PluginInterface.SavePluginConfig( this );
+            UpdateHideSettings();
+        }
+
+        private void UpdateHideSettings() {
+            Dalamud.PluginInterface.UiBuilder.DisableAutomaticUiHide = !HideWithUI;
             Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
+            Dalamud.PluginInterface.UiBuilder.DisableCutsceneUiHide = !HideWithUI;
+            Dalamud.PluginInterface.UiBuilder.DisableGposeUiHide = !HideWithUI;
         }
 
         // =================
