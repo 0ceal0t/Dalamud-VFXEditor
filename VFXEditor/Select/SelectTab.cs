@@ -26,16 +26,22 @@ namespace VfxEditor.Select {
 
         protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
 
-        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) { // TODO
+        // TODO
+        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
             if( situation.IsSituation ) {
-                DrawPath( "Daytime Bgm", situation.DayPath, $"{name} / Day" );
-                DrawPath( "Nighttime Bgm", situation.NightPath, $"{name} / Night" );
-                DrawPath( "Battle Bgm", situation.BattlePath, $"{name} / Battle" );
-                DrawPath( "Daybreak Bgm", situation.DaybreakPath, $"{name} / Break" );
+                DrawPaths( new Dictionary<string, string>() {
+                    { "Day", situation.DayPath },
+                    { "Night", situation.NightPath },
+                    { "Battle", situation.BattlePath },
+                    { "Daybreak", situation.DaybreakPath }
+                }, name );
             }
-            else DrawPath( "Bgm", situation.Path, name );
+            else {
+                DrawPaths( situation.Path, name );
+            }
         }
 
+        // TODO
         protected static void DrawIcon( uint iconId ) {
             if( iconId <= 0 ) return;
 

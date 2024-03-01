@@ -48,7 +48,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Body", Loaded.BodyPath, Selected.Name );
+            DrawPaths( Loaded.BodyPath, $"{Selected.Name} Body" );
 
             if( !HairFace ) return;
 

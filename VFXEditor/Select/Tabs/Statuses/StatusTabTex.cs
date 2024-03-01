@@ -1,4 +1,5 @@
 using Lumina.Excel.GeneratedSheets;
+using System.Collections.Generic;
 using System.Linq;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
@@ -17,13 +18,15 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            var path = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
-            var hdPath = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
+            var icon = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
+            var hd = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
 
-            DrawPath( "Icon", path, "", Selected.Name );
-            if( Dalamud.DataManager.FileExists( hdPath ) ) {
-                DrawPath( "HD Icon", hdPath, "", $"{Selected.Name} HD" );
-            }
+            var paths = new Dictionary<string, string>() {
+                { "Icon", icon }
+            };
+            if( Dalamud.DataManager.FileExists( hd ) ) paths["HD Icon"] = hd;
+
+            DrawPaths( paths, Selected.Name );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

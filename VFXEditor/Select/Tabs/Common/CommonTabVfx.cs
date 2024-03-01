@@ -41,7 +41,8 @@ namespace VfxEditor.Select.Tabs.Common {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Path", Selected.Path, Selected.Name );
+
+            DrawPaths( Selected.Path, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

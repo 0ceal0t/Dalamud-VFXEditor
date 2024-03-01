@@ -37,6 +37,8 @@ namespace VfxEditor.Select.Tabs.Gimmick {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.TmbPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             DrawPaths( Loaded.Paths, Selected.Name );
         }
 

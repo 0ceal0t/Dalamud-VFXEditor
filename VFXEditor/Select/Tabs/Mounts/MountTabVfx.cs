@@ -45,7 +45,9 @@ namespace VfxEditor.Select.Tabs.Mounts {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
-            DrawPath( "VFX", Loaded.Path, Selected.Name );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+            DrawPaths( Loaded.Path, Selected.Name );
         }
     }
 }

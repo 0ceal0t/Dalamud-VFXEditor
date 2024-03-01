@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
             DrawIcon( Selected.Icon );
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) {
-                DrawPath( "Path", path, Selected.Name );
+                DrawPaths( path, Selected.Name );
             }
         }
     }

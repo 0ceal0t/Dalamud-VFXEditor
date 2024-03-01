@@ -74,6 +74,8 @@ namespace VfxEditor.Select.Tabs.Items {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.ImcPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             if( Loaded.IsWeapon ) {
                 DrawPaths( Loaded.WeaponPaths, Selected.Name );
             }

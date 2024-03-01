@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Selected.Path, Selected.Name );
+            DrawPaths( Selected.Path, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

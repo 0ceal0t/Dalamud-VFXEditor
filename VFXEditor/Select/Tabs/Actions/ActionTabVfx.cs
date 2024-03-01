@@ -46,7 +46,7 @@ namespace VfxEditor.Select.Tabs.Actions {
                 SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            ImGui.Separator();
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             DrawPaths( new Dictionary<string, string>() {
                 { "Cast", Selected.CastVfxPath },

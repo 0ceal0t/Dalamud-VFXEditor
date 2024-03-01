@@ -15,6 +15,8 @@ namespace VfxEditor.Select.Tabs.Zone {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.LgbPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             DrawPaths( Loaded.Paths, Selected.Name );
         }
     }

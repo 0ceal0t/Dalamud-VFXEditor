@@ -40,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Items {
             DrawIcon( Selected.Icon );
 
             if( Loaded.IsWeapon ) {
-                DrawPath( "Model", Loaded.WeaponPath, Selected.Name );
+                DrawPaths( Loaded.WeaponPath, Selected.Name );
             }
             else {
                 DrawPaths( Loaded.ArmorPaths, Selected.Name );

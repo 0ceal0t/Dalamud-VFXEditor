@@ -26,6 +26,8 @@ namespace VfxEditor.Select.Tabs.Housing {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             DrawPaths( Loaded.Paths, Selected.Name );
         }
 

@@ -90,11 +90,13 @@ namespace VfxEditor.Select.Tabs.Character {
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Ground Sit" ) ) {
-                DrawPath( "Ground Start", Loaded.GroundStart, Selected.Name );
-                DrawPath( "Jmn", Loaded.Jmn, Selected.Name );
+                DrawPaths( new Dictionary<string, string>() {
+                    { "Ground Start", Loaded.GroundStart },
+                    { "Jmn", Loaded.Jmn },
+                }, Selected.Name );
+
+                ImGui.Separator();
                 DrawPaths( Loaded.SitPoses, Selected.Name );
-
-
 
                 ImGui.EndTabItem();
             }

@@ -18,6 +18,8 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.Path );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             DrawPaths( Loaded.Paths, Selected.Name );
         }
 

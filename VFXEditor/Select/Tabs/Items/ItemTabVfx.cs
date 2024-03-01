@@ -42,6 +42,8 @@ namespace VfxEditor.Select.Tabs.Items {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Loaded.ImcPath );
 
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
             DrawPaths( Loaded.Paths, Selected.Name );
 
             if( Loaded.Paths.Count == 0 ) SelectUiUtils.DisplayNoVfx();

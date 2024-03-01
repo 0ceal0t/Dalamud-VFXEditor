@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -22,8 +23,10 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "DX9", Selected.Path, $"{Selected.Name} (DX9)" );
-            DrawPath( "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ), $"{Selected.Name} (DX11)" );
+            DrawPaths( new Dictionary<string, string>() {
+                { "DX9", Selected.Path },
+                { "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ) }
+            }, Selected.Name );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

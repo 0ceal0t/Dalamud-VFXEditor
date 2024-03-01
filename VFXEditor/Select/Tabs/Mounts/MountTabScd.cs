@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace VfxEditor.Select.Tabs.Mounts {
     public class MountTabScd : MountTab<object> {
         public MountTabScd( SelectDialog dialog, string name ) : base( dialog, name ) { }
@@ -6,8 +8,11 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Mount", Selected.Sound, $"{Selected.Name} Mount" );
-            DrawPath( "Bgm", Selected.Bgm, $"{Selected.Name} BGM" );
+
+            DrawPaths( new Dictionary<string, string>() {
+                { "Mount", Selected.Sound },
+                { "Bgm", Selected.Bgm },
+            }, Selected.Name );
         }
     }
 }

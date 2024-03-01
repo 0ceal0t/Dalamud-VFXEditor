@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPath( "Path", Loaded.Path, Selected.Name );
+            DrawPaths( Loaded.Path, Selected.Name );
         }
 
         protected override string GetName( OrchestrionRow item ) => item.Name;

@@ -16,8 +16,8 @@ namespace VfxEditor.Select.Tabs.Items {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            if( string.IsNullOrEmpty( Loaded ) ) return;
-            DrawPath( "Animations", Loaded, Selected.Name );
+
+            DrawPaths( Loaded, Selected.Name );
         }
     }
 }
