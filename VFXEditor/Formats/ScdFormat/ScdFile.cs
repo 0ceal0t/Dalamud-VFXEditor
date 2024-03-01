@@ -178,12 +178,14 @@ namespace VfxEditor.ScdFormat {
 
         public static async void Import( string path, ScdAudioEntry music ) {
             await Task.Run( () => {
-                if( music.Format == SscfWaveFormat.Vorbis ) {
-                    var ext = Path.GetExtension( path );
-                    if( ext == ".wav" ) ScdVorbis.ImportWav( path, music );
+                if( music.Format == SscfWaveFormat.Vorbis ) { // .ogg
+                    if( Path.GetExtension( path ) == ".wav" ) ScdVorbis.ImportWav( path, music );
                     else ScdVorbis.ImportOgg( path, music );
                 }
-                else ScdAdpcm.Import( path, music );
+                else { // .wav
+                    if( Path.GetExtension( path ) == ".wav" ) ScdAdpcm.ImportWav( path, music );
+                    else ScdVorbis.ImportOgg( path, music ); // kind of jank, but hopefully works
+                }
             } );
         }
 

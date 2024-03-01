@@ -298,7 +298,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Import File", IsVorbis ? "Audio files{.ogg,.wav},.*" : "Audio files{.wav},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( bool ok, string res ) => {
                 if( ok ) ScdFile.Import( res, Entry );
             } );
         }

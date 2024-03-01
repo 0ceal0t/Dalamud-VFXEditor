@@ -26,7 +26,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( Data );
         }
 
-        public static void Import( string path, ScdAudioEntry entry ) {
+        public static void ImportWav( string path, ScdAudioEntry entry ) {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
                 Dalamud.Log( "Already Adpcm, skipping conversion" );

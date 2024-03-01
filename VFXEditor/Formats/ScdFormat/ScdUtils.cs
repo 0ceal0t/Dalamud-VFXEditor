@@ -5,7 +5,7 @@ namespace VfxEditor.ScdFormat {
     public static class ScdUtils {
         public static string VorbisHeader => Path.Combine( Plugin.RootLocation, "Files", "vorbis_header.bin" );
 
-        public static void ConvertToOgg( string wavPath ) {
+        public static void ConvertWavToOgg( string wavPath ) {
             Cleanup();
             InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManager.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
         }
