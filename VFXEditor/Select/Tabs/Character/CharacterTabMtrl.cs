@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMtrl {
-        public Dictionary<string, Dictionary<string, string>> Faces;
-        public Dictionary<string, Dictionary<string, string>> Bodies;
-        public Dictionary<(string, uint), Dictionary<string, string>> Hairs;
-        public Dictionary<string, Dictionary<string, string>> Ears;
-        public Dictionary<string, Dictionary<string, string>> Tails;
+        public Dictionary<string, List<string>> Faces;
+        public Dictionary<string, List<string>> Bodies;
+        public Dictionary<(string, uint), List<string>> Hairs;
+        public Dictionary<string, List<string>> Ears;
+        public Dictionary<string, List<string>> Tails;
     }
 
     public class CharacterTabMtrl : SelectTab<CharacterRow, SelectedMtrl> {
@@ -59,24 +59,21 @@ namespace VfxEditor.Select.Tabs.Character {
 
         protected override string GetName( CharacterRow item ) => item.Name;
 
-        private static IEnumerable<(int, Dictionary<string, string>)> IdsToPaths( IEnumerable<int> ids, IEnumerable<string> suffixes, CharacterRow item, CharacterPart part ) =>
+        private static IEnumerable<(int, List<string>)> IdsToPaths( IEnumerable<int> ids, IEnumerable<string> suffixes, CharacterRow item, CharacterPart part ) =>
             ids.Select( id =>
                 (id, suffixes
                 .Select( suffix => item.GetMtrl( part, id, suffix ) )
                 .Where( path => Dalamud.DataManager.FileExists( path ) )
-                .WithIndex()
-                .ToDictionary(
-                    path => $"Material {path.Index}",
-                    path => path.Value
-                ))
+                .ToList()
+                )
             )
-            .Where( x => x.Item2.Count > 0 );
+            .Where( x => x.Item2.Count() > 0 );
 
-        private static Dictionary<string, Dictionary<string, string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes ) =>
+        private static Dictionary<string, List<string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes ) =>
             IdsToPaths( ids, suffixes, item, part )
             .ToDictionary( x => $"{name} {x.Item1}", x => x.Item2 );
 
-        private static Dictionary<(string, uint), Dictionary<string, string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes, Dictionary<int, uint> iconMap ) =>
+        private static Dictionary<(string, uint), List<string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes, Dictionary<int, uint> iconMap ) =>
             IdsToPaths( ids, suffixes, item, part )
             .ToDictionary( x => ($"{name} {x.Item1}", iconMap.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
     }

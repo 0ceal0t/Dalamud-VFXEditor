@@ -13,7 +13,6 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         public override void LoadSelection( MountRow item, out object loaded ) { loaded = new(); }
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) {
                 DrawPaths( path, Selected.Name );

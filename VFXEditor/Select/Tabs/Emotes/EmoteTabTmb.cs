@@ -9,7 +9,6 @@ namespace VfxEditor.Select.Tabs.Emotes {
         }
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             DrawPaths( Loaded, Selected.Name );
         }
     }

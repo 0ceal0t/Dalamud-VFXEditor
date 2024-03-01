@@ -57,5 +57,7 @@ namespace VfxEditor.Select.Tabs.Items {
         }
 
         protected override string GetName( ItemRow item ) => item.Name;
+
+        protected override uint GetIconId( ItemRow item ) => item.Icon;
     }
 }

@@ -37,8 +37,6 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-
             if( Loaded.IsWeapon ) {
                 DrawPaths( Loaded.WeaponPath, Selected.Name );
             }

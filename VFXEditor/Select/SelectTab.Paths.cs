@@ -5,15 +5,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Select.Tabs.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
     public partial class SelectTab {
+        // ========= UTILS =========
+
+        protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
+
+        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
+            if( situation.IsSituation ) {
+                DrawPaths( new Dictionary<string, string>() {
+                    { "Day", situation.DayPath },
+                    { "Night", situation.NightPath },
+                    { "Battle", situation.BattlePath },
+                    { "Daybreak", situation.DaybreakPath }
+                }, name );
+            }
+            else {
+                DrawPaths( situation.Path, name );
+            }
+        }
+
         // ========= HEADERS ========
+
+        protected void DrawPaths( Dictionary<string, List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
+
+        protected void DrawPaths( Dictionary<(string, uint), List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.WithIndex().Select( y => ($"#{y.Index}", y.Value) ) ), resultName );
 
         protected void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
 
-        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) {
+        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.Select( y => (y.Key, y.Value) ) ), resultName );
+
+        protected void DrawPaths( Dictionary<(string, uint), IEnumerable<(string, string)>> items, string resultName ) {
             if( items == null || items.Count == 0 ) return;
 
             foreach( var ((name, iconId), paths) in items ) {
@@ -21,12 +46,12 @@ namespace VfxEditor.Select {
 
                 using var _ = ImRaii.PushId( name );
                 if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    if( iconId > 0 ) {
+                    if( iconId > 0 ) { // TODO: make this icon nicer <-----------------
                         var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
                         if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) ImGui.Image( icon.ImGuiHandle, new Vector2( 40, 40 ) );
                     }
 
-                    DrawPaths( paths.Select( x => (x.Key, 0u, x.Value) ), resultName );
+                    DrawPaths( paths.Select( x => (x.Item1, 0u, x.Item2) ), resultName );
                 }
             }
         }

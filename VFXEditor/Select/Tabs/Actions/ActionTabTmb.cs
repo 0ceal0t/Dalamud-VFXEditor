@@ -19,8 +19,6 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-
             DrawPaths( new Dictionary<string, string>() {
                 { "Start",  Selected.StartPath },
                 { "End",  Selected.EndPath },
@@ -31,5 +29,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         }
 
         protected override string GetName( ActionRow item ) => item.Name;
+
+        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

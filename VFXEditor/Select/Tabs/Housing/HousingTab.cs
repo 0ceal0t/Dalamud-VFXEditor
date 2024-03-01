@@ -21,7 +21,6 @@ namespace VfxEditor.Select.Tabs.Housing {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.Text( "SGB:" );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.SgbPath );
@@ -32,5 +31,7 @@ namespace VfxEditor.Select.Tabs.Housing {
         }
 
         protected override string GetName( HousingRow item ) => item.Name;
+
+        protected override uint GetIconId( HousingRow item ) => item.Icon;
     }
 }

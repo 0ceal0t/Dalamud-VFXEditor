@@ -34,10 +34,11 @@ namespace VfxEditor.Select.Tabs.Skeleton {
 
         protected override string GetName( ItemRowArmor item ) => item.Name;
 
+        protected override uint GetIconId( ItemRowArmor item ) => item.Icon;
+
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             DrawPaths( Loaded, Selected.Name );
         }
     }

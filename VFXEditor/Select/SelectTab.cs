@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using VfxEditor.Select.Tabs.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
@@ -21,36 +20,6 @@ namespace VfxEditor.Select {
         }
 
         public abstract void Draw();
-
-        // ====== DRAWING UTILITY FUNCTIONS ===========
-
-        protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
-
-        // TODO
-        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
-            if( situation.IsSituation ) {
-                DrawPaths( new Dictionary<string, string>() {
-                    { "Day", situation.DayPath },
-                    { "Night", situation.NightPath },
-                    { "Battle", situation.BattlePath },
-                    { "Daybreak", situation.DaybreakPath }
-                }, name );
-            }
-            else {
-                DrawPaths( situation.Path, name );
-            }
-        }
-
-        // TODO
-        protected static void DrawIcon( uint iconId ) {
-            if( iconId <= 0 ) return;
-
-            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            }
-        }
     }
 
     // ===== LOAD SINGLE ========
@@ -86,6 +55,8 @@ namespace VfxEditor.Select {
                 States.Add( StateId, State );
             }
         }
+
+        protected virtual uint GetIconId( T item ) => 0;
 
         protected abstract string GetName( T item );
 
@@ -162,6 +133,7 @@ namespace VfxEditor.Select {
 
             ImGui.Text( GetName( Selected ) );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            DrawIconId( GetIconId( Selected ) );
             DrawSelected();
         }
 
@@ -187,6 +159,16 @@ namespace VfxEditor.Select {
         }
 
         public abstract void LoadData();
+
+        protected static void DrawIconId( uint iconId ) {
+            if( iconId <= 0 ) return;
+
+            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
+            }
+        }
     }
 
     // ======= LOAD DOUBLE ========
@@ -206,6 +188,7 @@ namespace VfxEditor.Select {
                 using var child = ImRaii.Child( "Child" );
                 ImGui.Text( GetName( Selected ) );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+                DrawIconId( GetIconId( Selected ) );
                 DrawSelected();
             }
             else ImGui.Text( "No data found" );

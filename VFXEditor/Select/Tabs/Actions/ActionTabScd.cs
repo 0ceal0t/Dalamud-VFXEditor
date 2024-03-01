@@ -39,10 +39,11 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             DrawPaths( Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;
+
+        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

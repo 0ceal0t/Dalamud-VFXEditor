@@ -19,7 +19,6 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             var path = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
             var hdPath = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
 
@@ -31,5 +30,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         }
 
         protected override string GetName( ActionRow item ) => item.Name;
+
+        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

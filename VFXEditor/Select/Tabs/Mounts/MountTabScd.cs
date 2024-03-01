@@ -7,8 +7,6 @@ namespace VfxEditor.Select.Tabs.Mounts {
         public override void LoadSelection( MountRow item, out object loaded ) { loaded = new(); }
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-
             DrawPaths( new Dictionary<string, string>() {
                 { "Mount", Selected.Sound },
                 { "Bgm", Selected.Bgm },

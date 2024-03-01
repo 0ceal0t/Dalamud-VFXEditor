@@ -12,8 +12,6 @@ namespace VfxEditor.Select.Tabs.Mounts {
         }
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-
             DrawPaths( Selected.Pap, $"{Selected.Name} Mount" );
             DrawPaths( Loaded, Selected.Name );
         }

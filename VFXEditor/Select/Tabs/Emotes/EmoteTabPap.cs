@@ -35,7 +35,6 @@ namespace VfxEditor.Select.Tabs.Emotes {
         }
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
             using var tabBar = ImRaii.TabBar( "Tabs" );

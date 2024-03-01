@@ -1,5 +1,3 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -79,20 +77,8 @@ namespace VfxEditor.Select {
         }
 
         protected override void DrawSelected() {
-            foreach( var (group, idx) in Loaded.WithIndex() ) {
-                using var _ = ImRaii.PushId( idx );
-
-                if( ImGui.CollapsingHeader( group.Key, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    using var indent = ImRaii.PushIndent( 10f );
-
-                    foreach( var (file, fileIdx) in group.Value.WithIndex() ) {
-                        var (gamePath, localPath) = file;
-                        if( !Path.Exists( localPath ) ) continue;
-
-                        //DrawPath( $"File {fileIdx}", Dialog.ShowLocal ? localPath : gamePath, gamePath, $"{Selected} {group.Key} {fileIdx}" );
-                    }
-                }
-            }
+            var filtered = Loaded.ToDictionary( x => (x.Key, 0u), x => x.Value.Where( y => Path.Exists( y.Item2 ) ) ); // Filter out local paths that don't exist
+            DrawPaths( filtered, Selected );
         }
 
         protected override string GetName( string item ) => item;

@@ -19,8 +19,6 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
-
             DrawPaths( new Dictionary<string, string>() {
                 { "Hit", Selected.HitPath },
                 { "Loop 1", Selected.LoopPath1 },
@@ -30,5 +28,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
         }
 
         protected override string GetName( StatusRow item ) => item.Name;
+
+        protected override uint GetIconId( StatusRow item ) => item.Icon;
     }
 }

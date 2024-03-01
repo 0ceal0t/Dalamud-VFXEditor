@@ -36,7 +36,6 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             ImGui.Text( $"Variant: {Selected.Variant}" );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();

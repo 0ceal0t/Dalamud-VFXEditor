@@ -34,7 +34,6 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Icon );
             if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
                 using( var _ = ImRaii.PushId( "CopyTmb" ) ) {
                     SelectUiUtils.Copy( Loaded.OriginalPath );
@@ -55,5 +54,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         }
 
         protected override string GetName( ActionRowVfx item ) => item.Name;
+
+        protected override uint GetIconId( ActionRowVfx item ) => item.Icon;
     }
 }

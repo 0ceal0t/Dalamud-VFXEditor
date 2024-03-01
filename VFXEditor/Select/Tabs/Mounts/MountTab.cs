@@ -15,5 +15,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
         // ===== DRAWING ======
 
         protected override string GetName( MountRow item ) => item.Name;
+
+        protected override uint GetIconId( MountRow item ) => item.Icon;
     }
 }

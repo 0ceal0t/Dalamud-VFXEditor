@@ -18,6 +18,8 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
         protected override string GetName( EmoteRow item ) => item.Name;
 
+        protected override uint GetIconId( EmoteRow item ) => item.Icon;
+
         protected override bool CheckMatch( EmoteRow item, string searchInput ) => base.CheckMatch( item, SearchInput ) || SelectUiUtils.Matches( item.Command, searchInput );
     }
 }

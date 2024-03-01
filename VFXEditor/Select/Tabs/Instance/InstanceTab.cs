@@ -27,10 +27,11 @@ namespace VfxEditor.Select.Tabs.Instance {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawIcon( Selected.Image );
             DrawBgmSituation( Selected.Name, Loaded.Situation );
         }
 
         protected override string GetName( InstanceRow item ) => item.Name;
+
+        protected override uint GetIconId( InstanceRow item ) => item.Image;
     }
 }
