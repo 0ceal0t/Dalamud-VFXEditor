@@ -28,6 +28,16 @@ namespace VfxEditor.Select {
             }
         }
 
+        protected static bool DrawIcon( uint iconId, Vector2 size ) {
+            if( iconId <= 0 ) return false;
+            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                ImGui.Image( icon.ImGuiHandle, size );
+                return true;
+            }
+            return false;
+        }
+
         // ========= HEADERS ========
 
         protected void DrawPaths( Dictionary<string, List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
@@ -45,12 +55,16 @@ namespace VfxEditor.Select {
                 if( !paths.Any() ) continue;
 
                 using var _ = ImRaii.PushId( name );
-                if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    if( iconId > 0 ) { // TODO: make this icon nicer <-----------------
-                        var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
-                        if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) ImGui.Image( icon.ImGuiHandle, new Vector2( 40, 40 ) );
-                    }
 
+                var showIcon = DrawIcon( iconId, new( 40, 40 ) );
+                if( showIcon ) {
+                    using var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+                    ImGui.SameLine();
+                }
+
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding with { Y = 12f }, showIcon );
+                if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
+                    style.Dispose();
                     DrawPaths( paths.Select( x => (x.Item1, 0u, x.Item2) ), resultName );
                 }
             }
@@ -118,10 +132,7 @@ namespace VfxEditor.Select {
             ImGui.TableNextRow();
 
             ImGui.TableNextColumn(); // Icon
-            if( iconId > 0 ) {
-                var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
-                if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) ImGui.Image( icon.ImGuiHandle, new Vector2( 40, 40 ) );
-            }
+            DrawIcon( iconId, new( 40, 40 ) );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 

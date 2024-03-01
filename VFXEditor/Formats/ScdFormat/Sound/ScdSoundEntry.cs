@@ -132,6 +132,8 @@ namespace VfxEditor.ScdFormat {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
+            using var _ = ImRaii.PushId( "Sound" );
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
@@ -141,44 +143,57 @@ namespace VfxEditor.ScdFormat {
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Parameters" ) ) {
-                using var child = ImRaii.Child( "Child" );
-                Attributes.Draw();
-                BusNumber.Draw();
-                Priority.Draw();
-                Type.Draw();
-                LocalNumber.Draw();
-                UserId.Draw();
-                PlayHistory.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Attributes.Draw();
+                    BusNumber.Draw();
+                    Priority.Draw();
+                    Type.Draw();
+                    LocalNumber.Draw();
+                    UserId.Draw();
+                    PlayHistory.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Layout" ) ) {
-                using var _ = ImRaii.PushId( "Layout" );
-                using var child = ImRaii.Child( "Child" );
-                Layout.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Layout.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( RoutingEnabled && ImGui.BeginTabItem( "Routing" ) ) {
-                RoutingInfo.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    RoutingInfo.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( BusDuckingEnabled && ImGui.BeginTabItem( "Bus Ducking" ) ) {
-                BusDucking.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    BusDucking.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( AccelerationEnabled && ImGui.BeginTabItem( "Acceleration" ) ) {
-                Acceleration.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Acceleration.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( AtomosEnabled && ImGui.BeginTabItem( "Atomos" ) ) {
-                Atomos.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Atomos.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( ExtraEnabled && ImGui.BeginTabItem( "Extra" ) ) {
-                Extra.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Extra.Draw();
+                }
                 ImGui.EndTabItem();
             }
             if( UnknownEnabled && ImGui.BeginTabItem( "Unknown" ) ) {
-                Unknown.Draw();
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Unknown.Draw();
+                }
                 ImGui.EndTabItem();
             }
         }
