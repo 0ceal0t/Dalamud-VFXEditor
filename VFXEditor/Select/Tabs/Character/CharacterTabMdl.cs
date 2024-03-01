@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMdl {
-        public Dictionary<string, string> Faces;
-        public Dictionary<string, string> Bodies;
-        public Dictionary<(string, uint), string> Hairs;
-        public Dictionary<string, string> Ears;
-        public Dictionary<string, string> Tails;
+        public List<(string, string)> Faces;
+        public List<(string, string)> Bodies;
+        public List<(string, uint, string)> Hairs;
+        public List<(string, string)> Ears;
+        public List<(string, string)> Tails;
     }
 
     public class CharacterTabMdl : SelectTab<CharacterRow, SelectedMdl> {
@@ -59,16 +59,17 @@ namespace VfxEditor.Select.Tabs.Character {
 
         protected override string GetName( CharacterRow item ) => item.Name;
 
-        private static Dictionary<string, string> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
+        private static List<(string, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => $"{name} {x.id}", x => x.Item2 );
+            .Select( x => ($"{name} {x.id}", x.Item2) ).ToList();
 
-        private static Dictionary<(string, uint), string> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
+        private static List<(string, uint, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .ToDictionary( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0), x => x.Item2 );
+            .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+            .ToList();
     }
 }

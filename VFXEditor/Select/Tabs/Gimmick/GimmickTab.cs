@@ -37,7 +37,7 @@ namespace VfxEditor.Select.Tabs.Gimmick {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.TmbPath );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( GimmickRow item ) => item.Name;

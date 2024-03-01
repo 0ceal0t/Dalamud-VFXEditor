@@ -1,8 +1,6 @@
-using Dalamud.Interface;
-using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabTmb : SelectTab<ActionRow> {
@@ -22,28 +20,16 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPath( "Start", Selected.StartPath, $"{Selected.Name} Start" );
-            DrawMovementCancel( Selected.StartMotion );
 
-            DrawPath( "End", Selected.EndPath, $"{Selected.Name} End" );
-            DrawMovementCancel( Selected.EndMotion );
+            DrawPaths( new Dictionary<string, string>() {
+                { "Start",  Selected.StartPath },
+                { "End",  Selected.EndPath },
+                { "Hit",  Selected.HitPath },
+                { "Weapon",  Selected.WeaponPath },
 
-            DrawPath( "Hit", Selected.HitPath, $"{Selected.Name} Hit" );
-
-            DrawPath( "Weapon", Selected.WeaponPath, $"{Selected.Name} Weapon" );
+            }, Selected.Name );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;
-
-        private void DrawMovementCancel( bool disabled ) {
-            if( !disabled ) return;
-            if( Dialog.ShowLocal ) return;
-            ImGui.Indent( 25f );
-            UiUtils.IconText( FontAwesomeIcon.QuestionCircle, true );
-            UiUtils.Tooltip( "This parameter is set in the game's Excel sheet, and cannot be removed with VFXEditor" );
-            ImGui.SameLine();
-            ImGui.TextDisabled( "Animation canceled by movement" );
-            ImGui.Unindent( 25f );
-        }
     }
 }

@@ -70,7 +70,7 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawExtraColumn() {
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
             using( var group = ImRaii.Group() ) {
-                if( VfxSpawn.Active ) {
+                if( VfxSpawn.IsActive ) {
                     if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Remove();
                 }
                 else {

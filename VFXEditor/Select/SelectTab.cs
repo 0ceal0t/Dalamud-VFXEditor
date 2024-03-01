@@ -9,7 +9,7 @@ using VfxEditor.Select.Tabs.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
-    public abstract class SelectTab {
+    public abstract partial class SelectTab {
         protected readonly SelectDialog Dialog;
         protected readonly string Name;
         protected readonly SelectResultType ResultType;
@@ -26,79 +26,7 @@ namespace VfxEditor.Select {
 
         protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
 
-        protected void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
-
-        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) { // With headers and icons
-            if( items == null ) return;
-
-            foreach( var ((name, icon), paths) in items ) {
-                if( paths.Count == 0 ) continue;
-
-                using var _ = ImRaii.PushId( name );
-                if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
-                    using var indent = ImRaii.PushIndent( 10f );
-                    DrawIcon( icon );
-                    DrawPaths( paths, $"{resultName} {name}" );
-                    ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                }
-            }
-        }
-
-        protected void DrawPaths( string label, IEnumerable<string> paths, string resultName ) => DrawPaths( label, paths.Select( x => (x, 0u) ), resultName );
-
-        protected void DrawPaths( string label, IEnumerable<(string, uint)> paths, string resultName ) {
-            if( paths == null ) return;
-
-            foreach( var ((path, icon), idx) in paths.WithIndex() ) {
-                using var _ = ImRaii.PushId( idx );
-                DrawIcon( icon );
-                DrawPath( $"{label} #{idx}", path, $"{resultName} #{idx}" );
-            }
-        }
-
-        protected void DrawPaths( Dictionary<string, string> paths, string resultName ) => DrawPaths( paths.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
-
-        protected void DrawPaths( Dictionary<(string, uint), string> paths, string resultName ) {
-            if( paths == null ) return;
-
-            using var _ = ImRaii.PushId( resultName );
-            foreach( var ((name, icon), path) in paths ) {
-                DrawIcon( icon );
-                DrawPath( name, path, $"{resultName} ({name})" );
-            }
-        }
-
-        protected void DrawPath( string label, string path, string resultName ) => DrawPath( label, path, path, resultName );
-
-        protected void DrawPath( string label, string path, string displayPath, string resultName ) {
-            if( string.IsNullOrEmpty( path ) ) return;
-            if( path.Contains( "BGM_Null" ) ) return;
-
-            using var _ = ImRaii.PushId( label );
-
-            DrawFavorite( path, resultName );
-            if( string.IsNullOrEmpty( displayPath ) ) {
-                ImGui.Text( label );
-            }
-            else {
-                ImGui.Text( $"{label}:" );
-                ImGui.SameLine();
-                if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
-                    SelectUiUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
-                }
-                else SelectUiUtils.DisplayPath( path );
-            }
-
-            using var indent = ImRaii.PushIndent( 25f );
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-            if( ImGui.Button( "SELECT" ) ) Dialog.Invoke( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
-            ImGui.SameLine();
-            SelectUiUtils.Copy( path );
-
-            if( Dialog.CanPlay && ResultType != SelectResultType.Local ) Dialog.PlayButton( path );
-        }
-
-        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
+        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) { // TODO
             if( situation.IsSituation ) {
                 DrawPath( "Daytime Bgm", situation.DayPath, $"{name} / Day" );
                 DrawPath( "Nighttime Bgm", situation.NightPath, $"{name} / Night" );

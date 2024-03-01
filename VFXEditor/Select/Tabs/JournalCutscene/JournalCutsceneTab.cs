@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
 
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaths( "VFX", Loaded[idx].Paths, $"{Selected.Name} {idx}" );
+                    DrawPaths( Loaded[idx].Paths, $"{Selected.Name} {idx}" );
                 }
             }
         }

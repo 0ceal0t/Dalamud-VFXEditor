@@ -53,7 +53,7 @@ namespace VfxEditor.Select.Tabs.Voice {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( "SCD", Loaded, Selected.Name );
+            DrawPaths( Loaded, Selected.Name );
         }
 
         protected override string GetName( VoiceRow item ) => item.Name;

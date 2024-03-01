@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Zone {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.LgbPath );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( Loaded.Paths, Selected.Name );
         }
     }
 }

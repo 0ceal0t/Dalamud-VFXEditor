@@ -6,8 +6,8 @@ using System.Linq;
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedSkeleton {
         public string BodyPath;
-        public Dictionary<string, string> FacePaths;
-        public Dictionary<(string, uint), string> HairPaths;
+        public List<(string, string)> FacePaths;
+        public List<(string, uint, string)> HairPaths;
     }
 
     public class CharacterTabSkeleton : SelectTab<CharacterRow, SelectedSkeleton> {
@@ -35,12 +35,14 @@ namespace VfxEditor.Select.Tabs.Character {
             loaded.FacePaths = item.Data.FaceOptions
                 .Select( face => (face, $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}") )
                 .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .ToDictionary( x => $"Face {x.Item1}", x => x.Item2 );
+                .Select( x => ($"Face {x.face}", x.Item2) )
+                .ToList();
 
             loaded.HairPaths = item.Data.HairOptions
                 .Select( hair => (hair, $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}") )
                 .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .ToDictionary( x => ($"Hair {x.Item1}", item.Data.HairToIcon.TryGetValue( x.Item1, out var icon ) ? icon : 0), x => x.Item2 );
+                .Select( x => ($"Hair {x.hair}", item.Data.HairToIcon.TryGetValue( x.hair, out var icon ) ? icon : 0, x.Item2) )
+                .ToList();
         }
 
         // ===== DRAWING ======

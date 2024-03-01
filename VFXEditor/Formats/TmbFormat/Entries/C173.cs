@@ -18,10 +18,10 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path", new() {
             new() {
-                Icon = () => VfxSpawn.Active ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
+                Icon = () => VfxSpawn.IsActive ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
                 Remove = false,
                 Action = ( string path ) => {
-                    if( VfxSpawn.Active ) VfxSpawn.Remove();
+                    if( VfxSpawn.IsActive ) VfxSpawn.Remove();
                     else VfxSpawn.OnSelf( path, false );
                 }
             }

@@ -40,7 +40,7 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             DrawIcon( Selected.Icon );
-            DrawPaths( "Sound", Loaded.Paths, Selected.Name );
+            DrawPaths( Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

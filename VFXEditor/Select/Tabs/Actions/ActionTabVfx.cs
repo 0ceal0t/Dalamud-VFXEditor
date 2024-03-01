@@ -1,6 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -45,11 +46,12 @@ namespace VfxEditor.Select.Tabs.Actions {
                 SelectUiUtils.DisplayPath( Loaded.OriginalPath );
             }
 
-            DrawPath( "Cast", Selected.CastVfxPath, $"{Selected.Name} Cast" );
-            DrawPath( "Start", Selected.StartVfxPath, $"{Selected.Name} Start" );
-            if( !string.IsNullOrEmpty( Loaded.OriginalPath ) ) {
-                DrawPaths( "VFX", Loaded.Paths, Selected.Name );
-            }
+            ImGui.Separator();
+
+            DrawPaths( new Dictionary<string, string>() {
+                { "Cast", Selected.CastVfxPath },
+                { "Start", Selected.StartVfxPath }
+            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? new List<string>() : Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( ActionRowVfx item ) => item.Name;

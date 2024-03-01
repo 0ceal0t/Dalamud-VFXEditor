@@ -25,7 +25,6 @@ namespace VfxEditor.Select.Tabs.Character {
         public override void LoadData() => CharacterTab.Load( Items );
 
         public override void LoadSelection( CharacterRow item, out SelectedPap loaded ) {
-            // General
             var general = new Dictionary<string, string>();
             var idlePath = item.GetPap( "resident/idle" );
             var movePathA = item.GetPap( "resident/move_a" );
@@ -33,8 +32,6 @@ namespace VfxEditor.Select.Tabs.Character {
             if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
             if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
             if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
-
-            // ===== STAND =======
 
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
@@ -47,8 +44,6 @@ namespace VfxEditor.Select.Tabs.Character {
                     } );
                 }
             }
-
-            // ======= SIT ========
 
             var sitPoses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
@@ -64,8 +59,6 @@ namespace VfxEditor.Select.Tabs.Character {
 
             var jmn = item.GetPap( "emote/jmn" );
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
-
-            // ====== FACES ========
 
             var facePaths = new Dictionary<string, string>();
             foreach( var face in item.Data.FaceOptions ) {
@@ -100,6 +93,9 @@ namespace VfxEditor.Select.Tabs.Character {
                 DrawPath( "Ground Start", Loaded.GroundStart, Selected.Name );
                 DrawPath( "Jmn", Loaded.Jmn, Selected.Name );
                 DrawPaths( Loaded.SitPoses, Selected.Name );
+
+
+
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Faces" ) ) {

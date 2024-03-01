@@ -14,7 +14,7 @@ namespace VfxEditor.Spawn {
         }
 
         public static BaseVfx Vfx { get; private set; }
-        public static bool Active => Vfx != null;
+        public static bool IsActive => Vfx != null;
 
         private static SpawnType LoopType = SpawnType.None;
         private static string LoopPath = "";
@@ -25,7 +25,7 @@ namespace VfxEditor.Spawn {
         public static void DrawButton( string path, bool loop ) {
             using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.DARK_GRAY );
 
-            if( Active ) {
+            if( IsActive ) {
                 if( ImGui.Button( "Remove" ) ) Remove();
                 return;
             }

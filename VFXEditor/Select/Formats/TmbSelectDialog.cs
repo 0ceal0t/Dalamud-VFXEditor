@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -23,14 +24,13 @@ namespace VfxEditor.Select.Formats {
         public override bool CanPlay => true;
 
         public override void PlayButton( string path ) {
-            using var _ = ImRaii.PushId( "Spawn" );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
-            ImGui.SameLine();
             if( TmbSpawn.CanReset ) {
-                if( ImGui.Button( "Reset" ) ) TmbSpawn.Reset();
+                if( ImGui.Button( FontAwesomeIcon.Stop.ToIconString() ) ) TmbSpawn.Reset();
             }
             else {
-                if( ImGui.Button( "Play" ) ) TmbSpawn.Apply( path );
+                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) TmbSpawn.Apply( path );
             }
         }
     }

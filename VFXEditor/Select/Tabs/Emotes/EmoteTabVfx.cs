@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
             DrawIcon( Selected.Icon );
             ImGui.TextDisabled( Selected.Command );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( Loaded.Paths, Selected.Name );
         }
     }
 }

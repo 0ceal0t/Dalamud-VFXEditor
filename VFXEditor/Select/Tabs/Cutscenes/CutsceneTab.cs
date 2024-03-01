@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Selected.Path );
 
-            DrawPaths( "VFX", Loaded.Paths, Selected.Name );
+            DrawPaths( Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

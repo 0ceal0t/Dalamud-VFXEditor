@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Numerics;
 using VfxEditor.Utils;
@@ -29,7 +29,7 @@ namespace VfxEditor.Select {
 
         public static void DisplayPathWarning( string path, string warning ) {
             using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR ) ) {
-                ImGui.TextWrapped( $"{path} (!)" );
+                ImGui.TextWrapped( path );
             }
             UiUtils.Tooltip( warning );
         }

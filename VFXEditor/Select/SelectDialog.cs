@@ -253,9 +253,6 @@ namespace VfxEditor.Select {
                     res = true;
                 }
             }
-
-            ImGui.SameLine();
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 2 );
             return res;
         }
 
