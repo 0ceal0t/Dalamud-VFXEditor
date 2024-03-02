@@ -134,14 +134,14 @@ namespace VfxEditor.Select {
             ImGui.TableNextColumn(); // Icon
             DrawIcon( iconId, new( 40, 40 ) );
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-
             ImGui.TableNextColumn(); // Favorite + name
             DrawFavorite( path, resultName );
             if( !string.IsNullOrEmpty( label ) ) {
                 ImGui.SameLine();
                 ImGui.Text( label );
             }
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             ImGui.TableNextColumn(); // Path
             if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {

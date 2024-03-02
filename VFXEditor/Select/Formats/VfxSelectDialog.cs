@@ -43,7 +43,7 @@ namespace VfxEditor.Select.Formats {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
             if( VfxSpawn.IsActive ) {
-                if( ImGui.Button( FontAwesomeIcon.Stop.ToIconString() ) ) VfxSpawn.Remove();
+                if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) VfxSpawn.Remove();
             }
             else {
                 if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) VfxSpawn.OnSelf( path, false );

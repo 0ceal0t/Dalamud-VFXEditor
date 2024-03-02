@@ -1,7 +1,8 @@
 using System.IO;
 using VfxEditor.Interop;
+using VfxEditor.ScdFormat;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Utils {
     public static class ScdUtils {
         public static string VorbisHeader => Path.Combine( Plugin.RootLocation, "Files", "vorbis_header.bin" );
 
@@ -30,7 +31,7 @@ namespace VfxEditor.ScdFormat {
             var byte1 = dataLength & 0xFF & 0x7F;
             var byte2 = byte1 & 0x3F;
             for( var i = 0; i < dataFile.Length; i++ ) {
-                var xorByte = XORTABLE[( byte2 + i ) & 0xFF];
+                var xorByte = XORTABLE[byte2 + i & 0xFF];
                 xorByte &= 0xFF;
                 xorByte ^= dataFile[i] & 0xFF;
                 xorByte ^= byte1;

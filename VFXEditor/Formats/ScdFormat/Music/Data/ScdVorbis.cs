@@ -5,6 +5,7 @@ using SharpDX.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdVorbis : ScdAudioData {

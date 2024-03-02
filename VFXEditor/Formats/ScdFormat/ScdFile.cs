@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.ScdFormat.Utils;
 using VfxEditor.ScdFormat.Music;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Components.SplitViews;
@@ -14,10 +15,10 @@ using VfxEditor.Utils;
 namespace VfxEditor.ScdFormat {
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
-        private readonly ScdOffsetsHeader OffsetsHeader;
 
         public readonly List<ScdAudioEntry> Audio = new();
         public readonly List<ScdSoundEntry> Sounds = new();
+        private List<ScdLayoutEntry> Layouts => Sounds.Select( x => x.Layout ).ToList();
         public readonly List<ScdTrackEntry> Tracks = new();
         public readonly List<ScdAttributeEntry> Attributes = new();
 
@@ -26,44 +27,49 @@ namespace VfxEditor.ScdFormat {
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
+        private readonly short UnknownOffset; // TODO: what is this?
+        private readonly int EofPaddingSize;
+
         public ScdFile( BinaryReader reader, bool verify ) : base() {
             Header = new( reader );
-            OffsetsHeader = new( reader );
+            var offsets = new ScdReader( reader );
+            UnknownOffset = offsets.UnknownOffset;
+            EofPaddingSize = offsets.EofPaddingSize;
 
             // The acutal sound effect/music data
-            foreach( var offset in OffsetsHeader.AudioOffsets.Where( x => x != 0 ) ) {
+            foreach( var offset in offsets.AudioOffsets.Where( x => x != 0 ) ) {
                 var newAudio = new ScdAudioEntry( this );
                 newAudio.Read( reader, offset );
                 Audio.Add( newAudio );
             }
 
             var layouts = new List<ScdLayoutEntry>();
-            foreach( var offset in OffsetsHeader.LayoutOffsets.Where( x => x != 0 ) ) {
+            foreach( var offset in offsets.LayoutOffsets.Where( x => x != 0 ) ) {
                 var newLayout = new ScdLayoutEntry();
                 newLayout.Read( reader, offset );
                 layouts.Add( newLayout );
             }
 
-            foreach( var offset in OffsetsHeader.TrackOffsets.Where( x => x != 0 ) ) {
+            foreach( var offset in offsets.TrackOffsets.Where( x => x != 0 ) ) {
                 var newTrack = new ScdTrackEntry();
                 newTrack.Read( reader, offset );
                 Tracks.Add( newTrack );
             }
 
-            foreach( var offset in OffsetsHeader.AttributeOffsets.Where( x => x != 0 ) ) {
+            foreach( var offset in offsets.AttributeOffsets.Where( x => x != 0 ) ) {
                 var newAttribute = new ScdAttributeEntry();
                 newAttribute.Read( reader, offset );
                 Attributes.Add( newAttribute );
             }
 
-            foreach( var (offset, index) in OffsetsHeader.SoundOffsets.Where( x => x != 0 ).WithIndex() ) {
+            foreach( var (offset, index) in offsets.SoundOffsets.Where( x => x != 0 ).WithIndex() ) {
                 var newSound = new ScdSoundEntry( layouts[index] );
                 newSound.Read( reader, offset );
                 Sounds.Add( newSound );
             }
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
-            if( OffsetsHeader.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
+            if( offsets.Modded ) Verified = VerifiedStatus.UNSUPPORTED;
 
             AudioSplitView = new( Audio );
             SoundView = new( "Sound", Sounds, true, null, () => new ScdSoundEntry() );
@@ -134,31 +140,59 @@ namespace VfxEditor.ScdFormat {
 
         public override void Write( BinaryWriter writer ) {
             Header.Write( writer );
-            OffsetsHeader.Write( writer );
 
-            UpdateOffsets( writer, Sounds.Select( x => x.Layout ).ToList(), OffsetsHeader.LayoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
+            writer.Write( ( short )Sounds.Count );
+            writer.Write( ( short )Tracks.Count );
+            writer.Write( ( short )Audio.Count );
+            writer.Write( UnknownOffset );
+
+            var placeholders = writer.BaseStream.Position;
+            writer.Write( 0 ); // track
+            writer.Write( 0 ); // audio
+            writer.Write( 0 ); // layout
+            writer.Write( 0 ); // routing
+            writer.Write( 0 ); // attribute
+            writer.Write( EofPaddingSize );
+
+            var soundOffset = PopulateOffsetPlaceholders( writer, Sounds );
+            var trackOffset = PopulateOffsetPlaceholders( writer, Tracks );
+            var audioOffset = PopulateOffsetPlaceholders( writer, Audio );
+            var layoutOffset = PopulateOffsetPlaceholders( writer, Layouts );
+            var attributeOffset = PopulateOffsetPlaceholders( writer, Attributes );
+
+            // Update placeholders
+            var savePos = writer.BaseStream.Position;
+            writer.BaseStream.Position = placeholders;
+            writer.Write( trackOffset );
+            writer.Write( audioOffset );
+            writer.Write( layoutOffset );
+            writer.Write( 0 ); // routing
+            writer.Write( attributeOffset );
+            writer.BaseStream.Position = savePos;
+
+            UpdateOffsets( writer, Sounds.Select( x => x.Layout ).ToList(), layoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Sounds, ( int )OffsetsHeader.SoundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
+            UpdateOffsets( writer, Sounds, soundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Tracks, OffsetsHeader.TrackOffset, ( BinaryWriter bw, ScdTrackEntry item ) => {
+            UpdateOffsets( writer, Tracks, trackOffset, ( BinaryWriter bw, ScdTrackEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Attributes, OffsetsHeader.AttributeOffset, ( BinaryWriter bw, ScdAttributeEntry item ) => {
+            UpdateOffsets( writer, Attributes, attributeOffset, ( BinaryWriter bw, ScdAttributeEntry item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
             // Sounds
             long paddingSubtract = 0;
-            UpdateOffsets( writer, Audio, OffsetsHeader.AudioOffset, ( BinaryWriter bw, ScdAudioEntry music ) => {
+            UpdateOffsets( writer, Audio, audioOffset, ( BinaryWriter bw, ScdAudioEntry music ) => {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
             } );
@@ -187,6 +221,14 @@ namespace VfxEditor.ScdFormat {
                     else ScdVorbis.ImportOgg( path, music ); // kind of jank, but hopefully works
                 }
             } );
+        }
+
+        private static int PopulateOffsetPlaceholders<T>( BinaryWriter writer, List<T> items ) {
+            if( items.Count == 0 ) return 0;
+            var offset = writer.BaseStream.Position;
+            foreach( var _ in items ) writer.Write( 0 );
+            FileUtils.PadTo( writer, 16 );
+            return ( int )offset;
         }
 
         private static void UpdateOffsets<T>( BinaryWriter writer, List<T> items, int offsetLocation, Action<BinaryWriter, T> action ) where T : ScdEntry {

@@ -1,5 +1,6 @@
 using NAudio.Wave;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdAdpcm : ScdAudioData {

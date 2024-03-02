@@ -1,6 +1,7 @@
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Formats.ScdFormat.Utils;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
