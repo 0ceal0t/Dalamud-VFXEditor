@@ -27,11 +27,6 @@ namespace VfxEditor.ScdFormat {
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
 
-        private int ConverterSamplesOut = 0;
-        private int ConverterSecondsOut = 0;
-        private int ConverterSamples = 0;
-        private float ConverterSeconds = 0f;
-
         private bool LoopTimeInitialized = false;
         private bool LoopTimeRefreshing = false;
         private double LoopStartTime = 0;
@@ -50,11 +45,10 @@ namespace VfxEditor.ScdFormat {
         public void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
-
             DrawPlayer();
             DrawChannels();
-            DrawConverter();
             ProcessQueue(); // Loop, etc.
+            Entry.DrawTabs();
         }
 
         public void DrawMiniPlayer() {
@@ -64,6 +58,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void DrawControls() {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding with { X = 4 } ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( State == PlaybackState.Stopped ) {
                     if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) Play();
@@ -92,8 +87,9 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
-                var startX = 221f * ( LoopStartTime / TotalTime );
-                var endX = 221f * ( LoopEndTime / TotalTime );
+                var dragWidth = ImGui.GetStyle().GrabMinSize + 4f;
+                var startX = ( 221f - dragWidth ) * ( LoopStartTime / TotalTime ) + ( dragWidth / 2f );
+                var endX = ( 221f - dragWidth ) * ( LoopEndTime / TotalTime ) + ( dragWidth / 2f );
 
                 var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
                 var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
@@ -109,7 +105,6 @@ namespace VfxEditor.ScdFormat {
         private void DrawPlayer() {
             using var tabItem = ImRaii.TabItem( "Music" );
             if( !tabItem ) return;
-
             using var _ = ImRaii.PushId( "Music" );
 
             DrawControls();
@@ -139,17 +134,17 @@ namespace VfxEditor.ScdFormat {
             }
             UiUtils.Tooltip( "Replace sound file" );
 
-            var loopStartEnd = new int[2] { Entry.LoopStart, Entry.LoopEnd };
+            var loop = Entry.Data.GetLoopTime();
             ImGui.SetNextItemWidth( 246f );
-            if( ImGui.InputInt2( "##LoopStartEnd", ref loopStartEnd[0] ) ) {
-                Entry.LoopStart = loopStartEnd[0];
-                Entry.LoopEnd = loopStartEnd[1];
+            if( ImGui.InputFloat2( "##LoopStartEnd", ref loop ) ) {
+                Entry.LoopStart = Entry.Data.TimeToBytes( loop.X );
+                Entry.LoopEnd = Entry.Data.TimeToBytes( loop.Y );
             }
 
             ImGui.SameLine();
             if( UiUtils.DisabledButton( "Update", Plugin.Configuration.SimulateScdLoop ) ) RefreshLoopStartEndTime();
             ImGui.SameLine();
-            ImGui.Text( "Loop Start/End (Bytes)" );
+            ImGui.Text( "Loop Time" );
 
             ImGui.TextDisabled( $"{Entry.Format} / {Entry.NumChannels} Ch / {Entry.SampleRate}Hz / 0x{Entry.DataLength:X8} bytes" );
         }
@@ -181,37 +176,6 @@ namespace VfxEditor.ScdFormat {
             if( ImGui.Button( "Update" ) ) Reset();
         }
 
-        private void DrawConverter() {
-            using var tabItem = ImRaii.TabItem( "Convertor" );
-            if( !tabItem ) return;
-
-            using var _ = ImRaii.PushId( "Convertor" );
-
-            ImGui.TextDisabled( "Utilities to generate byte values which can be used for loop start/end" );
-
-            // Bytes
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesIn", ref ConverterSamples, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( "##SamplesOut", ref ConverterSamplesOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( "Samples to Bytes" ) ) {
-                ConverterSamplesOut = Entry.Data.SamplesToBytes( ConverterSamples );
-            }
-
-            // Time
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputFloat( "##SecondsIn", ref ConverterSeconds, 0, 0 );
-            ImGui.SameLine();
-            ImGui.PushFont( UiBuilder.IconFont ); ImGui.Text( FontAwesomeIcon.ArrowRight.ToIconString() ); ImGui.PopFont();
-            ImGui.SameLine();
-            ImGui.SetNextItemWidth( 100 ); ImGui.InputInt( $"##SecondsOut", ref ConverterSecondsOut, 0, 0, ImGuiInputTextFlags.ReadOnly );
-            ImGui.SameLine();
-            if( ImGui.Button( "Seconds to Bytes" ) ) {
-                ConverterSecondsOut = Entry.Data.TimeToBytes( ConverterSeconds );
-            }
-        }
-
         private void ProcessQueue() {
             var currentState = State;
             var justQueued = false;
@@ -226,7 +190,7 @@ namespace VfxEditor.ScdFormat {
                     }
                 }
             }
-            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopEndTime - CurrentTime ) < 0.03f ) {
+            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopEndTime - CurrentTime ) < 0.1f ) {
                 if( QueueSeek == -1 ) {
                     QueueSeek = LoopStartTime;
                     justQueued = true;
@@ -299,7 +263,10 @@ namespace VfxEditor.ScdFormat {
 
         private void ImportDialog() {
             FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( bool ok, string res ) => {
-                if( ok ) ScdFile.Import( res, Entry );
+                if( ok ) {
+                    Reset();
+                    Entry.File.Import( res, Entry );
+                }
             } );
         }
 
@@ -316,7 +283,7 @@ namespace VfxEditor.ScdFormat {
             FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
-                    File.WriteAllBytes( res, data.DecodedData );
+                    File.WriteAllBytes( res, data.Data );
                 }
             } );
         }
@@ -330,8 +297,11 @@ namespace VfxEditor.ScdFormat {
         private async void RefreshLoopStartEndTime() {
             if( LoopTimeRefreshing ) return;
             LoopTimeRefreshing = true;
+
             await Task.Run( () => {
-                Entry.Data.BytesToLoopStartEnd( Entry.LoopStart, Entry.LoopEnd, out LoopStartTime, out LoopEndTime );
+                var loop = Entry.Data.GetLoopTime();
+                LoopStartTime = loop.X;
+                LoopEndTime = loop.Y;
                 LoopTimeInitialized = true;
                 LoopTimeRefreshing = false;
             } );

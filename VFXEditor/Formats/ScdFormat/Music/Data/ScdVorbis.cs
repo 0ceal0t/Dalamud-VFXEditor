@@ -1,237 +1,176 @@
 using NAudio.Vorbis;
 using NAudio.Wave;
 using NVorbis;
-using SharpDX.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.ScdFormat.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdVorbis : ScdAudioData {
-        private readonly bool Imported = false;
+        private readonly short EncodeMode = 0; // default to unencoded
+        private readonly short EncodeByte = 0;
+        private readonly int XorOffset = 0;
+        private readonly int XorSize = 0;
+        private readonly int Unknown1 = 0;
+        private readonly int Unknown2 = 0;
 
-        public short EncodeMode;
-        public short EncodeByte;
-        public int Unk1;
-        public int Unk2;
-        public float Unk3;
-        public int SeekTableSize;
-        public int VorbisHeaderSize;
-        public int Unk4;
-        public int Unk5;
+        private readonly float SeekStep = 0.1f;
+        private readonly List<int> SeekTable = new(); // how many bytes to get to each `SeekStep`
 
-        public byte[] SeekTableData;
-        public byte[] VorbisHeaderData;
-        public byte[] OggData;
-
-        public byte[] DecodedData;
+        private readonly int VorbisHeaderSize;
+        private readonly byte[] EncodedData;
+        private readonly byte[] DecodedData;
+        public readonly byte[] Data; // final decoded
 
         // https://github.com/CrimsonOrion/CS-FFXIV-Data-Worker/blob/af126fd74139f54722b4dd8feea87c54077caeb7/FFXIV%20Data%20Worker/OggToScd.cs
         // https://github.com/Soreepeong/XivAlexander/blob/0b1077ebbcd2bf13955169fddc2bc38c218d19fe/XivAlexanderCommon/Sqex/Sound/Writer.cpp#L63
-
         // https://github.com/Leinxad/KHPCSoundTools/blob/ad90c925c7b6b5d20fdabe0e7bc1c80bf106dbbe/SingleEncoder/Program.cs#L218
-        private readonly SortedDictionary<int, int> PageBytesToSamples = new();
-        private static readonly byte[] PagePattern = "OggS"u8.ToArray();
-        private static readonly byte[] HeaderPattern = new byte[] { 0x05, 0x76, 0x6F, 0x72, 0x62, 0x69, 0x73 };
-        private readonly int SampleRate;
-        private readonly int FirstPageBytes;
-        private readonly int LastPageSamples;
 
-        public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) {
+        // https://en.wikipedia.org/wiki/Ogg#Page_structure
+        // "OggS" Page pattern with version, header type, and grandule position = 0
+        private static readonly byte[] PagePattern = new byte[] { 0x4F, 0x67, 0x67, 0x53, 0x00 };
+
+        public ScdVorbis( byte[] data, ScdAudioEntry entry ) : base( entry ) {
+            VorbisHeaderSize = 0;
+            Entry.DataLength = data.Length; // set data length here
+
+            EncodedData = Array.Empty<byte>(); // data already decoded
+            DecodedData = data;
+            Data = data;
+
+            var candidates = Locate( Data, PagePattern, 0, false );
+            using var ms = new MemoryStream( Data );
+            using var dataReader = new BinaryReader( ms );
+            foreach( var offset in candidates ) {
+                var pos = offset - VorbisHeaderSize;
+                if( pos < 0 ) continue;
+                dataReader.BaseStream.Position = offset + 6;
+
+                var maxSamples = dataReader.ReadInt32();
+                var maxTime = ( float )maxSamples / entry.SampleRate;
+
+                if( Math.Abs( maxTime - ( SeekStep * SeekTable.Count ) ) < 0.02f ) SeekTable.Add( pos );
+            }
+        }
+
+        public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) : base( entry ) {
             EncodeMode = reader.ReadInt16();
             EncodeByte = reader.ReadInt16();
-            Unk1 = reader.ReadInt32();
-            Unk2 = reader.ReadInt32();
-            Unk3 = reader.ReadSingle();
-            SeekTableSize = reader.ReadInt32();
+            XorOffset = reader.ReadInt32();
+            XorSize = reader.ReadInt32();
+            SeekStep = reader.ReadSingle();
+            var seekTableSize = reader.ReadInt32();
+            VorbisHeaderSize = reader.ReadInt32();
+            Unknown1 = reader.ReadInt32();
+            Unknown2 = reader.ReadInt32();
 
-            // Check if imported .ogg
-
-            var seekTableString = Encoding.ASCII.GetString( BitConverter.GetBytes( SeekTableSize ) );
-
-            if( seekTableString.EndsWith( "vor" ) ) { // "vorbis"
-                Imported = true;
-                VorbisHeaderData = reader.ReadBytes( 0x35C );
-                OggData = reader.ReadBytes( entry.DataLength + 0x10 );
-                DecodedData = OggData;
-            }
-            else {
-                VorbisHeaderSize = reader.ReadInt32();
-                Unk4 = reader.ReadInt32();
-                Unk5 = reader.ReadInt32();
-
-                //1c6c
-                //Vorbis Header + Data
-                SeekTableData = reader.ReadBytes( SeekTableSize );
-                VorbisHeaderData = reader.ReadBytes( VorbisHeaderSize );
-
-                var decodedHeader = new byte[VorbisHeaderData.Length];
-                Buffer.BlockCopy( VorbisHeaderData, 0, decodedHeader, 0, decodedHeader.Length );
-                if( EncodeMode == 0x2002 && EncodeByte != 0x00 ) ScdUtils.XorDecode( decodedHeader, ( byte )EncodeByte );
-
-                OggData = reader.ReadBytes( entry.DataLength );
-
-                using var ms = new MemoryStream();
-                using var bw = new BinaryWriter( ms );
-                bw.Write( decodedHeader );
-                bw.Write( OggData );
-
-                DecodedData = ms.ToArray();
-
-                if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( DecodedData, OggData.Length );
+            for( var i = 0; i < seekTableSize / 4; i++ ) {
+                var seek = reader.ReadInt32();
+                SeekTable.Add( seek );
             }
 
-            // Parse out pages
+            EncodedData = reader.ReadBytes( VorbisHeaderSize );
+            var decodedHeader = new byte[EncodedData.Length];
+            Buffer.BlockCopy( EncodedData, 0, decodedHeader, 0, decodedHeader.Length );
+            if( EncodeMode == 0x2002 && EncodeByte != 0x00 ) ScdUtils.XorDecode( decodedHeader, ( byte )EncodeByte );
 
-            var headerOffset = Locate( DecodedData, HeaderPattern, 0, true );
-            if( headerOffset == null || headerOffset.Length == 0 ) {
-                Dalamud.Error( "Could not find header" );
+            DecodedData = reader.ReadBytes( entry.DataLength );
+            using( var ms = new MemoryStream() )
+            using( var writer = new BinaryWriter( ms ) ) {
+                writer.Write( decodedHeader );
+                writer.Write( DecodedData );
+                Data = ms.ToArray();
             }
-            var headerSize = headerOffset[0];
-
-            var pageOffsets = Locate( DecodedData, PagePattern, headerSize, false );
-            if( headerOffset == null || headerOffset.Length == 0 ) {
-                Dalamud.Error( "Could not find pages" );
-            }
-
-            using var pageMs = new MemoryStream( DecodedData );
-            using var decodedReader = new BinaryReader( pageMs );
-
-            var lastPageSamples = 0;
-            foreach( var offset in pageOffsets ) {
-                decodedReader.BaseStream.Position = offset + 6;
-                var samples = decodedReader.ReadInt32();
-                var pageOffset = offset + 4;
-                if( PageBytesToSamples.Count == 0 ) FirstPageBytes = pageOffset;
-                PageBytesToSamples[pageOffset] = samples;
-                lastPageSamples = samples;
-            }
-            LastPageSamples = lastPageSamples;
-
-            SampleRate = entry.SampleRate;
+            if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( Data, DecodedData.Length );
         }
 
-        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )( SampleRate * time ) );
-
-        public override int SamplesToBytes( int samples ) {
-            var lastBytes = 0;
-            foreach( var page in PageBytesToSamples ) {
-                if( page.Value == samples ) {
-                    return Math.Min( page.Key, DecodedData.Length ) - FirstPageBytes;
-                }
-                else if( page.Value > samples ) {
-                    return Math.Min( lastBytes, DecodedData.Length ) - FirstPageBytes;
-                }
-                lastBytes = page.Key;
+        public override int TimeToBytes( float time ) {
+            if( SeekTable.Count == 0 ) return 0;
+            for( var i = 0; i < SeekTable.Count; i++ ) {
+                if( i * SeekStep > time ) return SeekTable[i - 1];
             }
-            return DecodedData.Length - FirstPageBytes;
+            return Data.Length - VorbisHeaderSize;
         }
 
-        public double BytesToTime( int bytes ) => ( ( double )BytesToSamples( bytes ) ) / SampleRate;
+        public override int SamplesToBytes( int samples ) => TimeToBytes( samples / Entry.SampleRate );
 
-        public int BytesToSamples( int bytes ) {
-            var lastSamples = 0;
-            bytes += FirstPageBytes;
-            foreach( var page in PageBytesToSamples ) {
-                if( page.Key == bytes ) {
-                    return page.Value;
-                }
-                else if( page.Key > bytes ) {
-                    return lastSamples;
-                }
-                lastSamples = page.Value;
+        public double BytesToTime( int bytes ) {
+            if( SeekTable.Count == 0 ) return 0;
+            for( var i = 0; i < SeekTable.Count; i++ ) {
+                if( SeekTable[i] > bytes ) return SeekStep * ( i - 1 );
             }
-            return LastPageSamples;
+            return SeekTable.Count * SeekStep;
         }
 
-        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
-            if( loopStart == 0 && loopEnd == 0 ) {
-                startTime = 0;
-                endTime = 0;
-                return;
-            }
+        public int BytesToSamples( int bytes ) => ( int )( BytesToTime( bytes ) * Entry.SampleRate );
 
-            startTime = BytesToTime( loopStart );
-            endTime = BytesToTime( loopEnd );
+        public override Vector2 GetLoopTime() {
+            if( Entry.LoopStart == 0 && Entry.LoopEnd == 0 ) return new( 0, 0 );
+
+            return new( ( float )BytesToTime( Entry.LoopStart ), ( float )BytesToTime( Entry.LoopEnd ) );
         }
 
         public override WaveStream GetStream() {
-            var ms = new MemoryStream( DecodedData, 0, DecodedData.Length, false );
+            var ms = new MemoryStream( Data, 0, Data.Length, false );
             return new VorbisWaveReader( ms );
         }
 
         public override void Write( BinaryWriter writer ) {
             writer.Write( EncodeMode );
             writer.Write( EncodeByte );
-            writer.Write( Unk1 );
-            writer.Write( Unk2 );
-            writer.Write( Unk3 );
-            writer.Write( SeekTableSize );
-
-            if( Imported ) {
-                writer.Write( VorbisHeaderData );
-                writer.Write( OggData );
-                return;
-            }
-
+            writer.Write( XorOffset );
+            writer.Write( XorSize );
+            writer.Write( SeekStep );
+            writer.Write( SeekTable.Count * 4 );
             writer.Write( VorbisHeaderSize );
-            writer.Write( Unk4 );
-            writer.Write( Unk5 );
-            writer.Write( SeekTableData );
-            writer.Write( VorbisHeaderData );
-            writer.Write( OggData );
+            writer.Write( Unknown1 );
+            writer.Write( Unknown2 );
+            foreach( var item in SeekTable ) writer.Write( item );
+            writer.Write( EncodedData );
+            writer.Write( DecodedData );
         }
 
-        // Giga-scuffed
-        public static void ImportOgg( string path, ScdAudioEntry oldEntry ) {
-            using var oggReader = new VorbisReader( path );
+        public override int GetSubInfoSize() => 0x20 + ( SeekTable.Count * 4 ) + VorbisHeaderSize;
 
+        // =======================
+
+        public static ScdAudioEntry ImportOgg( string path, ScdAudioEntry oldEntry ) {
+            using var oggReader = new VorbisReader( path );
             var loopStartTag = oggReader.Tags.GetTagSingle( "LoopStart" );
             var loopEndTag = oggReader.Tags.GetTagSingle( "LoopEnd" );
 
             var oggData = File.ReadAllBytes( path );
 
-            var rawHeader = File.ReadAllBytes( ScdUtils.VorbisHeader );
+            // Create new entry
+            var entry = new ScdAudioEntry(
+                oldEntry,
+                0, // data length is a placeholder
+                oggReader.Channels,
+                oggReader.SampleRate,
+                SscfWaveFormat.Vorbis
+            );
 
-            using var writerMs = new MemoryStream();
-            using var writer = new BinaryWriter( writerMs );
-            writer.Write( rawHeader );
-            writer.Write( oggData );
-
-            writer.BaseStream.Position = 0;
-            writer.Write( oggData.Length - 0x10 ); // update data length
-            writer.Write( oggReader.Channels );
-            writer.Write( oggReader.SampleRate );
-
-            writer.BaseStream.Position = 0x10;
-            writer.Write( 0 ); // loop start
-            writer.Write( oggData.Length ); // loop end
-
-            var newEntryData = writerMs.ToArray();
-
-            using var readerMs = new MemoryStream( newEntryData );
-            using var reader = new BinaryReader( readerMs );
-
-            var newEntry = new ScdAudioEntry( Plugin.ScdManager.File );
-            newEntry.Read( reader );
-
+            // Create new data
+            var vorbis = new ScdVorbis( oggData, entry );
             if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) ) {
-                newEntry.LoopStart = newEntry.Data.SamplesToBytes( loopStartSamples );
+                entry.LoopStart = vorbis.SamplesToBytes( loopStartSamples );
             }
-
             if( !string.IsNullOrEmpty( loopEndTag ) && int.TryParse( loopEndTag, out var loopEndSamples ) ) {
-                newEntry.LoopEnd = newEntry.Data.SamplesToBytes( loopEndSamples );
+                entry.LoopEnd = vorbis.SamplesToBytes( loopEndSamples );
             }
 
-            Plugin.ScdManager.File.Replace( oldEntry, newEntry );
-            oldEntry.Dispose();
+            entry.Data = vorbis;
+            return entry;
         }
 
-        public static void ImportWav( string path, ScdAudioEntry entry ) {
+        public static ScdAudioEntry ImportWav( string path, ScdAudioEntry oldEntry ) {
             ScdUtils.ConvertWavToOgg( path );
-            ImportOgg( ScdManager.ConvertOgg, entry );
+            return ImportOgg( ScdManager.ConvertOgg, oldEntry );
         }
+
+        // ================================
 
         private static int[] Locate( byte[] data, byte[] candidate, int start, bool onlyOnce ) {
             if( IsEmptyLocate( data, candidate ) ) return null;

@@ -27,7 +27,7 @@ namespace VfxEditor.ScdFormat {
         public readonly CommandSplitView<ScdTrackEntry> TrackView;
         public readonly UiSplitView<ScdAttributeEntry> AttributeView;
 
-        private readonly short UnknownOffset; // TODO: what is this?
+        private readonly short UnknownOffset;
         private readonly int EofPaddingSize;
 
         public ScdFile( BinaryReader reader, bool verify ) : base() {
@@ -201,25 +201,25 @@ namespace VfxEditor.ScdFormat {
             ScdHeader.UpdateFileSize( writer, paddingSubtract ); // end with this
         }
 
-        public void Replace( ScdAudioEntry old, ScdAudioEntry newEntry ) {
-            var index = Audio.IndexOf( old );
-            if( index == -1 ) return;
-            Audio.Remove( old );
+        public void Replace( ScdAudioEntry entry, ScdAudioEntry newEntry ) {
+            var index = Audio.IndexOf( entry );
+            if( index == -1 || entry == newEntry || entry == null || newEntry == null ) return;
+            Audio.Remove( entry );
             Audio.Insert( index, newEntry );
+            entry.Player.Dispose();
         }
 
         public override void Dispose() => Audio.ForEach( x => x.Dispose() );
 
-        public static async void Import( string path, ScdAudioEntry music ) {
+        public async void Import( string path, ScdAudioEntry entry ) {
             await Task.Run( () => {
-                if( music.Format == SscfWaveFormat.Vorbis ) { // .ogg
-                    if( Path.GetExtension( path ) == ".wav" ) ScdVorbis.ImportWav( path, music );
-                    else ScdVorbis.ImportOgg( path, music );
-                }
-                else { // .wav
-                    if( Path.GetExtension( path ) == ".wav" ) ScdAdpcm.ImportWav( path, music );
-                    else ScdVorbis.ImportOgg( path, music ); // kind of jank, but hopefully works
-                }
+                var newEntry = entry.Data switch {
+                    ScdAdpcm _ => ( Path.GetExtension( path ) == ".wav" ) ? ScdAdpcm.ImportWav( path, entry ) : ScdVorbis.ImportOgg( path, entry ),
+                    ScdVorbis _ => ( Path.GetExtension( path ) == ".wav" ) ? ScdVorbis.ImportWav( path, entry ) : ScdVorbis.ImportOgg( path, entry ),
+                    _ => null
+                };
+
+                if( newEntry != null ) Replace( entry, newEntry );
             } );
         }
 

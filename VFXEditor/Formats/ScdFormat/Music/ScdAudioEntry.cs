@@ -3,6 +3,8 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Music.Marker;
+using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -18,29 +20,44 @@ namespace VfxEditor.ScdFormat {
         Atrac3Too = 0x0D
     }
 
+    [Flags]
+    public enum AudioFlag {
+        Enabled_Marker = 0x01,
+        Mono_Split = 0x02,
+        Version_Shift = 0x01000000
+    }
+
     public class ScdAudioEntry : ScdEntry, IUiItem {
         public readonly ScdFile File;
+        public readonly AudioPlayer Player;
+        public ScdAudioData Data;
 
         public int DataLength;
         public int NumChannels;
         public int SampleRate;
         public SscfWaveFormat Format;
-        public int LoopStart;
-        public int LoopEnd;
-        public int FirstFrame;
-        public short AuxCount;
-        public short BitsPerSample;
+        public int LoopStart = 0;
+        public int LoopEnd = 0;
 
-        public byte[] AuxChunkData;
-
-        public ScdAudioData Data;
-        public readonly AudioPlayer Player;
+        public readonly ParsedFlag<AudioFlag> Flags = new( "Flags" );
+        public ScdAudioMarker Marker = new();
 
         public bool NoLoop => LoopStart == 0 && LoopEnd == 0;
+        public bool HasMarker => Flags.HasFlag( AudioFlag.Enabled_Marker );
+        public int AuxDataSize => HasMarker ? Marker.GetSize() : 0;
 
         public ScdAudioEntry( ScdFile file ) {
             Player = new( this );
             File = file;
+        }
+
+        public ScdAudioEntry( ScdAudioEntry baseEntry, int dataLength, int numChannel, int sampleRate, SscfWaveFormat format ) : this( baseEntry.File ) {
+            DataLength = dataLength;
+            NumChannels = numChannel;
+            SampleRate = sampleRate;
+            Format = format;
+            Flags.Value = baseEntry.Flags.Value;
+            Marker = baseEntry.Marker;
         }
 
         public override void Read( BinaryReader reader ) {
@@ -50,29 +67,41 @@ namespace VfxEditor.ScdFormat {
             Format = ( SscfWaveFormat )reader.ReadInt32();
             LoopStart = reader.ReadInt32();
             LoopEnd = reader.ReadInt32();
-            FirstFrame = reader.ReadInt32();
-            AuxCount = reader.ReadInt16();
-            BitsPerSample = reader.ReadInt16();
+            var subInfoSize = reader.ReadInt32();
+            Flags.Read( reader );
 
-            if( DataLength == 0 ) {
-                AuxChunkData = Array.Empty<byte>();
-                return;
-            }
+            if( DataLength == 0 ) return;
 
-            var chunkStartPos = reader.BaseStream.Position;
-            var chunkEndPos = chunkStartPos;
-            for( var i = 0; i < AuxCount; i++ ) {
-                reader.ReadInt32(); // id
-                chunkEndPos += reader.ReadInt32(); // data, skip for now
-                reader.BaseStream.Position = chunkEndPos;
-            }
-            AuxChunkData = GetDataRange( chunkStartPos, chunkEndPos, reader );
+            // SubInfoSize is from here
+            if( HasMarker ) Marker.Read( reader );
 
             Data = Format switch {
-                SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, this ),
+                SscfWaveFormat.MsAdPcm => new ScdAdpcm( reader, subInfoSize - AuxDataSize, this ),
                 SscfWaveFormat.Vorbis => new ScdVorbis( reader, this ),
                 _ => null
             };
+        }
+
+        public void Dispose() {
+            Player.Dispose();
+            Data = null;
+        }
+
+        public override void Write( BinaryWriter writer ) => Write( writer, out var _ );
+
+        public void Write( BinaryWriter writer, out long padding ) {
+            writer.Write( DataLength );
+            writer.Write( NumChannels );
+            writer.Write( SampleRate );
+            writer.Write( ( int )Format );
+            writer.Write( LoopStart );
+            writer.Write( LoopEnd );
+            writer.Write( AuxDataSize + ( Data == null ? 0 : Data.GetSubInfoSize() ) );
+            Flags.Write( writer );
+            if( HasMarker ) Marker.Write( writer );
+            Data?.Write( writer );
+
+            padding = FileUtils.PadTo( writer, 16 );
         }
 
         public void Draw() {
@@ -97,34 +126,20 @@ namespace VfxEditor.ScdFormat {
             Player.Draw();
         }
 
-        public void Dispose() => Player.Dispose();
-
-        public override void Write( BinaryWriter writer ) => Write( writer, out var _ );
-
-        public void Write( BinaryWriter writer, out long padding ) {
-            writer.Write( DataLength );
-            writer.Write( NumChannels );
-            writer.Write( SampleRate );
-            writer.Write( ( int )Format );
-            writer.Write( LoopStart );
-            writer.Write( LoopEnd );
-            writer.Write( FirstFrame );
-            writer.Write( AuxCount );
-            writer.Write( BitsPerSample );
-
-            writer.Write( AuxChunkData );
-            Data?.Write( writer );
-
-            padding = FileUtils.PadTo( writer, 16 );
+        public void DrawTabs() {
+            if( ImGui.BeginTabItem( "Parameters" ) ) {
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    Flags.Draw();
+                }
+                ImGui.EndTabItem();
+            }
+            if( HasMarker && ImGui.BeginTabItem( "Markers" ) ) {
+                Marker.Draw();
+                ImGui.EndTabItem();
+            }
         }
 
-        public static byte[] GetDataRange( long start, long end, BinaryReader reader ) {
-            var savePos = reader.BaseStream.Position;
-            reader.BaseStream.Position = start;
-            var ret = reader.ReadBytes( ( int )( end - start ) );
-            reader.BaseStream.Position = savePos;
-            return ret;
-        }
+        // ==========================================
 
         public static ScdAudioEntry Default( ScdFile file ) {
             var audio = new ScdAudioEntry( file );

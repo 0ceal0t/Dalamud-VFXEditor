@@ -1,15 +1,22 @@
 using NAudio.Wave;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.ScdFormat.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdAdpcm : ScdAudioData {
-        public byte[] WaveHeader;
-        public byte[] Data;
-        public WaveFormat Format;
+        public readonly WaveFormat Format;
+        public readonly byte[] WaveHeader;
+        public readonly byte[] Data;
 
-        public ScdAdpcm( BinaryReader reader, ScdAudioEntry entry ) {
-            WaveHeader = reader.ReadBytes( entry.FirstFrame - entry.AuxChunkData.Length );
+        public ScdAdpcm( WaveFormat format, byte[] waveHeader, byte[] data, ScdAudioEntry entry ) : base( entry ) {
+            Format = format;
+            WaveHeader = waveHeader;
+            Data = data;
+        }
+
+        public ScdAdpcm( BinaryReader reader, int headerSize, ScdAudioEntry entry ) : base( entry ) {
+            WaveHeader = reader.ReadBytes( headerSize );
             Data = reader.ReadBytes( entry.DataLength );
 
             using var ms = new MemoryStream( WaveHeader );
@@ -27,7 +34,17 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( Data );
         }
 
-        public static void ImportWav( string path, ScdAudioEntry entry ) {
+        public override int SamplesToBytes( int samples ) => Format.BitsPerSample * samples / 8;
+
+        public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
+
+        public override Vector2 GetLoopTime() => new( Entry.LoopStart / Format.AverageBytesPerSecond, Entry.LoopEnd / Format.AverageBytesPerSecond );
+
+        public override int GetSubInfoSize() => WaveHeader.Length;
+
+        // ===================
+
+        public static ScdAudioEntry ImportWav( string path, ScdAudioEntry oldEntry ) {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
                 Dalamud.Log( "Already Adpcm, skipping conversion" );
@@ -40,14 +57,12 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
             if( !File.Exists( ScdManager.ConvertWav ) ) {
                 Dalamud.Error( "Could not conver to ADPCM" );
-                return;
+                return null;
             }
 
-            var data = ( ScdAdpcm )entry.Data;
             using var waveFile = new WaveFileReader( ScdManager.ConvertWav );
-
             var rawData = File.ReadAllBytes( ScdManager.ConvertWav );
-            var waveFormat = waveFile.WaveFormat;
+            var format = waveFile.WaveFormat;
 
             using var ms = new MemoryStream( rawData );
             using var br = new BinaryReader( ms );
@@ -56,8 +71,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             br.ReadInt32(); // WAVE
             br.ReadInt32(); // fmt
             var headerLength = br.ReadInt32();
-            data.WaveHeader = br.ReadBytes( headerLength );
-
+            var waveHeader = br.ReadBytes( headerLength );
             var magic = br.ReadInt32();
             while( magic != 0x61746164 ) { // data
                 var size = br.ReadInt32();
@@ -65,23 +79,22 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 magic = br.ReadInt32();
             }
             var dataLength = br.ReadInt32();
-            data.Data = br.ReadBytes( dataLength );
+            var data = br.ReadBytes( dataLength );
 
-            data.Format = waveFormat;
-            entry.DataLength = dataLength;
-            entry.FirstFrame = headerLength + entry.AuxChunkData.Length;
-            entry.SampleRate = waveFormat.SampleRate;
-            entry.NumChannels = waveFormat.Channels;
-            entry.BitsPerSample = ( short )waveFormat.BitsPerSample;
-        }
+            // Create new entry
+            var entry = new ScdAudioEntry(
+                oldEntry,
+                dataLength,
+                format.Channels,
+                format.SampleRate,
+                SscfWaveFormat.MsAdPcm
+            );
 
-        public override int SamplesToBytes( int samples ) => Format.BitsPerSample * samples / 8;
+            // Create new data
+            var adpcm = new ScdAdpcm( format, waveHeader, data, entry );
 
-        public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
-
-        public override void BytesToLoopStartEnd( int loopStart, int loopEnd, out double startTime, out double endTime ) {
-            startTime = ( double )loopStart / Format.AverageBytesPerSecond;
-            endTime = ( double )loopEnd / Format.AverageBytesPerSecond;
+            entry.Data = adpcm;
+            return entry;
         }
     }
 }
