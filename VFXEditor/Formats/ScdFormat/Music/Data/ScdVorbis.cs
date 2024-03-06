@@ -51,7 +51,12 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 var maxSamples = dataReader.ReadInt32();
                 var maxTime = ( float )maxSamples / entry.SampleRate;
 
-                if( Math.Abs( maxTime - ( SeekStep * SeekTable.Count ) ) < 0.02f ) SeekTable.Add( pos );
+                if( SeekTable.Count == 1 && maxTime > SeekStep ) {
+                    SeekStep = maxTime;
+                    Dalamud.Log( $"SeekStep is now: {SeekStep} seconds" );
+                }
+
+                if( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) SeekTable.Add( pos );
             }
         }
 
@@ -67,8 +72,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             Unknown2 = reader.ReadInt32();
 
             for( var i = 0; i < seekTableSize / 4; i++ ) {
-                var seek = reader.ReadInt32();
-                SeekTable.Add( seek );
+                SeekTable.Add( reader.ReadInt32() );
             }
 
             EncodedData = reader.ReadBytes( VorbisHeaderSize );
