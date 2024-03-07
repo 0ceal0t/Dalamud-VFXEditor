@@ -126,8 +126,7 @@ namespace VfxEditor.Select {
         }
 
         protected void DrawPathRow( uint iconId, string label, string path, string resultName ) {
-            if( string.IsNullOrEmpty( path ) ) return;
-            if( path.Contains( "BGM_Null" ) ) return;
+            if( string.IsNullOrEmpty( path ) || path.Contains( "BGM_Null" ) ) return;
 
             ImGui.TableNextRow();
 
@@ -144,7 +143,7 @@ namespace VfxEditor.Select {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             ImGui.TableNextColumn(); // Path
-            if( path.Contains( "action.pap" ) || path.Contains( "face.pap" ) ) {
+            if( path.Contains( "/action.pap" ) || path.Contains( "/face.pap" ) ) {
                 SelectUiUtils.DisplayPathWarning( path, "Be careful about modifying this file, as it contains dozens of animations for every job" );
             }
             else SelectUiUtils.DisplayPath( path );

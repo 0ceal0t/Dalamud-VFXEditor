@@ -104,7 +104,7 @@ namespace VfxEditor.Select {
             if( string.IsNullOrEmpty( path ) ) return new();
             Dictionary<string, Dictionary<string, string>> ret = new();
             foreach( var item in CharacterRaces ) {
-                ret[item.Name] = item.FaceOptions.ToDictionary( x => $"Face {x}", x => $"chara/human/{item.Id}/animation/f{x:D4}/nonresident/{path}.pap" );
+                ret[item.Name] = FileExistsFilter( item.FaceOptions.ToDictionary( x => $"Face {x}", x => $"chara/human/{item.Id}/animation/f{x:D4}/nonresident/{path}.pap" ) );
             }
             return ret;
         }
