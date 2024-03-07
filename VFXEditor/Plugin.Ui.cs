@@ -6,6 +6,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Export;
@@ -91,44 +92,60 @@ namespace VfxEditor {
         public static void DrawManagersMenu( IFileManager currentManager ) {
             using var _ = ImRaii.PushId( "Menu" );
 
-            if( ImGui.MenuItem( "Textures" ) ) TextureManager.Show();
-            ImGui.Separator();
-
             // Manually specify the order since it's different than the load order
-            var managers = new IFileManager[] {
-                AvfxManager,
-                TmbManager,
-                PapManager,
-                ScdManager,
-                UldManager,
-                SklbManager,
-                SkpManager,
-                PhybManager,
-                EidManager,
-                AtchManager,
-                MdlManager,
-                ShpkManager,
-                ShcdManager,
-                MtrlManager,
+            var categories = new List<IFileManager[]> {
+                new IFileManager[]{
+                    AvfxManager,
+                    TextureManager
+                },
+                new IFileManager[]{
+                    TmbManager,
+                    PapManager,
+                },
+                new IFileManager[]{
+                    ScdManager
+                },
+                new IFileManager[]{
+                    UldManager
+                },
+                new IFileManager[]{
+                    SklbManager,
+                    SkpManager,
+                    PhybManager,
+                    EidManager,
+                    AtchManager
+                },
+                new IFileManager[]{
+                    MdlManager,
+                    MtrlManager,
+                    ShpkManager,
+                    ShcdManager
+                }
             };
 
             var dropdown = false;
+            var managerCount = categories.Sum( x => x.Length );
+            var managerIdx = 0;
 
-            for( var i = 0; i < managers.Length; i++ ) {
-                var manager = managers[i];
+            foreach( var (category, categoryIdx) in categories.WithIndex() ) {
+                foreach( var manager in category ) {
+                    if( !dropdown && managerIdx < ( managerCount - 1 ) ) { // no need for a dropdown for the last one
+                        var width = ImGui.CalcTextSize( manager.GetName() ).X + ( 2 * ImGui.GetStyle().ItemSpacing.X ) + 10;
 
-                if( !dropdown && i < ( managers.Length - 1 ) ) { // no need for a dropdown for the last one
-                    var width = ImGui.CalcTextSize( manager.GetId() ).X + ( 2 * ImGui.GetStyle().ItemSpacing.X ) + 10;
-
-                    if( width > ImGui.GetContentRegionAvail().X ) {
-                        dropdown = true;
-                        using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                        if( !ImGui.BeginMenu( FontAwesomeIcon.EllipsisH.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                        if( width > ImGui.GetContentRegionAvail().X ) {
+                            dropdown = true;
+                            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                            if( !ImGui.BeginMenu( FontAwesomeIcon.EllipsisH.ToIconString() ) ) return; // Menu hidden, just skip the rest
+                        }
                     }
+
+                    using var disabled = ImRaii.Disabled( manager == currentManager );
+                    if( ImGui.MenuItem( manager.GetName() ) ) manager.Show();
+
+                    managerIdx++;
                 }
 
-                using var disabled = ImRaii.Disabled( manager == currentManager );
-                if( ImGui.MenuItem( manager.GetId() ) ) manager.Show();
+                if( categoryIdx < categories.Count - 1 ) ImGui.Separator();
             }
 
             if( dropdown ) ImGui.EndMenu();

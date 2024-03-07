@@ -45,6 +45,8 @@ namespace VfxEditor.FileManager {
 
         public string GetId() => Id;
 
+        public string GetName() => Id.ToLower();
+
         public WindowSystem GetWindowSystem() => WindowSystem;
     }
 }
