@@ -20,13 +20,14 @@ namespace VfxEditor.FileManager {
         protected string Name = "";
 
         protected SelectResult Source;
-        public string SourceDisplay => Source == null ? "[NONE]" : Source.DisplayString;
-        public string SourcePath => Source == null ? "" : Source.Path;
-
         protected SelectResult Replace;
+        public string SourceDisplay => Source == null ? "[NONE]" : Source.DisplayString;
         public string ReplaceDisplay => Replace == null ? "[NONE]" : Replace.DisplayString;
         public string ReplacePath => ( Disabled || Replace == null ) ? "" : Replace.Path;
         protected bool Disabled = false;
+
+        private string SourceTextInput = "";
+        private string ReplaceTextInput = "";
 
         public string WriteLocation { get; protected set; }
 
@@ -103,6 +104,7 @@ namespace VfxEditor.FileManager {
         public void SetSource( SelectResult result ) {
             if( result == null ) return;
             Source = result;
+            SourceTextInput = "";
 
             if( result.Type == SelectResultType.Local ) LoadLocal( result.Path, true );
             else LoadGame( result.Path, true );
@@ -116,14 +118,19 @@ namespace VfxEditor.FileManager {
             File?.Dispose();
             File = null;
             Source = null;
+            SourceTextInput = "";
         }
 
         public void SetReplace( SelectResult result ) {
             Replace = result;
+            ReplaceTextInput = "";
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
         }
 
-        protected void RemoveReplace() { Replace = null; }
+        protected void RemoveReplace() {
+            Replace = null;
+            ReplaceTextInput = "";
+        }
 
         // =====================
 
@@ -160,6 +167,10 @@ namespace VfxEditor.FileManager {
             Source = source;
             Replace = replace;
             Disabled = disabled;
+
+            SourceTextInput = "";
+            ReplaceTextInput = "";
+
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
             if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
@@ -259,7 +270,7 @@ namespace VfxEditor.FileManager {
             var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && ImGui.IsMouseHoveringRect( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ) );
 
             var color = hovered ?
-                ImGui.ColorConvertFloat4ToU32( UiUtils.YELLOW_COLOR ) :
+                ImGui.ColorConvertFloat4ToU32( UiUtils.DALAMUD_ORANGE ) :
                 ( Disabled ?
                     ImGui.ColorConvertFloat4ToU32( UiUtils.RED_COLOR ) :
                     ImGui.GetColorU32( ImGuiCol.TextDisabled )
@@ -316,10 +327,11 @@ namespace VfxEditor.FileManager {
 
         protected virtual void DrawExtraColumn() { }
 
+        // ====== TEXT INPUTS ============
+
         protected void DisplaySourceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Source" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-            var sourceString = Source == null ? "" : Source.DisplayString;
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -329,11 +341,14 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputTextWithHint( "", "[NONE]", ref sourceString, 255, ImGuiInputTextFlags.ReadOnly );
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
+                if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
+                    SetSource( new( SelectResultType.GamePath, SourceTextInput, $"[GAME] {SourceTextInput}", SourceTextInput ) );
+                }
+            }
 
             // Search
             ImGui.SameLine();
-
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
             }
@@ -342,7 +357,6 @@ namespace VfxEditor.FileManager {
         protected void DisplayReplaceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Replace" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
-            var previewString = Replace == null ? "" : Replace.DisplayString;
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
@@ -352,24 +366,33 @@ namespace VfxEditor.FileManager {
             // Input
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
-            ImGui.InputTextWithHint( "", "[NONE]", ref previewString, 255, ImGuiInputTextFlags.ReadOnly );
-            if( Replace != null && ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
+                if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
+                    SetReplace( new( SelectResultType.GamePath, ReplaceTextInput, $"[GAME] {ReplaceTextInput}", ReplaceTextInput ) );
+                }
+            }
 
-            if( Replace != null && ImGui.BeginPopup( "CopyPopup" ) ) {
-                ImGui.Text( Replace.Path );
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 2 );
-                if( ImGui.SmallButton( "Copy" ) ) ImGui.SetClipboardText( Replace.Path );
-                ImGui.EndPopup();
+            if( Replace != null ) {
+                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
+                if( ImGui.BeginPopup( "CopyPopup" ) ) {
+
+                    ImGui.TextDisabled( Replace.Path );
+                    ImGui.SameLine();
+                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
+                    SelectUiUtils.Copy( Replace.Path );
+
+                    ImGui.EndPopup();
+                }
             }
 
             // Search
             ImGui.SameLine();
-
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
             }
         }
+
+        // ==========================
 
         protected virtual void DisplayFileControls() {
             if( UiUtils.OkButton( "UPDATE" ) ) Update();

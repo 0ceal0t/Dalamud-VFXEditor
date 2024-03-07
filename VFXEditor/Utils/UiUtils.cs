@@ -31,8 +31,6 @@ namespace VfxEditor.Utils {
 
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );
 
-        public static readonly Vector4 YELLOW_COLOR = new( 0.984375f, 0.7265625f, 0.01176470f, 1.0f );
-
         public static readonly Vector4 DARK_GRAY = new( 0.21764705882f, 0.21764705882f, 0.21764705882f, 1 );
 
         public static Vector4 DALAMUD_RED => StyleModel.GetFromCurrent().BuiltInColors.DalamudRed.Value;
@@ -137,7 +135,7 @@ namespace VfxEditor.Utils {
 
         public static void WikiButton( string url ) {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), YELLOW_COLOR ) ) OpenUrl( url );
+                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), DALAMUD_ORANGE ) ) OpenUrl( url );
             }
             Tooltip( "Click to view more information on the VFXEditor wiki" );
         }
@@ -161,7 +159,7 @@ namespace VfxEditor.Utils {
                 VerifiedStatus.OK => GREEN_COLOR,
                 VerifiedStatus.ERROR => RED_COLOR,
                 VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
-                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => YELLOW_COLOR,
+                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => DALAMUD_ORANGE,
                 _ => new Vector4( 1 )
             };
 

@@ -51,7 +51,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             ImGui.SameLine();
             var selectedCount = Selected.Count;
             var totalCount = Group.Items.Count;
-            using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.YELLOW_COLOR, selectedCount > 0 );
+            using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.DALAMUD_ORANGE, selectedCount > 0 );
             ImGui.SetNextItemOpen( false, ImGuiCond.FirstUseEver );
             if( ImGui.CollapsingHeader( $"{HeaderText} [{selectedCount}/{totalCount}]###{HeaderText}" ) ) {
                 color.Pop();

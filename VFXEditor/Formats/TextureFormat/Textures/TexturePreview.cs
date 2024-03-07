@@ -1,6 +1,6 @@
 using Dalamud.Interface.Internal;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -67,7 +67,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
             if( Penumbra ) {
                 ImGui.SameLine();
-                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR );
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE );
                 ImGui.Text( "[Penumbra]" );
             }
 

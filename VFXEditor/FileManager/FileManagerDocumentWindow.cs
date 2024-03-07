@@ -39,7 +39,7 @@ namespace VfxEditor.FileManager {
                 ImGui.TableNextColumn();
 
                 var active = document == Manager.ActiveDocument;
-                using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_COLOR, active ) ) {
+                using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE, active ) ) {
                     ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 10 );
 
                     if( ShowSourceColumn ) {
