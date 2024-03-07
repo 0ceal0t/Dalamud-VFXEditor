@@ -29,8 +29,7 @@ namespace VfxEditor.ScdFormat {
 
         private bool LoopTimeInitialized = false;
         private bool LoopTimeRefreshing = false;
-        private double LoopStartTime = 0;
-        private double LoopEndTime = 0;
+        private Vector2 LoopTime = new( 0 );
 
         private double QueueSeek = -1;
 
@@ -88,17 +87,15 @@ namespace VfxEditor.ScdFormat {
 
             if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
                 var dragWidth = ImGui.GetStyle().GrabMinSize + 4f;
-                var startX = ( 221f - dragWidth ) * ( LoopStartTime / TotalTime ) + ( dragWidth / 2f );
-                var endX = ( 221f - dragWidth ) * ( LoopEndTime / TotalTime ) + ( dragWidth / 2f );
+                var range = LoopTime * ( ( 221f - dragWidth ) / ( float )TotalTime ) + new Vector2( dragWidth / 2f );
 
-                var startPos = drawPos + new Vector2( ( float )startX - 2, 0 );
-                var endPos = drawPos + new Vector2( ( float )endX - 2, 0 );
+                var startPos = drawPos + new Vector2( range.X - 1, 0 );
+                var endPos = drawPos + new Vector2( range.Y - 1, 0 );
 
                 var height = ImGui.GetFrameHeight();
-
                 var drawList = ImGui.GetWindowDrawList();
-                drawList.AddRectFilled( startPos, startPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
-                drawList.AddRectFilled( endPos, endPos + new Vector2( 4, height ), 0xFFFF0000, 1 );
+                drawList.AddRectFilled( startPos, startPos + new Vector2( 2, height ), ImGui.GetColorU32( UiUtils.PARSED_GREEN ), 1 );
+                drawList.AddRectFilled( endPos, endPos + new Vector2( 2, height ), ImGui.GetColorU32( UiUtils.DALAMUD_RED ), 1 );
             }
         }
 
@@ -183,16 +180,16 @@ namespace VfxEditor.ScdFormat {
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
                 ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
                 Play();
-                if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopStartTime > 0 ) {
+                if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopTime.X > 0 ) {
                     if( QueueSeek == -1 ) {
-                        QueueSeek = LoopStartTime;
+                        QueueSeek = LoopTime.X;
                         justQueued = true;
                     }
                 }
             }
-            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopEndTime - CurrentTime ) < 0.1f ) {
+            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopTime.Y - CurrentTime ) < 0.1f ) {
                 if( QueueSeek == -1 ) {
-                    QueueSeek = LoopStartTime;
+                    QueueSeek = LoopTime.X;
                     justQueued = true;
                 }
             }
@@ -299,9 +296,7 @@ namespace VfxEditor.ScdFormat {
             LoopTimeRefreshing = true;
 
             await Task.Run( () => {
-                var loop = Entry.Data.GetLoopTime();
-                LoopStartTime = loop.X;
-                LoopEndTime = loop.Y;
+                LoopTime = Entry.Data.GetLoopTime();
                 LoopTimeInitialized = true;
                 LoopTimeRefreshing = false;
             } );

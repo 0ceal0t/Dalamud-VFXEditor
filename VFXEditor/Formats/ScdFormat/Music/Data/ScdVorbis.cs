@@ -5,10 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Text;
 using VfxEditor.Formats.ScdFormat.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdVorbis : ScdAudioData {
+        public readonly bool LegacyImported = false; // old scds
+
         private readonly short EncodeMode = 0; // default to unencoded
         private readonly short EncodeByte = 0;
         private readonly int XorOffset = 0;
@@ -16,10 +19,10 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private readonly int Unknown1 = 0;
         private readonly int Unknown2 = 0;
 
-        private readonly float SeekStep = 0.1f;
+        private float SeekStep = 0.1f;
         private readonly List<int> SeekTable = new(); // how many bytes to get to each `SeekStep`
 
-        private readonly int VorbisHeaderSize;
+        private readonly int VorbisHeaderSize = 0;
         private readonly byte[] EncodedData;
         private readonly byte[] DecodedData;
         public readonly byte[] Data; // final decoded
@@ -33,31 +36,12 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private static readonly byte[] PagePattern = new byte[] { 0x4F, 0x67, 0x67, 0x53, 0x00 };
 
         public ScdVorbis( byte[] data, ScdAudioEntry entry ) : base( entry ) {
-            VorbisHeaderSize = 0;
-            Entry.DataLength = data.Length; // set data length here
-
-            EncodedData = Array.Empty<byte>(); // data already decoded
+            EncodedData = Array.Empty<byte>();
             DecodedData = data;
-            Data = data;
+            Data = DecodedData;
+            Entry.DataLength = Data.Length;
 
-            var candidates = Locate( Data, PagePattern, 0, false );
-            using var ms = new MemoryStream( Data );
-            using var dataReader = new BinaryReader( ms );
-            foreach( var offset in candidates ) {
-                var pos = offset - VorbisHeaderSize;
-                if( pos < 0 ) continue;
-                dataReader.BaseStream.Position = offset + 6;
-
-                var maxSamples = dataReader.ReadInt32();
-                var maxTime = ( float )maxSamples / entry.SampleRate;
-
-                if( SeekTable.Count == 1 && maxTime > SeekStep ) {
-                    SeekStep = maxTime;
-                    Dalamud.Log( $"SeekStep is now: {SeekStep} seconds" );
-                }
-
-                if( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) SeekTable.Add( pos );
-            }
+            PopualateSeekTable( Data );
         }
 
         public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) : base( entry ) {
@@ -67,13 +51,33 @@ namespace VfxEditor.ScdFormat.Music.Data {
             XorSize = reader.ReadInt32();
             SeekStep = reader.ReadSingle();
             var seekTableSize = reader.ReadInt32();
+
+            // ====== LEGACY SCD STUFF =======
+            if( Encoding.ASCII.GetString( BitConverter.GetBytes( seekTableSize ) ).EndsWith( "vor" ) ) {
+                LegacyImported = true;
+
+                EncodeMode = 0;
+                EncodeByte = 0;
+                XorOffset = 0;
+                XorSize = 0;
+                SeekStep = 0.1f;
+
+                reader.ReadBytes( 0x35C ); // skip legacy header
+                EncodedData = Array.Empty<byte>();
+                DecodedData = reader.ReadBytes( entry.DataLength + 0x10 );
+                Data = DecodedData;
+                Entry.DataLength = Data.Length;
+
+                PopualateSeekTable( Data );
+
+                return;
+            }
+            // ===============================
+
             VorbisHeaderSize = reader.ReadInt32();
             Unknown1 = reader.ReadInt32();
             Unknown2 = reader.ReadInt32();
-
-            for( var i = 0; i < seekTableSize / 4; i++ ) {
-                SeekTable.Add( reader.ReadInt32() );
-            }
+            for( var i = 0; i < seekTableSize / 4; i++ ) SeekTable.Add( reader.ReadInt32() );
 
             EncodedData = reader.ReadBytes( VorbisHeaderSize );
             var decodedHeader = new byte[EncodedData.Length];
@@ -88,6 +92,27 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 Data = ms.ToArray();
             }
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( Data, DecodedData.Length );
+        }
+
+        private void PopualateSeekTable( byte[] data ) {
+            var candidates = Locate( Data, PagePattern, 0, false );
+            using var ms = new MemoryStream( Data );
+            using var dataReader = new BinaryReader( ms );
+            foreach( var offset in candidates ) {
+                var pos = offset - VorbisHeaderSize;
+                if( pos < 0 ) continue;
+                dataReader.BaseStream.Position = offset + 6;
+
+                var maxSamples = dataReader.ReadInt32();
+                var maxTime = ( float )maxSamples / Entry.SampleRate;
+
+                if( SeekTable.Count == 1 && maxTime > SeekStep ) {
+                    SeekStep = maxTime;
+                    Dalamud.Log( $"SeekStep is now: {SeekStep} seconds" );
+                }
+
+                if( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) SeekTable.Add( pos );
+            }
         }
 
         public override int TimeToBytes( float time ) {
