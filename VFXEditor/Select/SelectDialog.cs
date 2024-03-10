@@ -42,8 +42,6 @@ namespace VfxEditor.Select {
         public string DisplayString; // [PREFIX] Name
         public string Path;
 
-        public bool IsCustomPath => !string.IsNullOrEmpty( Path ) && Type != SelectResultType.Local && !Dalamud.GameFileExists( Path );
-
         public SelectResult( SelectResultType type, string name, string displayString, string path ) {
             Type = type;
             Name = name;

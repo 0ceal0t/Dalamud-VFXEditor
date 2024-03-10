@@ -3,6 +3,7 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Formats.ScdFormat.Music.Marker;
 using VfxEditor.Parsing;
 using VfxEditor.ScdFormat.Music.Data;
@@ -39,10 +40,27 @@ namespace VfxEditor.ScdFormat {
         public int LoopStart = 0;
         public int LoopEnd = 0;
 
+        private Vector2 _LoopTimeInternal = new( -1, -1 );
+        public Vector2 LoopTime {
+            get {
+                try {
+                    if( _LoopTimeInternal.X < 0 ) _LoopTimeInternal = Data.GetLoopTime();
+                }
+                catch( Exception ) {
+                    _LoopTimeInternal = new( 0, 0 );
+                }
+                return _LoopTimeInternal;
+            }
+            set {
+                LoopStart = Data.TimeToBytes( value.X );
+                LoopEnd = Data.TimeToBytes( value.Y );
+                _LoopTimeInternal = Data.GetLoopTime();
+            }
+        }
+
         public readonly ParsedFlag<AudioFlag> Flags = new( "Flags" );
         public ScdAudioMarker Marker = new();
 
-        public bool NoLoop => LoopStart == 0 && LoopEnd == 0;
         public bool HasMarker => Flags.HasFlag( AudioFlag.Enabled_Marker );
         public int AuxDataSize => HasMarker ? Marker.GetSize() : 0;
 

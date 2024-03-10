@@ -5,7 +5,6 @@ using NAudio.Wave;
 using System;
 using System.IO;
 using System.Numerics;
-using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
 using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Utils;
@@ -26,10 +25,6 @@ namespace VfxEditor.ScdFormat {
         private double CurrentTime => LeftStream?.CurrentTime == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
-
-        private bool LoopTimeInitialized = false;
-        private bool LoopTimeRefreshing = false;
-        private Vector2 LoopTime = new( 0 );
 
         private double QueueSeek = -1;
 
@@ -85,9 +80,11 @@ namespace VfxEditor.ScdFormat {
                 }
             }
 
-            if( State != PlaybackState.Stopped && !Entry.NoLoop && LoopTimeInitialized && Plugin.Configuration.SimulateScdLoop ) {
+            if( State != PlaybackState.Stopped && Entry.LoopTime.Y > 0 && Plugin.Configuration.SimulateScdLoop ) {
+                if( Entry.LoopTime.X > TotalTime || Entry.LoopTime.Y > TotalTime ) return; // out of bounds
+
                 var dragWidth = ImGui.GetStyle().GrabMinSize + 4f;
-                var range = LoopTime * ( ( 221f - dragWidth ) / ( float )TotalTime ) + new Vector2( dragWidth / 2f );
+                var range = Entry.LoopTime * ( ( 221f - dragWidth ) / ( float )TotalTime ) + new Vector2( dragWidth / 2f );
 
                 var startPos = drawPos + new Vector2( range.X - 1, 0 );
                 var endPos = drawPos + new Vector2( range.Y - 1, 0 );
@@ -131,15 +128,10 @@ namespace VfxEditor.ScdFormat {
             }
             UiUtils.Tooltip( "Replace sound file" );
 
-            var loop = Entry.Data.GetLoopTime();
+            var loop = Entry.LoopTime;
             ImGui.SetNextItemWidth( 246f );
-            if( ImGui.InputFloat2( "##LoopStartEnd", ref loop ) ) {
-                Entry.LoopStart = Entry.Data.TimeToBytes( loop.X );
-                Entry.LoopEnd = Entry.Data.TimeToBytes( loop.Y );
-            }
+            if( ImGui.InputFloat2( "##LoopStartEnd", ref loop ) ) Entry.LoopTime = loop;
 
-            ImGui.SameLine();
-            if( UiUtils.DisabledButton( "Update", Plugin.Configuration.SimulateScdLoop ) ) RefreshLoopStartEndTime();
             ImGui.SameLine();
             ImGui.Text( "Loop Time" );
 
@@ -180,16 +172,16 @@ namespace VfxEditor.ScdFormat {
             if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
                 ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
                 Play();
-                if( !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && LoopTime.X > 0 ) {
+                if( Plugin.Configuration.SimulateScdLoop && Entry.LoopTime.X > 0 && Entry.LoopTime.Y > 0 ) {
                     if( QueueSeek == -1 ) {
-                        QueueSeek = LoopTime.X;
+                        QueueSeek = Entry.LoopTime.X;
                         justQueued = true;
                     }
                 }
             }
-            else if( currentState == PlaybackState.Playing && !Entry.NoLoop && Plugin.Configuration.SimulateScdLoop && LoopTimeInitialized && Math.Abs( LoopTime.Y - CurrentTime ) < 0.1f ) {
+            else if( currentState == PlaybackState.Playing && Entry.LoopTime.Y > 0 && Plugin.Configuration.SimulateScdLoop && Math.Abs( Entry.LoopTime.Y - CurrentTime ) < 0.1f ) {
                 if( QueueSeek == -1 ) {
-                    QueueSeek = LoopTime.X;
+                    QueueSeek = Entry.LoopTime.X;
                     justQueued = true;
                 }
             }
@@ -206,8 +198,6 @@ namespace VfxEditor.ScdFormat {
         private void Play() {
             Reset();
             try {
-                if( !LoopTimeInitialized ) RefreshLoopStartEndTime();
-
                 var stream = Entry.Data.GetStream();
                 var format = stream.WaveFormat;
                 LeftStream = ConvertStream( stream );
@@ -290,17 +280,6 @@ namespace VfxEditor.ScdFormat {
             WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
             _ => stream
         };
-
-        private async void RefreshLoopStartEndTime() {
-            if( LoopTimeRefreshing ) return;
-            LoopTimeRefreshing = true;
-
-            await Task.Run( () => {
-                LoopTime = Entry.Data.GetLoopTime();
-                LoopTimeInitialized = true;
-                LoopTimeRefreshing = false;
-            } );
-        }
 
         public void Reset() {
             CurrentOutput?.Stop();

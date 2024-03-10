@@ -90,11 +90,11 @@ namespace VfxEditor.Interop {
         private static bool GetReplacePath( string gamePath, out string localPath ) {
             localPath = null;
 
-            if( Plugin.State != WorkspaceState.None ) return GetCustomPathBackup( gamePath, out localPath );
+            if( Plugin.State != WorkspaceState.None ) return false;
 
             foreach( var manager in Plugin.Managers.Where( x => x != null ) ) {
-                if( manager.GetReplacePath( gamePath, out var localFile ) ) {
-                    localPath = localFile;
+                if( manager.GetReplacePath( gamePath, out var managerLocalPath ) ) {
+                    localPath = managerLocalPath;
                     return true;
                 }
             }

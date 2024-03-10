@@ -34,11 +34,13 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( Data );
         }
 
-        public override int SamplesToBytes( int samples ) => Format.BitsPerSample * samples / 8;
+        public override int SamplesToBytes( int samples ) => TimeToBytes( samples / Entry.SampleRate );
 
         public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
 
-        public override Vector2 GetLoopTime() => new( Entry.LoopStart / Format.AverageBytesPerSecond, Entry.LoopEnd / Format.AverageBytesPerSecond );
+        public float BytesToTime( int bytes ) => ( float )bytes / Format.AverageBytesPerSecond;
+
+        public override Vector2 GetLoopTime() => new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
 
         public override int GetSubInfoSize() => WaveHeader.Length;
 

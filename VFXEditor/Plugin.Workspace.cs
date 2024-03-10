@@ -240,11 +240,14 @@ namespace VfxEditor {
         // =======================
 
         public static void AddCustomBackupLocation( SelectResult result, string localPath ) {
-            if( result == null || !result.IsCustomPath ) return;
+            if( result == null || result.Type == SelectResultType.Local ) return;
             AddCustomBackupLocation( result.Path, localPath );
         }
 
         public static void AddCustomBackupLocation( string gamePath, string localPath ) {
+            if( string.IsNullOrEmpty( gamePath ) || string.IsNullOrEmpty( localPath ) ) return;
+            if( Dalamud.GameFileExists( gamePath ) ) return; // not a custom path
+
             CustomPathBackups[gamePath.ToLower()] = localPath;
             if( Configuration?.LogDebug == true ) {
                 Dalamud.Log( "[CUSTOM]" );

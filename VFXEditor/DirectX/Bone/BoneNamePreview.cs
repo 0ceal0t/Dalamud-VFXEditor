@@ -56,8 +56,6 @@ namespace VfxEditor.DirectX {
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
             UpdateDraw();
-
-            Dalamud.Log( $"Loaded wireframe {NumWireframe}" );
         }
 
         public void LoadEmpty( int renderId, FileManagerFile file ) {

@@ -133,11 +133,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
             return SeekTable.Count * SeekStep;
         }
 
-        public int BytesToSamples( int bytes ) => ( int )( BytesToTime( bytes ) * Entry.SampleRate );
-
         public override Vector2 GetLoopTime() {
             if( Entry.LoopStart == 0 && Entry.LoopEnd == 0 ) return new( 0, 0 );
-
             return new( ( float )BytesToTime( Entry.LoopStart ), ( float )BytesToTime( Entry.LoopEnd ) );
         }
 
