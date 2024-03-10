@@ -41,7 +41,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             Data = DecodedData;
             Entry.DataLength = Data.Length;
 
-            PopualateSeekTable( Data );
+            PopualateSeekTable();
         }
 
         public ScdVorbis( BinaryReader reader, ScdAudioEntry entry ) : base( entry ) {
@@ -68,7 +68,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 Data = DecodedData;
                 Entry.DataLength = Data.Length;
 
-                PopualateSeekTable( Data );
+                PopualateSeekTable();
 
                 return;
             }
@@ -94,7 +94,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTable( Data, DecodedData.Length );
         }
 
-        private void PopualateSeekTable( byte[] data ) {
+        private void PopualateSeekTable() {
             var candidates = Locate( Data, PagePattern, 0, false );
             using var ms = new MemoryStream( Data );
             using var dataReader = new BinaryReader( ms );

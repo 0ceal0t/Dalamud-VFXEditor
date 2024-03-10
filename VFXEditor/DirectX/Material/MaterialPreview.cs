@@ -187,6 +187,8 @@ namespace VfxEditor.DirectX {
             return new ShaderResourceView( Device, texture );
         }
 
+        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();
+
         public override void Dispose() {
             base.Dispose();
             Model?.Dispose();

@@ -88,6 +88,8 @@ namespace VfxEditor.DirectX.Mesh {
                     new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
         }
 
+        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();
+
         public override void Dispose() {
             base.Dispose();
             Model?.Dispose();

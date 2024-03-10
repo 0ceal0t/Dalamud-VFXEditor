@@ -25,6 +25,7 @@ namespace VfxEditor.ScdFormat {
         private double CurrentTime => LeftStream?.CurrentTime == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
 
         private bool IsVorbis => Entry.Format == SscfWaveFormat.Vorbis;
+        private bool LoopSound => ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects );
 
         private double QueueSeek = -1;
 
@@ -43,12 +44,6 @@ namespace VfxEditor.ScdFormat {
             DrawChannels();
             ProcessQueue(); // Loop, etc.
             Entry.DrawTabs();
-        }
-
-        public void DrawMiniPlayer() {
-            using var _ = ImRaii.PushId( "Music" );
-            DrawControls();
-            ProcessQueue(); // Loop, etc.
         }
 
         private void DrawControls() {
@@ -169,8 +164,7 @@ namespace VfxEditor.ScdFormat {
             var currentState = State;
             var justQueued = false;
 
-            if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing &&
-                ( ( IsVorbis && Plugin.Configuration.LoopMusic ) || ( !IsVorbis && Plugin.Configuration.LoopSoundEffects ) ) ) {
+            if( currentState == PlaybackState.Stopped && PrevState == PlaybackState.Playing && LoopSound ) {
                 Play();
                 if( Plugin.Configuration.SimulateScdLoop && Entry.LoopTime.X > 0 && Entry.LoopTime.Y > 0 ) {
                     if( QueueSeek == -1 ) {
@@ -248,6 +242,23 @@ namespace VfxEditor.ScdFormat {
             }
         }
 
+        public void Reset() {
+            CurrentOutput?.Stop();
+            CurrentOutput?.Dispose();
+            LeftStream?.Dispose();
+            RightStream?.Dispose();
+            LeftStream = null;
+            RightStream = null;
+            CurrentOutput = null;
+        }
+
+        public void Dispose() {
+            CurrentOutput?.Stop();
+            Reset();
+        }
+
+        // ======================
+
         private void ImportDialog() {
             FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( bool ok, string res ) => {
                 if( ok ) {
@@ -280,20 +291,5 @@ namespace VfxEditor.ScdFormat {
             WaveFormatEncoding.Adpcm => WaveFormatConversionStream.CreatePcmStream( stream ),
             _ => stream
         };
-
-        public void Reset() {
-            CurrentOutput?.Stop();
-            CurrentOutput?.Dispose();
-            LeftStream?.Dispose();
-            RightStream?.Dispose();
-            LeftStream = null;
-            RightStream = null;
-            CurrentOutput = null;
-        }
-
-        public void Dispose() {
-            CurrentOutput?.Stop();
-            Reset();
-        }
     }
 }

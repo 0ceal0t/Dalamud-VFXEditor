@@ -73,6 +73,8 @@ namespace VfxEditor.DirectX {
 
         protected override bool ShowEdges() => false;
 
+        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXSkeleton();
+
         protected override void DrawPasses() {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
         }

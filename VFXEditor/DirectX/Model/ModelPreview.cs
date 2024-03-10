@@ -122,6 +122,8 @@ namespace VfxEditor.DirectX {
             Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
         }
 
+        protected override void DrawPopup() { }
+
         public override void Dispose() {
             base.Dispose();
             Model?.Dispose();

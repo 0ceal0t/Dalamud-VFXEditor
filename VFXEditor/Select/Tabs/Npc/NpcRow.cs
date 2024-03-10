@@ -19,7 +19,9 @@ namespace VfxEditor.Select.Tabs.Npc {
         public string BaseIdString => BaseId.ToString().PadLeft( 4, '0' );
         public string PathPrefix => IsMonster ? "monster" : "demihuman";
         public string RootPath => "chara/" + PathPrefix + "/" + ModelString + ( IsMonster ? "/obj/body/b" : "/obj/equipment/e" ) + BaseIdString + "/";
+
         public string AtchPath => $"chara/xls/attachoffset/{ModelString}.atch";
+
         public string ImcPath => RootPath + ( IsMonster ? "b" : "e" ) + BaseIdString + ".imc";
 
         public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc, string name ) {
@@ -36,5 +38,9 @@ namespace VfxEditor.Select.Tabs.Npc {
         public string GetVfxPath( int vfxId ) => RootPath + "vfx/eff/v" + ( IsMonster ? "m" : "e" ) + vfxId.ToString().PadLeft( 4, '0' ) + ".avfx";
 
         public string GetSkeletonPath( string prefix, string extension ) => $"chara/{PathPrefix}/{ModelString}/skeleton/base/b0001/{prefix}_{ModelString}b0001.{extension}";
+
+        // chara/demihuman/d0001/obj/equipment/e0002/model/d0001e0002_met.mdl
+        // chara/monster/m0150/obj/body/b0001/model/m0150 b0001.mdl
+        public string GetMdlPath( string suffix ) => RootPath + "model/" + ModelString + ( IsMonster ? "b" : "e" ) + BaseIdString + ( IsMonster ? "" : "_" + suffix ) + ".mdl";
     }
 }

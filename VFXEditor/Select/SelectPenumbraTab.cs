@@ -27,6 +27,7 @@ namespace VfxEditor.Select {
             Items.AddRange( Plugin.PenumbraIpc.GetMods() );
         }
 
+        // $"{group} {option}" -> (gamePath, localPath)
         public override void LoadSelection( string item, out Dictionary<string, List<(string, string)>> loaded ) {
             loaded = new();
             var baseModPath = Plugin.PenumbraIpc.GetModDirectory();
@@ -43,7 +44,7 @@ namespace VfxEditor.Select {
                             if( mod.Files != null ) {
                                 var defaultFiles = new List<(string, string)>();
                                 AddToFiles( mod?.Files, defaultFiles, modPath );
-                                loaded[fileName] = defaultFiles;
+                                loaded["default_mod"] = defaultFiles;
                             }
                         }
                         else {
@@ -77,7 +78,10 @@ namespace VfxEditor.Select {
         }
 
         protected override void DrawSelected() {
-            var filtered = Loaded.ToDictionary( x => (x.Key, 0u), x => x.Value.Where( y => Path.Exists( y.Item2 ) ) ); // Filter out local paths that don't exist
+            var filtered = Loaded.ToDictionary(
+                x => (x.Key, 0u),
+                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList()
+            ); // Filter out local paths that don't exist
             DrawPaths( filtered, Selected );
         }
 

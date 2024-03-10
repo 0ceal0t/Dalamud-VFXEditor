@@ -327,7 +327,8 @@ namespace VfxEditor.DirectX.Renderers {
 
             using( var popup = ImRaii.Popup( "Popup" ) ) {
                 if( popup ) {
-                    // TODO
+                    Plugin.Configuration.DrawDirectXCommon();
+                    DrawPopup();
                 }
             }
 
@@ -345,6 +346,8 @@ namespace VfxEditor.DirectX.Renderers {
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
         }
+
+        protected abstract void DrawPopup();
 
         public override void Dispose() {
             RasterizeState?.Dispose();
