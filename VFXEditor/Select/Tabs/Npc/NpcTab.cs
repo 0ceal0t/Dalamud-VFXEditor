@@ -1,3 +1,4 @@
+using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -60,6 +61,11 @@ namespace VfxEditor.Select.Tabs.Npc {
         protected override void DrawExtra() => SelectUiUtils.NpcThankYou();
 
         protected override string GetName( NpcRow item ) => item.Name;
+
+        protected override void DrawSelected() {
+            ImGui.Text( "Variant: " + Selected.Variant );
+            DrawPaths( Loaded, Selected.Name );
+        }
 
         // ====== UTILS ===========
 
