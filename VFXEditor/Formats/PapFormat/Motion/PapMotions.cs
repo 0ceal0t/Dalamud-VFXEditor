@@ -56,6 +56,10 @@ namespace VfxEditor.PapFormat.Motion {
                 return $"chara/human/{charaType}/skeleton/face/{faceType}/skl_{charaType}{faceType}.sklb";
             }
 
+            if( !string.IsNullOrEmpty( sourcePath ) && sourcePath.Contains( "material.pap" ) ) {
+                return "chara/common/animation/skl_material.sklb";
+            }
+
             var format = modelType switch {
                 SkeletonType.Monster => "chara/monster/m{0:D4}/skeleton/base/b{1:D4}/skl_m{0:D4}b{1:D4}.sklb",
                 SkeletonType.DemiHuman => "chara/demihuman/d{0:D4}/skeleton/base/b{1:D4}/skl_d{0:D4}b{1:D4}.sklb",

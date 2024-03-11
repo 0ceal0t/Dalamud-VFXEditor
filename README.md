@@ -118,4 +118,12 @@ https://github.com/NotAdam/Lumina/blob/73e5bbff7c1668054f410b14815a01eae68d8e8e/
 
 https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Files/MdlFile.cs#L7
 https://github.com/NotAdam/Lumina/blob/40dab50183eb7ddc28344378baccc2d63ae71d35/src/Lumina/Data/Parsing/MdlStructs.cs#L13
+
+chara/monster/m0733/animation/s0001/body/material.pap
+chara/weapon/w0814/animation/s0001/body/material.pap
+chara/demihuman/d1024/animation/s0001/top/material.pap
+
+chara/weapon/w0101/animation/s0002/body/material.pap
+chara/monster/m0105/animation/s0002/body/material.pap
+chara/weapon/w0601/animation/s0002/body/material.pap
 ```

@@ -48,5 +48,8 @@ namespace VfxEditor.Select.Tabs.Items {
         }
 
         public string GetMtrlPath( int id, string suffix ) => $"chara/weapon/{ModelString}/obj/body/{BodyString}/material/v" + id.ToString().PadLeft( 4, '0' ) + $"/mt_{ModelString}{BodyString}_{suffix}.mtrl";
+
+        // chara/weapon/w0101/animation/s0002/body/material.pap
+        public string GetMaterialPap( int id ) => $"chara/weapon/{ModelString}/animation/s" + id.ToString().PadLeft( 4, '0' ) + "/body/material.pap";
     }
 }
