@@ -156,11 +156,11 @@ namespace VfxEditor.ScdFormat {
             writer.Write( 0 ); // attribute
             writer.Write( EofPaddingSize );
 
-            var soundOffset = PopulateOffsetPlaceholders( writer, Sounds );
-            var trackOffset = PopulateOffsetPlaceholders( writer, Tracks );
-            var audioOffset = PopulateOffsetPlaceholders( writer, Audio );
-            var layoutOffset = PopulateOffsetPlaceholders( writer, Layouts );
-            var attributeOffset = PopulateOffsetPlaceholders( writer, Attributes );
+            var soundOffset = PopulateOffsetPlaceholders( writer, Sounds, false );
+            var trackOffset = PopulateOffsetPlaceholders( writer, Tracks, false );
+            var audioOffset = PopulateOffsetPlaceholders( writer, Audio, false );
+            var layoutOffset = PopulateOffsetPlaceholders( writer, Layouts, false );
+            var attributeOffset = PopulateOffsetPlaceholders( writer, Attributes, true );
 
             // Update placeholders
             var savePos = writer.BaseStream.Position;
@@ -225,8 +225,8 @@ namespace VfxEditor.ScdFormat {
             } );
         }
 
-        private static int PopulateOffsetPlaceholders<T>( BinaryWriter writer, List<T> items ) {
-            if( items.Count == 0 ) return 0;
+        private static int PopulateOffsetPlaceholders<T>( BinaryWriter writer, List<T> items, bool defaultZero ) {
+            if( items.Count == 0 ) return defaultZero ? 0 : ( int )writer.BaseStream.Position;
             var offset = writer.BaseStream.Position;
             foreach( var _ in items ) writer.Write( 0 );
             FileUtils.PadTo( writer, 16 );

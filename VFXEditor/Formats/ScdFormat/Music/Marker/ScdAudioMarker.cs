@@ -17,8 +17,8 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
         public readonly ParsedFloat LoopStart = new( "Loop Start" );
         public readonly ParsedFloat LoopEnd = new( "Loop End" );
 
-        public readonly List<ParsedFloat> Markers = new();
-        private readonly CommandListView<ParsedFloat> MarkerView;
+        public readonly List<ParsedDouble> Markers = new();
+        private readonly CommandListView<ParsedDouble> MarkerView;
 
         public ScdAudioMarker() {
             MarkerView = new( Markers, () => new( "##Marker" ), true );
@@ -41,7 +41,7 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
             var numMarkers = reader.ReadInt32();
 
             for( var i = 0; i < numMarkers; i++ ) {
-                var newMarker = new ParsedFloat( "##Marker" ) {
+                var newMarker = new ParsedDouble( "##Marker" ) {
                     Value = ( float )reader.ReadInt32() / Entry.SampleRate
                 };
                 Markers.Add( newMarker );
@@ -56,7 +56,7 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
             writer.Write( ( int )( LoopStart.Value * Entry.SampleRate ) );
             writer.Write( ( int )( LoopEnd.Value * Entry.SampleRate ) );
             writer.Write( Markers.Count );
-            foreach( var marker in Markers ) writer.Write( ( int )Math.Round( marker.Value * Entry.SampleRate ) );
+            foreach( var marker in Markers ) writer.Write( ( int )Math.Round( marker.Value * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
 
             FileUtils.PadTo( writer, 16 );
         }
