@@ -22,8 +22,8 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt BindPointId = new( "Bind Point Id" );
         private readonly ParsedInt Rotation = new( "Rotation" );
         private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "Object Control" );
-        private readonly ParsedInt Unk6 = new( "Unknown 6" );
-        private readonly ParsedInt Unk7 = new( "Unknown 7" );
+        private readonly ParsedBool NoulithAlignment = new( "Noulith Alignment" );
+        private readonly ParsedBool ScaleEnabled = new( "Scale Enabled" );
         private readonly ParsedFloat Scale = new( "Scale" );
 
         public C203( TmbFile file ) : base( file ) { }
@@ -36,8 +36,8 @@ namespace VfxEditor.TmbFormat.Entries {
             BindPointId,
             Rotation,
             ObjectControl,
-            Unk6,
-            Unk7,
+            NoulithAlignment,
+            ScaleEnabled,
             Scale
         };
     }
