@@ -16,7 +16,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public unsafe class PapMotionSkeleton : PapMotionPreview {
-        private static PapBonePreview PapPreview => Plugin.DirectXManager.PapPreview;
+        private static PapBonePreview Preview => Plugin.DirectXManager.PapPreview;
 
         public readonly int RenderId = Renderer.NewId;
 
@@ -32,8 +32,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( Data == null ) {
                 UpdateFrameData();
             }
-
-            else if( PapPreview.CurrentRenderId != RenderId ) {
+            else if( Preview.CurrentRenderId != RenderId ) {
                 Frame = 0;
                 Playing = false;
                 UpdateFrameData();
@@ -88,14 +87,12 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
             if( ImGui.Button( "Export" ) ) ExportDialog( Motion.File.Animations[idx].GetName() );
-
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) ImportDialog( idx );
-
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            PapPreview.DrawInline();
+            Preview.DrawInline();
         }
 
         // ======== UPDATING ===========
@@ -156,10 +153,10 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
         private void UpdatePreview() {
             if( Data == null || Data.Count == 0 || Motion.TotalFrames == 0 ) {
-                PapPreview.LoadEmpty( Motion );
+                Preview.LoadEmpty( this );
             }
             else {
-                PapPreview.LoadSkeleton( Motion, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
+                Preview.LoadSkeleton( this, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
             }
         }
     }

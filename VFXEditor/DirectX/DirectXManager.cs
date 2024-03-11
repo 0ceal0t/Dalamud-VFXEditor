@@ -15,6 +15,7 @@ namespace VfxEditor.DirectX {
         public readonly ModelPreview ModelPreview;
         public readonly GradientRenderer GradientView;
         public readonly PapBonePreview PapPreview;
+        public readonly GradientRenderer PapMaterialPreview;
         public readonly BoneNamePreview PhybPreview;
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
@@ -34,6 +35,7 @@ namespace VfxEditor.DirectX {
             ModelPreview = new( Device, Ctx, shaderPath );
             GradientView = new( Device, Ctx, shaderPath );
             PapPreview = new( Device, Ctx, shaderPath );
+            PapMaterialPreview = new( Device, Ctx, shaderPath );
             PhybPreview = new( Device, Ctx, shaderPath );
             SklbPreview = new( Device, Ctx, shaderPath );
             EidPreview = new( Device, Ctx, shaderPath );
@@ -60,6 +62,9 @@ namespace VfxEditor.DirectX {
         public void Dispose() {
             Renderers.ForEach( x => x.Dispose() );
             Renderers.Clear();
+
+            GradientView.Dispose();
+            PapMaterialPreview.Dispose();
 
             Device = null;
             Ctx = null;

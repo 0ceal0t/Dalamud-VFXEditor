@@ -20,7 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         private static int EDITOR_ID = 0;
         private readonly CurveType Type;
-        private readonly int Id;
+        private readonly int Id = EDITOR_ID++;
 
         public readonly AvfxEnum<CurveBehavior> PreBehavior = new( "Pre Behavior", "BvPr" );
         public readonly AvfxEnum<CurveBehavior> PostBehavior = new( "Post Behavior", "BvPo" );
@@ -39,7 +39,6 @@ namespace VfxEditor.AvfxFormat {
             Type = type;
             Locked = locked;
 
-            Id = EDITOR_ID++;
             KeyList = new( this );
 
             Parsed = new() {

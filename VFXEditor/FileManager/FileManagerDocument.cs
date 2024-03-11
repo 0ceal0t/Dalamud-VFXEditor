@@ -343,7 +343,8 @@ namespace VfxEditor.FileManager {
             ImGui.SetNextItemWidth( inputSize );
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
                 if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
-                    SetSource( new( SelectResultType.GamePath, SourceTextInput, $"[GAME] {SourceTextInput}", SourceTextInput ) );
+                    var cleanedPath = SourceTextInput.Trim().Replace( "\\", "/" );
+                    SetSource( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
                 }
             }
 
@@ -368,7 +369,8 @@ namespace VfxEditor.FileManager {
             ImGui.SetNextItemWidth( inputSize );
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
                 if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
-                    SetReplace( new( SelectResultType.GamePath, ReplaceTextInput, $"[GAME] {ReplaceTextInput}", ReplaceTextInput ) );
+                    var cleanedPath = ReplaceTextInput.Trim().Replace( "\\", "/" );
+                    SetReplace( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
                 }
             }
 

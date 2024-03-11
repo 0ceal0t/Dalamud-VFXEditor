@@ -2,7 +2,6 @@ using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using VfxEditor.DirectX;
 using VfxEditor.Formats.PapFormat.Motion.Preview;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Parsing;
@@ -22,7 +21,6 @@ namespace VfxEditor.PapFormat.Motion {
     }
 
     public unsafe class PapMotion {
-        public readonly int RenderId = Renderer.NewId;
         public readonly PapFile File;
         public readonly hkaAnimatedSkeleton* AnimatedSkeleton;
         public readonly hkaAnimationControl* AnimationControl;
