@@ -1,3 +1,4 @@
+using ImGuiNET;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,12 @@ using System.Linq;
 using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Select {
-    public class SelectPenumbraTab : SelectTab<string, Dictionary<string, List<(string, string)>>> {
+    public class SelectedPenumbraMod {
+        public Dictionary<string, List<string>> Files;
+        public PenumbraMeta Meta;
+    }
+
+    public class SelectPenumbraTab : SelectTab<string, SelectedPenumbraMod> {
         public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared", SelectResultType.Local ) { }
 
         public override void Draw() {
@@ -28,44 +34,53 @@ namespace VfxEditor.Select {
         }
 
         // $"{group} {option}" -> (gamePath, localPath)
-        public override void LoadSelection( string item, out Dictionary<string, List<(string, string)>> loaded ) {
+        public override void LoadSelection( string item, out SelectedPenumbraMod loaded ) {
             loaded = new();
+            var files = new Dictionary<string, List<(string, string)>>();
+
             var baseModPath = Plugin.PenumbraIpc.GetModDirectory();
             if( string.IsNullOrEmpty( baseModPath ) ) return;
 
             try {
                 var modPath = Path.Join( baseModPath, Selected );
-                var files = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
-                foreach( var file in files ) {
+                loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
+
+                var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
+                foreach( var modFile in modFiles ) {
                     try {
-                        var fileName = Path.GetFileName( file ).Replace( ".json", "" );
-                        if( fileName == "default_mod" ) {
-                            var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( file ) );
+                        var modFileName = Path.GetFileName( modFile ).Replace( ".json", "" );
+                        if( modFileName == "default_mod" ) {
+                            var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( modFile ) );
                             if( mod.Files != null ) {
                                 var defaultFiles = new List<(string, string)>();
                                 AddToFiles( mod?.Files, defaultFiles, modPath );
-                                loaded["default_mod"] = defaultFiles;
+                                files["default_mod"] = defaultFiles;
                             }
                         }
                         else {
-                            var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( file ) );
+                            var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( modFile ) );
                             if( group.Options != null ) {
                                 foreach( var option in group.Options.Where( x => x.Files != null ) ) {
                                     var optionFiles = new List<(string, string)>();
                                     AddToFiles( option?.Files, optionFiles, modPath );
-                                    loaded[$"{group.Name} / {option.Name}"] = optionFiles;
+                                    files[$"{group.Name} / {option.Name}"] = optionFiles;
                                 }
                             }
                         }
                     }
                     catch( Exception e ) {
-                        Dalamud.Error( e, file );
+                        Dalamud.Error( e, modFile );
                     }
                 }
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error reading Penumbra mods" );
             }
+
+            loaded.Files = files.ToDictionary(
+                x => x.Key,
+                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList() // Filter out local paths that don't exist
+            );
         }
 
         private void AddToFiles( Dictionary<string, string> filesToAdd, List<(string, string)> files, string modPath ) {
@@ -78,11 +93,12 @@ namespace VfxEditor.Select {
         }
 
         protected override void DrawSelected() {
-            var filtered = Loaded.ToDictionary(
-                x => (x.Key, 0u),
-                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList()
-            ); // Filter out local paths that don't exist
-            DrawPaths( filtered, Selected );
+            if( Loaded.Meta != null ) {
+                ImGui.TextDisabled( $"by {Loaded.Meta.Author}" );
+            }
+            if( Loaded.Files != null ) {
+                DrawPaths( Loaded.Files, Selected );
+            }
         }
 
         protected override string GetName( string item ) => item;

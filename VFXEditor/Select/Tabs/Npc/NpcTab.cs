@@ -63,7 +63,7 @@ namespace VfxEditor.Select.Tabs.Npc {
         protected override string GetName( NpcRow item ) => item.Name;
 
         protected override void DrawSelected() {
-            ImGui.Text( "Variant: " + Selected.Variant );
+            ImGui.TextDisabled( "Variant: " + Selected.Variant );
             DrawPaths( Loaded, Selected.Name );
         }
 

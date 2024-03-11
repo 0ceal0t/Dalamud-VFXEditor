@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             var paths = new Dictionary<string, string> {
                 { "Icon", path }
             };
-            if( Dalamud.DataManager.FileExists( hdPath ) ) paths.Add( "HD Icons", hdPath );
+            if( Dalamud.DataManager.FileExists( hdPath ) ) paths.Add( "HD Icon", hdPath );
             DrawPaths( paths, Selected.Name );
         }
 

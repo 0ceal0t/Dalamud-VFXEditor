@@ -76,7 +76,7 @@ namespace VfxEditor.ScdFormat {
             }
 
             if( State != PlaybackState.Stopped && Entry.LoopTime.Y > 0 && Plugin.Configuration.SimulateScdLoop ) {
-                if( Entry.LoopTime.X > TotalTime || Entry.LoopTime.Y > TotalTime ) return; // out of bounds
+                if( Entry.LoopTime.X > ( TotalTime + 1f ) || Entry.LoopTime.Y > ( TotalTime + 1f ) ) return; // out of bounds
 
                 var dragWidth = ImGui.GetStyle().GrabMinSize + 4f;
                 var range = Entry.LoopTime * ( ( 221f - dragWidth ) / ( float )TotalTime ) + new Vector2( dragWidth / 2f );

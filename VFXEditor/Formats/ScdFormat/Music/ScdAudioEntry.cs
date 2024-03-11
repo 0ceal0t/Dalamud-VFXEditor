@@ -67,6 +67,7 @@ namespace VfxEditor.ScdFormat {
         public ScdAudioEntry( ScdFile file ) {
             Player = new( this );
             File = file;
+            Marker.SetEntry( this );
         }
 
         public ScdAudioEntry( ScdAudioEntry baseEntry, int dataLength, int numChannel, int sampleRate, SscfWaveFormat format ) : this( baseEntry.File ) {
@@ -76,6 +77,7 @@ namespace VfxEditor.ScdFormat {
             Format = format;
             Flags.Value = baseEntry.Flags.Value;
             Marker = baseEntry.Marker;
+            Marker.SetEntry( this );
         }
 
         public override void Read( BinaryReader reader ) {

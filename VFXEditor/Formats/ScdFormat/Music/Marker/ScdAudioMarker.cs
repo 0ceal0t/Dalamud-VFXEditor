@@ -1,23 +1,31 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
+using VfxEditor.ScdFormat;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ScdFormat.Music.Marker {
     public class ScdAudioMarker {
-        public readonly ParsedPaddedString Id = new( "Id", 4, 0x00 );
-        public readonly ParsedInt LoopStart = new( "Loop Start" );
-        public readonly ParsedInt LoopEnd = new( "Loop End" );
+        private ScdAudioEntry Entry;
 
-        public readonly List<ParsedInt> Markers = new();
-        private readonly CommandListView<ParsedInt> MarkerView;
+        public readonly ParsedPaddedString Id = new( "Id", 4, 0x00 );
+        public readonly ParsedFloat LoopStart = new( "Loop Start" );
+        public readonly ParsedFloat LoopEnd = new( "Loop End" );
+
+        public readonly List<ParsedFloat> Markers = new();
+        private readonly CommandListView<ParsedFloat> MarkerView;
 
         public ScdAudioMarker() {
             MarkerView = new( Markers, () => new( "##Marker" ), true );
+        }
+
+        public void SetEntry( ScdAudioEntry entry ) {
+            Entry = entry;
         }
 
         public int GetSize() {
@@ -28,13 +36,14 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
         public void Read( BinaryReader reader ) {
             Id.Value = FileUtils.ReadString( reader, 4 );
             reader.ReadUInt32();
-            LoopStart.Read( reader );
-            LoopEnd.Read( reader );
+            LoopStart.Value = ( float )reader.ReadInt32() / Entry.SampleRate;
+            LoopEnd.Value = ( float )reader.ReadInt32() / Entry.SampleRate;
             var numMarkers = reader.ReadInt32();
 
             for( var i = 0; i < numMarkers; i++ ) {
-                var newMarker = new ParsedInt( "##Marker" );
-                newMarker.Read( reader );
+                var newMarker = new ParsedFloat( "##Marker" ) {
+                    Value = ( float )reader.ReadInt32() / Entry.SampleRate
+                };
                 Markers.Add( newMarker );
             }
 
@@ -44,10 +53,10 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
         public void Write( BinaryWriter writer ) {
             FileUtils.WriteString( writer, Id.Value );
             writer.Write( GetSize() );
-            LoopStart.Write( writer );
-            LoopEnd.Write( writer );
+            writer.Write( ( int )( LoopStart.Value * Entry.SampleRate ) );
+            writer.Write( ( int )( LoopEnd.Value * Entry.SampleRate ) );
             writer.Write( Markers.Count );
-            foreach( var marker in Markers ) marker.Write( writer );
+            foreach( var marker in Markers ) writer.Write( ( int )Math.Round( marker.Value * Entry.SampleRate ) );
 
             FileUtils.PadTo( writer, 16 );
         }
