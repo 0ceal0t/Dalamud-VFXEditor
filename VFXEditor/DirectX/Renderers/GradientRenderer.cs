@@ -3,7 +3,7 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat;
+using System.Linq;
 using VfxEditor.DirectX.Drawable;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -35,35 +35,44 @@ namespace VfxEditor.DirectX.Renderers {
             Gradient.AddPass( device, PassType.Final, Path.Combine( shaderPath, "gradient.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void SetGradient( AvfxCurve curve ) {
-            CurrentRenderId = curve.RenderId;
+        public void SetGradient( int renderId, List<List<(int, System.Numerics.Vector3)>> rows ) {
+            CurrentRenderId = renderId;
 
-            var numPoints = curve.KeyList.Keys.Count;
-            if( numPoints < 2 ) {
+            if( rows.Count == 0 || rows.Min( x => x.Count ) < 2 ) {
                 Gradient.ClearVertexes();
+                Draw();
+                return;
             }
-            else {
-                var data = new List<Vector4>();
 
-                float startTime = curve.Keys[0].Time.Value;
-                float endTime = curve.Keys[numPoints - 1].Time.Value;
-                var timeDiff = endTime - startTime;
+            // =======================
 
-                for( var i = 0; i < numPoints - 1; i++ ) {
-                    var left = curve.KeyList.Keys[i];
-                    var right = curve.KeyList.Keys[i + 1];
+            var data = new List<Vector4>();
+            var count = 0;
 
-                    var leftPosition = ( left.Time.Value - startTime ) / timeDiff * 2 - 1;
-                    var rightPosition = ( right.Time.Value - startTime ) / timeDiff * 2 - 1;
-                    var _leftColor = left.Color;
-                    var _rightColor = right.Color;
-                    var leftColor = new Vector4( _leftColor.X, _leftColor.Y, _leftColor.Z, 1 );
-                    var rightColor = new Vector4( _rightColor.X, _rightColor.Y, _rightColor.Z, 1 );
+            var startTime = ( float )rows[0][0].Item1;
+            var endTime = ( float )rows[0][^1].Item1;
+            var timeDiff = endTime - startTime;
 
-                    var topLeftPos = new Vector4( leftPosition, 1, 0, 1 );
-                    var topRightPos = new Vector4( rightPosition, 1, 0, 1 );
-                    var bottomLeftPos = new Vector4( leftPosition, -1, 0, 1 );
-                    var bottomRightPos = new Vector4( rightPosition, -1, 0, 1 );
+            var rowPortion = 1f / rows.Count;
+            foreach( var (row, rowIdx) in rows.WithIndex() ) {
+                var rowStart = ( rowIdx * rowPortion ) * 2f - 1f;
+                var rowEnd = ( ( rowIdx + 1 ) * rowPortion ) * 2f - 1f;
+
+                for( var i = 0; i < row.Count - 1; i++ ) {
+                    count++;
+
+                    var (leftTime, _leftColor) = row[i];
+                    var (rightTime, _rightColor) = row[i + 1];
+
+                    var leftPosition = ( leftTime - startTime ) / timeDiff * 2f - 1f;
+                    var rightPosition = ( rightTime - startTime ) / timeDiff * 2f - 1f;
+                    var leftColor = new Vector4( _leftColor.X, _leftColor.Y, _leftColor.Z, 1f );
+                    var rightColor = new Vector4( _rightColor.X, _rightColor.Y, _rightColor.Z, 1f );
+
+                    var topLeftPos = new Vector4( leftPosition, rowStart, 0, 1 );
+                    var topRightPos = new Vector4( rightPosition, rowStart, 0, 1 );
+                    var bottomLeftPos = new Vector4( leftPosition, rowEnd, 0, 1 );
+                    var bottomRightPos = new Vector4( rightPosition, rowEnd, 0, 1 );
 
                     data.Add( topLeftPos );
                     data.Add( leftColor );
@@ -83,9 +92,9 @@ namespace VfxEditor.DirectX.Renderers {
                     data.Add( bottomLeftPos );
                     data.Add( leftColor );
                 }
-
-                Gradient.SetVertexes( Device, data.ToArray(), ( numPoints - 1 ) * 6 );
             }
+
+            Gradient.SetVertexes( Device, data.ToArray(), count * 6 );
             Draw();
         }
 

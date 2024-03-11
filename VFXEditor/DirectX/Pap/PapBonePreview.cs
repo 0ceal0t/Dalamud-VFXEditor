@@ -3,9 +3,9 @@ using SharpDX.Direct3D11;
 using VfxEditor.PapFormat.Motion;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
-    public class PapPreview : BonePreview {
-        public PapPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
+namespace VfxEditor.DirectX.Pap {
+    public class PapBonePreview : BonePreview {
+        public PapBonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
 
         public void LoadSkeleton( PapMotion animation, BoneSkinnedMeshGeometry3D mesh ) {
             CurrentRenderId = animation.RenderId;

@@ -4,6 +4,7 @@ using ImGuiNET;
 using ImPlotNET;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Utils;
@@ -256,16 +257,22 @@ namespace VfxEditor.AvfxFormat {
                 Keys[^1].Time.Value++;
             }
 
-            Plugin.DirectXManager.GradientView.SetGradient( this );
+            UpdateGradient();
         }
 
         private void DrawGradient() {
             if( !IsColor || Keys.Count < 2 ) return;
-            if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) Plugin.DirectXManager.GradientView.SetGradient( this );
+            if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) UpdateGradient();
 
             var topLeft = new ImPlotPoint { x = Keys[0].DisplayX, y = 1 };
             var bottomRight = new ImPlotPoint { x = Keys[^1].DisplayX, y = -1 };
             ImPlot.PlotImage( "##Gradient", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
+        }
+
+        private void UpdateGradient() {
+            Plugin.DirectXManager.GradientView.SetGradient( RenderId, new() {
+                Keys.Select( x => (x.Time.Value, x.Color)).ToList()
+            } );
         }
 
         // ======== UTILS ===========

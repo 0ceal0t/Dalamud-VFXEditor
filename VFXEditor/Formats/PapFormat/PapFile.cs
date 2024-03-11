@@ -21,6 +21,7 @@ namespace VfxEditor.PapFormat {
     public class PapFile : FileManagerFile {
         public readonly string HkxTempLocation;
         public readonly string SourcePath;
+        public bool IsMaterial => SourcePath?.Contains( "material.pap" ) == true || Animations.Any( x => x.GetPapType() == 22 );
 
         public readonly ParsedShort ModelId = new( "Model Id" );
         public readonly ParsedEnum<SkeletonType> ModelType = new( "Skeleton Type", size: 1 );
@@ -175,6 +176,7 @@ namespace VfxEditor.PapFormat {
         }
 
         public override List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+
         public override List<short> GetPapTypes() => Animations.Select( x => x.GetPapType() ).ToList();
 
         public void RefreshHavokIndexes() {
