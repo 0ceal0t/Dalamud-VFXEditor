@@ -347,6 +347,7 @@ namespace VfxEditor.FileManager {
                     SetSource( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
                 }
             }
+            DrawCopy( Source );
 
             // Search
             ImGui.SameLine();
@@ -373,24 +374,26 @@ namespace VfxEditor.FileManager {
                     SetReplace( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
                 }
             }
-
-            if( Replace != null ) {
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
-                if( ImGui.BeginPopup( "CopyPopup" ) ) {
-
-                    ImGui.TextDisabled( Replace.Path );
-                    ImGui.SameLine();
-                    ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
-                    SelectUiUtils.Copy( Replace.Path );
-
-                    ImGui.EndPopup();
-                }
-            }
+            DrawCopy( Replace );
 
             // Search
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
+            }
+        }
+
+        private static void DrawCopy( SelectResult result ) {
+            if( result == null ) return;
+            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
+            if( ImGui.BeginPopup( "CopyPopup" ) ) {
+
+                ImGui.TextDisabled( result.Path );
+                ImGui.SameLine();
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
+                SelectUiUtils.Copy( result.Path );
+
+                ImGui.EndPopup();
             }
         }
 

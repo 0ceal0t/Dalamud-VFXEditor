@@ -1,8 +1,10 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using ImPlotNET;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
@@ -11,21 +13,59 @@ using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
-    public unsafe class PapMotionMaterial : PapMotionPreview {
-        private static int MATERIAL_ID = 0;
-        private static GradientRenderer Preview => Plugin.DirectXManager.PapMaterialPreview;
+    public class PapMotionMaterialData {
+        public readonly List<(int, Vector3)> Color = new();
+        public double[] R {
+            get {
+                _InternalR ??= Color.Select( x => ( double )x.Item2.X ).ToArray();
+                return _InternalR;
+            }
+        }
+        public double[] G {
+            get {
+                _InternalG ??= Color.Select( x => ( double )x.Item2.Y ).ToArray();
+                return _InternalG;
+            }
+        }
+        public double[] B {
+            get {
+                _InternalB ??= Color.Select( x => ( double )x.Item2.Z ).ToArray();
+                return _InternalB;
+            }
+        }
 
+        private double[] _InternalR;
+        private double[] _InternalG;
+        private double[] _InternalB;
+    }
+
+    public unsafe class PapMotionMaterial : PapMotionPreview {
+        private static GradientRenderer Preview => Plugin.DirectXManager.PapMaterialPreview;
         public readonly int RenderId = Renderer.NewId;
+
+        private static int MATERIAL_ID = 0;
         private readonly int Id = MATERIAL_ID++;
 
-        private List<List<(int, Vector3)>> Data;
+        private bool IsColor => Plugin.Configuration.PapMaterialDisplay == 1;
+
+        private string BoneSelected = "";
+        private double[] AllFrames;
+        private Dictionary<string, PapMotionMaterialData> Data;
 
         public PapMotionMaterial( PapMotion motion ) : base( motion ) { }
 
         public override void Draw( int idx ) {
-            if( Data == null || Preview.CurrentRenderId != RenderId ) UpdatePreview();
+            if( Data == null ) Update();
+            if( Preview.CurrentRenderId != RenderId ) UpdatePreview();
 
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+            // ======== CONTROLS ==========
+
+            if( ImGui.RadioButton( "Color", ref Plugin.Configuration.PapMaterialDisplay, 1 ) ) Plugin.Configuration.Save();
+            ImGui.SameLine();
+            if( ImGui.RadioButton( "Graph", ref Plugin.Configuration.PapMaterialDisplay, 2 ) ) Plugin.Configuration.Save();
+            ImGui.SameLine();
+
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemSpacing with { X = ImGui.GetStyle().ItemInnerSpacing.X } ) ) {
                 if( ImGui.Button( "Export" ) ) ExportDialog( Motion.File.Animations[idx].GetName() );
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) ImportDialog( idx );
@@ -33,25 +73,64 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
             }
 
+            ImGui.Separator();
+
+            if( IsColor ) {
+                if( ImGui.ColorEdit3( "Base Preview Color", ref Plugin.Configuration.PapMaterialBaseColor, ImGuiColorEditFlags.NoInputs ) ) {
+                    Plugin.Configuration.Save();
+                    UpdatePreview();
+                }
+            }
+            else {
+                ImGui.SetNextItemWidth( 150f );
+                using( var combo = ImRaii.Combo( "##Material", BoneSelected ) ) {
+                    if( combo ) {
+                        foreach( var name in Data.Keys ) {
+                            if( ImGui.Selectable( name, name == BoneSelected ) ) BoneSelected = name;
+                        }
+                    }
+                }
+
+                ImGui.SameLine();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.ArrowsLeftRightToLine.ToIconString() ) ) ImPlot.SetNextAxesToFit();
+                }
+            }
+
             // ====================
 
-            ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+            if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
             ImPlot.SetNextAxisLimits( ImAxis.X1, 0, Motion.TotalFrames, ImPlotCond.Once );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ImPlotFlags.NoLegend ) ) {
-                ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
-                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel );
+            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ( IsColor ? ImPlotFlags.NoLegend : ImPlotFlags.None ) ) ) {
+                if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
+                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None,
+                    IsColor ? ( ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel ) : ImPlotAxisFlags.NoLabel );
 
-                var topLeft = new ImPlotPoint { x = 0, y = 1 };
-                var bottomRight = new ImPlotPoint { x = Motion.TotalFrames, y = -1 };
-                ImPlot.PlotImage( "##Gradient", Preview.Output, topLeft, bottomRight );
+                var element = Data[BoneSelected];
 
-                for( var i = 0; i < Data.Count - 1; i++ ) {
-                    var yPos = -1f + 2f * ( i + 1f ) / ( Data.Count );
-                    var xs = new double[] { 0, Motion.TotalFrames };
-                    var ys = new double[] { yPos, yPos };
-                    ImPlot.SetNextLineStyle( new( 0f, 0f, 0f, 1f ), 5f );
-                    ImPlot.PlotLine( $"Line {i}", ref xs[0], ref ys[0], xs.Length );
+                if( IsColor ) {
+                    var topLeft = new ImPlotPoint { x = 0, y = 1 };
+                    var bottomRight = new ImPlotPoint { x = Motion.TotalFrames, y = -1 };
+                    ImPlot.PlotImage( "##Gradient", Preview.Output, topLeft, bottomRight );
+
+                    for( var i = 0; i < Data.Count - 1; i++ ) {
+                        var yPos = -1f + 2f * ( i + 1f ) / ( Data.Count );
+                        var xs = new double[] { 0, Motion.TotalFrames };
+                        var ys = new double[] { yPos, yPos };
+                        ImPlot.SetNextLineStyle( new( 0f, 0f, 0f, 1f ), 5f );
+                        ImPlot.PlotLine( $"Line {i}", ref xs[0], ref ys[0], xs.Length );
+                    }
+                }
+                else {
+                    ImPlot.SetNextLineStyle( new( 1, 0, 0, 1 ), 3 );
+                    ImPlot.PlotLine( "R", ref AllFrames[0], ref element.R[0], AllFrames.Length );
+
+                    ImPlot.SetNextLineStyle( new( 0, 1, 0, 1 ), 3 );
+                    ImPlot.PlotLine( "G", ref AllFrames[0], ref element.G[0], AllFrames.Length );
+
+                    ImPlot.SetNextLineStyle( new( 0, 0, 1, 1 ), 3 );
+                    ImPlot.PlotLine( "B", ref AllFrames[0], ref element.B[0], AllFrames.Length );
                 }
 
                 ImPlot.EndPlot();
@@ -59,38 +138,48 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImPlot.PopStyleVar( 1 );
         }
 
-        private void UpdatePreview() {
-            Data = new();
+        private void Update() {
+            var allFrames = new List<double>();
+            Data = new Dictionary<string, PapMotionMaterialData>();
 
             for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
-                var bone = Motion.Skeleton->Bones[i];
-                if( bone.Name.String == "n_material" ) continue;
-                Data.Add( new() );
+                var name = Motion.Skeleton->Bones[i].Name.String;
+                if( name == "n_material" ) continue;
+
+                Data[name] = new();
+                if( string.IsNullOrEmpty( BoneSelected ) ) BoneSelected = name;
             }
 
             for( var frame = 0; frame < Motion.TotalFrames; frame++ ) {
-                Motion.AnimationControl->LocalTime = frame * ( 1 / 30f );
+                allFrames.Add( frame );
 
+                Motion.AnimationControl->LocalTime = frame * ( 1 / 30f );
                 var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
                 var floats = ( float* )Marshal.AllocHGlobal( Motion.Skeleton->FloatSlots.Length * sizeof( float ) );
                 Motion.AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
-                var rowIdx = 0;
                 for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
-                    var bone = Motion.Skeleton->Bones[i];
-                    if( bone.Name.String == "n_material" ) continue;
+                    var name = Motion.Skeleton->Bones[i].Name.String;
+                    if( name == "n_material" ) continue;
 
                     var position = transforms[i].Translation;
-                    Data[rowIdx].Add( (frame, new( position.X, position.Y, position.Z )) );
+                    Data[name].Color.Add( (frame, new( position.X, position.Y, position.Z )) );
 
-                    rowIdx++;
                 }
 
                 Marshal.FreeHGlobal( ( nint )transforms );
                 Marshal.FreeHGlobal( ( nint )floats );
             }
 
-            Preview.SetGradient( RenderId, Data );
+            AllFrames = allFrames.ToArray();
+            UpdatePreview();
+        }
+
+        private void UpdatePreview() {
+            Preview.SetGradient(
+                RenderId,
+                Data.Select( x => x.Value.Color.Select( y => (y.Item1, y.Item2 + Plugin.Configuration.PapMaterialBaseColor) ).ToList() ).ToList()
+            );
         }
     }
 }

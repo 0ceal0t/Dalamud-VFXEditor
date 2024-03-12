@@ -137,6 +137,9 @@ namespace VfxEditor {
         public Vector4 SkeletonBoneNameColor = new( 1f );
         public Vector4 SkeletonBoneLineColor = new( 1f );
 
+        public int PapMaterialDisplay = 1;
+        public Vector3 PapMaterialBaseColor = new( 0, 0, 0 );
+
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
         public bool ModelShowEmitters = true;
