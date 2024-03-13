@@ -65,6 +65,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             var edgeGeometryOffset = reader.ReadUInt32(); // equal to `vertexBufferOffset + vertexBufferSize` if `edgeGeometrySize = 0`
             var polygonCount = reader.ReadUInt32();
             var unknown = reader.ReadUInt32();
+
             reader.ReadUInt32(); // vertex buffer size, same as MdlFile
             reader.ReadUInt32(); // index buffer size
             reader.ReadUInt32(); // vertex data offset
@@ -72,7 +73,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
 
             // https://github.com/xivdev/Xande/blob/8fc75ce5192edcdabc4d55ac93ca0199eee18bc9/Xande.GltfImporter/MdlFileBuilder.cs#L558
             if( edgeGeometrySize != 0 || polygonCount != 0 || unknown != 0 ) {
-                Dalamud.Error( $"LoD: {edgeGeometrySize}/{edgeGeometryOffset} {polygonCount} {unknown}" );
+                Dalamud.Error( $"LoD: {edgeGeometrySize:X4} {edgeGeometryOffset:X4} {polygonCount:X4} {unknown:X4}" );
             }
 
             // ========= VIEWS ==============

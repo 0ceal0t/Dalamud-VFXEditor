@@ -440,7 +440,7 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in vertexSizes ) writer.Write( item );
             foreach( var item in indexSizes ) writer.Write( item );
 
-            foreach( var (item, idx) in UsedLods.WithIndex() ) {
+            foreach( var (item, idx) in AllLods.WithIndex() ) {
                 writer.BaseStream.Position = data.LodPlaceholders[item];
                 writer.Write( 0 );
                 writer.Write( vertexOffsets[idx] + vertexSizes[idx] );

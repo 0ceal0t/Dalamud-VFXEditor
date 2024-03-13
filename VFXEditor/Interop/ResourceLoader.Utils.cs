@@ -78,6 +78,7 @@ namespace VfxEditor.Interop {
 
         private static bool ProcessPenumbraPath( string path, out string outPath ) {
             outPath = path;
+            if( string.IsNullOrEmpty( path ) ) return false;
             if( !path.StartsWith( "|" ) ) return false;
 
             var split = path.Split( "|" );
@@ -112,7 +113,7 @@ namespace VfxEditor.Interop {
             if( string.IsNullOrEmpty( gamePath ) ) return;
 
             var gameResource = GetResource( gamePath, true );
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} {localPath} -> " + gameResource.ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} / {localPath} -> " + gameResource.ToString( "X8" ) );
 
             if( gameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( gameResource, papIds, papTypes );
@@ -123,7 +124,7 @@ namespace VfxEditor.Interop {
             if( string.IsNullOrEmpty( localPath ) ) return;
 
             var localGameResource = GetResource( gamePath, false ); // get local path resource
-            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} {localPath} -> " + localGameResource.ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} / {localPath} -> " + localGameResource.ToString( "X8" ) );
 
             if( localGameResource != IntPtr.Zero ) {
                 InteropUtils.PrepPap( localGameResource, papIds, papTypes );

@@ -8,7 +8,8 @@ using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Select {
     public class SelectedPenumbraMod {
-        public Dictionary<string, List<string>> Files;
+        public Dictionary<string, List<string>> SourceFiles;
+        public Dictionary<string, List<string>> ReplaceFiles;
         public PenumbraMeta Meta;
     }
 
@@ -77,9 +78,14 @@ namespace VfxEditor.Select {
                 Dalamud.Error( e, "Error reading Penumbra mods" );
             }
 
-            loaded.Files = files.ToDictionary(
+            loaded.SourceFiles = files.ToDictionary(
                 x => x.Key,
-                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList() // Filter out local paths that don't exist
+                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList()
+            );
+
+            loaded.ReplaceFiles = files.ToDictionary(
+                x => x.Key,
+                x => x.Value.Select( y => y.Item1 ).ToList()
             );
         }
 
@@ -96,8 +102,10 @@ namespace VfxEditor.Select {
             if( Loaded.Meta != null ) {
                 ImGui.TextDisabled( $"by {Loaded.Meta.Author}" );
             }
-            if( Loaded.Files != null ) {
-                DrawPaths( Loaded.Files, Selected );
+
+            var files = Dialog.ShowLocal ? Loaded.SourceFiles : Loaded.ReplaceFiles;
+            if( files != null ) {
+                DrawPaths( files, Selected );
             }
         }
 

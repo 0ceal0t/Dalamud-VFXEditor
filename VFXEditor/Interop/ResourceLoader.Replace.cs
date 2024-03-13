@@ -95,7 +95,7 @@ namespace VfxEditor.Interop {
 
             if( replacedPath == null || replacedPath.Length >= 260 ) {
                 var unreplaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) Dalamud.Log( $"[GetResourceHandler] Original {gamePathString} -> {replacedPath} -> " + new IntPtr( unreplaced ).ToString( "X8" ) );
+                if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePathString ) ) Dalamud.Log( $"[GetResourceHandler] ORIGINAL: {gamePathString} -> " + new IntPtr( unreplaced ).ToString( "X8" ) );
                 return unreplaced;
             }
 
@@ -106,7 +106,7 @@ namespace VfxEditor.Interop {
             path = resolvedPath.InternalName.Path;
 
             var replaced = CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
-            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[GetResourceHandler] Replace {gamePathString} -> {replacedPath} -> " + new IntPtr( replaced ).ToString( "X8" ) );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[GetResourceHandler] REPLACED: {gamePathString} -> {replacedPath} -> " + new IntPtr( replaced ).ToString( "X8" ) );
             return replaced;
         }
 
@@ -134,11 +134,11 @@ namespace VfxEditor.Interop {
 
             // call the original if it's a penumbra path that doesn't need replacement as well
             if( gameFsPath == null || gameFsPath.Length >= 260 || !isRooted || isPenumbra ) {
-                if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Calling Original With {originalPath}" );
+                if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] ORIGINAL: {originalPath}" );
                 return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
             }
 
-            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] Replaced with {gameFsPath}" );
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[ReadSqpackHandler] REPLACED: {gameFsPath}" );
 
             fileDesc->FileMode = FileMode.LoadUnpackedResource;
 
