@@ -80,7 +80,7 @@ namespace VfxEditor.Select {
 
             loaded.SourceFiles = files.ToDictionary(
                 x => x.Key,
-                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList()
+                x => x.Value.Where( y => Path.Exists( y.Item2 ) ).Select( y => $"{y.Item1}|{y.Item2}" ).ToList() // actually use local path
             );
 
             loaded.ReplaceFiles = files.ToDictionary(

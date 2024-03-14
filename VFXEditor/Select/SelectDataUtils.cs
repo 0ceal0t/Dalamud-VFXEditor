@@ -26,24 +26,24 @@ namespace VfxEditor.Select {
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
         public static readonly List<RacialData> CharacterRaces = new() {
-            new RacialData( "Midlander M", "c0101", 1 ),
-            new RacialData( "Midlander F","c0201", 101 ),
-            new RacialData( "Highlander M", "c0301", 201 ),
-            new RacialData( "Highlander F", "c0401", 301 ),
-            new RacialData( "Elezen M", "c0501", 401 ),
-            new RacialData( "Elezen F", "c0601", 501 ),
-            new RacialData( "Miquote M", "c0701", 801 ),
-            new RacialData( "Miquote F", "c0801", 901 ),
-            new RacialData( "Roegadyn M", "c0901", 1001 ),
-            new RacialData( "Roegadyn F", "c1001", 1101 ),
-            new RacialData( "Lalafell M", "c1101",601 ),
-            new RacialData( "Lalafell F", "c1201", 701 ),
-            new RacialData( "Aura M", "c1301", 1201 ),
-            new RacialData( "Aura F", "c1401", 1301 ),
-            new RacialData( "Hrothgar M", "c1501", 1401 ),
-            // 1601 coming soon (tm) - 25
-            new RacialData( "Viera M", "c1701", 1601 ),
-            new RacialData( "Viera F", "c1801", 1701 )
+            new RacialData( "Midlander M", "c0101", 0 ),
+            new RacialData( "Midlander F","c0201", 1 ),
+            new RacialData( "Highlander M", "c0301", 2 ),
+            new RacialData( "Highlander F", "c0401", 3 ),
+            new RacialData( "Elezen M", "c0501", 4 ),
+            new RacialData( "Elezen F", "c0601", 5 ),
+            new RacialData( "Miquote M", "c0701", 12 ),
+            new RacialData( "Miquote F", "c0801", 13 ),
+            new RacialData( "Roegadyn M", "c0901", 16 ),
+            new RacialData( "Roegadyn F", "c1001", 17 ),
+            new RacialData( "Lalafell M", "c1101",8 ),
+            new RacialData( "Lalafell F", "c1201", 9 ),
+            new RacialData( "Aura M", "c1301", 20 ),
+            new RacialData( "Aura F", "c1401", 21 ),
+            new RacialData( "Hrothgar M", "c1501", 24 ),
+            // 1601 coming soon (tm)
+            new RacialData( "Viera M", "c1701", 28 ),
+            new RacialData( "Viera F", "c1801", 29 )
         };
 
         public static readonly Dictionary<string, string> JobAnimationIds = new() {

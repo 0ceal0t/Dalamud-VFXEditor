@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMdl {
-        public List<(string, string)> Faces;
+        public List<(string, uint, string)> Faces;
         public List<(string, string)> Bodies;
         public List<(string, uint, string)> Hairs;
-        public List<(string, string)> Ears;
-        public List<(string, string)> Tails;
+        public List<(string, uint, string)> Ears;
+        public List<(string, uint, string)> Tails;
     }
 
     public class CharacterTabMdl : SelectTab<CharacterRow, SelectedMdl> {
@@ -21,11 +21,11 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMdl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions ),
+                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, item.Data.FaceToIcon ),
                 Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions ),
                 Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, item.Data.HairToIcon ),
-                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions ),
-                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions )
+                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, item.Data.FeatureToIcon ),
+                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, item.Data.FeatureToIcon )
             };
         }
 

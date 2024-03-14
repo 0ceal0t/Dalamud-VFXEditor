@@ -33,6 +33,12 @@ namespace VfxEditor.Select {
             var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
             if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( icon.ImGuiHandle, size );
+                if( ImGui.IsItemHovered() ) {
+                    ImGui.BeginTooltip();
+                    ImGui.Image( icon.ImGuiHandle, icon.Size );
+                    ImGui.EndTooltip();
+                }
+
                 return true;
             }
             return false;
