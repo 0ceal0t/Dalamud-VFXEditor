@@ -6,7 +6,7 @@ using System.Linq;
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedSkeleton {
         public string BodyPath;
-        public List<(string, string)> FacePaths;
+        public List<(string, uint, string)> FacePaths;
         public List<(string, uint, string)> HairPaths;
     }
 
@@ -32,17 +32,8 @@ namespace VfxEditor.Select.Tabs.Character {
 
             if( !HairFace ) return;
 
-            loaded.FacePaths = item.Data.FaceOptions
-                .Select( face => (face, $"chara/human/{item.SkeletonId}/skeleton/face/f{face:D4}/{Prefix}_{item.SkeletonId}f{face:D4}.{Extension}") )
-                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .Select( x => ($"Face {x.face}", x.Item2) )
-                .ToList();
-
-            loaded.HairPaths = item.Data.HairOptions
-                .Select( hair => (hair, $"chara/human/{item.SkeletonId}/skeleton/hair/h{hair:D4}/{Prefix}_{item.SkeletonId}h{hair:D4}.{Extension}") )
-                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .Select( x => ($"Hair {x.hair}", item.Data.HairToIcon.TryGetValue( x.hair, out var icon ) ? icon : 0, x.Item2) )
-                .ToList();
+            loaded.FacePaths = GetPaths( item, item.Data.FaceOptions, "face", "Face", item.Data.FaceToIcon );
+            loaded.HairPaths = GetPaths( item, item.Data.HairOptions, "hair", "Hair", item.Data.HairToIcon );
         }
 
         // ===== DRAWING ======
@@ -69,5 +60,13 @@ namespace VfxEditor.Select.Tabs.Character {
         }
 
         protected override string GetName( CharacterRow item ) => item.Name;
+
+        private List<(string, uint, string)> GetPaths( CharacterRow item, IEnumerable<int> ids, string part, string name, Dictionary<int, uint> iconMap ) {
+            return ids
+                .Select( id => (id, $"chara/human/{item.SkeletonId}/skeleton/{part}/{part[0]}{id:D4}/{Prefix}_{item.SkeletonId}{part[0]}{id:D4}.{Extension}") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+                .ToList();
+        }
     }
 }

@@ -48,13 +48,15 @@ namespace VfxEditor.Select {
 
         protected void DrawPaths( Dictionary<string, List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
 
-        protected void DrawPaths( Dictionary<(string, uint), List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.WithIndex().Select( y => ($"#{y.Index}", y.Value) ) ), resultName );
+        protected void DrawPaths( Dictionary<(string, uint), List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.WithIndex().Select( y => ($"#{y.Index}", 0u, y.Value) ) ), resultName );
 
         protected void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
 
-        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.Select( y => (y.Key, y.Value) ) ), resultName );
+        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.Select( y => (y.Key, 0u, y.Value) ) ), resultName );
 
-        protected void DrawPaths( Dictionary<(string, uint), IEnumerable<(string, string)>> items, string resultName ) {
+        protected void DrawPaths( Dictionary<string, List<(string, uint, string)>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value.Select( x => x ) ), resultName );
+
+        protected void DrawPaths( Dictionary<(string, uint), IEnumerable<(string, uint, string)>> items, string resultName ) {
             if( items == null || items.Count == 0 ) return;
 
             foreach( var ((name, iconId), paths) in items ) {
@@ -71,7 +73,7 @@ namespace VfxEditor.Select {
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding with { Y = 12f }, showIcon );
                 if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     style.Dispose();
-                    DrawPaths( paths.Select( x => (x.Item1, 0u, x.Item2) ), resultName );
+                    DrawPaths( paths, resultName );
                 }
             }
         }
@@ -135,7 +137,7 @@ namespace VfxEditor.Select {
             if( string.IsNullOrEmpty( path ) || path.Contains( "BGM_Null" ) ) return;
 
             var displayPath = path;
-            if( path.Contains( "|" ) ) {
+            if( path.Contains( '|' ) ) {
                 var split = path.Split( "|" );
                 displayPath = split[0];
                 path = split[1];

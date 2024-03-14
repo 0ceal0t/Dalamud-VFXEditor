@@ -1,6 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedPap {
@@ -10,7 +11,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // Pose # -> Start, Loop
         public Dictionary<string, Dictionary<string, string>> Poses;
 
-        public Dictionary<string, string> FacePaths;
+        public List<(string, uint, string)> FacePaths;
 
         public string GroundStart;
         public string Jmn;
@@ -60,16 +61,17 @@ namespace VfxEditor.Select.Tabs.Character {
             var jmn = item.GetPap( "emote/jmn" );
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
 
-            var facePaths = new Dictionary<string, string>();
-            foreach( var face in item.Data.FaceOptions ) {
-                facePaths[$"Face {face}"] = $"chara/human/{item.SkeletonId}/animation/f{face:D4}/resident/face.pap";
-            }
+            var facePaths = item.Data.FaceOptions
+                .Select( id => (id, $"chara/human/{item.SkeletonId}/animation/f{id:D4}/resident/face.pap") )
+                .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                .Select( x => ($"Face {x.id}", item.Data.FaceToIcon.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+                .ToList();
 
             loaded = new SelectedPap {
                 General = general,
                 Poses = poses,
                 SitPoses = sitPoses,
-                FacePaths = SelectDataUtils.FileExistsFilter( facePaths ),
+                FacePaths = facePaths,
                 Jmn = Dalamud.DataManager.FileExists( jmn ) ? jmn : null,
                 GroundStart = Dalamud.DataManager.FileExists( groundStart ) ? groundStart : null,
             };

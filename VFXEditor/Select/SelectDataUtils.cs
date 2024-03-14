@@ -93,22 +93,6 @@ namespace VfxEditor.Select {
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }
 
-        public static Dictionary<string, string> GetAllJobPaps( string jobId, string path ) => FileExistsFilter( GetAllSkeletonPaths( $"{jobId}/{path}.pap" ) );
-
-        public static Dictionary<string, Dictionary<string, string>> GetAllJobPaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
-            return JobAnimationIds.ToDictionary( x => x.Key, x => GetAllJobPaps( x.Value, path ) );
-        }
-
-        public static Dictionary<string, Dictionary<string, string>> GetAllFacePaps( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
-            Dictionary<string, Dictionary<string, string>> ret = new();
-            foreach( var item in CharacterRaces ) {
-                ret[item.Name] = FileExistsFilter( item.FaceOptions.ToDictionary( x => $"Face {x}", x => $"chara/human/{item.Id}/animation/f{x:D4}/nonresident/{path}.pap" ) );
-            }
-            return ret;
-        }
-
         public static string ToTmbPath( string key ) => ( string.IsNullOrEmpty( key ) || key.Contains( "[SKL_ID]" ) ) ? string.Empty : $"chara/action/{key}.tmb";
 
         public static string ToVfxPath( string key ) => string.IsNullOrEmpty( key ) ? string.Empty : $"vfx/common/eff/{key}.avfx";

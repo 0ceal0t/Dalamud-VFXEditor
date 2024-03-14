@@ -1,36 +1,57 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace VfxEditor.Select.Tabs.Emotes {
-    public class EmoteTabPap : EmoteTab<Dictionary<string, Dictionary<string, Dictionary<string, string>>>> {
+    public class SelectedPapEntry {
+        public EmoteRowType Type;
+        public Dictionary<string, string> ActionData;
+        public Dictionary<string, Dictionary<string, string>> JobData;
+        public Dictionary<string, List<(string, uint, string)>> FaceData;
+    }
+
+    public class EmoteTabPap : EmoteTab<Dictionary<string, SelectedPapEntry>> {
         public EmoteTabPap( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
-        public override void LoadSelection( EmoteRow item, out Dictionary<string, Dictionary<string, Dictionary<string, string>>> loaded ) {
+        public override void LoadSelection( EmoteRow item, out Dictionary<string, SelectedPapEntry> loaded ) {
             loaded = new();
 
             foreach( var papFile in item.Items ) {
                 var key = papFile.Item1;
-                var papDict = new Dictionary<string, Dictionary<string, string>>();
+                if( string.IsNullOrEmpty( key ) ) continue;
+
+                var entry = new SelectedPapEntry() {
+                    Type = papFile.Item2
+                };
 
                 if( papFile.Item2 == EmoteRowType.Normal ) {
                     // bt_common, per race (chara/human/{RACE}/animation/a0001/bt_common/emote/add_yes.pap)
-                    papDict.Add( "Action", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) ) ); // just a dummy node
+                    entry.ActionData = SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) );
 
                 }
                 else if( papFile.Item2 == EmoteRowType.PerJob ) {
                     // chara/human/c0101/animation/a0001/bt_swd_sld/emote/battle01.pap
-                    papDict = SelectDataUtils.GetAllJobPaps( key );
+                    entry.JobData = SelectDataUtils.JobAnimationIds.ToDictionary(
+                        x => x.Key,
+                        x => SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"{x.Value}/{key}.pap" ) )
+                    );
                 }
                 else if( papFile.Item2 == EmoteRowType.Facial ) {
                     // chara/human/c0101/animation/f0003/resident/face.pap
                     // chara/human/c0101/animation/f0003/resident/smile.pap
                     // chara/human/c0101/animation/f0003/nonresident/angry_cl.pap
-                    papDict = SelectDataUtils.GetAllFacePaps( key );
+                    entry.FaceData = SelectDataUtils.CharacterRaces.ToDictionary( race => race.Name, race =>
+                        race.FaceOptions
+                            .Select( id => (id, $"chara/human/{race.Id}/animation/f{id:D4}/nonresident/{key}.pap") )
+                            .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
+                            .Select( x => ($"Face {x.id}", race.FaceToIcon.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
+                            .ToList()
+                    );
                 }
 
-                loaded.Add( key, papDict );
+                loaded.Add( key, entry );
             }
         }
 
@@ -40,19 +61,16 @@ namespace VfxEditor.Select.Tabs.Emotes {
             using var tabBar = ImRaii.TabBar( "Tabs" );
             if( !tabBar ) return;
 
-            foreach( var (subAction, subActionPaths) in Loaded ) {
-                using var tabItem = ImRaii.TabItem( subAction );
+            foreach( var (key, paths) in Loaded ) {
+                using var tabItem = ImRaii.TabItem( key );
                 if( !tabItem ) continue;
 
-                using var _ = ImRaii.PushId( subAction );
+                using var _ = ImRaii.PushId( key );
                 using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
-                if( subActionPaths.TryGetValue( "Action", out var actionPaths ) ) {
-                    DrawPaths( actionPaths, $"{Selected.Name} {subAction}" );
-                }
-                else {
-                    DrawPaths( subActionPaths, $"{Selected.Name} {subAction}" );
-                }
+                if( paths.Type == EmoteRowType.Normal ) DrawPaths( paths.ActionData, $"{Selected.Name} {key}" );
+                else if( paths.Type == EmoteRowType.PerJob ) DrawPaths( paths.JobData, $"{Selected.Name} {key}" );
+                else if( paths.Type == EmoteRowType.Facial ) DrawPaths( paths.FaceData, $"{Selected.Name} {key}" );
             }
         }
     }

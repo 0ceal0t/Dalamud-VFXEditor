@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public class SelectedMtrl {
-        public Dictionary<string, List<string>> Faces;
+        public Dictionary<(string, uint), List<string>> Faces;
         public Dictionary<string, List<string>> Bodies;
         public Dictionary<(string, uint), List<string>> Hairs;
-        public Dictionary<string, List<string>> Ears;
-        public Dictionary<string, List<string>> Tails;
+        public Dictionary<(string, uint), List<string>> Ears;
+        public Dictionary<(string, uint), List<string>> Tails;
     }
 
     public class CharacterTabMtrl : SelectTab<CharacterRow, SelectedMtrl> {
@@ -21,11 +21,11 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, new List<string>() { "fac_a", "etc_a", "iri_a" } ),
+                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, new List<string>() { "fac_a", "etc_a", "iri_a" }, item.Data.FaceToIcon ),
                 Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, new List<string>() { "a" } ),
                 Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, new List<string>() { "hir_a", "acc_b" }, item.Data.HairToIcon ),
-                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, new List<string>() { "fac_a", "a" } ),
-                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, new List<string>() { "a" } )
+                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, new List<string>() { "fac_a", "a" }, item.Data.FeatureToIcon ),
+                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, new List<string>() { "a" }, item.Data.FeatureToIcon )
             };
         }
 
@@ -67,7 +67,7 @@ namespace VfxEditor.Select.Tabs.Character {
                 .ToList()
                 )
             )
-            .Where( x => x.Item2.Count() > 0 );
+            .Where( x => x.Item2.Count > 0 );
 
         private static Dictionary<string, List<string>> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, IEnumerable<string> suffixes ) =>
             IdsToPaths( ids, suffixes, item, part )
