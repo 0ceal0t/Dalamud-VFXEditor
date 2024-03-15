@@ -24,8 +24,6 @@ namespace VfxEditor.Ui.Components.SplitViews {
             return false;
         }
 
-        protected virtual string GetText( T item, int idx ) => $"{Id} {idx}";
-
         protected override void DrawSelected() {
             using var _ = ImRaii.PushId( Items.IndexOf( Selected ) );
             Selected.Draw();

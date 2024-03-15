@@ -4,25 +4,14 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.Components.Base;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components {
-    public abstract class Dropdown<T> where T : class {
-        protected readonly string Id;
-
-        protected T Selected = null;
-        protected readonly List<T> Items;
-
-        public Dropdown( string id, List<T> items ) {
-            Id = id;
-            Items = items;
-        }
+    public abstract class Dropdown<T> : SelectView<T> where T : class {
+        public Dropdown( string id, List<T> items ) : base( id, items ) { }
 
         protected abstract void DrawSelected();
-
-        protected abstract string GetText( T item, int idx );
-
-        public void ClearSelected() { Selected = null; }
 
         protected virtual void DrawSelectItem( T item, int idx ) {
             var isColored = DoColor( item, out var col );

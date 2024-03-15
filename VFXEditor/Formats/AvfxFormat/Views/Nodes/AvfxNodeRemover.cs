@@ -63,7 +63,7 @@ namespace VfxEditor.AvfxFormat {
             Group.RemoveAndUpdate( Item );
             // This disconnects all of the selectors and removes the parent/child linkages
             Item.Disconnect();
-            View.ResetSelected();
+            View.ClearSelected();
         }
     }
 }

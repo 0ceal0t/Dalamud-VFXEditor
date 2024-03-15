@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public T Read( BinaryReader reader, int size );
 
         public T GetSelected();
-        public void ResetSelected();
+        public void ClearSelected();
         public void SetSelected( T selected );
 
         public static void DrawControls( IUiNodeView<T> view, AvfxFile file ) {

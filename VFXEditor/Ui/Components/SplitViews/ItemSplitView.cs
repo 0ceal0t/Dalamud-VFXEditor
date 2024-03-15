@@ -7,11 +7,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Components.SplitViews {
     public abstract class ItemSplitView<T> : SplitView<T> where T : class {
-        protected readonly List<T> Items;
-
-        public ItemSplitView( string id, List<T> items ) : base( id ) {
-            Items = items;
-        }
+        public ItemSplitView( string id, List<T> items ) : base( id, items ) { }
 
         protected virtual void DrawControls() { }
 

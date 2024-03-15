@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -11,7 +11,6 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Ui {
     public class TextureView : SplitView<TextureReplace> {
-        public readonly List<TextureReplace> Textures;
         private readonly TexSelectDialog ExtractSelect;
         private readonly TexSelectDialog ImportSelect;
 
@@ -38,8 +37,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             ExtractFileType.DDS
         };
 
-        public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures" ) {
-            Textures = textures;
+        public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures", textures ) {
             InitialWidth = 300;
             ExtractSelect = new( "Texture Extract", manager, false, Extract );
             ImportSelect = new( "Texture Import", manager, false, Import );
@@ -102,7 +100,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
-            if( !Textures.Contains( Selected ) ) ClearSelected();
+            if( !Items.Contains( Selected ) ) ClearSelected();
 
             base.Draw();
         }
@@ -110,13 +108,13 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         protected override void DrawPreLeft() { }
 
         protected override void DrawLeftColumn() {
-            if( Textures.Count == 0 ) {
+            if( Items.Count == 0 ) {
                 ImGui.TextDisabled( "No textures have been replaced..." );
                 return;
             }
 
-            for( var idx = 0; idx < Textures.Count; idx++ ) {
-                var item = Textures[idx];
+            for( var idx = 0; idx < Items.Count; idx++ ) {
+                var item = Items[idx];
                 if( !string.IsNullOrEmpty( SearchText ) && !item.Matches( SearchText ) ) continue;
                 var name = item.GetExportReplace();
 
@@ -126,7 +124,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                     if( ImGui.Selectable( "##{Name}", item == Selected, ImGuiSelectableFlags.SpanAllColumns ) ) Selected = item;
                 }
 
-                if( UiUtils.DrawDragDrop( Textures, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", false ) ) break;
+                if( UiUtils.DrawDragDrop( Items, item, item.GetExportReplace(), ref DraggingItem, $"TEXTUREVIEW-SPLIT", false ) ) break;
 
                 using( var _ = ImRaii.PushId( idx ) ) {
                     ImGui.SameLine();
@@ -140,8 +138,6 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
         }
 
         protected override void DrawRightColumn() => Selected?.DrawBody();
-
-        public void ClearSelected() { Selected = null; }
 
         public static void DrawHd( bool isHd ) {
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 0, 4 );

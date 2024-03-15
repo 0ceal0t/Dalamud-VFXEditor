@@ -42,8 +42,6 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawSelected() => Selected.Draw();
 
-        public void ResetSelected() { Selected = null; }
-
         public NodeGroup<T> GetGroup() => Group;
 
         public string GetDefaultPath() => DefaultPath;
@@ -52,7 +50,7 @@ namespace VfxEditor.AvfxFormat {
 
         public bool IsAllowedDelete() => AllowDelete;
 
-        public void SetSelected( T selected ) {
+        public override void SetSelected( T selected ) {
             Selected = selected;
             OnSelect( selected );
         }

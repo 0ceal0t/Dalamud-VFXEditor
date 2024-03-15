@@ -4,12 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
@@ -28,8 +25,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
         public readonly AvfxExport ExportUi;
-
-        private readonly HashSet<IUiItem> ForceOpenTabs = new();
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );
@@ -58,8 +53,12 @@ namespace VfxEditor.AvfxFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawView( Main, "Parameters" );
-            DrawView( ScheduleView, "Scheduler" );
+            if( ImGui.BeginTabItem( "Parameters" ) ) {
+                Main.Draw();
+                ImGui.EndTabItem();
+            }
+
+            DrawView( ScheduleView, "Schedulers" );
             DrawView( TimelineView, "Timelines" );
             DrawView( EmitterView, "Emitters" );
             DrawView( ParticleView, "Particles" );
@@ -69,35 +68,28 @@ namespace VfxEditor.AvfxFormat {
             DrawView( ModelView, "Models" );
         }
 
-        private unsafe void DrawView( IUiItem view, string label ) {
-            var labelBytes = Encoding.UTF8.GetBytes( label + "##Main" );
-            var labelRef = stackalloc byte[labelBytes.Length + 1];
-            Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
-
-            var forceOpen = ForceOpenTabs.Contains( view );
-            if( forceOpen ) ForceOpenTabs.Remove( view );
-            var flags = forceOpen ? ImGuiTabItemFlags.None | ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None;
-            if( ImGuiNative.igBeginTabItem( labelRef, null, flags ) == 1 ) {
+        private static unsafe void DrawView<T>( IUiNodeView<T> view, string label ) where T : AvfxNode {
+            if( UiUtils.BeginTabItem<T>( label ) ) {
                 view.Draw();
-                ImGuiNative.igEndTabItem();
+                ImGui.EndTabItem();
             }
         }
 
         public void SelectItem( AvfxNode item ) {
-            if( item is AvfxScheduler sched ) SelectItem( ScheduleView, sched );
-            else if( item is AvfxTimeline timeline ) SelectItem( TimelineView, timeline );
-            else if( item is AvfxEmitter emitter ) SelectItem( EmitterView, emitter );
-            else if( item is AvfxParticle particle ) SelectItem( ParticleView, particle );
-            else if( item is AvfxEffector effector ) SelectItem( EffectorView, effector );
-            else if( item is AvfxBinder binder ) SelectItem( BinderView, binder );
-            else if( item is AvfxTexture texture ) SelectItem( TextureView, texture );
-            else if( item is AvfxModel model ) SelectItem( ModelView, model );
+            if( item is AvfxScheduler sched ) SelectItem( ScheduleView, sched, "Schedulers" );
+            else if( item is AvfxTimeline timeline ) SelectItem( TimelineView, timeline, "Timeline" );
+            else if( item is AvfxEmitter emitter ) SelectItem( EmitterView, emitter, "Emitters" );
+            else if( item is AvfxParticle particle ) SelectItem( ParticleView, particle, "Particles" );
+            else if( item is AvfxEffector effector ) SelectItem( EffectorView, effector, "Effectors" );
+            else if( item is AvfxBinder binder ) SelectItem( BinderView, binder, "Binders" );
+            else if( item is AvfxTexture texture ) SelectItem( TextureView, texture, "Textures" );
+            else if( item is AvfxModel model ) SelectItem( ModelView, model, "Models" );
         }
 
-        public void SelectItem<T>( IUiNodeView<T> view, T item ) where T : AvfxNode {
+        public static void SelectItem<T>( IUiNodeView<T> view, T item, string label ) where T : AvfxNode {
             if( item == null ) return;
             view.SetSelected( item );
-            ForceOpenTabs.Add( view );
+            UiUtils.ForceOpenTabs.Add( typeof( T ) );
         }
 
         // ====== CLEANUP UNUSED =======
@@ -150,7 +142,6 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Dispose() {
             NodeGroupSet?.Dispose();
-            ForceOpenTabs.Clear();
         }
 
         // ========== WORKSPACE ==========

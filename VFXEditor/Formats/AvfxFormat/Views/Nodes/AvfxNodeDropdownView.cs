@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
@@ -88,7 +88,7 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        public void ResetSelected() { Selected = null; }
+        public void ClearSelected() { Selected = null; }
 
         public NodeGroup<T> GetGroup() => Group;
 

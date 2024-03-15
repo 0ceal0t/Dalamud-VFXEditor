@@ -6,8 +6,10 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing.Int;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
+using VfxEditor.UldFormat.Timeline;
 
 namespace VfxEditor.UldFormat.Component.Node {
     public enum NodeType : int {
@@ -71,7 +73,8 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedShort AddBlue = new( "Add Blue" );
         public readonly ParsedInt Alpha = new( "Alpha", size: 1 );
         public readonly ParsedInt ClipCount = new( "Clip Count", size: 1 );
-        public readonly ParsedUInt TimelineId = new( "Timeline Id", size: 2 );
+        public readonly ParsedItemSelect<UldTimeline> TimelineId
+            = new( "Timeline Id", () => Plugin.UldManager.File.TimelineDropdown, ( UldTimeline item ) => ( int )item.Id.Value, size: 2 );
 
         // need to wait until all components are initialized, so store this until then
         private readonly long DelayedPosition;

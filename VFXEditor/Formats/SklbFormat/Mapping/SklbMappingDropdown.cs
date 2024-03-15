@@ -17,7 +17,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             File = file;
         }
 
-        protected override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
+        public override string GetText( SklbMapping item, int idx ) => $"Mapping {idx}" + ( string.IsNullOrEmpty( item.Name.Value ) ? "" : $" ({item.Name.Value})" );
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 

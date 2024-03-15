@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Extensions;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -159,51 +159,31 @@ namespace VfxEditor.UldFormat {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
-            DrawTextures();
-            DrawParts();
-            DrawComponents();
-            DrawTimelines();
-            DrawWidgets();
-        }
-
-        private void DrawTextures() {
-            using var tabItem = ImRaii.TabItem( "Textures" );
-            if( !tabItem ) return;
-
-            TextureList.Draw();
-            TextureSplitView.Draw();
-        }
-
-        private void DrawParts() {
-            using var tabItem = ImRaii.TabItem( "Part Lists" );
-            if( !tabItem ) return;
-
-            PartList.Draw();
-            PartsSplitView.Draw();
-        }
-
-        private void DrawComponents() {
-            using var tabItem = ImRaii.TabItem( "Components" );
-            if( !tabItem ) return;
-
-            ComponentList.Draw();
-            ComponentDropdown.Draw();
-        }
-
-        private void DrawTimelines() {
-            using var tabItem = ImRaii.TabItem( "Timelines" );
-            if( !tabItem ) return;
-
-            TimelineList.Draw();
-            TimelineDropdown.Draw();
-        }
-
-        private void DrawWidgets() {
-            using var tabItem = ImRaii.TabItem( "Widgets" );
-            if( !tabItem ) return;
-
-            WidgetList.Draw();
-            WidgetDropdown.Draw();
+            if( UiUtils.BeginTabItem<UldTexture>( "Textures" ) ) {
+                TextureList.Draw();
+                TextureSplitView.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldPartList>( "Part Lists" ) ) {
+                PartList.Draw();
+                PartsSplitView.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldComponent>( "Components" ) ) {
+                ComponentList.Draw();
+                ComponentDropdown.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldTimeline>( "Timelines" ) ) {
+                TimelineList.Draw();
+                TimelineDropdown.Draw();
+                ImGui.EndTabItem();
+            }
+            if( UiUtils.BeginTabItem<UldWidget>( "Widgets" ) ) {
+                WidgetList.Draw();
+                WidgetDropdown.Draw();
+                ImGui.EndTabItem();
+            }
         }
 
         // ========== WORKSPACE ==========

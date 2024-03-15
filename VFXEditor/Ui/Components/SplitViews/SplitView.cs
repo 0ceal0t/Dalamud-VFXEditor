@@ -1,18 +1,15 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.Components.Base;
 
 namespace VfxEditor.Ui.Components.SplitViews {
-    public abstract class SplitView<T> where T : class {
-        protected readonly string Id;
-        protected T Selected = null;
-
+    public abstract class SplitView<T> : SelectView<T> where T : class {
         protected bool DrawOnce = false;
         protected int InitialWidth = 200;
 
-        public SplitView( string id ) {
-            Id = id;
-        }
+        public SplitView( string id, List<T> items ) : base( id, items ) { }
 
         protected abstract void DrawLeftColumn();
 
@@ -45,7 +42,5 @@ namespace VfxEditor.Ui.Components.SplitViews {
 
             ImGui.Columns( 1 );
         }
-
-        public T GetSelected() => Selected;
     }
 }

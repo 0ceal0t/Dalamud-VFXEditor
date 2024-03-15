@@ -12,7 +12,7 @@ namespace VfxEditor.TmbFormat.Actor {
             File = file;
         }
 
-        protected override string GetText( Tmac item, int idx ) => $"Actor {idx}";
+        public override string GetText( Tmac item, int idx ) => $"Actor {idx}";
 
         protected override bool DoColor( Tmac item, out Vector4 color ) => TmbEntry.DoColor( item.MaxDanger, out color );
 

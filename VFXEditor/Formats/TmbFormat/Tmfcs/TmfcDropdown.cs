@@ -11,7 +11,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             File = file;
         }
 
-        protected override string GetText( Tmfc item, int idx ) => $"F-Curve {idx}";
+        public override string GetText( Tmfc item, int idx ) => $"F-Curve {idx}";
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 

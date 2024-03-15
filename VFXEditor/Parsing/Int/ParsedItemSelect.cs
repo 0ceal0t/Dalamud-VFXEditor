@@ -1,40 +1,53 @@
-using ImGuiNET;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Ui.Components.Base;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedItemSelect<T> : ParsedInt where T : class, ITextItem {
-        private readonly List<T> Items;
+        private readonly Func<SelectView<T>> GetView;
         private readonly Func<T, int> ToValue;
 
-        public ParsedItemSelect( List<T> items, Func<T, int> toValue, string name, int size = 4 ) : base( name, size ) {
-            Items = items;
-            ToValue = toValue;
-        }
+        private T Selected => ToValue == null ?
+                ( ( Value < 0 || Value >= View.Items.Count ) ? null : View.Items[Value] ) :
+                View.Items.FirstOrDefault( x => ToValue( x ) == Value, null );
+        private SelectView<T> View => GetView();
 
-        public ParsedItemSelect( List<T> items, Func<T, int> toValue, string name, int value, int size = 4 ) : base( name, value, size ) {
-            Items = items;
+        public ParsedItemSelect( string name, Func<SelectView<T>> getView, Func<T, int> toValue, int size = 4 ) : base( name, size ) {
+            GetView = getView;
             ToValue = toValue;
         }
 
         protected override void DrawBody() {
-            var selected = ToValue == null ?
-                ( ( Value < 0 || Value >= Items.Count ) ? null : Items[Value] ) :
-                Items.FirstOrDefault( x => ToValue( x ) == Value, null );
-
-            using var combo = ImRaii.Combo( Name, selected == null ? "[NONE]" : selected.GetText() );
-            if( !combo ) return;
-
-            if( ImGui.Selectable( "[NONE]", selected == null ) ) CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
-            for( var i = 0; i < Items.Count; i++ ) {
-                using var _ = ImRaii.PushId( i );
-                if( ImGui.Selectable( Items[i].GetText(), Items[i] == selected ) ) {
-                    Update( ToValue == null ? i : ToValue( Items[i] ) );
+            ImGui.SetNextItemWidth( UiUtils.GetOffsetInputSize( FontAwesomeIcon.Share ) );
+            using( var combo = ImRaii.Combo( $"##{Name}", Selected == null ? "[NONE]" : Selected.GetText() ) ) {
+                if( combo ) {
+                    if( ImGui.Selectable( "[NONE]", Selected == null ) ) CommandManager.Add( new ParsedSimpleCommand<int>( this, -1 ) );
+                    foreach( var (item, idx) in View.Items.WithIndex() ) {
+                        using var _ = ImRaii.PushId( idx );
+                        if( ImGui.Selectable( item.GetText(), item == Selected ) ) Update( ToValue == null ? idx : ToValue( item ) );
+                    }
                 }
             }
+
+            // ================================================
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            ImGui.SameLine();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, Selected == null );
+                if( ImGui.Button( FontAwesomeIcon.Share.ToIconString() ) ) {
+                    View.SetSelected( Selected );
+                    UiUtils.ForceOpenTabs.Add( typeof( T ) );
+                }
+            }
+
+            ImGui.SameLine();
+            ImGui.Text( Name );
         }
     }
 }

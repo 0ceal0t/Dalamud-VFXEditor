@@ -8,6 +8,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Text;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 
@@ -396,5 +398,18 @@ namespace VfxEditor.Utils {
         }
 
         public static float AngleUpDownSize => 17 + ImGui.GetStyle().ItemSpacing.Y;
+
+        public static readonly HashSet<Type> ForceOpenTabs = new();
+
+        public static unsafe bool BeginTabItem<T>( string label ) {
+            var labelBytes = Encoding.UTF8.GetBytes( label );
+            var labelRef = stackalloc byte[labelBytes.Length + 1];
+            Marshal.Copy( labelBytes, 0, new IntPtr( labelRef ), labelBytes.Length );
+
+            var type = typeof( T );
+            var forceOpen = ForceOpenTabs.Contains( type );
+            if( forceOpen ) ForceOpenTabs.Remove( type );
+            return ImGuiNative.igBeginTabItem( labelRef, null, forceOpen ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None ) == 1;
+        }
     }
 }

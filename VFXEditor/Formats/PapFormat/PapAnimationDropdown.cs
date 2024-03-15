@@ -13,7 +13,7 @@ namespace VfxEditor.PapFormat {
             File = file;
         }
 
-        protected override string GetText( PapAnimation item, int idx ) => item.GetName();
+        public override string GetText( PapAnimation item, int idx ) => item.GetName();
 
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 

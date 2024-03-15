@@ -17,7 +17,7 @@ namespace VfxEditor.Ui.Components {
 
         protected override void DrawSelected() => Selected.Draw();
 
-        protected override string GetText( T item, int idx ) => GetTextAction == null ? $"{Id} {idx}" : GetTextAction.Invoke( item, idx );
+        public override string GetText( T item, int idx ) => GetTextAction == null ? $"{Id} {idx}" : GetTextAction.Invoke( item, idx );
 
         protected override void DrawControls() {
             if( NewAction == null ) return;

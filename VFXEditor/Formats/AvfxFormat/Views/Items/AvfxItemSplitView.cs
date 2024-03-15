@@ -52,7 +52,5 @@ namespace VfxEditor.AvfxFormat {
         protected override void DrawSelected() => Selected.Draw();
 
         public void UpdateIdx() { for( var i = 0; i < Items.Count; i++ ) Items[i].SetIdx( i ); }
-
-        public void ClearSelected() { Selected = null; }
     }
 }

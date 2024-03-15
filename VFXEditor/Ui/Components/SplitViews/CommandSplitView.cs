@@ -26,8 +26,6 @@ namespace VfxEditor.Ui.Components.SplitViews {
 
         protected override bool RecordReorder() => true;
 
-        protected override string GetText( T item, int idx ) => GetTextAction == null ? base.GetText( item, idx ) : GetTextAction.Invoke( item, idx );
-
-        public void SetSelected( T item ) => Selected = item;
+        public override string GetText( T item, int idx ) => GetTextAction == null ? base.GetText( item, idx ) : GetTextAction.Invoke( item, idx );
     }
 }
