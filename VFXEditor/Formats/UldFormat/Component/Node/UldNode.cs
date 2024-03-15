@@ -54,27 +54,21 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt Unk2 = new( "Unknown 2" );
         public readonly ParsedInt Unk3 = new( "Unknown 3" );
         public readonly ParsedInt Unk4 = new( "Unknown 4" );
-        public readonly ParsedShort X = new( "X" );
-        public readonly ParsedShort Y = new( "Y" );
-        public readonly ParsedUInt W = new( "Width", size: 2 );
-        public readonly ParsedUInt H = new( "Height", size: 2 );
+        public readonly ParsedShort2 Position = new( "Position" );
+        public readonly ParsedShort2 Size = new( "Size" );
         public readonly ParsedRadians Rotation = new( "Rotation" );
         public readonly ParsedFloat2 Scale = new( "Scale" );
-        public readonly ParsedShort OriginX = new( "Origin X" );
-        public readonly ParsedShort OriginY = new( "Origin Y" );
+        public readonly ParsedShort2 Origin = new( "Origin" );
         public readonly ParsedUInt Priority = new( "Priority", size: 2 );
         public readonly ParsedFlag<NodeFlags> Flags = new( "Flags", size: 1 );
         public readonly ParsedInt Unk7 = new( "Unknown 7", size: 1 );
-        public readonly ParsedShort MultiplyRed = new( "Multiply Red" );
-        public readonly ParsedShort MultiplyGreen = new( "Multiply Green" );
-        public readonly ParsedShort MultiplyBlue = new( "Multiply Blue" );
-        public readonly ParsedShort AddRed = new( "Add Red" );
-        public readonly ParsedShort AddGreen = new( "Add Green" );
-        public readonly ParsedShort AddBlue = new( "Add Blue" );
+        public readonly ParsedShort3 MultiplyColor = new( "Multiply Color" );
+        public readonly ParsedShort3 AddColor = new( "Add Color" );
         public readonly ParsedInt Alpha = new( "Alpha", size: 1 );
         public readonly ParsedInt ClipCount = new( "Clip Count", size: 1 );
-        public readonly ParsedItemSelect<UldTimeline> TimelineId
-            = new( "Timeline Id", () => Plugin.UldManager.File.TimelineDropdown, ( UldTimeline item ) => ( int )item.Id.Value, size: 2 );
+
+        public readonly ParsedItemSelect<UldTimeline> TimelineId = new( "Timeline",
+            () => Plugin.UldManager.File.TimelineDropdown, ( UldTimeline item ) => ( int )item.Id.Value, 0, size: 2 );
 
         // need to wait until all components are initialized, so store this until then
         private readonly long DelayedPosition;
@@ -92,23 +86,16 @@ namespace VfxEditor.UldFormat.Component.Node {
                 Unk2,
                 Unk3,
                 Unk4,
-                X,
-                Y,
-                W,
-                H,
+                Position,
+                Size,
                 Rotation,
                 Scale,
-                OriginX,
-                OriginY,
+                Origin,
                 Priority,
                 Flags,
                 Unk7,
-                MultiplyRed,
-                MultiplyGreen,
-                MultiplyBlue,
-                AddRed,
-                AddGreen,
-                AddBlue,
+                MultiplyColor,
+                AddColor,
                 Alpha,
                 ClipCount,
                 TimelineId

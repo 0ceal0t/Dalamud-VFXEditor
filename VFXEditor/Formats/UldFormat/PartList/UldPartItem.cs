@@ -1,18 +1,18 @@
 using ImGuiNET;
 using System.IO;
 using System.Linq;
-using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
-        public readonly ParsedUInt TextureId = new( "Texture Id" );
-        private readonly ParsedUInt U = new( "U", size: 2 );
-        private readonly ParsedUInt V = new( "V", size: 2 );
-        private readonly ParsedUInt W = new( "W", size: 2 );
-        private readonly ParsedUInt H = new( "H", size: 2 );
+        private readonly ParsedShort2 Offset = new( "Offset" );
+        private readonly ParsedShort2 Size = new( "Size" );
 
-        public UldTexture CurrentTexture => Plugin.UldManager.File.Textures.Where( x => x.Id.Value == TextureId.Value ).FirstOrDefault();
+        public readonly ParsedItemSelect<UldTexture> TextureId = new( "Texture",
+            () => Plugin.UldManager.File.TextureSplitView, ( UldTexture item ) => ( int )item.Id.Value, 0 );
+
+        public UldTexture CurrentTexture => Plugin.UldManager.File.Textures.FirstOrDefault( x => x.Id.Value == TextureId.Value, null );
 
         private bool ShowHd = false;
 
@@ -20,23 +20,17 @@ namespace VfxEditor.UldFormat.PartList {
 
         public UldPartItem( BinaryReader reader ) {
             TextureId.Read( reader );
-            U.Read( reader );
-            V.Read( reader );
-            W.Read( reader );
-            H.Read( reader );
+            Offset.Read( reader );
+            Size.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
             TextureId.Write( writer );
-            U.Write( writer );
-            V.Write( writer );
-            W.Write( writer );
-            H.Write( writer );
+            Offset.Write( writer );
+            Size.Write( writer );
         }
 
         public void Draw() {
-            TextureId.Draw();
-
             ImGui.Checkbox( "Show HD", ref ShowHd );
 
             var currentTexture = CurrentTexture;
@@ -46,19 +40,18 @@ namespace VfxEditor.UldFormat.PartList {
 
                 if( !string.IsNullOrEmpty( path ) ) {
                     Plugin.TextureManager.GetTexture( path )?.Draw(
-                        U.Value * mult,
-                        V.Value * mult,
-                        W.Value * mult,
-                        H.Value * mult
+                        ( uint )Offset.Value.X * mult,
+                        ( uint )Offset.Value.Y * mult,
+                        ( uint )Size.Value.X * mult,
+                        ( uint )Size.Value.Y * mult
                     );
                 }
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-            U.Draw();
-            V.Draw();
-            W.Draw();
-            H.Draw();
+            TextureId.Draw();
+            Offset.Draw();
+            Size.Draw();
         }
     }
 }
