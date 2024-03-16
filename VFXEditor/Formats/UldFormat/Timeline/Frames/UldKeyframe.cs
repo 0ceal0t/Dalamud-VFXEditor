@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
-    public class UldKeyframe {
+    public class UldKeyframe : IUiItem {
         public readonly ParsedUInt Time = new( "Time" );
         public readonly ParsedInt Interpolation = new( "Interpolation", size: 1 );
         public readonly ParsedInt Unk1 = new( "Unknown", size: 1 );
@@ -160,5 +161,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
 
             Data.ForEach( x => x.Draw() );
         }
+
+        public string GetText() => $"Frame {Time.Value}";
     }
 }

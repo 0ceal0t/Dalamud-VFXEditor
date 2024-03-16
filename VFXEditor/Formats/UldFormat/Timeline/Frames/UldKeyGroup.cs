@@ -1,13 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Data;
+using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.UldFormat.Timeline.Frames;
-using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.Timeline {
     public enum KeyUsage : int {
@@ -56,9 +53,11 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly ParsedDataListEnum<KeyGroupType, UldKeyframe> Type;
 
         public readonly List<UldKeyframe> Keyframes = new();
+        private readonly CollapsingHeaders<UldKeyframe> KeyframeView;
 
         public UldKeyGroup() {
             Type = new( Keyframes, "Type", size: 2 );
+            KeyframeView = new( "Keyframe", Keyframes, ( UldKeyframe item, int _ ) => item.GetText(), () => new( Type.Value ) );
         }
 
         public UldKeyGroup( BinaryReader reader ) : this() {
@@ -98,29 +97,7 @@ namespace VfxEditor.UldFormat.Timeline {
         public void Draw() {
             Usage.Draw();
             Type.Draw();
-
-            for( var idx = 0; idx < Keyframes.Count; idx++ ) {
-                if( DrawKeyframe( Keyframes[idx], idx ) ) break;
-            }
-
-            if( ImGui.Button( "+ New" ) ) { // NEW
-                CommandManager.Add( new ListAddCommand<UldKeyframe>( Keyframes, new UldKeyframe( Type.Value ) ) );
-            }
-        }
-
-        private bool DrawKeyframe( UldKeyframe item, int idx ) {
-            using var _ = ImRaii.PushId( idx );
-            if( ImGui.CollapsingHeader( $"Keyframe {idx}" ) ) {
-                using var indent = ImRaii.PushIndent();
-
-                if( UiUtils.RemoveButton( $"Delete", true ) ) { // REMOVE
-                    CommandManager.Add( new ListRemoveCommand<UldKeyframe>( Keyframes, item ) );
-                    return true;
-                }
-
-                item.Draw();
-            }
-            return false;
+            KeyframeView.Draw();
         }
     }
 }

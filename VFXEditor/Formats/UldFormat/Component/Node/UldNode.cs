@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -45,7 +46,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedIntSelect<UldNode> ChildNodeId;
 
         public bool IsComponentNode = false;
-        public readonly ParsedInt ComponentTypeId = new( "Component Id" );
+        public readonly ParsedInt ComponentTypeId = new( "##ComponentId" );
         public UldGenericData Data = null;
 
         public readonly ParsedDataEnum<NodeType, UldGenericData> Type;
@@ -246,8 +247,13 @@ namespace VfxEditor.UldFormat.Component.Node {
 
             if( IsComponentNode ) {
                 ComponentTypeId.Draw();
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
                 ImGui.SameLine();
-                if( ImGui.SmallButton( "Update" ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
+                }
+                ImGui.SameLine();
+                ImGui.Text( "Component Type" );
             }
             else Type.Draw();
 

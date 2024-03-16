@@ -14,8 +14,8 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly CommandSplitView<UldFrame> FramesView2;
 
         public UldTimeline() {
-            FramesView1 = new( "Frame", Frames1, true, null, () => new UldFrame() );
-            FramesView2 = new( "Frame", Frames2, true, null, () => new UldFrame() );
+            FramesView1 = new( "Group", Frames1, true, null, () => new UldFrame() );
+            FramesView2 = new( "Group", Frames2, true, null, () => new UldFrame() );
         }
 
         public UldTimeline( BinaryReader reader ) : this() {
