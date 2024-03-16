@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.SplitViews;
@@ -15,7 +15,7 @@ namespace VfxEditor.UldFormat.Timeline {
 
         public UldTimeline() {
             FramesView1 = new( "Frame", Frames1, true, null, () => new UldFrame() );
-            FramesView2 = new( "Frame", Frames1, true, null, () => new UldFrame() );
+            FramesView2 = new( "Frame", Frames2, true, null, () => new UldFrame() );
         }
 
         public UldTimeline( BinaryReader reader ) : this() {

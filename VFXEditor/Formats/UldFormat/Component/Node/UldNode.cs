@@ -7,6 +7,7 @@ using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Data;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Components.Base;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
 using VfxEditor.UldFormat.Timeline;
@@ -37,10 +38,11 @@ namespace VfxEditor.UldFormat.Component.Node {
         private readonly List<UldComponent> Components;
         private readonly UldWorkspaceItem Parent;
 
-        public readonly ParsedInt ParentId = new( "Parent Id" );
-        public readonly ParsedInt NextSiblingId = new( "Next Sibling Id" );
-        public readonly ParsedInt PrevSiblingId = new( "Prev Sibling Id" );
-        public readonly ParsedInt ChildNodeId = new( "Child Node Id" );
+        public readonly SelectView<UldNode> NodeView;
+        public readonly ParsedIntSelect<UldNode> ParentId;
+        public readonly ParsedIntSelect<UldNode> NextSiblingId;
+        public readonly ParsedIntSelect<UldNode> PrevSiblingId;
+        public readonly ParsedIntSelect<UldNode> ChildNodeId;
 
         public bool IsComponentNode = false;
         public readonly ParsedInt ComponentTypeId = new( "Component Id" );
@@ -67,15 +69,19 @@ namespace VfxEditor.UldFormat.Component.Node {
         public readonly ParsedInt Alpha = new( "Alpha", size: 1 );
         public readonly ParsedInt ClipCount = new( "Clip Count", size: 1 );
 
-        public readonly ParsedItemSelect<UldTimeline> TimelineId = new( "Timeline",
-            () => Plugin.UldManager.File.TimelineDropdown, ( UldTimeline item ) => ( int )item.Id.Value, 0, size: 2 );
+        public readonly ParsedIntSelect<UldTimeline> TimelineId = new( "Timeline", 0,
+            () => Plugin.UldManager.File.TimelineDropdown,
+            ( UldTimeline item ) => ( int )item.Id.Value,
+            ( UldTimeline item, int _ ) => item.GetText(),
+            size: 2
+        );
 
         // need to wait until all components are initialized, so store this until then
         private readonly long DelayedPosition;
         private readonly int DelayedSize;
         private readonly int DelayedNodeType;
 
-        public UldNode( List<UldComponent> components, UldWorkspaceItem parent ) {
+        public UldNode( List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) {
             Parent = parent;
             Components = components;
             Type = new( this, "Type" );
@@ -97,12 +103,33 @@ namespace VfxEditor.UldFormat.Component.Node {
                 MultiplyColor,
                 AddColor,
                 Alpha,
-                ClipCount,
-                TimelineId
+                ClipCount
             };
+
+            NodeView = nodeView;
+            ParentId = new( "Parent", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            NextSiblingId = new( "Next Sibling", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            PrevSiblingId = new( "Previous Sibling", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
+            ChildNodeId = new( "Child", 0,
+                () => NodeView,
+                ( UldNode item ) => ( int )item.Id.Value,
+                ( UldNode item, int _ ) => item.GetText()
+            );
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent ) : this( components, parent ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : this( components, parent, nodeView ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );
@@ -124,6 +151,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             }
 
             Parsed.ForEach( x => x.Read( reader ) );
+            TimelineId.Read( reader );
 
             DelayedPosition = reader.BaseStream.Position;
             DelayedSize = ( int )( pos + size - reader.BaseStream.Position ) - 12;
@@ -160,6 +188,8 @@ namespace VfxEditor.UldFormat.Component.Node {
             writer.Write( ( ushort )0 );
 
             Parsed.ForEach( x => x.Write( writer ) );
+            TimelineId.Write( writer );
+
             Data?.Write( writer );
 
             var finalPos = writer.BaseStream.Position;
@@ -237,6 +267,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             using var _ = ImRaii.PushId( "Parameters" );
             using var child = ImRaii.Child( "Child" );
 
+            TimelineId.Draw();
             ParentId.Draw();
             NextSiblingId.Draw();
             PrevSiblingId.Draw();

@@ -31,7 +31,7 @@ namespace VfxEditor.UldFormat.Widget {
 
         public UldWidget( List<UldComponent> components ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( components, this ) );
+                ( UldNode item, int idx ) => item.GetText(), () => new( components, this, NodeSplitView ) );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
@@ -44,7 +44,7 @@ namespace VfxEditor.UldFormat.Widget {
             var nodeCount = reader.ReadUInt16();
             var size = reader.ReadUInt16();
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
 
             reader.BaseStream.Position = pos + size;
         }

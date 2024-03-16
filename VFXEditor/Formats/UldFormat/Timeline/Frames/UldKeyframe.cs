@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldKeyframe {
@@ -16,17 +17,16 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         public UldKeyframe( KeyGroupType groupType ) {
             Data.AddRange( groupType switch {
                 KeyGroupType.Float1 => new List<ParsedBase>() {
-                    new ParsedFloat( "Value 1" )
+                    new ParsedFloat( "Value" )
                 },
                 KeyGroupType.Float2 => new List<ParsedBase>() {
-                    new ParsedFloat( "Value 1" ),
-                    new ParsedFloat( "Value 2" )
+                    new ParsedFloat2( "Value" )
                 },
                 KeyGroupType.Float3 => new List<ParsedBase>() {
-                    new ParsedFloat( "Value 1" ), new ParsedFloat( "Value 2" ), new ParsedFloat( "Value 3" )
+                    new ParsedFloat3( "Value" )
                 },
                 KeyGroupType.SByte1 => new List<ParsedBase>() {
-                    new ParsedSByte( "Value 1" ),
+                    new ParsedSByte( "Value" ),
                     new ParsedReserve( 3 )
                 },
                 KeyGroupType.SByte2 => new List<ParsedBase>() {
@@ -50,19 +50,19 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
                     new ParsedReserve( 1 )
                 },
                 KeyGroupType.Short1 => new List<ParsedBase>() {
-                    new ParsedShort( "Value 1" ),
+                    new ParsedShort( "Value" ),
                     new ParsedReserve( 2 )
                 },
                 KeyGroupType.Short2 => new List<ParsedBase>() {
-                    new ParsedShort( "Value 1" ), new ParsedShort( "Value 2" ),
+                    new ParsedShort2( "Value" ),
                     new ParsedReserve( 2 )
                 },
                 KeyGroupType.Short3 => new List<ParsedBase>() {
-                    new ParsedShort( "Value 1" ), new ParsedShort( "Value 2" ), new ParsedShort( "Value 3" ),
+                    new ParsedShort3( "Value" ),
                     new ParsedReserve( 2 )
                 },
                 KeyGroupType.UShort1 => new List<ParsedBase>() {
-                    new ParsedUInt( "Value 1", size: 2 ),
+                    new ParsedUInt( "Value", size: 2 ),
                     new ParsedReserve( 2 )
                 },
                 KeyGroupType.UShort2 => new List<ParsedBase>() {
@@ -83,7 +83,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
                     new ParsedInt( "Value 1" ), new ParsedInt( "Value 2" ), new ParsedInt( "Value 3" )
                 },
                 KeyGroupType.UInt1 => new List<ParsedBase>() {
-                    new ParsedUInt( "Value 1" )
+                    new ParsedUInt( "Value" )
                 },
                 KeyGroupType.UInt2 => new List<ParsedBase>() {
                     new ParsedUInt( "Value 1" ), new ParsedUInt( "Value 2" )
@@ -92,7 +92,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
                     new ParsedUInt( "Value 1" ), new ParsedUInt( "Value 2" ), new ParsedUInt( "Value 3" )
                 },
                 KeyGroupType.Bool1 => new List<ParsedBase>() {
-                    new ParsedByteBool( "Value 1" ),
+                    new ParsedByteBool( "Value" ),
                     new ParsedReserve( 3 )
                 },
                 KeyGroupType.Bool2 => new List<ParsedBase>() {
@@ -104,12 +104,8 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
                     new ParsedReserve( 1 )
                 },
                 KeyGroupType.Color => new List<ParsedBase>() {
-                    new ParsedInt( "Multiply Red", size: 2 ),
-                    new ParsedInt( "Multiply Green", size: 2 ),
-                    new ParsedInt( "Multiply Blue", size: 2 ),
-                    new ParsedInt( "Add Red", size: 2 ),
-                    new ParsedInt( "Add Green", size: 2 ),
-                    new ParsedInt( "Add Blue", size: 2 )
+                    new ParsedShort3( "Multiply Color" ),
+                    new ParsedShort3( "Add Color" )
                 },
                 KeyGroupType.Label => new List<ParsedBase>() {
                     new ParsedUInt( "Label Id", size: 2 ), new ParsedInt( "Label Command", size: 1 ), new ParsedInt( "Jump Id", size: 1 )

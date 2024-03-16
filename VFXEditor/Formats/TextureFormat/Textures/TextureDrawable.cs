@@ -35,9 +35,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             DrawControls();
         }
 
-        public void Draw( uint u, uint v, uint w, uint h ) {
+        public void Draw( uint u, uint v, uint w, uint h, bool controls ) {
             DrawImage( u, v, w, h );
-            DrawControls();
+            if( controls ) DrawControls();
         }
 
         protected void DrawExportReplaceButtons() {

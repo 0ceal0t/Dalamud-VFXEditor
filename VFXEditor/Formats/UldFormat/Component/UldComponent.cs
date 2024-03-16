@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this ) );
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this, NodeSplitView ) );
 
             Id.Value = 1001; // default
         }
@@ -82,7 +82,7 @@ namespace VfxEditor.UldFormat.Component {
 
             reader.BaseStream.Position = pos + offset;
 
-            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this ) );
+            for( var i = 0; i < nodeCount; i++ ) Nodes.Add( new UldNode( reader, components, this, NodeSplitView ) );
         }
 
         public void Write( BinaryWriter writer ) {
