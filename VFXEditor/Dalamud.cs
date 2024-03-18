@@ -18,8 +18,9 @@ namespace VfxEditor {
         [PluginService] public static ITargetManager TargetManager { get; private set; } = null!;
         [PluginService] public static IKeyState KeyState { get; private set; } = null!;
         [PluginService] public static ITextureProvider TextureProvider { get; private set; } = null!;
-        [PluginService] public static IPluginLog PluginLog { get; private set; } = null;
-        [PluginService] public static IGameInteropProvider Hooks { get; private set; } = null;
+        [PluginService] public static IPluginLog PluginLog { get; private set; } = null!;
+        [PluginService] public static IGameInteropProvider Hooks { get; private set; } = null!;
+        [PluginService] public static INotificationManager Notification { get; private set; } = null!;
 
         public static void Error( Exception e, string message ) => PluginLog.Error( e, message );
 

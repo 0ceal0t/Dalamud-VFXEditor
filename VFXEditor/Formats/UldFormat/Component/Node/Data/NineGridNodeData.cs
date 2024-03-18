@@ -1,5 +1,4 @@
 using System.IO;
-using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.UldFormat.PartList;
@@ -74,19 +73,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         public override void Draw() {
             PartListId.Draw();
             PartId.Draw();
-
-            /*var part = PartId.Selected;
-            var texture = part.GetTexture( out var mult );
-            if( texture != null ) {
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
-
-                var offset = part.Offset.Value;
-                var size = part.Offset.Value;
-
-                DrawTexture( texture, offset.X, offset.Y, LeftOffset.Value, TopOffset.Value, mult );
-                ImGui.SameLine();
-                DrawTexture( texture, offset.X + LeftOffset.Value, offset.Y,  );
-            }*/
+            PartId.Selected?.DrawImage( false );
 
             GridParts.Draw();
             GridRender.Draw();
@@ -97,16 +84,6 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             Unknown1.Draw();
             Unknown2.Draw();
             Unknown3.Draw();
-        }
-
-        private void DrawTexture( TextureDrawable texture, int u, int v, int w, int h, uint mult ) {
-            texture.Draw(
-                ( uint )u * mult,
-                ( uint )v * mult,
-                ( uint )w * mult,
-                ( uint )h * mult,
-                false
-            );
         }
     }
 }
