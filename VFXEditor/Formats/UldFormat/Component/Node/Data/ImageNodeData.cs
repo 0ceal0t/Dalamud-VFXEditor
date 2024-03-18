@@ -5,7 +5,7 @@ using VfxEditor.UldFormat.PartList;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
     public class ImageNodeData : UldGenericData {
-        private readonly ParsedIntSelect<UldPartList> PartListId; // Size = 2
+        private readonly ParsedIntSelect<UldPartList> PartListId;
         private readonly ParsedUIntPicker<UldPartItem> PartId;
 
         private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );

@@ -1,12 +1,13 @@
 using ImGuiNET;
 using System.IO;
+using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Parsing.Int;
 using VfxEditor.UldFormat.Texture;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartItem {
-        private readonly ParsedShort2 Offset = new( "Offset" );
-        private readonly ParsedShort2 Size = new( "Size" );
+        public readonly ParsedShort2 Offset = new( "Offset" );
+        public readonly ParsedShort2 Size = new( "Size" );
 
         public readonly ParsedIntSelect<UldTexture> TextureId = new( "Texture", 0,
             () => Plugin.UldManager.File.TextureSplitView,
@@ -42,15 +43,20 @@ namespace VfxEditor.UldFormat.PartList {
             Size.Draw();
         }
 
-        public void DrawImage( bool controls ) {
+        public TextureDrawable GetTexture( out uint mult ) {
+            mult = ShowHd ? 2u : 1u;
             var currentTexture = CurrentTexture;
-            if( currentTexture == null ) return;
+            if( currentTexture == null ) return null;
 
             var path = currentTexture.IconId.Value > 0 ? currentTexture.GetIconPath( ShowHd ) : currentTexture.GetTexturePath( ShowHd );
-            if( string.IsNullOrEmpty( path ) ) return;
+            if( string.IsNullOrEmpty( path ) ) return null;
 
-            var mult = ShowHd ? 2u : 1u;
-            Plugin.TextureManager.GetTexture( path )?.Draw(
+            return Plugin.TextureManager.GetTexture( path );
+        }
+
+        public void DrawImage( bool controls ) {
+            var texture = GetTexture( out var mult );
+            texture?.Draw(
                 ( uint )Offset.Value.X * mult,
                 ( uint )Offset.Value.Y * mult,
                 ( uint )Size.Value.X * mult,
