@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 ColorToAlpha,
                 UseScreenCopy,
@@ -44,7 +44,7 @@ namespace VfxEditor.AvfxFormat {
                 MaskTextureIdx,
                 TexN,
                 TexNRandom
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );
@@ -92,8 +92,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Texture Color 1";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelectList<AvfxTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, MaskTextureIdx )
-        };
+        ];
     }
 }

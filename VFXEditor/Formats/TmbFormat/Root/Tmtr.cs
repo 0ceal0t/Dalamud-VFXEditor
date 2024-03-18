@@ -22,13 +22,13 @@ namespace VfxEditor.TmbFormat {
         public override int Size => 0x18;
         public override int ExtraSize => !LuaAssigned.Value ? 0 : 8 + ( 12 * LuaEntries.Count );
 
-        public readonly List<TmbEntry> Entries = new();
+        public readonly List<TmbEntry> Entries = [];
         private readonly List<int> TempIds;
         public DangerLevel MaxDanger => Entries.Count == 0 ? DangerLevel.None : Entries.Select( x => x.Danger ).Max();
 
         private TmtrLuaEntry DraggingItem;
         private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
-        public readonly List<TmtrLuaEntry> LuaEntries = new();
+        public readonly List<TmtrLuaEntry> LuaEntries = [];
 
         private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
 
@@ -200,8 +200,8 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void AddEntry( Type type ) {
-            var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ) } );
-            var newEntry = ( TmbEntry )constructor.Invoke( new object[] { File } );
+            var constructor = type.GetConstructor( [typeof( TmbFile )] );
+            var newEntry = ( TmbEntry )constructor.Invoke( [File] );
 
             var commands = new List<ICommand>();
             AddEntry( commands, newEntry );

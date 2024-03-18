@@ -24,14 +24,14 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         public readonly PhybSimulatorParams Params;
 
-        public readonly List<PhybCollisionData> Collisions = new();
-        public readonly List<PhybCollisionData> CollisionConnectors = new();
-        public readonly List<PhybChain> Chains = new();
-        public readonly List<PhybConnector> Connectors = new();
-        public readonly List<PhybAttract> Attracts = new();
-        public readonly List<PhybPin> Pins = new();
-        public readonly List<PhybSpring> Springs = new();
-        public readonly List<PhybPostAlignment> PostAlignments = new();
+        public readonly List<PhybCollisionData> Collisions = [];
+        public readonly List<PhybCollisionData> CollisionConnectors = [];
+        public readonly List<PhybChain> Chains = [];
+        public readonly List<PhybConnector> Connectors = [];
+        public readonly List<PhybAttract> Attracts = [];
+        public readonly List<PhybPin> Pins = [];
+        public readonly List<PhybSpring> Springs = [];
+        public readonly List<PhybPostAlignment> PostAlignments = [];
 
         private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
         private readonly CommandSplitView<PhybCollisionData> CollisionConnectorSplitView;

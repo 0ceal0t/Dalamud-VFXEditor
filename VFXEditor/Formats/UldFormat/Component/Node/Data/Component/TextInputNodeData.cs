@@ -28,7 +28,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
 
     public class TextInputNodeData : UldNodeComponentData {
         public TextInputNodeData() : base() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Max Width" ),
                 new ParsedUInt( "Max Lines" ),
                 new ParsedUInt( "Max Bytes" ),
@@ -36,7 +36,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data.Component {
                 new ParsedFlag<TextInputFlags>( "Flags", size: 1 ),
                 new ParsedFlag<TextInputFlags2>( "Flags 2", size: 1 ),
                 new ParsedUInt( "Charset", size: 2 ),
-            } );
+            ] );
 
             for( var i = 1; i <= 16; i++ ) Parsed.Add( new ParsedInt( $"Charset Extra {i}", size: 1 ) );
         }

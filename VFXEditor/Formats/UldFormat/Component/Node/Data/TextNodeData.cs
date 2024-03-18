@@ -32,7 +32,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
     public class TextNodeData : UldGenericData {
         public TextNodeData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Text Id", size: 2 ),
                 new ParsedUInt( "Unknown 1", size: 2 ),
                 new ParsedSheetColor( "Color" ),
@@ -47,7 +47,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 new ParsedInt( "Line Spacing", size: 1 ),
                 new ParsedUInt( "Unknown 3", size: 2 ),
                 new ParsedUInt( "Unknown 4", size: 2 ),
-            } );
+            ] );
         }
     }
 }

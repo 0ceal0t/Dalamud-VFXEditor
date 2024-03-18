@@ -63,7 +63,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             }
 
             if( ImGui.BeginPopup( "Edit" ) ) {
-                if( ResizeInput == null && GetPreview() != null ) ResizeInput = new int[] { GetPreview().Width, GetPreview().Height };
+                if( ResizeInput == null && GetPreview() != null ) ResizeInput = [GetPreview().Width, GetPreview().Height];
                 ImGui.SetNextItemWidth( 100f );
                 ImGui.InputInt2( "##Resize", ref ResizeInput[0] );
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {

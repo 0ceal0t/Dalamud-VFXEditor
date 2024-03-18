@@ -21,12 +21,12 @@ namespace VfxEditor.Formats.MtrlFormat {
     public unsafe class MtrlManager : FileManager<MtrlDocument, MtrlFile, WorkspaceMetaBasic> {
         public readonly TextureDataFile TileDiffuseFile;
         public readonly TextureDataFile TileNormalFile;
-        public readonly List<IDalamudTextureWrap> TileDiffuse = new();
-        public readonly List<IDalamudTextureWrap> TileNormal = new();
+        public readonly List<IDalamudTextureWrap> TileDiffuse = [];
+        public readonly List<IDalamudTextureWrap> TileNormal = [];
 
         public readonly StmDataFile Stm;
         public readonly int[] Templates;
-        public readonly List<MtrlDye> Dyes = new();
+        public readonly List<MtrlDye> Dyes = [];
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
             SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
@@ -48,7 +48,7 @@ namespace VfxEditor.Formats.MtrlFormat {
                 0
             };
             foreach( var entry in Stm.Entries ) templates.Add( entry.Key );
-            Templates = templates.ToArray();
+            Templates = [.. templates];
 
             // Dyes
             foreach( var item in Dalamud.DataManager.GetExcelSheet<Stain>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {

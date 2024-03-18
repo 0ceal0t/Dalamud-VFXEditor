@@ -17,12 +17,12 @@ namespace VfxEditor.PhybFormat.Collision.Sphere {
 
         public PhybSphere( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Name,
             Bone,
             BoneOffset,
             Thickness,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;

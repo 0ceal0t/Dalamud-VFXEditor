@@ -83,17 +83,17 @@ namespace VfxEditor.FileBrowser.FolderFiles {
 
         private static bool GetIcon( string ext, out (FontAwesomeIcon, FilePickerFileColor) result ) {
             if( ICON_MAP == null ) {
-                ICON_MAP = new();
-                AddToIconMap( new string[] {
+                ICON_MAP = [];
+                AddToIconMap( [
                     "mp4",
                     "gif",
                     "mov",
                     "avi",
-                }, FontAwesomeIcon.FileVideo, FilePickerFileColor.Misc );
+                ], FontAwesomeIcon.FileVideo, FilePickerFileColor.Misc );
 
-                AddToIconMap( new string[] { "pdf" }, FontAwesomeIcon.FilePdf, FilePickerFileColor.Misc );
+                AddToIconMap( ["pdf"], FontAwesomeIcon.FilePdf, FilePickerFileColor.Misc );
 
-                AddToIconMap( new string[] {
+                AddToIconMap( [
                     "png",
                     "jpg",
                     "jpeg",
@@ -101,9 +101,9 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                     "dds",
                     "atex",
                     "tex",
-                }, FontAwesomeIcon.FileImage, FilePickerFileColor.Image );
+                ], FontAwesomeIcon.FileImage, FilePickerFileColor.Image );
 
-                AddToIconMap( new string[] {
+                AddToIconMap( [
                     "cs",
                     "json",
                     "cpp",
@@ -119,9 +119,9 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                     "gltf",
                     "glb",
                     "hkx",
-                }, FontAwesomeIcon.FileCode, FilePickerFileColor.Code );
+                ], FontAwesomeIcon.FileCode, FilePickerFileColor.Code );
 
-                AddToIconMap( new string[] {
+                AddToIconMap( [
                     "zip",
                     "7z",
                     "gz",
@@ -130,16 +130,16 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                     "pmp",
                     "vfxedit2",
                     "vfxworkspace",
-                }, FontAwesomeIcon.FileArchive, FilePickerFileColor.Archive );
+                ], FontAwesomeIcon.FileArchive, FilePickerFileColor.Archive );
 
-                AddToIconMap( new string[] {
+                AddToIconMap( [
                     "mp3",
                     "m4a",
                     "ogg",
                     "wav",
-                }, FontAwesomeIcon.FileAudio, FilePickerFileColor.Misc );
+                ], FontAwesomeIcon.FileAudio, FilePickerFileColor.Misc );
 
-                AddToIconMap( new string[] {
+                AddToIconMap( [
                     "avfx",
                     "tmb",
                     "pap",
@@ -152,9 +152,9 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                     "shcd",
                     "shpk",
                     "sgb",
-                }, FontAwesomeIcon.File, FilePickerFileColor.Ffxiv );
+                ], FontAwesomeIcon.File, FilePickerFileColor.Ffxiv );
 
-                AddToIconMap( new string[] { "csv" }, FontAwesomeIcon.FileCsv, FilePickerFileColor.Misc );
+                AddToIconMap( ["csv"], FontAwesomeIcon.FileCsv, FilePickerFileColor.Misc );
             }
 
             return ICON_MAP.TryGetValue( ext.ToLower(), out result );

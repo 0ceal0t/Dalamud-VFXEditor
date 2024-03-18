@@ -12,7 +12,7 @@ namespace VfxEditor.DirectX.Mesh {
     public class MeshPreview : ModelDeferredRenderer {
         private readonly D3dDrawable Model;
 
-        private readonly HashSet<Buffer> ToCleanUp = new();
+        private readonly HashSet<Buffer> ToCleanUp = [];
 
         protected Buffer MaterialPixelShaderBuffer;
         protected PSMaterialBuffer PSBufferData;
@@ -27,13 +27,13 @@ namespace VfxEditor.DirectX.Mesh {
             VSBufferData = new() { };
 
             Model = new( 5, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "UV", 0, Format.R32G32B32A32_Float, 32, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 64, 0 )
-                } );
+                ] );
             Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MeshGBuffer.fx" ), ShaderPassFlags.Pixel );
 
             // ===== QUAD =========
@@ -77,15 +77,15 @@ namespace VfxEditor.DirectX.Mesh {
         protected override void GBufferPass() {
             Model.Draw(
                 Ctx, PassType.GBuffer,
-                new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+                [VertexShaderBuffer, MaterialVertexShaderBuffer],
+                [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
         protected override void QuadPass() {
             Quad.Draw(
                 Ctx, PassType.Final,
-                    new List<Buffer>() { VertexShaderBuffer, MaterialVertexShaderBuffer },
-                    new List<Buffer>() { PixelShaderBuffer, MaterialPixelShaderBuffer } );
+                    [VertexShaderBuffer, MaterialVertexShaderBuffer],
+                    [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
         protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();

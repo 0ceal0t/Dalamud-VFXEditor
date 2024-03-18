@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         }
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
-            loaded = new();
+            loaded = [];
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) loaded.Add( path );
         }

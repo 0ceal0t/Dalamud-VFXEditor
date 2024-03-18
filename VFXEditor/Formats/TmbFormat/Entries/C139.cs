@@ -21,9 +21,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C139( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Enabled,
             Unk2
-        };
+        ];
     }
 }

@@ -157,16 +157,16 @@ namespace VfxEditor.FileBrowser.SideBar {
         }
 
         private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
-            folders = new();
+            folders = [];
             try {
                 var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
                 if( shellAppType == null ) return false;
 
                 var shell = Activator.CreateInstance( shellAppType );
-                var obj = shellAppType.InvokeMember( "NameSpace", BindingFlags.InvokeMethod, null, shell, new object[]
-                {
+                var obj = shellAppType.InvokeMember( "NameSpace", BindingFlags.InvokeMethod, null, shell,
+                [
                 "shell:::{679f85cb-0220-4080-b29b-5540cc05aab6}",
-                } );
+                ] );
                 if( obj == null ) return false;
 
 

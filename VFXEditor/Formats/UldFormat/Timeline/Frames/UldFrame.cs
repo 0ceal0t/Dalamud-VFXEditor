@@ -9,7 +9,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
     public class UldFrame : IUiItem {
         public readonly ParsedUInt StartFrame = new( "Start Frame" );
         public readonly ParsedUInt EndFrame = new( "End Frame" );
-        public readonly List<UldKeyGroup> KeyGroups = new();
+        public readonly List<UldKeyGroup> KeyGroups = [];
 
         public readonly CommandSplitView<UldKeyGroup> KeyGroupView;
 

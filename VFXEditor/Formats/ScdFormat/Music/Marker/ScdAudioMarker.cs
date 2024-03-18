@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
         public readonly ParsedFloat LoopStart = new( "Loop Start" );
         public readonly ParsedFloat LoopEnd = new( "Loop End" );
 
-        public readonly List<ParsedDouble> Markers = new();
+        public readonly List<ParsedDouble> Markers = [];
         private readonly CommandListView<ParsedDouble> MarkerView;
 
         public ScdAudioMarker() {

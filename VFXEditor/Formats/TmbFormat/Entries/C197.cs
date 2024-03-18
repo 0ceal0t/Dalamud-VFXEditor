@@ -23,13 +23,13 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C197( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             FadeTime,
             Unk2,
             VoicelineNumber,
             BindPointId,
             Unk5,
             Unk6
-        };
+        ];
     }
 }

@@ -12,13 +12,13 @@ using VfxEditor.TmbFormat;
 namespace VfxEditor.Select.Formats {
     public class TmbSelectDialog : SelectDialog {
         public TmbSelectDialog( string id, TmbManager manager, bool isSourceDialog ) : base( id, "tmb", manager, isSourceDialog ) {
-            GameTabs.AddRange( new List<SelectTab>() {
+            GameTabs.AddRange( [
                 new ActionTabTmb( this, "Action" ),
                 new ActionTabTmbNonPlayer( this, "Non-Player Action" ),
                 new EmoteTabTmb( this, "Emote" ),
                 new NpcTabTmb( this, "Npc" ),
                 new CommonTabTmb( this, "Common" )
-            } );
+            ] );
         }
 
         public override bool CanPlay => true;

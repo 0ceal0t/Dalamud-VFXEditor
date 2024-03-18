@@ -15,18 +15,18 @@ namespace VfxEditor.Select.Tabs.Voice {
             { "Viera", "vie" }
         };
 
-        private static readonly List<string> Languages = new( new[] {
+        private static readonly List<string> Languages = new( [
             "ja",
             "en",
             "de",
             "fr"
-        } );
+        ] );
 
-        private static readonly List<string> Codes = new( new[] {
+        private static readonly List<string> Codes = new( [
             "a",
             "b",
             "c"
-        } );
+        ] );
 
         public VoiceTab( SelectDialog dialog, string name ) : base( dialog, name, "Voice", SelectResultType.GameCharacter ) { }
 

@@ -62,21 +62,21 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedShort Unknown8 = new( "Unknown 8" );
         private readonly ParsedShort Unknown9 = new( "Unknown 9" );
 
-        public readonly List<MdlEid> Eids = new();
+        public readonly List<MdlEid> Eids = [];
         private readonly CommandSplitView<MdlEid> EidView;
 
-        public readonly List<MdlLod> AllLods = new();
-        public readonly List<MdlLod> UsedLods = new();
+        public readonly List<MdlLod> AllLods = [];
+        public readonly List<MdlLod> UsedLods = [];
         private readonly UiDropdown<MdlLod> LodView;
 
         private bool ExtraLodEnabled => Flags2.Value.HasFlag( ModelFlags2.Extra_LoD );
-        public readonly List<MdlExtraLod> ExtraLods = new();
+        public readonly List<MdlExtraLod> ExtraLods = [];
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
 
-        public readonly List<MdlBoneTable> BoneTables = new();
+        public readonly List<MdlBoneTable> BoneTables = [];
         private readonly UiSplitView<MdlBoneTable> BoneTableView;
 
-        public readonly List<MdlShape> Shapes = new(); // TODO
+        public readonly List<MdlShape> Shapes = []; // TODO
 
         private readonly byte[] Padding;
 
@@ -86,10 +86,10 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly MdlBoundingBox WaterBoundingBox;
         private readonly MdlBoundingBox VerticalFogBoundingBox;
 
-        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = new();
+        private readonly List<MdlBoneBoundingBox> BoneBoundingBoxes = [];
         private readonly CommandSplitView<MdlBoneBoundingBox> BoneBoxView;
 
-        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = new();
+        private readonly List<MdlBoundingBox> UnknownBoundingBoxes = [];
         private readonly CommandSplitView<MdlBoundingBox> UnknownBoxView;
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {

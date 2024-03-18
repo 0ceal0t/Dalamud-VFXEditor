@@ -30,7 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C192( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Unk1,
             Unk2,
             VoicelineNumber,
@@ -42,6 +42,6 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk9,
             Unk10,
             Unk11
-        };
+        ];
     }
 }

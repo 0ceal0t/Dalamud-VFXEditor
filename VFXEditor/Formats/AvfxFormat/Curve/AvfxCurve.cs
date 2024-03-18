@@ -41,17 +41,17 @@ namespace VfxEditor.AvfxFormat {
 
             KeyList = new( this );
 
-            Parsed = new() {
+            Parsed = [
                 PreBehavior,
                 PostBehavior,
                 Random,
                 KeyList
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 PreBehavior,
                 PostBehavior,
-            };
+            ];
             if( type != CurveType.Color ) Display.Add( Random );
         }
 

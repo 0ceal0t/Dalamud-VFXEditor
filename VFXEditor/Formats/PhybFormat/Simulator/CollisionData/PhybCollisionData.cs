@@ -25,10 +25,10 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             CollisionName,
             Type,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

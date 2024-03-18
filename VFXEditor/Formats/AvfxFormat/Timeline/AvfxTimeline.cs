@@ -16,8 +16,8 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public readonly List<AvfxTimelineClip> Clips = new();
-        public readonly List<AvfxTimelineItem> Items = new();
+        public readonly List<AvfxTimelineClip> Clips = [];
+        public readonly List<AvfxTimelineItem> Items = [];
 
         public readonly AvfxNodeGroupSet NodeGroups;
 
@@ -30,18 +30,18 @@ namespace VfxEditor.AvfxFormat {
         public AvfxTimeline( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
-            Parsed = new() {
+            Parsed = [
                 LoopStart,
                 LoopEnd,
                 BinderIdx,
                 TimelineCount,
                 ClipCount
-            };
+            ];
 
-            Display = new() {
+            Display = [
                 LoopStart,
                 LoopEnd
-            };
+            ];
 
             BinderSelect = new( this, "Binder Select", groupSet.Binders, BinderIdx );
 

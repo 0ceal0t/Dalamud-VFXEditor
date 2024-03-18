@@ -24,7 +24,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C175( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk2,
             Unk3,
@@ -32,7 +32,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk5,
             Unk6,
             Unk7
-        };
+        ];
 
         /*
             Unknown 1 can either function as Duration or a general toggle. If Unknown 5 is at 0, this should be at 1 if Time is 0, or can be ignored if Time is >0.

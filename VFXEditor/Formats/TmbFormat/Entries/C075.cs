@@ -26,7 +26,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C075( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Enabled,
             Unk1,
             Shape,
@@ -36,6 +36,6 @@ namespace VfxEditor.TmbFormat.Entries {
             RGBA,
             Unk3,
             Unk4
-        };
+        ];
     }
 }

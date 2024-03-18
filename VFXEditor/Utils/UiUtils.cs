@@ -406,7 +406,7 @@ namespace VfxEditor.Utils {
 
         public static float AngleUpDownSize => 17 + ImGui.GetStyle().ItemSpacing.Y;
 
-        public static readonly HashSet<Type> ForceOpenTabs = new();
+        public static readonly HashSet<Type> ForceOpenTabs = [];
 
         public static unsafe bool BeginTabItem<T>( string label ) {
             var labelBytes = Encoding.UTF8.GetBytes( label );

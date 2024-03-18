@@ -3,7 +3,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.UldFormat.Component.Data {
     public class MapComponentData : UldGenericData {
         public MapComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Unknown Node Id 1" ),
                 new ParsedUInt( "Unknown Node Id 2" ),
                 new ParsedUInt( "Unknown Node Id 3" ),
@@ -14,7 +14,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Unknown Node Id 8" ),
                 new ParsedUInt( "Unknown Node Id 9" ),
                 new ParsedUInt( "Unknown Node Id 10"),
-            } );
+            ] );
         }
     }
 }

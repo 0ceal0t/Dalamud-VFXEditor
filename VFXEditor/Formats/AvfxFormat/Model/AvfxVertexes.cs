@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxVertexes : AvfxBase {
-        public readonly List<AvfxVertex> Vertexes = new();
+        public readonly List<AvfxVertex> Vertexes = [];
 
         public AvfxVertexes() : base( "VDrw" ) { }
 

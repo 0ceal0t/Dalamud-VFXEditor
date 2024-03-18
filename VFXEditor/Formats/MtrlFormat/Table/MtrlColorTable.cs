@@ -8,7 +8,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly MtrlFile File;
         public const int Size = 16 * MtrlColorTableRow.Size;
 
-        public readonly List<MtrlColorTableRow> Rows = new();
+        public readonly List<MtrlColorTableRow> Rows = [];
         private readonly MtrlColorTableSplitView RowView;
         private MtrlDye PreviewDye;
 

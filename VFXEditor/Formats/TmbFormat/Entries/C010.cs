@@ -38,7 +38,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C010( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk1,
             Flags,
@@ -46,7 +46,7 @@ namespace VfxEditor.TmbFormat.Entries {
             AnimationEnd,
             Path,
             Unk5
-        };
+        ];
 
         public override void DrawBody() {
             DrawHeader();

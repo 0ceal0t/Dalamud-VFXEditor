@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
 
         private byte[] RawVertexData = Array.Empty<byte>();
 
-        private readonly List<MdlTerrainShadowSubmesh> Submeshes = new();
+        private readonly List<MdlTerrainShadowSubmesh> Submeshes = [];
         private readonly UiSplitView<MdlTerrainShadowSubmesh> SubmeshView;
 
         public MdlTerrainShadowMesh( MdlFile file, BinaryReader reader ) : base( file ) {
@@ -65,7 +65,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
                 data.Add( new( 1, 1, 1, 1 ) ); // colot
             }
 
-            return data.ToArray();
+            return [.. data];
         }
 
         public override void Draw() {

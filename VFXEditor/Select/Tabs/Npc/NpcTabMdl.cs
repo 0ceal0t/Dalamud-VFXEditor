@@ -7,14 +7,14 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
             loaded = Selected.IsMonster ?
-                new() { Selected.GetMdlPath( "" ) } :
+                [Selected.GetMdlPath( "" )] :
                 new List<string>() {
                     Selected.GetMdlPath( "met" ),
                     Selected.GetMdlPath( "glv" ),
                     Selected.GetMdlPath( "dwn" ),
                     Selected.GetMdlPath( "sho" ),
                     Selected.GetMdlPath( "top" )
-                }.Where( x => Dalamud.DataManager.FileExists( x ) ).ToList();
+                }.Where( Dalamud.DataManager.FileExists ).ToList();
         }
     }
 }

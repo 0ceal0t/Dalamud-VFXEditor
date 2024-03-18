@@ -19,8 +19,8 @@ namespace VfxEditor.PapFormat {
         private bool Compress = false;
         private bool SkipOriginal = false;
         private int AnimationIndex = 0;
-        private readonly List<string> AnimationNames = new();
-        private readonly List<string> NodeNames = new();
+        private readonly List<string> AnimationNames = [];
+        private readonly List<string> NodeNames = [];
 
         private bool Exclude = false;
         private ExcludedBonesConfiguration SelectedExcludeList;
@@ -149,7 +149,7 @@ namespace VfxEditor.PapFormat {
                     AnimationIndex,
                     Compress,
                     SkipOriginal,
-                    ( !Exclude || SelectedExcludeList == null ) ? new() : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
+                    ( !Exclude || SelectedExcludeList == null ) ? [] : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
                     ImportPath );
             } ) );
             UiUtils.OkNotification( "Havok data imported" );

@@ -20,9 +20,9 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public readonly ParsedUInt Unk9 = new( "Unknown 9", size: 1 );
         private readonly uint TempRowCount = 0;
 
-        public readonly List<ParsedBase> Parsed = new();
+        public readonly List<ParsedBase> Parsed = [];
 
-        public readonly List<TmfcRow> Rows = new();
+        public readonly List<TmfcRow> Rows = [];
 
         public int Size => 0x10 + ( 0x18 * Rows.Count );
 
@@ -32,7 +32,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
 
         public TmfcData( BinaryReader reader, TmbFile file ) {
             File = file;
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 Unk1,
                 Unk2,
                 Unk3,
@@ -42,7 +42,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
                 Unk7,
                 Unk8,
                 Unk9
-            } );
+            ] );
 
             Parsed.ForEach( x => x.Read( reader ) );
             TempRowCount = reader.ReadUInt32();

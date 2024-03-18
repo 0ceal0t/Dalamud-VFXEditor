@@ -21,12 +21,12 @@ namespace VfxEditor.PhybFormat.Simulator.Pin {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             BoneName,
             BoneOffset,
             ChainId,
             NodeId,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodeToBone( ChainId.Value, NodeId.Value, BoneName.Value, meshes.Spring, boneMatrixes );

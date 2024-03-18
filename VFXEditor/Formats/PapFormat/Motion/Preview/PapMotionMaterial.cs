@@ -14,7 +14,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public class PapMotionMaterialData {
-        public readonly List<(int, Vector3)> Color = new();
+        public readonly List<(int, Vector3)> Color = [];
         public double[] R {
             get {
                 _InternalR ??= Color.Select( x => ( double )x.Item2.X ).ToArray();
@@ -140,7 +140,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
         private void Update() {
             var allFrames = new List<double>();
-            Data = new Dictionary<string, PapMotionMaterialData>();
+            Data = [];
 
             for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
                 var name = Motion.Skeleton->Bones[i].Name.String;
@@ -171,7 +171,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 Marshal.FreeHGlobal( ( nint )floats );
             }
 
-            AllFrames = allFrames.ToArray();
+            AllFrames = [.. allFrames];
             UpdatePreview();
         }
 

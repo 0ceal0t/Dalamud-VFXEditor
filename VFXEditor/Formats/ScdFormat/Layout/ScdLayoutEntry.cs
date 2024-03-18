@@ -69,7 +69,7 @@ namespace VfxEditor.ScdFormat {
 
         public ScdLayoutEntry() {
             Type = new( this, "Type", size: 1 );
-            Parsed = new() {
+            Parsed = [
                 Type,
                 Version,
                 Flag1,
@@ -80,7 +80,7 @@ namespace VfxEditor.ScdFormat {
                 ReverbType,
                 AbGroupNumber,
                 Volume
-            };
+            ];
         }
 
         public override void Read( BinaryReader reader ) {

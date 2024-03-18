@@ -25,14 +25,14 @@ namespace VfxEditor.Select {
     // ===== LOAD SINGLE ========
 
     public class SelectTabState<T> {
-        public List<T> Items = new();
+        public List<T> Items = [];
         public bool ItemsLoaded = false;
         public bool WaitingForItems = false;
     }
 
     public abstract class SelectTab<T> : SelectTab where T : class {
         // Using this so that we don't have to query for tab entries multiple times
-        private static readonly Dictionary<string, object> States = new();
+        private static readonly Dictionary<string, object> States = [];
 
         private readonly string StateId;
 

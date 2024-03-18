@@ -44,7 +44,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         private byte Size = 0x10; // TODO: does this change with the size of acceleration?
         private readonly ParsedByte NumAcceleration = new( "Acceleration Count" );
         private readonly ParsedReserve Reserve1 = new( 1 + 4 * 3 );
-        public List<SoundAccelerationInfo> Acceleration = new();
+        public List<SoundAccelerationInfo> Acceleration = [];
 
         public void Read( BinaryReader reader ) {
             Version.Read( reader );

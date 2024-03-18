@@ -15,7 +15,7 @@ namespace VfxEditor.Utils {
                 Height = ( ushort )height,
                 Depth = 1,
                 MipLevels = ( ushort )mipLevels,
-                LodOffset = new uint[] { 0, 1, 2 },
+                LodOffset = [0, 1, 2],
                 OffsetToSurface = new uint[13]
             };
             Array.Clear( header.OffsetToSurface, 0, 13 );
@@ -186,8 +186,8 @@ namespace VfxEditor.Utils {
             using var compressedMs = new MemoryStream();
             using var writer = new BinaryWriter( compressedMs );
 
-            mipPartOffsets = new();
-            mipPartCounts = new();
+            mipPartOffsets = [];
+            mipPartCounts = [];
 
             var mipLength = GetMipSize( format, width, height );
 

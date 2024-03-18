@@ -7,14 +7,14 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.ScdFormat {
     public class SoundTracks {
-        public readonly List<SoundTrackInfo> Entries = new();
+        public readonly List<SoundTrackInfo> Entries = [];
         private readonly CommandTable<SoundTrackInfo> EntryTable;
 
         public SoundTracks() {
-            EntryTable = new( "Entries", true, false, Entries, new() {
+            EntryTable = new( "Entries", true, false, Entries, [
                 ( "Track Index", ImGuiTableColumnFlags.None, -1 ),
                 ( "Audio Index", ImGuiTableColumnFlags.None, -1 ),
-            },
+            ],
             () => new() );
         }
 

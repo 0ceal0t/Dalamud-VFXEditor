@@ -18,13 +18,13 @@ namespace VfxEditor.PhybFormat.Collision.NormalPlane {
 
         public PhybNormalPlane( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Name,
             Bone,
             BoneOffset,
             Normal,
             Thickness,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;

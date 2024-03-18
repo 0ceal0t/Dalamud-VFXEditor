@@ -104,7 +104,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             var floats = ( float* )Marshal.AllocHGlobal( Motion.Skeleton->FloatSlots.Length * sizeof( float ) );
             Motion.AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
-            Data = new();
+            Data = [];
 
             var parents = new List<int>();
             var refPoses = new List<Matrix>();

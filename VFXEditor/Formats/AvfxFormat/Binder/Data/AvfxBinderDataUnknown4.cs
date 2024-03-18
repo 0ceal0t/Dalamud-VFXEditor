@@ -3,9 +3,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve CarryOverFactor = new( "Carry Over Factor", "COF" );
 
         public AvfxBinderDataUnknown4() : base() {
-            Parsed = new() {
+            Parsed = [
                 CarryOverFactor
-            };
+            ];
 
             DisplayTabs.Add( CarryOverFactor );
         }

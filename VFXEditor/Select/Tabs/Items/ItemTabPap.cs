@@ -10,7 +10,7 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== LOADING =====
 
         public override void LoadSelection( ItemRow item, out List<(string, string)> loaded ) {
-            loaded = new();
+            loaded = [];
 
             // Motion animation
             if( item is not ItemRowWeapon weapon ) return;

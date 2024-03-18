@@ -20,7 +20,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private readonly int Unknown2 = 0;
 
         private float SeekStep = 0.1f;
-        private readonly List<int> SeekTable = new(); // how many bytes to get to each `SeekStep`
+        private readonly List<int> SeekTable = []; // how many bytes to get to each `SeekStep`
 
         private readonly int VorbisHeaderSize = 0;
         private readonly byte[] EncodedData;
@@ -33,7 +33,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         // https://en.wikipedia.org/wiki/Ogg#Page_structure
         // "OggS" Page pattern with version, header type, and grandule position = 0
-        private static readonly byte[] PagePattern = new byte[] { 0x4F, 0x67, 0x67, 0x53, 0x00 };
+        private static readonly byte[] PagePattern = [0x4F, 0x67, 0x67, 0x53, 0x00];
 
         public ScdVorbis( byte[] data, ScdAudioEntry entry ) : base( entry ) {
             EncodedData = Array.Empty<byte>();
@@ -209,7 +209,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 if( onlyOnce ) break;
             }
 
-            return list.Count == 0 ? null : list.ToArray();
+            return list.Count == 0 ? null : [.. list];
         }
 
         private static bool IsMatch( byte[] array, int position, byte[] candidate ) {

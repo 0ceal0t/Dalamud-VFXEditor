@@ -26,7 +26,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C176( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk2,
             TmfcId,
@@ -34,6 +34,6 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk5,
             Unk6,
             Unk7,
-        };
+        ];
     }
 }

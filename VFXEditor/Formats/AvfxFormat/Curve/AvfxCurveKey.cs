@@ -132,7 +132,7 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.InputFloat3( "Value", ref data ) ) {
                     CommandManager.Add( new CompoundCommand( new[] {
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
-                    }, onChangeAction: () => Curve.Update() ) );
+                    }, onChangeAction: Curve.Update ) );
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace VfxEditor.AvfxFormat {
                 Editing = false;
                 CommandManager.Add( new CompoundCommand( new[] {
                     new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color )
-                }, onChangeAction: () => Curve.Update() ) );
+                }, onChangeAction: Curve.Update ) );
             }
         }
 

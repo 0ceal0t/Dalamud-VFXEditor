@@ -7,7 +7,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.PartList {
     public class UldPartList : UldWorkspaceItem {
-        public readonly List<UldPartItem> Parts = new();
+        public readonly List<UldPartItem> Parts = [];
 
         private int Offset => 12 + Parts.Count * 12;
 

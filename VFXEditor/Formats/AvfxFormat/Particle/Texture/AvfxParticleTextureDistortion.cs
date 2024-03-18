@@ -25,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = new() {
+            Parsed = [
                 Enabled,
                 TargetUv1,
                 TargetUv2,
@@ -37,7 +37,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureBorderV,
                 TextureIdx,
                 DPow
-            };
+            ];
 
             Display.Add( Enabled );
             Display.Add( TargetUv1 );
@@ -79,8 +79,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Texture Distortion";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelect<AvfxTexture>( Particle, "Texture", Particle.NodeGroups.Textures, TextureIdx )
-        };
+        ];
     }
 }

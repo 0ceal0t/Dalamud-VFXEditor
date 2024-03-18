@@ -5,12 +5,12 @@ namespace VfxEditor.UldFormat.Component.Data {
         public JournalComponentData() {
             AddUnknown( 32, "Unknown Node Id" );
 
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Item Margin", size: 2 ),
                 new ParsedUInt( "Basic Margin", size: 2 ),
                 new ParsedUInt( "Unknown Margin", size: 2 ),
                 new ParsedReserve( 2 ) // Padding
-            } );
+            ] );
         }
     }
 }

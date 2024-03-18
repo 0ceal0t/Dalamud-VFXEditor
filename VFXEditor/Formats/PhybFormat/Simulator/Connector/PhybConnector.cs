@@ -26,7 +26,7 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             ChainId1,
             ChainId2,
             NodeId1,
@@ -37,7 +37,7 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             Repulsion,
             CollisionFlag,
             ContinuousCollisionFlag,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, CollisionRadius.Value, meshes.Simulation, boneMatrixes );

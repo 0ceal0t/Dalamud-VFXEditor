@@ -50,7 +50,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             DrawPaths( new Dictionary<string, string>() {
                 { "Cast", Selected.CastVfxPath },
                 { "Start", Selected.StartVfxPath }
-            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? new List<string>() : Loaded.Paths, Selected.Name );
+            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name );
         }
 
         protected override string GetName( ActionRowVfx item ) => item.Name;

@@ -19,14 +19,14 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
 
         public PhybCapsule( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Name,
             StartBone,
             EndBone,
             StartOffset,
             EndOffset,
             Radius,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( StartBone.Value, out var startBone ) ) return;

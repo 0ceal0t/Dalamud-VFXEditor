@@ -33,11 +33,11 @@ namespace VfxEditor.Tracker {
         public readonly TmbTracker Tmb = new();
         public readonly SklbTracker Sklb = new();
 
-        private List<Tracker> Trackers => new( new Tracker[] {
+        private List<Tracker> Trackers => new( [
             Vfx,
             Tmb,
             Sklb,
-        } );
+        ] );
 
         private IEnumerable<Tracker> EnabledTrackers => Trackers.Where( x => x.Enabled );
 

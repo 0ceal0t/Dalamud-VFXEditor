@@ -21,11 +21,11 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public readonly WindowSystem WindowSystem = new();
 
-        public readonly List<IDalamudTextureWrap> Wraps = new();
-        public readonly List<IDalamudTextureWrap> WrapsToCleanup = new();
+        public readonly List<IDalamudTextureWrap> Wraps = [];
+        public readonly List<IDalamudTextureWrap> WrapsToCleanup = [];
 
-        private readonly List<TextureReplace> Textures = new();
-        private readonly Dictionary<string, TexturePreview> Previews = new();
+        private readonly List<TextureReplace> Textures = [];
+        private readonly Dictionary<string, TexturePreview> Previews = [];
         private readonly TextureView View;
         private readonly ManagerConfiguration Configuration;
 

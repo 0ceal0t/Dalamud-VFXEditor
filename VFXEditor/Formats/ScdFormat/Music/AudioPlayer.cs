@@ -200,10 +200,10 @@ namespace VfxEditor.ScdFormat {
                 var firstChannel = ShowChannelSelect ? Channel1 : 0;
                 var secondChannel = ShowChannelSelect ? Channel2 : ( format.Channels > 1 ? 1 : 0 );
 
-                var leftStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { LeftStream }, 1 );
+                var leftStreamIsolated = new MultiplexingWaveProvider( [LeftStream], 1 );
                 leftStreamIsolated.ConnectInputToOutput( firstChannel, 0 );
 
-                var rightStreamIsolated = new MultiplexingWaveProvider( new IWaveProvider[] { RightStream }, 1 );
+                var rightStreamIsolated = new MultiplexingWaveProvider( [RightStream], 1 );
                 rightStreamIsolated.ConnectInputToOutput( secondChannel, 0 );
 
                 LeftRightCombined = new MultiplexingWaveProvider( new[] { leftStreamIsolated, rightStreamIsolated }, 2 );

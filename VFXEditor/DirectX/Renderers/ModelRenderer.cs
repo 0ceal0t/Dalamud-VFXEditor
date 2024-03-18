@@ -83,11 +83,11 @@ namespace VfxEditor.DirectX.Renderers {
             // ======= CUBE ==========
 
             Cube = new( 3, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
-                } );
+                ] );
             Cube.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Cube.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
@@ -448,7 +448,7 @@ namespace VfxEditor.DirectX.Renderers {
             }
 
             indexCount = mesh.Indices.Count;
-            return data.ToArray();
+            return [.. data];
         }
     }
 }

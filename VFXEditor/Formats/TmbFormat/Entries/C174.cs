@@ -49,7 +49,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C174( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk2,
             ObjectPosition,
@@ -57,6 +57,6 @@ namespace VfxEditor.TmbFormat.Entries {
             FinalPosition,
             PositionDelay,
             Unk6
-        };
+        ];
     }
 }

@@ -15,9 +15,9 @@ using VfxEditor.PapFormat.Motion;
 
 namespace VfxEditor.Utils.Gltf {
     public class AnimationKeys {
-        public readonly Dictionary<float, Vector3> ScaleKeys = new();
-        public readonly Dictionary<float, Quaternion> RotateKeys = new();
-        public readonly Dictionary<float, Vector3> TranslationKeys = new();
+        public readonly Dictionary<float, Vector3> ScaleKeys = [];
+        public readonly Dictionary<float, Quaternion> RotateKeys = [];
+        public readonly Dictionary<float, Vector3> TranslationKeys = [];
     }
 
     // There's something weird going on with the direct roots (n_hara, n_throw)
@@ -56,7 +56,7 @@ namespace VfxEditor.Utils.Gltf {
                 }
             }
 
-            scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, bones.ToArray() );
+            scene.AddSkinnedMesh( dummyMesh, Matrix4x4.Identity, [.. bones] );
             var armature = new NodeBuilder( "Armature" );
             roots.ForEach( armature.AddNode );
             scene.AddNode( armature );
@@ -270,7 +270,7 @@ namespace VfxEditor.Utils.Gltf {
 
             var flags = currentBinding.ptr->TransformTrackToBoneIndices.Flags;
 
-            binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( handles, currentBinding.ptr->FloatTrackToFloatSlotIndices, new() );
+            binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( handles, currentBinding.ptr->FloatTrackToFloatSlotIndices, [] );
             binding->TransformTrackToBoneIndices = HavokData.CreateArray(
                 handles, currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList() );
 

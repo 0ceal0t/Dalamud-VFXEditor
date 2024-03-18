@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
             Plugin.LibraryManager.AddNode( node.GetText(), newId, Plugin.AvfxManager.ActiveDocument.SourceDisplay, newPath );
         }
 
-        public static void Export( AvfxNode node, string path, bool exportDependencies ) => Export( new List<AvfxNode>() { node }, path, exportDependencies );
+        public static void Export( AvfxNode node, string path, bool exportDependencies ) => Export( [node], path, exportDependencies );
 
         public static void Export( List<AvfxNode> nodes, string path, bool exportDependencies ) {
             using var writer = new BinaryWriter( File.Open( path, FileMode.Create ) );

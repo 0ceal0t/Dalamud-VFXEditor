@@ -28,8 +28,8 @@ namespace VfxEditor.PapFormat {
         protected override void OnOk() {
             GltfAnimation.ExportAnimation(
                 Motion.File.MotionData.Skeleton,
-                new List<string>( new[] { AnimationName } ),
-                new List<PapMotion>( new[] { Motion } ),
+                new List<string>( [AnimationName] ),
+                new List<PapMotion>( [Motion] ),
                 SkipUnanimated,
                 ExportPath
             );

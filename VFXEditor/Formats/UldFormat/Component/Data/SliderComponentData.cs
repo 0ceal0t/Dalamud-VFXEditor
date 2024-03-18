@@ -3,7 +3,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.UldFormat.Component.Data {
     public class SliderComponentData : UldGenericData {
         public SliderComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Unknown Node Id 1" ),
                 new ParsedUInt( "Unknown Node Id 2" ),
                 new ParsedUInt( "Unknown Node Id 3" ),
@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Left Offset", size: 1 ),
                 new ParsedUInt( "Right Offset", size: 1),
                 new ParsedInt( "Padding", size: 1)
-            } );
+            ] );
         }
     }
 }

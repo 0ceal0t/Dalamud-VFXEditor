@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleSimple( AvfxParticle particle ) : base( "Smpl", particle ) {
             InitNodeSelects();
 
-            Parsed = new() {
+            Parsed = [
                 InjectionPositionType,
                 InjectionDirectionType,
                 BaseDirectionType,
@@ -146,7 +146,7 @@ namespace VfxEditor.AvfxFormat {
                 PolyLineTag,
                 Colors,
                 Frames
-            };
+            ];
 
             Display.Add( InjectionPositionType );
             Display.Add( InjectionDirectionType );
@@ -231,9 +231,9 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Simple Animation";
 
-        public override List<AvfxNodeSelect> GetNodeSelects() => new() {
+        public override List<AvfxNodeSelect> GetNodeSelects() => [
             new AvfxNodeSelect<AvfxModel>( Particle, "Injection Model", Particle.NodeGroups.Models, InjectionModelIdx ),
             new AvfxNodeSelect<AvfxModel>( Particle, "Injection Vertex Bind Model", Particle.NodeGroups.Models, InjectionVertexBindModelIdx )
-        };
+        ];
     }
 }

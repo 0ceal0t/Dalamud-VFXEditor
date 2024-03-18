@@ -32,14 +32,14 @@ namespace VfxEditor.TmbFormat.Root {
             { 0x39, "GPose" },
         } );
 
-        public static readonly LuaPool Pool2 = new( 2, 32, new() );
+        public static readonly LuaPool Pool2 = new( 2, 32, [] );
 
-        public static readonly LuaPool Pool3 = new( 3, 32, new() );
+        public static readonly LuaPool Pool3 = new( 3, 32, [] );
 
-        public static List<LuaPool> Pools => new() {
+        public static List<LuaPool> Pools => [
             Pool1,
             Pool2,
             Pool3,
-        };
+        ];
     }
 }

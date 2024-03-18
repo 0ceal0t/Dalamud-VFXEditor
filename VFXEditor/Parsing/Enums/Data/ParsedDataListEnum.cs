@@ -15,17 +15,17 @@ namespace VfxEditor.Parsing.Data {
         }
 
         public override void Update( T prevValue, T value ) {
-            CommandManager.Add( new CompoundCommand( new ICommand[] {
+            CommandManager.Add( new CompoundCommand( [
                 new ParsedSimpleCommand<T>( this, prevValue, value ),
-                new ListSetCommand<S>( Items, new List<S>() )
-            } ) );
+                new ListSetCommand<S>( Items, [] )
+            ] ) );
         }
 
         public override void Update( T value ) {
-            CommandManager.Add( new CompoundCommand( new ICommand[] {
+            CommandManager.Add( new CompoundCommand( [
                 new ParsedSimpleCommand<T>( this, value ),
-                new ListSetCommand<S>( Items, new List<S>() )
-            } ) );
+                new ListSetCommand<S>( Items, [] )
+            ] ) );
         }
     }
 }

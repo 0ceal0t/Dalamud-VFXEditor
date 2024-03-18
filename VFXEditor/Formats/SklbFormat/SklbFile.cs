@@ -21,7 +21,7 @@ namespace VfxEditor.SklbFormat {
 
         public readonly SklbBones Bones;
 
-        public readonly HashSet<nint> Handles = new();
+        public readonly HashSet<nint> Handles = [];
 
         public SklbFile( BinaryReader reader, string hkxTemp, bool init, bool verify ) : base() {
             HkxTempLocation = hkxTemp;

@@ -21,11 +21,11 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, new List<string>() { "fac_a", "etc_a", "iri_a" }, item.Data.FaceToIcon ),
-                Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, new List<string>() { "a" } ),
-                Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, new List<string>() { "hir_a", "acc_b" }, item.Data.HairToIcon ),
-                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, new List<string>() { "fac_a", "a" }, item.Data.FeatureToIcon ),
-                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, new List<string>() { "a" }, item.Data.FeatureToIcon )
+                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "etc_a", "iri_a"], item.Data.FaceToIcon ),
+                Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, ["a"] ),
+                Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, ["hir_a", "acc_b"], item.Data.HairToIcon ),
+                Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, ["fac_a", "a"], item.Data.FeatureToIcon ),
+                Tails = GetPart( "Tail", CharacterPart.Tail, item, item.Data.TailOptions, ["a"], item.Data.FeatureToIcon )
             };
         }
 

@@ -15,7 +15,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
     public class UldNodeComponentData : UldGenericData {
         public UldNodeComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedInt( "Index", size: 1 ),
                 new ParsedInt( "Up", size: 1 ),
                 new ParsedInt( "Down", size: 1 ),
@@ -26,7 +26,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 new ParsedInt( "Unknown", size: 1 ),
                 new ParsedShort( "Offset X" ),
                 new ParsedShort( "Offset Y" )
-            } );
+            ] );
         }
     }
 }

@@ -36,13 +36,13 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C053( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Unk1,
             Unk2,
             SoundId1,
             SoundId2,
             Unk3,
             Flags,
-        };
+        ];
     }
 }

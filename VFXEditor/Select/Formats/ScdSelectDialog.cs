@@ -12,7 +12,7 @@ using VfxEditor.Select.Tabs.Zone;
 namespace VfxEditor.Select.Formats {
     public class ScdSelectDialog : SelectDialog {
         public ScdSelectDialog( string id, ScdManager manager, bool isSourceDialog ) : base( id, "scd", manager, isSourceDialog ) {
-            GameTabs.AddRange( new SelectTab[]{
+            GameTabs.AddRange( [
                 new ActionTabScd( this, "Actions" ),
                 new MountTabScd( this, "Mount" ),
                 new OrchestrionTab( this, "Orchestrion" ),
@@ -22,7 +22,7 @@ namespace VfxEditor.Select.Formats {
                 new InstanceTab( this, "Instance" ),
                 new VoiceTab( this, "Voice" ),
                 new CommonTabScd( this, "Common" ),
-            } );
+            ] );
         }
     }
 }

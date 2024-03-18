@@ -20,11 +20,11 @@ namespace VfxEditor.PhybFormat.Simulator.PostAlignment {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             CollisionName,
             ChainId,
             NodeId,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

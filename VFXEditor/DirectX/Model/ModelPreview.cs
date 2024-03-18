@@ -26,22 +26,22 @@ namespace VfxEditor.DirectX {
 
         public ModelPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             Model = new( 3, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
                     new( "COLOR", 0, Format.R32G32B32A32_Float, 16, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 32, 0 )
-                } );
+                ] );
             Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
 
             Emitters = new( 2, true,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 16, 0, InputClassification.PerVertexData, 0 ),
                     new( "INSTANCE", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 1, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 2, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 ),
                     new( "INSTANCE", 3, Format.R32G32B32A32_Float, InputElement.AppendAligned, 1, InputClassification.PerInstanceData, 1 )
-                } );
+                ] );
             Emitters.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, false );
@@ -79,7 +79,7 @@ namespace VfxEditor.DirectX {
                     }
                 }
 
-                Model.SetVertexes( Device, data.ToArray(), modelIndexes.Count * 3 );
+                Model.SetVertexes( Device, [.. data], modelIndexes.Count * 3 );
             }
 
             // ========= EMITTERS =====
@@ -97,7 +97,7 @@ namespace VfxEditor.DirectX {
                     data.Add( Matrix.AffineTransformation( 1f, rot, pos ) );
                 }
 
-                Emitters.SetInstances( Device, data.ToArray(), modelEmitters.Count );
+                Emitters.SetInstances( Device, [.. data], modelEmitters.Count );
             }
 
             UpdateDraw();

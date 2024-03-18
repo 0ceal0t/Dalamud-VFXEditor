@@ -23,7 +23,7 @@ namespace VfxEditor {
     }
 
     public partial class Plugin {
-        public static readonly Dictionary<string, string> CustomPathBackups = new(); // Map of lowercase custom game paths to local paths
+        public static readonly Dictionary<string, string> CustomPathBackups = []; // Map of lowercase custom game paths to local paths
 
         public static string CurrentWorkspaceLocation { get; private set; } = "";
         public static string CurrentWorkspaceName => string.IsNullOrEmpty( CurrentWorkspaceLocation ) ? "" : Path.GetFileName( CurrentWorkspaceLocation );

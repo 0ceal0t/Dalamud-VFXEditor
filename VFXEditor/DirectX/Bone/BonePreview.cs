@@ -15,11 +15,11 @@ namespace VfxEditor.DirectX {
 
         public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             Model = new( 3, false,
-                new InputElement[] {
+                [
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0),
                     new("NORMAL", 0, Format.R32G32B32A32_Float, 32, 0)
-                } );
+                ] );
             Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
         }
 
@@ -39,7 +39,7 @@ namespace VfxEditor.DirectX {
             for( var i = 0; i < meshes.Count; i++ ) {
                 data.AddRange( GetData( meshes[i] ) );
             }
-            return data.ToArray();
+            return [.. data];
         }
 
         protected static void PaintColor( MeshGeometry3D mesh, Vector4 color ) {
@@ -66,7 +66,7 @@ namespace VfxEditor.DirectX {
                 data.Add( new Vector4( normal.X, normal.Y, normal.Z, 0 ) );
             }
 
-            return data.ToArray();
+            return [.. data];
         }
 
         protected override bool Wireframe() => false;

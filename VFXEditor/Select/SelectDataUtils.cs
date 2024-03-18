@@ -25,7 +25,7 @@ namespace VfxEditor.Select {
 
         // https://github.com/imchillin/CMTool/blob/master/ConceptMatrix/Views/SpecialControl.xaml.cs#L365
 
-        public static readonly List<RacialData> CharacterRaces = new() {
+        public static readonly List<RacialData> CharacterRaces = [
             new RacialData( "Midlander M", "c0101", 0 ),
             new RacialData( "Midlander F","c0201", 1 ),
             new RacialData( "Highlander M", "c0301", 2 ),
@@ -44,7 +44,7 @@ namespace VfxEditor.Select {
             // 1601 coming soon (tm)
             new RacialData( "Viera M", "c1701", 28 ),
             new RacialData( "Viera F", "c1801", 29 )
-        };
+        ];
 
         public static readonly Dictionary<string, string> JobAnimationIds = new() {
             { "Warrior", "bt_2ax_emp" },
@@ -89,7 +89,7 @@ namespace VfxEditor.Select {
         public static string GetSkeletonPath( string skeletonId, string path ) => $"chara/human/{skeletonId}/animation/a0001/{path}";
 
         public static Dictionary<string, string> GetAllSkeletonPaths( string path ) {
-            if( string.IsNullOrEmpty( path ) ) return new();
+            if( string.IsNullOrEmpty( path ) ) return [];
             return CharacterRaces.ToDictionary( x => x.Name, x => GetSkeletonPath( x.Id, path ) );
         }
 

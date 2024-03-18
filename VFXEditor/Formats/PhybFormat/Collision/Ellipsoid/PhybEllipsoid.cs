@@ -18,7 +18,7 @@ namespace VfxEditor.PhybFormat.Collision.Ellipsoid {
 
         public PhybEllipsoid( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Name,
             Bone,
             Offset1,
@@ -26,7 +26,7 @@ namespace VfxEditor.PhybFormat.Collision.Ellipsoid {
             Offset3,
             Offset4,
             Radius,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

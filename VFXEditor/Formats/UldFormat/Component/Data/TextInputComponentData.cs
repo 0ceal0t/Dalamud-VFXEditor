@@ -6,11 +6,11 @@ namespace VfxEditor.UldFormat.Component.Data {
         public TextInputComponentData() {
             AddUnknown( 16, "Unknown Node Id" );
 
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedSheetColor( "Color" ),
                 new ParsedSheetColor( "IME Color" ),
                 new ParsedUInt( "Unknown" ),
-            } );
+            ] );
         }
     }
 }

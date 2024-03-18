@@ -73,7 +73,7 @@ namespace VfxEditor.Ui.Export {
                     Version = Version,
                     Description = null,
                     ModPackPages = null,
-                    SimpleModsList = simpleParts.ToArray()
+                    SimpleModsList = [.. simpleParts]
                 };
 
                 var saveDir = Path.GetDirectoryName( saveFile );

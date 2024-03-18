@@ -52,7 +52,7 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly ParsedEnum<KeyUsage> Usage = new( "Usage", size: 2 );
         public readonly ParsedDataListEnum<KeyGroupType, UldKeyframe> Type;
 
-        public readonly List<UldKeyframe> Keyframes = new();
+        public readonly List<UldKeyframe> Keyframes = [];
         private readonly CollapsingHeaders<UldKeyframe> KeyframeView;
 
         public UldKeyGroup() {

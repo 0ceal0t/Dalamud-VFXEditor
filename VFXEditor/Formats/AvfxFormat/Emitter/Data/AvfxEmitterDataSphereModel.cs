@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList Display;
 
         public AvfxEmitterDataSphereModel() : base() {
-            Parsed = new() {
+            Parsed = [
                 RotationOrderType,
                 GenerateMethodType,
                 DivideX,
@@ -25,7 +25,7 @@ namespace VfxEditor.AvfxFormat {
                 AYR,
                 InjectionSpeed,
                 InjectionSpeedRandom
-            };
+            ];
 
             DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
             Display.Add( RotationOrderType );

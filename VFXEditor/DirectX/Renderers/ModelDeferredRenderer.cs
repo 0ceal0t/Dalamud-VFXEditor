@@ -19,24 +19,24 @@ namespace VfxEditor.DirectX.Renderers {
         protected readonly DeferredTexture Color = new();
         protected readonly DeferredTexture UV = new();
 
-        protected List<DeferredTexture> DeferredTextures = new();
+        protected List<DeferredTexture> DeferredTextures = [];
 
         protected ModelDeferredRenderer( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             // https://github.com/justinstenning/Direct3D-Rendering-Cookbook/blob/672312ae7545c388387a8fec92d8db41cc326804/Ch10_01DeferredRendering/ScreenAlignedQuadRenderer.cs#L20
 
             Quad = new( 1, false,
-                new InputElement[] {
+                [
                     new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 )
-                } );
+                ] );
 
-            Quad.SetVertexes( Device, new Vector4[] {
+            Quad.SetVertexes( Device, [
                 new( -1.0f, -1.0f, 1, 1 ),
                 new( 1.0f, 1.0f, 1, 1 ),
                 new( -1.0f, 1.0f, 1, 1 ),
                 new( 1.0f, 1.0f, 1, 1 ),
                 new( -1.0f, -1.0f, 1, 1 ),
                 new( 1.0f, -1.0f, 1, 1 ),
-            }, 6 );
+            ], 6 );
 
             QuadStencilState = new( Device, new() {
                 IsDepthEnabled = false,
@@ -50,12 +50,12 @@ namespace VfxEditor.DirectX.Renderers {
             base.ResizeResources();
 
             if( DeferredTextures.Count == 0 ) {
-                DeferredTextures.AddRange( new[] {
+                DeferredTextures.AddRange( [
                     Position,
                     Normal,
                     Color,
                     UV
-                } );
+                ] );
             }
 
             DeferredTextures.ForEach( x => x.Resize( Device, Width, Height ) );

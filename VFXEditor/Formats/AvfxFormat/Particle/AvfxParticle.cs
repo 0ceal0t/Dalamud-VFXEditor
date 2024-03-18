@@ -68,7 +68,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxParticleTexturePalette TP;
         public readonly AvfxParticleSimple Simple;
 
-        public readonly List<AvfxParticleUvSet> UvSets = new();
+        public readonly List<AvfxParticleUvSet> UvSets = [];
         public readonly UiUvSetSplitView UvView;
 
         private readonly List<AvfxBase> Parsed;
@@ -99,7 +99,7 @@ namespace VfxEditor.AvfxFormat {
 
             // Parsing
 
-            Parsed = new() {
+            Parsed = [
                 LoopStart,
                 LoopEnd,
                 Type,
@@ -149,9 +149,9 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            };
+            ];
 
-            Parsed2 = new() {
+            Parsed2 = [
                 TC1,
                 TC2,
                 TC3,
@@ -160,11 +160,11 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            };
+            ];
 
             // Drawing
 
-            Parameters = new( "Parameters", new() {
+            Parameters = new( "Parameters", [
                 new UiNodeGraphView( this ),
                 LoopStart,
                 LoopEnd,
@@ -195,9 +195,9 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateLightBuffer,
                 DOTy,
                 DepthOffset
-            } );
+            ] );
 
-            AnimationSplitDisplay = new( "Animation", new() {
+            AnimationSplitDisplay = new( "Animation", [
                 Life,
                 Simple,
                 Gravity,
@@ -214,11 +214,11 @@ namespace VfxEditor.AvfxFormat {
                 RotVelYRandom,
                 RotVelZRandom,
                 Color
-            } );
+            ] );
 
             UvView = new( UvSets );
 
-            TextureDisplaySplit = new( "Textures", new() {
+            TextureDisplaySplit = new( "Textures", [
                 TC1,
                 TC2,
                 TC3,
@@ -227,7 +227,7 @@ namespace VfxEditor.AvfxFormat {
                 TR,
                 TD,
                 TP
-            } );
+            ] );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {

@@ -3,7 +3,7 @@ using VfxEditor.Parsing;
 namespace VfxEditor.UldFormat.Component.Data {
     public class GaugeComponentData : UldGenericData {
         public GaugeComponentData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedUInt( "Unknown Node Id 1" ),
                 new ParsedUInt( "Unknown Node Id 2" ),
                 new ParsedUInt( "Unknown Node Id 3" ),
@@ -14,7 +14,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Horizontal Margin", size: 2 ),
                 new ParsedByteBool( "Is Vertical" ),
                 new ParsedReserve( 3 ) // Padding
-            } );
+            ] );
         }
     }
 }

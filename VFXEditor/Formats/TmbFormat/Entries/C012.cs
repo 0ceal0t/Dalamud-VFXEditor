@@ -23,7 +23,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration", value: 30 );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly TmbOffsetString Path = new( "Path", new() {
+        private readonly TmbOffsetString Path = new( "Path", [
             new() {
                 Icon = () => VfxSpawn.IsActive ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
                 Remove = false,
@@ -32,7 +32,7 @@ namespace VfxEditor.TmbFormat.Entries {
                     else VfxSpawn.OnSelf( path, false );
                 }
             }
-        }, false );
+        ], false );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
         private readonly ParsedShort BindPoint3 = new( "Bind Point 3", value: 2 );
@@ -48,7 +48,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C012( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk1,
             Path,
@@ -62,6 +62,6 @@ namespace VfxEditor.TmbFormat.Entries {
             RGBA,
             Visibility,
             Unk3
-        };
+        ];
     }
 }

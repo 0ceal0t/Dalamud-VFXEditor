@@ -33,7 +33,7 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
             Size.Draw();
         }
 
-        private static readonly string[] Swizzle = new[] { "x", "y", "z", "w" };
+        private static readonly string[] Swizzle = ["x", "y", "z", "w"];
 
         public string GetText() {
             var ret = $"g_MaterialParameter[{( ( int )Math.Floor( StartSlot / 4f ) ).ToString().PadLeft( 2, '0' )}].";

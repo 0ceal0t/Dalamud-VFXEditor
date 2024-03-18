@@ -21,7 +21,7 @@ namespace VfxEditor.DirectX.Drawable {
         public Buffer Instances { get; protected set; }
         public Buffer Data { get; protected set; }
 
-        private readonly Dictionary<PassType, D3dPass> Passes = new();
+        private readonly Dictionary<PassType, D3dPass> Passes = [];
         private readonly InputElement[] Layout;
 
         public bool DoDraw => !ShaderError && Count > 0 && ( !UseInstances || InstanceCount > 0 );
@@ -82,7 +82,7 @@ namespace VfxEditor.DirectX.Drawable {
             if( pass == null ) return;
             pass.Setup( ctx );
         }
-        public void SetConstantBuffers( DeviceContext ctx, Buffer vertex, Buffer pixel ) => SetConstantBuffers( ctx, new List<Buffer>() { vertex }, new List<Buffer>() { pixel } );
+        public void SetConstantBuffers( DeviceContext ctx, Buffer vertex, Buffer pixel ) => SetConstantBuffers( ctx, [vertex], [pixel] );
 
         public virtual void SetConstantBuffers( DeviceContext ctx, List<Buffer> vertex, List<Buffer> pixel ) {
             if( !DoDraw ) return;
@@ -95,9 +95,9 @@ namespace VfxEditor.DirectX.Drawable {
             }
         }
 
-        public void Draw( DeviceContext ctx, PassType type ) => Draw( ctx, type, new List<Buffer>(), new List<Buffer>() );
+        public void Draw( DeviceContext ctx, PassType type ) => Draw( ctx, type, [], [] );
 
-        public void Draw( DeviceContext ctx, PassType type, Buffer vertex, Buffer pixel ) => Draw( ctx, type, new List<Buffer>() { vertex }, new List<Buffer>() { pixel } );
+        public void Draw( DeviceContext ctx, PassType type, Buffer vertex, Buffer pixel ) => Draw( ctx, type, [vertex], [pixel] );
 
         public void Draw( DeviceContext ctx, PassType type, List<Buffer> vertex, List<Buffer> pixel ) {
             if( !DoDraw ) return;

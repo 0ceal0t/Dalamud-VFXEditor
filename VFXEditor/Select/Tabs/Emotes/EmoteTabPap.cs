@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         public EmoteTabPap( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         public override void LoadSelection( EmoteRow item, out Dictionary<string, SelectedPapEntry> loaded ) {
-            loaded = new();
+            loaded = [];
 
             foreach( var papFile in item.Items ) {
                 var key = papFile.Item1;

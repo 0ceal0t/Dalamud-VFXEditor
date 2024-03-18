@@ -10,7 +10,7 @@ using VfxEditor.Select.Tabs.Npc;
 namespace VfxEditor.Select.Formats {
     public class PapSelectDialog : SelectDialog {
         public PapSelectDialog( string id, PapManager manager, bool isSourceDialog ) : base( id, "pap", manager, isSourceDialog ) {
-            GameTabs.AddRange( new SelectTab[]{
+            GameTabs.AddRange( [
                 new ItemTabPap( this, "Weapon" ),
                 new ActionTabPap( this, "Action" ),
                 new ActionTabPapNonPlayer( this, "Non-Player Action" ),
@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Formats {
                 new MountTabPap( this, "Mount" ),
                 new CharacterTabPap( this, "Character" ),
                 new JobTab( this, "Job" ),
-            } );
+            ] );
         }
     }
 }

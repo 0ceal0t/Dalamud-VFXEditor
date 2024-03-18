@@ -8,22 +8,22 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         private readonly ushort[] _ShapeMeshCounts;
 
         public readonly string Name;
-        public readonly List<List<MdlShapeMesh>> ShapeMeshes = new(); // per LoD
+        public readonly List<List<MdlShapeMesh>> ShapeMeshes = []; // per LoD
 
         public MdlShape( BinaryReader reader, Dictionary<uint, string> strings ) {
             Name = strings[reader.ReadUInt32()];
 
-            _ShapeMeshIndexes = new ushort[] {
+            _ShapeMeshIndexes = [
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),
-            };
+            ];
 
-            _ShapeMeshCounts = new ushort[] {
+            _ShapeMeshCounts = [
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),
-            };
+            ];
         }
 
         public void Populate( MdlFileData data ) {

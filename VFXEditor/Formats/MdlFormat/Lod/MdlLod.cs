@@ -30,19 +30,19 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ushort _VerticalFogMeshIndex;
         private readonly ushort _VerticalFogMeshCount;
 
-        private readonly List<MdlMesh> Meshes = new();
+        private readonly List<MdlMesh> Meshes = [];
         private readonly UiDropdown<MdlMesh> MeshView;
 
-        private readonly List<MdlTerrainShadowMesh> TerrainShadows = new();
+        private readonly List<MdlTerrainShadowMesh> TerrainShadows = [];
         private readonly UiDropdown<MdlTerrainShadowMesh> TerrainShadowView;
 
-        private readonly List<MdlMesh> WaterMeshes = new();
+        private readonly List<MdlMesh> WaterMeshes = [];
         private readonly UiDropdown<MdlMesh> WaterMeshView;
 
-        private readonly List<MdlMesh> ShadowMeshes = new();
+        private readonly List<MdlMesh> ShadowMeshes = [];
         private readonly UiDropdown<MdlMesh> ShadowMeshView;
 
-        private readonly List<MdlMesh> VerticalFogMeshes = new();
+        private readonly List<MdlMesh> VerticalFogMeshes = [];
         private readonly UiDropdown<MdlMesh> VerticalFogMeshView;
 
         public MdlLod( MdlFile file, BinaryReader reader ) {

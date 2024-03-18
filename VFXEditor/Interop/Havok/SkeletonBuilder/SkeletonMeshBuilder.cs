@@ -12,7 +12,7 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
         protected readonly IntCollection Tris;
         protected readonly Color4Collection Colors;
 
-        protected readonly List<float> BoneScales = new();
+        protected readonly List<float> BoneScales = [];
 
         protected readonly MeshGeometry3D SingleBone;
         protected readonly MeshBuilder SphereBuilder;

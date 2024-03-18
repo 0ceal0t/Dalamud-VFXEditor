@@ -28,10 +28,10 @@ namespace VfxEditor.DirectX.Renderers {
             ResizeResources();
 
             Gradient = new( 2, false,
-                new InputElement[] {
+                [
                     new("POSITION", 0, Format.R32G32B32A32_Float, 0, 0),
                     new("COLOR", 0, Format.R32G32B32A32_Float, 16, 0)
-                } );
+                ] );
             Gradient.AddPass( device, PassType.Final, Path.Combine( shaderPath, "gradient.fx" ), ShaderPassFlags.Pixel );
         }
 
@@ -94,7 +94,7 @@ namespace VfxEditor.DirectX.Renderers {
                 }
             }
 
-            Gradient.SetVertexes( Device, data.ToArray(), count * 6 );
+            Gradient.SetVertexes( Device, [.. data], count * 6 );
             Draw();
         }
 

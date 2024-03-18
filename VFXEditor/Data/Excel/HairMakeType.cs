@@ -11,8 +11,8 @@ namespace VfxEditor.Data.Excel {
         public uint HairStartIndex { get; set; }
         public uint FacepaintStartIndex { get; set; }
 
-        public List<LazyRow<CharaMakeCustomize>> HairStyles { get; set; } = new();
-        public List<LazyRow<CharaMakeCustomize>> Facepaints { get; set; } = new();
+        public List<LazyRow<CharaMakeCustomize>> HairStyles { get; set; } = [];
+        public List<LazyRow<CharaMakeCustomize>> Facepaints { get; set; } = [];
 
         public override void PopulateData( RowParser parser, Lumina.GameData gameData, Language language ) {
             base.PopulateData( parser, gameData, language );

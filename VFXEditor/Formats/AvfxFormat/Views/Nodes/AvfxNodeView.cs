@@ -72,7 +72,7 @@ namespace VfxEditor.AvfxFormat {
                 reader.BaseStream.Position = 0;
 
                 var size = ms.Length;
-                file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( new[] { selected.Renamed } ) );
+                file.Import( reader, ( int )size, false, string.IsNullOrEmpty( selected.Renamed ) ? null : new List<string>( [selected.Renamed] ) );
             }
         }
     }

@@ -11,7 +11,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.TmbFormat.Utils {
     public class TmbReader : ParsingReader {
         public long StartPosition;
-        private readonly Dictionary<int, TmbItemWithId> ItemsWithId = new();
+        private readonly Dictionary<int, TmbItemWithId> ItemsWithId = [];
 
         public TmbReader( BinaryReader reader ) : base( reader ) { }
 
@@ -52,7 +52,7 @@ namespace VfxEditor.TmbFormat.Utils {
                 }
 
                 var type = value.Type;
-                var constructor = type.GetConstructor( new Type[] { typeof( TmbFile ), typeof( TmbReader ) } );
+                var constructor = type.GetConstructor( [typeof( TmbFile ), typeof( TmbReader )] );
                 if( constructor == null ) {
                     Dalamud.Log( $"TmbReader constructor failed for {magic}" );
                     verified = VerifiedStatus.ERROR;
@@ -60,7 +60,7 @@ namespace VfxEditor.TmbFormat.Utils {
                     return;
                 }
 
-                var item = constructor.Invoke( new object[] { file, this } );
+                var item = constructor.Invoke( [file, this] );
                 if( item == null ) {
                     Dalamud.Log( $"Constructor failed for {magic}" );
                     verified = VerifiedStatus.ERROR;

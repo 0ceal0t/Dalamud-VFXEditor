@@ -27,7 +27,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             BoneName,
             Radius,
             AttractByAnimation,
@@ -38,7 +38,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             ConstraintPlaneNormal,
             CollisionFlag,
             ContinuousCollisionFlag,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

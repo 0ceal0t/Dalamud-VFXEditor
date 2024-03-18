@@ -35,12 +35,12 @@ namespace VfxEditor.TmbFormat.Entries {
             } );
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Loop,
             Interrupt,
             Path,
             SoundIndex,
             SoundPosition
-        };
+        ];
     }
 }

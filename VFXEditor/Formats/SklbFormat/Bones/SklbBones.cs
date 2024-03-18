@@ -38,7 +38,7 @@ namespace VfxEditor.SklbFormat.Bones {
         private SklbBone DraggingBone;
         private string SearchText = "";
 
-        public readonly List<SklbMapping> Mappings = new();
+        public readonly List<SklbMapping> Mappings = [];
         public readonly SklbMappingDropdown MappingView;
         public readonly SklbBoneListView ListView;
 

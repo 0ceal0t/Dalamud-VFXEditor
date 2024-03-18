@@ -19,10 +19,10 @@ namespace VfxEditor.TmbFormat {
         public readonly Tmpp HeaderTmpp;
         public readonly Tmal HeaderTmal;
 
-        public readonly List<Tmfc> Tmfcs = new();
-        public readonly List<Tmac> Actors = new();
-        public readonly List<Tmtr> Tracks = new();
-        public readonly List<TmbEntry> AllEntries = new();
+        public readonly List<Tmfc> Tmfcs = [];
+        public readonly List<Tmac> Actors = [];
+        public readonly List<Tmtr> Tracks = [];
+        public readonly List<TmbEntry> AllEntries = [];
 
         public readonly TmbActorDropdown ActorsDropdown;
         public readonly TmfcDropdown TmfcDropdown;

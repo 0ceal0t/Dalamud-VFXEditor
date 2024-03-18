@@ -20,7 +20,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedShort CloseTime = new( "Close Time" );
 
         public LayoutBoardObstructionData() {
-            Parsed = new() {
+            Parsed = [
                 Position1,
                 Position2,
                 Position3,
@@ -31,7 +31,7 @@ namespace VfxEditor.ScdFormat {
                 Reserved1,
                 OpenTime,
                 CloseTime
-            };
+            ];
         }
     }
 }

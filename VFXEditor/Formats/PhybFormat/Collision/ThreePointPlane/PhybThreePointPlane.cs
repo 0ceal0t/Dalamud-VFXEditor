@@ -21,7 +21,7 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
 
         public PhybThreePointPlane( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Name,
             Bone,
             Unknown1,
@@ -32,7 +32,7 @@ namespace VfxEditor.PhybFormat.Collision.ThreePointPlane {
             Unknown5,
             Unknown6,
             Thickness,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 

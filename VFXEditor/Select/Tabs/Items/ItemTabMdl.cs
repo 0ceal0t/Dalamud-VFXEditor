@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Items {
             loaded = new() {
                 IsWeapon = false,
                 WeaponPath = "",
-                ArmorPaths = new(),
+                ArmorPaths = [],
             };
 
             if( item is ItemRowWeapon weapon ) {

@@ -3,9 +3,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve Count = new( "Count", "Cnt" );
 
         public AvfxParticleDataPolygon() : base() {
-            Parsed = new() {
+            Parsed = [
                 Count
-            };
+            ];
 
             DisplayTabs.Add( Count );
         }

@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
         private readonly uint _ShapeValueCount;
         private readonly uint _ShapeValueOffset;
 
-        private readonly List<MdlShapeValue> Values = new();
+        private readonly List<MdlShapeValue> Values = [];
 
         public MdlShapeMesh( BinaryReader reader ) {
             _MeshIndexOffset = reader.ReadUInt32();

@@ -38,7 +38,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public byte SendCount;
         private readonly ParsedReserve Reserve1 = new( 11 );
         // Send Info
-        public readonly List<SoundSendInfo> SendInfo = new();
+        public readonly List<SoundSendInfo> SendInfo = [];
         public readonly SoundEffectParam EffectParam = new();
 
         public void Read( BinaryReader reader ) {
@@ -99,7 +99,7 @@ namespace VfxEditor.ScdFormat.Sound.Data {
         public readonly ParsedEnum<InsertEffectName> Type = new( "Type", size: 1 );
         private readonly ParsedReserve Reserve1 = new( 3 );
         // Equalizer Effect
-        public readonly List<SoundFilterParam> Filters = new();
+        public readonly List<SoundFilterParam> Filters = [];
         public readonly ParsedInt NumFilters = new( "Filter Count" );
         private readonly ParsedReserve Reserve2 = new( 2 * 4 );
 

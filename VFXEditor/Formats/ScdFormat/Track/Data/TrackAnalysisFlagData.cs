@@ -3,7 +3,7 @@ using System.IO;
 
 namespace VfxEditor.ScdFormat {
     public class TrackAnalysisFlagData : ScdTrackData {
-        public readonly List<short> Data = new();
+        public readonly List<short> Data = [];
 
         public override void Read( BinaryReader reader ) {
             var size = reader.ReadInt16();
@@ -12,7 +12,7 @@ namespace VfxEditor.ScdFormat {
 
         public override void Write( BinaryWriter writer ) {
             writer.Write( ( short )Data.Count );
-            Data.ForEach( x => writer.Write( x ) );
+            Data.ForEach( writer.Write );
         }
 
         public override void Draw() { }

@@ -55,12 +55,12 @@ namespace VfxEditor.TmbFormat.Entries {
             } );
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             FadeTime,
             Unk1,
             StartVisibility,
             EndVisibility
-        };
+        ];
 
         public override void Write( TmbWriter writer ) {
             base.Write( writer );

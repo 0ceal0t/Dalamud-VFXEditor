@@ -7,7 +7,7 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.SkpFormat.LookAt {
     public class SkpLookAtGroup : IUiItem {
         public readonly ParsedPaddedString Id = new( "Id", 32, 0x00 );
-        public readonly List<SkpLookAtGroupElement> Elements = new();
+        public readonly List<SkpLookAtGroupElement> Elements = [];
 
         private readonly CollapsingHeaders<SkpLookAtGroupElement> ElementView;
 

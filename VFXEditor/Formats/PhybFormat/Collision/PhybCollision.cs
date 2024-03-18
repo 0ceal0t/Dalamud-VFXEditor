@@ -15,11 +15,11 @@ namespace VfxEditor.PhybFormat.Collision {
     public class PhybCollision : IPhysicsObject {
         public readonly PhybFile File;
 
-        public readonly List<PhybCapsule> Capsules = new();
-        public readonly List<PhybEllipsoid> Ellipsoids = new();
-        public readonly List<PhybNormalPlane> NormalPlanes = new();
-        public readonly List<PhybThreePointPlane> ThreePointPlanes = new();
-        public readonly List<PhybSphere> Spheres = new();
+        public readonly List<PhybCapsule> Capsules = [];
+        public readonly List<PhybEllipsoid> Ellipsoids = [];
+        public readonly List<PhybNormalPlane> NormalPlanes = [];
+        public readonly List<PhybThreePointPlane> ThreePointPlanes = [];
+        public readonly List<PhybSphere> Spheres = [];
 
         private readonly CommandSplitView<PhybCapsule> CapsuleSplitView;
         private readonly CommandSplitView<PhybEllipsoid> EllipsoidSplitView;

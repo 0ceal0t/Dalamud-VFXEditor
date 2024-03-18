@@ -22,6 +22,6 @@ namespace VfxEditor.Library {
         public Vector4 Color;
 
         // Folder only
-        public List<LibraryProps> Children = new();
+        public List<LibraryProps> Children = [];
     }
 }

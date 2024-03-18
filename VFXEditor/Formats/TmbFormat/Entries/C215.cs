@@ -21,11 +21,11 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public C215( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Duration,
             Unk2,
             Unk3,
             Unk4
-        };
+        ];
     }
 }

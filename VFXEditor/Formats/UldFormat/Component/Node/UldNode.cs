@@ -87,7 +87,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             Components = components;
             Type = new( this, "Type" );
 
-            Parsed = new() {
+            Parsed = [
                 TabIndex,
                 Unk1,
                 Unk2,
@@ -105,7 +105,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 AddColor,
                 Alpha,
                 ClipCount
-            };
+            ];
 
             NodeView = nodeView;
             ParentId = new( "Parent", 0,

@@ -9,13 +9,13 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
     public class CollisionNodeData : UldGenericData {
         public CollisionNodeData() {
-            Parsed.AddRange( new ParsedBase[] {
+            Parsed.AddRange( [
                 new ParsedEnum<CollisionType>( "Collision Type", size: 2 ),
                 new ParsedUInt( "Unknown 1", size: 2 ),
                 new ParsedInt( "X" ),
                 new ParsedInt( "Y" ),
                 new ParsedUInt( "Radius" ),
-            } );
+            ] );
         }
     }
 }

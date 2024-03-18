@@ -26,8 +26,8 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly ParsedFloat3 LastBoneOffset = new( "Last Bone Offset" );
         public readonly ParsedEnum<ChainType> Type = new( "Type" );
 
-        public readonly List<PhybCollisionData> Collisions = new();
-        public readonly List<PhybNode> Nodes = new();
+        public readonly List<PhybCollisionData> Collisions = [];
+        public readonly List<PhybNode> Nodes = [];
 
         private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
         private readonly CommandSplitView<PhybNode> NodeSplitView;
@@ -62,7 +62,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             reader.BaseStream.Position = resetPos;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Dampening,
             MaxSpeed,
             Friction,
@@ -70,7 +70,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             RepulsionStrength,
             LastBoneOffset,
             Type,
-        };
+        ];
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Chain" );
