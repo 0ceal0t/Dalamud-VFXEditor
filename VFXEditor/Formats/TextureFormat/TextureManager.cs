@@ -16,8 +16,8 @@ using VfxEditor.Utils;
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : DalamudWindow, IFileManager {
         private int TEX_ID = 0;
-        public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_convert.atex" ).Replace( '\\', '/' );
-        public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_png.png" ).Replace( '\\', '/' );
+        public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.atex" ).Replace( '\\', '/' );
+        public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, "temp_png.png" ).Replace( '\\', '/' );
 
         public readonly WindowSystem WindowSystem = new();
 

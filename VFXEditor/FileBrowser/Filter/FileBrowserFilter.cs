@@ -6,6 +6,14 @@ namespace VfxEditor.FileBrowser.Filter {
         public string Filter;
         public HashSet<string> CollectionFilters;
 
+        public string Text {
+            get {
+                if( Filter == ".*" ) return "All Files";
+                if( CollectionFilters?.Count > 0 ) return Filter + " (" + string.Join( ", ", CollectionFilters ) + ")";
+                return Filter;
+            }
+        }
+
         public bool Empty() => string.IsNullOrEmpty( Filter ) && ( ( CollectionFilters == null ) || ( CollectionFilters.Count == 0 ) );
 
         public bool Matches( string filter ) => ( Filter == filter ) || ( CollectionFilters != null && CollectionFilters.Contains( filter ) );

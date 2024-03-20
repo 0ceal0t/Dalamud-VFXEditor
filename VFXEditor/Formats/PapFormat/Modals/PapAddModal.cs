@@ -8,12 +8,14 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapAddModal : Modal {
-        private readonly PapFile File;
+        public static string TempHkx => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.hkx" ).Replace( '\\', '/' );
+
+        private readonly PapFile PapFile;
         private readonly string ImportPath;
         private int Index;
 
         public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index", true ) {
-            File = file;
+            PapFile = file;
             ImportPath = importPath;
         }
 
@@ -28,22 +30,38 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
-            var animation = new PapAnimation( File, File.HkxTempLocation );
+            var animation = new PapAnimation( PapFile, PapFile.HkxTempLocation );
             animation.ReadTmb( Path.Combine( Plugin.RootLocation, "Files", "default_pap_tmb.tmb" ) );
 
+            var hkxPath = ImportPath;
+            if( ImportPath.Contains( ".pap" ) ) {
+                // Need to extract the havok data
+                using var file = File.Open( ImportPath, FileMode.Open );
+                using var reader = new BinaryReader( file );
+
+                reader.BaseStream.Position = 0x12;
+                var havokPosition = reader.ReadInt32();
+                var footerPosition = reader.ReadInt32();
+                var havokDataSize = footerPosition - havokPosition;
+                reader.BaseStream.Position = havokPosition;
+                File.WriteAllBytes( TempHkx, reader.ReadBytes( havokDataSize ) );
+
+                hkxPath = TempHkx;
+            }
+
             var commands = new List<ICommand> {
-                new ListAddCommand<PapAnimation>( File.Animations, animation, ( PapAnimation item, bool add ) => item.File.RefreshHavokIndexes()  ),
-                new PapHavokCommand( File, () => {
-                    var newAnimation = new HavokData( ImportPath, true );
-                    var container = File.MotionData.AnimationContainer;
+                new ListAddCommand<PapAnimation>( PapFile.Animations, animation, ( PapAnimation item, bool add ) => item.File.RefreshHavokIndexes()  ),
+                new PapHavokCommand( PapFile, () => {
+                    var newAnimation = new HavokData( hkxPath, true );
+                    var container = PapFile.MotionData.AnimationContainer;
 
                     var anims = HavokData.ToList( container->Animations );
                     var bindings = HavokData.ToList( container->Bindings );
                     anims.Add( newAnimation.AnimationContainer->Animations[Index] );
                     bindings.Add( newAnimation.AnimationContainer->Bindings[Index] );
 
-                    container->Animations = HavokData.CreateArray( File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
-                    container->Bindings = HavokData.CreateArray( File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
+                    container->Animations = HavokData.CreateArray( PapFile.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
+                    container->Bindings = HavokData.CreateArray( PapFile.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
                 } )
             };
             Command.AddAndExecute( new CompoundCommand( commands ) );

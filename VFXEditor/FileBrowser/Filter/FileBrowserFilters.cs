@@ -47,16 +47,16 @@ namespace VfxEditor.FileBrowser.Filter {
             if( Filters.Count == 0 ) return;
 
             ImGui.SameLine();
-            ImGui.SetNextItemWidth( 150 );
+            ImGui.SetNextItemWidth( 200 );
 
-            var text = Selected == null ? "[NONE]" : ( Selected.Filter == ".*" ? "All Files" : Selected.Filter );
+            var text = Selected == null ? "[NONE]" : Selected.Text;
 
             using var combo = ImRaii.Combo( "##Filters", text, ImGuiComboFlags.None );
             if( !combo ) return;
 
             foreach( var (filter, idx) in Filters.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
-                if( ImGui.Selectable( filter.Filter == ".*" ? "All Files" : filter.Filter, filter == Selected ) ) {
+                if( ImGui.Selectable( filter.Text, filter == Selected ) ) {
                     Selected = filter;
                     Dialog.UpdateFiles();
                 }

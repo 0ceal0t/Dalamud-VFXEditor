@@ -18,7 +18,7 @@ namespace VfxEditor.PapFormat {
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
         private void OnNew() {
-            FileBrowserManager.OpenFileDialog( "Select a File", ".hkx,.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Animation{.hkx,.pap}", ( bool ok, string res ) => {
                 if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }
