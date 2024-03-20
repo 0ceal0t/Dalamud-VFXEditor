@@ -63,7 +63,7 @@ namespace VfxEditor.ScdFormat {
         public SoundAcceleration Acceleration = new();
         public SoundAtomos Atomos = new();
         public SoundExtra Extra = new();
-        public SoundUnknown Unknown = new();
+        public SoundBypass BypassPLIIz = new();
         public SoundRandomTracks RandomTracks = new(); // Includes Cycle
         public SoundTracks Tracks = new();
 
@@ -72,7 +72,7 @@ namespace VfxEditor.ScdFormat {
         private bool AccelerationEnabled => Attributes.Value.HasFlag( SoundAttribute.Acceleration );
         private bool AtomosEnabled => Attributes.Value.HasFlag( SoundAttribute.Atomosgear );
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.Extra_Desc );
-        private bool UnknownEnabled => Attributes.Value.HasFlag( SoundAttribute.Fixed_Volume ) || Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
+        private bool BypassEnabled => Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
 
         public readonly ScdLayoutEntry Layout;
@@ -99,7 +99,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Read( reader );
             if( AtomosEnabled ) Atomos.Read( reader );
             if( ExtraEnabled ) Extra.Read( reader );
-            if( UnknownEnabled ) Unknown.Read( reader );
+            if( BypassEnabled ) BypassPLIIz.Read( reader );
 
             if( RandomTracksEnabled ) RandomTracks.Read( reader, Type.Value, trackCount );
             else Tracks.Read( reader, trackCount );
@@ -121,7 +121,7 @@ namespace VfxEditor.ScdFormat {
             if( AccelerationEnabled ) Acceleration.Write( writer );
             if( AtomosEnabled ) Atomos.Write( writer );
             if( ExtraEnabled ) Extra.Write( writer );
-            if( UnknownEnabled ) Unknown.Write( writer );
+            if( BypassEnabled ) BypassPLIIz.Write( writer );
 
             if( RandomTracksEnabled ) RandomTracks.Write( writer, Type.Value );
             else Tracks.Write( writer );
@@ -190,9 +190,9 @@ namespace VfxEditor.ScdFormat {
                 }
                 ImGui.EndTabItem();
             }
-            if( UnknownEnabled && ImGui.BeginTabItem( "Unknown" ) ) {
+            if( BypassEnabled && ImGui.BeginTabItem( "Bypass PLIIz" ) ) {
                 using( var child = ImRaii.Child( "Child" ) ) {
-                    Unknown.Draw();
+                    BypassPLIIz.Draw();
                 }
                 ImGui.EndTabItem();
             }

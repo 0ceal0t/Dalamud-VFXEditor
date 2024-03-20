@@ -3,7 +3,7 @@ using System.IO;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.ScdFormat.Sound.Data {
-    public class SoundUnknown {
+    public class SoundBypass {
         private readonly ParsedShort Unknown1 = new( "Unknown 1" );
         private readonly ParsedShort Unknown2 = new( "Unknown 2" );
         private readonly ParsedUInt Unknown3 = new( "Unknown 3" );
