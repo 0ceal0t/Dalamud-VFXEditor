@@ -17,9 +17,9 @@ namespace VfxEditor.Formats.SkpFormat.LookAt {
         }
 
         protected override List<ParsedBase> GetParsed() => [
-            new ParsedFloat4( "Limit Angles" ),
+            new ParsedRadians4( "Limit Angles" ),
             new ParsedFloat3( "Forward Rotation" ),
-            new ParsedFloat( "Limit Angle" ),
+            new ParsedRadians( "Limit Angle" ),
             new ParsedFloat3( "Eye Positions" ),
             new ParsedUInt( "Flags" ),
             new ParsedFloat( "Gain" ),

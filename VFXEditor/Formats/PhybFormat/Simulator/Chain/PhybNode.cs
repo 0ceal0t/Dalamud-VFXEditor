@@ -13,7 +13,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public readonly ParsedFloat AttractByAnimation = new( "Attract by Animation" );
         public readonly ParsedFloat WindScale = new( "Wind Scale" );
         public readonly ParsedFloat GravityScale = new( "Gravity Scale" );
-        public readonly ParsedFloat ConeMaxAngle = new( "Cone Max Angle" );
+        public readonly ParsedRadians ConeMaxAngle = new( "Cone Max Angle" );
         public readonly ParsedFloat3 ConeAxisOffset = new( "Cone Axis Offset" );
         public readonly ParsedFloat3 ConstraintPlaneNormal = new( "Constraint Plane Normal" );
         public readonly ParsedUInt CollisionFlag = new( "Collision Flags" );

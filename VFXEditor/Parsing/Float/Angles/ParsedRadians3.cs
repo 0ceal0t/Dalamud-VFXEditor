@@ -8,9 +8,7 @@ namespace VfxEditor.Parsing {
         public ParsedRadians3( string name, Vector3 value ) : base( name, value ) { }
 
         protected override void DrawBody() {
-            if( UiUtils.DrawRadians3( Name, Value, out var value ) ) {
-                Update( value );
-            }
+            if( UiUtils.DrawRadians3( Name, Value, out var value ) ) Update( value );
         }
     }
 }

@@ -31,9 +31,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ParameterLink = new( "Parameter Link", "PrLk", value: -1 );
         public readonly AvfxInt StartFrame = new( "Start Frame", "StFr", value: 0 );
         public readonly AvfxBool StartFrameNullUpdate = new( "Start Frame Null Update", "bStN", value: false );
-        public readonly AvfxFloat ByInjectionAngleX = new( "By Injection Angle X", "BIAX", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleY = new( "By Injection Angle Y", "BIAY", value: 0 );
-        public readonly AvfxFloat ByInjectionAngleZ = new( "By Injection Angle Z", "BIAZ", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleX = new( "By Injection Angle X", "BIAX", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleY = new( "By Injection Angle Y", "BIAY", value: 0 );
+        public readonly AvfxRadians ByInjectionAngleZ = new( "By Injection Angle Z", "BIAZ", value: 0 );
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD", 0 );
         public readonly AvfxBool GenerateDelayByOne = new( "Generate Delay By One", "bGD", value: false );
 
@@ -107,7 +107,9 @@ namespace VfxEditor.AvfxFormat {
                 ParameterLink,
                 StartFrame,
                 StartFrameNullUpdate,
-                new UiFloat3( "By Injection Angle", ByInjectionAngleX, ByInjectionAngleY, ByInjectionAngleZ ),
+                ByInjectionAngleX,
+                ByInjectionAngleY,
+                ByInjectionAngleZ,
                 GenerateDelay,
                 GenerateDelayByOne
             ];
