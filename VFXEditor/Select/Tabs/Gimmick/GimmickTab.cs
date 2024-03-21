@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Gimmick {
     public class GimmickTab : SelectTab<GimmickRow, ParsedPaths> {
-        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Gimmick", SelectResultType.GameGimmick ) { }
+        public GimmickTab( SelectDialog dialog, string name ) : base( dialog, name, "Gimmick" ) { }
 
         // ===== LOADING =====
 
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Gimmick {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameGimmick );
         }
 
         protected override string GetName( GimmickRow item ) => item.Name;

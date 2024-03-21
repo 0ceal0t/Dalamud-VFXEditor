@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Tabs.Character {
     }
 
     public class CharacterTabPap : SelectTab<CharacterRow, SelectedPap> {
-        public CharacterTabPap( SelectDialog dialog, string name ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) { }
+        public CharacterTabPap( SelectDialog dialog, string name ) : base( dialog, name, "Character" ) { }
 
         // ===== LOADING =====
 
@@ -84,26 +84,26 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                DrawPaths( Loaded.General, Selected.Name );
+                Dialog.DrawPaths( Loaded.General, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                DrawPaths( Loaded.Poses, Selected.Name );
+                Dialog.DrawPaths( Loaded.Poses, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Ground Sit" ) ) {
-                DrawPaths( new Dictionary<string, string>() {
+                Dialog.DrawPaths( new Dictionary<string, string>() {
                     { "Ground Start", Loaded.GroundStart },
                     { "Jmn", Loaded.Jmn },
-                }, Selected.Name );
+                }, Selected.Name, SelectResultType.GameCharacter );
 
                 ImGui.Separator();
-                DrawPaths( Loaded.SitPoses, Selected.Name );
+                Dialog.DrawPaths( Loaded.SitPoses, Selected.Name, SelectResultType.GameCharacter );
 
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Faces" ) ) {
-                DrawPaths( Loaded.FacePaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.FacePaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }

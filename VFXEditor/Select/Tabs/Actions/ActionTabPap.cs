@@ -6,7 +6,7 @@ namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabPap : SelectTab<ActionRowPap, Dictionary<string, Dictionary<string, string>>> {
         public ActionTabPap( SelectDialog dialog, string name ) : this( dialog, name, "Action-Pap" ) { }
 
-        public ActionTabPap( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabPap( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameAction );
         }
 
         protected override string GetName( ActionRowPap item ) => item.Name;

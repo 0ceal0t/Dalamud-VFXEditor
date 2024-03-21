@@ -5,7 +5,7 @@ using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabTex : SelectTab<ActionRow> {
-        public ActionTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Action-Tex", SelectResultType.GameAction ) { }
+        public ActionTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Action-Tex" ) { }
 
         // ===== LOADING =====
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Select.Tabs.Actions {
                 { "Icon", path }
             };
             if( Dalamud.DataManager.FileExists( hdPath ) ) paths.Add( "HD Icon", hdPath );
-            DrawPaths( paths, Selected.Name );
+            Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameAction );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

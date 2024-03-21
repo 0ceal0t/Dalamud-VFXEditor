@@ -5,7 +5,7 @@ using System.IO;
 
 namespace VfxEditor.Select.Tabs.Npc {
     public class NpcTabAtch : SelectTab<NpcRow> {
-        public NpcTabAtch( SelectDialog dialog, string name ) : base( dialog, name, "Npc-Atch", SelectResultType.GameNpc ) { }
+        public NpcTabAtch( SelectDialog dialog, string name ) : base( dialog, name, "Npc-Atch" ) { }
 
         public override void LoadData() {
             var file = Dalamud.DataManager.GetFile( "chara/xls/attachoffset/attachoffsetexist.waoe" );
@@ -38,7 +38,7 @@ namespace VfxEditor.Select.Tabs.Npc {
         }
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.AtchPath, Selected.Name );
+            Dialog.DrawPaths( Selected.AtchPath, Selected.Name, SelectResultType.GameNpc );
         }
 
         protected override string GetName( NpcRow item ) => item.Name;

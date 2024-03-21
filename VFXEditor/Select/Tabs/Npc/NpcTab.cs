@@ -21,7 +21,11 @@ namespace VfxEditor.Select.Tabs.Npc {
     public abstract class NpcTab : SelectTab<NpcRow, List<string>> {
         private static Dictionary<string, NpcFilesStruct> NpcFiles = [];
 
-        public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Npc", resultType ) { }
+        private readonly SelectResultType ResultType;
+
+        public NpcTab( SelectDialog dialog, string name, SelectResultType resultType ) : base( dialog, name, "Npc" ) {
+            ResultType = resultType;
+        }
 
         public NpcTab( SelectDialog dialog, string name ) : this( dialog, name, SelectResultType.GameNpc ) { }
 
@@ -64,7 +68,7 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         protected override void DrawSelected() {
             ImGui.TextDisabled( "Variant: " + Selected.Variant );
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, ResultType );
         }
 
         // ====== UTILS ===========

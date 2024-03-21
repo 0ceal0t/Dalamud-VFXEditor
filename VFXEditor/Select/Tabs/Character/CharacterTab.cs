@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Character {
     public abstract class CharacterTab : SelectTab<CharacterRow> {
-        public CharacterTab( SelectDialog dialog, string name ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) { }
+        public CharacterTab( SelectDialog dialog, string name ) : base( dialog, name, "Character" ) { }
 
         public override void LoadData() => Load( Items );
 

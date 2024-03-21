@@ -37,7 +37,7 @@ namespace VfxEditor.Select.Tabs.Items {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameItem );
         }
     }
 }

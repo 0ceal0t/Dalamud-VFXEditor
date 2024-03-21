@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabVfx : SelectTab<StatusRow> {
-        public StatusTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Status-Vfx", SelectResultType.GameStatus ) { }
+        public StatusTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Status-Vfx" ) { }
 
         // ===== LOADING =====
 
@@ -19,12 +19,12 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( new Dictionary<string, string>() {
+            Dialog.DrawPaths( new Dictionary<string, string>() {
                 { "Hit", Selected.HitPath },
                 { "Loop 1", Selected.LoopPath1 },
                 { "Loop 2", Selected.LoopPath2 },
                 { "Loop 3", Selected.LoopPath3 },
-            }, Selected.Name );
+            }, Selected.Name, SelectResultType.GameStatus );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

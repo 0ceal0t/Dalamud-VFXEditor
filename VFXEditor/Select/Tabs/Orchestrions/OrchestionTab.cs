@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
     }
 
     public class OrchestrionTab : SelectTab<OrchestrionRow, SelectedOrchestrion> {
-        public OrchestrionTab( SelectDialog dialog, string name ) : base( dialog, name, "Orchestrion", SelectResultType.GameMusic ) { }
+        public OrchestrionTab( SelectDialog dialog, string name ) : base( dialog, name, "Orchestrion" ) { }
 
         // ===== LOADING =====
 
@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded.Path, Selected.Name );
+            Dialog.DrawPaths( Loaded.Path, Selected.Name, SelectResultType.GameMusic );
         }
 
         protected override string GetName( OrchestrionRow item ) => item.Name;

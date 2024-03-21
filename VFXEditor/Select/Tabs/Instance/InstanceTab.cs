@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Instance {
     }
 
     public class InstanceTab : SelectTab<InstanceRow, SelectedInstance> {
-        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Instance", SelectResultType.GameMusic ) { }
+        public InstanceTab( SelectDialog dialog, string name ) : base( dialog, name, "Instance" ) { }
 
         // ===== LOADING =====
 
@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Instance {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawBgmSituation( Selected.Name, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
 
         protected override string GetName( InstanceRow item ) => item.Name;

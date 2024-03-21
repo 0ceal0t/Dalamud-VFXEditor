@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Cutscenes {
     public class CutsceneTab : SelectTab<CutsceneRow, ParsedPaths> {
-        public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Cutscene", SelectResultType.GameCutscene ) { }
+        public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Cutscene" ) { }
 
         public override void LoadData() {
             var sheet = Dalamud.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
@@ -20,7 +20,7 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameCutscene );
         }
 
         protected override string GetName( CutsceneRow item ) => item.Name;

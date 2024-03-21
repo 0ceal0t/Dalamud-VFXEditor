@@ -68,9 +68,9 @@ namespace VfxEditor.Select.Tabs.Emotes {
                 using var _ = ImRaii.PushId( key );
                 using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
-                if( paths.Type == EmoteRowType.Normal ) DrawPaths( paths.ActionData, $"{Selected.Name} {key}" );
-                else if( paths.Type == EmoteRowType.PerJob ) DrawPaths( paths.JobData, $"{Selected.Name} {key}" );
-                else if( paths.Type == EmoteRowType.Facial ) DrawPaths( paths.FaceData, $"{Selected.Name} {key}" );
+                if( paths.Type == EmoteRowType.Normal ) Dialog.DrawPaths( paths.ActionData, $"{Selected.Name} {key}", SelectResultType.GameEmote );
+                else if( paths.Type == EmoteRowType.PerJob ) Dialog.DrawPaths( paths.JobData, $"{Selected.Name} {key}", SelectResultType.GameEmote );
+                else if( paths.Type == EmoteRowType.Facial ) Dialog.DrawPaths( paths.FaceData, $"{Selected.Name} {key}", SelectResultType.GameEmote );
             }
         }
     }

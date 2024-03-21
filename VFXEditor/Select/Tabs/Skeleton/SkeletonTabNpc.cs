@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         }
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameNpc );
         }
     }
 }

@@ -6,7 +6,7 @@ namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabTmb : SelectTab<ActionRow> {
         public ActionTabTmb( SelectDialog dialog, string name ) : this( dialog, name, "Action-Tmb" ) { }
 
-        public ActionTabTmb( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabTmb( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -19,13 +19,13 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( new Dictionary<string, string>() {
+            Dialog.DrawPaths( new Dictionary<string, string>() {
                 { "Start",  Selected.StartPath },
                 { "End",  Selected.EndPath },
                 { "Hit",  Selected.HitPath },
                 { "Weapon",  Selected.WeaponPath },
 
-            }, Selected.Name );
+            }, Selected.Name, SelectResultType.GameAction );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

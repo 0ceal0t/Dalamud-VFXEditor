@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Zone {
     public abstract class ZoneTab<T> : SelectTab<ZoneRow, T> where T : class {
-        public ZoneTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameZone ) { }
+        public ZoneTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 

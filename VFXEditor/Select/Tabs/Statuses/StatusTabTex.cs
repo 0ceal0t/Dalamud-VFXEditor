@@ -5,7 +5,7 @@ using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabTex : SelectTab<StatusRow> {
-        public StatusTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Status-Tex", SelectResultType.GameStatus ) { }
+        public StatusTabTex( SelectDialog dialog, string name ) : base( dialog, name, "Status-Tex" ) { }
 
         // ===== LOADING =====
 
@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
             };
             if( Dalamud.DataManager.FileExists( hd ) ) paths["HD Icon"] = hd;
 
-            DrawPaths( paths, Selected.Name );
+            Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );
         }
 
         protected override string GetName( StatusRow item ) => item.Name;

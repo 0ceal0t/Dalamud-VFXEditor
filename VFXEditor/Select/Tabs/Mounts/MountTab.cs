@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Mounts {
     public abstract class MountTab<T> : SelectTab<MountRow, T> where T : class {
-        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Mount", SelectResultType.GameMount ) { }
+        public MountTab( SelectDialog dialog, string name ) : base( dialog, name, "Mount" ) { }
 
         // ===== LOADING =====
 

@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabVfx : SelectTab<ActionRowVfx, ParsedPaths> {
         public ActionTabVfx( SelectDialog dialog, string name ) : this( dialog, name, "Action-Vfx" ) { }
 
-        public ActionTabVfx( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId, SelectResultType.GameAction ) { }
+        public ActionTabVfx( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         // ===== LOADING =====
 
@@ -47,10 +47,10 @@ namespace VfxEditor.Select.Tabs.Actions {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( new Dictionary<string, string>() {
+            Dialog.DrawPaths( new Dictionary<string, string>() {
                 { "Cast", Selected.CastVfxPath },
                 { "Start", Selected.StartVfxPath }
-            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name );
+            }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
 
         protected override string GetName( ActionRowVfx item ) => item.Name;

@@ -14,7 +14,7 @@ namespace VfxEditor.Select {
     }
 
     public class SelectPenumbraTab : SelectTab<string, SelectedPenumbraMod> {
-        public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared", SelectResultType.Local ) { }
+        public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
 
         public override void Draw() {
             if( !Plugin.PenumbraIpc.PenumbraEnabled ) return;
@@ -105,7 +105,7 @@ namespace VfxEditor.Select {
 
             var files = Dialog.ShowLocal ? Loaded.SourceFiles : Loaded.ReplaceFiles;
             if( files != null ) {
-                DrawPaths( files, Selected );
+                Dialog.DrawPaths( files, Selected, SelectResultType.Local );
             }
         }
 

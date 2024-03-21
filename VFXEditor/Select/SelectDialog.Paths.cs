@@ -9,26 +9,22 @@ using VfxEditor.Select.Tabs.BgmQuest;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
-    public partial class SelectTab {
+    public partial class SelectDialog {
         // ========= UTILS =========
 
-        protected bool DrawFavorite( string path, string resultName ) => Dialog.DrawFavorite( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
-
-        protected void DrawBgmSituation( string name, BgmSituationStruct situation ) {
+        public void DrawBgmSituation( string name, BgmSituationStruct situation, SelectResultType resultType ) {
             if( situation.IsSituation ) {
                 DrawPaths( new Dictionary<string, string>() {
                     { "Day", situation.DayPath },
                     { "Night", situation.NightPath },
                     { "Battle", situation.BattlePath },
                     { "Daybreak", situation.DaybreakPath }
-                }, name );
+                }, name, resultType );
             }
-            else {
-                DrawPaths( situation.Path, name );
-            }
+            else DrawPaths( situation.Path, name, resultType );
         }
 
-        protected static bool DrawIcon( uint iconId, Vector2 size ) {
+        public static bool DrawIcon( uint iconId, Vector2 size ) {
             if( iconId <= 0 ) return false;
             var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
             if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
@@ -46,17 +42,22 @@ namespace VfxEditor.Select {
 
         // ========= HEADERS ========
 
-        protected void DrawPaths( Dictionary<string, List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
+        public void DrawPaths( Dictionary<string, List<string>> items, string resultName, SelectResultType resultType )
+            => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName, resultType );
 
-        protected void DrawPaths( Dictionary<(string, uint), List<string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.WithIndex().Select( y => ($"#{y.Index}", 0u, y.Value) ) ), resultName );
+        public void DrawPaths( Dictionary<(string, uint), List<string>> items, string resultName, SelectResultType resultType )
+            => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.WithIndex().Select( y => ($"#{y.Index}", 0u, y.Value) ) ), resultName, resultType );
 
-        protected void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName );
+        public void DrawPaths( Dictionary<string, Dictionary<string, string>> items, string resultName, SelectResultType resultType )
+            => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value ), resultName, resultType );
 
-        protected void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName ) => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.Select( y => (y.Key, 0u, y.Value) ) ), resultName );
+        public void DrawPaths( Dictionary<(string, uint), Dictionary<string, string>> items, string resultName, SelectResultType resultType )
+            => DrawPaths( items.ToDictionary( x => x.Key, x => x.Value.Select( y => (y.Key, 0u, y.Value) ) ), resultName, resultType );
 
-        protected void DrawPaths( Dictionary<string, List<(string, uint, string)>> items, string resultName ) => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value.Select( x => x ) ), resultName );
+        public void DrawPaths( Dictionary<string, List<(string, uint, string)>> items, string resultName, SelectResultType resultType )
+            => DrawPaths( items.ToDictionary( x => (x.Key, 0u), x => x.Value.Select( x => x ) ), resultName, resultType );
 
-        protected void DrawPaths( Dictionary<(string, uint), IEnumerable<(string, uint, string)>> items, string resultName ) {
+        public void DrawPaths( Dictionary<(string, uint), IEnumerable<(string, uint, string)>> items, string resultName, SelectResultType resultType ) {
             if( items == null || items.Count == 0 ) return;
 
             foreach( var ((name, iconId), paths) in items ) {
@@ -73,36 +74,39 @@ namespace VfxEditor.Select {
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding with { Y = 12f }, showIcon );
                 if( ImGui.CollapsingHeader( name, ImGuiTreeNodeFlags.DefaultOpen ) ) {
                     style.Dispose();
-                    DrawPaths( paths, resultName );
+                    DrawPaths( paths, resultName, resultType );
                 }
             }
         }
 
         // ========= INDEXED TABLE ===========
 
-        protected void DrawPaths( Dictionary<string, string> named, IEnumerable<string> indexed, string resultName ) => DrawPaths( named.Select( x => (x.Key, x.Value) ), indexed, resultName );
+        public void DrawPaths( Dictionary<string, string> named, IEnumerable<string> indexed, string resultName, SelectResultType resultType )
+            => DrawPaths( named.Select( x => (x.Key, x.Value) ), indexed, resultName, resultType );
 
-        protected void DrawPaths( IEnumerable<(string, string)> named, IEnumerable<string> indexed, string resultName ) {
+        public void DrawPaths( IEnumerable<(string, string)> named, IEnumerable<string> indexed, string resultName, SelectResultType resultType ) {
             var paths = named.Select( x => (x.Item1, 0u, x.Item2) ).ToList();
             paths.AddRange( indexed.WithIndex().Select( x => ($"#{x.Index}", 0u, x.Value) ) );
-            DrawPaths( paths, resultName );
+            DrawPaths( paths, resultName, resultType );
         }
 
-        protected void DrawPaths( IEnumerable<string> paths, string resultName ) => DrawPaths( paths.WithIndex().Select( x => ($"#{x.Index}", 0u, x.Value) ), resultName );
+        public void DrawPaths( IEnumerable<string> paths, string resultName, SelectResultType resultType )
+            => DrawPaths( paths.WithIndex().Select( x => ($"#{x.Index}", 0u, x.Value) ), resultName, resultType );
 
         // ========= SINGLE ===============
 
-        protected void DrawPaths( string path, string resultName ) => DrawPaths( new List<(string, uint, string)> {
-            (null, 0, path)
-        }, resultName );
+        public void DrawPaths( string path, string resultName, SelectResultType resultType )
+            => DrawPaths( new List<(string, uint, string)> { (null, 0, path) }, resultName, resultType );
 
         // ========= TABLE ================
 
-        protected void DrawPaths( Dictionary<string, string> paths, string resultName ) => DrawPaths( paths.Select( x => (x.Key, 0u, x.Value) ), resultName );
+        public void DrawPaths( Dictionary<string, string> paths, string resultName, SelectResultType resultType )
+            => DrawPaths( paths.Select( x => (x.Key, 0u, x.Value) ), resultName, resultType );
 
-        protected void DrawPaths( IEnumerable<(string, string)> paths, string resultName ) => DrawPaths( paths.Select( x => (x.Item1, 0u, x.Item2) ), resultName );
+        public void DrawPaths( IEnumerable<(string, string)> paths, string resultName, SelectResultType resultType )
+            => DrawPaths( paths.Select( x => (x.Item1, 0u, x.Item2) ), resultName, resultType );
 
-        protected void DrawPaths( IEnumerable<(string, uint, string)> paths, string resultName ) {
+        public void DrawPaths( IEnumerable<(string, uint, string)> paths, string resultName, SelectResultType resultType ) {
             if( paths == null || !paths.Any() ) return;
 
             using var _ = ImRaii.PushId( resultName );
@@ -120,7 +124,7 @@ namespace VfxEditor.Select {
             ImGui.TableSetupColumn( "##Play", ImGuiTableColumnFlags.None );
 
             ImGui.TableSetColumnEnabled( 0, paths.Where( x => x.Item2 > 0 ).Any() ); // show icon?
-            ImGui.TableSetColumnEnabled( 4, Dialog.CanPlay && ResultType != SelectResultType.Local ); // show play button?
+            ImGui.TableSetColumnEnabled( 4, CanPlay && resultType != SelectResultType.Local ); // show play button?
 
             foreach( var ((name, iconId, path), idx) in paths.WithIndex() ) {
                 using var __ = ImRaii.PushId( idx );
@@ -128,12 +132,13 @@ namespace VfxEditor.Select {
                     iconId,
                     name,
                     path,
-                    string.IsNullOrEmpty( name ) ? resultName : ( name.StartsWith( '#' ) ? $"{resultName} {name}" : $"{resultName} ({name})" )
+                    string.IsNullOrEmpty( name ) ? resultName : ( name.StartsWith( '#' ) ? $"{resultName} {name}" : $"{resultName} ({name})" ),
+                    resultType
                 );
             }
         }
 
-        protected void DrawPathRow( uint iconId, string label, string path, string resultName ) {
+        public void DrawPathRow( uint iconId, string label, string path, string resultName, SelectResultType resultType ) {
             if( string.IsNullOrEmpty( path ) || path.Contains( "BGM_Null" ) ) return;
 
             var displayPath = path;
@@ -149,7 +154,7 @@ namespace VfxEditor.Select {
             DrawIcon( iconId, new( 40, 40 ) );
 
             ImGui.TableNextColumn(); // Favorite + name
-            DrawFavorite( path, resultName );
+            DrawFavorite( path, resultName, resultType );
             if( !string.IsNullOrEmpty( label ) ) {
                 ImGui.SameLine();
                 ImGui.Text( label );
@@ -166,12 +171,12 @@ namespace VfxEditor.Select {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
             ImGui.TableNextColumn(); // Controls
-            if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) Dialog.Invoke( SelectUiUtils.GetSelectResult( path, ResultType, resultName ) );
+            if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) Invoke( SelectUiUtils.GetSelectResult( path, resultType, resultName ) );
             ImGui.SameLine();
             SelectUiUtils.Copy( path );
 
             ImGui.TableNextColumn(); // Play
-            if( Dialog.CanPlay && ResultType != SelectResultType.Local ) Dialog.PlayButton( path );
+            if( CanPlay && resultType != SelectResultType.Local ) PlayButton( path );
         }
     }
 }

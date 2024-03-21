@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabScd : SelectTab<ActionRow, ParsedPaths> {
-        public ActionTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Action-Scd", SelectResultType.GameAction ) { }
+        public ActionTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Action-Scd" ) { }
 
         // ===== LOADING =====
 
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
 
         protected override string GetName( ActionRow item ) => item.Name;

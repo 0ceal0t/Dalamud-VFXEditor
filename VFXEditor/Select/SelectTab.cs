@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
-    public abstract partial class SelectTab {
+    public abstract class SelectTab {
         protected readonly SelectDialog Dialog;
         protected readonly string Name;
-        protected readonly SelectResultType ResultType;
 
-        public SelectTab( SelectDialog dialog, string name, SelectResultType resultType ) {
+        public SelectTab( SelectDialog dialog, string name ) {
             Dialog = dialog;
             Name = name;
-            ResultType = resultType;
         }
 
         public abstract void Draw();
@@ -45,7 +43,7 @@ namespace VfxEditor.Select {
         protected string SearchInput = "";
         protected List<T> Searched;
 
-        protected SelectTab( SelectDialog dialog, string name, string stateId, SelectResultType resultType ) : base( dialog, name, resultType ) {
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name ) {
             StateId = stateId;
             if( States.TryGetValue( StateId, out var existingState ) ) {
                 State = ( SelectTabState<T> )existingState;
@@ -176,7 +174,7 @@ namespace VfxEditor.Select {
     public abstract class SelectTab<T, S> : SelectTab<T> where T : class where S : class {
         protected S Loaded;
 
-        protected SelectTab( SelectDialog dialog, string name, string stateId, SelectResultType resultType ) : base( dialog, name, stateId, resultType ) { }
+        protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
 
         protected override void Select( T item ) {
             LoadItemAsync( item );

@@ -3,7 +3,7 @@ namespace VfxEditor.Select.Tabs.Character {
         public CharacterTabAtch( SelectDialog dialog, string name ) : base( dialog, name ) { }
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.AtchPath, Selected.Name );
+            Dialog.DrawPaths( Selected.AtchPath, Selected.Name, SelectResultType.GameCharacter );
         }
     }
 }

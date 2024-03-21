@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.JournalCutscene {
     public class JournalCutsceneTab : SelectTab<JournalCutsceneRow, List<ParsedPaths>> {
-        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "JournalCutscene", SelectResultType.GameCutscene ) { }
+        public JournalCutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "JournalCutscene" ) { }
 
         // ===== LOADING =====
 
@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
 
                 if( ImGui.CollapsingHeader( $"Cutscene {idx}" ) ) {
                     using var indent = ImRaii.PushIndent( 10f );
-                    DrawPaths( Loaded[idx].Paths, $"{Selected.Name} {idx}" );
+                    Dialog.DrawPaths( Loaded[idx].Paths, $"{Selected.Name} {idx}", SelectResultType.GameCutscene );
                 }
             }
         }

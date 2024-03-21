@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Bgm {
     public class BgmTab : SelectTab<BgmRow> {
-        public BgmTab( SelectDialog dialog, string name ) : base( dialog, name, "Bgm", SelectResultType.GameMusic ) { }
+        public BgmTab( SelectDialog dialog, string name ) : base( dialog, name, "Bgm" ) { }
 
         // ===== LOADING =====
 
@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Bgm {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.Path, Selected.Name );
+            Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameMusic );
         }
 
         protected override string GetName( BgmRow item ) => item.Name;

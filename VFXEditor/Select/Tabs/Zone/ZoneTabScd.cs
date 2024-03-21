@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Tabs.BgmQuest;
@@ -32,7 +32,7 @@ namespace VfxEditor.Select.Tabs.Zone {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawBgmSituation( Selected.Name, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameZone );
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             var idx = 0;
@@ -42,7 +42,7 @@ namespace VfxEditor.Select.Tabs.Zone {
                 if( ImGui.CollapsingHeader( entry.Key ) ) {
                     using var indent = ImRaii.PushIndent();
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
-                    DrawBgmSituation( entry.Key, entry.Value );
+                    Dialog.DrawBgmSituation( entry.Key, entry.Value, SelectResultType.GameZone );
                     ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
                 }
                 idx++;

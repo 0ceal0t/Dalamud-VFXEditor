@@ -43,7 +43,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameItem );
 
             if( Loaded.Paths.Count == 0 ) SelectUiUtils.DisplayNoVfx();
         }

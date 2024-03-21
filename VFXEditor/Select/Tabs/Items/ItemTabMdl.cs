@@ -38,10 +38,10 @@ namespace VfxEditor.Select.Tabs.Items {
 
         protected override void DrawSelected() {
             if( Loaded.IsWeapon ) {
-                DrawPaths( Loaded.WeaponPath, Selected.Name );
+                Dialog.DrawPaths( Loaded.WeaponPath, Selected.Name, SelectResultType.GameItem );
             }
             else {
-                DrawPaths( Loaded.ArmorPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.ArmorPaths, Selected.Name, SelectResultType.GameItem );
             }
         }
     }

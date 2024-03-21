@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Zone {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameZone );
         }
     }
 }

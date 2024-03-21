@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Tabs.Job {
     }
 
     public class JobTab : SelectTab<JobRow, SelectedJob> {
-        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job", SelectResultType.GameJob ) { }
+        public JobTab( SelectDialog dialog, string name ) : base( dialog, name, "Job" ) { }
 
         public override void LoadData() {
             foreach( var item in SelectDataUtils.JobAnimationIds ) Items.Add( new JobRow( item.Key, item.Value ) );
@@ -89,15 +89,15 @@ namespace VfxEditor.Select.Tabs.Job {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "General" ) ) {
-                DrawPaths( Loaded.General, Selected.Name );
+                Dialog.DrawPaths( Loaded.General, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Poses" ) ) {
-                DrawPaths( Loaded.Poses, Selected.Name );
+                Dialog.DrawPaths( Loaded.Poses, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Auto-Attack" ) ) {
-                DrawPaths( Loaded.AutoAttack, Selected.Name );
+                Dialog.DrawPaths( Loaded.AutoAttack, Selected.Name, SelectResultType.GameJob );
                 ImGui.EndTabItem();
             }
         }

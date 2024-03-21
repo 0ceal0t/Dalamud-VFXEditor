@@ -12,8 +12,8 @@ namespace VfxEditor.Select.Tabs.Mounts {
         }
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.Pap, $"{Selected.Name} Mount" );
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Selected.Pap, $"{Selected.Name} Mount", SelectResultType.GameMount );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameMount );
         }
     }
 }

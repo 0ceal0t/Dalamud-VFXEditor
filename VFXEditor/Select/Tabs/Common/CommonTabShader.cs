@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Tabs.Common {
         private readonly string Path;
         private readonly string Extension;
 
-        public CommonTabShader( SelectDialog dialog, string name, string stateId, string path, string extension ) : base( dialog, name, stateId, SelectResultType.GameUi ) {
+        public CommonTabShader( SelectDialog dialog, string name, string stateId, string path, string extension ) : base( dialog, name, stateId ) {
             Path = path;
             Extension = extension;
         }
@@ -23,10 +23,10 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( new Dictionary<string, string>() {
+            Dialog.DrawPaths( new Dictionary<string, string>() {
                 { "DX9", Selected.Path },
                 { "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ) }
-            }, Selected.Name );
+            }, Selected.Name, SelectResultType.GameUi );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

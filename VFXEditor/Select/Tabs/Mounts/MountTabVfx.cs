@@ -46,7 +46,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Path, Selected.Name );
+            Dialog.DrawPaths( Loaded.Path, Selected.Name, SelectResultType.GameMount );
         }
     }
 }

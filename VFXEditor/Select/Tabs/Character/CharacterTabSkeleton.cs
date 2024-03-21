@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Character {
         private readonly string Extension;
         private readonly bool HairFace;
 
-        public CharacterTabSkeleton( SelectDialog dialog, string name, string prefix, string extension, bool hairFace ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) {
+        public CharacterTabSkeleton( SelectDialog dialog, string name, string prefix, string extension, bool hairFace ) : base( dialog, name, "Character" ) {
             Prefix = prefix;
             Extension = extension;
             HairFace = hairFace;
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded.BodyPath, $"{Selected.Name} Body" );
+            Dialog.DrawPaths( Loaded.BodyPath, $"{Selected.Name} Body", SelectResultType.GameCharacter );
 
             if( !HairFace ) return;
 
@@ -49,12 +49,12 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Hair" ) ) {
-                DrawPaths( Loaded.HairPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.HairPaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
 
             if( ImGui.BeginTabItem( "Face" ) ) {
-                DrawPaths( Loaded.FacePaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.FacePaths, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }

@@ -1,10 +1,9 @@
 using Lumina.Excel.GeneratedSheets;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabScd : SelectTab<CommonRow> {
-        public CommonTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Common-Scd", SelectResultType.GameMisc ) { }
+        public CommonTabScd( SelectDialog dialog, string name ) : base( dialog, name, "Common-Scd" ) { }
 
         // ===== LOADING =====
 
@@ -20,7 +19,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
             foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
                 var name = line.Name.ToString();
-                var path = name.StartsWith( "/" ) ? $"sound{line.Name.ToString().ToLower()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLower()}.scd";
+                var path = name.StartsWith( '/' ) ? $"sound{line.Name.ToString().ToLower()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLower()}.scd";
                 Items.Add( new( idx++, path, name, 0 ) );
             }
         }
@@ -28,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.Path, Selected.Name );
+            Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameMisc );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

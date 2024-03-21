@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Tabs.Character {
     }
 
     public class CharacterTabMdl : SelectTab<CharacterRow, SelectedMdl> {
-        public CharacterTabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Character", SelectResultType.GameCharacter ) { }
+        public CharacterTabMdl( SelectDialog dialog, string name ) : base( dialog, name, "Character" ) { }
 
         // ===== LOADING =====
 
@@ -36,23 +36,23 @@ namespace VfxEditor.Select.Tabs.Character {
             if( !tabBar ) return;
 
             if( ImGui.BeginTabItem( "Faces" ) ) {
-                DrawPaths( Loaded.Faces, Selected.Name );
+                Dialog.DrawPaths( Loaded.Faces, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Bodies" ) ) {
-                DrawPaths( Loaded.Bodies, Selected.Name );
+                Dialog.DrawPaths( Loaded.Bodies, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Hairs" ) ) {
-                DrawPaths( Loaded.Hairs, Selected.Name );
+                Dialog.DrawPaths( Loaded.Hairs, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Ears" ) ) {
-                DrawPaths( Loaded.Ears, Selected.Name );
+                Dialog.DrawPaths( Loaded.Ears, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
             if( ImGui.BeginTabItem( "Tails" ) ) {
-                DrawPaths( Loaded.Tails, Selected.Name );
+                Dialog.DrawPaths( Loaded.Tails, Selected.Name, SelectResultType.GameCharacter );
                 ImGui.EndTabItem();
             }
         }

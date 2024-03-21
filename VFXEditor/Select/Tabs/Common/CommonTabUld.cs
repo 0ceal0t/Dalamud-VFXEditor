@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabUld : SelectTab<CommonRow> {
-        public CommonTabUld( SelectDialog dialog, string name ) : base( dialog, name, "Common-Uld", SelectResultType.GameUi ) { }
+        public CommonTabUld( SelectDialog dialog, string name ) : base( dialog, name, "Common-Uld" ) { }
 
         // ===== LOADING =====
 
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Selected.Path, Selected.Name );
+            Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameUi );
         }
 
         protected override string GetName( CommonRow item ) => item.Name;

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Housing {
     public class HousingTab : SelectTab<HousingRow, ParsedPaths> {
-        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Housing", SelectResultType.GameHousing ) { }
+        public HousingTab( SelectDialog dialog, string name ) : base( dialog, name, "Housing" ) { }
 
         // ===== LOADING =====
 
@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Housing {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
-            DrawPaths( Loaded.Paths, Selected.Name );
+            Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameHousing );
         }
 
         protected override string GetName( HousingRow item ) => item.Name;

@@ -9,7 +9,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         }
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameEmote );
         }
     }
 }

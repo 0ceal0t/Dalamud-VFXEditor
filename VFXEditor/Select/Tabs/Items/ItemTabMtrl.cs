@@ -75,10 +75,10 @@ namespace VfxEditor.Select.Tabs.Items {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( Loaded.IsWeapon ) {
-                DrawPaths( Loaded.WeaponPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.WeaponPaths, Selected.Name, SelectResultType.GameItem );
             }
             else {
-                DrawPaths( Loaded.ArmorPaths, Selected.Name );
+                Dialog.DrawPaths( Loaded.ArmorPaths, Selected.Name, SelectResultType.GameItem );
             }
         }
 

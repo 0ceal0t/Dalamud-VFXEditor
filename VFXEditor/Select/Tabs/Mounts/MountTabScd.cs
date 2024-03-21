@@ -7,10 +7,10 @@ namespace VfxEditor.Select.Tabs.Mounts {
         public override void LoadSelection( MountRow item, out object loaded ) { loaded = new(); }
 
         protected override void DrawSelected() {
-            DrawPaths( new Dictionary<string, string>() {
+            Dialog.DrawPaths( new Dictionary<string, string>() {
                 { "Mount", Selected.Sound },
                 { "Bgm", Selected.Bgm },
-            }, Selected.Name );
+            }, Selected.Name, SelectResultType.GameMount );
         }
     }
 }

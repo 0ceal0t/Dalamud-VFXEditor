@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         private readonly string Prefix;
         private readonly string Extension;
 
-        public SkeletonTabArmor( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor", SelectResultType.GameItem ) {
+        public SkeletonTabArmor( SelectDialog dialog, string name, string prefix, string extension ) : base( dialog, name, "Skeleton-Armor" ) {
             Prefix = prefix;
             Extension = extension;
         }
@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameItem );
         }
     }
 }

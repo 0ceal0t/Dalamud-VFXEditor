@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Items {
     public abstract class ItemTab<T> : SelectTab<ItemRow, T> where T : class {
         private readonly ItemTabFilter Filter;
 
-        public ItemTab( SelectDialog dialog, string name, string stateId, ItemTabFilter filter ) : base( dialog, name, stateId, SelectResultType.GameItem ) {
+        public ItemTab( SelectDialog dialog, string name, string stateId, ItemTabFilter filter ) : base( dialog, name, stateId ) {
             Filter = filter;
         }
 

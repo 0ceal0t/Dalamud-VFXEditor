@@ -28,7 +28,7 @@ namespace VfxEditor.Select.Tabs.Voice {
             "c"
         ] );
 
-        public VoiceTab( SelectDialog dialog, string name ) : base( dialog, name, "Voice", SelectResultType.GameCharacter ) { }
+        public VoiceTab( SelectDialog dialog, string name ) : base( dialog, name, "Voice" ) { }
 
         // ===== LOADING =====
 
@@ -53,7 +53,7 @@ namespace VfxEditor.Select.Tabs.Voice {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawPaths( Loaded, Selected.Name );
+            Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameCharacter );
         }
 
         protected override string GetName( VoiceRow item ) => item.Name;

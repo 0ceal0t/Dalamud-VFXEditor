@@ -15,7 +15,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         protected override void DrawSelected() {
             var path = Selected.GetSkeletonPath( Prefix, Extension );
             if( Dalamud.DataManager.FileExists( path ) ) {
-                DrawPaths( path, Selected.Name );
+                Dialog.DrawPaths( path, Selected.Name, SelectResultType.GameMount );
             }
         }
     }

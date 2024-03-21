@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
     }
 
     public class BgmQuestTab : SelectTab<BgmQuestRow, SelectedBgmQuest> {
-        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "BgmQuest", SelectResultType.GameMusic ) { }
+        public BgmQuestTab( SelectDialog dialog, string name ) : base( dialog, name, "BgmQuest" ) { }
 
         // ===== LOADING =====
 
@@ -34,7 +34,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            DrawBgmSituation( Selected.Name, Loaded.Situation );
+            Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
 
         protected override string GetName( BgmQuestRow item ) => item.Name;
