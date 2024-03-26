@@ -29,12 +29,12 @@ namespace VfxEditor.UldFormat.Widget {
         public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldWidget( List<UldComponent> components ) {
+        public UldWidget( uint id, List<UldComponent> components ) : base( id ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( components, this, NodeSplitView ) );
+                ( UldNode item, int idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
         }
 
-        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );

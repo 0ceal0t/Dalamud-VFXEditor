@@ -51,16 +51,14 @@ namespace VfxEditor.UldFormat.Component {
         public readonly List<UldNode> Nodes = [];
         public readonly CommandSplitView<UldNode> NodeSplitView;
 
-        public UldComponent( List<UldComponent> components ) {
+        public UldComponent( uint id, List<UldComponent> components ) : base( id ) {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( components, this, NodeSplitView ) );
-
-            Id.Value = 1001; // default
+                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
         }
 
-        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( components ) {
+        public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );

@@ -82,7 +82,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         private readonly int DelayedSize;
         private readonly int DelayedNodeType;
 
-        public UldNode( List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) {
+        public UldNode( uint id, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : base( id ) {
             Parent = parent;
             Components = components;
             Type = new( this, "Type" );
@@ -130,7 +130,7 @@ namespace VfxEditor.UldFormat.Component.Node {
             );
         }
 
-        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : this( components, parent, nodeView ) {
+        public UldNode( BinaryReader reader, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : this( 0, components, parent, nodeView ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );

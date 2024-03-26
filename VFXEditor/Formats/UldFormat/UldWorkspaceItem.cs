@@ -7,6 +7,10 @@ namespace VfxEditor.UldFormat {
         public readonly ParsedUInt Id = new( "Id", 1, size: 4 );
         public string Renamed = "";
 
+        public UldWorkspaceItem( uint id ) {
+            Id.Value = id;
+        }
+
         public int GetIdx() => ( int )Id.Value;
 
         public void SetIdx( int idx ) { Id.Value = ( uint )idx; }
@@ -28,5 +32,10 @@ namespace VfxEditor.UldFormat {
         public virtual void SetChildrenRename( Dictionary<string, string> renameDict ) { }
 
         public void DrawRename( string label = "Name##Rename" ) => IWorkspaceUiItem.DrawRenameInput( this, label, ref Renamed );
+
+        public static uint GetNextId<T>( List<T> items, uint defaultId = 1 ) where T : UldWorkspaceItem {
+            if( items.Count == 0 ) return defaultId;
+            return items[^1].Id.Value + 1;
+        }
     }
 }

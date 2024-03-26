@@ -13,12 +13,12 @@ namespace VfxEditor.UldFormat.Timeline {
         public readonly CommandSplitView<UldFrame> FramesView1;
         public readonly CommandSplitView<UldFrame> FramesView2;
 
-        public UldTimeline() {
+        public UldTimeline( uint id ) : base( id ) {
             FramesView1 = new( "Group", Frames1, true, null, () => new UldFrame() );
             FramesView2 = new( "Group", Frames2, true, null, () => new UldFrame() );
         }
 
-        public UldTimeline( BinaryReader reader ) : this() {
+        public UldTimeline( BinaryReader reader ) : this( 0 ) {
             var pos = reader.BaseStream.Position;
 
             Id.Read( reader );

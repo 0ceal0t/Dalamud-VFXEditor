@@ -11,9 +11,9 @@ namespace VfxEditor.UldFormat.Texture {
 
         private bool ShowHd = false;
 
-        public UldTexture() { }
+        public UldTexture( uint id ) : base( id ) { }
 
-        public UldTexture( BinaryReader reader, char minorVersion ) {
+        public UldTexture( BinaryReader reader, char minorVersion ) : this( 0 ) {
             Id.Read( reader );
             Path.Read( reader );
             IconId.Read( reader );
