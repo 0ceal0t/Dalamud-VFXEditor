@@ -87,6 +87,15 @@ namespace VfxEditor.FileBrowser {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) UpdateFiles();
+
+                ImGui.SameLine();
+                var isFavorite = Plugin.Configuration.IsFileBrowserFavorite( CurrentPath );
+                using( var star = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE, isFavorite ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.Star.ToIconString() ) ) {
+                        if( isFavorite ) Plugin.Configuration.RemoveFileBrowserFavorite( CurrentPath );
+                        else Plugin.Configuration.AddFileBrowserFavorite( CurrentPath );
+                    }
+                }
             }
 
             ImGui.SameLine();

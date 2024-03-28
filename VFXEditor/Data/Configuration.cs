@@ -126,6 +126,7 @@ namespace VfxEditor {
         public bool FileBrowserImagePreview = true;
         public bool FileBrowserOverwriteDontAsk = false;
         public List<FileBrowserSidebarItem> FileBrowserRecent = [];
+        public List<FileBrowserSidebarItem> FileBrowserFavorites = [];
 
         public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
         public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
@@ -232,6 +233,8 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.DisableGposeUiHide = !HideWithUI;
         }
 
+        // ======================
+
         public void AddFileBrowserRecent( string path ) {
             if( FileBrowserRecent.Any( x => x.Location == path ) ) return;
 
@@ -242,6 +245,25 @@ namespace VfxEditor {
             } );
 
             while( FileBrowserRecent.Count > 10 ) FileBrowserRecent.RemoveAt( 0 );
+            Save();
+        }
+
+        public bool IsFileBrowserFavorite( string path ) => FileBrowserFavorites.Any( x => x.Location == path );
+
+        public void RemoveFileBrowserFavorite( string path ) {
+            FileBrowserFavorites.RemoveAll( x => x.Location == path );
+            Save();
+        }
+
+        public void AddFileBrowserFavorite( string path ) {
+            if( IsFileBrowserFavorite( path ) ) return;
+
+            FileBrowserFavorites.Add( new FileBrowserSidebarItem {
+                Icon = FontAwesomeIcon.Folder,
+                Location = path,
+                Text = Path.GetFileName( path )
+            } );
+
             Save();
         }
 

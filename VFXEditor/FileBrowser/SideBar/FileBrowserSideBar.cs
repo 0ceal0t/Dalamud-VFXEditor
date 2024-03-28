@@ -123,6 +123,7 @@ namespace VfxEditor.FileBrowser.SideBar {
             DrawCategory( Drives, "Drives", FontAwesomeIcon.Display, ref idx );
             DrawCategory( QuickAccess, "Quick Access", FontAwesomeIcon.Home, ref idx );
             DrawCategory( Pinned, "Pinned", FontAwesomeIcon.Thumbtack, ref idx );
+            DrawCategory( Plugin.Configuration.FileBrowserFavorites, "Favorites", FontAwesomeIcon.Star, ref idx );
             DrawCategory( Plugin.Configuration.FileBrowserRecent, "Recent", FontAwesomeIcon.History, ref idx );
         }
 
