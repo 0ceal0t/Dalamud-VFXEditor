@@ -74,7 +74,6 @@ namespace VfxEditor.FileBrowser {
             string currentPath,
             string defaultFileName,
             string defaultExtension,
-            List<FileBrowserSidebarItem> recent,
             CommandManager command
         ) {
             Id = id;
@@ -89,7 +88,7 @@ namespace VfxEditor.FileBrowser {
             FileNameInput = DefaultFileName;
             Command = command;
 
-            SideBar = new( this, recent );
+            SideBar = new( this );
             Filters = new( this, filters );
             Preview = new();
 

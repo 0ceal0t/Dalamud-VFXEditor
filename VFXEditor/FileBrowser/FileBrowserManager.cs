@@ -1,20 +1,14 @@
-using Dalamud.Interface;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using VfxEditor.Data.Command;
-using VfxEditor.FileBrowser.SideBar;
 
 namespace VfxEditor.FileBrowser {
     public static class FileBrowserManager {
         private static FileBrowserDialog Dialog;
         private static string SavedPath = ".";
         private static Action<bool, string> Callback;
-        private static readonly List<FileBrowserSidebarItem> Recent = [];
 
         public static void Dispose() {
             Reset();
-            Recent.Clear();
         }
 
         public static void OpenFileDialog( string title, string filters, Action<bool, string> callback ) {
@@ -51,7 +45,7 @@ namespace VfxEditor.FileBrowser {
             Reset();
             Callback = callback;
             // Save CommandManager so we can use it for later
-            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, Recent, CommandManager.Current );
+            Dialog = new FileBrowserDialog( id, title, modal, flags, folderDialog, filters, SavedPath, defaultFileName, defaultExtension, CommandManager.Current );
             Dialog.Show();
         }
 
@@ -62,7 +56,7 @@ namespace VfxEditor.FileBrowser {
                 Callback( Dialog.GetIsOk(), Dialog.GetResult() );
 
                 SavedPath = Dialog.GetCurrentPath();
-                AddRecent( SavedPath );
+                Plugin.Configuration.AddFileBrowserRecent( SavedPath );
                 Reset();
             }
         }
@@ -72,22 +66,6 @@ namespace VfxEditor.FileBrowser {
             Dialog?.Hide();
             Dialog = null;
             Callback = null;
-        }
-
-        private static void AddRecent( string path ) {
-            foreach( var recent in Recent ) {
-                if( recent.Location == path ) return;
-            }
-
-            Recent.Add( new FileBrowserSidebarItem {
-                Icon = FontAwesomeIcon.Folder,
-                Location = path,
-                Text = Path.GetFileName( path )
-            } );
-
-            while( Recent.Count > 10 ) {
-                Recent.RemoveAt( 0 );
-            }
         }
     }
 }

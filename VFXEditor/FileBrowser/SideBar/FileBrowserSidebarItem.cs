@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 
 namespace VfxEditor.FileBrowser.SideBar {
     public class FileBrowserSidebarItem {
@@ -11,10 +11,11 @@ namespace VfxEditor.FileBrowser.SideBar {
         public bool Draw( bool selected ) {
             var ret = false;
 
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Selectable( Icon.ToIconString(), selected ) ) ret = true;
             }
-            ImGui.SameLine( 25 );
+            ImGui.SameLine();
             ImGui.Text( Text );
 
             return ret;

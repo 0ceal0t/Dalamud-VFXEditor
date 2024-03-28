@@ -1,14 +1,13 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
-using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.SideBar {
     public class FileBrowserSideBar {
@@ -18,16 +17,13 @@ namespace VfxEditor.FileBrowser.SideBar {
 
         private readonly ConcurrentQueue<FileBrowserSidebarItem> Drives = new();
         private readonly ConcurrentQueue<FileBrowserSidebarItem> QuickAccess = new();
-        private readonly ConcurrentQueue<FileBrowserSidebarItem> Favorites = new();
-        private readonly List<FileBrowserSidebarItem> Recent;
+        private readonly ConcurrentQueue<FileBrowserSidebarItem> Pinned = new();
 
-        public FileBrowserSideBar( FileBrowserDialog dialog, List<FileBrowserSidebarItem> recent ) {
+        public FileBrowserSideBar( FileBrowserDialog dialog ) {
             Dialog = dialog;
-            Recent = recent;
-
             PopulateDrives();
             PopulateQuickAccess();
-            PopulateFavorites();
+            PopulatePinned();
         }
 
         private async void PopulateDrives() {
@@ -98,11 +94,11 @@ namespace VfxEditor.FileBrowser.SideBar {
             } );
         }
 
-        private async void PopulateFavorites() {
+        private async void PopulatePinned() {
             await Task.Run( () => {
-                if( GetQuickAccessFolders( out var folders ) ) {
+                if( GetPinnedFolders( out var folders ) ) {
                     foreach( var (name, path) in folders ) {
-                        Favorites.Enqueue( new FileBrowserSidebarItem {
+                        Pinned.Enqueue( new FileBrowserSidebarItem {
                             Icon = FontAwesomeIcon.Folder,
                             Location = path,
                             Text = $"{name}"
@@ -124,39 +120,42 @@ namespace VfxEditor.FileBrowser.SideBar {
 
             var idx = 0;
 
-            foreach( var item in Drives ) DrawSideBarItem( item, ref idx );
-            foreach( var item in QuickAccess ) DrawSideBarItem( item, ref idx );
-            DrawCategory( Favorites, "Favorites", FontAwesomeIcon.Star, ref idx );
-            DrawCategory( Recent, "Recent", FontAwesomeIcon.History, ref idx );
+            DrawCategory( Drives, "Drives", FontAwesomeIcon.Display, ref idx );
+            DrawCategory( QuickAccess, "Quick Access", FontAwesomeIcon.Home, ref idx );
+            DrawCategory( Pinned, "Pinned", FontAwesomeIcon.Thumbtack, ref idx );
+            DrawCategory( Plugin.Configuration.FileBrowserRecent, "Recent", FontAwesomeIcon.History, ref idx );
         }
 
-        private void DrawCategory( IEnumerable<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
-            if( items == null || items.Count() == 0 ) return;
+        private unsafe void DrawCategory( IEnumerable<FileBrowserSidebarItem> items, string name, FontAwesomeIcon icon, ref int idx ) {
+            using var indent = ImRaii.PushStyle( ImGuiStyleVar.IndentSpacing, 15f );
+            using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 0, 0 ) );
+
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 5 );
+            using var disabled = ImRaii.PushColor( ImGuiCol.Text, *ImGui.GetStyleColorVec4( ImGuiCol.TextDisabled ) );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+            using var tree = ImRaii.TreeNode( icon.ToIconString(), ImGuiTreeNodeFlags.DefaultOpen );
+            font.Dispose();
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) { ImGui.SameLine(); }
+            ImGui.Text( name );
+            disabled.Dispose();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            using( var disabled = ImRaii.Disabled() ) {
-                UiUtils.IconText( icon );
-                ImGui.SameLine();
-                ImGui.Text( name );
-            }
 
+            if( !tree ) return;
+            if( items == null ) return;
             foreach( var item in items ) {
-                DrawSideBarItem( item, ref idx );
-            }
-        }
+                using var _ = ImRaii.PushId( idx++ );
 
-        private void DrawSideBarItem( FileBrowserSidebarItem item, ref int idx ) {
-            using var _ = ImRaii.PushId( idx );
-
-            if( item.Draw( item == Selected ) ) {
-                Dialog.SetPath( item.Location, true );
-                Selected = item;
+                if( item.Draw( item == Selected ) ) {
+                    Dialog.SetPath( item.Location, true );
+                    Selected = item;
+                }
             }
 
-            idx++;
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
 
-        private static bool GetQuickAccessFolders( out List<(string Name, string Path)> folders ) {
+        private static bool GetPinnedFolders( out List<(string Name, string Path)> folders ) {
             folders = [];
             try {
                 var shellAppType = Type.GetTypeFromProgID( "Shell.Application" );
@@ -169,10 +168,8 @@ namespace VfxEditor.FileBrowser.SideBar {
                 ] );
                 if( obj == null ) return false;
 
-
                 foreach( var item in ( ( dynamic )obj ).Items() ) {
                     if( !item.IsLink && !item.IsFolder ) continue;
-
                     folders.Add( (item.Name, item.Path) );
                 }
 

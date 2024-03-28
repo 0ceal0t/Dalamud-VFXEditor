@@ -1,12 +1,15 @@
 using Dalamud.Configuration;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.DirectX.Lights;
+using VfxEditor.FileBrowser.SideBar;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Library;
 using VfxEditor.Select;
@@ -122,6 +125,7 @@ namespace VfxEditor {
         public bool FileBrowserPreviewOpen = true;
         public bool FileBrowserImagePreview = true;
         public bool FileBrowserOverwriteDontAsk = false;
+        public List<FileBrowserSidebarItem> FileBrowserRecent = [];
 
         public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
         public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
@@ -226,6 +230,19 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.DisableUserUiHide = !HideWithUI;
             Dalamud.PluginInterface.UiBuilder.DisableCutsceneUiHide = !HideWithUI;
             Dalamud.PluginInterface.UiBuilder.DisableGposeUiHide = !HideWithUI;
+        }
+
+        public void AddFileBrowserRecent( string path ) {
+            if( FileBrowserRecent.Any( x => x.Location == path ) ) return;
+
+            FileBrowserRecent.Add( new FileBrowserSidebarItem {
+                Icon = FontAwesomeIcon.Folder,
+                Location = path,
+                Text = Path.GetFileName( path )
+            } );
+
+            while( FileBrowserRecent.Count > 10 ) FileBrowserRecent.RemoveAt( 0 );
+            Save();
         }
 
         // =================
