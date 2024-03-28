@@ -4,11 +4,11 @@ using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select.Lists;
 using VfxEditor.Ui;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select {
     public enum SelectResultType {
@@ -50,7 +50,6 @@ namespace VfxEditor.Select {
     }
 
     public abstract partial class SelectDialog : DalamudWindow {
-        public static readonly uint FavoriteColor = ImGui.GetColorU32( new Vector4( 1.0f, 0.878f, 0.1058f, 1 ) );
         public static readonly List<string> LoggedFiles = [];
 
         public readonly IFileManagerSelect Manager;
@@ -130,7 +129,7 @@ namespace VfxEditor.Select {
             var isFavorite = IsFavorite( selectResult );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-            using( var color = ImRaii.PushColor( ImGuiCol.Text, FavoriteColor, isFavorite ) ) {
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE, isFavorite ) ) {
                 ImGui.Text( FontAwesomeIcon.Star.ToIconString() );
 
                 if( ImGui.IsItemClicked() ) {

@@ -1,4 +1,6 @@
+using ImGuiNET;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.UldFormat.PartList;
@@ -73,7 +75,29 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         public override void Draw() {
             PartListId.Draw();
             PartId.Draw();
-            PartId.Selected?.DrawImage( false );
+
+            var part = PartId.Selected;
+            if( part != null ) {
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+
+                var mult = part.ShowHd ? 2f : 1f;
+                var pos = ImGui.GetCursorScreenPos();
+                var size = part.Size.Value;
+                var width = size.X;
+                var height = size.Y;
+
+                part.DrawImage( false );
+                var drawList = ImGui.GetWindowDrawList();
+                var color = ImGui.ColorConvertFloat4ToU32( new( 1f, 0f, 0f, 1f ) );
+
+                drawList.AddLine( pos + new Vector2( LeftOffset.Value, 0 ) * mult, pos + new Vector2( LeftOffset.Value, height ) * mult, color, 1f );
+                drawList.AddLine( pos + new Vector2( width - RightOffset.Value, 0 ) * mult, pos + new Vector2( width - RightOffset.Value, height ) * mult, color, 1f );
+
+                drawList.AddLine( pos + new Vector2( 0, TopOffset.Value ) * mult, pos + new Vector2( width, TopOffset.Value ) * mult, color, 1f );
+                drawList.AddLine( pos + new Vector2( 0, height - BottonOffset.Value ) * mult, pos + new Vector2( width, height - BottonOffset.Value ) * mult, color, 1f );
+
+                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            }
 
             GridParts.Draw();
             GridRender.Draw();

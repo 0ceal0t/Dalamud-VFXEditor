@@ -16,7 +16,7 @@ namespace VfxEditor.UldFormat.PartList {
         );
         public UldTexture CurrentTexture => TextureId.Selected;
 
-        private bool ShowHd = false;
+        public bool ShowHd = false;
 
         public UldPartItem() { }
 

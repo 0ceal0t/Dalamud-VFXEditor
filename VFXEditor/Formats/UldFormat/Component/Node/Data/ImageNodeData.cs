@@ -12,7 +12,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedByteBool FlipH = new( "Flip H" );
         private readonly ParsedByteBool FlipV = new( "Flip V" );
         private readonly ParsedInt Wrap = new( "Wrap", size: 1 );
-        private readonly ParsedInt Unknown2 = new( "Unknown 2", size: 1 );
+        private readonly ParsedInt DrawMode = new( "Draw Mode", size: 1 );
 
         public ImageNodeData() {
             PartListId = new( "Part List", 0,
@@ -35,7 +35,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             FlipH.Read( reader );
             FlipV.Read( reader );
             Wrap.Read( reader );
-            Unknown2.Read( reader );
+            DrawMode.Read( reader );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -45,7 +45,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             FlipH.Write( writer );
             FlipV.Write( writer );
             Wrap.Write( writer );
-            Unknown2.Write( writer );
+            DrawMode.Write( writer );
         }
 
         public override void Draw() {
@@ -57,7 +57,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             FlipV.Draw();
             Wrap.Draw();
             Unknown1.Draw();
-            Unknown2.Draw();
+            DrawMode.Draw();
         }
     }
 }
