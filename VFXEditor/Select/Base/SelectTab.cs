@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using VfxEditor.Select.Base;
 using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
@@ -28,7 +29,7 @@ namespace VfxEditor.Select {
         public bool WaitingForItems = false;
     }
 
-    public abstract class SelectTab<T> : SelectTab where T : class {
+    public abstract class SelectTab<T> : SelectTab where T : class, ISelectItem {
         // Using this so that we don't have to query for tab entries multiple times
         private static readonly Dictionary<string, object> States = [];
 
@@ -54,11 +55,7 @@ namespace VfxEditor.Select {
             }
         }
 
-        protected virtual uint GetIconId( T item ) => 0;
-
-        protected abstract string GetName( T item );
-
-        protected virtual bool CheckMatch( T item, string searchInput ) => SelectUiUtils.Matches( GetName( item ), searchInput );
+        protected virtual bool CheckMatch( T item, string searchInput ) => SelectUiUtils.Matches( item.GetName(), searchInput );
 
         protected abstract void DrawSelected();
 
@@ -100,7 +97,9 @@ namespace VfxEditor.Select {
             ImGui.TableNextColumn();
 
             using( var tree = ImRaii.Child( "Tree" ) ) {
-                SelectUiUtils.DisplayVisible( Searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+                var iconOnLeft = Plugin.Configuration.SelectDialogIconsOnLeft && typeof( T ).IsAssignableTo( typeof( ISelectItemWithIcon ) );
+                var itemHeight = iconOnLeft ? 25 : ImGui.GetTextLineHeight() + ImGui.GetStyle().ItemSpacing.Y;
+                SelectUiUtils.DisplayVisible( Searched.Count, itemHeight, out var preItems, out var showItems, out var postItems );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
 
                 if( resetScroll ) ImGui.SetScrollHereY();
@@ -108,10 +107,39 @@ namespace VfxEditor.Select {
                 var idx = 0;
                 foreach( var item in Searched ) {
                     if( idx < preItems || idx > ( preItems + showItems ) ) { idx++; continue; }
-
                     using var __ = ImRaii.PushId( idx );
-                    if( ImGui.Selectable( GetName( item ), Selected == item ) ) {
-                        if( Selected != item ) Select( item ); // not what is currently selected
+
+                    if( iconOnLeft ) {
+                        // based on https://github.com/Etheirys/Brio/blob/93950203668f672f8ff67a4fcf9d8758418b783f/Brio/UI/Controls/Selectors/GearSelector.cs#L12
+                        var startPos = ImGui.GetCursorPos();
+                        if( ImGui.Selectable( "###Entry", Selected == item, ImGuiSelectableFlags.AllowDoubleClick, new Vector2( 0, itemHeight ) ) && Selected != item ) Select( item );
+                        var endPos = ImGui.GetCursorPos();
+
+                        ImGui.SetCursorPos( startPos );
+                        using( var group = ImRaii.Group() ) {
+                            if( group ) {
+                                var iconId = ( item as ISelectItemWithIcon ).GetIconId();
+                                if( iconId <= 0 ) {
+                                    ImGui.Dummy( new( itemHeight, itemHeight ) );
+                                }
+                                else {
+                                    var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+                                    if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
+                                        ImGui.Image( icon.ImGuiHandle, new Vector2( itemHeight, itemHeight ) );
+                                    }
+                                }
+
+                                ImGui.SameLine();
+                                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + ( itemHeight - ImGui.GetTextLineHeight() ) / 2f );
+                                ImGui.Text( item.GetName() );
+                            }
+
+
+                        }
+                        ImGui.SetCursorPos( endPos );
+                    }
+                    else {
+                        if( ImGui.Selectable( item.GetName(), Selected == item ) && Selected != item ) Select( item );
                     }
 
                     idx++;
@@ -129,9 +157,9 @@ namespace VfxEditor.Select {
         protected virtual void DrawInner() {
             using var child = ImRaii.Child( "Child" );
 
-            ImGui.Text( GetName( Selected ) );
+            ImGui.Text( Selected.GetName() );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawIconId( GetIconId( Selected ) );
+            if( ISelectItemWithIcon.HasIcon( Selected, out var iconId ) ) DrawIcon( iconId );
             DrawSelected();
         }
 
@@ -158,7 +186,7 @@ namespace VfxEditor.Select {
 
         public abstract void LoadData();
 
-        protected static void DrawIconId( uint iconId ) {
+        protected static void DrawIcon( uint iconId ) {
             if( iconId <= 0 ) return;
 
             var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
@@ -171,7 +199,7 @@ namespace VfxEditor.Select {
 
     // ======= LOAD DOUBLE ========
 
-    public abstract class SelectTab<T, S> : SelectTab<T> where T : class where S : class {
+    public abstract class SelectTab<T, S> : SelectTab<T> where T : class, ISelectItem where S : class {
         protected S Loaded;
 
         protected SelectTab( SelectDialog dialog, string name, string stateId ) : base( dialog, name, stateId ) { }
@@ -184,9 +212,9 @@ namespace VfxEditor.Select {
         protected override void DrawInner() {
             if( Loaded != null ) {
                 using var child = ImRaii.Child( "Child" );
-                ImGui.Text( GetName( Selected ) );
+                ImGui.Text( Selected.GetName() );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                DrawIconId( GetIconId( Selected ) );
+                if( ISelectItemWithIcon.HasIcon( Selected, out var iconId ) ) DrawIcon( iconId );
                 DrawSelected();
             }
             else ImGui.Text( "No data found" );

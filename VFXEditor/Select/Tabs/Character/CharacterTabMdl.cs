@@ -57,8 +57,6 @@ namespace VfxEditor.Select.Tabs.Character {
             }
         }
 
-        protected override string GetName( CharacterRow item ) => item.Name;
-
         private static List<(string, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
             ids
             .Select( id => (id, item.GetMdl( part, id )) )

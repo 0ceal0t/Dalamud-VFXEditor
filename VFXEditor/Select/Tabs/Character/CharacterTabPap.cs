@@ -107,7 +107,5 @@ namespace VfxEditor.Select.Tabs.Character {
                 ImGui.EndTabItem();
             }
         }
-
-        protected override string GetName( CharacterRow item ) => item.Name;
     }
 }

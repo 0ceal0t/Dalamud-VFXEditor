@@ -47,8 +47,10 @@ namespace VfxEditor {
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
-        public bool SelectDialogLogOpen = true;
         public bool UseDegreesForAngles = false;
+
+        public bool SelectDialogLogOpen = true;
+        public bool SelectDialogIconsOnLeft = true;
 
         public bool OverlayLimit = true;
         public float OverlayRemoveDelay = 1;
@@ -65,7 +67,6 @@ namespace VfxEditor {
 
         public bool VfxSpawnLoop = false;
         public float VfxSpawnDelay = 0.1f;
-        public bool VfxSpawnSplit = false;
 
         // ===== [ OBSOLETE ] =======
         public List<SelectResult> RecentSelects = [];
@@ -350,7 +351,7 @@ namespace VfxEditor {
                 ImGui.SetNextItemWidth( 135 );
                 if( ImGui.InputFloat( "Overlay Remove Delay", ref OverlayRemoveDelay ) ) Save();
                 if( ImGui.Checkbox( "Limit Overlay by Distance", ref OverlayLimit ) ) Save();
-                if( ImGui.Checkbox( "Split Spawn in Select Dialog", ref VfxSpawnSplit ) ) Save();
+                if( ImGui.Checkbox( "Show Icons in Select Dialog", ref SelectDialogIconsOnLeft ) ) Save();
             }
         }
 

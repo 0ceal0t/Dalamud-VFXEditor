@@ -17,7 +17,5 @@ namespace VfxEditor.Select.Tabs.Bgm {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameMusic );
         }
-
-        protected override string GetName( BgmRow item ) => item.Name;
     }
 }

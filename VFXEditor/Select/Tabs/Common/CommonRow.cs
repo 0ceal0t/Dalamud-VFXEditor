@@ -1,5 +1,7 @@
+using VfxEditor.Select.Base;
+
 namespace VfxEditor.Select.Tabs.Common {
-    public class CommonRow {
+    public class CommonRow : ISelectItem {
         public readonly string Name;
         public readonly ushort Icon;
         public readonly string Path;
@@ -11,5 +13,7 @@ namespace VfxEditor.Select.Tabs.Common {
             Name = name;
             Icon = icon;
         }
+
+        public string GetName() => Name;
     }
 }

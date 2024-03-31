@@ -1,6 +1,7 @@
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Items {
     public struct ItemIds {
@@ -56,7 +57,7 @@ namespace VfxEditor.Select.Tabs.Items {
         Other
     }
 
-    public abstract class ItemRow {
+    public abstract class ItemRow : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -98,5 +99,8 @@ namespace VfxEditor.Select.Tabs.Items {
         }
 
         public string GetVfxPath( int idx ) => $"{RootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";
+
+        public string GetName() => Name;
+        public uint GetIconId() => Icon;
     }
 }

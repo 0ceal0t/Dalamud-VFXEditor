@@ -27,9 +27,5 @@ namespace VfxEditor.Select.Tabs.Actions {
 
             }, Selected.Name, SelectResultType.GameAction );
         }
-
-        protected override string GetName( ActionRow item ) => item.Name;
-
-        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

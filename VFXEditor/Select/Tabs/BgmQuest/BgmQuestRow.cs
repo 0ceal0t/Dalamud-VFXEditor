@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
-    public class BgmQuestRow {
+    public class BgmQuestRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort BgmId;
@@ -11,5 +12,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
             RowId = ( int )bgm.RowId;
             BgmId = bgm.BGM;
         }
+
+        public string GetName() => Name;
     }
 }

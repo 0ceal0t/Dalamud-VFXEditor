@@ -39,11 +39,8 @@ namespace VfxEditor.Select.Tabs.Common {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
+            DrawIcon( Selected.Icon );
             Dialog.DrawPaths( Selected.Path, Selected.Name, SelectResultType.GameMisc );
         }
-
-        protected override string GetName( CommonRow item ) => item.Name;
-
-        protected override uint GetIconId( CommonRow item ) => item.Icon;
     }
 }

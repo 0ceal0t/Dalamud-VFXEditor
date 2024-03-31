@@ -40,7 +40,5 @@ namespace VfxEditor.Select.Tabs.Npc {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Selected.AtchPath, Selected.Name, SelectResultType.GameNpc );
         }
-
-        protected override string GetName( NpcRow item ) => item.Name;
     }
 }

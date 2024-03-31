@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using VfxEditor.Select.Data;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Character {
     public enum CharacterPart {
@@ -22,7 +23,7 @@ namespace VfxEditor.Select.Tabs.Character {
         }
     }
 
-    public class CharacterRow {
+    public class CharacterRow : ISelectItem {
         public string Name => Data.Name;
         public readonly RacialData Data;
 
@@ -41,6 +42,8 @@ namespace VfxEditor.Select.Tabs.Character {
         public CharacterRow( RacialData data ) {
             Data = data;
         }
+
+        public string GetName() => Name;
 
         public string GetLoopPap( int id, string prefix ) => $"{PapPrefix}/emote/{prefix}pose" + id.ToString().PadLeft( 2, '0' ) + "_loop.pap";
 

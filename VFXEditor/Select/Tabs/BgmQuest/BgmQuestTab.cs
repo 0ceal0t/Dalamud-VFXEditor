@@ -37,8 +37,6 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
             Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
 
-        protected override string GetName( BgmQuestRow item ) => item.Name;
-
         public static BgmSituationStruct GetBgmSituation( ushort bgmId ) {
             if( bgmId < 1000 ) {
                 return new BgmSituationStruct {

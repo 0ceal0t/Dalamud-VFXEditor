@@ -29,7 +29,5 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
                 }
             }
         }
-
-        protected override string GetName( JournalCutsceneRow item ) => item.Name;
     }
 }

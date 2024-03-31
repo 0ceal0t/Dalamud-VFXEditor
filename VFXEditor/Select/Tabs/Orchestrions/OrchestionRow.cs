@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Orchestrions {
-    public class OrchestrionRow {
+    public class OrchestrionRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
 
@@ -9,5 +10,7 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
             Name = orchestrion.Name.ToString();
             RowId = ( int )orchestrion.RowId;
         }
+
+        public string GetName() => Name;
     }
 }

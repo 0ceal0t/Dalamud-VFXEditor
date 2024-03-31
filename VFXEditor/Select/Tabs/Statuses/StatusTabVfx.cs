@@ -26,9 +26,5 @@ namespace VfxEditor.Select.Tabs.Statuses {
                 { "Loop 3", Selected.LoopPath3 },
             }, Selected.Name, SelectResultType.GameStatus );
         }
-
-        protected override string GetName( StatusRow item ) => item.Name;
-
-        protected override uint GetIconId( StatusRow item ) => item.Icon;
     }
 }

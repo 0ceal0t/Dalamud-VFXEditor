@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
-    public class ActionRowPap {
+    public class ActionRowPap : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -47,5 +48,8 @@ namespace VfxEditor.Select.Tabs.Actions {
             else if( loadType == 0 ) return $"bt_common/resident/action.pap";
             return "";
         }
+
+        public string GetName() => Name;
+        public uint GetIconId() => Icon;
     }
 }

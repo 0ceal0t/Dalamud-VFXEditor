@@ -1,6 +1,7 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public enum EmoteRowType {
@@ -9,7 +10,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         PerJob
     }
 
-    public class EmoteRow {
+    public class EmoteRow : ISelectItemWithIcon {
         public readonly int RowId;
         public readonly ushort Icon;
         public readonly string Name;
@@ -46,5 +47,8 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
             return (null, 0);
         }
+
+        public string GetName() => Name;
+        public uint GetIconId() => Icon;
     }
 }

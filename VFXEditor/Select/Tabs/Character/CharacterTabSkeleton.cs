@@ -59,8 +59,6 @@ namespace VfxEditor.Select.Tabs.Character {
             }
         }
 
-        protected override string GetName( CharacterRow item ) => item.Name;
-
         private List<(string, uint, string)> GetPaths( CharacterRow item, IEnumerable<int> ids, string part, string name, Dictionary<int, uint> iconMap ) {
             return ids
                 .Select( id => (id, $"chara/human/{item.SkeletonId}/skeleton/{part}/{part[0]}{id:D4}/{Prefix}_{item.SkeletonId}{part[0]}{id:D4}.{Extension}") )

@@ -86,7 +86,8 @@ namespace VfxEditor.Select {
                 .Where( x => x.EndsWith( Extension ) && ( string.IsNullOrEmpty( LoggedFilesSearch ) || x.Contains( LoggedFilesSearch, System.StringComparison.CurrentCultureIgnoreCase ) ) )
                 .ToList();
 
-            SelectUiUtils.DisplayVisible( searched.Count, out var preItems, out var showItems, out var postItems, out var itemHeight );
+            var itemHeight = ImGui.GetTextLineHeight() + ImGui.GetStyle().ItemSpacing.Y;
+            SelectUiUtils.DisplayVisible( searched.Count, itemHeight, out var preItems, out var showItems, out var postItems );
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + preItems * itemHeight );
 
             if( ImGui.BeginTable( "Table", 1, ImGuiTableFlags.RowBg ) ) {

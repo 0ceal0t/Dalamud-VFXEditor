@@ -27,9 +27,5 @@ namespace VfxEditor.Select.Tabs.Statuses {
 
             Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );
         }
-
-        protected override string GetName( StatusRow item ) => item.Name;
-
-        protected override uint GetIconId( StatusRow item ) => item.Icon;
     }
 }

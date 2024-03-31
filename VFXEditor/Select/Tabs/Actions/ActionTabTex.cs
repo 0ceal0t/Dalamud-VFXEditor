@@ -28,9 +28,5 @@ namespace VfxEditor.Select.Tabs.Actions {
             if( Dalamud.DataManager.FileExists( hdPath ) ) paths.Add( "HD Icon", hdPath );
             Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameAction );
         }
-
-        protected override string GetName( ActionRow item ) => item.Name;
-
-        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

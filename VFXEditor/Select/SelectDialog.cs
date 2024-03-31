@@ -7,6 +7,7 @@ using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select.Lists;
+using VfxEditor.Select.Penumbra;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
 

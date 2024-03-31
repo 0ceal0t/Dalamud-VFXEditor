@@ -41,9 +41,5 @@ namespace VfxEditor.Select.Tabs.Actions {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
-
-        protected override string GetName( ActionRow item ) => item.Name;
-
-        protected override uint GetIconId( ActionRow item ) => item.Icon;
     }
 }

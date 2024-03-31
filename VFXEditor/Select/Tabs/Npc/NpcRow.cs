@@ -1,10 +1,12 @@
+using VfxEditor.Select.Base;
+
 namespace VfxEditor.Select.Tabs.Npc {
     public enum NpcType {
         Demihuman = 2,
         Monster = 3
     }
 
-    public class NpcRow {
+    public class NpcRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
 
@@ -42,5 +44,7 @@ namespace VfxEditor.Select.Tabs.Npc {
         // chara/demihuman/d0001/obj/equipment/e0002/model/d0001e0002_met.mdl
         // chara/monster/m0150/obj/body/b0001/model/m0150 b0001.mdl
         public string GetMdlPath( string suffix ) => RootPath + "model/" + ModelString + ( IsMonster ? "b" : "e" ) + BaseIdString + ( IsMonster ? "" : "_" + suffix ) + ".mdl";
+
+        public string GetName() => Name;
     }
 }

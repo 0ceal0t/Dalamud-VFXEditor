@@ -1,9 +1,10 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 using VfxEditor.Select.Tabs.Npc;
 
 namespace VfxEditor.Select.Tabs.Mounts {
-    public class MountRow : NpcRow {
+    public class MountRow : NpcRow, ISelectItemWithIcon {
         public readonly ushort Icon;
         public readonly string Bgm;
         public readonly int Seats;
@@ -34,5 +35,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
             }
             return ret;
         }
+
+        public uint GetIconId() => Icon;
     }
 }

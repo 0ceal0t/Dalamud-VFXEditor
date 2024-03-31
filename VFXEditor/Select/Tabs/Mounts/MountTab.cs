@@ -11,11 +11,5 @@ namespace VfxEditor.Select.Tabs.Mounts {
             var sheet = Dalamud.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
             foreach( var item in sheet ) Items.Add( new MountRow( item ) );
         }
-
-        // ===== DRAWING ======
-
-        protected override string GetName( MountRow item ) => item.Name;
-
-        protected override uint GetIconId( MountRow item ) => item.Icon;
     }
 }

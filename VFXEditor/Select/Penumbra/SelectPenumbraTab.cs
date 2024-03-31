@@ -6,14 +6,14 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Ui.Export;
 
-namespace VfxEditor.Select {
+namespace VfxEditor.Select.Penumbra {
     public class SelectedPenumbraMod {
         public Dictionary<string, List<string>> SourceFiles;
         public Dictionary<string, List<string>> ReplaceFiles;
         public PenumbraMeta Meta;
     }
 
-    public class SelectPenumbraTab : SelectTab<string, SelectedPenumbraMod> {
+    public class SelectPenumbraTab : SelectTab<SelectPenumbraTabItem, SelectedPenumbraMod> {
         public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
 
         public override void Draw() {
@@ -31,11 +31,11 @@ namespace VfxEditor.Select {
 
         public override void LoadData() {
             Items.Clear();
-            Items.AddRange( Plugin.PenumbraIpc.GetMods() );
+            Items.AddRange( Plugin.PenumbraIpc.GetMods().Select( x => new SelectPenumbraTabItem( x ) ) );
         }
 
         // $"{group} {option}" -> (gamePath, localPath)
-        public override void LoadSelection( string item, out SelectedPenumbraMod loaded ) {
+        public override void LoadSelection( SelectPenumbraTabItem item, out SelectedPenumbraMod loaded ) {
             loaded = new();
             var files = new Dictionary<string, List<(string, string)>>();
 
@@ -43,7 +43,7 @@ namespace VfxEditor.Select {
             if( string.IsNullOrEmpty( baseModPath ) ) return;
 
             try {
-                var modPath = Path.Join( baseModPath, Selected );
+                var modPath = Path.Join( baseModPath, Selected.Name );
                 loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
 
                 var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
@@ -105,10 +105,8 @@ namespace VfxEditor.Select {
 
             var files = Dialog.ShowLocal ? Loaded.SourceFiles : Loaded.ReplaceFiles;
             if( files != null ) {
-                Dialog.DrawPaths( files, Selected, SelectResultType.Local );
+                Dialog.DrawPaths( files, Selected.Name, SelectResultType.Local );
             }
         }
-
-        protected override string GetName( string item ) => item;
     }
 }

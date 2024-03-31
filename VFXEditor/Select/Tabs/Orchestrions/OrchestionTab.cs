@@ -30,7 +30,5 @@ namespace VfxEditor.Select.Tabs.Orchestrions {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Loaded.Path, Selected.Name, SelectResultType.GameMusic );
         }
-
-        protected override string GetName( OrchestrionRow item ) => item.Name;
     }
 }

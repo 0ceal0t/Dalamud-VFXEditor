@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Statuses {
-    public class StatusRow {
+    public class StatusRow : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
         public readonly uint Icon;
@@ -30,5 +31,8 @@ namespace VfxEditor.Select.Tabs.Statuses {
         }
 
         private static string GetVfxPath( string path ) => string.IsNullOrEmpty( path ) ? "" : $"vfx/common/eff/{path}.avfx";
+
+        public string GetName() => Name;
+        public uint GetIconId() => Icon;
     }
 }

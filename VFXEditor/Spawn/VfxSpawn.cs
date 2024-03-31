@@ -2,7 +2,6 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using VfxEditor.Structs.Vfx;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Spawn {
     public static unsafe class VfxSpawn {
@@ -21,35 +20,6 @@ namespace VfxEditor.Spawn {
         private static bool LastSpawnCanLoop = false; // Don't want to loop from the selection dialog
         private static bool Removed = false;
         private static DateTime RemoveTime;
-
-        public static void DrawButton( string path, bool loop ) {
-            using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.DARK_GRAY );
-
-            if( IsActive ) {
-                if( ImGui.Button( "Remove" ) ) Remove();
-                return;
-            }
-
-            if( !Plugin.Configuration.VfxSpawnSplit ) {
-                if( ImGui.Button( "Spawn" ) ) ImGui.OpenPopup( "SpawnPopup" );
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
-
-                DrawPopup( path, false );
-            }
-            else {
-                if( ImGui.Button( "Self" ) ) OnSelf( path, loop );
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
-
-                ImGui.SameLine();
-                if( ImGui.Button( "Ground" ) ) OnGround( path, loop );
-                if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ToggleSplit();
-            }
-        }
-
-        private static void ToggleSplit() {
-            Plugin.Configuration.VfxSpawnSplit = !Plugin.Configuration.VfxSpawnSplit;
-            Plugin.Configuration.Save();
-        }
 
         public static void DrawPopup( string path, bool loop ) {
             using var popup = ImRaii.Popup( "SpawnPopup" );

@@ -7,8 +7,6 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadData() => Load( Items );
 
-        protected override string GetName( CharacterRow item ) => item.Name;
-
         // =====================
 
         public static void Load( List<CharacterRow> items ) {

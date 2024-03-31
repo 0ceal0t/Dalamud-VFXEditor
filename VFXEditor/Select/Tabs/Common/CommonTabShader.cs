@@ -28,7 +28,5 @@ namespace VfxEditor.Select.Tabs.Common {
                 { "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ) }
             }, Selected.Name, SelectResultType.GameUi );
         }
-
-        protected override string GetName( CommonRow item ) => item.Name;
     }
 }

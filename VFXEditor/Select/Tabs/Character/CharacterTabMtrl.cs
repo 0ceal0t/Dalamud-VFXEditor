@@ -57,8 +57,6 @@ namespace VfxEditor.Select.Tabs.Character {
             }
         }
 
-        protected override string GetName( CharacterRow item ) => item.Name;
-
         private static IEnumerable<(int, List<string>)> IdsToPaths( IEnumerable<int> ids, IEnumerable<string> suffixes, CharacterRow item, CharacterPart part ) =>
             ids.Select( id =>
                 (id, suffixes

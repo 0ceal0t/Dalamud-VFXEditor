@@ -22,7 +22,5 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
 
             Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameCutscene );
         }
-
-        protected override string GetName( CutsceneRow item ) => item.Name;
     }
 }

@@ -29,9 +29,5 @@ namespace VfxEditor.Select.Tabs.Housing {
 
             Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameHousing );
         }
-
-        protected override string GetName( HousingRow item ) => item.Name;
-
-        protected override uint GetIconId( HousingRow item ) => item.Icon;
     }
 }

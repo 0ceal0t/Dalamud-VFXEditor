@@ -20,7 +20,7 @@ namespace VfxEditor.Select {
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Adding-a-VFX-to-an-Item-Without-One" );
         }
 
-        public static bool Matches( string item, string query ) => item.ToLower().Contains( query.ToLower() );
+        public static bool Matches( string item, string query ) => item.Contains( query, StringComparison.CurrentCultureIgnoreCase );
 
         public static void DisplayPath( string path ) {
             using var style = ImRaii.PushColor( ImGuiCol.Text, new Vector4( 0.8f, 0.8f, 0.8f, 1 ) );
@@ -41,8 +41,7 @@ namespace VfxEditor.Select {
             if( ImGui.Button( FontAwesomeIcon.ClipboardList.ToIconString() ) ) ImGui.SetClipboardText( path );
         }
 
-        public static void DisplayVisible( int count, out int preItems, out int showItems, out int postItems, out float itemHeight ) {
-            itemHeight = ImGui.GetTextLineHeight() + ImGui.GetStyle().ItemSpacing.Y;
+        public static void DisplayVisible( int count, float itemHeight, out int preItems, out int showItems, out int postItems ) {
             preItems = ( int )Math.Floor( ImGui.GetScrollY() / itemHeight );
             showItems = ( int )Math.Ceiling( ( ImGui.GetWindowSize().Y - ImGui.GetCursorPosY() ) / itemHeight );
             postItems = count - showItems - preItems;

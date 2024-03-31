@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Zone {
-    public class ZoneRow {
+    public class ZoneRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
         public readonly int PlaceRowId;
@@ -18,5 +19,7 @@ namespace VfxEditor.Select.Tabs.Zone {
             bg[^1] = "vfx.lgb";
             LgbPath = "bg/" + string.Join( "/", bg );
         }
+
+        public string GetName() => Name;
     }
 }

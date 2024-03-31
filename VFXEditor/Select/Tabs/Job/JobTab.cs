@@ -101,7 +101,5 @@ namespace VfxEditor.Select.Tabs.Job {
                 ImGui.EndTabItem();
             }
         }
-
-        protected override string GetName( JobRow item ) => item.Name;
     }
 }

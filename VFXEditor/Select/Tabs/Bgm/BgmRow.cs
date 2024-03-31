@@ -1,7 +1,8 @@
 using Lumina.Excel.GeneratedSheets;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Bgm {
-    public class BgmRow {
+    public class BgmRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
         public readonly string Path;
@@ -11,5 +12,7 @@ namespace VfxEditor.Select.Tabs.Bgm {
             Name = Path.Replace( "music/", "" ).Replace( ".scd", "" );
             RowId = ( int )bgm.RowId;
         }
+
+        public string GetName() => Name;
     }
 }

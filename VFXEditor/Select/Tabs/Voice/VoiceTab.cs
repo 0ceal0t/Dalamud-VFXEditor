@@ -55,7 +55,5 @@ namespace VfxEditor.Select.Tabs.Voice {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameCharacter );
         }
-
-        protected override string GetName( VoiceRow item ) => item.Name;
     }
 }

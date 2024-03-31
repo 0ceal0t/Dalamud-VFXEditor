@@ -1,9 +1,10 @@
 using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
 using System.Text;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
-    public class ActionRowVfx {
+    public class ActionRowVfx : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
         public readonly ushort Icon;
@@ -50,5 +51,8 @@ namespace VfxEditor.Select.Tabs.Actions {
             };
             HitAction = new ActionRowVfx( hitAction, true );
         }
+
+        public string GetName() => Name;
+        public uint GetIconId() => Icon;
     }
 }

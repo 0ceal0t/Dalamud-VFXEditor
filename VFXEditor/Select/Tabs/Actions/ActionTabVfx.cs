@@ -52,9 +52,5 @@ namespace VfxEditor.Select.Tabs.Actions {
                 { "Start", Selected.StartVfxPath }
             }, string.IsNullOrEmpty( Loaded.OriginalPath ) ? [] : Loaded.Paths, Selected.Name, SelectResultType.GameAction );
         }
-
-        protected override string GetName( ActionRowVfx item ) => item.Name;
-
-        protected override uint GetIconId( ActionRowVfx item ) => item.Icon;
     }
 }

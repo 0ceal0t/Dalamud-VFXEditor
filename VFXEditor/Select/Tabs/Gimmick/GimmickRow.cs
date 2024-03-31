@@ -1,8 +1,9 @@
 using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Gimmick {
-    public class GimmickRow {
+    public class GimmickRow : ISelectItem {
         public readonly string Name;
         public readonly int RowId;
         public readonly string TmbPath;
@@ -21,5 +22,7 @@ namespace VfxEditor.Select.Tabs.Gimmick {
                 }
             }
         }
+
+        public string GetName() => Name;
     }
 }

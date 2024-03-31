@@ -41,7 +41,5 @@ namespace VfxEditor.Select.Tabs.Gimmick {
 
             Dialog.DrawPaths( Loaded.Paths, Selected.Name, SelectResultType.GameGimmick );
         }
-
-        protected override string GetName( GimmickRow item ) => item.Name;
     }
 }

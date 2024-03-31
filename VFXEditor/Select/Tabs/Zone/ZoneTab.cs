@@ -11,9 +11,5 @@ namespace VfxEditor.Select.Tabs.Zone {
             var sheet = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
-
-        // ===== DRAWING ======
-
-        protected override string GetName( ZoneRow item ) => item.Name;
     }
 }
