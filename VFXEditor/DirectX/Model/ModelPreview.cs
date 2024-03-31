@@ -44,8 +44,17 @@ namespace VfxEditor.DirectX {
                 ] );
             Emitters.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Emitter.fx" ), ShaderPassFlags.Pixel );
 
+            UpdatePyramidMesh();
+        }
+
+        public void UpdatePyramidMesh() {
             var builder = new MeshBuilder( true, false );
-            builder.AddPyramid( new Vector3( 0, 0, 0 ), Vector3.UnitX, Vector3.UnitY, 0.25f, 0.5f, true );
+            builder.AddPyramid(
+                new Vector3( 0, 0, 0 ),
+                Vector3.UnitX, Vector3.UnitY,
+                Plugin.Configuration.ModelEmittersSize.X,
+                Plugin.Configuration.ModelEmittersSize.Y,
+                true );
             var data = FromMeshBuilder( builder, null, false, false, false, out var emitterCount );
             Emitters.SetVertexes( Device, data, emitterCount );
         }
@@ -93,10 +102,8 @@ namespace VfxEditor.DirectX {
                     var emitter = modelEmitters[idx];
                     var pos = new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z );
                     var rot = GetEmitterRotationQuat( new Vector3( emitter.Normal.X, emitter.Normal.Y, emitter.Normal.Z ) );
-
                     data.Add( Matrix.AffineTransformation( 1f, rot, pos ) );
                 }
-
                 Emitters.SetInstances( Device, [.. data], modelEmitters.Count );
             }
 
@@ -119,10 +126,12 @@ namespace VfxEditor.DirectX {
 
         protected override void DrawPasses() {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
-            Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
+            if( Plugin.Configuration.ModelShowEmitters ) {
+                Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
+            }
         }
 
-        protected override void DrawPopup() { }
+        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXVfx();
 
         public override void Dispose() {
             base.Dispose();

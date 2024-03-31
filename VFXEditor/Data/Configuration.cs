@@ -148,6 +148,8 @@ namespace VfxEditor {
         public bool ModelWireframe = false;
         public bool ModelShowEdges = true;
         public bool ModelShowEmitters = true;
+        public Vector2 ModelEmittersSize = new( 0.025f, 0.05f );
+
         public bool EmitterVertexSplitOpen = true;
 
         public Vector4 LuaParensColor = new( 0.5f, 0.5f, 0.5f, 1f );
@@ -439,6 +441,11 @@ namespace VfxEditor {
                 using var _ = ImRaii.PushIndent( 10f );
                 DrawDirectXMaterials();
             }
+
+            if( ImGui.CollapsingHeader( "Vfx" ) ) {
+                using var _ = ImRaii.PushIndent( 10f );
+                DrawDirectXVfx();
+            }
         }
 
         public void DrawDirectXCommon() {
@@ -472,6 +479,14 @@ namespace VfxEditor {
             if( updated ) {
                 Plugin.DirectXManager.RedrawMaterials();
                 Save();
+            }
+        }
+
+        public void DrawDirectXVfx() {
+            if( ImGui.InputFloat2( "Preview Pyramid Size", ref ModelEmittersSize ) ) {
+                Save();
+                Plugin.DirectXManager.ModelPreview.UpdatePyramidMesh();
+                Plugin.DirectXManager.ModelPreview.Draw();
             }
         }
 

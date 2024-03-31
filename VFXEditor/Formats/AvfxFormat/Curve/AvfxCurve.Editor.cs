@@ -26,6 +26,8 @@ namespace VfxEditor.AvfxFormat {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
 
+        private float PopupFrame;
+
         public void RemoveKey( AvfxCurveKey key ) {
             Keys.Remove( key );
             Selected.Remove( key );
@@ -36,6 +38,11 @@ namespace VfxEditor.AvfxFormat {
 
             DrawControls();
             Selected.RemoveAll( x => !Keys.Contains( x ) );
+
+            if( !DrawOnce ) {
+                ImPlot.SetNextAxesToFit();
+                DrawOnce = true;
+            }
 
             var wrongOrder = false;
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
@@ -105,45 +112,27 @@ namespace VfxEditor.AvfxFormat {
                     // Selecting point [Left Click]
                     // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
                     var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
-                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() ) {
-                        var mousePos = ImGui.GetMousePos();
-                        foreach( var key in Keys ) {
-                            if( ( ImPlot.PlotToPixels( key.Point ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
-                                if( !ImGui.GetIO().KeyShift ) Selected.Clear();
-                                if( !Selected.Contains( key ) ) Selected.Add( key );
-                                break;
-                            }
-                        }
-                    }
+                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() ) SingleSelect();
 
                     // Box selection [Right-click, drag, then left-click]
-                    if( ImPlot.IsPlotSelected() ) {
-                        var selection = ImPlot.GetPlotSelection();
-                        if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
-                            ImPlot.CancelPlotSelection();
-                            Selected.Clear();
-                            foreach( var key in Keys ) {
-                                var point = key.Point;
-                                if( point.x <= selection.X.Max && point.x >= selection.X.Min && point.y <= selection.Y.Max && point.y >= selection.Y.Min ) Selected.Add( key );
-                            }
+                    if( ImPlot.IsPlotSelected() ) BoxSelect();
+                    else {
+                        // Popup [Right-click]
+                        if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) {
+                            ImGui.OpenPopup( "CurvePopup" );
+                            PopupFrame = ( float )Math.Round( ImPlot.GetPlotMousePos().x );
+                        }
+
+                        using var popup = ImRaii.Popup( "CurvePopup" );
+                        if( popup ) {
+                            using var disabled = ImRaii.Disabled( CopiedKeys.Count == 0 );
+                            if( ImGui.Selectable( $"Paste at frame {( int )PopupFrame}" ) ) PasteAtFrame( PopupFrame );
                         }
                     }
                 }
 
                 // Inserting point [Ctrl + Left Click]
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) {
-                    var pos = ImPlot.GetPlotMousePos();
-                    var time = Math.Round( pos.x );
-                    var insertIdx = 0;
-                    foreach( var key in Keys ) {
-                        if( key.DisplayX > time ) break;
-                        insertIdx++;
-                    }
-
-                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Keys,
-                        new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
-                        insertIdx, ( AvfxCurveKey _, bool _ ) => Update() ) );
-                }
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() ) NewPoint();
 
                 if( clickState && !PrevClickState ) {
                     PrevClickTime = DateTime.Now;
@@ -177,28 +166,16 @@ namespace VfxEditor.AvfxFormat {
             }
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( !DrawOnce || ImGui.SmallButton( "Fit" ) ) {
-                    ImPlot.SetNextAxesToFit();
-                    DrawOnce = true;
-                }
+                if( ImGui.SmallButton( "Fit" ) ) ImPlot.SetNextAxesToFit();
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) {
-                    CopiedKeys.Clear();
-                    foreach( var key in Keys ) CopiedKeys.Add( key.CopyPasteData );
-                }
+                if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) Copy();
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) {
-                    var commands = new List<ICommand>();
-                    foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
-                    CommandManager.Add( new CompoundCommand( commands, Update ) );
-                }
+                if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) Paste();
 
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( "Clear", true ) ) {
-                    CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
-                }
+                if( UiUtils.RemoveButton( "Clear", true ) ) Clear();
             }
 
             ImGui.SameLine();
@@ -245,6 +222,72 @@ namespace VfxEditor.AvfxFormat {
         public double ToDegrees( double value ) {
             if( Type != CurveType.Angle || !Plugin.Configuration.UseDegreesForAngles ) return value;
             return ( 180 / Math.PI ) * value;
+        }
+
+        // ========== FUNCTIONS ============
+
+        private void SingleSelect() {
+            var mousePos = ImGui.GetMousePos();
+            foreach( var key in Keys ) {
+                if( ( ImPlot.PlotToPixels( key.Point ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
+                    if( !ImGui.GetIO().KeyShift ) Selected.Clear();
+                    if( !Selected.Contains( key ) ) Selected.Add( key );
+                    break;
+                }
+            }
+        }
+
+        private void BoxSelect() {
+            var selection = ImPlot.GetPlotSelection();
+            if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
+                ImPlot.CancelPlotSelection();
+                Selected.Clear();
+                foreach( var key in Keys ) {
+                    var point = key.Point;
+                    if( point.x <= selection.X.Max && point.x >= selection.X.Min && point.y <= selection.Y.Max && point.y >= selection.Y.Min ) Selected.Add( key );
+                }
+            }
+        }
+
+        private void NewPoint() {
+            var pos = ImPlot.GetPlotMousePos();
+            var time = Math.Round( pos.x );
+            var insertIdx = 0;
+            foreach( var key in Keys ) {
+                if( key.DisplayX > time ) break;
+                insertIdx++;
+            }
+
+            CommandManager.Add( new ListAddCommand<AvfxCurveKey>(
+                Keys,
+                new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
+                insertIdx,
+                ( AvfxCurveKey _, bool _ ) => Update()
+            ) );
+        }
+
+        private void Copy() {
+            CopiedKeys.Clear();
+            foreach( var key in Keys ) CopiedKeys.Add( key.CopyPasteData );
+        }
+
+        private void Paste() {
+            var commands = new List<ICommand>();
+            foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
+            CommandManager.Add( new CompoundCommand( commands, Update ) );
+        }
+
+        private void PasteAtFrame( float frame ) {
+            var firstFrame = CopiedKeys[0].Item2.X;
+            var commands = new List<ICommand>();
+            foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys,
+                    new( this, (key.Item1, key.Item2 with { X = key.Item2.X - firstFrame + frame }) )
+                ) );
+            CommandManager.Add( new CompoundCommand( commands, Update ) );
+        }
+
+        private void Clear() {
+            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
         }
 
         // ======== GRADIENT ==========
