@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,12 +19,15 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPaths( new Dictionary<string, string>() {
+            var paths = new Dictionary<string, string>() {
                 { "Hit", Selected.HitPath },
-                { "Loop 1", Selected.LoopPath1 },
-                { "Loop 2", Selected.LoopPath2 },
-                { "Loop 3", Selected.LoopPath3 },
-            }, Selected.Name, SelectResultType.GameStatus );
+            };
+
+            foreach( var (path, idx) in Selected.LoopPaths.WithIndex() ) {
+                paths[$"Loop {idx + 1}"] = path;
+            }
+
+            Dialog.DrawPaths( paths, Selected.Name, SelectResultType.GameStatus );
         }
     }
 }

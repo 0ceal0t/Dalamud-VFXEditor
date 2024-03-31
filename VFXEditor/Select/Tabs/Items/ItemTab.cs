@@ -19,7 +19,7 @@ namespace VfxEditor.Select.Tabs.Items {
         // ======== LOADING =========
 
         public override void LoadData() {
-            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Item>() ) {
                 if(
                     row.EquipSlotCategory.Value?.MainHand == 1 ||
                     row.EquipSlotCategory.Value?.OffHand == 1

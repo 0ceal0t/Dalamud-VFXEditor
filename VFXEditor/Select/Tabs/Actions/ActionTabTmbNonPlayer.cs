@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Actions {

@@ -1,6 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Tabs.BgmQuest;
@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Tabs.Zone {
 
             foreach( var bgmSwitch in Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
                 var questName = bgmSwitch.Quest.Value?.Name.ToString();
-                var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM );
+                var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM.Row );
                 loaded.Quests[string.IsNullOrEmpty( questName ) ? item.Name : questName] = situation;
             }
         }

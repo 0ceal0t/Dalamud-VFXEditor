@@ -1,7 +1,8 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Base;
+using VfxEditor.Select.Tabs.Actions;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public enum EmoteRowType {
@@ -18,7 +19,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         public readonly List<(string, byte)> Keys;
         public readonly string Command;
 
-        public List<string> TmbFiles => Keys.Select( x => SelectDataUtils.ToTmbPath( x.Item1 ) ).ToList();
+        public List<string> TmbFiles => Keys.Select( x => ActionRow.ToTmbPath( x.Item1 ) ).ToList();
 
         public List<string> VfxPapFiles => Keys.Where( x => x.Item1.Contains( "emote_sp" ) ).Select( x => $"chara/human/c0101/animation/a0001/bt_common/{x.Item1}.pap" ).ToList();
 

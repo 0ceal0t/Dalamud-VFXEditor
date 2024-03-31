@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,9 +19,9 @@ namespace VfxEditor.Select.Tabs.Actions {
             if( !string.IsNullOrEmpty( item.CastVfxPath ) ) paths.Add( item.CastVfxPath );
             if( !string.IsNullOrEmpty( item.StartVfxPath ) ) paths.Add( item.StartVfxPath );
 
-            PopulatePaths( item.StartPath, paths );
-            PopulatePaths( item.EndPath, paths );
-            PopulatePaths( item.HitPath, paths );
+            PopulatePaths( item.StartTmbPath, paths );
+            PopulatePaths( item.EndTmbPath, paths );
+            PopulatePaths( item.HitTmbPath, paths );
 
             ParsedPaths.ReadFile( paths, SelectDataUtils.ScdRegex, out loaded );
         }

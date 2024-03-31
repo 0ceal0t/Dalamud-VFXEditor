@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 using VfxEditor.Select.Tabs.BgmQuest;
 
@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Tabs.Instance {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content > 0 && x.ContentLinkType == 1 );
+            var sheet = Dalamud.DataManager.GetExcelSheet<ContentFinderCondition>().Where( x => !string.IsNullOrEmpty( x.Name ) && x.Content.Row > 0 && x.ContentLinkType == 1 );
             foreach( var item in sheet ) Items.Add( new InstanceRow( item ) );
         }
 

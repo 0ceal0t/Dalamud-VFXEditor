@@ -1,5 +1,5 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

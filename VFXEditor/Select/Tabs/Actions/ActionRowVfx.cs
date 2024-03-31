@@ -1,6 +1,5 @@
-using Lumina.Excel.GeneratedSheets;
-using Lumina.Text;
-using System.Text;
+using Lumina.Excel;
+using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -9,47 +8,27 @@ namespace VfxEditor.Select.Tabs.Actions {
         public readonly int RowId;
         public readonly ushort Icon;
 
-        private readonly string TmbKey;
-        private readonly string CastVfxKey;
-        private readonly string StartVfxKey;
+        public readonly string TmbPath;
+        public readonly string CastVfxPath;
+        public readonly string StartVfxPath;
 
         public readonly ActionRowVfx HitAction;
 
-        public string TmbPath => SelectDataUtils.ToTmbPath( TmbKey );
-        public string CastVfxPath => SelectDataUtils.ToVfxPath( CastVfxKey );
-        public string StartVfxPath => SelectDataUtils.ToVfxPath( StartVfxKey );
+        public ActionRowVfx( string name, int rowId, ushort icon, LazyRow<ActionTimeline> timeline ) {
+            Name = name;
+            RowId = rowId;
+            Icon = icon;
 
-        public ActionRowVfx( Action action, bool isHit ) {
-            Name = action.Name.ToString();
-            RowId = ( int )action.RowId;
-            Icon = action.Icon;
+            TmbPath = ActionRow.ToTmbPath( timeline.Value?.Key.ToString() );
+        }
 
-            TmbKey = action.AnimationEnd.Value?.Key.ToString();
-
-            if( isHit ) {
-                HitAction = null;
-                return;
-            }
-
-            StartVfxKey = action.AnimationStart.Value?.VFX.Value?.Location;
-            CastVfxKey = action.VFX.Value?.VFX.Value?.Location;
+        public ActionRowVfx( Action action ) : this( action.Name.ToString(), ( int )action.RowId, action.Icon, action.AnimationEnd ) {
+            StartVfxPath = ActionRow.ToVfxPath( action.AnimationStart.Value?.VFX.Value?.Location );
+            CastVfxPath = ActionRow.ToVfxPath( action.VFX.Value?.VFX.Value?.Location );
 
             var hitKey = action.ActionTimelineHit?.Value?.Key.ToString();
-            if( hitKey.Contains( "normal_hit" ) ) hitKey = string.Empty;
-            if( string.IsNullOrEmpty( hitKey ) ) {
-                HitAction = null;
-                return;
-            }
-
-            if( string.IsNullOrEmpty( hitKey ) ) return;
-            var hitAction = new Action {
-                Icon = action.Icon,
-                Name = new SeString( Encoding.UTF8.GetBytes( Name + " / Target" ) ),
-                IsPlayerAction = action.IsPlayerAction,
-                RowId = action.RowId,
-                AnimationEnd = action.ActionTimelineHit
-            };
-            HitAction = new ActionRowVfx( hitAction, true );
+            if( string.IsNullOrEmpty( hitKey ) || hitKey.Contains( "normal_hit" ) ) return;
+            HitAction = new ActionRowVfx( $"{Name} (Target)", RowId, Icon, action.ActionTimelineHit );
         }
 
         public string GetName() => Name;

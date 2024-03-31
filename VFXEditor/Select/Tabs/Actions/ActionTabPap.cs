@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,9 +18,9 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         public override void LoadSelection( ActionRowPap item, out Dictionary<string, Dictionary<string, string>> loaded ) {
             loaded = new Dictionary<string, Dictionary<string, string>> {
-                { "Start", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.Start ) ) },
-                { "End", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.End ) ) },
-                { "Hit", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.Hit ) ) }
+                { "Start", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.StartPath ) ) },
+                { "End", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.EndPath ) ) },
+                { "Hit", SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( item.HitPath ) ) }
             };
         }
 

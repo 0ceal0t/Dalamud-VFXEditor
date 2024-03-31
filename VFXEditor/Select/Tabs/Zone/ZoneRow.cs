@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Zone {
@@ -7,13 +7,13 @@ namespace VfxEditor.Select.Tabs.Zone {
         public readonly int RowId;
         public readonly int PlaceRowId;
         public readonly string LgbPath;
-        public readonly ushort BgmId;
+        public readonly uint BgmId;
 
         public ZoneRow( TerritoryType zone ) {
             Name = zone.PlaceName.Value?.Name.ToString();
             RowId = ( int )zone.RowId;
             PlaceRowId = ( int )zone.PlaceName.Value?.RowId;
-            BgmId = zone.BGM;
+            BgmId = zone.BGM.Row;
 
             var bg = zone.Bg.ToString().Split( '/' );
             bg[^1] = "vfx.lgb";

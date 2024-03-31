@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 
 namespace VfxEditor.Select.Tabs.Items {
     public class ItemRowArmor : ItemRow {

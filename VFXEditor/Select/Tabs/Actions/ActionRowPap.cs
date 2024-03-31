@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -7,18 +7,18 @@ namespace VfxEditor.Select.Tabs.Actions {
         public readonly int RowId;
         public readonly ushort Icon;
 
-        public readonly string Start;
-        public readonly string End;
-        public readonly string Hit;
+        public readonly string StartPath;
+        public readonly string EndPath;
+        public readonly string HitPath;
 
         public ActionRowPap( Action action ) {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            Start = ToPap( action.AnimationStart.Value?.Name.Value );
-            End = ToPap( action.AnimationEnd.Value );
-            Hit = ToPap( action.ActionTimelineHit.Value );
+            StartPath = ToPap( action.AnimationStart.Value?.Name.Value );
+            EndPath = ToPap( action.AnimationEnd.Value );
+            HitPath = ToPap( action.ActionTimelineHit.Value );
         }
 
         // chara/human/c0101/animation/a0001/bt_common/ability/2bw_bard/abl001.pap

@@ -1,6 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             var sheet = Dalamud.DataManager.GetExcelSheet<Action>()
                 .Where( x => !string.IsNullOrEmpty( x.Name ) && ( x.IsPlayerAction || x.ClassJob.Value != null ) );
             foreach( var item in sheet ) {
-                var action = new ActionRowVfx( item, false );
+                var action = new ActionRowVfx( item );
                 Items.Add( action );
                 if( action.HitAction != null ) Items.Add( action.HitAction );
             }

@@ -1,4 +1,5 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
+using System.Collections.Generic;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Statuses {
@@ -7,27 +8,26 @@ namespace VfxEditor.Select.Tabs.Statuses {
         public readonly int RowId;
         public readonly uint Icon;
 
-        public readonly string HitKey;
-        public readonly string LoopKey1;
-        public readonly string LoopKey2;
-        public readonly string LoopKey3;
+        public readonly string HitPath;
+        public readonly List<string> LoopPaths = [];
 
-        public bool VfxExists => !string.IsNullOrEmpty( LoopKey1 ) || !string.IsNullOrEmpty( LoopKey2 ) || !string.IsNullOrEmpty( LoopKey3 ) || !string.IsNullOrEmpty( HitKey );
-
-        public string HitPath => GetVfxPath( HitKey );
-        public string LoopPath1 => GetVfxPath( LoopKey1 );
-        public string LoopPath2 => GetVfxPath( LoopKey2 );
-        public string LoopPath3 => GetVfxPath( LoopKey3 );
+        public bool VfxExists => LoopPaths.Count > 0 || !string.IsNullOrEmpty( HitPath );
 
         public StatusRow( Status status ) {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
             Icon = status.Icon;
 
-            HitKey = status.HitEffect.Value?.Location.Value?.Location;
-            LoopKey1 = status.VFX.Value?.VFX?.Value.Location;
-            LoopKey2 = status.VFX.Value?.VFX2?.Value.Location;
-            LoopKey3 = status.VFX.Value?.VFX3?.Value.Location;
+            HitPath = GetVfxPath( status.HitEffect.Value?.Location.Value?.Location );
+
+            var loopVfxs = status.VFX.Value?.VFX;
+            if( loopVfxs == null ) return;
+            foreach( var vfx in loopVfxs ) {
+                if( vfx?.Value == null ) continue;
+                var key = vfx?.Value.Location;
+                if( string.IsNullOrEmpty( key ) ) continue;
+                LoopPaths.Add( GetVfxPath( key ) );
+            }
         }
 
         private static string GetVfxPath( string path ) => string.IsNullOrEmpty( path ) ? "" : $"vfx/common/eff/{path}.avfx";

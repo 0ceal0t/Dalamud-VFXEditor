@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,10 +20,10 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         protected override void DrawSelected() {
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "Start",  Selected.StartPath },
-                { "End",  Selected.EndPath },
-                { "Hit",  Selected.HitPath },
-                { "Weapon",  Selected.WeaponPath },
+                { "Start",  Selected.StartTmbPath },
+                { "End",  Selected.EndTmbPath },
+                { "Hit",  Selected.HitTmbPath },
+                { "Weapon",  Selected.WeaponTmbPath },
 
             }, Selected.Name, SelectResultType.GameAction );
         }

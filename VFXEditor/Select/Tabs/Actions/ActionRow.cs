@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -7,41 +7,34 @@ namespace VfxEditor.Select.Tabs.Actions {
         public readonly int RowId;
         public readonly ushort Icon;
 
-        public readonly string StartKey;
-        public readonly string EndKey;
-        public readonly string HitKey;
-        public readonly string WeaponKey;
+        public readonly string StartTmbPath;
+        public readonly string EndTmbPath;
+        public readonly string HitTmbPath;
+        public readonly string WeaponTmbPath;
 
-        public readonly string CastVfxKey;
-        public readonly string StartVfxKey;
+        public readonly string CastVfxPath;
+        public readonly string StartVfxPath;
 
         public readonly bool StartMotion;
         public readonly bool EndMotion;
         public readonly bool HitMotion;
-
-        public string StartPath => SelectDataUtils.ToTmbPath( StartKey );
-        public string EndPath => SelectDataUtils.ToTmbPath( EndKey );
-        public string HitPath => SelectDataUtils.ToTmbPath( HitKey );
-        public string WeaponPath => SelectDataUtils.ToTmbPath( WeaponKey );
-        public string CastVfxPath => SelectDataUtils.ToVfxPath( CastVfxKey );
-        public string StartVfxPath => SelectDataUtils.ToVfxPath( StartVfxKey );
 
         public ActionRow( Action action ) {
             Name = action.Name.ToString();
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            StartVfxKey = action.AnimationStart.Value?.VFX.Value?.Location.ToString();
-            CastVfxKey = action.VFX.Value?.VFX.Value?.Location.ToString();
+            StartVfxPath = ToVfxPath( action.AnimationStart.Value?.VFX.Value?.Location.ToString() );
+            CastVfxPath = ToVfxPath( action.VFX.Value?.VFX.Value?.Location.ToString() );
 
             var start = action.AnimationStart.Value?.Name.Value;
             var end = action.AnimationEnd.Value;
             var hit = action.ActionTimelineHit.Value;
 
-            StartKey = start?.Key.ToString();
-            EndKey = end?.Key.ToString();
-            HitKey = hit?.Key.ToString();
-            WeaponKey = action.AnimationEnd.Value?.WeaponTimeline.Value?.File.ToString();
+            StartTmbPath = ToTmbPath( start?.Key.ToString() );
+            EndTmbPath = ToTmbPath( end?.Key.ToString() );
+            HitTmbPath = ToTmbPath( hit?.Key.ToString() );
+            WeaponTmbPath = ToTmbPath( action.AnimationEnd.Value?.WeaponTimeline.Value?.File.ToString() );
 
             StartMotion = start?.IsMotionCanceledByMoving ?? false;
             EndMotion = end?.IsMotionCanceledByMoving ?? false;
@@ -50,5 +43,9 @@ namespace VfxEditor.Select.Tabs.Actions {
 
         public string GetName() => Name;
         public uint GetIconId() => Icon;
+
+        public static string ToTmbPath( string key ) => ( string.IsNullOrEmpty( key ) || key.Contains( "[SKL_ID]" ) ) ? string.Empty : $"chara/action/{key}.tmb";
+
+        public static string ToVfxPath( string key ) => string.IsNullOrEmpty( key ) ? string.Empty : $"vfx/common/eff/{key}.avfx";
     }
 }

@@ -68,17 +68,6 @@ namespace VfxEditor {
         public bool VfxSpawnLoop = false;
         public float VfxSpawnDelay = 0.1f;
 
-        // ===== [ OBSOLETE ] =======
-        public List<SelectResult> RecentSelects = [];
-        public List<SelectResult> RecentSelectsTMB = [];
-        public List<SelectResult> RecentSelectsPAP = [];
-        public List<SelectResult> RecentSelectsScd = [];
-        public List<SelectResult> FavoriteVfx = [];
-        public List<SelectResult> FavoriteTmb = [];
-        public List<SelectResult> FavoritePap = [];
-        public List<SelectResult> FavoriteScd = [];
-        // ===========================
-
         public Dictionary<string, ManagerConfiguration> ManagerConfigs = [];
 
         public KeybindConfiguration SaveKeybind = new();
@@ -173,12 +162,6 @@ namespace VfxEditor {
         public void Setup() {
             UpdateHideSettings();
 
-            // Move old configurations over to new
-            ProcessOldManagerConfigs( RecentSelects, FavoriteVfx, "Vfx" );
-            ProcessOldManagerConfigs( RecentSelectsTMB, FavoriteTmb, "Tmb" );
-            ProcessOldManagerConfigs( RecentSelectsPAP, FavoritePap, "Pap" );
-            ProcessOldManagerConfigs( RecentSelectsScd, FavoriteScd, "Scd" );
-
             try { Directory.CreateDirectory( WriteLocation ); }
             catch( Exception ) { WriteLocationError = true; }
 
@@ -194,17 +177,6 @@ namespace VfxEditor {
             var newConfig = new ManagerConfiguration();
             ManagerConfigs.Add( id, newConfig );
             return newConfig;
-        }
-
-        private void ProcessOldManagerConfigs( List<SelectResult> recent, List<SelectResult> favorites, string key ) {
-            if( recent.Count == 0 && favorites.Count == 0 ) return;
-
-            if( !ManagerConfigs.ContainsKey( key ) ) ManagerConfigs[key] = new();
-            ManagerConfigs[key].RecentItems.AddRange( recent );
-            ManagerConfigs[key].Favorites.AddRange( favorites );
-
-            recent.Clear();
-            favorites.Clear();
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {

@@ -1,3 +1,4 @@
+using Lumina.Excel.GeneratedSheets2;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Npc {
@@ -26,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         public string ImcPath => RootPath + ( IsMonster ? "b" : "e" ) + BaseIdString + ".imc";
 
-        public NpcRow( Lumina.Excel.GeneratedSheets.ModelChara npc, string name ) {
+        public NpcRow( ModelChara npc, string name ) {
             Name = name;
             RowId = ( int )npc.RowId;
             ModelId = npc.Model;

@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
@@ -37,7 +37,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
             Dialog.DrawBgmSituation( Selected.Name, Loaded.Situation, SelectResultType.GameMusic );
         }
 
-        public static BgmSituationStruct GetBgmSituation( ushort bgmId ) {
+        public static BgmSituationStruct GetBgmSituation( uint bgmId ) {
             if( bgmId < 1000 ) {
                 return new BgmSituationStruct {
                     Path = Dalamud.DataManager.GetExcelSheet<BGM>().GetRow( bgmId )?.File.ToString(),
