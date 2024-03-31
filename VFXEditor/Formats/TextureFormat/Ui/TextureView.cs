@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Select;
@@ -39,7 +40,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
         public TextureView( TextureManager manager, List<TextureReplace> textures ) : base( "Textures", textures ) {
             InitialWidth = 300;
-            ExtractSelect = new( "Texture Extract", manager, false, Extract );
+            ExtractSelect = new( "Texture Extract", manager, true, Extract );
             ImportSelect = new( "Texture Import", manager, false, Import );
         }
 
@@ -152,13 +153,15 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
 
 
         public void Extract( SelectResult result ) {
-            if( !Dalamud.DataManager.FileExists( result.Path ) ) return;
-            var ext = result.Path.Split( '.' )[^1].ToLower();
-            var file = Dalamud.DataManager.GetFile<TextureDataFile>( result.Path );
+            var file = result.Type == SelectResultType.Local ?
+                ( Path.Exists( result.Path ) ? TextureDataFile.LoadFromLocal( result.Path ) : null ) :
+                ( Dalamud.DataManager.FileExists( result.Path ) ? Dalamud.DataManager.GetFile<TextureDataFile>( result.Path ) : null );
+
+            if( file == null ) return;
 
             if( ExtractType == ExtractFileType.DDS ) file.SaveDdsDialog();
             else if( ExtractType == ExtractFileType.PNG ) file.SavePngDialog();
-            else file.SaveTexDialog( ext );
+            else file.SaveTexDialog( result.Path.Split( '.' )[^1].ToLower() );
         }
 
         public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result );

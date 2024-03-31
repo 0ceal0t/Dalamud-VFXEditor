@@ -93,7 +93,7 @@ namespace VfxEditor.Select.Penumbra {
             if( filesToAdd == null ) return;
 
             foreach( var (gamePath, localFile) in filesToAdd ) {
-                if( !gamePath.EndsWith( Dialog.Extension ) ) continue;
+                if( !Dialog.Extensions.Any( gamePath.EndsWith ) ) continue;
                 files.Add( (gamePath, Path.Join( modPath, localFile )) );
             }
         }

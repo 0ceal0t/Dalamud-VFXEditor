@@ -209,7 +209,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "TMB Entry{.tmbentry},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbentry},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     ImportEntry( System.IO.File.ReadAllBytes( res ) );

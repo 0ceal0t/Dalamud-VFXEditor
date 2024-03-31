@@ -20,7 +20,7 @@ namespace VfxEditor.Select {
             ImGui.Text( "Game Path" );
             using( var __ = ImRaii.PushId( "Game" ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                ImGui.InputTextWithHint( "##Path", $"vfx/common/eff/wp_astro1h.{Extension}", ref GamePathInput, 255 );
+                ImGui.InputTextWithHint( "##Path", $"vfx/common/eff/wp_astro1h.{Extensions[0]}", ref GamePathInput, 255 );
 
                 ImGui.SameLine();
                 if( ImGui.Button( "SELECT" ) ) SelectGamePath( GamePathInput );
@@ -34,12 +34,12 @@ namespace VfxEditor.Select {
                 using var __ = ImRaii.PushId( "Local" );
 
                 ImGui.SetNextItemWidth( UiUtils.GetOffsetInputSize( UiUtils.GetPaddedIconSize( FontAwesomeIcon.FolderOpen ) ) );
-                ImGui.InputTextWithHint( "##Path", $"C:\\Users\\me\\Desktop\\custom.{Extension}", ref LocalPathInput, 255 );
+                ImGui.InputTextWithHint( "##Path", $"C:\\Users\\me\\Desktop\\custom.{Extensions[0]}", ref LocalPathInput, 255 );
 
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FileBrowserManager.OpenFileDialog( "Select a File", $".{Extension},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileDialog( "Select a File", "Files{" + string.Join( ",", Extensions.Select( e => $".{e}" ) ) + "},.*", ( bool ok, string res ) => {
                             if( !ok ) return;
                             Invoke( new SelectResult( SelectResultType.Local, res, "[LOCAL] " + res, res ) );
                         } );
@@ -83,7 +83,7 @@ namespace VfxEditor.Select {
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
 
             var searched = LoggedFiles
-                .Where( x => x.EndsWith( Extension ) && ( string.IsNullOrEmpty( LoggedFilesSearch ) || x.Contains( LoggedFilesSearch, System.StringComparison.CurrentCultureIgnoreCase ) ) )
+                .Where( x => Extensions.Any( x.EndsWith ) && ( string.IsNullOrEmpty( LoggedFilesSearch ) || x.Contains( LoggedFilesSearch, System.StringComparison.CurrentCultureIgnoreCase ) ) )
                 .ToList();
 
             var itemHeight = ImGui.GetTextLineHeight() + ImGui.GetStyle().ItemSpacing.Y;
