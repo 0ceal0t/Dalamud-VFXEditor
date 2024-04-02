@@ -125,7 +125,7 @@ namespace VfxEditor.Select {
                                 else {
                                     var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
                                     if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                                        ImGui.Image( icon.ImGuiHandle, new Vector2( itemHeight, itemHeight ) );
+                                        ImGui.Image( icon.ImGuiHandle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
                                     }
                                 }
 

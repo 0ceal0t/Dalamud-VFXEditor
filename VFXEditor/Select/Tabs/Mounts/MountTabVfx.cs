@@ -39,7 +39,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            ImGui.Text( "Variant: " + Selected.Variant );
+            ImGui.TextDisabled( "Variant: " + Selected.Variant );
             ImGui.Text( "IMC: " );
             ImGui.SameLine();
             SelectUiUtils.DisplayPath( Loaded.ImcPath );
