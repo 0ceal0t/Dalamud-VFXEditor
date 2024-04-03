@@ -386,15 +386,13 @@ namespace VfxEditor.FileManager {
         private static void DrawCopy( SelectResult result ) {
             if( result == null ) return;
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "CopyPopup" );
-            if( ImGui.BeginPopup( "CopyPopup" ) ) {
 
-                ImGui.TextDisabled( result.Path );
-                ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 4 );
-                SelectUiUtils.Copy( result.Path );
-
-                ImGui.EndPopup();
-            }
+            using var popup = ImRaii.Popup( "CopyPopup" );
+            if( !popup ) return;
+            ImGui.TextDisabled( result.Path );
+            ImGui.SameLine();
+            ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( 4, -2 ) );
+            SelectUiUtils.Copy( result.Path );
         }
 
         // ==========================

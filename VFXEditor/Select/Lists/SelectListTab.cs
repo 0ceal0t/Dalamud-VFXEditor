@@ -10,6 +10,7 @@ namespace VfxEditor.Select.Lists {
         protected readonly string Name;
 
         protected Vector2 DefaultWindowPadding = new();
+        protected string SearchInput = "";
 
         public SelectListTab( SelectDialog dialog, string name, List<SelectResult> items ) {
             Dialog = dialog;
@@ -27,25 +28,31 @@ namespace VfxEditor.Select.Lists {
 
             DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+            ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
+
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 3 ) );
+            using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
+            using var table = ImRaii.Table( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit );
+            if( !table ) return;
+            padding.Dispose();
 
-            if( ImGui.BeginTable( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit ) ) {
-                ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthFixed, 25 );
-                ImGui.TableSetupColumn( "##Column2" );
-                ImGui.TableSetupColumn( "##Column3", ImGuiTableColumnFlags.WidthStretch );
+            ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthFixed, 25 );
+            ImGui.TableSetupColumn( "##Column2" );
+            ImGui.TableSetupColumn( "##Column3", ImGuiTableColumnFlags.WidthStretch );
 
-                var idx = 0;
-                foreach( var item in Items ) {
-                    if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
+            var idx = 0;
+            foreach( var item in Items ) {
+                if( item.Type == SelectResultType.Local && !Dialog.ShowLocal ) continue;
+                if( !( string.IsNullOrEmpty( SearchInput ) ||
+                    item.Path.Contains( SearchInput, System.StringComparison.CurrentCultureIgnoreCase ) ||
+                    ( string.IsNullOrEmpty( item.Name ) ? item.DisplayString : item.Name ).Contains( SearchInput, System.StringComparison.CurrentCultureIgnoreCase )
+                ) ) continue;
 
-                    ImGui.TableNextRow();
-                    if( DrawRow( item, idx ) ) break;
+                ImGui.TableNextRow();
+                if( DrawRow( item, idx ) ) break;
 
-                    idx++;
-                }
-
-                ImGui.EndTable();
+                idx++;
             }
         }
 
