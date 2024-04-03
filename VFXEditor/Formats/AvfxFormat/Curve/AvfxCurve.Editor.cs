@@ -36,22 +36,25 @@ namespace VfxEditor.AvfxFormat {
         private void DrawEditor() {
             using var _ = ImRaii.PushId( Id );
 
-            DrawControls();
+            DrawControls( out var fit );
             Selected.RemoveAll( x => !Keys.Contains( x ) );
 
             if( !DrawOnce ) {
-                ImPlot.SetNextAxesToFit();
+                fit = true;
                 DrawOnce = true;
             }
 
             var wrongOrder = false;
-            if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
-
             var height = ImGui.GetContentRegionAvail().Y - ( 4 * ImGui.GetFrameHeightWithSpacing() + 5 );
 
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
             if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
-                if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
+                if( fit ) ImPlot.SetNextAxesToFit();
+                if( IsColor ) {
+                    ImPlot.SetupAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+                    ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
+                }
+
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
@@ -150,7 +153,8 @@ namespace VfxEditor.AvfxFormat {
             SelectedPrimary?.Draw();
         }
 
-        private void DrawControls() {
+        private void DrawControls( out bool fit ) {
+            fit = false;
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             if( Type == CurveType.Angle ) {
@@ -166,7 +170,7 @@ namespace VfxEditor.AvfxFormat {
             }
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                if( ImGui.SmallButton( "Fit" ) ) ImPlot.SetNextAxesToFit();
+                if( ImGui.SmallButton( "Fit" ) ) fit = true;
 
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( "Copy", Keys.Count > 0, true ) ) Copy();
