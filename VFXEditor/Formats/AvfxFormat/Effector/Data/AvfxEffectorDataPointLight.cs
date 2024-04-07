@@ -37,10 +37,10 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( ShadowCreateDistanceNear );
             ParameterTab.Add( ShadowCreateDistanceFar );
 
-            DisplayTabs.Add( Color );
-            DisplayTabs.Add( DistanceScale );
-            DisplayTabs.Add( Rotation );
-            DisplayTabs.Add( Position );
+            Tabs.Add( Color );
+            Tabs.Add( DistanceScale );
+            Tabs.Add( Rotation );
+            Tabs.Add( Position );
         }
     }
 }

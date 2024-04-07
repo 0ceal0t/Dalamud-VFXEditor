@@ -32,12 +32,12 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( DivideX );
             ParameterTab.Add( DivideY );
 
-            DisplayTabs.Add( Radius );
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
+            Tabs.Add( Radius );
+            Tabs.Add( Length );
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
         }
     }
 }

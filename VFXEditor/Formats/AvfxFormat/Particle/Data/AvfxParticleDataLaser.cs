@@ -9,8 +9,8 @@ namespace VfxEditor.AvfxFormat {
                 Width
             ];
 
-            DisplayTabs.Add( Width );
-            DisplayTabs.Add( Length );
+            Tabs.Add( Width );
+            Tabs.Add( Length );
         }
     }
 }

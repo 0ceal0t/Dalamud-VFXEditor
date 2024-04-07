@@ -43,17 +43,17 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( PointIntervalFactoryV );
             ParameterTab.Add( SS );
 
-            DisplayTabs.Add( Angle );
-            DisplayTabs.Add( HeightBeginInner );
-            DisplayTabs.Add( HeightEndInner );
-            DisplayTabs.Add( HeightBeginOuter );
-            DisplayTabs.Add( HeightEndOuter );
-            DisplayTabs.Add( WidthBegin );
-            DisplayTabs.Add( WidthEnd );
-            DisplayTabs.Add( RadiusBegin );
-            DisplayTabs.Add( RadiusEnd );
-            DisplayTabs.Add( ColorEdgeInner );
-            DisplayTabs.Add( ColorEdgeOuter );
+            Tabs.Add( Angle );
+            Tabs.Add( HeightBeginInner );
+            Tabs.Add( HeightEndInner );
+            Tabs.Add( HeightBeginOuter );
+            Tabs.Add( HeightEndOuter );
+            Tabs.Add( WidthBegin );
+            Tabs.Add( WidthEnd );
+            Tabs.Add( RadiusBegin );
+            Tabs.Add( RadiusEnd );
+            Tabs.Add( ColorEdgeInner );
+            Tabs.Add( ColorEdgeOuter );
         }
     }
 }

@@ -29,11 +29,11 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( RotationOrderType );
             ParameterTab.Add( GenerateMethodType );
 
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( AZ );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( AZ );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
         }
 
         public override void Enable() {

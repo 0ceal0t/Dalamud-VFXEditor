@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
                 Count
             ];
 
-            DisplayTabs.Add( Count );
+            Tabs.Add( Count );
         }
     }
 }

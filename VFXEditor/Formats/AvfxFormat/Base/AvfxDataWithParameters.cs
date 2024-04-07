@@ -3,7 +3,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiDisplayList ParameterTab = new( "Parameters" );
 
         public AvfxDataWithParameters( bool optional = false ) : base( optional ) {
-            DisplayTabs.Add( ParameterTab );
+            Tabs.Add( ParameterTab );
         }
     }
 }

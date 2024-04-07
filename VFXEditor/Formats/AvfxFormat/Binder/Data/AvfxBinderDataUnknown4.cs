@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
                 CarryOverFactor
             ];
 
-            DisplayTabs.Add( CarryOverFactor );
+            Tabs.Add( CarryOverFactor );
         }
     }
 }

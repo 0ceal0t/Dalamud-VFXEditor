@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( ScalingScale );
             ParameterTab.Add( RingFan );
 
-            DisplayTabs.Add( Width );
+            Tabs.Add( Width );
         }
     }
 }

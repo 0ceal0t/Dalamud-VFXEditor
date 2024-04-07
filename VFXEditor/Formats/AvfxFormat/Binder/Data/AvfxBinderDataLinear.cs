@@ -9,8 +9,8 @@ namespace VfxEditor.AvfxFormat {
                 CarryOverFactorRandom
             ];
 
-            DisplayTabs.Add( CarryOverFactor );
-            DisplayTabs.Add( CarryOverFactorRandom );
+            Tabs.Add( CarryOverFactor );
+            Tabs.Add( CarryOverFactorRandom );
         }
     }
 }

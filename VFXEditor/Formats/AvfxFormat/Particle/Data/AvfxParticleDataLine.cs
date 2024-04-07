@@ -17,10 +17,10 @@ namespace VfxEditor.AvfxFormat {
 
             ParameterTab.Add( LineCount );
 
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( LengthRandom );
-            DisplayTabs.Add( ColorBegin );
-            DisplayTabs.Add( ColorEnd );
+            Tabs.Add( Length );
+            Tabs.Add( LengthRandom );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorEnd );
         }
     }
 }

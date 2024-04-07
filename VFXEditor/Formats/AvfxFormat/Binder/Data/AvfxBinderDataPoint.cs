@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
                 SpringStrength
             ];
 
-            DisplayTabs.Add( SpringStrength );
+            Tabs.Add( SpringStrength );
         }
     }
 }

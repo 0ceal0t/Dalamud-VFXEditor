@@ -30,11 +30,11 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( DivideX );
             ParameterTab.Add( DivideY );
 
-            DisplayTabs.Add( Radius );
-            DisplayTabs.Add( AZ );
-            DisplayTabs.Add( AYR );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
+            Tabs.Add( Radius );
+            Tabs.Add( AZ );
+            Tabs.Add( AYR );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
         }
     }
 }

@@ -38,15 +38,15 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( DivideX );
             ParameterTab.Add( DivideY );
 
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( AXR );
-            DisplayTabs.Add( AYR );
-            DisplayTabs.Add( Radius );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
-            DisplayTabs.Add( InjectionAngle );
-            DisplayTabs.Add( InjectionAngleRandom );
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( AXR );
+            Tabs.Add( AYR );
+            Tabs.Add( Radius );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
+            Tabs.Add( InjectionAngle );
+            Tabs.Add( InjectionAngleRandom );
         }
     }
 }

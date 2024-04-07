@@ -13,10 +13,10 @@ namespace VfxEditor.AvfxFormat {
                 Rotation
             ];
 
-            DisplayTabs.Add( Ambient );
-            DisplayTabs.Add( Color );
-            DisplayTabs.Add( Power );
-            DisplayTabs.Add( Rotation );
+            Tabs.Add( Ambient );
+            Tabs.Add( Color );
+            Tabs.Add( Power );
+            Tabs.Add( Rotation );
         }
     }
 }

@@ -25,13 +25,13 @@ namespace VfxEditor.AvfxFormat {
 
             ParameterTab.Add( RotationOrderType );
 
-            DisplayTabs.Add( AX );
-            DisplayTabs.Add( AY );
-            DisplayTabs.Add( InnerSize );
-            DisplayTabs.Add( OuterSize );
-            DisplayTabs.Add( InjectionSpeed );
-            DisplayTabs.Add( InjectionSpeedRandom );
-            DisplayTabs.Add( InjectionAngle );
+            Tabs.Add( AX );
+            Tabs.Add( AY );
+            Tabs.Add( InnerSize );
+            Tabs.Add( OuterSize );
+            Tabs.Add( InjectionSpeed );
+            Tabs.Add( InjectionSpeedRandom );
+            Tabs.Add( InjectionAngle );
         }
     }
 }

@@ -9,8 +9,8 @@ namespace VfxEditor.AvfxFormat {
                 DistanceRandom
             ];
 
-            DisplayTabs.Add( Distance );
-            DisplayTabs.Add( DistanceRandom );
+            Tabs.Add( Distance );
+            Tabs.Add( DistanceRandom );
         }
     }
 }

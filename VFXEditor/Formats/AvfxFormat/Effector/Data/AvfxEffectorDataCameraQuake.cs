@@ -15,11 +15,11 @@ namespace VfxEditor.AvfxFormat {
                 Position
             ];
 
-            DisplayTabs.Add( Attenuation );
-            DisplayTabs.Add( RadiusOut );
-            DisplayTabs.Add( RadiusIn );
-            DisplayTabs.Add( Rotation );
-            DisplayTabs.Add( Position );
+            Tabs.Add( Attenuation );
+            Tabs.Add( RadiusOut );
+            Tabs.Add( RadiusIn );
+            Tabs.Add( Rotation );
+            Tabs.Add( Position );
         }
     }
 }

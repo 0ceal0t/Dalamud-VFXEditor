@@ -85,24 +85,24 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( IsSpline );
             ParameterTab.Add( IsLocal );
 
-            DisplayTabs.Add( Width );
-            DisplayTabs.Add( WidthBegin );
-            DisplayTabs.Add( WidthCenter );
-            DisplayTabs.Add( WidthEnd );
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( LengthRandom );
+            Tabs.Add( Width );
+            Tabs.Add( WidthBegin );
+            Tabs.Add( WidthCenter );
+            Tabs.Add( WidthEnd );
+            Tabs.Add( Length );
+            Tabs.Add( LengthRandom );
 
-            DisplayTabs.Add( ColorBegin );
-            DisplayTabs.Add( ColorCenter );
-            DisplayTabs.Add( ColorEnd );
-            DisplayTabs.Add( ColorEdgeBegin );
-            DisplayTabs.Add( ColorEdgeCenter );
-            DisplayTabs.Add( ColorEdgeEnd );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorCenter );
+            Tabs.Add( ColorEnd );
+            Tabs.Add( ColorEdgeBegin );
+            Tabs.Add( ColorEdgeCenter );
+            Tabs.Add( ColorEdgeEnd );
 
-            DisplayTabs.Add( CF );
-            DisplayTabs.Add( Softness );
-            DisplayTabs.Add( SoftRandom );
-            DisplayTabs.Add( PnDs );
+            Tabs.Add( CF );
+            Tabs.Add( Softness );
+            Tabs.Add( SoftRandom );
+            Tabs.Add( PnDs );
         }
     }
 }

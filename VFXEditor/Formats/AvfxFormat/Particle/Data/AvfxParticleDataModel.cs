@@ -49,12 +49,12 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( IsLightning );
             ParameterTab.Add( IsMorph );
 
-            DisplayTabs.Add( Morph );
-            DisplayTabs.Add( FresnelCurve );
-            DisplayTabs.Add( FresnelRotation );
-            DisplayTabs.Add( ColorBegin );
-            DisplayTabs.Add( ColorEnd );
-            DisplayTabs.Add( AnimationNumber );
+            Tabs.Add( Morph );
+            Tabs.Add( FresnelCurve );
+            Tabs.Add( FresnelRotation );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorEnd );
+            Tabs.Add( AnimationNumber );
         }
 
         public override void Enable() => ModelSelect.Enable();

@@ -27,11 +27,11 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( FadeEndDistance );
             ParameterTab.Add( FadeBasePointType );
 
-            DisplayTabs.Add( Length );
-            DisplayTabs.Add( Strength );
-            DisplayTabs.Add( Gradation );
-            DisplayTabs.Add( InnerRadius );
-            DisplayTabs.Add( OuterRadius );
+            Tabs.Add( Length );
+            Tabs.Add( Strength );
+            Tabs.Add( Gradation );
+            Tabs.Add( InnerRadius );
+            Tabs.Add( OuterRadius );
         }
     }
 }

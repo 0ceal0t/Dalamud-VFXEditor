@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +10,13 @@ namespace VfxEditor.AvfxFormat {
         protected List<AvfxBase> Parsed;
 
         public readonly bool Optional;
-        public readonly List<AvfxItem> DisplayTabs = [];
-        public readonly AvfxDisplaySplitView<AvfxItem> SplitView;
+        public readonly List<AvfxItem> Tabs = [];
+
+        private readonly AvfxDisplaySplitView<AvfxItem> SplitView;
 
         public AvfxData( bool optional = false ) : base( "Data" ) {
             Optional = optional;
-            SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", DisplayTabs );
+            SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", Tabs );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
@@ -27,7 +29,13 @@ namespace VfxEditor.AvfxFormat {
 
         public override string GetDefaultText() => "Data";
 
-        public override void Draw() => SplitView.Draw();
+        public override void Draw() {
+            if( Tabs.Count == 1 ) {
+                using var child = ImRaii.Child( "Child" );
+                Tabs[0].Draw();
+            }
+            else SplitView.Draw();
+        }
 
         public virtual void Enable() { }
 
