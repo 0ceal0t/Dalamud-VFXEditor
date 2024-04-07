@@ -234,9 +234,10 @@ namespace VfxEditor.AvfxFormat {
             Peek( reader, Parsed, size );
             Peek( reader, Parsed2, size );
 
+            UpdateData(); // TODO: check if moving this here breaks anything
+
             ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
                 if( _name == "Data" ) {
-                    UpdateData();
                     Data?.Read( _reader, _size );
                 }
                 else if( _name == "UvSt" ) {
@@ -273,7 +274,7 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Line => new AvfxParticleDataLine(),
                 ParticleType.Model => new AvfxParticleDataModel( this ),
                 ParticleType.Polyline => new AvfxParticleDataPolyline(),
-                ParticleType.Quad => null,
+                ParticleType.Quad => new AvfxParticleDataQuad(),
                 ParticleType.Polygon => new AvfxParticleDataPolygon(),
                 ParticleType.Decal => new AvfxParticleDataDecal(),
                 ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
@@ -282,13 +283,15 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Laser => new AvfxParticleDataLaser(),
                 _ => null,
             };
-            Data?.SetAssigned( true );
+
+            Data?.SetAssigned( !Data.Optional );
         }
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Particle" );
             DrawRename();
             Type.Draw();
+            Data?.DrawEnableCheckbox();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -314,7 +317,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void DrawData() {
-            if( Data == null ) return;
+            if( Data == null || ( Data.Optional && !Data.IsAssigned() ) ) return;
 
             using var tabItem = ImRaii.TabItem( "Data" );
             if( !tabItem ) return;

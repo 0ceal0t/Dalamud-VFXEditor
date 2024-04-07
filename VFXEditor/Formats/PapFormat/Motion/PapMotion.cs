@@ -51,7 +51,7 @@ namespace VfxEditor.PapFormat.Motion {
             Preview = file.IsMaterial ? new PapMotionMaterial( this ) : new PapMotionSkeleton( this );
         }
 
-        public void Draw( int idx ) => Preview.Draw( idx );
+        public void DrawPreview( int idx ) => Preview.Draw( idx );
 
         public void DrawHavok() {
             ImGui.TextDisabled( $"{Animation->Type}" );

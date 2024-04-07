@@ -1,5 +1,5 @@
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataDisc : AvfxData {
+    public class AvfxParticleDataDisc : AvfxDataWithParameters {
         public readonly AvfxInt PartsCount = new( "Parts Count", "PrtC" );
         public readonly AvfxInt PartsCountU = new( "Parts Count U", "PCnU" );
         public readonly AvfxInt PartsCountV = new( "Parts Count V", "PCnV" );
@@ -15,8 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve RadiusEnd = new( "Radius End", "RE" );
         public readonly AvfxCurveColor ColorEdgeInner = new( name: "Color Edge Inner", "CEI" );
         public readonly AvfxCurveColor ColorEdgeOuter = new( name: "Color Edge Outer", "CEO" );
-
-        public readonly UiDisplayList Display;
+        public readonly AvfxInt SS = new( "Scaling Scale", "SS" );
 
         public AvfxParticleDataDisc() : base() {
             Parsed = [
@@ -34,14 +33,16 @@ namespace VfxEditor.AvfxFormat {
                 RadiusBegin,
                 RadiusEnd,
                 ColorEdgeInner,
-                ColorEdgeOuter
+                ColorEdgeOuter,
+                SS
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( PartsCount );
-            Display.Add( PartsCountU );
-            Display.Add( PartsCountV );
-            Display.Add( PointIntervalFactoryV );
+            ParameterTab.Add( PartsCount );
+            ParameterTab.Add( PartsCountU );
+            ParameterTab.Add( PartsCountV );
+            ParameterTab.Add( PointIntervalFactoryV );
+            ParameterTab.Add( SS );
+
             DisplayTabs.Add( Angle );
             DisplayTabs.Add( HeightBeginInner );
             DisplayTabs.Add( HeightEndInner );

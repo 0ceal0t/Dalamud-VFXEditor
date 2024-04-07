@@ -36,7 +36,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private static readonly byte[] PagePattern = [0x4F, 0x67, 0x67, 0x53, 0x00];
 
         public ScdVorbis( byte[] data, ScdAudioEntry entry ) : base( entry ) {
-            EncodedData = Array.Empty<byte>();
+            EncodedData = [];
             DecodedData = data;
             Data = DecodedData;
             Entry.DataLength = Data.Length;
@@ -63,7 +63,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 SeekStep = 0.1f;
 
                 reader.ReadBytes( 0x35C ); // skip legacy header
-                EncodedData = Array.Empty<byte>();
+                EncodedData = [];
                 DecodedData = reader.ReadBytes( entry.DataLength + 0x10 );
                 Data = DecodedData;
                 Entry.DataLength = Data.Length;

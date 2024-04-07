@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitterDataCone : AvfxData {
+    public class AvfxEmitterDataCone : AvfxDataWithParameters {
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
         public readonly AvfxCurve AY = new( "Angle Y", "AnY", CurveType.Angle );
@@ -10,8 +10,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
         public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
-
-        public readonly UiDisplayList Display;
 
         public AvfxEmitterDataCone() : base() {
             Parsed = [
@@ -25,8 +23,8 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngle
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( RotationOrderType );
+            ParameterTab.Add( RotationOrderType );
+
             DisplayTabs.Add( AX );
             DisplayTabs.Add( AY );
             DisplayTabs.Add( InnerSize );

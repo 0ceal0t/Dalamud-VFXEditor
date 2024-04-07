@@ -76,7 +76,7 @@ namespace VfxEditor.PapFormat.Motion {
             else {
                 Selector.Draw();
             }
-            Motions[havokIndex].Draw( havokIndex );
+            Motions[havokIndex].DrawPreview( havokIndex );
         }
 
         public void DrawExportAll() {

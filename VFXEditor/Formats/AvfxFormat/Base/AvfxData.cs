@@ -1,15 +1,19 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxData : AvfxItem, IData {
         protected List<AvfxBase> Parsed;
 
+        public readonly bool Optional;
         public readonly List<AvfxItem> DisplayTabs = [];
         public readonly AvfxDisplaySplitView<AvfxItem> SplitView;
 
-        public AvfxData() : base( "Data" ) {
+        public AvfxData( bool optional = false ) : base( "Data" ) {
+            Optional = optional;
             SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", DisplayTabs );
         }
 
@@ -28,5 +32,13 @@ namespace VfxEditor.AvfxFormat {
         public virtual void Enable() { }
 
         public virtual void Disable() { }
+
+        public void DrawEnableCheckbox() {
+            if( !Optional ) return;
+            var assigned = Assigned;
+            if( ImGui.Checkbox( "Enable Data", ref assigned ) ) {
+                CommandManager.Add( new AvfxAssignCommand( this, assigned ) );
+            }
+        }
     }
 }

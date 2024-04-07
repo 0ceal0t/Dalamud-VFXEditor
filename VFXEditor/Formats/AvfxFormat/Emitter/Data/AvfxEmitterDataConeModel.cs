@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitterDataConeModel : AvfxData {
+    public class AvfxEmitterDataConeModel : AvfxDataWithParameters {
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
         public readonly AvfxInt DivideX = new( "Divide X", "DivX" );
@@ -15,8 +15,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
         public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
         public readonly AvfxCurve InjectionAngleRandom = new( "Injection Angle Random", "IjAR", CurveType.Angle );
-
-        public readonly UiDisplayList Display;
 
         public AvfxEmitterDataConeModel() : base() {
             Parsed = [
@@ -35,11 +33,11 @@ namespace VfxEditor.AvfxFormat {
                 InjectionAngleRandom
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( RotationOrderType );
-            Display.Add( GenerateMethodType );
-            Display.Add( DivideX );
-            Display.Add( DivideY );
+            ParameterTab.Add( RotationOrderType );
+            ParameterTab.Add( GenerateMethodType );
+            ParameterTab.Add( DivideX );
+            ParameterTab.Add( DivideY );
+
             DisplayTabs.Add( AX );
             DisplayTabs.Add( AY );
             DisplayTabs.Add( AXR );

@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataPolyline : AvfxData {
+    public class AvfxParticleDataPolyline : AvfxDataWithParameters {
         public readonly AvfxEnum<LineCreateType> CreateLineType = new( "Create Line Type", "LnCT" );
         public readonly AvfxEnum<NotBillboardBaseAxisType> NotBillBoardBaseAxisType = new( "Not Billboard Base Axis", "NBBA" );
         public readonly AvfxInt BindWeaponType = new( "Bind Weapon Type", "BWpT" );
@@ -34,8 +34,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor ColorEdgeBegin = new( name: "Color Edge Begin", "CoEB" );
         public readonly AvfxCurveColor ColorEdgeCenter = new( name: "Color Edge Center", "CoEC" );
         public readonly AvfxCurveColor ColorEdgeEnd = new( name: "Color Edge End", "CoEE" );
-
-        public readonly UiDisplayList Display;
 
         public AvfxParticleDataPolyline() : base() {
             Parsed = [
@@ -72,21 +70,20 @@ namespace VfxEditor.AvfxFormat {
                 ColorEdgeEnd
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( CreateLineType );
-            Display.Add( NotBillBoardBaseAxisType );
-            Display.Add( BindWeaponType );
-            Display.Add( PointCount );
-            Display.Add( PointCountCenter );
-            Display.Add( PointCountEndDistortion );
-            Display.Add( UseEdge );
-            Display.Add( NotBillboard );
-            Display.Add( BindWeapon );
-            Display.Add( ConnectTarget );
-            Display.Add( ConnectTargetReverse );
-            Display.Add( TagNumber );
-            Display.Add( IsSpline );
-            Display.Add( IsLocal );
+            ParameterTab.Add( CreateLineType );
+            ParameterTab.Add( NotBillBoardBaseAxisType );
+            ParameterTab.Add( BindWeaponType );
+            ParameterTab.Add( PointCount );
+            ParameterTab.Add( PointCountCenter );
+            ParameterTab.Add( PointCountEndDistortion );
+            ParameterTab.Add( UseEdge );
+            ParameterTab.Add( NotBillboard );
+            ParameterTab.Add( BindWeapon );
+            ParameterTab.Add( ConnectTarget );
+            ParameterTab.Add( ConnectTargetReverse );
+            ParameterTab.Add( TagNumber );
+            ParameterTab.Add( IsSpline );
+            ParameterTab.Add( IsLocal );
 
             DisplayTabs.Add( Width );
             DisplayTabs.Add( WidthBegin );

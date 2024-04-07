@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorDataPointLight : AvfxData {
+    public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
         public readonly AvfxCurveColor Color = new( "Color" );
         public readonly AvfxCurve DistanceScale = new( "Distance Scale", "DstS" );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
@@ -13,8 +13,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool EnableMoveShadow = new( "Enabled Move Shadow", "bMvS" );
         public readonly AvfxFloat ShadowCreateDistanceNear = new( "Create Distance Near", "SCDN" );
         public readonly AvfxFloat ShadowCreateDistanceFar = new( "Create Distance Far", "SCDF" );
-
-        public readonly UiDisplayList Display;
 
         public AvfxEffectorDataPointLight() : base() {
             Parsed = [
@@ -31,14 +29,13 @@ namespace VfxEditor.AvfxFormat {
                 ShadowCreateDistanceFar
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( PointLightAttenuationType );
-            Display.Add( EnableShadow );
-            Display.Add( EnableCharShadow );
-            Display.Add( EnableMapShadow );
-            Display.Add( EnableMoveShadow );
-            Display.Add( ShadowCreateDistanceNear );
-            Display.Add( ShadowCreateDistanceFar );
+            ParameterTab.Add( PointLightAttenuationType );
+            ParameterTab.Add( EnableShadow );
+            ParameterTab.Add( EnableCharShadow );
+            ParameterTab.Add( EnableMapShadow );
+            ParameterTab.Add( EnableMoveShadow );
+            ParameterTab.Add( ShadowCreateDistanceNear );
+            ParameterTab.Add( ShadowCreateDistanceFar );
 
             DisplayTabs.Add( Color );
             DisplayTabs.Add( DistanceScale );

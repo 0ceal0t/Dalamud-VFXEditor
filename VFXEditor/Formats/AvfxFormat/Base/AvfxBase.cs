@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
 
         public string GetAvfxName() => AvfxName;
 
-        public bool IsAssigned() => Assigned;
+        public virtual bool IsAssigned() => Assigned;
 
         protected abstract IEnumerable<AvfxBase> GetChildren();
 
@@ -35,8 +35,8 @@ namespace VfxEditor.AvfxFormat {
 
         public void AssignedCopyPaste( string name ) {
             CopyManager.TrySetAssigned( this, name );
-            if( CopyManager.TryGetAssigned( this, name, out var val ) ) {
-                CommandManager.Paste( new AvfxAssignCommand( this, val, false, false ) );
+            if( CopyManager.TryGetAssigned( this, name, out var assigned ) ) {
+                CommandManager.Paste( new AvfxAssignCommand( this, assigned ) );
             }
         }
 
@@ -45,21 +45,21 @@ namespace VfxEditor.AvfxFormat {
 
             if( name.StartsWith( "##" ) ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
-                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) CommandManager.Add( new AvfxAssignCommand( this, true, recurse, false ) );
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) CommandManager.Add( new AvfxAssignCommand( this, true, recurse: recurse ) );
             }
             else {
-                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommand( this, true, recurse, false ) );
+                if( ImGui.SmallButton( $"+ {name}" ) ) CommandManager.Add( new AvfxAssignCommand( this, true, recurse: recurse ) );
             }
             return true;
         }
 
         public void DrawUnassignPopup( string name ) {
-            if( UnassignPopup( name ) ) CommandManager.Add( new AvfxAssignCommand( this, false, false, false ) );
+            if( UnassignPopup( name ) ) CommandManager.Add( new AvfxAssignCommand( this, false ) );
         }
 
         public bool DrawUnassignButton( string name ) {
             if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
-                CommandManager.Add( new AvfxAssignCommand( this, false, false, false ) );
+                CommandManager.Add( new AvfxAssignCommand( this, false ) );
                 return true;
             }
             return false;
@@ -72,9 +72,9 @@ namespace VfxEditor.AvfxFormat {
 
             if( ImGui.SmallButton( $"+ {name}" ) ) {
                 var commands = new List<ICommand> {
-                    new AvfxAssignCommand( this, true, false, true )
+                    new AvfxAssignCommand( this, true, toggleState: true )
                 };
-                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, true, false, true ) );
+                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, true, toggleState: true ) );
                 CommandManager.Add( new CompoundCommand( commands ) );
             }
             return true;
@@ -83,9 +83,9 @@ namespace VfxEditor.AvfxFormat {
         public void DrawUnassignPopup<T>( List<T> items, string name ) where T : AvfxBase {
             if( UnassignPopup( name ) ) {
                 var commands = new List<ICommand> {
-                    new AvfxAssignCommand( this, false, false, true )
+                    new AvfxAssignCommand( this, false, toggleState: true )
                 };
-                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, false, false, true ) );
+                foreach( var item in items ) commands.Add( new AvfxAssignCommand( item, false, toggleState: true ) );
                 CommandManager.Add( new CompoundCommand( commands ) );
             }
         }

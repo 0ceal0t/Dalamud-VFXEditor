@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorDataRadialBlur : AvfxData {
+    public class AvfxEffectorDataRadialBlur : AvfxDataWithParameters {
         public readonly AvfxCurve Length = new( "Length", "Len" );
         public readonly AvfxCurve Strength = new( "Strength", "Str" );
         public readonly AvfxCurve Gradation = new( "Gradation", "Gra" );
@@ -10,8 +10,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat FadeStartDistance = new( "Fade Start Distance", "FSDc" );
         public readonly AvfxFloat FadeEndDistance = new( "Fade End Distance", "FEDc" );
         public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "Fade Base Point", "FaBP" );
-
-        public readonly UiDisplayList Display;
 
         public AvfxEffectorDataRadialBlur() : base() {
             Parsed = [
@@ -25,10 +23,9 @@ namespace VfxEditor.AvfxFormat {
                 FadeBasePointType
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( FadeStartDistance );
-            Display.Add( FadeEndDistance );
-            Display.Add( FadeBasePointType );
+            ParameterTab.Add( FadeStartDistance );
+            ParameterTab.Add( FadeEndDistance );
+            ParameterTab.Add( FadeBasePointType );
 
             DisplayTabs.Add( Length );
             DisplayTabs.Add( Strength );

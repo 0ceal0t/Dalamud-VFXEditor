@@ -1,18 +1,15 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataWindmill : AvfxData {
+    public class AvfxParticleDataWindmill : AvfxDataWithParameters {
         public readonly AvfxEnum<WindmillUVType> WindmillUVType = new( "Windmill UV Type", "WUvT" );
-
-        public readonly UiDisplayList Display;
 
         public AvfxParticleDataWindmill() : base() {
             Parsed = [
                 WindmillUVType
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( WindmillUVType );
+            ParameterTab.Add( WindmillUVType );
         }
     }
 }

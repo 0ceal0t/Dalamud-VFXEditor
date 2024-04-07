@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEmitterDataModel : AvfxData {
+    public class AvfxEmitterDataModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MdNo", value: -1 );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
@@ -12,7 +12,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
-        public readonly UiDisplayList Display;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
             Parsed = [
@@ -26,10 +25,10 @@ namespace VfxEditor.AvfxFormat {
                 InjectionSpeedRandom
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
-            Display.Add( RotationOrderType );
-            Display.Add( GenerateMethodType );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( RotationOrderType );
+            ParameterTab.Add( GenerateMethodType );
+
             DisplayTabs.Add( AX );
             DisplayTabs.Add( AY );
             DisplayTabs.Add( AZ );

@@ -8,7 +8,7 @@ namespace VfxEditor.Formats.AvfxFormat.Assign {
         private readonly bool ToggleState;
         private readonly bool PrevState;
 
-        public AvfxAssignCommand( AvfxBase item, bool assigned, bool recurse, bool toggleState ) {
+        public AvfxAssignCommand( AvfxBase item, bool assigned, bool recurse = false, bool toggleState = false ) {
             Item = item;
             Assigned = assigned;
             Recurse = recurse;

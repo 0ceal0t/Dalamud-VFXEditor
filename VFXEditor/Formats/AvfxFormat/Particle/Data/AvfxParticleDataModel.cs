@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataModel : AvfxData {
+    public class AvfxParticleDataModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelNumberRandomValue = new( "Model Number Random", "MNRv" );
         public readonly AvfxEnum<RandomType> ModelNumberRandomType = new( "Model Number Random Type", "MNRt" );
         public readonly AvfxInt ModelNumberRandomInterval = new( "Model Number Random Interval", "MNRi" );
@@ -19,7 +19,6 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
 
         public readonly AvfxNodeSelectList<AvfxModel> ModelSelect;
-        public readonly UiDisplayList Display;
 
         public AvfxParticleDataModel( AvfxParticle particle ) : base() {
             Parsed = [
@@ -40,16 +39,15 @@ namespace VfxEditor.AvfxFormat {
                 ColorEnd
             ];
 
-            DisplayTabs.Add( Display = new UiDisplayList( "Parameters" ) );
-            Display.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
-            Display.Add( ModelNumberRandomValue );
-            Display.Add( ModelNumberRandomType );
-            Display.Add( ModelNumberRandomInterval );
-            Display.Add( FresnelType );
-            Display.Add( DirectionalLightType );
-            Display.Add( PointLightType );
-            Display.Add( IsLightning );
-            Display.Add( IsMorph );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( ModelNumberRandomValue );
+            ParameterTab.Add( ModelNumberRandomType );
+            ParameterTab.Add( ModelNumberRandomInterval );
+            ParameterTab.Add( FresnelType );
+            ParameterTab.Add( DirectionalLightType );
+            ParameterTab.Add( PointLightType );
+            ParameterTab.Add( IsLightning );
+            ParameterTab.Add( IsMorph );
 
             DisplayTabs.Add( Morph );
             DisplayTabs.Add( FresnelCurve );
