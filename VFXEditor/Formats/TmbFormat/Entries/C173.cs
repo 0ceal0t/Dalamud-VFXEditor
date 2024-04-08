@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat.Entries {
                 Icon = () => VfxSpawn.IsActive ? FontAwesomeIcon.Times : FontAwesomeIcon.Eye,
                 Remove = false,
                 Action = ( string path ) => {
-                    if( VfxSpawn.IsActive ) VfxSpawn.Remove();
+                    if( VfxSpawn.IsActive ) VfxSpawn.Clear();
                     else VfxSpawn.OnSelf( path, false );
                 }
             }

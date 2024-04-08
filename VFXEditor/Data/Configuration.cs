@@ -44,6 +44,7 @@ namespace VfxEditor {
         public bool AutosaveBackups = true;
         public int BackupCount = 20;
 
+        public bool LockMainWindows = false;
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
@@ -315,6 +316,7 @@ namespace VfxEditor {
                 using var _ = ImRaii.PushIndent( 10f );
                 if( ImGui.Checkbox( "Hide with Game UI", ref HideWithUI ) ) Save();
                 if( ImGui.Checkbox( "Show Tab Bar", ref ShowTabBar ) ) Save();
+                if( ImGui.Checkbox( "Lock Main Windows", ref LockMainWindows ) ) Save();
                 ImGui.SetNextItemWidth( 135 );
                 if( ImGui.InputInt( "Recent File Limit", ref SaveRecentLimit ) ) {
                     SaveRecentLimit = Math.Max( SaveRecentLimit, 0 );

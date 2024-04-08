@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
@@ -43,7 +42,7 @@ namespace VfxEditor.Select.Formats {
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
 
             if( VfxSpawn.IsActive ) {
-                if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) VfxSpawn.Remove();
+                if( ImGui.Button( FontAwesomeIcon.Pause.ToIconString() ) ) VfxSpawn.Clear();
             }
             else {
                 if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) VfxSpawn.OnSelf( path, false );

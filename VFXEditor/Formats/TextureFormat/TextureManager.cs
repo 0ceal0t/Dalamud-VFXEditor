@@ -29,7 +29,7 @@ namespace VfxEditor.Formats.TextureFormat {
         private readonly TextureView View;
         private readonly ManagerConfiguration Configuration;
 
-        public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem ) {
+        public TextureManager() : base( "Textures", false, new( 800, 500 ), Plugin.WindowSystem, isMainWindow: true ) {
             Configuration = Plugin.Configuration.GetManagerConfig( "Tex" );
             View = new( this, Textures );
         }

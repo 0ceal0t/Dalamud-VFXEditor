@@ -49,12 +49,11 @@ namespace VfxEditor.Interop {
             Plugin.TrackerManager?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) Dalamud.Log( $"New Static: {path} {vfx:X8}" );
-
             return vfx;
         }
 
         private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
-            if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
+            VfxSpawn.InteropRemoved( vfx );
             Plugin.TrackerManager?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
@@ -64,12 +63,11 @@ namespace VfxEditor.Interop {
             Plugin.TrackerManager?.Vfx.AddActor( ( VfxStruct* )vfx, path );
 
             if( Plugin.Configuration?.LogVfxDebug == true ) Dalamud.Log( $"New Actor: {path} {vfx:X8}" );
-
             return vfx;
         }
 
         private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
-            if( VfxSpawn.Vfx != null && vfx == ( IntPtr )VfxSpawn.Vfx.Vfx ) VfxSpawn.InteropRemoved();
+            VfxSpawn.InteropRemoved( vfx );
             Plugin.TrackerManager?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
@@ -78,7 +76,6 @@ namespace VfxEditor.Interop {
             var timeline = VfxUseTriggerHook.Original( vfx, triggerId );
 
             if( Plugin.Configuration?.LogVfxTriggers == true ) Dalamud.Log( $"Trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
-
             return timeline;
         }
     }

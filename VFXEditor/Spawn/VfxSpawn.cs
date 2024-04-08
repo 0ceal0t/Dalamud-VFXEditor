@@ -1,25 +1,44 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using VfxEditor.Structs.Vfx;
 
 namespace VfxEditor.Spawn {
-    public static unsafe class VfxSpawn {
-        private enum SpawnType {
-            None,
-            Ground,
-            Self,
-            Target
+    public enum SpawnType {
+        None,
+        Ground,
+        Self,
+        Target
+    }
+
+    public class VfxSpawnItem {
+        public readonly string Path;
+        public readonly SpawnType Type;
+        public readonly bool CanLoop;
+
+        public VfxSpawnItem( string path, SpawnType type, bool canLoop ) {
+            Path = path;
+            Type = type;
+            CanLoop = canLoop;
         }
+    }
 
-        public static BaseVfx Vfx { get; private set; }
-        public static bool IsActive => Vfx != null;
+    public class VfxLoopItem {
+        public VfxSpawnItem Item;
+        public DateTime RemovedTime;
 
-        private static SpawnType LoopType = SpawnType.None;
-        private static string LoopPath = "";
-        private static bool LastSpawnCanLoop = false; // Don't want to loop from the selection dialog
-        private static bool Removed = false;
-        private static DateTime RemoveTime;
+        public VfxLoopItem( VfxSpawnItem item, DateTime removedTime ) {
+            Item = item;
+            RemovedTime = removedTime;
+        }
+    }
+
+    public static unsafe class VfxSpawn {
+        public static readonly Dictionary<BaseVfx, VfxSpawnItem> Vfxs = [];
+        public static readonly List<VfxLoopItem> ToLoop = [];
+
+        public static bool IsActive => Vfxs.Count > 0;
 
         public static void DrawPopup( string path, bool loop ) {
             using var popup = ImRaii.Popup( "SpawnPopup" );
@@ -34,72 +53,57 @@ namespace VfxEditor.Spawn {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
-            LoopPath = path;
-            LoopType = SpawnType.Ground;
-            LastSpawnCanLoop = canLoop;
-            Removed = false;
-
-            Vfx = new StaticVfx( path, playerObject.Position, playerObject.Rotation );
+            Vfxs.Add( new StaticVfx( path, playerObject.Position, playerObject.Rotation ), new( path, SpawnType.Ground, canLoop ) );
         }
 
         public static void OnSelf( string path, bool canLoop ) {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
-            LoopPath = path;
-            LoopType = SpawnType.Self;
-            LastSpawnCanLoop = canLoop;
-            Removed = false;
-
-            Vfx = new ActorVfx( playerObject, playerObject, path );
+            Vfxs.Add( new ActorVfx( playerObject, playerObject, path ), new( path, SpawnType.Self, canLoop ) );
         }
 
         public static void OnTarget( string path, bool canLoop ) {
             var targetObject = Plugin.TargetObject;
             if( targetObject == null ) return;
 
-            LoopPath = path;
-            LoopType = SpawnType.Target;
-            LastSpawnCanLoop = canLoop;
-            Removed = false;
-
-            Vfx = new ActorVfx( targetObject, targetObject, path );
+            Vfxs.Add( new ActorVfx( targetObject, targetObject, path ), new( path, SpawnType.Target, canLoop ) );
         }
 
         public static void Tick() {
-            if( !Removed || !LastSpawnCanLoop || LoopType == SpawnType.None || string.IsNullOrEmpty( LoopPath ) ) return;
-            if( ( DateTime.Now - RemoveTime ).TotalSeconds < Plugin.Configuration.VfxSpawnDelay ) return;
+            var justLooped = new List<VfxLoopItem>();
+            foreach( var loop in ToLoop ) {
+                if( ( DateTime.Now - loop.RemovedTime ).TotalSeconds < Plugin.Configuration.VfxSpawnDelay ) continue;
 
-            if( LoopType == SpawnType.Self ) OnSelf( LoopPath, true );
-            else if( LoopType == SpawnType.Ground ) OnGround( LoopPath, true );
-            else if( LoopType == SpawnType.Target ) OnTarget( LoopPath, true );
-        }
-
-        public static void Remove() {
-            if( Vfx != null ) {
-                Vfx?.Remove(); // this also calls InteropRemoved()
-                Vfx = null;
+                justLooped.Add( loop );
+                if( loop.Item.Type == SpawnType.Self ) OnSelf( loop.Item.Path, true );
+                else if( loop.Item.Type == SpawnType.Ground ) OnGround( loop.Item.Path, true );
+                else if( loop.Item.Type == SpawnType.Target ) OnTarget( loop.Item.Path, true );
             }
 
-            LoopType = SpawnType.None;
-            LoopPath = "";
-            Removed = false;
+            ToLoop.RemoveAll( justLooped.Contains );
         }
 
-        public static void InteropRemoved() {
-            Vfx = null;
-
-            if( Plugin.Configuration.VfxSpawnLoop && LastSpawnCanLoop ) {
-                RemoveTime = DateTime.Now;
-                Removed = true;
-            }
-            else {
-                LoopType = SpawnType.None;
-                LoopPath = "";
-                Removed = false;
-            }
+        public static void Clear() {
+            foreach( var vfx in Vfxs ) vfx.Key?.Remove(); // this also calls InteropRemoved()
+            Vfxs.Clear();
+            ToLoop.Clear();
         }
 
-        public static void Dispose() => Remove();
+        public static void InteropRemoved( IntPtr data ) {
+            if( !GetVfx( data, out var vfx ) ) return;
+            var item = Vfxs[vfx];
+
+            if( Plugin.Configuration.VfxSpawnLoop && item.CanLoop ) ToLoop.Add( new( item, DateTime.Now ) );
+            Vfxs.Remove( vfx );
+        }
+
+        public static bool GetVfx( IntPtr data, out BaseVfx vfx ) {
+            vfx = null;
+            if( data == IntPtr.Zero || Vfxs.Count == 0 ) return false;
+            return Vfxs.Keys.FindFirst( x => data == ( IntPtr )x.Vfx, out vfx );
+        }
+
+        public static void Dispose() => Clear();
     }
 }
