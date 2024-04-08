@@ -25,6 +25,8 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = [[], [], []];
         public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = [[], [], []];
 
+        public readonly List<string> BoneTableStrings = [];
+
         public MdlWriteData( MdlFile file ) {
             for( var j = 0; j < 3; j++ ) {
                 var vMs = new MemoryStream();
@@ -55,6 +57,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
             AddStringOffsets( AttributeStrings );
             AddStringOffsets( BoneStrings );
             AddStringOffsets( MaterialStrings );
+            AddStringOffsets( BoneTableStrings );
             AddStringOffsets( ShapeStrings );
         }
 
@@ -115,6 +118,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         // ========= STRINGS =================
 
         public void AddBone( string item ) => AddString( BoneStrings, item );
+        public void AddBoneTable( string item ) => AddString( BoneTableStrings, item );
         public void AddAttribute( string item ) => AddString( AttributeStrings, item );
         public void AddMaterial( string item ) => AddString( MaterialStrings, item );
         public void AddShape( string item ) => AddString( ShapeStrings, item );
@@ -125,6 +129,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
         private void AddStringOffsets( List<string> list ) {
             foreach( var item in list ) {
+                if( AllStrings.Contains( item ) ) continue;
                 AllStrings.Add( item );
                 OffsetToString[TotalStringLength] = item;
                 StringToOffset[item] = TotalStringLength;

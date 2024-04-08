@@ -29,7 +29,7 @@ namespace VfxEditor.Formats.MdlFormat.Element {
         }
 
         public void PopulateWrite( MdlWriteData data ) {
-            data.AddBone( ParentBone.Value );
+            data.AddBoneTable( ParentBone.Value );
         }
 
         public void Write( BinaryWriter writer, MdlWriteData data ) {

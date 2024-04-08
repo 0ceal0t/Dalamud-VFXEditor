@@ -26,10 +26,10 @@ namespace VfxEditor.AvfxFormat {
             Assigned = assigned;
         }
 
-        protected void ResetChildren() {
+        protected void UnassignChildren() {
             foreach( var child in GetChildren() ) {
                 child?.SetAssigned( false );
-                child?.ResetChildren();
+                child?.UnassignChildren();
             }
         }
 
@@ -94,7 +94,7 @@ namespace VfxEditor.AvfxFormat {
 
         public virtual void Read( BinaryReader reader, int size ) {
             Assigned = true;
-            ResetChildren();
+            UnassignChildren();
             ReadContents( reader, size );
         }
 
