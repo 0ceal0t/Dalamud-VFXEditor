@@ -37,7 +37,7 @@ namespace VfxEditor.Interop {
 
         public ReadFilePrototype ReadFile { get; private set; }
 
-        private void* GetResourceSyncHandler(
+        private void* GetResourceSyncDetour(
             IntPtr resourceManager,
             uint* categoryId,
             ResourceType* resourceType,
@@ -46,7 +46,7 @@ namespace VfxEditor.Interop {
             GetResourceParameters* resParams
         ) => GetResourceHandler( true, resourceManager, categoryId, resourceType, resourceHash, path, resParams, false );
 
-        private void* GetResourceAsyncHandler(
+        private void* GetResourceAsyncDetour(
             IntPtr resourceManager,
             uint* categoryId,
             ResourceType* resourceType,
@@ -110,7 +110,7 @@ namespace VfxEditor.Interop {
             return replaced;
         }
 
-        private byte ReadSqpackHandler( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync ) {
+        private byte ReadSqpackDetour( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync ) {
             if( !fileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
                 return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
             }

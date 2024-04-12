@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader : IDisposable {
         public ResourceLoader() {
-            ReadSqpackHook = Dalamud.Hooks.HookFromSignature<ReadSqpackPrototype>( Constants.ReadSqpackSig, ReadSqpackHandler );
-            GetResourceSyncHook = Dalamud.Hooks.HookFromSignature<GetResourceSyncPrototype>( Constants.GetResourceSyncSig, GetResourceSyncHandler );
-            GetResourceAsyncHook = Dalamud.Hooks.HookFromSignature<GetResourceAsyncPrototype>( Constants.GetResourceAsyncSig, GetResourceAsyncHandler );
+            ReadSqpackHook = Dalamud.Hooks.HookFromSignature<ReadSqpackPrototype>( Constants.ReadSqpackSig, ReadSqpackDetour );
+            GetResourceSyncHook = Dalamud.Hooks.HookFromSignature<GetResourceSyncPrototype>( Constants.GetResourceSyncSig, GetResourceSyncDetour );
+            GetResourceAsyncHook = Dalamud.Hooks.HookFromSignature<GetResourceAsyncPrototype>( Constants.GetResourceAsyncSig, GetResourceAsyncDetour );
             ReadFile = Marshal.GetDelegateForFunctionPointer<ReadFilePrototype>( Dalamud.SigScanner.ScanText( Constants.ReadFileSig ) );
 
             var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( Constants.StaticVfxCreateSig );
@@ -21,10 +21,10 @@ namespace VfxEditor.Interop {
             StaticVfxRun = Marshal.GetDelegateForFunctionPointer<StaticVfxRunDelegate>( Dalamud.SigScanner.ScanText( Constants.StaticVfxRunSig ) );
             StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<StaticVfxCreateDelegate>( staticVfxCreateAddress );
 
-            StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<StaticVfxCreateDelegate>( staticVfxCreateAddress, StaticVfxNewHandler );
-            StaticVfxRemoveHook = Dalamud.Hooks.HookFromAddress<StaticVfxRemoveDelegate>( staticVfxRemoveAddress, StaticVfxRemoveHandler );
-            ActorVfxCreateHook = Dalamud.Hooks.HookFromAddress<ActorVfxCreateDelegate>( actorVfxCreateAddress, ActorVfxNewHandler );
-            ActorVfxRemoveHook = Dalamud.Hooks.HookFromAddress<ActorVfxRemoveDelegate>( actorVfxRemoveAddress, ActorVfxRemoveHandler );
+            StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<StaticVfxCreateDelegate>( staticVfxCreateAddress, StaticVfxNewDetour );
+            StaticVfxRemoveHook = Dalamud.Hooks.HookFromAddress<StaticVfxRemoveDelegate>( staticVfxRemoveAddress, StaticVfxRemoveDetour );
+            ActorVfxCreateHook = Dalamud.Hooks.HookFromAddress<ActorVfxCreateDelegate>( actorVfxCreateAddress, ActorVfxNewDetour );
+            ActorVfxRemoveHook = Dalamud.Hooks.HookFromAddress<ActorVfxRemoveDelegate>( actorVfxRemoveAddress, ActorVfxRemoveDetour );
 
             GetMatrixSingleton = Marshal.GetDelegateForFunctionPointer<GetMatrixSingletonDelegate>( Dalamud.SigScanner.ScanText( Constants.GetMatrixSig ) );
             GetFileManager = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( Dalamud.SigScanner.ScanText( Constants.GetFileManagerSig ) );
@@ -50,7 +50,7 @@ namespace VfxEditor.Interop {
             var luaActorVariableOffset = Marshal.ReadInt32( luaActorVariableStart );
             LuaActorVariables = luaActorVariableStart + 8 + luaActorVariableOffset;
 
-            VfxUseTriggerHook = Dalamud.Hooks.HookFromSignature<VfxUseTriggerDelete>( Constants.CallTriggerSig, VfxUseTriggerHandler );
+            VfxUseTriggerHook = Dalamud.Hooks.HookFromSignature<VfxUseTriggerDelete>( Constants.CallTriggerSig, VfxUseTriggerDetour );
 
             var interleavedVtbl = Dalamud.SigScanner.ScanText( Constants.HavokInterleavedVtblSig ) - 4;
             var interleavedVtblOffset = Marshal.ReadInt32( interleavedVtbl );
@@ -65,7 +65,7 @@ namespace VfxEditor.Interop {
             PlaySoundPath = Marshal.GetDelegateForFunctionPointer<PlaySoundDelegate>( Dalamud.SigScanner.ScanText( Constants.PlaySoundSig ) );
             InitSoundHook = Dalamud.Hooks.HookFromSignature<InitSoundPrototype>( Constants.InitSoundSig, InitSoundDetour );
 
-            LuaRead = Marshal.GetDelegateForFunctionPointer<LuaReadDelegate>( Dalamud.SigScanner.ScanText( "E8 ?? ?? ?? ?? 89 03 B0 01 48 8B 5C 24 ?? 48 83 C4 20" ) );
+            LuaRead = Marshal.GetDelegateForFunctionPointer<LuaReadDelegate>( Dalamud.SigScanner.ScanText( Constants.LuaReadSig ) );
 
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
@@ -80,7 +80,6 @@ namespace VfxEditor.Interop {
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
-
             PathResolved += AddCrc;
         }
 

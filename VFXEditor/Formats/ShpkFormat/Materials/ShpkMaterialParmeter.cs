@@ -36,7 +36,7 @@ namespace VfxEditor.Formats.ShpkFormat.Materials {
         private static readonly string[] Swizzle = ["x", "y", "z", "w"];
 
         public string GetText() {
-            var ret = $"g_MaterialParameter[{( ( int )Math.Floor( StartSlot / 4f ) ).ToString().PadLeft( 2, '0' )}].";
+            var ret = $"g_MaterialParameter[{( int )Math.Floor( StartSlot / 4f ):D2}].";
             for( var slot = StartSlot; slot < EndSlot; slot++ ) {
                 ret += $"{Swizzle[slot % 4]}";
             }

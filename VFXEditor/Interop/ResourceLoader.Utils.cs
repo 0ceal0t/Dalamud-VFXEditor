@@ -168,7 +168,7 @@ namespace VfxEditor.Interop {
             var pResourceHash = ( int* )bHash;
 
             var resource = original ? new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) ) :
-                new IntPtr( GetResourceSyncHandler( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) );
+                new IntPtr( GetResourceSyncDetour( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) );
             DecRef( resource );
 
             return resource;

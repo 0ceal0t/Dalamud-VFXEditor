@@ -57,6 +57,8 @@ namespace VfxEditor.Interop {
 
         public const string LuaGetVariableSig = "44 8B C2 C1 FA 1C 41 81 E0 FF FF FF 0F";
 
+        public const string LuaReadSig = "E8 ?? ?? ?? ?? 89 03 B0 01 48 8B 5C 24 ?? 48 83 C4 20";
+
         // ========
 
         public const string HavokInterleavedVtblSig = "48 89 07 48 8B CD 48 89 77 38";

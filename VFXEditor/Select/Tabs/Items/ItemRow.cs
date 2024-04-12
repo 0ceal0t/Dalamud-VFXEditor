@@ -67,7 +67,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public bool HasModel => Ids.Id1 != 0;
 
-        public string VariantString => "v" + Variant.ToString().PadLeft( 4, '0' );
+        public string VariantString => $"v{Variant:D4}";
 
         public abstract string RootPath { get; }
 
@@ -98,7 +98,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public ItemRow( Item item ) : this( item.Name.ToString(), item.RowId, item.Icon, new( item.ModelMain ), new( item.ModelSub ), item.EquipSlotCategory.Value ) { }
 
-        public string GetVfxPath( int idx ) => $"{RootPath}{idx.ToString().PadLeft( 4, '0' )}.avfx";
+        public string GetVfxPath( int idx ) => $"{RootPath}{idx:D4}.avfx";
 
         public string GetName() => Name;
         public uint GetIconId() => Icon;

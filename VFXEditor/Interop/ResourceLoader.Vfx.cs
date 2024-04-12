@@ -44,7 +44,7 @@ namespace VfxEditor.Interop {
 
         // ==============================
 
-        private IntPtr StaticVfxNewHandler( string path, string pool ) {
+        private IntPtr StaticVfxNewDetour( string path, string pool ) {
             var vfx = StaticVfxCreateHook.Original( path, pool );
             Plugin.TrackerManager?.Vfx.AddStatic( ( VfxStruct* )vfx, path );
 
@@ -52,13 +52,13 @@ namespace VfxEditor.Interop {
             return vfx;
         }
 
-        private IntPtr StaticVfxRemoveHandler( IntPtr vfx ) {
+        private IntPtr StaticVfxRemoveDetour( IntPtr vfx ) {
             VfxSpawn.InteropRemoved( vfx );
             Plugin.TrackerManager?.Vfx.RemoveStatic( ( VfxStruct* )vfx );
             return StaticVfxRemoveHook.Original( vfx );
         }
 
-        private IntPtr ActorVfxNewHandler( string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
+        private IntPtr ActorVfxNewDetour( string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7 ) {
             var vfx = ActorVfxCreateHook.Original( path, a2, a3, a4, a5, a6, a7 );
             Plugin.TrackerManager?.Vfx.AddActor( ( VfxStruct* )vfx, path );
 
@@ -66,13 +66,13 @@ namespace VfxEditor.Interop {
             return vfx;
         }
 
-        private IntPtr ActorVfxRemoveHandler( IntPtr vfx, char a2 ) {
+        private IntPtr ActorVfxRemoveDetour( IntPtr vfx, char a2 ) {
             VfxSpawn.InteropRemoved( vfx );
             Plugin.TrackerManager?.Vfx.RemoveActor( ( VfxStruct* )vfx );
             return ActorVfxRemoveHook.Original( vfx, a2 );
         }
 
-        private IntPtr VfxUseTriggerHandler( IntPtr vfx, uint triggerId ) {
+        private IntPtr VfxUseTriggerDetour( IntPtr vfx, uint triggerId ) {
             var timeline = VfxUseTriggerHook.Original( vfx, triggerId );
 
             if( Plugin.Configuration?.LogVfxTriggers == true ) Dalamud.Log( $"Trigger {triggerId} on {vfx:X8}, timeline: {timeline:X8}" );
