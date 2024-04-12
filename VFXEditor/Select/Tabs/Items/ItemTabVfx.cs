@@ -3,6 +3,7 @@ using Lumina.Data.Files;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Interop.Penumbra;
 
 namespace VfxEditor.Select.Tabs.Items {
     public class SelectedVfx {
@@ -11,7 +12,9 @@ namespace VfxEditor.Select.Tabs.Items {
     }
 
     public class ItemTabVfx : ItemTab<SelectedVfx> {
-        public ItemTabVfx( SelectDialog dialog, string name ) : base( dialog, name, "Item-Vfx", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor ) { }
+        public ItemTabVfx( SelectDialog dialog, string name ) : this( dialog, name, "Item-Vfx", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor ) { }
+
+        public ItemTabVfx( SelectDialog dialog, string name, string state, ItemTabFilter filter ) : base( dialog, name, state, filter ) { }
 
         // ===== LOADING =====
 
@@ -22,6 +25,11 @@ namespace VfxEditor.Select.Tabs.Items {
             try {
                 var file = Dalamud.DataManager.GetFile<ImcFile>( imcPath );
                 var ids = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
+
+                var manips = Plugin.PenumbraIpc.GetPlayerMetaManipulations();
+                foreach( var manip in manips.Where( x => x.ManipulationType == MetaManipulation.Type.Imc ).Select( x => ( ImcManipulation )x.Manipulation ) ) {
+                    if( manip.PrimaryId == item.Ids.Id && manip.Variant == item.Variant && $"{item.Type}" == $"{manip.EquipSlot}" ) ids.Add( manip.Entry.VfxId );
+                }
 
                 loaded = new() {
                     ImcPath = file.FilePath,

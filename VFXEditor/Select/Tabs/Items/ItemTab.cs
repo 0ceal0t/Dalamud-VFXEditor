@@ -6,7 +6,7 @@ namespace VfxEditor.Select.Tabs.Items {
         Weapon = 0x01,
         SubWeapon = 0x02,
         Armor = 0x04,
-        Acc = 0x08,
+        Accessory = 0x08,
     }
 
     public abstract class ItemTab<T> : SelectTab<ItemRow, T> where T : class {
@@ -49,7 +49,7 @@ namespace VfxEditor.Select.Tabs.Items {
                     row.EquipSlotCategory.Value?.Wrists == 1 ||
                     row.EquipSlotCategory.Value?.Ears == 1
                 ) {
-                    if( !Filter.HasFlag( ItemTabFilter.Acc ) ) continue;
+                    if( !Filter.HasFlag( ItemTabFilter.Accessory ) ) continue;
                     var armor = new ItemRowArmor( row );
                     if( armor.HasModel ) Items.Add( armor );
                 }

@@ -16,10 +16,7 @@ namespace VfxEditor.Select.Penumbra {
     public class SelectPenumbraTab : SelectTab<SelectPenumbraTabItem, SelectedPenumbraMod> {
         public SelectPenumbraTab( SelectDialog dialog ) : base( dialog, "Penumbra", "Penumbra-Shared" ) { }
 
-        public override void Draw() {
-            if( !Plugin.PenumbraIpc.PenumbraEnabled ) return;
-            base.Draw();
-        }
+        protected override bool IsDisabled() => !Plugin.PenumbraIpc.PenumbraEnabled;
 
         // Don't need to worry about doing this async
         // Also fine to keep getting the mods every frame, since it could change

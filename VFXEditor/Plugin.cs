@@ -18,6 +18,7 @@ using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Interop;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Library;
 using VfxEditor.PapFormat;
 using VfxEditor.PhybFormat;

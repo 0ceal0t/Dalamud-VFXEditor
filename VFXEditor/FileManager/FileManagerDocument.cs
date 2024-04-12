@@ -344,7 +344,9 @@ namespace VfxEditor.FileManager {
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Source != null ) ) {
                 if( ImGui.InputTextWithHint( "", SourceDisplay, ref SourceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
                     var cleanedPath = SourceTextInput.Trim().Replace( "\\", "/" );
-                    SetSource( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
+                    SetSource( result );
+                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
                 }
             }
             DrawCopy( Source );
@@ -371,7 +373,9 @@ namespace VfxEditor.FileManager {
             using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, Replace != null ) ) {
                 if( ImGui.InputTextWithHint( "", ReplaceDisplay, ref ReplaceTextInput, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
                     var cleanedPath = ReplaceTextInput.Trim().Replace( "\\", "/" );
-                    SetReplace( new( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath ) );
+                    var result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
+                    SetReplace( result );
+                    Plugin.Configuration.AddRecent( Manager.Configuration.RecentItems, result );
                 }
             }
             DrawCopy( Replace );

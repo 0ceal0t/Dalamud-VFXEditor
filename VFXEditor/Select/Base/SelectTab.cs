@@ -61,11 +61,14 @@ namespace VfxEditor.Select {
 
         protected virtual void DrawExtra() { }
 
+        protected virtual bool IsDisabled() => false;
+
         public override void Draw() {
             using var _ = ImRaii.PushId( Name );
 
+            using var disabled = ImRaii.Disabled( IsDisabled() );
             using var tabItem = ImRaii.TabItem( Name );
-            if( !tabItem ) return;
+            if( !tabItem || IsDisabled() ) return;
 
             Load();
 

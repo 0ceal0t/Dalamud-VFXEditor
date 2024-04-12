@@ -163,7 +163,7 @@ namespace VfxEditor.Select {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             ImGui.TableNextColumn(); // Path
-            if( displayPath.Contains( "/action.pap" ) || displayPath.Contains( "/face.pap" ) ) {
+            if( displayPath.Contains( "/action.pap" ) ) {
                 SelectUiUtils.DisplayPathWarning( displayPath, "Be careful about modifying this file, as it contains dozens of animations for every job" );
             }
             else SelectUiUtils.DisplayPath( displayPath );

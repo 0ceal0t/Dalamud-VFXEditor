@@ -12,7 +12,7 @@ namespace VfxEditor.Select.Tabs.Items {
     }
 
     public class ItemTabMtrl : ItemTab<SelectedMtrl> {
-        public ItemTabMtrl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mtrl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Acc ) { }
+        public ItemTabMtrl( SelectDialog dialog, string name ) : base( dialog, name, "Item-Mtrl", ItemTabFilter.Weapon | ItemTabFilter.SubWeapon | ItemTabFilter.Armor | ItemTabFilter.Accessory ) { }
 
         // ===== LOADING =====
 

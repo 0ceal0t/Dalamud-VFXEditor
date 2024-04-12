@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public override int Variant => Ids.GearVariant;
 
-        public override string RootPath => $"chara/{Prefix}/{ModelString}/vfx/eff/ve";
+        public override string RootPath => $"chara/{Prefix}/{ModelString}/vfx/eff/v" + ( IsAccessory ? "a" : "e" );
 
         public string Suffix => Type switch {
             ItemType.Head => "met",
