@@ -16,7 +16,7 @@ namespace VfxEditor.Formats.MdlFormat.Element {
 
         public MdlEid( Dictionary<uint, string> strings, BinaryReader reader ) : this() {
             ElementId.Read( reader );
-            ParentBone.Value = strings[reader.ReadUInt32()];
+            ParentBone.Value = strings.TryGetValue( reader.ReadUInt32(), out var _value ) ? _value : "[ERROR]";
             Translation.Read( reader );
             Rotation.Read( reader );
         }
