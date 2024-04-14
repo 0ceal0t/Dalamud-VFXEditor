@@ -163,8 +163,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public string GetExportSource() => "";
         public string GetExportReplace() => string.IsNullOrEmpty( Name ) ? TrimPath( GamePath ) : Name;
         public bool IsHd() => GamePath.Contains( "_hr1" );
-        public bool Matches( string text ) => GamePath.ToLower().Contains( text.ToLower() )
-            || ( !string.IsNullOrEmpty( Name ) && Name.ToLower().Contains( text.ToLower() ) );
+        public bool Matches( string text ) => GamePath.Contains( text, StringComparison.CurrentCultureIgnoreCase )
+            || ( !string.IsNullOrEmpty( Name ) && Name.Contains( text, StringComparison.CurrentCultureIgnoreCase ) );
 
         public static string TrimPath( string path ) {
             if( string.IsNullOrEmpty( path ) ) return "";

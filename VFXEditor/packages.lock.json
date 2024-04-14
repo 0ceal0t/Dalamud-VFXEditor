@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     "net8.0-windows7.0": {
+      "BCnEncoder.Net": {
+        "type": "Direct",
+        "requested": "[2.1.0, )",
+        "resolved": "2.1.0",
+        "contentHash": "bBKYUDhpYenmp8vy5BVUHmS2LFym0NMga9V+S1eMJ+4zQLBwDw63Bs83AKOyqBKC2AqqgxXdTFA2a2V+SmGoIw==",
+        "dependencies": {
+          "Microsoft.Toolkit.HighPerformance": "7.0.2"
+        }
+      },
       "DalamudPackager": {
         "type": "Direct",
         "requested": "[2.1.12, )",
@@ -135,6 +144,11 @@
         "type": "Transitive",
         "resolved": "1.1.0",
         "contentHash": "aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg=="
+      },
+      "Microsoft.Toolkit.HighPerformance": {
+        "type": "Transitive",
+        "resolved": "7.0.2",
+        "contentHash": "tG6v0AhDw/yJMtiH/tI4F6I/+sNIfu4++6WFfN73FyNcPh31et33w45wo8Lx1sfxcfLtkYk+w2fvU/MubYg4VQ=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",

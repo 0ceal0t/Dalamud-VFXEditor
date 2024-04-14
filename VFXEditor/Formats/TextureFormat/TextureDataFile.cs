@@ -1,3 +1,4 @@
+using BCnEncoder.Decoder;
 using Lumina.Data;
 using Lumina.Data.Parsing.Tex;
 using System;
@@ -69,6 +70,7 @@ namespace VfxEditor.Formats.TextureFormat {
         Null = 0x5100,
         Shadow16 = 0x5140,
         Shadow24 = 0x5150,
+        BC5 = 0x6230,
     }
 
     public class TextureDataFile : FileResource {
@@ -164,8 +166,11 @@ namespace VfxEditor.Formats.TextureFormat {
                 case TextureFormat.A8:
                     DecompressA8( data, writer, width, height * layers );
                     break;
+                case TextureFormat.BC5:
+                    DecompressBc5( data, writer, width, height * layers );
+                    break;
                 default:
-                    return [Array.Empty<byte>()];
+                    return [[]];
             }
 
             var output = ms.ToArray();
@@ -201,9 +206,10 @@ namespace VfxEditor.Formats.TextureFormat {
                 TextureFormat.DXT1 => CompressionFormat.BC1a,
                 TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
+                TextureFormat.BC5 => CompressionFormat.BC5,
                 TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 or TextureFormat.R5G5B5A1 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
-            };
+            }; ;
         }
 
         public static byte[] CompressA8( byte[] data ) {
@@ -234,6 +240,21 @@ namespace VfxEditor.Formats.TextureFormat {
 
         private static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
+        }
+
+        private static void DecompressBc5( byte[] data, BinaryWriter writer, int width, int height ) {
+            var decoder = new BcDecoder();
+            var output = decoder.DecodeRaw2D( data, width, height, BCnEncoder.Shared.CompressionFormat.Bc5 ).ToArray();
+
+            for( var i = 0; i < height; i++ ) {
+                for( var j = 0; j < width; j++ ) {
+                    var pixel = output[i, j];
+                    writer.Write( pixel.b );
+                    writer.Write( pixel.g );
+                    writer.Write( pixel.r );
+                    writer.Write( pixel.a );
+                }
+            }
         }
 
         private static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
