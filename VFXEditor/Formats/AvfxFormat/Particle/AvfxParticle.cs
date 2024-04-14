@@ -24,7 +24,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsDepthWrite = new( "Depth Write", "DsDw" );
         public readonly AvfxBool IsSoftParticle = new( "Soft Particle", "DsSp" );
         public readonly AvfxInt CollisionType = new( "Collision Type", "Coll" );
-        public readonly AvfxBool Bs11 = new( "BS11", "bS11" );
+        public readonly AvfxBool S11Enabled = new( "S11 Enabled", "bS11" );
+
+        // New to dawntrail
+        public readonly AvfxInt ShUT = new( "ShUT", "ShUT" );
+        public readonly AvfxInt ShR = new( "ShR", "ShR" );
+        public readonly AvfxBool E24Enabled = new( "E24 Enabled", "bE24" );
+
         public readonly AvfxBool IsApplyToneMap = new( "Apply Tone Map", "bATM" );
         public readonly AvfxBool IsApplyFog = new( "Apply Fog", "bAFg" );
         public readonly AvfxBool ClipNearEnable = new( "Enable Clip Near", "bNea" );
@@ -116,7 +122,10 @@ namespace VfxEditor.AvfxFormat {
                 IsDepthWrite,
                 IsSoftParticle,
                 CollisionType,
-                Bs11,
+                S11Enabled,
+                ShUT,
+                ShR,
+                E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
                 ClipNearEnable,
@@ -182,7 +191,10 @@ namespace VfxEditor.AvfxFormat {
                 IsDepthWrite,
                 IsSoftParticle,
                 CollisionType,
-                Bs11,
+                S11Enabled,
+                ShUT,
+                ShR,
+                E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
                 ClipNearEnable,
@@ -281,6 +293,7 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Disc => new AvfxParticleDataDisc(),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
+                ParticleType.Unknown_15 => new AvfxParticleDataUnknown15(),
                 _ => null,
             };
 

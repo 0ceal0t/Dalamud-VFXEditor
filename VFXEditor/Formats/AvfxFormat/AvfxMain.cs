@@ -74,6 +74,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool LTSEnabled = new( "LTS Enabled", "bLTS" );
         public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
 
+        // New to dawntrail
+        public readonly AvfxInt APRi = new( "APri", "APri" );
+        public readonly AvfxInt DPri = new( "DPri", "DPri" );
+        public readonly AvfxBool SABEnabled = new( "SAB Enabled", "bSAB" );
+        public readonly AvfxBool SBVEnabled = new( "SBV Enabled", "bSBV" );
+        public readonly AvfxFloat SBVa = new( "SBVa", "SBVa" );
+        public readonly AvfxBool SSVEnabled = new( "SSV Enabled", "bSSV" );
+        public readonly AvfxFloat SSVa = new( "SSVa", "SSVa" );
+
         public readonly AvfxNodeGroupSet NodeGroupSet;
 
         private readonly List<AvfxBase> Parsed;
@@ -147,6 +156,13 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
+                APRi,
+                DPri,
+                SABEnabled,
+                SBVEnabled,
+                SBVa,
+                SSVEnabled,
+                SSVa,
             ];
 
             NodeGroupSet = new( this );
@@ -189,6 +205,13 @@ namespace VfxEditor.AvfxFormat {
                 GlobalFogEnabled,
                 LTSEnabled,
                 AGSEnabled,
+                APRi,
+                DPri,
+                SABEnabled,
+                SBVEnabled,
+                SBVa,
+                SSVEnabled,
+                SSVa,
             ];
         }
 

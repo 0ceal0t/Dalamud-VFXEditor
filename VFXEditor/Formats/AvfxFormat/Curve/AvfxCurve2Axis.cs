@@ -1,14 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxCurve2Axis : AvfxOptional {
-        public readonly string Name;
-        public readonly bool Locked;
-
+    public class AvfxCurve2Axis : AvfxCurveBase {
         public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
         public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
         public readonly AvfxCurve X;
@@ -17,11 +14,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve RY;
 
         private readonly List<AvfxBase> Parsed;
-        private readonly List<AvfxCurve> Curves;
+        private readonly List<AvfxCurveBase> Curves;
 
-        public AvfxCurve2Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( avfxName ) {
-            Name = name;
-            Locked = locked;
+        public AvfxCurve2Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( name, avfxName, locked ) {
             X = new( "X", "X", type );
             Y = new( "Y", "Y", type );
             RX = new( "Random X", "XR", type );
@@ -52,28 +47,12 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            DrawAssignButton( Name, true );
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( !Locked && DrawUnassignButton( Name ) ) return;
-
-            AvfxCurve.DrawUnassignedCurves( Curves );
-
+        protected override void DrawBody() {
+            DrawUnassignedCurves( Curves );
             AxisConnectType.Draw();
             AxisConnectRandomType.Draw();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-
-            AvfxCurve.DrawAssignedCurves( Curves );
+            DrawAssignedCurves( Curves );
         }
-
-        public override string GetDefaultText() => Name;
     }
 }
