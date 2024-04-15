@@ -71,6 +71,7 @@ namespace VfxEditor.Formats.TextureFormat {
         Shadow16 = 0x5140,
         Shadow24 = 0x5150,
         BC5 = 0x6230,
+        BC7 = 0x6432,
     }
 
     public class TextureDataFile : FileResource {
@@ -167,7 +168,10 @@ namespace VfxEditor.Formats.TextureFormat {
                     DecompressA8( data, writer, width, height * layers );
                     break;
                 case TextureFormat.BC5:
-                    DecompressBc5( data, writer, width, height * layers );
+                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc5 );
+                    break;
+                case TextureFormat.BC7:
+                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc7 );
                     break;
                 default:
                     return [[]];
@@ -194,6 +198,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 DXGIFormat.BC1_UNorm => TextureFormat.DXT1,
                 DXGIFormat.BC2_UNorm => TextureFormat.DXT3,
                 DXGIFormat.BC3_UNorm => TextureFormat.DXT5,
+                DXGIFormat.BC7_UNorm => TextureFormat.BC7,
                 DXGIFormat.B8G8R8A8_UNorm => TextureFormat.A8R8G8B8,
                 DXGIFormat.B4G4R4A4_UNorm => TextureFormat.R4G4B4A4,
                 DXGIFormat.B5G5R5A1_UNorm => TextureFormat.R5G5B5A1,
@@ -207,6 +212,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 TextureFormat.DXT3 => CompressionFormat.BC2,
                 TextureFormat.DXT5 => CompressionFormat.BC3,
                 TextureFormat.BC5 => CompressionFormat.BC5,
+                TextureFormat.BC7 => CompressionFormat.BC7,
                 TextureFormat.A8R8G8B8 or TextureFormat.R4G4B4A4 or TextureFormat.A8 or TextureFormat.R5G5B5A1 => CompressionFormat.BGRA,
                 _ => CompressionFormat.ETC1,
             }; ;
@@ -242,9 +248,9 @@ namespace VfxEditor.Formats.TextureFormat {
             writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
         }
 
-        private static void DecompressBc5( byte[] data, BinaryWriter writer, int width, int height ) {
+        private static void DecompressBc( byte[] data, BinaryWriter writer, int width, int height, BCnEncoder.Shared.CompressionFormat format ) {
             var decoder = new BcDecoder();
-            var output = decoder.DecodeRaw2D( data, width, height, BCnEncoder.Shared.CompressionFormat.Bc5 ).ToArray();
+            var output = decoder.DecodeRaw2D( data, width, height, format ).ToArray();
 
             for( var i = 0; i < height; i++ ) {
                 for( var j = 0; j < width; j++ ) {
