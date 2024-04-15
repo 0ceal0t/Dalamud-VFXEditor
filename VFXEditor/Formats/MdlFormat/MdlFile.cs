@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Bone;
+using VfxEditor.Formats.MdlFormat.Bone.V6;
 using VfxEditor.Formats.MdlFormat.Box;
 using VfxEditor.Formats.MdlFormat.Element;
 using VfxEditor.Formats.MdlFormat.Lod;
@@ -45,6 +46,8 @@ namespace VfxEditor.Formats.MdlFormat {
     }
 
     public class MdlFile : FileManagerFile {
+        public const uint VERSION_6 = 0x01000006; // Updated dawntrail model
+
         private readonly uint Version;
 
         private readonly ParsedByteBool IndexBufferStreaming = new( "Index Buffer Streaming" );
@@ -73,8 +76,7 @@ namespace VfxEditor.Formats.MdlFormat {
         public readonly List<MdlExtraLod> ExtraLods = [];
         private readonly UiDropdown<MdlExtraLod> ExtraLodView;
 
-        public readonly List<MdlBoneTable> BoneTables = [];
-        private readonly UiSplitView<MdlBoneTable> BoneTableView;
+        public readonly MdlBoneTables BoneTables;
 
         public readonly List<MdlShape> Shapes = []; // TODO
 
@@ -96,6 +98,7 @@ namespace VfxEditor.Formats.MdlFormat {
             var data = new MdlFileData();
 
             Version = reader.ReadUInt32();
+
             reader.ReadUInt32(); // stack size
             reader.ReadUInt32(); // runtime size
             var vertexDeclarationCount = reader.ReadUInt16();
@@ -193,7 +196,8 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
             for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
-            for( var i = 0; i < boneTableCount; i++ ) BoneTables.Add( new( reader, data.BoneStrings ) );
+
+            BoneTables = Version == VERSION_6 ? new MdlBoneTablesV6( reader, boneTableCount, data ) : new MdlBoneTables( reader, boneTableCount, data );
 
             // // ======== SHAPES ============
 
@@ -229,7 +233,6 @@ namespace VfxEditor.Formats.MdlFormat {
                 () => new() );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
-            BoneTableView = new( "Bone Table", BoneTables, false );
             UnknownBoxView = new( "Bounding Box", UnknownBoundingBoxes, false, null, () => new() );
             BoneBoxView = new( "Bounding Box", BoneBoundingBoxes, false,
                 ( MdlBoneBoundingBox item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
@@ -260,7 +263,7 @@ namespace VfxEditor.Formats.MdlFormat {
             }
 
             using( var tab = ImRaii.TabItem( "Bone Tables" ) ) {
-                if( tab ) BoneTableView.Draw();
+                if( tab ) BoneTables.Draw();
             }
 
             using( var tab = ImRaii.TabItem( "Bounding Boxes" ) ) {
@@ -349,7 +352,7 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.SubMeshes.Count );
             writer.Write( ( ushort )data.MaterialStrings.Count );
             writer.Write( ( ushort )data.BoneStrings.Count );
-            writer.Write( ( ushort )BoneTables.Count );
+            writer.Write( ( ushort )BoneTables.Tables.Count );
             writer.Write( ( ushort )data.Shapes.Count );
             writer.Write( ( ushort )data.ShapesMeshes.Count );
             writer.Write( ( ushort )data.ShapeValues.Count );
@@ -382,7 +385,8 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in data.TerrainShadowSubmeshes ) item.Write( writer );
             foreach( var item in data.MaterialStrings ) writer.Write( data.StringToOffset[item] );
             foreach( var item in data.BoneStrings ) writer.Write( data.StringToOffset[item] );
-            foreach( var item in BoneTables ) item.Write( writer, data );
+
+            BoneTables.Write( writer, data );
 
             foreach( var item in data.Shapes ) item.Write( writer, data );
             foreach( var item in data.ShapesMeshes ) item.Write( writer, data );

@@ -39,12 +39,6 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             foreach( var element in Elements ) element.Write( writer );
         }
 
-        private int GetStride( int stream ) {
-            var elements = GetElements( stream );
-            if( elements.Count == 0 ) return 0;
-            return elements.Last().EndOffset;
-        }
-
         private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => !x.NoData && x.Stream == stream ).ToList();
 
         public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount ) {

@@ -41,7 +41,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
                 IndexWriters.Add( iWriter );
             }
 
-            foreach( var item in file.BoneTables ) item.PopulateWrite( this );
+            foreach( var item in file.BoneTables.Tables ) item.PopulateWrite( this );
             for( var i = 0; i < file.AllLods.Count; i++ ) file.AllLods[i].PopulateWrite( this, i );
             for( var i = 0; i < file.ExtraLods.Count; i++ ) file.ExtraLods[i].PopulateWrite( this, i );
             foreach( var item in file.Eids ) item.PopulateWrite( this );
