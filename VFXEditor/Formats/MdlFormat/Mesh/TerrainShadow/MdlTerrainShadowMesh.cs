@@ -36,8 +36,6 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
             if( stride != 8 ) Dalamud.Log( $"Terrain Shadow: stride={stride}" );
 
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
-
-
         }
 
         public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) {

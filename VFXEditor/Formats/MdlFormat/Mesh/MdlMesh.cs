@@ -104,7 +104,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             RawVertexData = [];
             for( var i = 0; i < 3; i++ ) {
-                var stride = Format.GetStride( i );
+                var stride = Strides[i];
                 if( stride == 0 ) continue;
                 reader.BaseStream.Position = data.VertexBufferOffsets[lod] + _VertexBufferOffsets[i];
                 RawVertexData.Add( reader.ReadBytes( VertexCount * stride ) );

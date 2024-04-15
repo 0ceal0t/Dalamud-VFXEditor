@@ -30,31 +30,22 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         public readonly List<MdlVertexElement> Elements = [];
 
         public MdlVertexDeclaration( BinaryReader reader ) {
-            var endPos = reader.BaseStream.Position + ( 8 * 17 );
-
             for( var i = 0; i < 17; i++ ) {
-                var element = new MdlVertexElement( reader );
-                if( element.End ) break;
-                Elements.Add( element );
+                Elements.Add( new MdlVertexElement( reader ) );
             }
-
-            reader.BaseStream.Position = endPos;
         }
 
         public void Write( BinaryWriter writer ) {
             foreach( var element in Elements ) element.Write( writer );
-            writer.Write( ( byte )255 );
-            for( var i = 0; i < 7 + 8 * ( 17 - Elements.Count - 1 ); i++ ) writer.Write( ( byte )0 );
         }
 
-        public int GetStride( int stream ) {
+        private int GetStride( int stream ) {
             var elements = GetElements( stream );
             if( elements.Count == 0 ) return 0;
-
             return elements.Last().EndOffset;
         }
 
-        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => x.Stream == stream ).ToList();
+        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => !x.NoData && x.Stream == stream ).ToList();
 
         public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount ) {
             var data = new List<Vector4>();

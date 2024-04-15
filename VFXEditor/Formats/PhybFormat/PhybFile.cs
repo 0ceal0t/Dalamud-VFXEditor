@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.PhybFormat.Extended;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
@@ -33,12 +34,12 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
+        private PhybExtended Extended;
+
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
 
-            if( Version.Value > 0 ) {
-                DataType.Read( reader );
-            }
+            if( Version.Value > 0 ) DataType.Read( reader );
 
             var collisionOffset = reader.ReadUInt32();
             var simOffset = reader.ReadUInt32();
@@ -52,6 +53,10 @@ namespace VfxEditor.PhybFormat {
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
+
+            // New to dawntrail
+            if( reader.BaseStream.Position == reader.BaseStream.Length ) return;
+            Extended = new( reader );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -78,10 +83,14 @@ namespace VfxEditor.PhybFormat {
             var simWriter = new SimulationWriter();
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
+            var endPos = writer.BaseStream.Position;
 
             writer.BaseStream.Position = offsetPos;
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
+
+            writer.BaseStream.Position = endPos;
+            Extended?.Write( writer );
         }
 
         public override void Draw() {
@@ -94,6 +103,8 @@ namespace VfxEditor.PhybFormat {
             using( var child = ImRaii.Child( "Child", size, false ) ) {
                 Version.Draw();
                 DataType.Draw();
+                var extended = Extended != null;
+                if( ImGui.Checkbox( "Extended", ref extended ) ) Extended = extended ? new() : null;
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 

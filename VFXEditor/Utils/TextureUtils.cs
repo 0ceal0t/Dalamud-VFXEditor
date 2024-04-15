@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
@@ -78,6 +77,8 @@ namespace VfxEditor.Utils {
             };
             writer.Write( pfFlags );
 
+            uint fourccDX10 = 0x30315844; // "DX10"
+
             uint magic;
             switch( format ) {
                 case TextureFormat.DXT1:
@@ -89,6 +90,10 @@ namespace VfxEditor.Utils {
                 case TextureFormat.DXT5:
                     magic = 0x35545844;
                     break;
+                case TextureFormat.BC5:
+                case TextureFormat.BC7:
+                    magic = fourccDX10;
+                    break;
                 case TextureFormat.A8R8G8B8:
                 case TextureFormat.R4G4B4A4:
                 case TextureFormat.R5G5B5A1:
@@ -99,9 +104,7 @@ namespace VfxEditor.Utils {
                     return null;
             }
 
-            if( depth > 1 ) {
-                magic = BitConverter.ToUInt32( Encoding.UTF8.GetBytes( "DX10" ), 0 );
-            }
+            if( depth > 1 ) magic = fourccDX10;
 
             writer.Write( magic );
 
@@ -152,10 +155,12 @@ namespace VfxEditor.Utils {
                     }
             }
 
-            if( depth > 1 ) {
+            if( magic == fourccDX10 ) {
                 var dxgiFormat = format switch {
                     TextureFormat.DXT1 => DXGI_FORMAT.DXGI_FORMAT_BC1_UNORM,
                     TextureFormat.DXT5 => DXGI_FORMAT.DXGI_FORMAT_BC3_UNORM,
+                    TextureFormat.BC5 => DXGI_FORMAT.DXGI_FORMAT_BC5_UNORM,
+                    TextureFormat.BC7 => DXGI_FORMAT.DXGI_FORMAT_BC7_UNORM,
                     _ => DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM
                 };
                 writer.Write( ( uint )dxgiFormat );

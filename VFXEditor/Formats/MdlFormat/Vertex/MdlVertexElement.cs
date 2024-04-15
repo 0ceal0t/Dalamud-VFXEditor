@@ -9,7 +9,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         public readonly VertexUsage Usage;
         public readonly byte UsageIndex;
 
-        public bool End => Stream == 255;
+        public bool NoData => Stream == 255 || Type == 0;
         public int EndOffset => Offset + Size;
 
         public int Size => Type switch {
