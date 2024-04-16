@@ -1,6 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,7 +36,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
         private readonly ushort VertexCount; // Maxes out at ushort.MaxValue
 
-        private List<byte[]> RawVertexData = [Array.Empty<byte>(), Array.Empty<byte>(), Array.Empty<byte>()];
+        private List<byte[]> RawVertexData = [[], [], []];
 
         private readonly List<MdlSubMesh> Submeshes = [];
         private readonly UiSplitView<MdlSubMesh> SubmeshView;
@@ -65,7 +64,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             SubmeshView = new( "Sub-Mesh", Submeshes, false );
         }
 
-        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount );
+        public override Vector4[] GetData( int indexCount, byte[] rawIndexData ) => Format.GetData( rawIndexData, RawVertexData, indexCount, VertexCount, Strides );
 
         public override void Draw() {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
