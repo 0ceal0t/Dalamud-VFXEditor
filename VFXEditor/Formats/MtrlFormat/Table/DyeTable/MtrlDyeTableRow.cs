@@ -5,7 +5,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.MtrlFormat.Table {
+namespace VfxEditor.Formats.MtrlFormat.Table.DyeTable {
     [Flags]
     public enum DyeRowFlags {
         Apply_Diffuse = 0x01,
@@ -30,7 +30,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
         public void Write( BinaryWriter writer ) {
             var value = Flags.IntValue;
-            writer.Write( ( ushort )( ( value & 0x1F ) | ( Template.Value << 5 ) ) );
+            writer.Write( ( ushort )( value & 0x1F | Template.Value << 5 ) );
         }
 
         public void Draw() {

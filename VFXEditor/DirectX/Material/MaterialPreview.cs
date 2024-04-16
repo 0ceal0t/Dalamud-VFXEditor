@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MtrlFormat.Table;
+using VfxEditor.Formats.MtrlFormat.Table.DyeTable;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {

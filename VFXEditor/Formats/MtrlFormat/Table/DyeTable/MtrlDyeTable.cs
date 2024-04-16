@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace VfxEditor.Formats.MtrlFormat.Table {
+namespace VfxEditor.Formats.MtrlFormat.Table.DyeTable {
     public class MtrlDyeTable {
         public const int Size = 16 * MtrlDyeTableRow.Size;
 
@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             for( var i = 0; i < 16; i++ ) Rows.Add( new() );
         }
 
-        public MtrlDyeTable( BinaryReader reader ) {
+        public MtrlDyeTable( BinaryReader reader, long size ) {
             for( var i = 0; i < 16; i++ ) Rows.Add( new( reader ) );
         }
 

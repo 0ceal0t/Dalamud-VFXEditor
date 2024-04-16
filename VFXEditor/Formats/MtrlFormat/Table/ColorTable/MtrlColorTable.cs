@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
+    public enum ColorTableSize : int {
+        Standard = 512, // 16 * 32
+        DT_Large = 2048, // 16 * 128
+    }
+
     public class MtrlColorTable {
         public readonly MtrlFile File;
-        public const int Size = 16 * MtrlColorTableRow.Size;
-
+        public readonly ColorTableSize Size = ColorTableSize.Standard;
         public readonly List<MtrlColorTableRow> Rows = [];
+
         private readonly MtrlColorTableSplitView RowView;
         private MtrlDye PreviewDye;
 
@@ -17,7 +22,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
             RowView = new( Rows );
         }
 
-        public MtrlColorTable( MtrlFile file, BinaryReader reader ) {
+        public MtrlColorTable( MtrlFile file, BinaryReader reader, ColorTableSize size ) {
+            Size = size;
             for( var i = 0; i < 16; i++ ) Rows.Add( new( file, reader ) );
             RowView = new( Rows );
         }

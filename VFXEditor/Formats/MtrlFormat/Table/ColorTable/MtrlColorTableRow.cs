@@ -5,6 +5,7 @@ using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.Formats.MtrlFormat.Stm;
+using VfxEditor.Formats.MtrlFormat.Table.DyeTable;
 using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
@@ -17,8 +18,6 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public StmDyeData DyeData { get; private set; }
 
         private MtrlDye PreviewDye;
-
-        public const int Size = 32; // 16 ushorts
 
         public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
         public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );

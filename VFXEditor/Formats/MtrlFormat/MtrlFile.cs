@@ -9,6 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
 using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Table;
+using VfxEditor.Formats.MtrlFormat.Table.DyeTable;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Parsing;
@@ -40,7 +41,7 @@ namespace VfxEditor.Formats.MtrlFormat {
     }
 
     public class MtrlFile : FileManagerFile {
-        private readonly byte[] Version;
+        public readonly uint Version;
         private readonly byte[] ExtraData;
 
         private readonly List<MtrlTexture> Textures = [];
@@ -75,7 +76,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         private readonly int ModdedMod4 = 0;
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
-            Version = reader.ReadBytes( 4 );
+            Version = reader.ReadUInt32();
             reader.ReadUInt16(); // file size
             var dataSize = reader.ReadUInt16();
             var stringSize = reader.ReadUInt16();
@@ -122,9 +123,17 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            ColorTable = ( Flags.HasFlag( TableFlags.Has_Color_Table ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlColorTable.Size ) ? new( this, reader ) : new( this );
-            DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ? new( reader ) : new();
-            for( var i = 0; i < 16; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
+
+            ColorTable = !Flags.HasFlag( TableFlags.Has_Color_Table ) ? new( this ) : ( int )( dataEnd - reader.BaseStream.Position ) switch {
+                >= ( int )ColorTableSize.DT_Large => new( this, reader, ColorTableSize.DT_Large ),
+                >= ( int )ColorTableSize.Standard => new( this, reader, ColorTableSize.Standard ),
+                _ => new( this )
+            };
+
+            DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ?
+                new( reader, dataEnd - reader.BaseStream.Position ) : new();
+
+            for( var i = 0; i < DyeTable.Rows.Count; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
             reader.BaseStream.Position = dataEnd;
 
             var shaderValueSize = reader.ReadUInt16();
@@ -280,7 +289,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             Shader.Draw();
             ImGui.TextDisabled( ShaderFilePath );
             if( ShaderFileState != ShpkFileState.None ) {
-                using var color = ImRaii.PushColor( ImGuiCol.TextDisabled, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
+                using var color = ImRaii.PushColor( ImGuiCol.Text, ShaderFileState == ShpkFileState.Missing ? UiUtils.DALAMUD_RED : UiUtils.PARSED_GREEN );
                 ImGui.SameLine();
                 ImGui.Text( $"[{ShaderFileState}]" );
             }
