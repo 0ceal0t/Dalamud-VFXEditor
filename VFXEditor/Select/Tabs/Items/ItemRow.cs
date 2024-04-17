@@ -64,6 +64,7 @@ namespace VfxEditor.Select.Tabs.Items {
         public readonly ItemIds Ids;
         public readonly ItemIds SecondaryIds;
         public readonly ItemType Type = ItemType.Other;
+        public string ModelString { get; protected set; }
 
         public bool HasModel => Ids.Id1 != 0;
 
@@ -101,6 +102,7 @@ namespace VfxEditor.Select.Tabs.Items {
         public string GetVfxPath( int idx ) => $"{RootPath}{idx:D4}.avfx";
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
     }
 }

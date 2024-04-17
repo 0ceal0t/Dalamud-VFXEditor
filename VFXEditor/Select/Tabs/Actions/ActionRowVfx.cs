@@ -32,6 +32,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         }
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
     }
 }

@@ -2,8 +2,6 @@ using Lumina.Excel.GeneratedSheets2;
 
 namespace VfxEditor.Select.Tabs.Items {
     public class ItemRowArmor : ItemRow {
-        private readonly string ModelString;
-
         public override string ImcPath => $"chara/{Prefix}/{ModelString}/{ModelString}.imc";
 
         public override int Variant => Ids.GearVariant;

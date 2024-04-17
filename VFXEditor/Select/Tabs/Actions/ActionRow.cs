@@ -42,6 +42,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         }
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
 
         public static string ToTmbPath( string key ) => ( string.IsNullOrEmpty( key ) || key.Contains( "[SKL_ID]" ) ) ? string.Empty : $"chara/action/{key}.tmb";

@@ -4,7 +4,6 @@ namespace VfxEditor.Select.Tabs.Items {
     public class ItemRowWeapon : ItemRow {
         public readonly ItemRowWeapon SubItem;
         public readonly string OverrideImcPath = null;
-        private readonly string ModelString;
         private readonly string BodyString;
 
         public bool HasSubModel => SecondaryIds.Id1 != 0;

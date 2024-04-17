@@ -50,6 +50,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         }
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
     }
 }

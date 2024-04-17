@@ -33,6 +33,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
         private static string GetVfxPath( string path ) => string.IsNullOrEmpty( path ) ? "" : $"vfx/common/eff/{path}.avfx";
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
     }
 }

@@ -30,6 +30,7 @@ namespace VfxEditor.Select.Tabs.Housing {
         }
 
         public string GetName() => Name;
+
         public uint GetIconId() => Icon;
     }
 }
