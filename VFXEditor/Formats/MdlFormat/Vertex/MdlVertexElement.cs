@@ -1,5 +1,6 @@
 using System.IO;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Vertex {
     public class MdlVertexElement {
@@ -10,17 +11,6 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         public readonly byte UsageIndex;
 
         public bool NoData => Stream == 255 || Type == 0;
-        public int EndOffset => Offset + Size;
-
-        public int Size => Type switch {
-            VertexType.Single3 => 12,
-            VertexType.Single4 => 16,
-            VertexType.UInt => 4,
-            VertexType.ByteFloat4 => 4,
-            VertexType.Half2 => 4,
-            VertexType.Half4 => 8,
-            _ => 0
-        };
 
         public MdlVertexElement() { }
 
@@ -34,11 +24,16 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         }
 
         public Vector4 Read( BinaryReader reader ) => Type switch {
-            VertexType.Half2 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), 0, 0 ),
-            VertexType.Half4 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf() ),
             VertexType.Single3 => new( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), 0 ),
             VertexType.Single4 => new( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() ),
-            VertexType.UInt or VertexType.ByteFloat4 => new( reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() ),
+            VertexType.UInt => new( reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() ),
+            VertexType.Short2 or VertexType.Short2n => new( reader.ReadInt16(), reader.ReadInt16(), 0, 0 ),
+            VertexType.Short4 or VertexType.Short4n => new( reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16(), reader.ReadInt16() ),
+            VertexType.ByteFloat4 => new Vector4( reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte() ) / 255f,
+            VertexType.Half2 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), 0, 0 ),
+            VertexType.Half4 => new( ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf(), ( float )reader.ReadHalf() ),
+            VertexType.UShort2 => new( reader.ReadUInt16(), reader.ReadUInt16(), 0, 0 ),
+            VertexType.UShort4 => new( reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16(), reader.ReadUInt16() ),
             _ => new( 0 )
         };
 
@@ -48,7 +43,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             writer.Write( ( byte )Type );
             writer.Write( ( byte )Usage );
             writer.Write( UsageIndex );
-            for( var i = 0; i < 3; i++ ) writer.Write( ( byte )0 ); // padding
+            FileUtils.Pad( writer, 3 );
         }
     }
 }

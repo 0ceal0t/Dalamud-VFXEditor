@@ -8,9 +8,15 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
         Single3 = 2,
         Single4 = 3,
         UInt = 5,
+        Short2 = 6,
+        Short4 = 7,
         ByteFloat4 = 8,
+        Short2n = 9,
+        Short4n = 10,
         Half2 = 13,
-        Half4 = 14
+        Half4 = 14,
+        UShort2 = 16,
+        UShort4 = 17
     }
 
     public enum VertexUsage : byte {
@@ -66,10 +72,10 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                         var item = element.Read( reader );
 
                         if( element.Usage == VertexUsage.Position ) positions.Add( item );
-                        else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( item );
+                        else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( Vector4.Normalize( item - new Vector4( 0.5f, 0.5f, 0.5f, 0f ) ) );
                         else if( element.Usage == VertexUsage.UV ) uvs.Add( item );
                         else if( element.Usage == VertexUsage.Normal ) normals.Add( item );
-                        else if( element.Usage == VertexUsage.Color ) colors.Add( item / 255f );
+                        else if( element.Usage == VertexUsage.Color ) colors.Add( item );
                     }
                     reader.BaseStream.Position = startPos + stride;
                 }

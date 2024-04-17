@@ -174,8 +174,11 @@ namespace VfxEditor.Formats.TextureFormat {
                     DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc7 );
                     break;
                 default:
+                    Dalamud.Log( $"Unknown format {format}" );
                     return [[]];
             }
+
+            // TODO: R16G16B16A16F -> https://github.com/NotAdam/Lumina/blob/56a057f78ea8ee442f61f9dec3d4fb6fd109486a/src/Lumina/Data/Parsing/Tex/Buffers/R16G16B16A16FTextureBuffer.cs#L9
 
             var output = ms.ToArray();
             var size = width * height * 4;
