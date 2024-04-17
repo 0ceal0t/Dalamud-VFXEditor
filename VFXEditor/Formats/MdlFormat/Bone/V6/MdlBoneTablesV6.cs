@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone.V6 {
             for( var i = 0; i < count; i++ ) {
                 var (_, tableCount) = header[i];
                 Tables.Add( new MdlBoneTableV6( reader, data.BoneStrings, tableCount ) );
-                if( i < count - 1 ) FileUtils.PadTo( reader, 4 );
+                FileUtils.PadTo( reader, 4 );
             }
         }
 
@@ -28,7 +28,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone.V6 {
             for( var i = 0; i < Tables.Count; i++ ) {
                 positions.Add( writer.BaseStream.Position );
                 Tables[i].Write( writer, data );
-                if( i < Tables.Count - 1 ) FileUtils.PadTo( writer, 4 );
+                FileUtils.PadTo( writer, 4 );
             }
             var endPos = writer.BaseStream.Position;
 
