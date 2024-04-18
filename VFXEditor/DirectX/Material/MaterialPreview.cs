@@ -99,13 +99,13 @@ namespace VfxEditor.DirectX {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadColorRow( MtrlColorTableRowStandard row ) {
+        public void LoadColorRow( MtrlColorTableRow row ) {
             CurrentRenderId = row.RenderId;
             if( row == null ) return;
 
             VSBufferData = VSBufferData with {
-                Repeat = new( row.MaterialRepeatX.Value, row.MaterialRepeatY.Value ),
-                Skew = new( row.MaterialSkew.Value.X, row.MaterialSkew.Value.Y ),
+                Repeat = new( row.TileRepeatX.Value, row.TileRepeatY.Value ),
+                Skew = new( row.TileSkew.Value.X, row.TileSkew.Value.Y ),
             };
 
             var applyDye = row.StainTemplate != null;

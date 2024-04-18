@@ -1,15 +1,22 @@
 using Dalamud.Interface.Utility.Raii;
-using System.Collections.Generic;
 using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MtrlFormat.Table.Color {
     public class MtrlColorTableSplitView : UiSplitView<MtrlColorTableRow> {
-        public MtrlColorTableSplitView( List<MtrlColorTableRow> items ) : base( "Row", items, false ) { }
+        public readonly MtrlTables Tables;
 
-        protected override bool DrawLeftItem( MtrlColorTableRow item, int idx ) {
-            using var _ = ImRaii.PushId( idx );
-            item.DrawLeftItem( idx, ref Selected );
-            return false;
+        public MtrlColorTableSplitView( MtrlTables tables ) : base( "Row", tables.Rows, false ) {
+            Tables = tables;
+        }
+
+        protected override void DrawLeftColumn() {
+            var items = Items.GetRange( 0, Tables.Mode == ColorTableSize.Extended ? 32 : 16 );
+
+            if( Selected != null && !items.Contains( Selected ) ) Selected = null;
+            for( var idx = 0; idx < items.Count; idx++ ) {
+                using var _ = ImRaii.PushId( idx );
+                items[idx].DrawLeftItem( idx, ref Selected );
+            }
         }
     }
 }

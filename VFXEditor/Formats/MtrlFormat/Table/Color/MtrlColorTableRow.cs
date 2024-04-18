@@ -2,32 +2,96 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.Formats.MtrlFormat.Stm;
+using VfxEditor.Formats.MtrlFormat.Table.Dye;
+using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.Table.Color {
-    public abstract class MtrlColorTableRow : IUiItem {
+    public class MtrlColorTableRow : IUiItem {
         public readonly int RenderId = Renderer.NewId;
+        public readonly MtrlTables Tables;
+        public readonly MtrlDyeTableRow DyeRow;
 
-        protected readonly MtrlFile File;
+        public MtrlStain Stain { get; private set; }
+        public StmDyeData StainTemplate { get; private set; }
 
-        public MtrlStain Stain { get; protected set; }
-        public StmDyeData StainTemplate { get; protected set; }
+        public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
+        public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
 
-        public MtrlColorTableRow( MtrlFile file ) {
-            File = file;
+        public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
+        public readonly ParsedHalf GlossStrength = new( "Gloss Strength", 20f );
+
+        public readonly ParsedHalf3Color Emissive = new( "Emissive" );
+        public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
+
+        public readonly ParsedHalf TileRepeatX = new( "Material Repeat X", 16f );
+        public readonly ParsedHalf2 TileSkew = new( "Material Skew" );
+        public readonly ParsedHalf TileRepeatY = new( "Material Repeat Y", 16f );
+
+        public MtrlColorTableRow( MtrlTables tables ) {
+            Tables = tables;
+            DyeRow = new( tables );
         }
 
-        public abstract void InitDye();
-        public abstract void InitDye( BinaryReader reader );
+        // ====== READ+WRITE =========
 
-        public abstract void Write( BinaryWriter writer );
-        public abstract void WriteDye( BinaryWriter writer );
+        public void Read( BinaryReader reader ) {
+            Dalamud.Log( $"{reader.BaseStream.Position:X4} {Tables.Mode}" );
 
-        protected abstract void DrawTabs();
-        protected abstract void DrawDyeRow();
+            Diffuse.Read( reader );
+            SpecularStrength.Read( reader );
+            Specular.Read( reader );
+            GlossStrength.Read( reader );
+            Emissive.Read( reader );
+            TileMaterial.Read( reader );
+            TileRepeatX.Read( reader );
+            TileSkew.Read( reader );
+            TileRepeatY.Read( reader );
+
+            if( Tables.Mode == ColorTableSize.Extended ) reader.ReadBytes( 32 ); // temp
+        }
+
+        public void Write( BinaryWriter writer ) {
+            Diffuse.Write( writer );
+            SpecularStrength.Write( writer );
+            Specular.Write( writer );
+            GlossStrength.Write( writer );
+            Emissive.Write( writer );
+            TileMaterial.Write( writer );
+            TileRepeatX.Write( writer );
+            TileSkew.Write( writer );
+            TileRepeatY.Write( writer );
+
+            if( Tables.Mode == ColorTableSize.Extended ) FileUtils.Pad( writer, 32 ); // temp
+        }
+
+        // ====== DRAWING ===========
+
+        private void DrawTabs() {
+            using( var tab = ImRaii.TabItem( "Color" ) ) {
+                if( tab ) {
+                    Diffuse.Draw();
+                    SpecularStrength.Draw();
+                    Specular.Draw();
+                    GlossStrength.Draw();
+                    Emissive.Draw();
+                }
+            }
+
+            using( var tab = ImRaii.TabItem( "Tiling" ) ) {
+                if( tab ) {
+                    TileMaterial.Draw();
+                    TileRepeatX.Draw();
+                    TileRepeatY.Draw();
+                    TileSkew.Draw();
+                }
+            }
+        }
 
         public void Draw() {
             using var editing = new Edited();
@@ -37,15 +101,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
 
             DrawTabs();
 
-            using( var disabled = ImRaii.Disabled( !File.DyeTableEnabled ) )
+            using( var disabled = ImRaii.Disabled( !Tables.File.DyeTableEnabled ) )
             using( var tab = ImRaii.TabItem( "Dye" ) ) {
-                if( tab ) DrawDyeRow();
+                if( tab ) DyeRow.Draw();
             }
 
             if( Stain != null ) {
                 using var child = ImRaii.Child( "Child", new( -1, ImGui.GetFrameHeight() + ImGui.GetStyle().WindowPadding.Y * 2 ), true );
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
-
                 if( StainTemplate == null ) ImGui.TextDisabled( "[NO DYE VALUE]" );
                 else StainTemplate.Draw();
             }
@@ -61,7 +124,6 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 DrawLeftItemColors();
             }
-
             if( ImGui.Selectable( $"Row {idx}", this == selected ) ) selected = this;
             if( StainTemplate != null ) {
                 ImGui.SameLine();
@@ -70,11 +132,20 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             }
         }
 
-        protected abstract void DrawLeftItemColors();
+        private void DrawLeftItemColors() {
+            Diffuse.DrawPreview();
+            ImGui.SameLine();
+            Specular.DrawPreview();
+            ImGui.SameLine();
+            Emissive.DrawPreview();
+            ImGui.SameLine();
+        }
 
-        public abstract StmDyeData GetStainTemplate();
+        // ===== PREVIEW =========
 
-        public abstract void RefreshPreview();
+        public StmDyeData GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFile.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
+
+        public void RefreshPreview() => Plugin.DirectXManager.MaterialPreview.LoadColorRow( this );
 
         public void SetPreviewStain( MtrlStain stain ) {
             Stain = stain;

@@ -14,20 +14,27 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Dye {
         Apply_Specular_Strength = 0x10
     }
 
-    public class MtrlDyeTableRowStandard {
+    public class MtrlDyeTableRow {
+        public readonly MtrlTables Tables;
         public readonly ParsedShort Template = new( "Template" );
         public readonly ParsedFlag<DyeRowFlags> Flags = new( "Flags", 2 );
 
-        public MtrlDyeTableRowStandard() { }
+        public MtrlDyeTableRow( MtrlTables tables ) {
+            Tables = tables;
+        }
 
-        public MtrlDyeTableRowStandard( BinaryReader reader ) {
+        public void Read( BinaryReader reader ) {
             Flags.Read( reader );
             Template.Value = Flags.IntValue >> 5;
+
+            if( Tables.Mode == ColorTableSize.Extended ) reader.ReadUInt16(); // temp
         }
 
         public void Write( BinaryWriter writer ) {
             var value = Flags.IntValue;
             writer.Write( ( ushort )( value & 0x1F | Template.Value << 5 ) );
+
+            if( Tables.Mode == ColorTableSize.Extended ) FileUtils.Pad( writer, 2 ); // temp
         }
 
         public void Draw() {

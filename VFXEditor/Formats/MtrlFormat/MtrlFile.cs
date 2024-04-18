@@ -124,13 +124,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             var dataEnd = reader.BaseStream.Position + dataSize;
 
-            Tables = !Flags.HasFlag( TableFlags.Has_Color_Table ) ?
-                new MtrlTablesStandard( this ) :
-                ( int )( dataEnd - reader.BaseStream.Position ) switch {
-                    >= ( int )ColorTableSize.Extended => null,
-                    >= ( int )ColorTableSize.Standard => new MtrlTablesStandard( this, reader, dataEnd ),
-                    _ => new MtrlTablesStandard( this )
-                };
+            Tables = ColorTableEnabled ? new( this, reader, dataEnd ) : new( this );
 
             reader.BaseStream.Position = dataEnd;
 
