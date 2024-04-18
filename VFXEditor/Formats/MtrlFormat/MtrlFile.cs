@@ -9,7 +9,6 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
 using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Table;
-using VfxEditor.Formats.MtrlFormat.Table.DyeTable;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Parsing;
@@ -51,9 +50,10 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly ParsedString Shader;
         private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
 
-        public readonly MtrlColorTable ColorTable;
+        public bool ColorTableEnabled => Flags.HasFlag( TableFlags.Has_Color_Table );
         public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
-        public readonly MtrlDyeTable DyeTable;
+
+        public readonly MtrlTables Tables;
 
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
         private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
@@ -124,16 +124,14 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             var dataEnd = reader.BaseStream.Position + dataSize;
 
-            ColorTable = !Flags.HasFlag( TableFlags.Has_Color_Table ) ? new( this ) : ( int )( dataEnd - reader.BaseStream.Position ) switch {
-                >= ( int )ColorTableSize.DT_Large => new( this, reader, ColorTableSize.DT_Large ),
-                >= ( int )ColorTableSize.Standard => new( this, reader, ColorTableSize.Standard ),
-                _ => new( this )
-            };
+            Tables = !Flags.HasFlag( TableFlags.Has_Color_Table ) ?
+                new MtrlTablesStandard( this ) :
+                ( int )( dataEnd - reader.BaseStream.Position ) switch {
+                    >= ( int )ColorTableSize.Extended => null,
+                    >= ( int )ColorTableSize.Standard => new MtrlTablesStandard( this, reader, dataEnd ),
+                    _ => new MtrlTablesStandard( this )
+                };
 
-            DyeTable = ( Flags.HasFlag( TableFlags.Dyeable ) && ( dataEnd - reader.BaseStream.Position ) >= MtrlDyeTable.Size ) ?
-                new( reader, dataEnd - reader.BaseStream.Position ) : new();
-
-            for( var i = 0; i < DyeTable.Rows.Count; i++ ) ColorTable.Rows[i].SetDyeRow( DyeTable.Rows[i] );
             reader.BaseStream.Position = dataEnd;
 
             var shaderValueSize = reader.ReadUInt16();
@@ -216,8 +214,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataStart = writer.BaseStream.Position;
-            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) ColorTable.Write( writer );
-            if( Flags.HasFlag( TableFlags.Dyeable ) ) DyeTable.Write( writer );
+            Tables.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
             writer.Write( ( ushort )MaterialParameters.Select( x => x.Values.Count * 4 ).Sum() );
@@ -276,9 +273,9 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) ColorSetView.Draw();
             }
 
-            if( Flags.HasFlag( TableFlags.Has_Color_Table ) ) {
+            if( ColorTableEnabled ) {
                 using var tab = ImRaii.TabItem( "Color Table" );
-                if( tab ) ColorTable.Draw();
+                if( tab ) Tables.Draw();
             }
         }
 

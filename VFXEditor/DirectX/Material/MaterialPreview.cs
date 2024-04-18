@@ -6,8 +6,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
-using VfxEditor.Formats.MtrlFormat.Table;
-using VfxEditor.Formats.MtrlFormat.Table.DyeTable;
+using VfxEditor.Formats.MtrlFormat.Table.Color;
+using VfxEditor.Formats.MtrlFormat.Table.Dye;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -99,7 +99,7 @@ namespace VfxEditor.DirectX {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadColorRow( MtrlColorTableRow row ) {
+        public void LoadColorRow( MtrlColorTableRowStandard row ) {
             CurrentRenderId = row.RenderId;
             if( row == null ) return;
 
@@ -108,15 +108,15 @@ namespace VfxEditor.DirectX {
                 Skew = new( row.MaterialSkew.Value.X, row.MaterialSkew.Value.Y ),
             };
 
-            var applyDye = row.DyeData != null;
+            var applyDye = row.StainTemplate != null;
             var dyeRow = row.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? row.DyeData.Diffuse : row.Diffuse.Value ),
-                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? row.DyeData.Emissive : row.Emissive.Value ),
-                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? row.DyeData.Specular : row.Specular.Value ),
-                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? row.DyeData.Power : row.SpecularStrength.Value,
-                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? row.DyeData.Gloss : row.GlossStrength.Value,
+                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value ),
+                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value ),
+                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? row.StainTemplate.Specular : row.Specular.Value ),
+                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? row.StainTemplate.Power : row.SpecularStrength.Value,
+                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? row.StainTemplate.Gloss : row.GlossStrength.Value,
             };
 
             // Clear out the old

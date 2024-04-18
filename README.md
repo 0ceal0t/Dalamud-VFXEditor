@@ -92,6 +92,7 @@ Client.System.Resource.Handle.EyeAnimationResourceHandle
 Client.System.Resource.Handle.FacialParameterEditResourceHandle
 Client.System.Resource.Handle.KineDriverLoadResourceHandle
 Client.System.Resource.Handle.KineDriverResourceHandle
+spm = shader parameters
 
 chara/xls/bonamik/bonamik-demihuman.bklb
 chara/xls/bonamik/bonamik-demihuman.bklb

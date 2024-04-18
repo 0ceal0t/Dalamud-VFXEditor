@@ -2,10 +2,9 @@ using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.MtrlFormat.Table.DyeTable {
+namespace VfxEditor.Formats.MtrlFormat.Table.Dye {
     [Flags]
     public enum DyeRowFlags {
         Apply_Diffuse = 0x01,
@@ -15,15 +14,13 @@ namespace VfxEditor.Formats.MtrlFormat.Table.DyeTable {
         Apply_Specular_Strength = 0x10
     }
 
-    public class MtrlDyeTableRow : IUiItem {
-        public const int Size = 2;
-
+    public class MtrlDyeTableRowStandard {
         public readonly ParsedShort Template = new( "Template" );
         public readonly ParsedFlag<DyeRowFlags> Flags = new( "Flags", 2 );
 
-        public MtrlDyeTableRow() { }
+        public MtrlDyeTableRowStandard() { }
 
-        public MtrlDyeTableRow( BinaryReader reader ) {
+        public MtrlDyeTableRowStandard( BinaryReader reader ) {
             Flags.Read( reader );
             Template.Value = Flags.IntValue >> 5;
         }
@@ -35,10 +32,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.DyeTable {
 
         public void Draw() {
             ImGui.SetNextItemWidth( 200f );
-            if( UiUtils.EnumComboBox( "Template", Plugin.MtrlManager.Templates, Template.Value, out var value ) ) {
-                Template.Update( value );
-            }
-
+            if( UiUtils.EnumComboBox( "Template", Plugin.MtrlManager.Templates, Template.Value, out var value ) ) Template.Update( value );
             Flags.Draw();
         }
     }
