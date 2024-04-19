@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Dye {
         Apply_Specular_Strength = 0x10
     }
 
-    public class MtrlDyeTableRow {
+    public partial class MtrlDyeTableRow {
         public readonly MtrlTables Tables;
         public readonly ParsedShort Template = new( "Template" );
         public readonly ParsedFlag<DyeRowFlags> Flags = new( "Flags", 2 );

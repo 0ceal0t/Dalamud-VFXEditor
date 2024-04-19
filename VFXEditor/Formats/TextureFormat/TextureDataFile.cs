@@ -142,56 +142,15 @@ namespace VfxEditor.Formats.TextureFormat {
             Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
             Marshal.FreeHGlobal( handle );
 
-            var rawData = DdsData = reader.ReadBytes( localData.Length - HeaderLength );
+            DdsData = reader.ReadBytes( localData.Length - HeaderLength );
 
-            if( Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ) {
-                /*
-                 * DDS needs to be
-                 * 
-                 * array 0
-                 *  mip 0
-                 *  mip 1
-                 *  ...
-                 * array 1
-                 *  ...
-                 *   
-                 * But FFXIV is
-                 * 
-                 * mip 0
-                 *   array 0
-                 *   array 1
-                 *   ...
-                 * mip 1
-                 *   ...
-                 */
-
-                reader.BaseStream.Position = HeaderLength;
-
-                var mipArrayData = new List<List<byte[]>>();
-                var offsets = new List<int>();
-                for( var i = 0; i < Header.MipLevelsCount; i++ ) offsets.Add( ( int )Header.OffsetToSurface[i] - HeaderLength );
-                offsets.Add( ( int )reader.BaseStream.Length - HeaderLength );
-
-                for( var i = 0; i < Header.MipLevelsCount; i++ ) {
-                    var mipSize = offsets[i + 1] - offsets[i];
-                    var arrayData = new List<byte[]>();
-                    for( var j = 0; j < Header.ArraySize; j++ ) arrayData.Add( reader.ReadBytes( mipSize / Header.ArraySize ) );
-                    mipArrayData.Add( arrayData );
-                }
-
-                using var arrayMs = new MemoryStream();
-                using var writer = new BinaryWriter( arrayMs );
-                for( var i = 0; i < Header.ArraySize; i++ ) {
-                    for( var j = 0; j < Header.MipLevelsCount; j++ ) writer.Write( mipArrayData[j][i] );
-                }
-
-                DdsData = arrayMs.ToArray();
-                Layers = Convert( rawData, Header.Format, Header.Width, Header.Height, Header.ArraySize );
-            }
-            else {
-                DdsData = rawData;
-                Layers = Convert( DdsData, Header.Format, Header.Width, Header.Height, Header.Depth );
-            }
+            Layers = Convert(
+                DdsData,
+                Header.Format,
+                Header.Width,
+                Header.Height,
+                Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth
+            );
 
             ValidFormat = ImageData.Length > 0;
         }

@@ -12,7 +12,7 @@ using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.Table.Color {
-    public class MtrlColorTableRow : IUiItem {
+    public partial class MtrlColorTableRow : IUiItem {
         public readonly int RenderId = Renderer.NewId;
         public readonly MtrlTables Tables;
         public readonly MtrlDyeTableRow DyeRow;
@@ -21,16 +21,20 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         public StmDyeData StainTemplate { get; private set; }
 
         public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
-        public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
-        public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
         public readonly ParsedHalf GlossStrength = new( "Gloss Strength", 20f );
+        public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
+        public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
+
+        public readonly ParsedHalf BlendingAnisotropy = new( "Blending Anisotrophy" );
+        public readonly ParsedHalf SpmIndex = new( "SPM Index" ); // TODO
         public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
+        public readonly ParsedHalf NormalScale = new( "Normal Scale" );
+
+        public readonly ParsedHalf TileNormalScale = new( "Normal Scale" );
         public readonly ParsedHalf TileRepeatX = new( "Repeat X", 16f );
         public readonly ParsedHalf2 TileSkew = new( "Skew" );
         public readonly ParsedHalf TileRepeatY = new( "Repeat Y", 16f );
-
-        public readonly ParsedHalf TileNormalScale = new( "Normal Scale" );
 
         public MtrlColorTableRow( MtrlTables tables ) {
             Tables = tables;
@@ -40,28 +44,20 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         // ====== READ+WRITE =========
 
         public void Read( BinaryReader reader ) {
-            if( !Tables.Extended ) {
-                Diffuse.Read( reader );
-                SpecularStrength.Read( reader );
-                Specular.Read( reader );
-                GlossStrength.Read( reader );
-                Emissive.Read( reader );
-                TileMaterial.Read( reader );
-                TileRepeatX.Read( reader );
-                TileSkew.Read( reader );
-                TileRepeatY.Read( reader );
-
-                return;
-            }
+            if( ReadLegacy( reader ) ) return;
 
             Diffuse.Read( reader );
             GlossStrength.Read( reader );
             Specular.Read( reader );
             SpecularStrength.Read( reader );
 
-            for( var i = 0; i < 5; i++ ) {
-                Dalamud.Log( $"{i} >> {reader.ReadHalf()} {reader.ReadHalf()} {reader.ReadHalf()} {reader.ReadHalf()}" );
-            }
+            for( var i = 0; i < 11; i++ ) reader.ReadHalf(); // TODO
+            BlendingAnisotropy.Read( reader );
+            for( var i = 0; i < 4; i++ ) reader.ReadHalf(); // TODO
+            SpmIndex.Read( reader );
+            TileMaterial.Read( reader );
+            NormalScale.Read( reader );
+            reader.ReadHalf(); // TODO
 
             TileRepeatX.Read( reader );
             TileSkew.Read( reader );
@@ -69,25 +65,21 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         }
 
         public void Write( BinaryWriter writer ) {
-            if( !Tables.Extended ) {
-                Diffuse.Write( writer );
-                SpecularStrength.Write( writer );
-                Specular.Write( writer );
-                GlossStrength.Write( writer );
-                Emissive.Write( writer );
-                TileMaterial.Write( writer );
-                TileRepeatX.Write( writer );
-                TileSkew.Write( writer );
-                TileRepeatY.Write( writer );
-
-                return;
-            }
+            if( WriteLegacy( writer ) ) return;
 
             Diffuse.Write( writer );
             GlossStrength.Write( writer );
             Specular.Write( writer );
             SpecularStrength.Write( writer );
-            FileUtils.Pad( writer, 8 * 5 ); // temp
+
+            FileUtils.Pad( writer, 11 * 2 ); // TODO
+            BlendingAnisotropy.Write( writer );
+            FileUtils.Pad( writer, 4 * 2 ); // TODO
+            SpmIndex.Write( writer );
+            TileMaterial.Write( writer );
+            NormalScale.Write( writer );
+            FileUtils.Pad( writer, 2 ); // TODO
+
             TileRepeatX.Write( writer );
             TileSkew.Write( writer );
             TileRepeatY.Write( writer );
@@ -96,6 +88,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         // ====== DRAWING ===========
 
         private void DrawTabs() {
+            if( DrawTabsLegacy() ) return;
+
             using( var tab = ImRaii.TabItem( "Color" ) ) {
                 if( tab ) {
                     Diffuse.Draw();
@@ -108,6 +102,9 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
 
             using( var tab = ImRaii.TabItem( "Tiling" ) ) {
                 if( tab ) {
+                    BlendingAnisotropy.Draw();
+                    SpmIndex.Draw();
+                    NormalScale.Draw();
                     TileMaterial.Draw();
                     TileRepeatX.Draw();
                     TileRepeatY.Draw();
