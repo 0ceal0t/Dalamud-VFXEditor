@@ -20,7 +20,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly List<MtrlColorTableRow> Rows = [];
         public readonly MtrlColorTableSplitView RowView;
 
-        public ColorTableSize Mode { get; private set; } = ColorTableSize.Standard; // default
+        public bool Extended { get; private set; } = false; // default
+        public int Count => Extended ? 32 : 16;
 
         private MtrlStain Stain;
 
@@ -32,51 +33,32 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
         public MtrlTables( MtrlFile file, BinaryReader reader, long dataEnd ) : this( file ) {
             var size = ( int )( dataEnd - reader.BaseStream.Position );
-            int count;
+            if( size < ( int )ColorTableSize.Standard ) return;
+            Extended = size >= ( int )ColorTableSize.Extended;
 
-            if( size >= ( int )ColorTableSize.Extended ) {
-                Mode = ColorTableSize.Extended;
-                count = 32;
-            }
-            else if( size >= ( int )ColorTableSize.Standard ) {
-                Mode = ColorTableSize.Standard;
-                count = 16; // only use 16
-            }
-            else return; // no need to read dye table
-
-            for( var i = 0; i < count; i++ ) Rows[i].Read( reader );
+            for( var i = 0; i < Count; i++ ) Rows[i].Read( reader );
 
             // Read dye rows
             size = ( int )( dataEnd - reader.BaseStream.Position );
-            if( file.DyeTableEnabled && size >= ( int )DyeTableSize.Standard ) {
-                for( var i = 0; i < count; i++ ) Rows[i].DyeRow.Read( reader );
-            }
+            if( !file.DyeTableEnabled || size < ( Extended ? ( int )DyeTableSize.Extended : ( int )DyeTableSize.Standard ) ) return;
+
+            for( var i = 0; i < Count; i++ ) Rows[i].DyeRow.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
-            var count = Mode == ColorTableSize.Standard ? 16 : 32;
-            if( File.ColorTableEnabled ) for( var i = 0; i < count; i++ ) Rows[i].Write( writer );
-            if( File.DyeTableEnabled ) for( var i = 0; i < count; i++ ) Rows[i].DyeRow.Write( writer );
+            if( File.ColorTableEnabled ) for( var i = 0; i < Count; i++ ) Rows[i].Write( writer );
+            if( File.DyeTableEnabled ) for( var i = 0; i < Count; i++ ) Rows[i].DyeRow.Write( writer );
         }
 
         public void Draw() {
-            DrawModeCombo();
+            var extened = Extended;
+            if( ImGui.Checkbox( "Extended", ref extened ) ) Extended = extened;
             ImGui.SameLine();
+
             DrawDyeCombo();
 
             ImGui.Separator();
             RowView.Draw();
-
-            // TODO: mode select
-        }
-
-        private void DrawModeCombo() {
-            ImGui.SetNextItemWidth( 200f );
-            using var combo = ImRaii.Combo( "##Mode", Mode == ColorTableSize.Extended ? "Extended (Dawntrail)" : $"{Mode}" );
-            if( !combo ) return;
-
-            if( ImGui.Selectable( "Standard" ) ) Mode = ColorTableSize.Standard;
-            if( ImGui.Selectable( "Extended (Dawntrail)" ) ) Mode = ColorTableSize.Extended;
         }
 
         private void DrawDyeCombo() {

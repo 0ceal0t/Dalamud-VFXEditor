@@ -22,16 +22,15 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
 
         public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
         public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
-
         public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
         public readonly ParsedHalf GlossStrength = new( "Gloss Strength", 20f );
-
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
         public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
+        public readonly ParsedHalf TileRepeatX = new( "Repeat X", 16f );
+        public readonly ParsedHalf2 TileSkew = new( "Skew" );
+        public readonly ParsedHalf TileRepeatY = new( "Repeat Y", 16f );
 
-        public readonly ParsedHalf TileRepeatX = new( "Material Repeat X", 16f );
-        public readonly ParsedHalf2 TileSkew = new( "Material Skew" );
-        public readonly ParsedHalf TileRepeatY = new( "Material Repeat Y", 16f );
+        public readonly ParsedHalf TileNormalScale = new( "Normal Scale" );
 
         public MtrlColorTableRow( MtrlTables tables ) {
             Tables = tables;
@@ -41,33 +40,57 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         // ====== READ+WRITE =========
 
         public void Read( BinaryReader reader ) {
-            Dalamud.Log( $"{reader.BaseStream.Position:X4} {Tables.Mode}" );
+            if( !Tables.Extended ) {
+                Diffuse.Read( reader );
+                SpecularStrength.Read( reader );
+                Specular.Read( reader );
+                GlossStrength.Read( reader );
+                Emissive.Read( reader );
+                TileMaterial.Read( reader );
+                TileRepeatX.Read( reader );
+                TileSkew.Read( reader );
+                TileRepeatY.Read( reader );
+
+                return;
+            }
 
             Diffuse.Read( reader );
-            SpecularStrength.Read( reader );
-            Specular.Read( reader );
             GlossStrength.Read( reader );
-            Emissive.Read( reader );
-            TileMaterial.Read( reader );
+            Specular.Read( reader );
+            SpecularStrength.Read( reader );
+
+            for( var i = 0; i < 5; i++ ) {
+                Dalamud.Log( $"{i} >> {reader.ReadHalf()} {reader.ReadHalf()} {reader.ReadHalf()} {reader.ReadHalf()}" );
+            }
+
             TileRepeatX.Read( reader );
             TileSkew.Read( reader );
             TileRepeatY.Read( reader );
-
-            if( Tables.Mode == ColorTableSize.Extended ) reader.ReadBytes( 32 ); // temp
         }
 
         public void Write( BinaryWriter writer ) {
+            if( !Tables.Extended ) {
+                Diffuse.Write( writer );
+                SpecularStrength.Write( writer );
+                Specular.Write( writer );
+                GlossStrength.Write( writer );
+                Emissive.Write( writer );
+                TileMaterial.Write( writer );
+                TileRepeatX.Write( writer );
+                TileSkew.Write( writer );
+                TileRepeatY.Write( writer );
+
+                return;
+            }
+
             Diffuse.Write( writer );
-            SpecularStrength.Write( writer );
-            Specular.Write( writer );
             GlossStrength.Write( writer );
-            Emissive.Write( writer );
-            TileMaterial.Write( writer );
+            Specular.Write( writer );
+            SpecularStrength.Write( writer );
+            FileUtils.Pad( writer, 8 * 5 ); // temp
             TileRepeatX.Write( writer );
             TileSkew.Write( writer );
             TileRepeatY.Write( writer );
-
-            if( Tables.Mode == ColorTableSize.Extended ) FileUtils.Pad( writer, 32 ); // temp
         }
 
         // ====== DRAWING ===========
@@ -124,7 +147,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 DrawLeftItemColors();
             }
-            if( ImGui.Selectable( $"Row {idx}", this == selected ) ) selected = this;
+            if( ImGui.Selectable( $"#{idx}", this == selected ) ) selected = this;
             if( StainTemplate != null ) {
                 ImGui.SameLine();
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );

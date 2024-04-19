@@ -17,7 +17,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TexturePreview( TextureDataFile file, bool penumbra, string gamePath ) : base( gamePath ) {
             Format = file.Header.Format;
-            MipLevels = file.Header.MipLevels;
+            MipLevels = file.Header.MipLevelsCount;
             Width = file.Header.Width;
             Height = file.Header.Height;
             Depth = file.Header.Depth;

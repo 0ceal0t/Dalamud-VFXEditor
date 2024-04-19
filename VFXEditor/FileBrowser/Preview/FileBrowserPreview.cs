@@ -152,7 +152,7 @@ namespace VfxEditor.FileBrowser.Preview {
             if( file == null ) return null;
 
             format = $"{file.Header.Format}";
-            mips = file.Header.MipLevels;
+            mips = file.Header.MipLevelsCount;
             return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
         }
 

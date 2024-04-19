@@ -30,8 +30,9 @@ namespace VfxEditor.Formats.TextureFormat {
         TextureType1D = 0x400000,
         TextureType2D = 0x800000,
         TextureType3D = 0x1000000,
+        TextureType2DArray = 0x10000000,
         TextureTypeCube = 0x2000000,
-        TextureTypeMask = 0x3C00000,
+        TextureTypeMask = 0x13C00000,
         TextureSwizzle = 0x4000000,
         TextureNoTiled = 0x8000000,
         TextureNoSwizzle = 0x80000000,
@@ -82,7 +83,8 @@ namespace VfxEditor.Formats.TextureFormat {
             public ushort Width;
             public ushort Height;
             public ushort Depth;
-            public ushort MipLevels;
+            public byte MipLevelsCount;
+            public byte ArraySize;
             [MarshalAs( UnmanagedType.ByValArray, SizeConst = 3 )]
             public uint[] LodOffset;
             [MarshalAs( UnmanagedType.ByValArray, SizeConst = 13 )]
@@ -346,7 +348,14 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SaveAsDds( string path ) {
-            var header = TextureUtils.CreateDdsHeader( Header.Width, Header.Height, Header.Format, Header.Depth, Header.MipLevels );
+            var header = TextureUtils.CreateDdsHeader(
+                Header.Width,
+                Header.Height,
+                Header.Format,
+                Header.Depth,
+                Header.MipLevelsCount,
+                Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth
+            );
             var data = GetDdsData();
             var writeData = new byte[header.Length + data.Length];
             Buffer.BlockCopy( header, 0, writeData, 0, header.Length );

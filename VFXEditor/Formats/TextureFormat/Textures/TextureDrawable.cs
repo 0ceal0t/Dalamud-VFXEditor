@@ -10,7 +10,6 @@ using Surface = TeximpNet.Surface;
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public abstract class TextureDrawable {
         protected string GamePath = "";
-        protected string GameExtension => GamePath.Split( '.' )[^1].Trim( '\0' );
 
         private int[] ResizeInput;
 
@@ -58,7 +57,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( ImGui.BeginPopup( "TexExport" ) ) {
                 if( ImGui.Selectable( ".png" ) ) GetRawData()?.SavePngDialog();
                 if( ImGui.Selectable( ".dds" ) ) GetRawData()?.SaveDdsDialog();
-                if( ImGui.Selectable( $".{GameExtension}" ) ) GetRawData()?.SaveTexDialog( GameExtension );
+                if( ImGui.Selectable( $".atex" ) ) GetRawData()?.SaveTexDialog( "atex" );
+                if( ImGui.Selectable( $".tex" ) ) GetRawData()?.SaveTexDialog( "tex" );
                 ImGui.EndPopup();
             }
 
@@ -135,7 +135,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,." + GameExtension + ",.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.tex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     OnReplace( res );

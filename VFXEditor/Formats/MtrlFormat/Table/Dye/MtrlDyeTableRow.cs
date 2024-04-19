@@ -27,14 +27,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Dye {
             Flags.Read( reader );
             Template.Value = Flags.IntValue >> 5;
 
-            if( Tables.Mode == ColorTableSize.Extended ) reader.ReadUInt16(); // temp
+            if( Tables.Extended ) reader.ReadUInt16(); // temp
         }
 
         public void Write( BinaryWriter writer ) {
             var value = Flags.IntValue;
             writer.Write( ( ushort )( value & 0x1F | Template.Value << 5 ) );
 
-            if( Tables.Mode == ColorTableSize.Extended ) FileUtils.Pad( writer, 2 ); // temp
+            if( Tables.Extended ) FileUtils.Pad( writer, 2 ); // temp
         }
 
         public void Draw() {

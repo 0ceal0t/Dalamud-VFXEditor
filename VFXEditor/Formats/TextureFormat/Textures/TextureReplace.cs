@@ -223,7 +223,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 var header = file.Header;
 
                 TextureUtils.GetDdsInfo(
-                    file.GetDdsData(), header.Format, header.Width, header.Height, header.MipLevels,
+                    file.GetDdsData(), header.Format, header.Width, header.Height, header.MipLevelsCount,
                     out var compressed, out var mipPartOffset, out var mipPartCount );
 
                 using var ms = new MemoryStream();
@@ -231,7 +231,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
                 // Write Type 4 Data
                 texWriter.Write( TextureUtils.CreateType4Data( header.Format, mipPartOffset, mipPartCount, file.GetDdsData().Length,
-                        header.MipLevels, header.Width, header.Height ) );
+                        header.MipLevelsCount, header.Width, header.Height ) );
 
                 // Write .atex/.tex header
                 var size = Marshal.SizeOf( header );

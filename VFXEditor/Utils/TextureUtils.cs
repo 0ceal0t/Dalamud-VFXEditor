@@ -13,7 +13,7 @@ namespace VfxEditor.Utils {
                 Width = ( ushort )width,
                 Height = ( ushort )height,
                 Depth = 1,
-                MipLevels = ( ushort )mipLevels,
+                MipLevelsCount = ( byte )mipLevels,
                 LodOffset = [0, 1, 2],
                 OffsetToSurface = new uint[13]
             };
@@ -47,13 +47,13 @@ namespace VfxEditor.Utils {
 
         // https://github.com/TexTools/xivModdingFramework/blob/902ca589fa7548ce4517f886c9775d1c9c5d965e/xivModdingFramework/Textures/FileTypes/DDS.cs
 
-        public static byte[] CreateDdsHeader( uint width, uint height, TextureFormat format, uint depth, uint mipLevels ) {
+        public static byte[] CreateDdsHeader( uint width, uint height, TextureFormat format, uint depth, uint mipLevels, uint arraySize ) {
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
 
             writer.Write( 0x20534444u ); // Magic
             writer.Write( 124u ); // Header size
-            writer.Write( depth > 1 ? 0x00000004u : 528391u ); // flags
+            writer.Write( depth > 1 ? 0x00000004u : 0x81007u ); // flags
             writer.Write( height );
             writer.Write( width );
 
@@ -104,7 +104,7 @@ namespace VfxEditor.Utils {
                     return null;
             }
 
-            if( depth > 1 ) magic = fourccDX10;
+            if( depth > 1 || arraySize > 1 ) magic = fourccDX10;
 
             writer.Write( magic );
 
@@ -170,7 +170,7 @@ namespace VfxEditor.Utils {
                 // UINT miscFlag
                 writer.Write( 0 );
                 // UINT arraySize
-                writer.Write( depth );
+                writer.Write( arraySize );
                 // UINT miscFlags2
                 writer.Write( 0 );
             }

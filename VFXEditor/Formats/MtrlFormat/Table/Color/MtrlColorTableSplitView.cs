@@ -10,7 +10,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         }
 
         protected override void DrawLeftColumn() {
-            var items = Items.GetRange( 0, Tables.Mode == ColorTableSize.Extended ? 32 : 16 );
+            var items = Items.GetRange( 0, Tables.Count );
 
             if( Selected != null && !items.Contains( Selected ) ) Selected = null;
             for( var idx = 0; idx < items.Count; idx++ ) {
