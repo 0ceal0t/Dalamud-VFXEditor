@@ -9,7 +9,7 @@ using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.FileBrowser;
-using VfxEditor.Utils;
+using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
 
 namespace VfxEditor.Formats.TextureFormat {
     public enum Attribute : uint {
@@ -89,6 +89,17 @@ namespace VfxEditor.Formats.TextureFormat {
             public uint[] LodOffset;
             [MarshalAs( UnmanagedType.ByValArray, SizeConst = 13 )]
             public uint[] OffsetToSurface;
+
+            public readonly DXGIFormat DXGIFormat => Format switch {
+                TextureFormat.DXT1 => DXGIFormat.BC1_UNorm,
+                TextureFormat.DXT5 => DXGIFormat.BC3_UNorm,
+                TextureFormat.BC5 => DXGIFormat.BC5_UNorm,
+                TextureFormat.BC7 => DXGIFormat.BC7_UNorm,
+                TextureFormat.A8R8G8B8 => DXGIFormat.R8G8B8A8_UNorm,
+                TextureFormat.R4G4B4A4 => DXGIFormat.B4G4R4A4_UNorm,
+                TextureFormat.R5G5B5A1 => DXGIFormat.B5G5R5A1_UNorm,
+                _ => DXGIFormat.R8G8B8A8_UNorm
+            };
         };
 
         public TexHeader Header { get; private set; }
@@ -120,19 +131,68 @@ namespace VfxEditor.Formats.TextureFormat {
         public void LoadFile( byte[] localData ) {
             LocalData = localData;
             using var ms = new MemoryStream( LocalData );
-            using var br = new BinaryReader( ms );
+            using var reader = new BinaryReader( ms );
 
             Local = true;
-            br.BaseStream.Position = 0;
+            reader.BaseStream.Position = 0;
 
-            var buffer = br.ReadBytes( HeaderLength );
+            var headerBuffer = reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
-            Marshal.Copy( buffer, 0, handle, HeaderLength );
+            Marshal.Copy( headerBuffer, 0, handle, HeaderLength );
             Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
             Marshal.FreeHGlobal( handle );
 
-            DdsData = br.ReadBytes( localData.Length - HeaderLength );
-            Layers = Convert( DdsData, Header.Format, Header.Width, Header.Height, Header.Depth );
+            var rawData = DdsData = reader.ReadBytes( localData.Length - HeaderLength );
+
+            if( Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ) {
+                /*
+                 * DDS needs to be
+                 * 
+                 * array 0
+                 *  mip 0
+                 *  mip 1
+                 *  ...
+                 * array 1
+                 *  ...
+                 *   
+                 * But FFXIV is
+                 * 
+                 * mip 0
+                 *   array 0
+                 *   array 1
+                 *   ...
+                 * mip 1
+                 *   ...
+                 */
+
+                reader.BaseStream.Position = HeaderLength;
+
+                var mipArrayData = new List<List<byte[]>>();
+                var offsets = new List<int>();
+                for( var i = 0; i < Header.MipLevelsCount; i++ ) offsets.Add( ( int )Header.OffsetToSurface[i] - HeaderLength );
+                offsets.Add( ( int )reader.BaseStream.Length - HeaderLength );
+
+                for( var i = 0; i < Header.MipLevelsCount; i++ ) {
+                    var mipSize = offsets[i + 1] - offsets[i];
+                    var arrayData = new List<byte[]>();
+                    for( var j = 0; j < Header.ArraySize; j++ ) arrayData.Add( reader.ReadBytes( mipSize / Header.ArraySize ) );
+                    mipArrayData.Add( arrayData );
+                }
+
+                using var arrayMs = new MemoryStream();
+                using var writer = new BinaryWriter( arrayMs );
+                for( var i = 0; i < Header.ArraySize; i++ ) {
+                    for( var j = 0; j < Header.MipLevelsCount; j++ ) writer.Write( mipArrayData[j][i] );
+                }
+
+                DdsData = arrayMs.ToArray();
+                Layers = Convert( rawData, Header.Format, Header.Width, Header.Height, Header.ArraySize );
+            }
+            else {
+                DdsData = rawData;
+                Layers = Convert( DdsData, Header.Format, Header.Width, Header.Height, Header.Depth );
+            }
+
             ValidFormat = ImageData.Length > 0;
         }
 
@@ -348,19 +408,16 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SaveAsDds( string path ) {
-            var header = TextureUtils.CreateDdsHeader(
-                Header.Width,
-                Header.Height,
-                Header.Format,
-                Header.Depth,
-                Header.MipLevelsCount,
-                Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth
-            );
-            var data = GetDdsData();
-            var writeData = new byte[header.Length + data.Length];
-            Buffer.BlockCopy( header, 0, writeData, 0, header.Length );
-            Buffer.BlockCopy( data, 0, writeData, header.Length, data.Length );
-            File.WriteAllBytes( path, writeData );
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            using var buffer = new StreamTransferBuffer();
+            CustomDDSFile.WriteHeader( ms, buffer, TextureDimension.Two,
+                Header.DXGIFormat, Header.Width, Header.Height, Header.Depth, Header.ArraySize, Header.MipLevelsCount, DDSFlags.None );
+
+            writer.BaseStream.Position = ms.Length;
+            writer.Write( GetDdsData() );
+            File.WriteAllBytes( path, ms.ToArray() );
         }
 
         public void SavePngDialog() {
