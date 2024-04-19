@@ -94,6 +94,9 @@ Client.System.Resource.Handle.KineDriverLoadResourceHandle
 Client.System.Resource.Handle.KineDriverResourceHandle
 spm = shader parameters
 
+https://github.com/Irastris/ValkyrieUproject/tree/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public
+https://github.com/RussellJerome/TresGame/blob/main/Plugins/KineDriverRt/Source/KineDriverRt/Public/KineDriver_StructsAndEnums.h
+
 chara/xls/bonamik/bonamik-demihuman.bklb
 chara/xls/bonamik/bonamik-demihuman.bklb
 chara/xls/bonamik/bonamik-human-base.bklb

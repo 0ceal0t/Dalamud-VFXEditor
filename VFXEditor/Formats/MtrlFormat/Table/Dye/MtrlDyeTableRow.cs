@@ -24,10 +24,13 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Dye {
         }
 
         public void Read( BinaryReader reader ) {
+            Dalamud.Log( $"{reader.BaseStream.Position:X4}" );
+
             Flags.Read( reader );
             Template.Value = Flags.IntValue >> 5;
 
             if( Tables.Extended ) reader.ReadUInt16(); // temp
+            // 1001100
         }
 
         public void Write( BinaryWriter writer ) {
