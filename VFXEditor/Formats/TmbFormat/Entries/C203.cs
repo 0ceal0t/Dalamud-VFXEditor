@@ -6,6 +6,7 @@ namespace VfxEditor.TmbFormat.Entries {
     public enum SummonWeaponObjectControl {
         Weapon = 0,
         OffHand = 1,
+        Unknown_2 = 2,
     }
 
     public class C203 : TmbEntry {
@@ -23,7 +24,8 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Rotation = new( "Rotation" );
         private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "Object Control" );
         private readonly ParsedBool NoulithAlignment = new( "Noulith Alignment" );
-        private readonly ParsedBool ScaleEnabled = new( "Scale Enabled" );
+        private readonly ParsedBool ScaleEnabled = new( "Scale Enabled", size: 2 );
+        private readonly ParsedBool Unk3 = new( "Unknown 3", size: 2 );
         private readonly ParsedFloat Scale = new( "Scale" );
 
         public C203( TmbFile file ) : base( file ) { }
@@ -38,6 +40,7 @@ namespace VfxEditor.TmbFormat.Entries {
             ObjectControl,
             NoulithAlignment,
             ScaleEnabled,
+            Unk3,
             Scale
         ];
     }
