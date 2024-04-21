@@ -92,7 +92,13 @@ Client.System.Resource.Handle.EyeAnimationResourceHandle
 Client.System.Resource.Handle.FacialParameterEditResourceHandle
 Client.System.Resource.Handle.KineDriverLoadResourceHandle
 Client.System.Resource.Handle.KineDriverResourceHandle
-spm = shader parameters
+
+common/graphics/common_shader_param.spm
+common/graphics/chara_shader_param.spm
+common/graphics/bg_shader_param.spm
+https://imgur.com/wcMGZxY
+HairSpecularShift breaks into HairSpecularPrimaryShift, HairSpecularBackScatterShift, and HairSpecularSecondaryShift; HairRoughnessOffsetRate breaks into HairBackScatterRoughnessOffsetRate, and HairSecondaryRoughnessOffsetRate
+
 
 https://github.com/Irastris/ValkyrieUproject/tree/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public
 https://github.com/RussellJerome/TresGame/blob/main/Plugins/KineDriverRt/Source/KineDriverRt/Public/KineDriver_StructsAndEnums.h

@@ -67,6 +67,8 @@ namespace VfxEditor.Select {
             { "Black Mage", "bt_jst_sld" },
             { "Summoner", "bt_2bk_emp" },
             { "Blue Mage", "bt_rod_emp" },
+            // Pictomancer = bt_brs_plt
+            // Viper = bt_bld_bld
         };
 
         public static readonly Dictionary<string, string> JobMovementOverride = new() {

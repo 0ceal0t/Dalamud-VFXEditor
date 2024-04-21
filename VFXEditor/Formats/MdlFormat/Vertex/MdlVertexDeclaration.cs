@@ -68,6 +68,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
 
                 for( var j = 0; j < vertexCount; j++ ) {
                     var startPos = reader.BaseStream.Position;
+                    var colorFound = false;
                     foreach( var element in elements ) {
                         var item = element.Read( reader );
 
@@ -75,7 +76,10 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
                         else if( element.Usage == VertexUsage.Tangent1 ) tangents.Add( Vector4.Normalize( item - new Vector4( 0.5f, 0.5f, 0.5f, 0f ) ) );
                         else if( element.Usage == VertexUsage.UV ) uvs.Add( item );
                         else if( element.Usage == VertexUsage.Normal ) normals.Add( item );
-                        else if( element.Usage == VertexUsage.Color ) colors.Add( item );
+                        else if( element.Usage == VertexUsage.Color && !colorFound ) {
+                            colors.Add( item );
+                            colorFound = true;
+                        }
                     }
                     reader.BaseStream.Position = startPos + stride;
                 }

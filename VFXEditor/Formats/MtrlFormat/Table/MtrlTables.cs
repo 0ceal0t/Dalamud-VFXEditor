@@ -6,12 +6,12 @@ using VfxEditor.Formats.MtrlFormat.Table.Color;
 
 namespace VfxEditor.Formats.MtrlFormat.Table {
     public enum ColorTableSize : int {
-        Standard = 16 * 32,
+        Legacy = 16 * 32,
         Extended = 32 * 64
     }
 
     public enum DyeTableSize : int {
-        Standard = 16 * 2,
+        Legacy = 16 * 2,
         Extended = 32 * 4
     }
 
@@ -20,8 +20,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         public readonly List<MtrlColorTableRow> Rows = [];
         public readonly MtrlColorTableSplitView RowView;
 
-        public bool Extended { get; private set; } = false; // default
-        public int Count => Extended ? 32 : 16;
+        public bool Legacy { get; private set; } = true; // default
+        public int Count => Legacy ? 16 : 32;
 
         private MtrlStain Stain;
 
@@ -33,14 +33,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
 
         public MtrlTables( MtrlFile file, BinaryReader reader, long dataEnd ) : this( file ) {
             var size = ( int )( dataEnd - reader.BaseStream.Position );
-            if( size < ( int )ColorTableSize.Standard ) return;
-            Extended = size >= ( int )ColorTableSize.Extended;
+            if( size < ( int )ColorTableSize.Legacy ) return;
+            Legacy = !( size >= ( int )ColorTableSize.Extended );
 
             for( var i = 0; i < Count; i++ ) Rows[i].Read( reader );
 
             // Read dye rows
             size = ( int )( dataEnd - reader.BaseStream.Position );
-            if( !file.DyeTableEnabled || size < ( Extended ? ( int )DyeTableSize.Extended : ( int )DyeTableSize.Standard ) ) return;
+            if( !file.DyeTableEnabled || size < ( Legacy ? ( int )DyeTableSize.Legacy : ( int )DyeTableSize.Extended ) ) return;
 
             for( var i = 0; i < Count; i++ ) Rows[i].DyeRow.Read( reader );
         }
@@ -51,8 +51,8 @@ namespace VfxEditor.Formats.MtrlFormat.Table {
         }
 
         public void Draw() {
-            var extened = Extended;
-            if( ImGui.Checkbox( "Extended", ref extened ) ) Extended = extened;
+            var legacy = Legacy;
+            if( ImGui.Checkbox( "Legacy", ref legacy ) ) Legacy = legacy;
             ImGui.SameLine();
 
             DrawDyeCombo();

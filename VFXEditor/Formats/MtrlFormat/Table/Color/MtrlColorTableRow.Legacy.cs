@@ -4,7 +4,7 @@ using System.IO;
 namespace VfxEditor.Formats.MtrlFormat.Table.Color {
     public partial class MtrlColorTableRow {
         private bool ReadLegacy( BinaryReader reader ) {
-            if( Tables.Extended ) return false;
+            if( !Tables.Legacy ) return false;
 
             Diffuse.Read( reader );
             SpecularStrength.Read( reader );
@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         }
 
         private bool WriteLegacy( BinaryWriter writer ) {
-            if( Tables.Extended ) return false;
+            if( !Tables.Legacy ) return false;
 
             Diffuse.Write( writer );
             SpecularStrength.Write( writer );
@@ -36,7 +36,7 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         }
 
         private bool DrawTabsLegacy() {
-            if( Tables.Extended ) return false;
+            if( !Tables.Legacy ) return false;
 
             using( var tab = ImRaii.TabItem( "Color" ) ) {
                 if( tab ) {

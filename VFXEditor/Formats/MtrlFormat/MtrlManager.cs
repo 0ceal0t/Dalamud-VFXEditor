@@ -39,6 +39,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             // chara/common/texture/tile_orb_array.tex
             // chara/common/texture/tile_norm_array.tex
 
+            // the G buffer shader only uses red and green from the normal map
+            // but all 4 channels from the "orb" map
+
             foreach( var layer in TileDiffuseFile.Layers ) {
                 TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height, 4 ) );
             }
@@ -49,6 +52,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             // Dye Templates
             StmFile = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" );
             // ======== TODO: DT stain changes =======
+
             var templates = new List<int> {
                 0
             };

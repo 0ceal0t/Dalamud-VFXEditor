@@ -102,10 +102,10 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
 
             using( var tab = ImRaii.TabItem( "Tiling" ) ) {
                 if( tab ) {
-                    BlendingAnisotropy.Draw();
-                    SpmIndex.Draw();
-                    NormalScale.Draw();
                     TileMaterial.Draw();
+                    SpmIndex.Draw();
+                    BlendingAnisotropy.Draw();
+                    NormalScale.Draw();
                     TileRepeatX.Draw();
                     TileRepeatY.Draw();
                     TileSkew.Draw();
