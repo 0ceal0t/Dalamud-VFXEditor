@@ -25,11 +25,14 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
         public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
         public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
+        public readonly ParsedHalf3Color UnknownColor = new( "Unknown Color", Vector3.One );
 
         public readonly ParsedHalf Unknown1 = new( "Unknown 1" );
         public readonly ParsedHalf Unknown2 = new( "Unknown 2" );
         public readonly ParsedHalf Unknown3 = new( "Unknown 3" );
         public readonly ParsedHalf Unknown4 = new( "Unknown 4" );
+        public readonly ParsedHalf Unknown5 = new( "Unknown 5" );
+        public readonly ParsedHalf Unknown6 = new( "Unknown 6" );
 
         public readonly ParsedHalf BlendingAnisotropy = new( "Blending Anisotrophy" );
         public readonly ParsedHalf SpmIndex = new( "SPM Index" ); // TODO
@@ -56,14 +59,15 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             Specular.Read( reader );
             SpecularStrength.Read( reader );
 
-            for( var i = 0; i < 3; i++ ) reader.ReadHalf(); // TODO
-            Unknown1.Read( reader ); // TODO
-            for( var i = 0; i < 2; i++ ) reader.ReadHalf(); // TODO
-            Unknown2.Read( reader ); // TODO
-            reader.ReadHalf(); // TODO
+            UnknownColor.Read( reader );
+            Unknown1.Read( reader );
+            Unknown2.Read( reader );
             Unknown3.Read( reader );
-            reader.ReadHalf(); // TODO
             Unknown4.Read( reader );
+            reader.ReadHalf(); // TODO
+            Unknown5.Read( reader );
+            reader.ReadHalf(); // TODO
+            Unknown6.Read( reader );
 
             BlendingAnisotropy.Read( reader );
             for( var i = 0; i < 4; i++ ) reader.ReadHalf(); // TODO
@@ -85,14 +89,15 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             Specular.Write( writer );
             SpecularStrength.Write( writer );
 
-            FileUtils.Pad( writer, 3 * 2 ); // TODO
+            UnknownColor.Write( writer );
             Unknown1.Write( writer );
-            FileUtils.Pad( writer, 2 * 2 ); // TODO
             Unknown2.Write( writer );
-            FileUtils.Pad( writer, 2 ); // TODO
             Unknown3.Write( writer );
-            FileUtils.Pad( writer, 2 ); // TODO
             Unknown4.Write( writer );
+            FileUtils.Pad( writer, 2 ); // TODO
+            Unknown5.Write( writer );
+            FileUtils.Pad( writer, 2 ); // TODO
+            Unknown6.Write( writer );
 
             BlendingAnisotropy.Write( writer );
             FileUtils.Pad( writer, 4 * 2 ); // TODO
@@ -118,10 +123,18 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
                     Specular.Draw();
                     GlossStrength.Draw();
                     Emissive.Draw();
+                    UnknownColor.Draw();
+                }
+            }
+
+            using( var tab = ImRaii.TabItem( "Unknown" ) ) {
+                if( tab ) {
                     Unknown1.Draw();
                     Unknown2.Draw();
                     Unknown3.Draw();
                     Unknown4.Draw();
+                    Unknown5.Draw();
+                    Unknown6.Draw();
                     BlendingAnisotropy.Draw();
                 }
             }
@@ -184,6 +197,10 @@ namespace VfxEditor.Formats.MtrlFormat.Table.Color {
             ImGui.SameLine();
             Emissive.DrawPreview();
             ImGui.SameLine();
+            if( !Tables.Legacy ) {
+                UnknownColor.DrawPreview();
+                ImGui.SameLine();
+            }
         }
 
         // ===== PREVIEW =========
