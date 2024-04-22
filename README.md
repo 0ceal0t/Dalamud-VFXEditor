@@ -103,20 +103,51 @@ HairSpecularShift breaks into HairSpecularPrimaryShift, HairSpecularBackScatterS
 https://github.com/Irastris/ValkyrieUproject/tree/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public
 https://github.com/RussellJerome/TresGame/blob/main/Plugins/KineDriverRt/Source/KineDriverRt/Public/KineDriver_StructsAndEnums.h
 
-chara/xls/bonamik/bonamik-demihuman.bklb
-chara/xls/bonamik/bonamik-demihuman.bklb
-chara/xls/bonamik/bonamik-human-base.bklb
-chara/xls/bonamik/bonamik-human-base.bklb
-chara/xls/bonamik/bonamik-human-equipment.bklb
-chara/xls/bonamik/bonamik-human-equipment.bklb
-chara/xls/bonamik/bonamik-human-face.bklb
-chara/xls/bonamik/bonamik-human-face.bklb
-chara/xls/bonamik/bonamik-human-hair.bklb
-chara/xls/bonamik/bonamik-human-hair.bklb
-chara/xls/bonamik/bonamik-monster.bklb
 chara/xls/bonamik/bonamik-monster.bklb
 chara/xls/bonamik/bonamik-weapon.bklb
+chara/xls/bonamik/bonamik-human-base.bklb
+chara/xls/bonamik/bonamik-human-equipment.bklb
+chara/xls/bonamik/bonamik-human-face.bklb
+chara/xls/bonamik/bonamik-human-hair.bklb
+chara/xls/bonamik/bonamik-demihuman.bklb
+chara/xls/bonamik/bonamik-human-equipment.bklb
+chara/xls/bonamik/bonamik-monster.bklb
 chara/xls/bonamik/bonamik-weapon.bklb
+chara/xls/bonamik/bonamik-demihuman.bklb
+chara/xls/bonamik/bonamik-human-base.bklb
+chara/xls/bonamik/bonamik-human-face.bklb
+chara/xls/bonamik/bonamik-human-hair.bklb
+
+chara/xls/kinedriver/kinedriver-human-equipment.kdlb
+chara/xls/kinedriver/kinedriver-human-base.kdlb
+chara/xls/kinedriver/kinedriver-human-face.kdlb
+chara/xls/kinedriver/kinedriver-human-hair.kdlb
+chara/xls/kinedriver/kinedriver-demihuman.kdlb
+chara/xls/kinedriver/kinedriver-monster.kdlb
+chara/xls/kinedriver/kinedriver-weapon.kdlb
+chara/xls/kinedriver/kinedriver-demihuman.kdlb
+chara/xls/kinedriver/kinedriver-human-base.kdlb
+chara/xls/kinedriver/kinedriver-human-equipment.kdlb
+chara/xls/kinedriver/kinedriver-human-face.kdlb
+chara/xls/kinedriver/kinedriver-human-hair.kdlb
+chara/xls/kinedriver/kinedriver-monster.kdlb
+chara/xls/kinedriver/kinedriver-weapon.kdlb
+
+table TypeIdInfo {
+  id:ubyte;
+  unk_uint_1:uint;
+  has_kdb:bool;
+}
+table TypeIdArray {
+  has_kdbs:bool;
+  type_id_info:[TypeIdInfo];
+}
+table SkeletonIdArray {
+  skeleton_id:uint;
+  unk_default_1:uint;
+  type_id_array:[TypeIdArray];
+}
+
 
 chara/xls/extraskl/extra_weapon.eslb
 chara/human/c1701/skeleton/face/f0002/kdi_c1701f0002.kdb
