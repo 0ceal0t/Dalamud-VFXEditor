@@ -50,13 +50,14 @@ namespace VfxEditor.PhybFormat {
             reader.BaseStream.Position = simOffset;
             Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
 
+            // New to dawntrail
+            if( reader.BaseStream.Position != reader.BaseStream.Length ) {
+                Extended = new( reader ); // TODO: can be optionally assigned
+            }
+
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
-
-            // New to dawntrail
-            if( reader.BaseStream.Position == reader.BaseStream.Length ) return;
-            Extended = new( reader );
         }
 
         public override void Write( BinaryWriter writer ) {
