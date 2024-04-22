@@ -71,7 +71,7 @@ namespace VfxEditor.FileManager {
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error Reading File" );
-                UiUtils.ErrorNotification( "Error reading file" );
+                Dalamud.ErrorNotification( "Error reading file" );
             }
         }
 
@@ -95,7 +95,7 @@ namespace VfxEditor.FileManager {
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error Reading File" );
-                UiUtils.ErrorNotification( "Error reading file" );
+                Dalamud.ErrorNotification( "Error reading file" );
             }
         }
 

@@ -1,5 +1,6 @@
 using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Interface.Internal.Notifications;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -27,6 +28,26 @@ namespace VfxEditor {
         public static void Error( string message ) => PluginLog.Error( message );
 
         public static void Log( string messages ) => PluginLog.Info( messages );
+
+#nullable enable
+        public static void OkNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+            Content = content,
+            Title = title,
+            Type = NotificationType.Success,
+        } );
+
+        public static void ErrorNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+            Content = content,
+            Title = title,
+            Type = NotificationType.Error,
+        } );
+
+        public static void WarningNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+            Content = content,
+            Title = title,
+            Type = NotificationType.Warning,
+        } );
+#nullable disable
 
         public static bool GameFileExists( string path ) {
             try {

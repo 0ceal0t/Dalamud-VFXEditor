@@ -3,7 +3,6 @@ using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapAnimationDropdown : Dropdown<PapAnimation> {
@@ -42,7 +41,7 @@ namespace VfxEditor.PapFormat {
             ] );
             CommandManager.Add( command );
 
-            UiUtils.OkNotification( "Havok data removed" );
+            Dalamud.OkNotification( "Havok data removed" );
         }
 
         protected override void DrawSelected() => Selected.Draw();

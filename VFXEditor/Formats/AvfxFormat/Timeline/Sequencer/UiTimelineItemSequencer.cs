@@ -33,7 +33,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void OnDoubleClick( AvfxTimelineItem item ) {
             var file = Plugin.AvfxManager.File;
-            AvfxFile.SelectItem( file.EmitterView, item.Emitter, "Emitters" );
+            AvfxFile.SelectItem( file.EmitterView, item.Emitter );
         }
     }
 }

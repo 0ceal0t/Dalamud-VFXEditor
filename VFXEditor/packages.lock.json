@@ -17,6 +17,12 @@
         "resolved": "2.1.12",
         "contentHash": "Sc0PVxvgg4NQjcI8n10/VfUQBAS4O+Fw2pZrAqBdRMbthYGeogzu5+xmIGCGmsEZ/ukMOBuAqiNiB5qA3MRalg=="
       },
+      "Google.FlatBuffers": {
+        "type": "Direct",
+        "requested": "[24.3.25, )",
+        "resolved": "24.3.25",
+        "contentHash": "w1mv5UCKLPMYj1aVymTlrtUOOtdbOEPsn4XxwUGvpS35j+WrWSxyqvB7EhSel1mXgKZ1DaPTIKr1bORXBRVhGQ=="
+      },
       "HelixToolkit": {
         "type": "Direct",
         "requested": "[2.24.0, )",

@@ -182,7 +182,7 @@ namespace VfxEditor.FileBrowser {
             SearchedFiles.Clear();
 
             foreach( var file in Files ) {
-                if( !string.IsNullOrEmpty( SearchInput ) && !file.FileName.ToLower().Contains( SearchInput.ToLower() ) ) continue;
+                if( !string.IsNullOrEmpty( SearchInput ) && !file.FileName.Contains( SearchInput, StringComparison.CurrentCultureIgnoreCase ) ) continue;
                 if( FolderDialog && file.Type != FilePickerFileType.Directory ) continue;
 
                 SearchedFiles.Add( file );

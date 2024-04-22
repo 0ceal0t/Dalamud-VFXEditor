@@ -12,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using NotificationType = global::Dalamud.Interface.Internal.Notifications.NotificationType;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
@@ -142,26 +141,6 @@ namespace VfxEditor.Utils {
             }
             Tooltip( "Click to view more information on the VFXEditor wiki" );
         }
-
-#nullable enable
-        public static void OkNotification( string content, string? title = "VFXEditor" ) => Dalamud.Notification.AddNotification( new() {
-            Content = content,
-            Title = title,
-            Type = NotificationType.Success,
-        } );
-
-        public static void ErrorNotification( string content, string? title = "VFXEditor" ) => Dalamud.Notification.AddNotification( new() {
-            Content = content,
-            Title = title,
-            Type = NotificationType.Error,
-        } );
-
-        public static void WarningNotification( string content, string? title = "VFXEditor" ) => Dalamud.Notification.AddNotification( new() {
-            Content = content,
-            Title = title,
-            Type = NotificationType.Warning,
-        } );
-#nullable disable
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             var color = verified switch {

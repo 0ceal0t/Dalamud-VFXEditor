@@ -132,4 +132,8 @@ chara/xls/animation/animation_work_table-human.awt
 chara/xls/animation/MotionLineTable.mlt
 chara/xls/animation/animation_work_table-monster.awt
 chara/xls/animation/animation_work_table-weapon.awt
+
+chara/xls/animation_extension/animext.anxb
+chara/xls/charadb/extra_met.est
+chara/xls/charadb/hairskeletontemplate.est
 ```

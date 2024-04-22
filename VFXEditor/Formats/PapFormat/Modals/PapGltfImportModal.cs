@@ -38,7 +38,10 @@ namespace VfxEditor.PapFormat {
             }
 
             foreach( var node in model.LogicalNodes ) {
-                if( string.IsNullOrEmpty( node.Name ) || node.Name.ToLower().Contains( "mesh" ) || node.Name.ToLower().Contains( "armature" ) ) continue;
+                if( string.IsNullOrEmpty( node.Name ) ||
+                    node.Name.Contains( "mesh", StringComparison.CurrentCultureIgnoreCase ) ||
+                    node.Name.Contains( "armature", StringComparison.CurrentCultureIgnoreCase )
+                ) continue;
                 if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) continue;
                 NodeNames.Add( node.Name );
             }
@@ -152,7 +155,7 @@ namespace VfxEditor.PapFormat {
                     ( !Exclude || SelectedExcludeList == null ) ? [] : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
                     ImportPath );
             } ) );
-            UiUtils.OkNotification( "Havok data imported" );
+            Dalamud.OkNotification( "Havok data imported" );
         }
     }
 }

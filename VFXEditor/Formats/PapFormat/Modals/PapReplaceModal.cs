@@ -2,7 +2,6 @@ using ImGuiNET;
 using VfxEditor.Interop.Havok;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapReplaceModal : Modal {
@@ -42,7 +41,7 @@ namespace VfxEditor.PapFormat {
                 container->Animations = HavokData.CreateArray( Motion.File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
                 container->Bindings = HavokData.CreateArray( Motion.File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
             } ) );
-            UiUtils.OkNotification( "Havok data replaced" );
+            Dalamud.OkNotification( "Havok data replaced" );
         }
     }
 }

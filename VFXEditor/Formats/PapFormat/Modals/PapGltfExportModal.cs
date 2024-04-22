@@ -2,7 +2,6 @@ using ImGuiNET;
 using System.Collections.Generic;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor.PapFormat {
@@ -33,7 +32,7 @@ namespace VfxEditor.PapFormat {
                 SkipUnanimated,
                 ExportPath
             );
-            UiUtils.OkNotification( "Havok data exported" );
+            Dalamud.OkNotification( "Havok data exported" );
         }
     }
 }

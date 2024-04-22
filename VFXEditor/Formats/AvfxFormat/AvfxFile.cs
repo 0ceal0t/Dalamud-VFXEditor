@@ -76,17 +76,17 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public void SelectItem( AvfxNode item ) {
-            if( item is AvfxScheduler sched ) SelectItem( ScheduleView, sched, "Schedulers" );
-            else if( item is AvfxTimeline timeline ) SelectItem( TimelineView, timeline, "Timeline" );
-            else if( item is AvfxEmitter emitter ) SelectItem( EmitterView, emitter, "Emitters" );
-            else if( item is AvfxParticle particle ) SelectItem( ParticleView, particle, "Particles" );
-            else if( item is AvfxEffector effector ) SelectItem( EffectorView, effector, "Effectors" );
-            else if( item is AvfxBinder binder ) SelectItem( BinderView, binder, "Binders" );
-            else if( item is AvfxTexture texture ) SelectItem( TextureView, texture, "Textures" );
-            else if( item is AvfxModel model ) SelectItem( ModelView, model, "Models" );
+            if( item is AvfxScheduler sched ) SelectItem( ScheduleView, sched );
+            else if( item is AvfxTimeline timeline ) SelectItem( TimelineView, timeline );
+            else if( item is AvfxEmitter emitter ) SelectItem( EmitterView, emitter );
+            else if( item is AvfxParticle particle ) SelectItem( ParticleView, particle );
+            else if( item is AvfxEffector effector ) SelectItem( EffectorView, effector );
+            else if( item is AvfxBinder binder ) SelectItem( BinderView, binder );
+            else if( item is AvfxTexture texture ) SelectItem( TextureView, texture );
+            else if( item is AvfxModel model ) SelectItem( ModelView, model );
         }
 
-        public static void SelectItem<T>( IUiNodeView<T> view, T item, string label ) where T : AvfxNode {
+        public static void SelectItem<T>( IUiNodeView<T> view, T item ) where T : AvfxNode {
             if( item == null ) return;
             view.SetSelected( item );
             UiUtils.ForceOpenTabs.Add( typeof( T ) );
@@ -97,18 +97,24 @@ namespace VfxEditor.AvfxFormat {
         public void Cleanup() {
             var removedNodes = new List<AvfxNode>();
             var commands = new List<ICommand>();
-            CleanupInternalView( TimelineView, commands, removedNodes );
-            CleanupInternalView( EmitterView, commands, removedNodes );
-            CleanupInternalView( ParticleView, commands, removedNodes );
-            CleanupInternalView( EffectorView, commands, removedNodes );
-            CleanupInternalView( BinderView, commands, removedNodes );
-            CleanupInternalView( TextureView, commands, removedNodes );
-            CleanupInternalView( ModelView, commands, removedNodes );
+
+            var lastCount = -1;
+            while( removedNodes.Count != lastCount ) {
+                lastCount = removedNodes.Count;
+                CleanupInternalView( TimelineView, commands, removedNodes );
+                CleanupInternalView( EmitterView, commands, removedNodes );
+                CleanupInternalView( ParticleView, commands, removedNodes );
+                CleanupInternalView( EffectorView, commands, removedNodes );
+                CleanupInternalView( BinderView, commands, removedNodes );
+                CleanupInternalView( TextureView, commands, removedNodes );
+                CleanupInternalView( ModelView, commands, removedNodes );
+            }
+            Dalamud.OkNotification( $"Removed {removedNodes.Count} nodes" );
             Command.AddAndExecute( new CompoundCommand( commands ) );
         }
 
         private void CleanupInternalView<T>( IUiNodeView<T> view, List<ICommand> commands, List<AvfxNode> removedNodes ) where T : AvfxNode {
-            foreach( var node in view.GetGroup().Items ) {
+            foreach( var node in new List<T>( view.GetGroup().Items ) ) {
                 CleanupInternal( node, commands, removedNodes );
             }
         }

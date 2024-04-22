@@ -30,6 +30,10 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
             // short
             // short (EPHB count, only seen 1 so far)
             // offset from [PACK] to first EPHB (signed int, can be negative)
+            // short
+            // short
+            // short
+            // length of first EPHB to end of pack
         }
 
         public void Write( BinaryWriter writer ) {

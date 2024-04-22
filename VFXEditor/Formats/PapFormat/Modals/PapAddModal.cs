@@ -4,7 +4,6 @@ using System.IO;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
-using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
     public unsafe class PapAddModal : Modal {
@@ -66,7 +65,7 @@ namespace VfxEditor.PapFormat {
             };
             Command.AddAndExecute( new CompoundCommand( commands ) );
 
-            UiUtils.OkNotification( "Havok data added" );
+            Dalamud.OkNotification( "Havok data added" );
         }
     }
 }
