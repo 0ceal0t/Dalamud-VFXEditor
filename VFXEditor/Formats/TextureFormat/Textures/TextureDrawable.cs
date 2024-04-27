@@ -57,8 +57,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( ImGui.BeginPopup( "TexExport" ) ) {
                 if( ImGui.Selectable( ".png" ) ) GetRawData()?.SavePngDialog();
                 if( ImGui.Selectable( ".dds" ) ) GetRawData()?.SaveDdsDialog();
-                if( ImGui.Selectable( $".atex" ) ) GetRawData()?.SaveTexDialog( "atex" );
-                if( ImGui.Selectable( $".tex" ) ) GetRawData()?.SaveTexDialog( "tex" );
+                if( ImGui.Selectable( ".atex" ) ) GetRawData()?.SaveTexDialog( "atex" );
+                if( ImGui.Selectable( ".tex" ) ) GetRawData()?.SaveTexDialog( "tex" );
                 ImGui.EndPopup();
             }
 

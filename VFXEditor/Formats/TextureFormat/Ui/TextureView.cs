@@ -24,6 +24,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             TextureFormat.DXT3,
             TextureFormat.DXT1,
             TextureFormat.A8R8G8B8,
+            TextureFormat.BC5,
         ];
 
         private enum ExtractFileType {

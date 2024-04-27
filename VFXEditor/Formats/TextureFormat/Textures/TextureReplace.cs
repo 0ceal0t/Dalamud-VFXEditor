@@ -42,14 +42,13 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 var importFileExtension = Path.GetExtension( importPath ).ToLower();
 
                 if( importFileExtension == ".dds" ) {
-                    var ddsFile = DDSFile.Read( importPath );
-                    var format = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
+                    using var container = DDSFile.Read( importPath );
+                    var format = TextureDataFile.DXGItoTextureFormat( container.Format );
                     if( format == TextureFormat.Null ) return;
 
                     using( var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) ) ) {
-                        DdsToAtex( format, File.ReadAllBytes( importPath ), writer );
+                        DdsToAtex( format, container, File.ReadAllBytes( importPath ), writer );
                     }
-                    ddsFile.Dispose();
                 }
                 else if( importFileExtension == ".atex" || importFileExtension == ".tex" ) {
                     File.Copy( importPath, WriteLocation, true );
@@ -69,12 +68,17 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
                     compressor.Compression.SetBGRAPixelFormat();
-                    compressor.Process( out var ddsContainer );
+                    compressor.Process( out var container );
+
+                    if( container == null ) {
+                        Dalamud.Error( $"Error compressing png to {compFormat}" );
+                        return;
+                    }
 
                     using var ms = new MemoryStream();
 
                     // lord have mercy
-                    CustomDDSFile.Write( ms, ddsContainer.MipChains, ddsContainer.Format, ddsContainer.Dimension );
+                    CustomDDSFile.Write( ms, container.MipChains, container.Format, container.Dimension );
 
                     var ddsData = ms.ToArray();
 
@@ -86,9 +90,9 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                             _ => PostConversion.None
                         };
 
-                        DdsToAtex( Plugin.Configuration.PngFormat, ddsData, writer, postConversion );
+                        DdsToAtex( Plugin.Configuration.PngFormat, container, ddsData, writer, postConversion );
                     }
-                    ddsContainer.Dispose();
+                    container.Dispose();
                 }
                 else {
                     throw new Exception( $"Invalid extension {importFileExtension}" );
@@ -261,29 +265,26 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         // ===========================
 
-        private static void DdsToAtex( TextureFormat format, byte[] ddsData, BinaryWriter writer, PostConversion post = PostConversion.None ) {
+        private static void DdsToAtex( TextureFormat format, DDSContainer container, byte[] ddsData, BinaryWriter writer, PostConversion post = PostConversion.None ) {
             // Get DDS info
             using var ms = new MemoryStream( ddsData );
             using var reader = new BinaryReader( ms );
-            reader.BaseStream.Position = 12;
-            var height = reader.ReadInt32();
-            var width = reader.ReadInt32();
-            var pitch = reader.ReadInt32();
-            var depth = reader.ReadInt32();
-            var mipLevels = reader.ReadInt32();
+            reader.BaseStream.Position = 0x54;
+            var headerSize = ( reader.ReadUInt32() == 0x30315844 ) ? 148 : 128;
+            reader.BaseStream.Position = headerSize;
+            var data = reader.ReadBytes( ( int )ms.Length - headerSize );
 
-            writer.Write( TextureUtils.CreateTextureHeader( format, width, height, mipLevels ) );
-
-            // Add DDS data
-            reader.BaseStream.Position = 128;
-            var uncompressedLength = ms.Length - 128;
-            var imageData = new byte[uncompressedLength];
-            reader.Read( imageData, 0, ( int )uncompressedLength );
+            writer.Write( TextureUtils.CreateTextureHeader(
+                format,
+                container.MipChains[0][0].Width,
+                container.MipChains[0][0].Height,
+                container.MipChains[0].Count
+            ) );
 
             // Need to convert from R8G8B8A8
-            if( post == PostConversion.A8 ) imageData = TextureDataFile.CompressA8( imageData );
+            if( post == PostConversion.A8 ) data = TextureDataFile.CompressA8( data );
 
-            writer.Write( imageData );
+            writer.Write( data );
         }
     }
 }

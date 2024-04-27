@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace VfxEditor.Formats.ShpkFormat.Utils {
     public static class CrcMaps {
+        // TODO: https://github.com/TexTools/xivModdingFramework/commit/ed46a1feeba747bf4f185072e8aa84697a986499#diff-f98213032d46afd71ef572a1cd3d4df3601f28cce2ac25d6c6e4f65216fc93a8
+
         public static readonly Dictionary<uint, string> Passes = new() {
             {  0xC5A5389C, "PASS_0" },
             {  0xE412A2D4, "PASS_Z_OPAQUE" },
