@@ -96,7 +96,9 @@ namespace VfxEditor.AvfxFormat {
             Reverse = 5,
             Min = 6,
             Max = 7,
-            Opacity = 8
+            Opacity = 8,
+            Unknown_Multiply_9 = 9,
+            Unknown_Add_10 = 10,
         }
         public enum CullingType {
             None = 0,

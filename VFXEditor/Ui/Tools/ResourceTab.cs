@@ -29,27 +29,27 @@ namespace VfxEditor.Ui.Tools {
 
             if( !ImGui.BeginChild( "##ResourceManager", -Vector2.One, true ) ) return;
 
-            DrawCategoryContainer( ResourceCategory.Common, resourceHandler->ResourceGraph->CommonContainer );
-            DrawCategoryContainer( ResourceCategory.BgCommon, resourceHandler->ResourceGraph->BgCommonContainer );
-            DrawCategoryContainer( ResourceCategory.Bg, resourceHandler->ResourceGraph->BgContainer );
-            DrawCategoryContainer( ResourceCategory.Cut, resourceHandler->ResourceGraph->CutContainer );
-            DrawCategoryContainer( ResourceCategory.Chara, resourceHandler->ResourceGraph->CharaContainer );
-            DrawCategoryContainer( ResourceCategory.Shader, resourceHandler->ResourceGraph->ShaderContainer );
-            DrawCategoryContainer( ResourceCategory.Ui, resourceHandler->ResourceGraph->UiContainer );
-            DrawCategoryContainer( ResourceCategory.Sound, resourceHandler->ResourceGraph->SoundContainer );
-            DrawCategoryContainer( ResourceCategory.Vfx, resourceHandler->ResourceGraph->VfxContainer );
-            DrawCategoryContainer( ResourceCategory.UiScript, resourceHandler->ResourceGraph->UiScriptContainer );
-            DrawCategoryContainer( ResourceCategory.Exd, resourceHandler->ResourceGraph->ExdContainer );
-            DrawCategoryContainer( ResourceCategory.GameScript, resourceHandler->ResourceGraph->GameScriptContainer );
-            DrawCategoryContainer( ResourceCategory.Music, resourceHandler->ResourceGraph->MusicContainer );
-            DrawCategoryContainer( ResourceCategory.SqpackTest, resourceHandler->ResourceGraph->SqpackTestContainer );
-            DrawCategoryContainer( ResourceCategory.Debug, resourceHandler->ResourceGraph->DebugContainer );
+            DrawCategoryContainer( ResourceCategory.Common, resourceHandler->ResourceGraph->ContainerArraySpan[0] );
+            DrawCategoryContainer( ResourceCategory.BgCommon, resourceHandler->ResourceGraph->ContainerArraySpan[1] );
+            DrawCategoryContainer( ResourceCategory.Bg, resourceHandler->ResourceGraph->ContainerArraySpan[2] );
+            DrawCategoryContainer( ResourceCategory.Cut, resourceHandler->ResourceGraph->ContainerArraySpan[3] );
+            DrawCategoryContainer( ResourceCategory.Chara, resourceHandler->ResourceGraph->ContainerArraySpan[4] );
+            DrawCategoryContainer( ResourceCategory.Shader, resourceHandler->ResourceGraph->ContainerArraySpan[5] );
+            DrawCategoryContainer( ResourceCategory.Ui, resourceHandler->ResourceGraph->ContainerArraySpan[6] );
+            DrawCategoryContainer( ResourceCategory.Sound, resourceHandler->ResourceGraph->ContainerArraySpan[7] );
+            DrawCategoryContainer( ResourceCategory.Vfx, resourceHandler->ResourceGraph->ContainerArraySpan[8] );
+            DrawCategoryContainer( ResourceCategory.UiScript, resourceHandler->ResourceGraph->ContainerArraySpan[9] );
+            DrawCategoryContainer( ResourceCategory.Exd, resourceHandler->ResourceGraph->ContainerArraySpan[10] );
+            DrawCategoryContainer( ResourceCategory.GameScript, resourceHandler->ResourceGraph->ContainerArraySpan[11] );
+            DrawCategoryContainer( ResourceCategory.Music, resourceHandler->ResourceGraph->ContainerArraySpan[12] );
+            DrawCategoryContainer( ResourceCategory.SqpackTest, resourceHandler->ResourceGraph->ContainerArraySpan[13] );
+            DrawCategoryContainer( ResourceCategory.Debug, resourceHandler->ResourceGraph->ContainerArraySpan[14] );
 
             ImGui.EndChild();
         }
 
         private void DrawCategoryContainer( ResourceCategory category, ResourceGraph.CategoryContainer container ) {
-            var map = container.MainMap;
+            var map = container.CategoryMapsSpan[0].Value;
             if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}###{( uint )category}Debug" ) ) return;
 
             var node = map->SmallestValue;

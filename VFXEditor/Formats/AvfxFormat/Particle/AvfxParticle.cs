@@ -81,11 +81,8 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed2;
 
         public readonly AvfxNodeGroupSet NodeGroups;
-
         public readonly AvfxDisplaySplitView<AvfxItem> AnimationSplitDisplay;
-
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
-
         private readonly UiDisplayList Parameters;
 
         public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {

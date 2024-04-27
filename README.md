@@ -93,6 +93,18 @@ Client.System.Resource.Handle.FacialParameterEditResourceHandle
 Client.System.Resource.Handle.KineDriverLoadResourceHandle
 Client.System.Resource.Handle.KineDriverResourceHandle
 
+chara/human/c%04d/skeleton/base/b0001/bnm_c%04db0001.bnmb
+chara/human/c%04d/skeleton/face/f%04d/bnm_c%04df%04d.bnmb
+chara/human/c%04d/skeleton/hair/h%04d/bnm_c%04dh%04d.bnmb
+chara/human/c%04d/skeleton/met/m%04d/bnm_c%04dm%04d.bnmb
+chara/human/c%04d/skeleton/top/t%04d/bnm_c%04dt%04d.bnmb
+chara/demihuman/d%04d/skeleton/base/b0001/bnm_d%04db0001.bnmb
+chara/weapon/w%04d/skeleton/parts/p%04d/bnm_w%04dp%04d.bnmb
+chara/weapon/w%04d/skeleton/base/b0001/bnm_w%04db0001.bnmb
+chara/monster/m%04d/skeleton/base/b0001/bnm_m%04db0001.bnmb
+
+https://github.com/BlasterGrim/TresGame/tree/6a0fd71b783a1fcba90c9df619447dc620817910/Plugins/BonamikRt/Source/BonamikRt/Public
+
 common/graphics/common_shader_param.spm
 common/graphics/chara_shader_param.spm
 common/graphics/bg_shader_param.spm
