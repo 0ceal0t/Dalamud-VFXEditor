@@ -46,9 +46,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     var format = TextureDataFile.DXGItoTextureFormat( container.Format );
                     if( format == TextureFormat.Null ) return;
 
-                    using( var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) ) ) {
-                        DdsToAtex( format, container, File.ReadAllBytes( importPath ), writer );
-                    }
+                    using var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) );
+                    DdsToAtex( format, container, File.ReadAllBytes( importPath ), writer );
                 }
                 else if( importFileExtension == ".atex" || importFileExtension == ".tex" ) {
                     File.Copy( importPath, WriteLocation, true );

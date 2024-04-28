@@ -89,7 +89,7 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
         public string GetText( int idx ) {
             var selected = Id.Selected;
             if( selected != null ) return selected.GetText();
-            return $"Sampler {idx}"; ;
+            return $"Sampler {idx}";
         }
 
         private static uint Masked( uint flags ) => flags & ( ~( 0x3u | ( 0x3u << 2 ) | ( 0x3FF << 10 ) | ( 0xF << 20 ) ) );

@@ -7,6 +7,12 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.EidFormat.BindPoint {
     public abstract class EidBindPoint : IUiItem {
+        public readonly EidFile File;
+
+        public EidBindPoint( EidFile file ) {
+            File = file;
+        }
+
         public abstract string GetName();
 
         public abstract void Draw();

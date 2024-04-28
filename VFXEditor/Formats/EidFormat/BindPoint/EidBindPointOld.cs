@@ -15,9 +15,9 @@ namespace VfxEditor.EidFormat {
         public readonly ParsedFloat3 Position = new( "Position" );
         public readonly ParsedDegrees3 Rotation = new( "Rotation" );
 
-        public EidBindPointOld() { }
+        public EidBindPointOld( EidFile file ) : base( file ) { }
 
-        public EidBindPointOld( BinaryReader reader ) {
+        public EidBindPointOld( EidFile file, BinaryReader reader ) : this( file ) {
             Id.Read( reader );
             Position.Read( reader );
             Rotation.Read( reader );
@@ -42,6 +42,8 @@ namespace VfxEditor.EidFormat {
             Id.Draw();
             Position.Draw();
             Rotation.Draw();
+
+            File.Skeleton?.DrawSplit( ref Plugin.Configuration.EidSkeletonSplit );
         }
 
         protected override Vector3 GetOffset() => new( Position.Value.Y, Position.Value.X, Position.Value.Z );
