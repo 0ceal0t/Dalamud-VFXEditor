@@ -81,6 +81,7 @@ namespace VfxEditor.Formats.MdlFormat {
         public readonly List<MdlShape> Shapes = []; // TODO
 
         private readonly byte[] Padding;
+        private readonly uint StringTablePadding; // Can be weird for when exported from penumbra and other stuff
 
         // TODO
         private readonly MdlBoundingBox UnknownBoundingBox;
@@ -134,6 +135,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 data.OffsetToString[( uint )pos] = value;
             }
 
+            StringTablePadding = ( uint )( stringEndPos - reader.BaseStream.Position );
             reader.BaseStream.Position = stringEndPos;
 
             // ====== MODEL HEADER =======
@@ -341,10 +343,9 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( ushort )data.AllStrings.Count );
             writer.Write( ( ushort )0 ); // padding
 
-            var stringPadding = ( uint )FileUtils.NumberToPad( writer.BaseStream.Position + data.TotalStringLength, 4 );
-            writer.Write( data.TotalStringLength + stringPadding );
+            writer.Write( data.TotalStringLength + StringTablePadding );
             foreach( var item in data.AllStrings ) FileUtils.WriteString( writer, item, true );
-            FileUtils.Pad( writer, stringPadding );
+            FileUtils.Pad( writer, StringTablePadding );
 
             Radius.Write( writer );
             writer.Write( ( ushort )data.Meshes.Count );

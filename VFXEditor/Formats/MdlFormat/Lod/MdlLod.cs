@@ -118,11 +118,11 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         }
 
         public void Populate( MdlFileData data, BinaryReader reader, int lod ) {
-            Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
-            TerrainShadows.AddRange( data.TerrainShadowMeshes.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
-            WaterMeshes.AddRange( data.Meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
-            ShadowMeshes.AddRange( data.Meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
-            VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
+            if( _MeshIndex < data.Meshes.Count ) Meshes.AddRange( data.Meshes.GetRange( _MeshIndex, _MeshCount ) );
+            if( _TerrainShadowMeshIndex < data.Meshes.Count ) TerrainShadows.AddRange( data.TerrainShadowMeshes.GetRange( _TerrainShadowMeshIndex, _TerrainShadowMeshCount ) );
+            if( _WaterMeshIndex < data.Meshes.Count ) WaterMeshes.AddRange( data.Meshes.GetRange( _WaterMeshIndex, _WaterMeshCount ) );
+            if( _ShadowMeshIndex < data.Meshes.Count ) ShadowMeshes.AddRange( data.Meshes.GetRange( _ShadowMeshIndex, _ShadowMeshCount ) );
+            if( _VerticalFogMeshIndex < data.Meshes.Count ) VerticalFogMeshes.AddRange( data.Meshes.GetRange( _VerticalFogMeshIndex, _VerticalFogMeshCount ) );
 
             var allMeshes = new List<MdlMeshDrawable>();
             allMeshes.AddRange( Meshes );
