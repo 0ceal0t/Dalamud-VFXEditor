@@ -11,6 +11,7 @@ using VfxEditor.EidFormat;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.KdbFormat;
 using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
 using VfxEditor.Formats.ShcdFormat;
@@ -62,6 +63,7 @@ namespace VfxEditor {
             ShcdManager,
             MtrlManager,
             MdlManager,
+            KdbManager
         ];
 
         public static AvfxManager AvfxManager { get; private set; }
@@ -79,6 +81,7 @@ namespace VfxEditor {
         public static ShcdManager ShcdManager { get; private set; }
         public static MtrlManager MtrlManager { get; private set; }
         public static MdlManager MdlManager { get; private set; }
+        public static KdbManager KdbManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -88,6 +91,7 @@ namespace VfxEditor {
 #endif
 
         private static bool ClearKeyState = false;
+        public static bool IsImguiSafe = false;
 
         public Plugin( DalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
@@ -121,6 +125,7 @@ namespace VfxEditor {
             ShcdManager = new();
             MtrlManager = new();
             MdlManager = new();
+            KdbManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();

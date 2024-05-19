@@ -103,6 +103,12 @@
           "NAudio.Core": "2.2.1"
         }
       },
+      "QuickGraph": {
+        "type": "Direct",
+        "requested": "[3.6.61119.7, )",
+        "resolved": "3.6.61119.7",
+        "contentHash": "crtYNiFcYFtYbmbEfdYsdGw5M3923OO5ZZD25K+WeLPgTp/q4oq3U/FVrbaOK5+Jg8UJDmoZ6sqAVion4RgXCA=="
+      },
       "SharpDX.D3DCompiler": {
         "type": "Direct",
         "requested": "[4.2.0, )",

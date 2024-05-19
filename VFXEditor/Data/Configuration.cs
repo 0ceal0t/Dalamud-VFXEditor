@@ -148,6 +148,12 @@ namespace VfxEditor {
         public Vector4 LuaLiteralColor = new( 0.639f, 0.207f, 0.933f, 1f );
         public Vector4 LuaVariableColor = new( 0.125f, 0.67058f, 0.45098f, 1f );
 
+        public float NodeGraphUnitGridSmall = 10;
+        public float NodeGraphUnitGridLarge = 50;
+        public float NodeGraphGridSnapProximity = 3.5f;
+        public float NodeGraphTimeForRulerTextFade = 2500;
+        public bool NodeGraphShowRulerText = false;
+
         public List<ExcludedBonesConfiguration> ExcludedBones = [];
 
         public int PngMips = 9;

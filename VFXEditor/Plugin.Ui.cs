@@ -23,6 +23,7 @@ namespace VfxEditor {
         public static readonly Dictionary<string, Modal> Modals = [];
 
         public static void Draw() {
+            IsImguiSafe = true;
             if( CheckLoadState() ) return;
 
             CheckWorkspaceKeybinds();
@@ -113,7 +114,8 @@ namespace VfxEditor {
                     SkpManager,
                     PhybManager,
                     EidManager,
-                    AtchManager
+                    AtchManager,
+                    KdbManager,
                 },
                 new IFileManager[]{
                     MdlManager,
