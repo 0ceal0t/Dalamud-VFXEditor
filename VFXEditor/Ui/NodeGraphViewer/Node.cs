@@ -209,7 +209,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             // ButtonBox
             ImGui.SameLine();
-            NodeUtils.AlignRight( HandleButtonBoxItemWidth * 3 * pCanvasScaling, pConsiderImguiPaddings: false );
+            NodeUtils.AlignRight( HandleButtonBoxItemWidth * 2 * pCanvasScaling, pConsiderImguiPaddings: false );
 
             var tRes = DrawHandleButtonBox( pCanvasScaling );
             return tRes;

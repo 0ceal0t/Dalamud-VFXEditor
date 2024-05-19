@@ -805,8 +805,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 if( znode == null ) break;
                 var id = znode.Value;
                 // Get NodeOSP
-                var tNodeOSP = mMap.GetNodeScreenPos( id, tCanvasOSP, mConfig.scaling );
-                if( tNodeOSP == null ) continue;
+                var nodePosition = mMap.GetNodeScreenPos( id, tCanvasOSP, mConfig.scaling );
+                if( nodePosition == null ) continue;
                 if( !mNodes.TryGetValue( id, out var tNode ) || tNode == null ) continue;
 
                 // Packing / Check pack
@@ -816,8 +816,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     case Node.PackingStatus.UnpackingUnderway: UnpackNode( tNode ); break;
                 }
                 // Skip rendering if node is out of view
-                if( ( ( tNodeOSP.Value.X + tNode.Style.GetSizeScaled( GetScaling() ).X ) < pViewerOSP.X || tNodeOSP.Value.X > pViewerOSP.X + pViewerSize.X )
-                    || ( ( tNodeOSP.Value.Y + tNode.Style.GetSizeScaled( GetScaling() ).Y ) < pViewerOSP.Y || tNodeOSP.Value.Y > pViewerOSP.Y + pViewerSize.Y ) ) {
+                if( ( ( nodePosition.Value.X + tNode.Style.GetSizeScaled( GetScaling() ).X ) < pViewerOSP.X || nodePosition.Value.X > pViewerOSP.X + pViewerSize.X )
+                    || ( ( nodePosition.Value.Y + tNode.Style.GetSizeScaled( GetScaling() ).Y ) < pViewerOSP.Y || nodePosition.Value.Y > pViewerOSP.Y + pViewerSize.Y ) ) {
                     continue;
                 }
 
@@ -826,7 +826,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 // Then, we evaluate those recorded inputs in context of z-order, determining which one we need and which we don't.
                 if( !pCanvasDrawFlag.HasFlag( CanvasDrawFlags.NoInteract ) && !_isNodeSelectionLocked ) {
                     // Process input on node    (tIsNodeHandleClicked, pReadClicks, tIsNodeClicked, tFirstClick)
-                    var t = ProcessInputOnNode( tNode, tNodeOSP.Value, pInputPayload, tIsReadingClicksOnNode );
+                    var t = ProcessInputOnNode( tNode, nodePosition.Value, pInputPayload, tIsReadingClicksOnNode );
                     {
                         if( t.firstClick != FirstClickType.None ) {
                             tFirstClickScanRes = ( t.firstClick == FirstClickType.Body && _selectedNodes.Contains( id ) )
@@ -891,14 +891,14 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                         if( t.isWithinHandle && pInputPayload.mIsMouseRmb ) tNodeReqqingHandleCtxMenu.Push( tNode.Id );
                     }
 
-                    if( tNode.Style.CheckPosWithin( tNodeOSP.Value, GetScaling(), pInputPayload.mMousePos )
+                    if( tNode.Style.CheckPosWithin( nodePosition.Value, GetScaling(), pInputPayload.mMousePos )
                         && pInputPayload.mMouseWheelValue != 0
                         && _selectedNodes.Contains( id ) ) {
                         pCanvasDrawFlag |= CanvasDrawFlags.NoCanvasZooming;
                     }
                     // Select using selectArea
                     if( tSelectScreenArea != null && !_isNodeBeingDragged && _firstClickInDrag != FirstClickType.Handle ) {
-                        if( tNode.Style.CheckAreaIntersect( tNodeOSP.Value, mConfig.scaling, tSelectScreenArea ) ) {
+                        if( tNode.Style.CheckAreaIntersect( nodePosition.Value, mConfig.scaling, tSelectScreenArea ) ) {
                             if( _selectedNodes.Add( id ) && znode != null )
                                 tNodeToFocus.Push( znode );
                         }
@@ -908,8 +908,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 // Draw using NodeOSP
                 var tNodeRes = tNode.Draw(
                     tSnapDelta != null && _selectedNodes.Contains( id )
-                        ? tNodeOSP.Value + tSnapDelta.Value
-                        : tNodeOSP.Value,
+                        ? nodePosition.Value + tSnapDelta.Value
+                        : nodePosition.Value,
                     mConfig.scaling,
                     _selectedNodes.Contains( id ),
                     pInputPayload,
@@ -921,7 +921,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 var tNodeRelaPos = mMap.GetNodeRelaPos( id );
                 if( _isNodeBeingDragged && _selectedNodes.Contains( tNode.Id ) && tNodeRelaPos.HasValue )
                     ImGui.GetWindowDrawList().AddText(
-                        tNodeOSP.Value + new Vector2( 0, -30 ) * GetScaling()
+                        nodePosition.Value + new Vector2( 0, -30 ) * GetScaling()
                         , ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
                         $"({( tNodeRelaPos.Value.X / 10 ):F1}, {( tNodeRelaPos.Value.Y / 2 ):F1})" );
 
@@ -969,7 +969,11 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 }
                 // Draw conn tether to cursor
                 if( _nodeConnTemp != null && _nodeConnTemp.IsSource( tNode.Id ) ) {
-                    pDrawList.AddLine( tNodeOSP.Value, pInputPayload.mMousePos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ) );
+                    var startPos = nodePosition.Value;
+                    var endPos = pInputPayload.mMousePos;
+                    var midPos = startPos + ( endPos - startPos ) / 2f;
+
+                    pDrawList.AddBezierCubic( startPos, new( midPos.X, startPos.Y ), new( midPos.X, endPos.Y ), endPos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ), 1f );
                     pDrawList.AddText( pInputPayload.mMousePos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ), "[Right-click] another plug to connect, elsewhere to cancel.\n\nConnection will fail if it causes cycling or repeated graph." );
                 }
             }
