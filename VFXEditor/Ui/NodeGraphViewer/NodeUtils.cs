@@ -78,10 +78,10 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         public static bool IsLineIntersectRect( Vector2 a, Vector2 b, Area area ) {
-            if( Math.Min( a.X, b.X ) > area.end.X ) return false;
-            if( Math.Max( a.X, b.X ) < area.start.X ) return false;
-            if( Math.Min( a.Y, b.Y ) > area.end.Y ) return false;
-            if( Math.Max( a.Y, b.Y ) < area.start.Y ) return false;
+            if( Math.Min( a.X, b.X ) > area.End.X ) return false;
+            if( Math.Max( a.X, b.X ) < area.Start.X ) return false;
+            if( Math.Min( a.Y, b.Y ) > area.End.Y ) return false;
+            if( Math.Max( a.Y, b.Y ) < area.Start.Y ) return false;
             if( area.CheckPosIsWithin( a ) ) return true;
             if( area.CheckPosIsWithin( a ) ) return true;
             return true;

@@ -9,26 +9,26 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         private const float Thickness = 2f;
         private const float AnchorSize = 7.5f;
 
-        public readonly string SourceNodeId;
-        public readonly string TargetNodeId;
+        public readonly int SourceNodeId;
+        public readonly int TargetNodeId;
         public readonly SEdge<int> QgEdge;
 
-        public Edge( string pSourceNodeId, string pTargetNodeId, SEdge<int> pQgEdge ) {
+        public Edge( int pSourceNodeId, int pTargetNodeId, SEdge<int> pQgEdge ) {
             SourceNodeId = pSourceNodeId;
             TargetNodeId = pTargetNodeId;
             QgEdge = pQgEdge;
         }
 
-        public bool EitherWith( string pNodeId ) => StartsWith( pNodeId ) || EndsWith( pNodeId );
+        public bool EitherWith( int pNodeId ) => StartsWith( pNodeId ) || EndsWith( pNodeId );
 
-        public bool StartsWith( string pSourceNodeId ) => SourceNodeId == pSourceNodeId;
+        public bool StartsWith( int pSourceNodeId ) => SourceNodeId == pSourceNodeId;
 
-        public bool EndsWith( string pTargetNodeId ) => TargetNodeId == pTargetNodeId;
+        public bool EndsWith( int pTargetNodeId ) => TargetNodeId == pTargetNodeId;
 
-        public bool BothWith( string pSourceNodeId, string pTargetNodeId )
+        public bool BothWith( int pSourceNodeId, int pTargetNodeId )
             => StartsWith( pSourceNodeId ) && EndsWith( pTargetNodeId );
 
-        public NodeInteractionFlags Draw( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, bool highlighted = false, bool highlightedNegative = false, bool targetPacked = false ) {
+        public NodeInteractionFlags Draw( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, bool highlighted = false, bool highlightedNegative = false ) {
             var cursor = ImGui.GetCursorScreenPos();
             var res = NodeInteractionFlags.None;
 
@@ -52,11 +52,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             res |= DrawPU();
 
-            var color = targetPacked
-                            ? NodeUtils.Colors.NodePack
-                            : ( highlightedNegative && !highlighted )
-                                ? NodeUtils.Colors.NodeEdgeHighlightNeg
-                                : NodeUtils.Colors.NodeFg;
+            var color = ( highlightedNegative && !highlighted ) ? NodeUtils.Colors.NodeEdgeHighlightNeg : NodeUtils.Colors.NodeFg;
             ImGui.SetCursorScreenPos( cursor );
 
             drawList.AddBezierCubic(

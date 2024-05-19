@@ -2,24 +2,26 @@ using System.Numerics;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
     public class NodeCanvasConfig {
-        private float _scaling;
-        public float scaling {
-            get { return _scaling; }
+        private float ScalingInternal;
+
+        public float Scaling {
+            get { return ScalingInternal; }
             set {
                 if( value > NodeCanvas.MaxScale )
-                    _scaling = NodeCanvas.MaxScale;
+                    ScalingInternal = NodeCanvas.MaxScale;
                 else if( value < NodeCanvas.MinScale )
-                    _scaling = NodeCanvas.MinScale;
+                    ScalingInternal = NodeCanvas.MinScale;
                 else
-                    _scaling = value;
+                    ScalingInternal = value;
             }
         }
-        public Vector2 nodeGap;
+
+        public Vector2 NodeGap;
 
         public NodeCanvasConfig() {
-            scaling = 1f;
-            _scaling = 1f;
-            nodeGap = Vector2.One;
+            Scaling = 1f;
+            ScalingInternal = 1f;
+            NodeGap = Vector2.One;
         }
     }
 }

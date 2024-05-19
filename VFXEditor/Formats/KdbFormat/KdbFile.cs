@@ -2,7 +2,6 @@ using ImGuiNET;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Ui.NodeGraphViewer;
-using VfxEditor.Ui.NodeGraphViewer.Content;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Formats.KdbFormat {
@@ -19,7 +18,7 @@ namespace VfxEditor.Formats.KdbFormat {
 
         public override void Draw() {
             if( ImGui.Button( "New" ) ) {
-                NodeGraph.AddNodeToActiveCanvas<BasicNode>( new NodeContent( "New node" ) );
+                NodeGraph.AddNodeToActiveCanvas( new BasicNode() );
             }
 
             NodeGraph.Draw();

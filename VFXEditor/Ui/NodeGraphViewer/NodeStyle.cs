@@ -74,9 +74,9 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             return tArea.CheckPosIsWithin( screenPos );
         }
 
-        public bool CheckPosWithinHandle( Vector2 nodeOSP, float canvasScaling, Vector2 screenPos ) {
+        public bool CheckWithinHandle( Vector2 nodePosition, float canvasScaling, Vector2 screenPos ) {
             var tNodeSize = GetHandleSize() * canvasScaling;
-            Area tArea = new( nodeOSP, tNodeSize );
+            Area tArea = new( nodePosition, tNodeSize );
             return tArea.CheckPosIsWithin( screenPos );
         }
 

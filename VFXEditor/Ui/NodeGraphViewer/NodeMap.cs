@@ -4,8 +4,7 @@ using System.Numerics;
 namespace VfxEditor.Ui.NodeGraphViewer {
     public class NodeMap {
         private Vector2 OffsetBase = Vector2.Zero;
-        private readonly Dictionary<string, Vector2> Data = [];
-        private readonly HashSet<string> Keys = [];
+        private readonly Dictionary<Node, Vector2> Data = [];
         private bool NeedOffsetInit = true;
 
         public NodeMap() { }
@@ -22,8 +21,8 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public void ResetBaseOffset() => OffsetBase = Vector2.Zero;
 
-        public bool FocusOnNode( string nodeId, Vector2? extraOfs = null ) {
-            if( !Data.TryGetValue( nodeId, out var nodeOfsFromLocalBase ) ) return false;
+        public bool FocusOnNode( Node node, Vector2? extraOfs = null ) {
+            if( !Data.TryGetValue( node, out var nodeOfsFromLocalBase ) ) return false;
             ResetBaseOffset();
             AddBaseOffset( -nodeOfsFromLocalBase + ( extraOfs ?? Vector2.Zero ) );
             return true;
@@ -31,44 +30,40 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         // ========================= NODE =========================
 
-        public Vector2? GetNodeScreenPos( string nodeId, Vector2 canvasOrigninScreenPos, float canvasScaling ) {
-            var relaPos = GetNodeRelaPos( nodeId );
+        public Vector2? GetNodeScreenPos( Node node, Vector2 canvasOrigninScreenPos, float canvasScaling ) {
+            var relaPos = GetNodeRelaPos( node );
             if( relaPos == null ) return null;
             return canvasOrigninScreenPos + relaPos.Value * canvasScaling;
         }
 
-        public Vector2? GetNodeRelaPos( string nodeId ) {
-            if( Data.TryGetValue( nodeId, out var pos ) )
-                return pos;
-            return null;
+        public Vector2? GetNodeRelaPos( Node node ) => Data.TryGetValue( node, out var pos ) ? pos : null;
+
+        public void SetNodeRelaPos( Node node, Vector2 relaPos ) {
+            if( !Data.ContainsKey( node ) ) return;
+            Data[node] = relaPos;
         }
 
-        public void SetNodeRelaPos( string nodeId, Vector2 relaPos ) {
-            if( !Keys.Contains( nodeId ) ) return;
-            Data[nodeId] = relaPos;
+        public void SetNodeRelaPos( Node node, Node anchorNode, Vector2 relaDelta ) {
+            if( !Data.TryGetValue( node, out var value ) || !Data.ContainsKey( anchorNode ) ) return;
+            var anotherPos = GetNodeRelaPos( anchorNode );
+            Data[node] = anotherPos == null ? value : ( anotherPos.Value + relaDelta );
         }
 
-        public void SetNodeRelaPos( string nodeId, string anchorNodeId, Vector2 relaDelta ) {
-            if( !Keys.Contains( nodeId ) || !Keys.Contains( anchorNodeId ) ) return;
-            var anotherPos = GetNodeRelaPos( anchorNodeId );
-            Data[nodeId] = anotherPos == null ? Data[nodeId] : ( anotherPos.Value + relaDelta );
+        private void MoveNodeRelaPos( Node node, Vector2 relaDelta ) => SetNodeRelaPos( node, node, relaDelta );
+
+        public void MoveNodeRelaPos( Node node, Vector2 screenDelta, float canvasScaling ) => MoveNodeRelaPos( node, screenDelta / canvasScaling );
+
+        public void AddNode( Node node, Vector2 relaPos ) {
+            if( Data.ContainsKey( node ) ) return;
+            Data[node] = new();
+            SetNodeRelaPos( node, relaPos );
         }
 
-        private void MoveNodeRelaPos( string nodeId, Vector2 relaDelta ) => SetNodeRelaPos( nodeId, nodeId, relaDelta );
-
-        public void MoveNodeRelaPos( string nodeId, Vector2 screenDelta, float canvasScaling ) => MoveNodeRelaPos( nodeId, screenDelta / canvasScaling );
-
-        public void AddNode( string nodeId, Vector2 relaPos ) {
-            if( Keys.Contains( nodeId ) ) return;
-            Keys.Add( nodeId );
-            SetNodeRelaPos( nodeId, relaPos );
+        public bool RemoveNode( Node node ) {
+            return Data.Remove( node );
         }
 
-        public bool RemoveNode( string nodeId ) {
-            return Data.Remove( nodeId ) & Keys.Remove( nodeId );
-        }
-
-        public bool CheckNodeExist( string nodeId ) => Keys.Contains( nodeId );
+        public bool CheckNodeExist( Node node ) => Data.ContainsKey( node );
 
         public bool CheckNeedInitOfs() => NeedOffsetInit;
 

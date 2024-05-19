@@ -1,54 +1,35 @@
 using ImGuiNET;
-using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.Ui.NodeGraphViewer.Canvas;
-using VfxEditor.Ui.NodeGraphViewer.Content;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
     public abstract class Node {
+        public static int NODE_ID = 0;
+
         public static readonly Vector2 NodeInsidePadding = new( 3.5f, 3.5f );
         public static readonly Vector2 MinHandleSize = new( 50, 20 );
         public static readonly float HandleButtonBoxItemWidth = 20;
+
         protected bool NeedReinit = false;
         public bool IsMarkedDeleted = false;
 
-        public HashSet<string> Pack = [];           // represents the nodes that this node packs
-        public string PackerNodeId = null;        // represents the node which packs this node (the master packer, not just the parent node). Only ONE packer per node.
-        public bool IsPacked = false;
-        public string Tag = null;
-        public PackingStatus Packing = PackingStatus.None;
-        public Vector2? RelaPosLastPackingCall = null;
+        public readonly int Id = NODE_ID++;
 
-        public abstract string Type { get; }
-        public string Id { get; protected set; } = string.Empty;
-        public int GraphId = -1;
-        protected Queue<Seed> Seeds = new();
+        public string Header { get; protected set; }
 
-        public NodeContent Content = new();
         public NodeStyle Style = new( Vector2.Zero, Vector2.Zero );
         protected virtual Vector2 RecommendedInitSize { get; } = new( 100, 200 );
         protected bool IsMinimized = false;
         public bool IsBusy = false;
         protected Vector2? LastUnminimizedSize = null;
 
-        public Node() { }
-
-        public virtual void Init( string pNodeId, int pGraphId, NodeContent pContent, NodeStyle _style = null, string pTag = null ) {
-            Id = pNodeId;
-            Tag = pTag;
-            GraphId = pGraphId;
-            Content = pContent;
-            if( _style != null ) Style = _style;
-
+        public Node( string header ) {
+            Header = header;
             // Basically SetHeader() and AdjustSizeToContent(),
             // but we need non-ImGui option for loading out of Draw()
-            if( Plugin.IsImguiSafe ) {
-                SetHeader( Content.GetHeader() );
-            }
+            if( Plugin.IsImguiSafe ) SetHeader( Header );
             else {
-                Content._setHeader( Content.GetHeader() );
-                Style.SetHandleTextSize( new Vector2( Content.GetHeader().Length * 6, 11 ) );
-                Style.SetSize( new Vector2( Content.GetHeader().Length * 6, 11 ) + NodeInsidePadding * 2 );
+                Style.SetHandleTextSize( new Vector2( Header.Length * 6, 11 ) );
+                Style.SetSize( new Vector2( Header.Length * 6, 11 ) + NodeInsidePadding * 2 );
                 NeedReinit = true;
             }
 
@@ -56,23 +37,21 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         protected virtual void ReInit() {
-            SetHeader( Content.GetHeader() );               // adjust minSize to new header
+            SetHeader( Header );               // adjust minSize to new header
             Style.SetSize( RecommendedInitSize );        // adjust size to the new minSize
         }
 
         public abstract void OnDelete();
 
-        public void SetId( string pId ) => Id = pId;
-
-        public virtual void SetHeader( string pText, bool pAutoSizing = true, bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
-            Content._setHeader( pText );
-            Style.SetHandleTextSize( ImGui.CalcTextSize( Content.GetHeader() ) );
+        public virtual void SetHeader( string header, bool pAutoSizing = true, bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
+            Header = header;
+            Style.SetHandleTextSize( ImGui.CalcTextSize( Header ) );
             if( pAutoSizing ) AdjustSizeToHeader( pAdjustWidthOnly, pChooseGreaterWidth );
         }
 
         public virtual void AdjustSizeToHeader( bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
             if( pAdjustWidthOnly ) {
-                var tW = ( ImGui.CalcTextSize( Content.GetHeader() ) + NodeInsidePadding * 2 ).X;
+                var tW = ( ImGui.CalcTextSize( Header ) + NodeInsidePadding * 2 ).X;
                 Style.SetSize(
                     new(
                         pChooseGreaterWidth
@@ -85,24 +64,19 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                     );
             }
             else
-                Style.SetSize( ImGui.CalcTextSize( Content.GetHeader() ) + NodeInsidePadding * 2 );
+                Style.SetSize( ImGui.CalcTextSize( Header ) + NodeInsidePadding * 2 );
         }
-
-        public virtual Seed GetSeed() => Seeds.Count == 0 ? null : Seeds.Dequeue();
-
-        protected virtual void SetSeed( Seed pSeed ) => Seeds.Enqueue( pSeed );
 
         public void Minimize() => IsMinimized = true;
 
         public void Unminimize() => IsMinimized = false;
 
         public NodeInteractionFlags Draw(
-            Vector2 pNodeOSP,
+            Vector2 nodePos,
             float pCanvasScaling,
             bool pIsActive,
             InputPayload pInputPayload,
-            bool pIsEstablishingConn = false,
-            bool pIsDrawingHndCtxMnu = false ) {
+            bool pIsEstablishingConn = false ) {
             // Re-calculate ImGui-dependant members, if required.
             if( NeedReinit ) {
                 ReInit();
@@ -120,7 +94,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             var tNodeSize = Style.GetSizeScaled( pCanvasScaling );
             Vector2 tOuterWindowSizeOfs = new( 15 * pCanvasScaling );
-            var tEnd = pNodeOSP + tNodeSize;
+            var tEnd = nodePos + tNodeSize;
             var tRes = NodeInteractionFlags.None;
 
             // resize grip
@@ -131,29 +105,28 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 ImGui.PushStyleColor( ImGuiCol.Button, ImGui.ColorConvertFloat4ToU32( Style.ColorFg ) );
                 ImGui.Button( $"##{Id}", tGripSize );
                 if( ImGui.IsItemHovered() ) { ImGui.SetMouseCursor( ImGuiMouseCursor.ResizeNWSE ); }
-                //else { ImGui.SetMouseCursor(ImGuiMouseCursor.Arrow); }
                 if( ImGui.IsItemActive() ) {
                     IsBusy = true;
-                    Style.SetSizeScaled( pInputPayload.mMousePos - pNodeOSP, pCanvasScaling );
+                    Style.SetSizeScaled( pInputPayload.mMousePos - nodePos, pCanvasScaling );
                 }
                 if( IsBusy && !pInputPayload.mIsMouseLmbDown ) { IsBusy = false; }
                 ImGui.PopStyleColor();
-                ImGui.SetCursorScreenPos( pNodeOSP );
+                ImGui.SetCursorScreenPos( nodePos );
             }
 
             // Each node drawing have 2 child windows.
             // One to get this node's drawList so that it would take priority over master drawlist.
             // One to format the node content.
-            ImGui.SetCursorScreenPos( pNodeOSP - tOuterWindowSizeOfs / 2 );
+            ImGui.SetCursorScreenPos( nodePos - tOuterWindowSizeOfs / 2 );
             ImGui.BeginChild(
                 $"##outer{Id}", tNodeSize + tOuterWindowSizeOfs, false,
                 ImGuiWindowFlags.NoMouseInputs | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoScrollbar );
-            var tDrawList = ImGui.GetWindowDrawList();
+            var drawList = ImGui.GetWindowDrawList();
 
-            ImGui.SetCursorScreenPos( pNodeOSP );
+            ImGui.SetCursorScreenPos( nodePos );
             // outline
-            tDrawList.AddRect(
-                pNodeOSP,
+            drawList.AddRect(
+                nodePos,
                 tEnd,
                 ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorFg, pIsActive ? 0.7f : 0.2f ) ),
                 1,
@@ -168,16 +141,16 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.PushStyleColor( ImGuiCol.Border, NodeUtils.AdjustTransparency( Style.ColorFg, pIsActive ? 0.7f : 0.2f ) );
 
             ImGui.BeginChild(
-                Id,
+                $"{Id}",
                 tNodeSize,
                 border: true,
                 ImGuiWindowFlags.ChildWindow
                 );
             // backdrop (leave this here so the backgrop can overwrite the child's bg)
-            if( !IsMinimized ) tDrawList.AddRectFilled( pNodeOSP, tEnd, ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
-            tRes |= DrawHandle( pNodeOSP, pCanvasScaling, tDrawList, pIsActive );
-            ImGui.SetCursorScreenPos( new Vector2( pNodeOSP.X + 2 * pCanvasScaling, ImGui.GetCursorScreenPos().Y + 5 * pCanvasScaling ) );
-            if( !IsMinimized ) tRes |= DrawBody( pNodeOSP, pCanvasScaling );
+            if( !IsMinimized ) drawList.AddRectFilled( nodePos, tEnd, ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
+            tRes |= DrawHandle( nodePos, pCanvasScaling, drawList, pIsActive );
+            ImGui.SetCursorScreenPos( new Vector2( nodePos.X + 2 * pCanvasScaling, ImGui.GetCursorScreenPos().Y + 5 * pCanvasScaling ) );
+            if( !IsMinimized ) tRes |= DrawBody( nodePos, pCanvasScaling );
             ImGui.EndChild();
 
             ImGui.PopStyleColor();
@@ -188,12 +161,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             ImGui.EndChild();
 
-            // HndCtxMnu
-            if( pIsDrawingHndCtxMnu ) ImGui.OpenPopup( GetExtraOptionPUGuiId() );
-            ImGui.PushStyleColor( ImGuiCol.Text, NodeUtils.Colors.NodeText );
-            ImGui.PopStyleColor();
-
-            tRes |= DrawEdgePlugButton( tDrawList, pNodeOSP, pIsActive, pIsEstablishingConn: pIsEstablishingConn );
+            tRes |= DrawConnection( drawList, nodePos, pIsActive, establishingConnection: pIsEstablishingConn );
 
             return tRes;
         }
@@ -205,7 +173,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 pNodeOSP + tHandleSize,
                 ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, pIsActive ? 0.45f : 0.15f ) ) );
 
-            ImGui.TextColored( NodeUtils.Colors.NodeText, Content.GetHeader() );
+            ImGui.TextColored( NodeUtils.Colors.NodeText, Header );
 
             // ButtonBox
             ImGui.SameLine();
@@ -239,51 +207,36 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             return tRes;
         }
 
-        protected string GetExtraOptionPUGuiId() => $"##hepu{Id}";
-
-        public NodeInteractionFlags DrawEdgePlugButton( ImDrawListPtr pDrawList, Vector2 pNodeOSP, bool pIsActive, bool pIsEstablishingConn = false ) {
+        public NodeInteractionFlags DrawConnection( ImDrawListPtr drawList, Vector2 nodePosition, bool active, bool establishingConnection = false ) {
+            var position = nodePosition;
             var tRes = NodeInteractionFlags.None;
             Vector2 tSize = new( 5f, 5f );
             var tIsHovered = false;
-            var tOriAnchor = ImGui.GetCursorScreenPos();
-            ImGui.SetCursorScreenPos( pNodeOSP - ( tSize * 3f ) );
+            var cursor = ImGui.GetCursorScreenPos();
+            ImGui.SetCursorScreenPos( position - ( tSize * 3f ) / 2f );
             if( ImGui.InvisibleButton( $"eb{Id}", tSize * 3f, ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonLeft ) ) {
-                // LMB: Collapse child nodes
                 if( ImGui.GetIO().MouseReleased[0] ) {
-                    Packing = Packing switch {
-                        PackingStatus.PackingDone => PackingStatus.UnpackingUnderway,
-                        PackingStatus.None => PackingStatus.PackingUnderway,
-                        _ => Packing
-                    };
-                }
-                // RMB: Node conn
-                else if( ImGui.GetIO().MouseReleased[1] ) {
-                    tRes |= pIsEstablishingConn ? NodeInteractionFlags.UnrequestingEdgeConn : NodeInteractionFlags.RequestingEdgeConn;
+                    tRes |= establishingConnection ? NodeInteractionFlags.UnrequestingEdgeConn : NodeInteractionFlags.RequestingEdgeConn;
                 }
 
             }
-            else if( NodeUtils.SetTooltipForLastItem( string.Format( "[Left-click] to {0}\n[Right-click] to start connecting nodes", Packing == PackingStatus.PackingDone ? $"unpack {Pack.Count} child node(s)" : "pack up all child nodes" ) ) ) {
+            else if( ImGui.IsItemHovered() ) {
                 tIsHovered = true;
             }
-            ImGui.SetCursorScreenPos( tOriAnchor );
-            // Draw
-            pDrawList.AddCircleFilled(
-                pNodeOSP - tSize, tSize.X * ( ( tIsHovered || pIsEstablishingConn || ( Packing != PackingStatus.None ) ) ? 2f : 1 ),
+
+            ImGui.SetCursorScreenPos( cursor );
+            drawList.AddCircleFilled(
+                position, tSize.X * ( ( tIsHovered || establishingConnection ) ? 2f : 1 ),
                 ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency(
-                    Packing == PackingStatus.None ? NodeUtils.Colors.NodeFg : NodeUtils.Colors.NodePack,
-                    ( pIsActive || tIsHovered || pIsEstablishingConn ) ? 1f : 0.7f ) ) );
-            pDrawList.AddCircleFilled( pNodeOSP - tSize, ( tSize.X * 0.7f ) * ( ( tIsHovered || pIsEstablishingConn || ( Packing != PackingStatus.None ) ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
-            pDrawList.AddCircleFilled( pNodeOSP - tSize, ( tSize.X * 0.5f ) * ( ( tIsHovered || pIsEstablishingConn ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, ( pIsActive || pIsEstablishingConn ) ? 0.55f : 0.25f ) ) );
+                    NodeUtils.Colors.NodeFg,
+                    ( active || tIsHovered || establishingConnection ) ? 1f : 0.7f ) ) );
+            drawList.AddCircleFilled( position, ( tSize.X * 0.7f ) * ( ( tIsHovered || establishingConnection ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
+            drawList.AddCircleFilled( position, ( tSize.X * 0.5f ) * ( ( tIsHovered || establishingConnection ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, ( active || establishingConnection ) ? 0.55f : 0.25f ) ) );
             return tRes;
         }
 
-        public abstract void Dispose();
+        public Vector2 GetInputPosition( Vector2 nodePosition ) => nodePosition + new Vector2( -5, 10 );
 
-        public enum PackingStatus {
-            None = 0,       // synonamous with UnpackingDone
-            PackingUnderway = 1,
-            PackingDone = 2,
-            UnpackingUnderway = 3
-        }
+        public abstract void Dispose();
     }
 }
