@@ -47,7 +47,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 else if( ImGui.GetIO().MouseClicked[2] == true ) res |= NodeInteractionFlags.RequestEdgeRemoval;
             }
             else {
-                anchorHovered = NodeUtils.SetTooltipForLastItem( $"[Left-click + drag] diagonally to switch between 3 paths: Upper or Lower perpendicular, or Diagonal.\n[Right-click] or [Middle-click] to delete." );
+                anchorHovered = ImGui.IsItemHovered();
             }
 
             res |= DrawPU();

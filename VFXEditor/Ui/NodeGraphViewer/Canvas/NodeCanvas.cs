@@ -452,7 +452,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
                 var tEdgeRes = e.Draw(
                     pDrawList,
-                    tFinalSourceOSP.Value,
+                    sourceNode.GetOutputPosition( tFinalSourceOSP.Value ),
                     tFinalTargetOSP.Value,
                     highlighted: SelectedNodes.Contains( sourceNode ),
                     highlightedNegative: SelectedNodes.Contains( targetNode ) );
@@ -571,7 +571,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     Config.Scaling,
                     SelectedNodes.Contains( node ),
                     pInputPayload,
-                    pIsEstablishingConn: NodeConnTemp != null && NodeConnTemp.IsSource( node ) );
+                    thisNodeConnecting: NodeConnTemp != null && NodeConnTemp.IsSource( node ),
+                    someNodeConnecting: NodeConnTemp != null );
 
                 var tNodeRelaPos = Map.GetNodeRelaPos( node );
                 if( NodeBeingDragged && SelectedNodes.Contains( node ) && tNodeRelaPos.HasValue )
@@ -622,7 +623,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 }
                 // Draw conn tether to cursor
                 if( NodeConnTemp != null && NodeConnTemp.IsSource( node ) ) {
-                    var startPos = nodePosition.Value;
+                    var startPos = node.GetOutputPosition( nodePosition.Value );
                     var endPos = pInputPayload.mMousePos;
                     var midPos = startPos + ( endPos - startPos ) / 2f;
 

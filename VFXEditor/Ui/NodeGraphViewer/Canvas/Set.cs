@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VfxEditor.Ui.NodeGraphViewer {
+namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
     public class Set {
         private readonly HashSet<SubSet> SubSets = [];
         public float MinBound { get; private set; } = 0;
@@ -128,7 +128,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 e1 ??= endpoints[i];
                 e2 ??= endpoints[i + 1];
 
-                if( endpoints[i + 1] - endpoints[i] > ( e2.Value - e1.Value ) ) {
+                if( endpoints[i + 1] - endpoints[i] > e2.Value - e1.Value ) {
                     e1 = endpoints[i];
                     e2 = endpoints[i + 1];
                 }

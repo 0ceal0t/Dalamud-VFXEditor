@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -107,12 +108,12 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             // And the grid should move along with the canvas (grid displays canvas's plane afterall, not the viewer),
             // honestly good luck with this.
             var tGridStart_S = pArea.Start + new Vector2(
-                        ( ( pOffset.X * pCanvasScale + ( pArea.Size.X * 0.5f ) ) % tUGSmall ),
-                        ( ( pOffset.Y * pCanvasScale + ( pArea.Size.Y * 0.5f ) ) % tUGSmall )
+                         ( pOffset.X * pCanvasScale + ( pArea.Size.X * 0.5f ) ) % tUGSmall,
+                         ( pOffset.Y * pCanvasScale + ( pArea.Size.Y * 0.5f ) ) % tUGSmall
                     );
             var tGridStart_L = pArea.Start + new Vector2(
-                        ( ( pOffset.X * pCanvasScale + ( pArea.Size.X * 0.5f ) ) % tUGLarge ),
-                        ( ( pOffset.Y * pCanvasScale + ( pArea.Size.Y * 0.5f ) ) % tUGLarge )
+                         ( pOffset.X * pCanvasScale + ( pArea.Size.X * 0.5f ) ) % tUGLarge,
+                         ( pOffset.Y * pCanvasScale + ( pArea.Size.Y * 0.5f ) ) % tUGLarge
                     );
 
             // backdrop
@@ -139,7 +140,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 if( IsShowingRulerText ) {
                     float tTrans = 1;
                     if( RulerTextLastAppear.HasValue )
-                        tTrans = tTransMax - ( ( float )( ( DateTime.Now - RulerTextLastAppear.Value ).TotalMilliseconds ) / Plugin.Configuration.NodeGraphTimeForRulerTextFade ) * tTransMax;
+                        tTrans = tTransMax - ( ( float )( DateTime.Now - RulerTextLastAppear.Value ).TotalMilliseconds / Plugin.Configuration.NodeGraphTimeForRulerTextFade ) * tTransMax;
                     pDrawList.AddText(
                         new Vector2( tGridStart_L.X + i * tUGLarge, pArea.Start.Y ),
                         ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeText, tTrans ) ),
@@ -158,7 +159,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 if( IsShowingRulerText ) {
                     float tTrans = 1;
                     if( RulerTextLastAppear.HasValue )
-                        tTrans = tTransMax - ( ( float )( ( DateTime.Now - RulerTextLastAppear.Value ).TotalMilliseconds ) / Plugin.Configuration.NodeGraphTimeForRulerTextFade ) * tTransMax;
+                        tTrans = tTransMax - ( ( float )( DateTime.Now - RulerTextLastAppear.Value ).TotalMilliseconds / Plugin.Configuration.NodeGraphTimeForRulerTextFade ) * tTransMax;
                     pDrawList.AddText(
                         new Vector2( pArea.Start.X + 6, tGridStart_L.Y + i * tUGLarge ),
                         ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeText, tTrans ) ),
@@ -209,6 +210,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             if( ImGui.BeginPopup( "##searchNodePU", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.ChildWindow ) ) {
                 foreach( var node in ActiveCanvas.Nodes.Where( x => x.Header.Contains( SearchInput, StringComparison.CurrentCultureIgnoreCase ) ) ) {
+                    using var _ = ImRaii.PushId( node.Id );
                     if( ImGui.Selectable( node.Header, false, ImGuiSelectableFlags.DontClosePopups ) ) ActiveCanvas.FocusOnNode( node );
                 }
                 if( !tIsInputActive && !ImGui.IsWindowFocused() && !tIsItemPUOpened ) ImGui.CloseCurrentPopup();

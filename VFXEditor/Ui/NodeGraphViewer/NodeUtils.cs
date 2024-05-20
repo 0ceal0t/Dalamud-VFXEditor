@@ -43,7 +43,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.SetWindowFontScale( DefaultFontScale );
         }
 
-        /// https://stackoverflow.com/questions/5953552/how-to-get-the-closest-number-from-a-listint-with-linq
+        // https://stackoverflow.com/questions/5953552/how-to-get-the-closest-number-from-a-listint-with-linq
         public static float? GetClosestItem( float itemToCompare, List<float> items )
             => items.Count == 0
                ? null
@@ -59,24 +59,6 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public static float GetSmallerVal( float v1, float v2 ) => v1 < v2 ? v1 : v2;
 
-        /// https://git.anna.lgbt/ascclemens/QuestMap/src/branch/main/QuestMap/PluginUi.cs#L778
-        public static void DrawArrow( ImDrawListPtr drawList, Vector2 start, Vector2 end, Vector4 color, float baseMultiplier = 1.5f ) {
-            const float arrowAngle = 30f;
-            var dir = end - start;
-            var h = dir;
-            dir /= dir.Length();
-
-            var s = new Vector2( -dir.Y, dir.X );
-            s *= ( float )( h.Length() * Math.Tan( arrowAngle * 0.5f * ( Math.PI / 180f ) ) );
-
-            drawList.AddTriangleFilled(
-                start + s * baseMultiplier,
-                end,
-                start - s * baseMultiplier,
-                ImGui.ColorConvertFloat4ToU32( color )
-            );
-        }
-
         public static bool IsLineIntersectRect( Vector2 a, Vector2 b, Area area ) {
             if( Math.Min( a.X, b.X ) > area.End.X ) return false;
             if( Math.Max( a.X, b.X ) < area.Start.X ) return false;
@@ -88,16 +70,6 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         public static Vector4 AdjustTransparency( Vector4 pColor, float pTransparency ) => new( pColor.X, pColor.Y, pColor.Z, pTransparency );
-
-        public static bool SetTooltipForLastItem( string tDesc, float tSize = 450.0f ) {
-            if( !ImGui.IsItemHovered() ) return false;
-            ImGui.BeginTooltip();
-            ImGui.PushTextWrapPos( tSize );
-            ImGui.TextUnformatted( tDesc );
-            ImGui.PopTextWrapPos();
-            ImGui.EndTooltip();
-            return true;
-        }
 
         public static Vector4 RgbatoVec4( int R, int G, int B, int A ) => new( ( float )R / 255, ( float )G / 255, ( float )B / 255, ( float )A / 255 );
 
