@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Ui.NodeGraphViewer.Canvas;
+using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
     public class NodeGraphViewer {
@@ -68,8 +69,8 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             // check if mouse within viewer, and if mouse is holding on viewer.
             InputPayload tInputPayload = new();
             tInputPayload.CaptureInput( pExtraKeyboardInputs: pExtraKeyboardInputs );
-            var tIsWithinViewer = pGraphArea.CheckPosIsWithin( tInputPayload.mMousePos );
-            IsMouseHoldingViewer = tInputPayload.mIsMouseLmbDown && ( tIsWithinViewer || IsMouseHoldingViewer );
+            var tIsWithinViewer = pGraphArea.CheckPosIsWithin( tInputPayload.MousePos );
+            IsMouseHoldingViewer = tInputPayload.IsMouseLmbDown && ( tIsWithinViewer || IsMouseHoldingViewer );
 
             if( tIsWithinViewer ) { tInputPayload.CaptureMouseWheel(); }
             if( IsMouseHoldingViewer ) { tInputPayload.CaptureMouseDragDelta(); }
@@ -178,18 +179,18 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         private static void DrawSnapLine( Area pGraphArea, GridSnapData pSnapData ) {
             var pDrawList = ImGui.GetWindowDrawList();
             // X
-            if( pSnapData.lastClosestSnapX != null ) {
+            if( pSnapData.LastClosestSnapX != null ) {
                 pDrawList.AddLine(
-                    new Vector2( pSnapData.lastClosestSnapX.Value, pGraphArea.Start.Y ),
-                    new Vector2( pSnapData.lastClosestSnapX.Value, pGraphArea.End.Y ),
+                    new Vector2( pSnapData.LastClosestSnapX.Value, pGraphArea.Start.Y ),
+                    new Vector2( pSnapData.LastClosestSnapX.Value, pGraphArea.End.Y ),
                     ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeGraphViewer_SnaplineGold, 0.5f ) ),
                     1.0f );
             }
             // Y
-            if( pSnapData.lastClosestSnapY != null ) {
+            if( pSnapData.LastClosestSnapY != null ) {
                 pDrawList.AddLine(
-                    new Vector2( pGraphArea.Start.X, pSnapData.lastClosestSnapY.Value ),
-                    new Vector2( pGraphArea.End.X, pSnapData.lastClosestSnapY.Value ),
+                    new Vector2( pGraphArea.Start.X, pSnapData.LastClosestSnapY.Value ),
+                    new Vector2( pGraphArea.End.X, pSnapData.LastClosestSnapY.Value ),
                     ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( NodeUtils.Colors.NodeGraphViewer_SnaplineGold, 0.5f ) ),
                     1.0f );
             }

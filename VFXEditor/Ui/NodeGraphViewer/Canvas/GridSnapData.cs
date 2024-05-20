@@ -1,33 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
     public class GridSnapData {
-        public List<float> X = new();
-        public List<float> Y = new();
-        public float? lastClosestSnapX = null;
-        public float? lastClosestSnapY = null;
+        public List<float> X = [];
+        public List<float> Y = [];
+        public float? LastClosestSnapX = null;
+        public float? LastClosestSnapY = null;
 
         public void AddUsingPos( Vector2 pos ) {
-            this.X.Add( pos.X );
-            this.Y.Add( pos.Y );
+            X.Add( pos.X );
+            Y.Add( pos.Y );
         }
         public Vector2 GetClosestSnapPos( Vector2 currPos, float proximity ) {
-            var tXClosest = NodeUtils.GetClosestItem( currPos.X, this.X );
-            var tYClosest = NodeUtils.GetClosestItem( currPos.Y, this.Y );
+            var tXClosest = NodeUtils.GetClosestItem( currPos.X, X );
+            var tYClosest = NodeUtils.GetClosestItem( currPos.Y, Y );
             var x = tXClosest ?? currPos.X;
             if( Math.Abs( x - currPos.X ) > proximity ) {
                 x = currPos.X;
-                this.lastClosestSnapX = null;
+                LastClosestSnapX = null;
             }
-            else if( tXClosest.HasValue ) this.lastClosestSnapX = x;
+            else if( tXClosest.HasValue ) LastClosestSnapX = x;
             var y = tYClosest ?? currPos.Y;
             if( Math.Abs( y - currPos.Y ) > proximity ) {
                 y = currPos.Y;
-                this.lastClosestSnapY = null;
+                LastClosestSnapY = null;
             }
-            else if( tYClosest.HasValue ) this.lastClosestSnapY = y;
+            else if( tYClosest.HasValue ) LastClosestSnapY = y;
             return new( x, y );
         }
     }

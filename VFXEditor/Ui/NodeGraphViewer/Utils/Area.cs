@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Numerics;
 
-namespace VfxEditor.Ui.NodeGraphViewer {
+namespace VfxEditor.Ui.NodeGraphViewer.Utils {
     public class Area {
         public Vector2 Start;
         public Vector2 End;
@@ -33,10 +33,10 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         public bool CheckPosIsWithin( Vector2 pos ) {
             var xRev = End.X < Start.X;
             var yRev = End.Y < Start.Y;
-            return ( xRev ? ( pos.X < Start.X ) : ( pos.X > Start.X ) )
-                && ( xRev ? ( pos.X > End.X ) : ( pos.X < End.X ) )
-                && ( yRev ? ( pos.Y < Start.Y ) : ( pos.Y > Start.Y ) )
-                && ( yRev ? ( pos.Y > End.Y ) : ( pos.Y < End.Y ) );
+            return ( xRev ? pos.X < Start.X : pos.X > Start.X )
+                && ( xRev ? pos.X > End.X : pos.X < End.X )
+                && ( yRev ? pos.Y < Start.Y : pos.Y > Start.Y )
+                && ( yRev ? pos.Y > End.Y : pos.Y < End.Y );
         }
 
         public bool CheckAreaIntersect( Area area ) => Rect.IntersectsWith( area.Rect );

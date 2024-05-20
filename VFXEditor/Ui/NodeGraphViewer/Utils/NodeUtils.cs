@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace VfxEditor.Ui.NodeGraphViewer {
+namespace VfxEditor.Ui.NodeGraphViewer.Utils {
     [Flags]
     public enum CanvasDrawFlags {
         None = 0,

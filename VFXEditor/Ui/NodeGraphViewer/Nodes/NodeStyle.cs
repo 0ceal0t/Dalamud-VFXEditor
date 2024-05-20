@@ -1,6 +1,7 @@
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Utils;
 
-namespace VfxEditor.Ui.NodeGraphViewer {
+namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
     public class NodeStyle {
         private Vector2 Size;
         private Vector2 SizeHandle = Vector2.Zero;
@@ -46,10 +47,10 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         private void SetMinSize( Vector2 handleSize ) {
             MinSize.X = handleSize.X < ( MinestMinSize == null ? Node.MinHandleSize.X : MinestMinSize.Value.X )
-                             ? ( MinestMinSize == null ? Node.MinHandleSize.X : MinestMinSize.Value.X )
+                             ? MinestMinSize == null ? Node.MinHandleSize.X : MinestMinSize.Value.X
                              : handleSize.X;
             MinSize.Y = handleSize.Y < ( MinestMinSize == null ? Node.MinHandleSize.Y : MinestMinSize.Value.Y )
-                             ? ( MinestMinSize == null ? Node.MinHandleSize.Y : MinestMinSize.Value.Y )
+                             ? MinestMinSize == null ? Node.MinHandleSize.Y : MinestMinSize.Value.Y
                              : handleSize.Y;
         }
 
