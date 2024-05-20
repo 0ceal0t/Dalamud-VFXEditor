@@ -6,19 +6,6 @@ using System.Numerics;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
     [Flags]
-    public enum NodeInteractionFlags {
-        None = 0,
-        Handle = 1,
-        Internal = 2,
-        LockSelection = 4,      // requesting canvas to stop capture ALL nodes select/deselect/remove
-        Edge = 8,
-        RequestingEdgeConn = 16,
-        UnrequestingEdgeConn = 32,
-        RequestEdgeRemoval = 64,
-        RequestSelectAllChild = 128
-    }
-
-    [Flags]
     public enum CanvasDrawFlags {
         None = 0,
         NoInteract = 1,

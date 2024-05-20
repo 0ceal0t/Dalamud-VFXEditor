@@ -1,13 +1,18 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Canvas;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
     public abstract class Node {
         private static int NODE_ID = 0;
-        public static readonly Vector2 NodeInsidePadding = new( 3.5f, 3.5f );
+        public static readonly Vector2 NodeInsidePadding = new( 10f, 3.5f );
         public static readonly Vector2 MinHandleSize = new( 50, 20 );
-        public static readonly float HandleButtonBoxItemWidth = 20;
+        private const float EdgeThickness = 2f;
+        private const float EdgeAnchorSize = 7.5f;
+        private const float ConnectionRadius = 5f;
+        private const float ConnectionSpacing = 5f;
 
         public readonly int Id = NODE_ID++;
 
@@ -15,22 +20,17 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public NodeStyle Style = new( Vector2.Zero, Vector2.Zero );
 
-        protected virtual Vector2 RecommendedInitSize => HasBody ? new( 100, 200 ) : new( 0, 0 );
-        protected Vector2? LastUnminimizedSize = null;
+        protected virtual Vector2 BodySize => new( 100, ( ConnectionRadius * 2f + ConnectionSpacing ) * InputSlots );
 
-        protected readonly bool HasBody;
-        protected readonly bool ShowControls;
-
-        public bool IsMarkedDeleted = false;
-        public bool IsBusy = false;
-
-        protected bool IsMinimized = false;
         protected bool NeedReinit = false;
 
-        public Node( string header, bool hasBody, bool showControls ) {
+        public int InputSlots => Inputs.Count;
+        public readonly List<Node> Inputs = [];
+
+        public Node( string header, int inputSlots ) {
             Header = header;
-            HasBody = hasBody;
-            ShowControls = showControls;
+            for( var i = 0; i < inputSlots; i++ ) Inputs.Add( null );
+
             // Basically SetHeader() and AdjustSizeToContent(),
             // but we need non-ImGui option for loading out of Draw()
             if( Plugin.IsImguiSafe ) SetHeader( Header );
@@ -40,15 +40,15 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 NeedReinit = true;
             }
 
-            Style.SetSize( RecommendedInitSize );
+            Style.SetSize( BodySize );
         }
+
+        public bool ChildOf( Node node ) => Inputs.Contains( node );
 
         protected virtual void ReInit() {
             SetHeader( Header );               // adjust minSize to new header
-            Style.SetSize( RecommendedInitSize );        // adjust size to the new minSize
+            Style.SetSize( BodySize );        // adjust size to the new minSize
         }
-
-        public abstract void OnDelete();
 
         public virtual void SetHeader( string header, bool pAutoSizing = true, bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
             Header = header;
@@ -64,11 +64,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             else Style.SetSize( ImGui.CalcTextSize( Header ) + NodeInsidePadding * 2 );
         }
 
-        public void Minimize() => IsMinimized = true;
-
-        public void Unminimize() => IsMinimized = false;
-
-        public NodeInteractionFlags Draw( Vector2 nodePos, float canvasScaling, bool isActive, InputPayload inputPayload, bool thisNodeConnecting, bool someNodeConnecting ) {
+        public void Draw( Vector2 nodePos, float canvasScaling, bool selected, NodeConnection connection, out NodeConnection _connection ) {
             using var _ = ImRaii.PushId( Id );
 
             // Re-calculate ImGui-dependant members, if required.
@@ -76,44 +72,14 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 ReInit();
                 NeedReinit = false;
             }
-            // Minimize/Unminimize
-            if( IsMinimized && !LastUnminimizedSize.HasValue ) {
-                LastUnminimizedSize = Style.GetSize();
-                Style.SetSize( new Vector2( LastUnminimizedSize.Value.X, 0 ) );
-            }
-            else if( !IsMinimized && LastUnminimizedSize.HasValue ) {
-                Style.SetSize( LastUnminimizedSize.Value );
-                LastUnminimizedSize = null;
-            }
 
-            var tNodeSize = HasBody ? Style.GetSizeScaled( canvasScaling ) : Style.GetHandleSizeScaled( canvasScaling );
+            var nodeSize = Style.GetSizeScaled( canvasScaling );
             Vector2 tOuterWindowSizeOfs = new( 15 * canvasScaling );
-            var tEnd = nodePos + tNodeSize;
-            var tRes = NodeInteractionFlags.None;
+            var endPosition = nodePos + nodeSize;
 
-            // resize grip
-            if( !IsMinimized && HasBody ) {
-                Vector2 tGripSize = new( 10, 10 );
-                tGripSize *= canvasScaling * 0.8f;     // making this scale less
-                ImGui.SetCursorScreenPos( tEnd - tGripSize * ( isActive ? 0.425f : 0.57f ) );
-                ImGui.PushStyleColor( ImGuiCol.Button, ImGui.ColorConvertFloat4ToU32( Style.ColorFg ) );
-                ImGui.Button( $"##{Id}", tGripSize );
-                if( ImGui.IsItemHovered() ) { ImGui.SetMouseCursor( ImGuiMouseCursor.ResizeNWSE ); }
-                if( ImGui.IsItemActive() ) {
-                    IsBusy = true;
-                    Style.SetSizeScaled( inputPayload.mMousePos - nodePos, canvasScaling );
-                }
-                if( IsBusy && !inputPayload.mIsMouseLmbDown ) { IsBusy = false; }
-                ImGui.PopStyleColor();
-                ImGui.SetCursorScreenPos( nodePos );
-            }
-
-            // Each node drawing have 2 child windows.
-            // One to get this node's drawList so that it would take priority over master drawlist.
-            // One to format the node content.
             ImGui.SetCursorScreenPos( nodePos - tOuterWindowSizeOfs / 2 );
             ImGui.BeginChild(
-                $"##outer{Id}", tNodeSize + tOuterWindowSizeOfs, false,
+                $"##outer{Id}", nodeSize + tOuterWindowSizeOfs, false,
                 ImGuiWindowFlags.NoMouseInputs | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoScrollbar );
             var drawList = ImGui.GetWindowDrawList();
 
@@ -121,28 +87,22 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             // outline
             drawList.AddRect(
                 nodePos,
-                tEnd,
-                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorFg, isActive ? 0.7f : 0.2f ) ),
+                endPosition,
+                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorFg, selected ? 0.7f : 0.2f ) ),
                 1,
                 ImDrawFlags.None,
-                ( isActive ? 6.5f : 4f ) * canvasScaling );
+                ( selected ? 6.5f : 4f ) * canvasScaling );
 
-            //node content(handle, body)
             NodeUtils.PushFontScale( canvasScaling );
             ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, NodeInsidePadding * canvasScaling );
             ImGui.PushStyleVar( ImGuiStyleVar.ScrollbarSize, 1.5f );
             ImGui.PushStyleColor( ImGuiCol.ChildBg, ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
-            ImGui.PushStyleColor( ImGuiCol.Border, NodeUtils.AdjustTransparency( Style.ColorFg, isActive ? 0.7f : 0.2f ) );
+            ImGui.PushStyleColor( ImGuiCol.Border, NodeUtils.AdjustTransparency( Style.ColorFg, selected ? 0.7f : 0.2f ) );
 
-            ImGui.BeginChild( $"{Id}", tNodeSize, border: true, ImGuiWindowFlags.ChildWindow );
+            ImGui.BeginChild( $"{Id}", nodeSize, border: true, ImGuiWindowFlags.ChildWindow );
             // backdrop (leave this here so the backgrop can overwrite the child's bg)
-            if( !IsMinimized ) drawList.AddRectFilled( nodePos, tEnd, ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
-            tRes |= DrawHandle( nodePos, canvasScaling, drawList, isActive );
-
-            if( HasBody ) {
-                ImGui.SetCursorScreenPos( new Vector2( nodePos.X + 2 * canvasScaling, ImGui.GetCursorScreenPos().Y + 5 * canvasScaling ) );
-                if( !IsMinimized ) tRes |= DrawBody( nodePos, canvasScaling );
-            }
+            drawList.AddRectFilled( nodePos, endPosition, ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
+            DrawHandle( nodePos, canvasScaling, drawList, selected );
 
             ImGui.EndChild();
 
@@ -154,89 +114,98 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             ImGui.EndChild();
 
-            tRes |= DrawConnection( drawList, nodePos, isActive, true, thisNodeConnecting, someNodeConnecting );
-            tRes |= DrawConnection( drawList, nodePos, isActive, false, thisNodeConnecting, someNodeConnecting );
+            for( var i = 0; i < InputSlots; i++ ) {
+                DrawConnection( drawList, nodePos, selected, true, i, connection, out connection );
+            }
 
-            return tRes;
+            // Output
+            DrawConnection( drawList, nodePos, selected, false, -1, connection, out connection );
+            _connection = connection;
         }
 
-        protected virtual NodeInteractionFlags DrawHandle( Vector2 pNodeOSP, float canvasScaling, ImDrawListPtr pDrawList, bool pIsActive ) {
+        protected virtual void DrawHandle( Vector2 pNodeOSP, float canvasScaling, ImDrawListPtr pDrawList, bool selected ) {
             var handleSize = Style.GetHandleSizeScaled( canvasScaling );
             pDrawList.AddRectFilled(
                 pNodeOSP,
                 pNodeOSP + handleSize,
-                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, pIsActive ? 0.45f : 0.15f ) ) );
+                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, selected ? 0.45f : 0.15f ) ) );
 
             ImGui.TextColored( NodeUtils.Colors.NodeText, Header );
-
-            if( ShowControls ) {
-                // ButtonBox
-                ImGui.SameLine();
-                NodeUtils.AlignRight( HandleButtonBoxItemWidth * 2 * canvasScaling, pConsiderImguiPaddings: false );
-                return DrawHandleButtonBox( canvasScaling );
-            }
-
-            return NodeInteractionFlags.None;
         }
 
-        protected abstract NodeInteractionFlags DrawBody( Vector2 pNodeOSP, float pCanvasScaling );
+        public void DrawConnection( ImDrawListPtr drawList, Vector2 nodePosition, bool active, bool isInput, int index, NodeConnection connection, out NodeConnection _connection ) {
+            var connectionActive = connection?.Node == this && connection?.IsInput == isInput && connection?.Index == index;
+            _connection = connection;
 
-        protected NodeInteractionFlags DrawHandleButtonBox( float pCanvasScaling ) {
-            var tRes = NodeInteractionFlags.None;
-            ImGui.PushStyleVar( ImGuiStyleVar.ItemSpacing, new Vector2( 0, 0 ) );
-            ImGui.PushStyleColor( ImGuiCol.Text, NodeUtils.Colors.NodeText );
+            using var _ = ImRaii.PushId( isInput ? $"Input{index}" : "Output" );
 
-            Vector2 tBSize = new( HandleButtonBoxItemWidth, Style.GetHandleSize().Y * 0.8f );
-            tBSize *= pCanvasScaling;
-            if( ImGui.Selectable( IsMinimized ? "  ▲" : "  ▼", false, ImGuiSelectableFlags.DontClosePopups, tBSize ) ) {
-                IsMinimized = !IsMinimized;
-            }
-            if( ImGui.IsItemActive() ) tRes |= NodeInteractionFlags.Internal;
-            ImGui.SameLine();
-            if( ImGui.Selectable( " ×", false, ImGuiSelectableFlags.DontClosePopups, tBSize ) ) {
-                IsMarkedDeleted = true;
-            }
-            if( ImGui.IsItemActive() ) tRes |= NodeInteractionFlags.Internal;
-
-            ImGui.PopStyleColor();
-            ImGui.PopStyleVar();
-            return tRes;
-        }
-
-        public NodeInteractionFlags DrawConnection( ImDrawListPtr drawList, Vector2 nodePosition, bool active, bool isInput, bool thisNodeConnecting, bool someNodeConnecting ) {
-            using var _ = ImRaii.PushId( isInput ? "Input" : "Output" );
-
-            var position = isInput ? nodePosition : GetOutputPosition( nodePosition );
-            var tRes = NodeInteractionFlags.None;
-            Vector2 tSize = new( 5f, 5f );
-            var tIsHovered = false;
+            var position = isInput ? GetInputPosition( nodePosition, index ) : GetOutputPosition( nodePosition );
+            Vector2 size = new( ConnectionRadius, ConnectionRadius );
+            var hovered = false;
             var cursor = ImGui.GetCursorScreenPos();
-            ImGui.SetCursorScreenPos( position - ( tSize * 3f ) / 2f );
-            if( ImGui.InvisibleButton( $"##Button", tSize * 3f, ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonLeft ) ) {
+            ImGui.SetCursorScreenPos( position - ( size * 3f ) / 2f );
+            if( ImGui.InvisibleButton( $"##Button", size * 3f, ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonLeft ) ) {
                 if( ImGui.GetIO().MouseReleased[0] ) {
-                    if( isInput ) {
-                        tRes |= ( !someNodeConnecting ) ? NodeInteractionFlags.UnrequestingEdgeConn : NodeInteractionFlags.RequestingEdgeConn;
+                    if( connection == null ) {
+                        _connection = new() {
+                            Index = index,
+                            IsInput = isInput,
+                            Node = this
+                        };
                     }
                     else {
-                        tRes |= ( someNodeConnecting && !thisNodeConnecting ) ? NodeInteractionFlags.UnrequestingEdgeConn : NodeInteractionFlags.RequestingEdgeConn;
+                        if( connection.Node != this && connection.IsInput != isInput ) { // TODO: check cycle
+                            if( isInput ) Inputs[index] = connection.Node;
+                            else connection.Node.Inputs[connection.Index] = this;
+                        }
+                        _connection = null;
                     }
                 }
 
             }
-            else if( ImGui.IsItemHovered() ) {
-                tIsHovered = true;
-            }
+            else if( ImGui.IsItemHovered() ) hovered = true;
 
             ImGui.SetCursorScreenPos( cursor );
             drawList.AddCircleFilled(
-                position, tSize.X * ( ( tIsHovered || thisNodeConnecting ) ? 2f : 1 ),
+                position, size.X * ( ( hovered || connectionActive ) ? 2f : 1 ),
                 ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency(
                     NodeUtils.Colors.NodeFg,
-                    ( active || tIsHovered || thisNodeConnecting ) ? 1f : 0.7f ) ) );
-            drawList.AddCircleFilled( position, ( tSize.X * 0.7f ) * ( ( tIsHovered || thisNodeConnecting ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
-            drawList.AddCircleFilled( position, ( tSize.X * 0.5f ) * ( ( tIsHovered || thisNodeConnecting ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, ( active || thisNodeConnecting ) ? 0.55f : 0.25f ) ) );
-            return tRes;
+                    ( active || hovered || connectionActive ) ? 1f : 0.7f ) ) );
+            drawList.AddCircleFilled( position, ( size.X * 0.7f ) * ( ( hovered || connectionActive ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( Style.ColorBg ) );
+            drawList.AddCircleFilled( position, ( size.X * 0.5f ) * ( ( hovered || connectionActive ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, ( active || connectionActive ) ? 0.55f : 0.25f ) ) );
         }
+
+        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Node target, int index, bool highlighted = false, bool highlightedNegative = false ) {
+            var cursor = ImGui.GetCursorScreenPos();
+            var anchorPosition = sourcePos + ( targetPos - sourcePos ) * 0.5f;
+            var anchorSize = new Vector2( EdgeAnchorSize, EdgeAnchorSize );
+            var anchorHovered = false;
+
+            ImGui.SetCursorScreenPos( anchorPosition - anchorSize );
+            ImGui.InvisibleButton( $"anchor{Id}{target.Id}{index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
+
+            if( ImGui.IsItemActive() ) {
+                if( ImGui.GetIO().MouseClicked[1] == true ) Inputs[index] = null;
+            }
+            else {
+                anchorHovered = ImGui.IsItemHovered();
+            }
+
+            var color = ( highlightedNegative && !highlighted ) ? NodeUtils.Colors.NodeEdgeHighlightNeg : NodeUtils.Colors.NodeFg;
+            ImGui.SetCursorScreenPos( cursor );
+
+            drawList.AddBezierCubic(
+                sourcePos,
+                new( anchorPosition.X, sourcePos.Y ),
+                new( anchorPosition.X, targetPos.Y ),
+                targetPos,
+                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, highlighted || highlightedNegative ? ( highlightedNegative ? 0.55f : 1 ) : 0.5f ) ),
+                ( highlighted || highlightedNegative ) ? EdgeThickness * 1.4f : EdgeThickness
+            );
+            drawList.AddCircleFilled( anchorPosition, EdgeAnchorSize * ( anchorHovered ? 0.6f : 0.4f ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, anchorHovered ? 0.5f * 1.25f : 0.5f ) ) );
+        }
+
+        public static Vector2 GetInputPosition( Vector2 nodePosition, int index ) => nodePosition + new Vector2( 0, ( ConnectionRadius * 2f + ConnectionSpacing ) * index + ConnectionRadius );
 
         public Vector2 GetOutputPosition( Vector2 nodePosition ) => nodePosition + Style.GetHandleSize();
 

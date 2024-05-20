@@ -41,7 +41,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public void SetHandleTextSize( Vector2 handleTextSize ) {
             HandleTextSize = handleTextSize;
-            SetMinSize( GetHandleTextSize() + Node.NodeInsidePadding * 2 + new Vector2( Node.HandleButtonBoxItemWidth * 2, 0 ) );
+            SetMinSize( GetHandleTextSize() + Node.NodeInsidePadding * 2 );
         }
 
         private void SetMinSize( Vector2 handleSize ) {
