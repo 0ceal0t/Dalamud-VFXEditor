@@ -38,11 +38,6 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public Vector2? GetNodeRelaPos( Node node ) => Data.TryGetValue( node, out var pos ) ? pos : null;
 
-        public void SetNodeRelaPos( Node node, Vector2 relaPos ) {
-            if( !Data.ContainsKey( node ) ) return;
-            Data[node] = relaPos;
-        }
-
         public void SetNodeRelaPos( Node node, Node anchorNode, Vector2 relaDelta ) {
             if( !Data.TryGetValue( node, out var value ) || !Data.ContainsKey( anchorNode ) ) return;
             var anotherPos = GetNodeRelaPos( anchorNode );
@@ -55,15 +50,12 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public void AddNode( Node node, Vector2 relaPos ) {
             if( Data.ContainsKey( node ) ) return;
-            Data[node] = new();
-            SetNodeRelaPos( node, relaPos );
+            Data[node] = relaPos;
         }
 
         public bool RemoveNode( Node node ) {
             return Data.Remove( node );
         }
-
-        public bool CheckNodeExist( Node node ) => Data.ContainsKey( node );
 
         public bool CheckNeedInitOfs() => NeedOffsetInit;
 

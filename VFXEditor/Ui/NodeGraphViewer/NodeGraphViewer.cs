@@ -8,23 +8,16 @@ using VfxEditor.Ui.NodeGraphViewer.Canvas;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
-    public class NodeGraphViewer {
-        private static Vector2 RecommendedViewerSizeToSearch = new( 200, 300 );
-
-        public readonly NodeCanvas ActiveCanvas;
+    public class NodeGraphViewer<T> where T : Node {
+        public readonly NodeCanvas<T> Canvas = new();
 
         private bool IsMouseHoldingViewer = false;
         private bool IsShowingRulerText = false;
         private DateTime? RulerTextLastAppear = null;
-        public Vector2? Size = null;
         private Vector2? SizeLastKnown = null;
         private string SearchInput = "";
 
-        public NodeGraphViewer() {
-            ActiveCanvas = new( 0 );
-        }
-
-        public void AddNodeToActiveCanvas( Node node ) => ActiveCanvas.AddNodeWithinView( node, SizeLastKnown ?? RecommendedViewerSizeToSearch );
+        public void AddToCanvas( T node ) => Canvas.AddNodeWithinView( node, SizeLastKnown ?? new( 200, 300 ) );
 
         public void Draw( HashSet<ImGuiKey> pExtraKeyboardInputs = null ) => Draw( ImGui.GetCursorScreenPos(), pExtraKeyboardInputs: pExtraKeyboardInputs );
 
@@ -38,11 +31,12 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             DrawGraph( tGraphArea, tDrawList, pExtraKeyboardInputs: pExtraKeyboardInputs );
         }
 
-        private void DrawUtilsBar() {
-            var tScaling = ( int )( ActiveCanvas.GetScaling() * 100 );
-            ImGui.SetNextItemWidth( 35 );
-            if( ImGui.DragInt( "##sldScaling", ref tScaling, NodeCanvas.StepScale * 100, ( int )( NodeCanvas.MinScale * 100 ), ( int )( NodeCanvas.MaxScale * 100 ), "%d%%" ) ) {
-                ActiveCanvas.SetScaling( ( float )tScaling / 100 );
+        protected virtual void DrawUtilsBar() {
+            using var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            var scaling = ( int )( Canvas.GetScaling() * 100 );
+            ImGui.SetNextItemWidth( 50 );
+            if( ImGui.DragInt( "##sldScaling", ref scaling, NodeCanvas.StepScale * 100, ( int )( NodeCanvas.MinScale * 100 ), ( int )( NodeCanvas.MaxScale * 100 ), "%d%%" ) ) {
+                Canvas.SetScaling( ( float )scaling / 100 );
             }
 
             ImGui.SameLine();
@@ -57,7 +51,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoMove );
             pDrawList.PushClipRect( pGraphArea.Start, pGraphArea.End, true );
 
-            var tSnapData = DrawGraphBg( pGraphArea, ActiveCanvas.GetBaseOffset(), ActiveCanvas.GetScaling() );
+            var tSnapData = DrawGraphBg( pGraphArea, Canvas.GetBaseOffset(), Canvas.GetScaling() );
             DrawGraphNodes( pGraphArea, tSnapData, pDrawList, pExtraKeyboardInputs: pExtraKeyboardInputs );
             ImGui.EndChild();
             pDrawList.PopClipRect();
@@ -75,7 +69,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             if( tIsWithinViewer ) { tInputPayload.CaptureMouseWheel(); }
             if( IsMouseHoldingViewer ) { tInputPayload.CaptureMouseDragDelta(); }
 
-            var tRes = ActiveCanvas.Draw(
+            var tRes = Canvas.Draw(
                                     pGraphArea.Center,
                                     pGraphArea.Start,
                                     pGraphArea.Size,
@@ -197,7 +191,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         private void DrawNodeSearchBox( Vector2? pPUSize = null, float? pTextBoxWidth = null ) {
-            var tAnchor = ImGui.GetCursorScreenPos();
+            var cursor = ImGui.GetCursorScreenPos();
 
             if( pTextBoxWidth != null ) ImGui.SetNextItemWidth( pTextBoxWidth.Value );
             ImGui.InputTextWithHint( "", "Search", ref SearchInput, 200 );
@@ -206,21 +200,19 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             if( SearchInput.Length != 0 && tIsInputActive ) ImGui.OpenPopup( "##searchNodePU" );
 
-            ImGui.SetNextWindowPos( tAnchor + new Vector2( 0, 25 ) );
+            ImGui.SetNextWindowPos( cursor + new Vector2( 0, 25 ) );
             ImGui.SetNextWindowSizeConstraints( new Vector2( 50, 25 ), pPUSize ?? new Vector2( 300, 300 ) );
 
             if( ImGui.BeginPopup( "##searchNodePU", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.ChildWindow ) ) {
-                foreach( var node in ActiveCanvas.Nodes.Where( x => x.Header.Contains( SearchInput, StringComparison.CurrentCultureIgnoreCase ) ) ) {
+                foreach( var node in Canvas.Nodes.Where( x => x.GetText().Contains( SearchInput, StringComparison.CurrentCultureIgnoreCase ) ) ) {
                     using var _ = ImRaii.PushId( node.Id );
-                    if( ImGui.Selectable( node.Header, false, ImGuiSelectableFlags.DontClosePopups ) ) ActiveCanvas.FocusOnNode( node );
+                    if( ImGui.Selectable( node.GetText(), false, ImGuiSelectableFlags.DontClosePopups ) ) Canvas.FocusOnNode( node );
                 }
                 if( !tIsInputActive && !ImGui.IsWindowFocused() && !tIsItemPUOpened ) ImGui.CloseCurrentPopup();
                 ImGui.EndPopup();
             }
         }
 
-        public void Dispose() {
-            ActiveCanvas.Dispose();
-        }
+        public void Dispose() => Canvas.Dispose();
     }
 }

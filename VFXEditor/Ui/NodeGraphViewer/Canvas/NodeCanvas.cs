@@ -30,19 +30,19 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         public const float MinScale = 0.1f;
         public const float MaxScale = 2f;
         public const float StepScale = 0.1f;
+    }
 
-        public int Id;
-        public string Name;
-        private readonly NodeMap Map = new();
-        private readonly OccupiedRegion Region;
+    public class NodeCanvas<T> where T : Node {
 
-        public readonly List<Node> Nodes = [];
+        public readonly NodeMap Map = new();
+        public readonly OccupiedRegion<T> Region = new();
+        public readonly List<T> Nodes = [];
+        public readonly HashSet<T> SelectedNodes = [];
+        public readonly LinkedList<T> NodeRenderZOrder = new();
 
         private NodeCanvasConfig Config { get; set; } = new();
 
         private bool NodeBeingDragged = false;
-        private readonly HashSet<Node> SelectedNodes = [];
-        private readonly LinkedList<Node> NodeRenderZOrder = new();
 
         private Node SnappingNode = null;
         private Vector2? LastSnapDelta = null;
@@ -51,11 +51,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         private Vector2? SelectAreaPosition = null;
         private Slot PendingConnection;
 
-        public NodeCanvas( int pId, string pName = null ) {
-            Id = pId;
-            Name = pName ?? $"Canvas {Id}";
-            Region = new();
-        }
+        public NodeCanvas() { }
 
         public float GetScaling() => Config.Scaling;
 
@@ -63,7 +59,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public Vector2 GetBaseOffset() => Map.GetBaseOffset();
 
-        private void AddNode( Node node, Vector2 pDrawRelaPos ) {
+        private void AddNode( T node, Vector2 pDrawRelaPos ) {
             // add node
             try {
                 if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
@@ -76,7 +72,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             Region.Update( Nodes, Map );
         }
 
-        public void AddNodeWithinView( Node node, Vector2 pViewerSize ) {
+        public void AddNodeWithinView( T node, Vector2 pViewerSize ) {
             var tOffset = Map.GetBaseOffset();
             Area pRelaAreaToScanForAvailableRegion = new(
                     -tOffset - pViewerSize * 0.5f,
@@ -87,9 +83,9 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public Node GetNode( int id ) => Nodes.FirstOrDefault( x => x.Id == id );
 
-        public IEnumerable<Node> GetChildren( Node node ) => Nodes.Where( x => x.ChildOf( node ) );
+        public IEnumerable<Node> GetChildren( T node ) => Nodes.Where( x => x.ChildOf( node ) );
 
-        public void AddNodeAdjacent( Node node, Node parent, Vector2? pOffset = null ) {
+        public void AddNodeAdjacent( T node, T parent, Vector2? pOffset = null ) {
             Vector2 relativePosition;
             float? chosenY = null;
             Node chosenNode = null;
@@ -115,7 +111,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             AddNode( node, relativePosition );
         }
 
-        public void RemoveNode( Node node ) {
+        public void RemoveNode( T node ) {
             node.Dispose();
 
             Map.RemoveNode( node );
@@ -344,8 +340,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
                     node.DrawEdge(
                         pDrawList,
-                        Node.GetInputPosition( nodePosition.Value, idx ),
-                        slot.Connected.GetOutputPosition( parentPosition.Value ),
+                        node.GetInputPosition( nodePosition.Value, idx, Config.Scaling ),
+                        slot.Connected.GetOutputPosition( parentPosition.Value, Config.Scaling ),
                         slot.Connected,
                         idx,
                         SelectedNodes.Contains( slot.Connected ),
@@ -355,10 +351,10 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             }
 
             // Draw nodes
-            Stack<LinkedListNode<Node>> tNodeToFocus = new();
-            Stack<Node> tNodeToSelect = new();
-            List<Node> tNodeToDeselect = [];
-            HashSet<Node> tNodesReqqingClearSelect = [];
+            Stack<LinkedListNode<T>> tNodeToFocus = new();
+            Stack<T> tNodeToSelect = new();
+            List<T> tNodeToDeselect = [];
+            HashSet<T> tNodesReqqingClearSelect = [];
             var tIsEscapingMultiselect = false;
             for( var znode = NodeRenderZOrder.First; znode != null; znode = znode?.Next ) {
                 if( znode == null ) break;
@@ -464,7 +460,9 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
                 // Draw conn tether to cursor
                 if( PendingConnection?.Node == node ) {
-                    var startPos = PendingConnection.IsInput ? Node.GetInputPosition( nodePosition.Value, PendingConnection.Index ) : node.GetOutputPosition( nodePosition.Value );
+                    var startPos = PendingConnection.IsInput ?
+                        node.GetInputPosition( nodePosition.Value, PendingConnection.Index, Config.Scaling ) :
+                        node.GetOutputPosition( nodePosition.Value, Config.Scaling );
                     var endPos = pInputPayload.MousePos;
                     var midPos = startPos + ( endPos - startPos ) / 2f;
 
@@ -546,13 +544,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     && ( FirstClickInDrag == FirstClickType.None || FirstClickInDrag == FirstClickType.Body )
                     && SelectAreaPosition == null ) {
                     pCanvasDrawFlag |= ProcessInputOnCanvas( pInputPayload, pCanvasDrawFlag );
-                }
-            }
-
-            // Mass delete nodes
-            if( pInputPayload.IsKeyDel ) {
-                foreach( var id in SelectedNodes ) {
-                    RemoveNode( id );
                 }
             }
 

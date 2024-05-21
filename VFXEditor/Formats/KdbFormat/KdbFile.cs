@@ -1,12 +1,14 @@
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.IO;
+using System.Linq;
 using VfxEditor.FileManager;
-using VfxEditor.Ui.NodeGraphViewer;
-using VfxEditor.Ui.NodeGraphViewer.Nodes;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat {
     public class KdbFile : FileManagerFile {
-        public readonly NodeGraphViewer NodeGraph = new();
+        public readonly KdbNodeGraphViewer NodeGraph = new();
 
         public KdbFile( BinaryReader reader, bool verify ) : base() {
 
@@ -17,11 +19,19 @@ namespace VfxEditor.Formats.KdbFormat {
         }
 
         public override void Draw() {
-            if( ImGui.Button( "New" ) ) {
-                NodeGraph.AddNodeToActiveCanvas( new BasicNode() );
+            ImGui.Separator();
+            using( var graphChild = ImRaii.Child( "GraphChild", new( -1, ImGui.GetContentRegionAvail().Y / 2f ) ) ) {
+                NodeGraph.Draw();
             }
 
-            NodeGraph.Draw();
+            using var selectedChild = ImRaii.Child( "SelectedChild" );
+            if( NodeGraph.Canvas.SelectedNodes.Count == 0 ) return;
+
+            var node = NodeGraph.Canvas.SelectedNodes.FirstOrDefault();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) NodeGraph.Canvas.RemoveNode( node );
+            }
+            node.Draw();
         }
     }
 }

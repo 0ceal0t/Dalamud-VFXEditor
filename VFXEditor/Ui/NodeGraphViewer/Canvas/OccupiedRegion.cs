@@ -3,7 +3,7 @@ using System.Numerics;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
-    public class OccupiedRegion {
+    public class OccupiedRegion<T> where T : Node {
         private readonly Set X = new();
         private readonly Set Y = new();
         private bool UpdatedOnce = false;
@@ -12,7 +12,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public bool IsUpdatedOnce() => UpdatedOnce;
 
-        public void Update( List<Node> nodes, NodeMap pMap ) {
+        public void Update( List<T> nodes, NodeMap pMap ) {
             ResetRegion();
             foreach( var n in nodes ) {
                 var tStart = pMap.GetNodeRelaPos( n );
