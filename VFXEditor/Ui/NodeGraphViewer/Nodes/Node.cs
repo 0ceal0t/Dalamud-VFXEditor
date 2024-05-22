@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Commands;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
@@ -144,7 +145,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.InvisibleButton( $"anchor{Id}{target.Id}{index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
 
             if( ImGui.IsItemActive() ) {
-                if( ImGui.GetIO().MouseClicked[1] == true ) Slots[index].Clear();
+                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( Slots[index], null ) );
             }
             else {
                 anchorHovered = ImGui.IsItemHovered();

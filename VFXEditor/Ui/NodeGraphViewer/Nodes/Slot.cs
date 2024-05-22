@@ -1,6 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Commands;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
@@ -22,10 +23,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             Name = name;
         }
 
-        public void Clear() {
-            Connected = null;
-        }
-
         public void ConnectTo( Node node ) {
             Connected = node;
         }
@@ -39,18 +36,14 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             var hovered = false;
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.SetCursorScreenPos( position - ( size * 3f ) / 2f );
-            if( ImGui.InvisibleButton( $"##Button", size * 3f, ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonLeft ) ) {
-                if( ImGui.GetIO().MouseReleased[0] ) {
-                    if( connection == null ) {
-                        _connection = this;
+            if( ImGui.InvisibleButton( $"##Button", size * 3f ) ) {
+                if( connection == null ) _connection = this;
+                else {
+                    if( connection.Node != Node && connection.IsInput != IsInput ) { // TODO: check cycle
+                        if( IsInput ) CommandManager.Add( new NodeSlotCommand( this, connection.Node ) );
+                        else CommandManager.Add( new NodeSlotCommand( connection, Node ) );
                     }
-                    else {
-                        if( connection.Node != Node && connection.IsInput != IsInput ) { // TODO: check cycle
-                            if( IsInput ) ConnectTo( connection.Node );
-                            else connection.ConnectTo( Node );
-                        }
-                        _connection = null;
-                    }
+                    _connection = null;
                 }
 
             }

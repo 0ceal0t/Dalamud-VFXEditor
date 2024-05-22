@@ -10,7 +10,7 @@ namespace VfxEditor.Formats.KdbFormat {
 
         protected override void DrawUtilsBar() {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) AddToCanvas( new() );
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) AddToCanvas( new(), true );
             }
 
             ImGui.SameLine();

@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.KdbFormat {
         public readonly KdbNodeGraphViewer NodeGraph = new();
 
         public KdbFile( BinaryReader reader, bool verify ) : base() {
-
+            NodeGraph.AddToCanvas( new(), false );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -26,6 +26,8 @@ namespace VfxEditor.Formats.KdbFormat {
 
             using var selectedChild = ImRaii.Child( "SelectedChild" );
             if( NodeGraph.Canvas.SelectedNodes.Count == 0 ) return;
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 10 );
 
             var node = NodeGraph.Canvas.SelectedNodes.FirstOrDefault();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {

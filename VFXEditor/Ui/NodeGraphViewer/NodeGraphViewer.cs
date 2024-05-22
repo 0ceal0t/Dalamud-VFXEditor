@@ -17,7 +17,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         private Vector2? SizeLastKnown = null;
         private string SearchInput = "";
 
-        public void AddToCanvas( T node ) => Canvas.AddNodeWithinView( node, SizeLastKnown ?? new( 200, 300 ) );
+        public void AddToCanvas( T node, bool record ) => Canvas.AddNodeWithinView( node, SizeLastKnown ?? new( 200, 300 ), record );
 
         public void Draw( HashSet<ImGuiKey> pExtraKeyboardInputs = null ) => Draw( ImGui.GetCursorScreenPos(), pExtraKeyboardInputs: pExtraKeyboardInputs );
 

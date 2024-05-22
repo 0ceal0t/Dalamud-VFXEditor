@@ -13,6 +13,13 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             OffsetBase = ofsBase;
         }
 
+        public Dictionary<Node, Vector2> GetState() => new( Data );
+
+        public void LoadState( Dictionary<Node, Vector2> data ) {
+            Data.Clear();
+            foreach( var entry in data ) Data[entry.Key] = entry.Value;
+        }
+
         // ========================= CANVAS =========================
 
         public Vector2 GetBaseOffset() => OffsetBase;
