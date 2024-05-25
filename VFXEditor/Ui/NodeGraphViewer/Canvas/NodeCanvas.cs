@@ -34,7 +34,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
     }
 
     public class NodeCanvas<T> where T : Node {
-
         public readonly NodeMap Map = new();
         public readonly OccupiedRegion<T> Region = new();
         public readonly List<T> Nodes = [];
@@ -64,17 +63,10 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public Vector2 GetBaseOffset() => Map.GetBaseOffset();
 
-        private void AddNode( T node, Vector2 pDrawRelaPos, bool record ) {
-            // add node
-            try {
-                if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
-                NodeOrder.AddLast( node );
-                Map.AddNode( node, pDrawRelaPos );
-                Nodes.Add( node );
-            }
-            catch( Exception e ) { Dalamud.Error( e.Message ); }
-
-            Region.Update( Nodes, Map );
+        private void AddNode( T node, Vector2 position, bool record ) {
+            if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
+            var command = new NodeAddCommand<T>( this, node, position );
+            if( record ) CommandManager.Add( command );
         }
 
         public void AddNodeWithinView( T node, Vector2 pViewerSize, bool record ) {
@@ -117,14 +109,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         }
 
         public void RemoveNode( T node ) {
-            node.Dispose();
-
-            Map.RemoveNode( node );
-            Nodes.Remove( node );
-            SelectedNodes.Remove( node );
-            NodeOrder.Remove( node );
-            Region.Update( Nodes, Map );
-            Nodes.ForEach( x => x.Slots.Where( y => y.Connected == node ).ToList().ForEach( z => z.ConnectTo( null ) ) );
+            if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
+            CommandManager.Add( new NodeRemoveCommand<T>( this, node ) );
         }
 
         public bool FocusOnNode( Node node, Vector2? pExtraOfs = null ) => Map.FocusOnNode( node, ( pExtraOfs ?? new Vector2( -90, -90 ) ) * GetScaling() );
@@ -563,10 +549,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             else if( pInputPayload.IsMouseLmbDown ) IsFirstFrameAfterLmbDown = false;
 
             return pCanvasDrawFlag;
-        }
-
-        public void Dispose() {
-            foreach( var node in Nodes ) node.Dispose();
         }
 
         public enum FirstClickType {

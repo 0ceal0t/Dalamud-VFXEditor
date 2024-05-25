@@ -23,7 +23,5 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
                 Style.SetSize( BodySize );
             }
         }
-
-        public override void Dispose() { }
     }
 }

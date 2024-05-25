@@ -168,7 +168,5 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         public Vector2 GetInputPosition( Vector2 nodePosition, int index, float scaling ) => nodePosition + new Vector2( 0, ( SlotSpacing * index + Style.GetHandleSize().Y + ( SlotSpacing / 2f ) ) * scaling );
 
         public Vector2 GetOutputPosition( Vector2 nodePosition, float scaling ) => nodePosition + Style.GetHandleSizeScaled( scaling );
-
-        public abstract void Dispose();
     }
 }

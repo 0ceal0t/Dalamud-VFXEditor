@@ -212,7 +212,5 @@ namespace VfxEditor.Ui.NodeGraphViewer {
                 ImGui.EndPopup();
             }
         }
-
-        public void Dispose() => Canvas.Dispose();
     }
 }
