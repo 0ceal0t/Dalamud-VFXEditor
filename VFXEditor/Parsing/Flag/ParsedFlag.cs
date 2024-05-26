@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.IO;
@@ -50,6 +51,16 @@ namespace VfxEditor.Parsing {
                     Update( ( T )( object )intValue );
                 }
             }
+        }
+
+        public void DrawWithIndent() {
+            using var _ = ImRaii.PushId( Name );
+            ImGui.TextDisabled( Name );
+            using var indent = ImRaii.PushIndent( 10f );
+            CopyPaste();
+            DrawBody();
+
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
         }
 
         public bool HasFlag( T option ) => Value.HasFlag( option );

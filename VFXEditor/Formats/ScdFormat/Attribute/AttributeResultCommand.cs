@@ -62,7 +62,7 @@ namespace VfxEditor.ScdFormat {
 
         public void Draw() {
             SelfCommandSelect.Draw();
-            TargetArgument.Draw();
+            TargetCommandSelect.Draw();
             SelfArgument.Draw();
             TargetArgument.Draw();
         }

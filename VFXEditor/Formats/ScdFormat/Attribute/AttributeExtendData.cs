@@ -1,4 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
@@ -6,12 +7,12 @@ using VfxEditor.Parsing;
 namespace VfxEditor.ScdFormat {
     [Flags]
     public enum ConditionType1st {
-        Attr = 0x01,
+        Attribute = 0x01,
         Label = 0x02,
         Equal = 0x04,
         Bank = 0x08,
-        ExternalId1st = 0x10,
-        Unknown = 0x40
+        External_Id_First = 0x10,
+        None = 0x40
     }
 
     public enum ConditionType2nd {
@@ -37,7 +38,7 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeExtendData {
-        public readonly ParsedEnum<ConditionType1st> FirstCondition = new( "First Condition", size: 1 );
+        public readonly ParsedFlag<ConditionType1st> FirstCondition = new( "First Condition", size: 1 );
         public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "Second Condition", size: 1 );
         public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "Join Type", size: 1 );
         public readonly ParsedByte NumberOfConditions = new( "Number of Conditions" );
@@ -71,12 +72,14 @@ namespace VfxEditor.ScdFormat {
         }
 
         public void Draw() {
-            FirstCondition.Draw();
+            FirstCondition.DrawWithIndent();
             SecondCondition.Draw();
             JoinTypeSelect.Draw();
             NumberOfConditions.Draw();
             SelfArgument.Draw();
             TargetArgument.Draw();
+
+            ImGui.Separator();
 
             using var _ = ImRaii.PushId( "Result" );
             Result.Draw();
