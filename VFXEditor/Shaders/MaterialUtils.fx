@@ -26,6 +26,9 @@ cbuffer PSMaterialConstants : register(b1)
     float3 EyePosition;
     LightData Light1;
     LightData Light2;
+    
+    float4x4 InvViewMatrix;
+    float4x4 InvProjectionMatrix;
 }
 
 float attenuation(float r, float f, float d)

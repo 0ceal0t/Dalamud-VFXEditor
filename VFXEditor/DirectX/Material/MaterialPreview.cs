@@ -55,6 +55,9 @@ namespace VfxEditor.DirectX {
 
         public LightData Light1;
         public LightData Light2;
+
+        public Matrix InvViewMatrix;
+        public Matrix InvProjectionMatrix;
     }
 
     public class MaterialPreview : ModelDeferredRenderer {
@@ -143,6 +146,8 @@ namespace VfxEditor.DirectX {
                 EyePosition = CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
+                InvViewMatrix = Matrix.Invert( ViewMatrix ),
+                InvProjectionMatrix = Matrix.Invert( ProjMatrix )
             };
 
             var vsBuffer = VSBufferData;

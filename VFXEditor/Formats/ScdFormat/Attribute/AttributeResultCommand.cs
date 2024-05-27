@@ -36,11 +36,11 @@ namespace VfxEditor.ScdFormat {
     }
 
     public class AttributeResultCommand {
-        public readonly ParsedEnum<SelfCommand> SelfCommandSelect = new( "Select Command", size: 1 );
-        public readonly ParsedEnum<TargetCommand> TargetCommandSelect = new( "Target Command", size: 1 );
+        public readonly ParsedEnum<SelfCommand> SelfCommandSelect = new( "Result Select Command", size: 1 );
+        public readonly ParsedEnum<TargetCommand> TargetCommandSelect = new( "Result Target Command", size: 1 );
         public readonly ParsedReserve Reserved1 = new( 2 );
-        public readonly ParsedInt SelfArgument = new( "Self Argument" );
-        public readonly ParsedInt TargetArgument = new( "Target Argument" );
+        public readonly ParsedInt SelfArgument = new( "Result Self Argument" );
+        public readonly ParsedInt TargetArgument = new( "Result Target Argument" );
 
         public AttributeResultCommand() { }
 

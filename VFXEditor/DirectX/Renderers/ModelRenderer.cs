@@ -260,8 +260,6 @@ namespace VfxEditor.DirectX.Renderers {
 
             // ======= PASSES ======
 
-            // TODO: make this always on top (depth stuff)
-
             Ctx.OutputMerger.SetDepthStencilState( StencilState );
             Ctx.OutputMerger.SetTargets( StencilView, RenderTarget );
 

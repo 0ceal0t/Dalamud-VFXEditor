@@ -77,6 +77,7 @@ namespace VfxEditor.ScdFormat {
             if( !tabItem ) return;
 
             using var _ = ImRaii.PushId( "Result" );
+            ImGui.Separator();
             ResultFirst.Draw();
         }
 

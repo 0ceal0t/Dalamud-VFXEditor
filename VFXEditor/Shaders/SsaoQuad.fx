@@ -30,53 +30,79 @@ PS_IN VS(VS_IN input)
     return output;
 }
 
-float doAmbientOcclusion(in float2 tcoord, in float2 uv, in float3 p, in float3 cnorm)
+// ===================
+
+#define DISK_SAMPLE_COUNT (16)
+static float2 poissonDisk[16] =
 {
-    float g_scale = 1.0f; // TODO
-    float g_bias = 0.0f; // TODO
-    float g_intensity = 10.0f; // TODO
+    float2(0.2770745f, 0.6951455f),
+    float2(0.1874257f, -0.02561589f),
+    float2(-0.3381929f, 0.8713168f),
+    float2(0.5867746f, 0.1087471f),
+    float2(-0.3078699f, 0.188545f),
+    float2(0.7993396f, 0.4595091f),
+    float2(-0.09242552f, 0.5260149f),
+    float2(0.3657553f, -0.5329605f),
+    float2(-0.3829718f, -0.2476171f),
+    float2(-0.01085108f, -0.6966301f),
+    float2(0.8404155f, -0.3543923f),
+    float2(-0.5186161f, -0.7624033f),
+    float2(-0.8135794f, 0.2328489f),
+    float2(-0.784665f, -0.2434929f),
+    float2(0.9920505f, 0.0855163f),
+    float2(-0.687256f, 0.6711345f)
+};
+
+float4 getPositionFromDepth(float u, float v, float depth)
+{
+    float4 H = float4((u) * 2 - 1, (1 - v) * 2 - 1, depth, 1.0);
+    float4 D = mul(InvProjectionMatrix, H);
+    float4 INworldPosition = mul(InvViewMatrix, (D / D.w));
+    return INworldPosition;
+}
+
+float getDepth(float2 coords)
+{
+    return PositionTexture.Sample(Sampler, coords).z;
+}
+
+float doAmbientOcclusion(float2 tcoord, float2 uv, float3 pos, float3 norm)
+{
+    float depth = getDepth(tcoord + uv);
     
-    float3 diff = PositionTexture.Sample(Sampler, tcoord + uv).xyz - p;
+    float3 diff = getPositionFromDepth(tcoord.x + uv.x, tcoord.y + uv.y, depth).xyz - pos;
+    
     const float3 v = normalize(diff);
-    const float d = length(diff) * g_scale;
-    return max(0.0, dot(cnorm, v) - g_bias) * (1.0 / (1.0 + d)) * g_intensity;
+    const float d = length(diff) * 2.0f;
+    return max(0.0, dot(norm, v) - 0.2f) * (1.0f / (1.0f + d)) * 1.5f;
 }
 
 float4 PS(PS_IN input) : SV_Target
 {
     float2 coords = input.Position.xy / Size;
-    float4 N = NormalTexture.Sample(Sampler, coords);
-    
+    float4 normal = NormalTexture.Sample(Sampler, coords);
     float3 color = ColorTexture.Sample(Sampler, coords).xyz;
     
-    if (N.w > 0.0f)
+    if (normal.w > 0.0f)
     {
-        float3 position = PositionTexture.Sample(Sampler, coords);
-        float3 normal = N.xyz * 2.0f - 1.0f;
-        
-        float2 rand = normalize(float2(0.5, 0.5)); // TODO
-        float radius = 5.0f / position.z; // TODO
-        
-        const float2 vec[4] = { float2(1, 0), float2(-1, 0), float2(0, 1), float2(0, -1) };
-        
+        float depth = PositionTexture.Sample(Sampler, coords).z;
+        float3 position = getPositionFromDepth(coords.r, coords.g, depth);
+
         float ao = 0.0f;
         
-        int iterations = 4;
-        for (int j = 0; j < iterations; ++j)
-        {
-            float2 coord1 = reflect(vec[j], rand) * radius;
-            float2 coord2 = float2(coord1.x * 0.707 - coord1.y * 0.707, coord1.x * 0.707 + coord1.y * 0.707);
-            
-            ao += doAmbientOcclusion(coords, coord1 * 0.25, position, normal);
-            ao += doAmbientOcclusion(coords, coord2 * 0.5, position, normal);
-            ao += doAmbientOcclusion(coords, coord1 * 0.75, position, normal);
-            ao += doAmbientOcclusion(coords, coord2, position, normal);
-        }
+        int sampleCount = DISK_SAMPLE_COUNT;
+        int sampleRadius = 8.0f;
         
-        ao /= (float) iterations * 4.0;
+        for (int i = 0; i < DISK_SAMPLE_COUNT; i++)
+        {
+            float2 pos = (poissonDisk[i].xy / Size) * sampleRadius;
+            ao = ao + doAmbientOcclusion(coords, pos, position, normalize(normal.xyz));
+        }
+
+        ao = 1.0f - abs(ao / float(sampleCount));
+        ao = saturate(pow(ao, 6.0f));
         
         color += AmbientColor * ao;
-
     }
     
     color = toGamma(color);

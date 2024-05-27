@@ -12,7 +12,7 @@ namespace VfxEditor.ScdFormat {
         Equal = 0x04,
         Bank = 0x08,
         External_Id_First = 0x10,
-        None = 0x40
+        Unknown = 0x40
     }
 
     public enum ConditionType2nd {
@@ -28,8 +28,9 @@ namespace VfxEditor.ScdFormat {
         LT = 0x20,
         LE = 0x30,
         EQ = 0x40,
+        Unknown = 0x42, // A float or something?
         NE = 0x50,
-        CondMask = 0xF0
+        CondMask = 0xF0,
     }
 
     public enum JoinType {
@@ -42,8 +43,14 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedEnum<ConditionType2nd> SecondCondition = new( "Second Condition", size: 1 );
         public readonly ParsedEnum<JoinType> JoinTypeSelect = new( "Join Type", size: 1 );
         public readonly ParsedByte NumberOfConditions = new( "Number of Conditions" );
+
         public readonly ParsedInt SelfArgument = new( "Self Argument" );
-        public readonly ParsedInt TargetArgument = new( "Target Argument" );
+        // idk what's up with this
+        public ParsedBase TargetArgument => SecondCondition.Value == ConditionType2nd.Unknown ? TargetArgument_Float : TargetArgument_Int;
+
+        public readonly ParsedInt TargetArgument_Int = new( "Target Argument" );
+        public readonly ParsedFloat TargetArgument_Float = new( "Target Argument" );
+
 
         public readonly AttributeResultCommand Result = new();
 
@@ -79,9 +86,8 @@ namespace VfxEditor.ScdFormat {
             SelfArgument.Draw();
             TargetArgument.Draw();
 
-            ImGui.Separator();
-
             using var _ = ImRaii.PushId( "Result" );
+            ImGui.Separator();
             Result.Draw();
         }
     }

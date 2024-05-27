@@ -57,6 +57,8 @@ namespace VfxEditor.DirectX.Mesh {
                 EyePosition = CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
+                InvViewMatrix = Matrix.Invert( ViewMatrix ),
+                InvProjectionMatrix = Matrix.Invert( ProjMatrix ),
 
                 DiffuseColor = new( 1f, 1f, 1f ),
                 EmissiveColor = new( 0f, 0f, 0f ),

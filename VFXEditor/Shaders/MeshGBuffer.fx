@@ -69,6 +69,7 @@ GBUFFER PS(PS_IN input)
     
     GBUFFER result = (GBUFFER) 0;
     result.Position.xy = input.Position.xy;
+    result.Position.z = input.Position.z / input.Position.w;
     result.Normal = (float4(N, 1) + 1.0f) / 2.0f;
     result.Color = finalColor;
     result.UV = float4(input.TexCoords, 0, 0);
