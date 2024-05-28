@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.KdbFormat {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override KdbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override KdbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,
