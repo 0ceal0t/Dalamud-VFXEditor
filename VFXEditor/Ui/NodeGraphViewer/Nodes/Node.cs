@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -11,25 +12,28 @@ namespace VfxEditor.Ui.NodeGraphViewer {
     public abstract class Node {
         public static readonly Vector2 NodeInsidePadding = new( 10f, 3.5f );
         public static readonly Vector2 MinHandleSize = new( 50, 20 );
-        private const float EdgeThickness = 2f;
-        private const float EdgeAnchorSize = 7.5f;
-        private const float SlotSpacing = 15f;
+        public const float EdgeThickness = 2f;
+        public const float EdgeAnchorSize = 7.5f;
+        public const float SlotSpacing = 15f;
 
         private static int NODE_ID = 0;
         public readonly int Id = NODE_ID++;
 
         protected bool NeedReinit = false;
-        public NodeStyle Style = new( Vector2.Zero, Vector2.Zero );
-        protected virtual Vector2 BodySize => new( 100, SlotSpacing * Slots.Count + Style.GetHandleSize().Y );
+        public readonly NodeStyle Style = new( Vector2.Zero, Vector2.Zero );
+        protected virtual Vector2 BodySize => new( 100, SlotSpacing * Math.Max( Inputs.Count, Outputs.Count ) + Style.GetHandleSize().Y );
 
         protected string Name;
-        public readonly List<Slot> Slots;
-        public readonly Slot OutputSlot;
+        public readonly List<Slot> Inputs;
+        public readonly List<Slot> Outputs;
 
         public Node( string name ) {
             Name = name;
-            Slots = GetSlots();
-            OutputSlot = new( this, "Output", -1, isInput: false );
+            Inputs = GetInputSlots();
+            Outputs = GetOutputSlots();
+
+            foreach( var (slot, idx) in Inputs.WithIndex() ) slot.SetIndex( idx );
+            foreach( var (slot, idx) in Outputs.WithIndex() ) slot.SetIndex( idx );
 
             if( Plugin.IsImguiSafe ) SetHeader( Name );
             else {
@@ -43,11 +47,13 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public string GetText() => Name;
 
-        protected abstract List<Slot> GetSlots();
+        protected abstract List<Slot> GetInputSlots();
 
-        public bool ChildOf( Node node ) => Slots.Any( x => x.Connected == node );
+        protected abstract List<Slot> GetOutputSlots();
 
-        protected virtual void ReInit() {
+        public bool ChildOf( Node node ) => Inputs.Any( x => x.Connected.Node == node );
+
+        protected virtual void Refresh() {
             SetHeader( Name );
             Style.SetSize( BodySize );
         }
@@ -71,7 +77,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             // Re-calculate ImGui-dependant members, if required.
             if( NeedReinit ) {
-                ReInit();
+                Refresh();
                 NeedReinit = false;
             }
 
@@ -116,12 +122,9 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             ImGui.EndChild();
 
-            // Output
-            foreach( var (slot, index) in Slots.WithIndex() ) {
-                slot.Draw( drawList, GetInputPosition( nodePos, index, canvasScaling ), selected, connection, out connection );
-            }
+            foreach( var slot in Inputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), selected, connection, out connection );
+            foreach( var slot in Outputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), selected, connection, out connection );
 
-            OutputSlot.Draw( drawList, GetOutputPosition( nodePos, canvasScaling ), selected, connection, out connection );
             _connection = connection;
         }
 
@@ -135,17 +138,17 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.TextColored( NodeUtils.Colors.NodeText, Name );
         }
 
-        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Node target, int index, bool highlighted = false, bool highlightedNegative = false ) {
+        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Slot source, Slot target, bool highlighted = false, bool highlightedNegative = false ) {
             var cursor = ImGui.GetCursorScreenPos();
             var anchorPosition = sourcePos + ( targetPos - sourcePos ) * 0.5f;
             var anchorSize = new Vector2( EdgeAnchorSize, EdgeAnchorSize );
             var anchorHovered = false;
 
             ImGui.SetCursorScreenPos( anchorPosition - anchorSize );
-            ImGui.InvisibleButton( $"anchor{Id}{target.Id}{index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
+            ImGui.InvisibleButton( $"anchor{Id}{target.Node.Id}{source.Index}{target.Index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
 
             if( ImGui.IsItemActive() ) {
-                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( Slots[index], null ) );
+                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, null ) );
             }
             else {
                 anchorHovered = ImGui.IsItemHovered();
@@ -164,9 +167,5 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             );
             drawList.AddCircleFilled( anchorPosition, EdgeAnchorSize * ( anchorHovered ? 0.6f : 0.4f ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, anchorHovered ? 0.5f * 1.25f : 0.5f ) ) );
         }
-
-        public Vector2 GetInputPosition( Vector2 nodePosition, int index, float scaling ) => nodePosition + new Vector2( 0, ( SlotSpacing * index + Style.GetHandleSize().Y + ( SlotSpacing / 2f ) ) * scaling );
-
-        public Vector2 GetOutputPosition( Vector2 nodePosition, float scaling ) => nodePosition + Style.GetHandleSizeScaled( scaling );
     }
 }

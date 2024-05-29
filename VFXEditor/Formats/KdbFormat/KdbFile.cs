@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.KdbFormat.Nodes;
+using VfxEditor.Formats.KdbFormat.Nodes.Types;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
@@ -28,8 +30,8 @@ namespace VfxEditor.Formats.KdbFormat {
         private readonly ParsedFnvHash FileName = new( "File Name" );
 
         private readonly ParsedDouble UnknownOperation = new( "Unknown Operation" );
-        private readonly ParsedUInt UnknownB1 = new( "Unknown B 1" );
-        private readonly ParsedUInt UnknownB2 = new( "Unknown B 2" );
+        private readonly ParsedUInt UnknownB1 = new( "Unknown B1" );
+        private readonly ParsedUInt UnknownB2 = new( "Unknown B2" );
 
         public readonly KdbNodeGraphViewer NodeGraph = new();
 
@@ -45,15 +47,14 @@ namespace VfxEditor.Formats.KdbFormat {
             reader.ReadUInt16(); // padding
 
             var dataArrayCount = reader.ReadUInt32();
-            var dataArrayPosition = reader.BaseStream.Position;
-            var dataArrayOffset = reader.ReadUInt32();
-
             if( dataArrayCount != 5 ) Dalamud.Error( $"Data array count is {dataArrayCount}" );
+            var dataArrayPosition = reader.BaseStream.Position + reader.ReadUInt32();
 
             for( var i = 0; i < 7; i++ ) reader.ReadUInt32(); // reserved
 
+            reader.BaseStream.Position = dataArrayPosition;
+
             var dataArrayPositions = new List<(ArrayType, long)>();
-            reader.BaseStream.Position = dataArrayPosition + dataArrayOffset;
             for( var i = 0; i < dataArrayCount; i++ ) {
                 var type = ( ArrayType )reader.ReadUInt16();
                 var unknown = reader.ReadUInt16();
@@ -65,12 +66,63 @@ namespace VfxEditor.Formats.KdbFormat {
                 reader.BaseStream.Position = position;
                 var count = reader.ReadUInt32();
                 var arrayPosition = reader.BaseStream.Position + reader.ReadUInt32(); // offset is 0 if count = 0
+
                 if( type == ArrayType.Operations ) {
-                    UnknownOperation.Read( reader );
+                    UnknownOperation.Read( reader ); // TODO
+                    reader.BaseStream.Position = arrayPosition;
+
+                    var nodes = new List<KdbNode>();
+                    for( var j = 0; j < count; j++ ) {
+                        reader.ReadUInt32(); // index
+                        var nodeType = ( KdbNodeType )reader.ReadByte();
+
+                        KdbNode newNode = nodeType switch {
+                            KdbNodeType.EffectorExpr => new KdbNodeEffectorExpr( reader ),
+                            KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
+                            KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
+                            KdbNodeType.SourceOther => new KdbNodeSourceOther( reader ),
+                            KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
+                            KdbNodeType.SourceTranslate => new KdbNodeSourceTranslate( reader ),
+                            KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
+                            KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
+                            KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
+                            KdbNodeType.Connection => new KdbConnection( reader ),
+                            _ => null
+                        };
+
+                        if( newNode == null ) Dalamud.Error( $"Unknown node type {nodeType}" );
+                        else nodes.Add( newNode );
+
+                        /*
+                         * connection is 0x40
+                         * 
+                         * source hash: 4
+                         * source offset: 4
+                         * source idx: 4
+                         * --- idk: 4
+                         * --- idk: 4
+                         * target hash: 4
+                         * target offset: 4
+                         * target idx: 4
+                         * --- idk: 4
+                         * --- idk: 4
+                         * --- idk: 4
+                         * --- idk: 4
+                         */
+                    }
+
+                    foreach( var node in nodes.Where( x => x is not KdbConnection ) ) NodeGraph.AddToCanvas( node, false );
+                    foreach( var node in nodes ) {
+                        if( node is not KdbConnection connection ) continue;
+                        Dalamud.Log( $">>>> {nodes[connection.SourceIdx].Type} ({connection.SourceType}) -> {nodes[connection.TargetIdx].Type} ({connection.TargetType})" );
+                    }
                 }
                 else if( type == ArrayType.B ) {
                     UnknownB1.Read( reader );
                     UnknownB2.Read( reader );
+                    reader.BaseStream.Position = arrayPosition;
+
+                    // TODO
                 }
             }
         }

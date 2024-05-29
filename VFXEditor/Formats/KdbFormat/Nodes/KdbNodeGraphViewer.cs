@@ -1,16 +1,17 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Ui.NodeGraphViewer;
 
-namespace VfxEditor.Formats.KdbFormat {
+namespace VfxEditor.Formats.KdbFormat.Nodes {
     public class KdbNodeGraphViewer : NodeGraphViewer<KdbNode> {
         public KdbNodeGraphViewer() { }
 
         protected override void DrawUtilsBar() {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) AddToCanvas( new(), true );
+                if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
+
+                }
             }
 
             ImGui.SameLine();

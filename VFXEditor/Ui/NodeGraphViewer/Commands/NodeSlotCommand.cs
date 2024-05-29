@@ -3,10 +3,10 @@ using VfxEditor.Ui.NodeGraphViewer.Nodes;
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {
     public class NodeSlotCommand : ICommand {
         public readonly Slot Slot;
-        public readonly Node State;
-        public readonly Node PrevState;
+        public readonly Slot State;
+        public readonly Slot PrevState;
 
-        public NodeSlotCommand( Slot slot, Node state ) {
+        public NodeSlotCommand( Slot slot, Slot state ) {
             Slot = slot;
             State = state;
             PrevState = slot.Connected;

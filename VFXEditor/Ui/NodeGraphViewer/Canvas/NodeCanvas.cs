@@ -257,7 +257,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             Vector2 pInitBaseOffset,
             float pGridSnapProximity,
             InputPayload pInputPayload,
-            ImDrawListPtr pDrawList,
+            ImDrawListPtr drawList,
             GridSnapData pSnapData = null,
             CanvasDrawFlags pCanvasDrawFlag = CanvasDrawFlags.None ) {
             var tIsAnyNodeHandleClicked = false;
@@ -328,20 +328,21 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 var nodePosition = Map.GetNodeScreenPos( node, tCanvasOSP, Config.Scaling );
                 if( !nodePosition.HasValue ) continue;
 
-                foreach( var (slot, idx) in node.Slots.WithIndex() ) {
+                foreach( var (slot, idx) in node.Inputs.WithIndex() ) {
                     if( slot.Connected == null ) continue;
-                    var parentPosition = Map.GetNodeScreenPos( slot.Connected, tCanvasOSP, Config.Scaling );
+                    var parentNode = slot.Connected.Node;
+                    var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
                     if( !parentPosition.HasValue ) continue;
 
                     if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
 
                     node.DrawEdge(
-                        pDrawList,
-                        node.GetInputPosition( nodePosition.Value, idx, Config.Scaling ),
-                        slot.Connected.GetOutputPosition( parentPosition.Value, Config.Scaling ),
+                        drawList,
+                        slot.GetSlotPosition( nodePosition.Value, Config.Scaling ),
+                        slot.Connected.GetSlotPosition( parentPosition.Value, Config.Scaling ),
+                        slot,
                         slot.Connected,
-                        idx,
-                        SelectedNodes.Contains( slot.Connected ),
+                        SelectedNodes.Contains( parentNode ),
                         SelectedNodes.Contains( node )
                     );
                 }
@@ -451,19 +452,17 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 var tNodeRelaPos = Map.GetNodeRelaPos( node );
                 if( NodeBeingDragged && SelectedNodes.Contains( node ) && tNodeRelaPos.HasValue )
                     ImGui.GetWindowDrawList().AddText(
-                        nodePosition.Value + new Vector2( 0, -30 ) * GetScaling()
-                        , ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
+                        nodePosition.Value + new Vector2( 0, -30 ) * GetScaling(),
+                        ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
                         $"({tNodeRelaPos.Value.X / 10:F1}, {tNodeRelaPos.Value.Y / 2:F1})" );
 
                 // Draw conn tether to cursor
                 if( PendingConnection?.Node == node ) {
-                    var startPos = PendingConnection.IsInput ?
-                        node.GetInputPosition( nodePosition.Value, PendingConnection.Index, Config.Scaling ) :
-                        node.GetOutputPosition( nodePosition.Value, Config.Scaling );
+                    var startPos = PendingConnection.GetSlotPosition( nodePosition.Value, Config.Scaling );
                     var endPos = pInputPayload.MousePos;
                     var midPos = startPos + ( endPos - startPos ) / 2f;
 
-                    pDrawList.AddBezierCubic( startPos, new( midPos.X, startPos.Y ), new( midPos.X, endPos.Y ), endPos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ), 1f );
+                    drawList.AddBezierCubic( startPos, new( midPos.X, startPos.Y ), new( midPos.X, endPos.Y ), endPos, ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeFg ), 1f );
                 }
 
 

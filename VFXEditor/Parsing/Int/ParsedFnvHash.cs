@@ -29,7 +29,7 @@ namespace VfxEditor.Parsing.Int {
         protected override void DrawBody() {
             var prevValue = Value;
             var inputValue = Value.Item1;
-            if( ImGui.InputTextWithHint( Name, $"0x{Value.Item2:X4}", ref inputValue, 255 ) ) {
+            if( ImGui.InputTextWithHint( Name, $"0x{Value.Item2:X8}", ref inputValue, 255 ) ) {
                 Value = (inputValue, FnvUtils.Encode( inputValue ));
 
                 if( !Editing ) {
