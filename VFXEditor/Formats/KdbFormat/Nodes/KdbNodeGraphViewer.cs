@@ -4,7 +4,7 @@ using ImGuiNET;
 using VfxEditor.Ui.NodeGraphViewer;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
-    public class KdbNodeGraphViewer : NodeGraphViewer<KdbNode> {
+    public class KdbNodeGraphViewer : NodeGraphViewer<KdbNode, KdbSlot> {
         public KdbNodeGraphViewer() { }
 
         protected override void DrawUtilsBar() {

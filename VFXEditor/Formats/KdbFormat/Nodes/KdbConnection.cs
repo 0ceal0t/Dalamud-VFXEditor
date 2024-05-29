@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
     public enum ConnectionType {
@@ -76,8 +75,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
         }
 
-        protected override List<Slot> GetInputSlots() => [];
+        protected override List<KdbSlot> GetInputSlots() => [];
 
-        protected override List<Slot> GetOutputSlots() => [];
+        protected override List<KdbSlot> GetOutputSlots() => [];
     }
 }

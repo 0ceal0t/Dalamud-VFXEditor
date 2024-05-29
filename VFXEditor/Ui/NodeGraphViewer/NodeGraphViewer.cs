@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Ui.NodeGraphViewer.Canvas;
+using VfxEditor.Ui.NodeGraphViewer.Nodes;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
-    public class NodeGraphViewer<T> where T : Node {
-        public readonly NodeCanvas<T> Canvas = new();
+    public class NodeGraphViewer<T, S> where T : Node<S> where S : Slot {
+        public readonly NodeCanvas<T, S> Canvas = new();
 
         private bool IsMouseHoldingViewer = false;
         private bool IsShowingRulerText = false;

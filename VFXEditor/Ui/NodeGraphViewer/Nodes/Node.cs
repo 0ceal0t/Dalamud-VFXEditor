@@ -21,13 +21,78 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         protected bool NeedReinit = false;
         public readonly NodeStyle Style = new( Vector2.Zero, Vector2.Zero );
-        protected virtual Vector2 BodySize => new( 100, SlotSpacing * Math.Max( Inputs.Count, Outputs.Count ) + Style.GetHandleSize().Y );
 
         protected string Name;
-        public readonly List<Slot> Inputs;
-        public readonly List<Slot> Outputs;
 
         public Node( string name ) {
+            Name = name;
+        }
+
+        public string GetText() => Name;
+
+        public virtual void SetHeader( string header, bool pAutoSizing = true, bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
+            Name = header;
+            Style.SetHandleTextSize( ImGui.CalcTextSize( Name ) );
+            if( pAutoSizing ) AdjustSizeToHeader( pAdjustWidthOnly, pChooseGreaterWidth );
+        }
+
+        public virtual void AdjustSizeToHeader( bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
+            if( pAdjustWidthOnly ) {
+                var tW = ( ImGui.CalcTextSize( Name ) + NodeInsidePadding * 2 ).X;
+                Style.SetSize( new( pChooseGreaterWidth ? ( tW > Style.GetSize().X ? tW : Style.GetSize().X ) : tW, Style.GetSize().Y ) );
+            }
+            else Style.SetSize( ImGui.CalcTextSize( Name ) + NodeInsidePadding * 2 );
+        }
+
+        protected virtual void DrawHandle( Vector2 pNodeOSP, float canvasScaling, ImDrawListPtr pDrawList, bool selected ) {
+            var handleSize = Style.GetHandleSizeScaled( canvasScaling );
+            pDrawList.AddRectFilled(
+                pNodeOSP,
+                pNodeOSP + handleSize,
+                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, selected ? 0.45f : 0.15f ) ) );
+
+            ImGui.TextColored( NodeUtils.Colors.NodeText, Name );
+        }
+
+        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Slot source, Slot target, bool highlighted = false, bool highlightedNegative = false ) {
+            var cursor = ImGui.GetCursorScreenPos();
+            var anchorPosition = sourcePos + ( targetPos - sourcePos ) * 0.5f;
+            var anchorSize = new Vector2( EdgeAnchorSize, EdgeAnchorSize );
+            var anchorHovered = false;
+
+            ImGui.SetCursorScreenPos( anchorPosition - anchorSize );
+            ImGui.InvisibleButton( $"anchor{Id}{target.Node.Id}{source.Index}{target.Index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
+
+            if( ImGui.IsItemActive() ) {
+                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, null ) );
+            }
+            else {
+                anchorHovered = ImGui.IsItemHovered();
+            }
+
+            var color = ( highlightedNegative && !highlighted ) ? NodeUtils.Colors.NodeEdgeHighlightNeg : NodeUtils.Colors.NodeFg;
+            ImGui.SetCursorScreenPos( cursor );
+
+            drawList.AddBezierCubic(
+                sourcePos,
+                new( anchorPosition.X, sourcePos.Y ),
+                new( anchorPosition.X, targetPos.Y ),
+                targetPos,
+                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, highlighted || highlightedNegative ? ( highlightedNegative ? 0.55f : 1 ) : 0.5f ) ),
+                ( highlighted || highlightedNegative ) ? EdgeThickness * 1.4f : EdgeThickness
+            );
+            drawList.AddCircleFilled( anchorPosition, EdgeAnchorSize * ( anchorHovered ? 0.6f : 0.4f ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, anchorHovered ? 0.5f * 1.25f : 0.5f ) ) );
+        }
+    }
+
+    public abstract class Node<S> : Node where S : Slot {
+        public readonly List<S> Inputs;
+
+        public readonly List<S> Outputs;
+
+        protected virtual Vector2 BodySize => new( 100, SlotSpacing * Math.Max( Inputs.Count, Outputs.Count ) + Style.GetHandleSize().Y );
+
+        public Node( string name ) : base( name ) {
             Name = name;
             Inputs = GetInputSlots();
             Outputs = GetOutputSlots();
@@ -45,31 +110,15 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             Style.SetSize( BodySize );
         }
 
-        public string GetText() => Name;
+        protected abstract List<S> GetInputSlots();
 
-        protected abstract List<Slot> GetInputSlots();
-
-        protected abstract List<Slot> GetOutputSlots();
+        protected abstract List<S> GetOutputSlots();
 
         public bool ChildOf( Node node ) => Inputs.Any( x => x.Connected.Node == node );
 
         protected virtual void Refresh() {
             SetHeader( Name );
             Style.SetSize( BodySize );
-        }
-
-        public virtual void SetHeader( string header, bool pAutoSizing = true, bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
-            Name = header;
-            Style.SetHandleTextSize( ImGui.CalcTextSize( Name ) );
-            if( pAutoSizing ) AdjustSizeToHeader( pAdjustWidthOnly, pChooseGreaterWidth );
-        }
-
-        public virtual void AdjustSizeToHeader( bool pAdjustWidthOnly = false, bool pChooseGreaterWidth = false ) {
-            if( pAdjustWidthOnly ) {
-                var tW = ( ImGui.CalcTextSize( Name ) + NodeInsidePadding * 2 ).X;
-                Style.SetSize( new( pChooseGreaterWidth ? ( tW > Style.GetSize().X ? tW : Style.GetSize().X ) : tW, Style.GetSize().Y ) );
-            }
-            else Style.SetSize( ImGui.CalcTextSize( Name ) + NodeInsidePadding * 2 );
         }
 
         public void Draw( Vector2 nodePos, float canvasScaling, bool selected, Slot connection, out Slot _connection ) {
@@ -126,46 +175,6 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             foreach( var slot in Outputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), selected, connection, out connection );
 
             _connection = connection;
-        }
-
-        protected virtual void DrawHandle( Vector2 pNodeOSP, float canvasScaling, ImDrawListPtr pDrawList, bool selected ) {
-            var handleSize = Style.GetHandleSizeScaled( canvasScaling );
-            pDrawList.AddRectFilled(
-                pNodeOSP,
-                pNodeOSP + handleSize,
-                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Style.ColorUnique, selected ? 0.45f : 0.15f ) ) );
-
-            ImGui.TextColored( NodeUtils.Colors.NodeText, Name );
-        }
-
-        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Slot source, Slot target, bool highlighted = false, bool highlightedNegative = false ) {
-            var cursor = ImGui.GetCursorScreenPos();
-            var anchorPosition = sourcePos + ( targetPos - sourcePos ) * 0.5f;
-            var anchorSize = new Vector2( EdgeAnchorSize, EdgeAnchorSize );
-            var anchorHovered = false;
-
-            ImGui.SetCursorScreenPos( anchorPosition - anchorSize );
-            ImGui.InvisibleButton( $"anchor{Id}{target.Node.Id}{source.Index}{target.Index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
-
-            if( ImGui.IsItemActive() ) {
-                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, null ) );
-            }
-            else {
-                anchorHovered = ImGui.IsItemHovered();
-            }
-
-            var color = ( highlightedNegative && !highlighted ) ? NodeUtils.Colors.NodeEdgeHighlightNeg : NodeUtils.Colors.NodeFg;
-            ImGui.SetCursorScreenPos( cursor );
-
-            drawList.AddBezierCubic(
-                sourcePos,
-                new( anchorPosition.X, sourcePos.Y ),
-                new( anchorPosition.X, targetPos.Y ),
-                targetPos,
-                ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, highlighted || highlightedNegative ? ( highlightedNegative ? 0.55f : 1 ) : 0.5f ) ),
-                ( highlighted || highlightedNegative ) ? EdgeThickness * 1.4f : EdgeThickness
-            );
-            drawList.AddCircleFilled( anchorPosition, EdgeAnchorSize * ( anchorHovered ? 0.6f : 0.4f ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, anchorHovered ? 0.5f * 1.25f : 0.5f ) ) );
         }
     }
 }

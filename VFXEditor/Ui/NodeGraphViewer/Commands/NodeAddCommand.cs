@@ -1,13 +1,14 @@
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.NodeGraphViewer.Canvas;
+using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {
-    public class NodeAddCommand<T> : ListAddCommand<T> where T : Node {
-        private readonly NodeCanvas<T> Canvas;
+    public class NodeAddCommand<T, S> : ListAddCommand<T> where T : Node<S> where S : Slot {
+        private readonly NodeCanvas<T, S> Canvas;
         private readonly Vector2 Position;
 
-        public NodeAddCommand( NodeCanvas<T> canvas, T node, Vector2 position ) : base( canvas.Nodes, node ) {
+        public NodeAddCommand( NodeCanvas<T, S> canvas, T node, Vector2 position ) : base( canvas.Nodes, node ) {
             Canvas = canvas;
             Position = position;
             // ==================

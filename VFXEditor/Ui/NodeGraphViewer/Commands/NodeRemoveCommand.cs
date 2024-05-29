@@ -6,12 +6,12 @@ using VfxEditor.Ui.NodeGraphViewer.Canvas;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {
-    public class NodeRemoveCommand<T> : ListRemoveCommand<T> where T : Node {
-        private readonly NodeCanvas<T> Canvas;
+    public class NodeRemoveCommand<T, S> : ListRemoveCommand<T> where T : Node<S> where S : Slot {
+        private readonly NodeCanvas<T, S> Canvas;
         private readonly Vector2 Position;
-        private readonly List<(Slot, Slot)> Slots;
+        private readonly List<(S, Slot)> Slots;
 
-        public NodeRemoveCommand( NodeCanvas<T> canvas, T node ) : base( canvas.Nodes, node ) {
+        public NodeRemoveCommand( NodeCanvas<T, S> canvas, T node ) : base( canvas.Nodes, node ) {
             Canvas = canvas;
             Position = Canvas.Map.GetNodeRelaPos( Item ).Value;
             Slots = Canvas.Nodes.SelectMany( node => node.Inputs.Where( slot => slot.Connected.Node == Item ).Select( slot => (slot, slot.Connected) ) ).ToList();

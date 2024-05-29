@@ -33,7 +33,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         public const float StepScale = 0.1f;
     }
 
-    public class NodeCanvas<T> where T : Node {
+    public class NodeCanvas<T, S> where T : Node<S> where S : Slot {
         public readonly NodeMap Map = new();
         public readonly OccupiedRegion<T> Region = new();
         public readonly List<T> Nodes = [];
@@ -65,7 +65,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         private void AddNode( T node, Vector2 position, bool record ) {
             if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
-            var command = new NodeAddCommand<T>( this, node, position );
+            var command = new NodeAddCommand<T, S>( this, node, position );
             if( record ) CommandManager.Add( command );
         }
 
@@ -110,7 +110,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public void RemoveNode( T node ) {
             if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
-            CommandManager.Add( new NodeRemoveCommand<T>( this, node ) );
+            CommandManager.Add( new NodeRemoveCommand<T, S>( this, node ) );
         }
 
         public bool FocusOnNode( Node node, Vector2? pExtraOfs = null ) => Map.FocusOnNode( node, ( pExtraOfs ?? new Vector2( -90, -90 ) ) * GetScaling() );
@@ -328,7 +328,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 var nodePosition = Map.GetNodeScreenPos( node, tCanvasOSP, Config.Scaling );
                 if( !nodePosition.HasValue ) continue;
 
-                foreach( var (slot, idx) in node.Inputs.WithIndex() ) {
+                foreach( var slot in node.Inputs ) {
                     if( slot.Connected == null ) continue;
                     var parentNode = slot.Connected.Node;
                     var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
