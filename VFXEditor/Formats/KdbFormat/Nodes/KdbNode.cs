@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer;
@@ -72,5 +74,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
             // TODO
         }
+
+        private KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
+
+        public KdbSlot FindInput( ConnectionType type ) => FindSlot( Inputs, type );
+
+        public KdbSlot FindOutput( ConnectionType type ) => FindSlot( Outputs, type );
     }
 }

@@ -1,6 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -83,6 +82,8 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             );
             drawList.AddCircleFilled( anchorPosition, EdgeAnchorSize * ( anchorHovered ? 0.6f : 0.4f ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( color, anchorHovered ? 0.5f * 1.25f : 0.5f ) ) );
         }
+
+        public abstract int GetOutputCount();
     }
 
     public abstract class Node<S> : Node where S : Slot {
@@ -90,15 +91,15 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         public readonly List<S> Outputs;
 
-        protected virtual Vector2 BodySize => new( 100, SlotSpacing * Math.Max( Inputs.Count, Outputs.Count ) + Style.GetHandleSize().Y );
+        protected virtual Vector2 BodySize => new( 200, SlotSpacing * ( Inputs.Count + Outputs.Count ) + Style.GetHandleSize().Y );
 
         public Node( string name ) : base( name ) {
             Name = name;
             Inputs = GetInputSlots();
             Outputs = GetOutputSlots();
 
-            foreach( var (slot, idx) in Inputs.WithIndex() ) slot.SetIndex( idx );
-            foreach( var (slot, idx) in Outputs.WithIndex() ) slot.SetIndex( idx );
+            foreach( var (slot, idx) in Inputs.WithIndex() ) slot.Setup( this, idx, true );
+            foreach( var (slot, idx) in Outputs.WithIndex() ) slot.Setup( this, idx, false );
 
             if( Plugin.IsImguiSafe ) SetHeader( Name );
             else {
@@ -176,5 +177,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             _connection = connection;
         }
+
+        public override int GetOutputCount() => Outputs.Count;
     }
 }

@@ -9,8 +9,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         public override void ReadBody( BinaryReader reader ) { }
 
-        protected override List<KdbSlot> GetInputSlots() => [];
+        protected override List<KdbSlot> GetInputSlots() => [
+            new( ConnectionType.Input ),
+        ];
 
-        protected override List<KdbSlot> GetOutputSlots() => [];
+        protected override List<KdbSlot> GetOutputSlots() => [
+            new( ConnectionType.Output ),
+        ];
     }
 }

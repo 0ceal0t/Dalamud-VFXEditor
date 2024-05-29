@@ -72,7 +72,7 @@ namespace VfxEditor.Formats.KdbFormat {
                     reader.BaseStream.Position = arrayPosition;
 
                     var nodes = new List<KdbNode>();
-                    for( var j = 0; j < count; j++ ) {
+                    for( var nodeIdx = 0; nodeIdx < count; nodeIdx++ ) {
                         reader.ReadUInt32(); // index
                         var nodeType = ( KdbNodeType )reader.ReadByte();
 
@@ -86,35 +86,33 @@ namespace VfxEditor.Formats.KdbFormat {
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
                             KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
                             KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
+                            KdbNodeType.TargetBendRoll => new KdbNodeTargetBendRoll( reader ),
+                            // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null
                         };
 
                         if( newNode == null ) Dalamud.Error( $"Unknown node type {nodeType}" );
                         else nodes.Add( newNode );
-
-                        /*
-                         * connection is 0x40
-                         * 
-                         * source hash: 4
-                         * source offset: 4
-                         * source idx: 4
-                         * --- idk: 4
-                         * --- idk: 4
-                         * target hash: 4
-                         * target offset: 4
-                         * target idx: 4
-                         * --- idk: 4
-                         * --- idk: 4
-                         * --- idk: 4
-                         * --- idk: 4
-                         */
                     }
 
                     foreach( var node in nodes.Where( x => x is not KdbConnection ) ) NodeGraph.AddToCanvas( node, false );
                     foreach( var node in nodes ) {
                         if( node is not KdbConnection connection ) continue;
-                        Dalamud.Log( $">>>> {nodes[connection.SourceIdx].Type} ({connection.SourceType}) -> {nodes[connection.TargetIdx].Type} ({connection.TargetType})" );
+
+                        var sourceNode = nodes[connection.SourceIdx];
+                        var targetNode = nodes[connection.TargetIdx];
+                        var sourceSlot = sourceNode.FindOutput( connection.SourceType );
+                        var targetSlot = targetNode.FindInput( connection.TargetType );
+                        if( sourceSlot == null ) {
+                            Dalamud.Error( $"Could not find output {connection.SourceType} for {sourceNode.Type}" );
+                            continue;
+                        }
+                        if( targetSlot == null ) {
+                            Dalamud.Error( $"Could not find input {connection.TargetType} for {targetNode.Type}" );
+                            continue;
+                        }
+                        targetSlot.ConnectTo( sourceSlot );
                     }
                 }
                 else if( type == ArrayType.B ) {

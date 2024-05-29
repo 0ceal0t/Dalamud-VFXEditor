@@ -82,32 +82,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         public IEnumerable<Node> GetChildren( T node ) => Nodes.Where( x => x.ChildOf( node ) );
 
-        public void AddNodeAdjacent( T node, T parent, bool record, Vector2? pOffset = null ) {
-            Vector2 relativePosition;
-            float? chosenY = null;
-            Node chosenNode = null;
-
-            foreach( var child in GetChildren( parent ) ) {
-                var childPos = Map.GetNodeRelaPos( child );
-                if( !childPos.HasValue ) continue;
-                if( !chosenY.HasValue || childPos.Value.Y > chosenY ) {
-                    chosenY = childPos.Value.Y;
-                    chosenNode = child ?? chosenNode;
-                }
-            }
-
-            // Calc final draw pos
-            if( chosenNode == null ) relativePosition = ( Map.GetNodeRelaPos( parent ) ?? Vector2.One ) + new Vector2( parent.Style.GetSize().X, 0 ) + ( pOffset ?? Vector2.One );
-            else {
-                relativePosition = new(
-                        ( ( Map.GetNodeRelaPos( parent ) ?? Vector2.One ) + new Vector2( parent.Style.GetSize().X, 0 ) + ( pOffset ?? Vector2.One ) ).X,
-                        ( Map.GetNodeRelaPos( chosenNode ) ?? Map.GetNodeRelaPos( parent ) ?? Vector2.One ).Y + chosenNode.Style.GetSize().Y + ( pOffset ?? Vector2.One ).Y
-                    );
-            }
-
-            AddNode( node, relativePosition, record );
-        }
-
         public void RemoveNode( T node ) {
             if( !Region.IsUpdatedOnce() ) Region.Update( Nodes, Map );
             CommandManager.Add( new NodeRemoveCommand<T, S>( this, node ) );

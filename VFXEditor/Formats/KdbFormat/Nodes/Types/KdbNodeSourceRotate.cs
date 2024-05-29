@@ -11,6 +11,19 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         protected override List<KdbSlot> GetInputSlots() => [];
 
-        protected override List<KdbSlot> GetOutputSlots() => [];
+        protected override List<KdbSlot> GetOutputSlots() => [
+            new( ConnectionType.RotateAngle ),
+            new( ConnectionType.BendingAngle ),
+            new( ConnectionType.RollBend ),
+            new( ConnectionType.Roll ),
+            new( ConnectionType.BendS ),
+            new( ConnectionType.BendT ),
+            new( ConnectionType.Expmap ),
+            new( ConnectionType.ExpmapX ),
+            new( ConnectionType.ExpmapY ),
+            new( ConnectionType.ExpmapZ ),
+            new( ConnectionType.RotateQuat ),
+            new( ConnectionType.BendingQuat ),
+        ];
     }
 }

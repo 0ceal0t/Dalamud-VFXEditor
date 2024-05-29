@@ -6,24 +6,23 @@ using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
     public class Slot {
-        public readonly Node Node;
-        public readonly bool IsInput;
-        public readonly string Name;
-        public Slot Connected { get; protected set; }
-        public int Index { get; protected set; }
-
         private const float SlotRadius = 5f;
 
-        public bool IsEmpty => Connected == null;
+        public readonly string Name;
 
-        public Slot( Node node, string name, bool isInput ) {
-            Node = node;
-            IsInput = isInput;
+        public Node Node { get; protected set; }
+        public Slot Connected { get; protected set; }
+        public int Index { get; protected set; }
+        public bool IsInput { get; protected set; }
+
+        public Slot( string name ) {
             Name = name;
         }
 
-        public void SetIndex( int index ) {
+        public void Setup( Node node, int index, bool isInput ) {
+            Node = node;
             Index = index;
+            IsInput = isInput;
         }
 
         public void ConnectTo( Slot slot ) {
@@ -64,6 +63,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
 
         public Vector2 GetSlotPosition( Vector2 nodePosition, float scaling ) => nodePosition + new Vector2(
             IsInput ? 0 : Node.Style.GetHandleSizeScaled( scaling ).X,
-            ( Node.SlotSpacing * Index + Node.Style.GetHandleSize().Y + ( Node.SlotSpacing / 2f ) ) * scaling );
+            ( Node.SlotSpacing * ( IsInput ? Index + Node.GetOutputCount() : Index ) + Node.Style.GetHandleSize().Y + ( Node.SlotSpacing / 2f ) ) * scaling );
     }
 }

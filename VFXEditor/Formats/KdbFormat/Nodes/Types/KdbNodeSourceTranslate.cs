@@ -11,6 +11,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         protected override List<KdbSlot> GetInputSlots() => [];
 
-        protected override List<KdbSlot> GetOutputSlots() => [];
+        protected override List<KdbSlot> GetOutputSlots() => [
+            new( ConnectionType.TranslateX ),
+            new( ConnectionType.TranslateY ),
+            new( ConnectionType.TranslateZ ),
+        ];
     }
 }

@@ -70,9 +70,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var idk8 = reader.ReadUInt32();
             var idk9 = reader.ReadUInt32();
 
-            Dalamud.Log( $"> {idk2} {idk4} {idk5} {idk6} {idk7} {idk8} {idk9}" );
-
-
+            // Dalamud.Log( $"> {idk2} {idk4} {idk5} {idk6} {idk7} {idk8} {idk9}" );
         }
 
         protected override List<KdbSlot> GetInputSlots() => [];
