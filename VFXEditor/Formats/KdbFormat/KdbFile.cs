@@ -114,6 +114,8 @@ namespace VfxEditor.Formats.KdbFormat {
                         }
                         targetSlot.ConnectTo( sourceSlot );
                     }
+
+                    NodeGraph.Canvas.Organize();
                 }
                 else if( type == ArrayType.B ) {
                     UnknownB1.Read( reader );

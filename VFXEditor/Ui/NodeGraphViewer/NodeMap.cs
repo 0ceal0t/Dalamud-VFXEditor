@@ -60,6 +60,10 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             Data[node] = relaPos;
         }
 
+        public void SetNodePosition( Node node, Vector2 pos ) {
+            Data[node] = pos;
+        }
+
         public bool RemoveNode( Node node ) {
             return Data.Remove( node );
         }

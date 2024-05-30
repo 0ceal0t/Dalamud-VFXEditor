@@ -87,6 +87,33 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             CommandManager.Add( new NodeRemoveCommand<T, S>( this, node ) );
         }
 
+        public void Organize() {
+            if( Nodes.Count == 0 ) return;
+
+            var stepCache = new Dictionary<Node, int>();
+            foreach( var node in Nodes ) GetStepsToRoot( node, stepCache );
+
+            var levels = stepCache.GroupBy( x => x.Value, y => y.Key ).ToDictionary( x => x.Key, x => x.ToList() );
+
+            var x = 0f;
+            foreach( var (level, nodes) in levels ) {
+                var y = 0f;
+                foreach( var node in nodes ) {
+                    Map.SetNodePosition( node, new( x, y ) );
+                    y += 100f + node.Style.GetSize().Y;
+                }
+                x += 100f + nodes[0].Style.GetSize().X;
+            }
+        }
+
+        private static int GetStepsToRoot( Node node, Dictionary<Node, int> cache ) {
+            if( cache.TryGetValue( node, out var _value ) ) return _value;
+
+            var parents = node.GetParents();
+            cache[node] = parents.Count == 0 ? 0 : parents.Select( x => GetStepsToRoot( x, cache ) ).Max() + 1;
+            return cache[node];
+        }
+
         public bool FocusOnNode( Node node, Vector2? pExtraOfs = null ) => Map.FocusOnNode( node, ( pExtraOfs ?? new Vector2( -90, -90 ) ) * GetScaling() );
 
         public void MoveCanvas( Vector2 pDelta ) => Map.AddBaseOffset( pDelta );

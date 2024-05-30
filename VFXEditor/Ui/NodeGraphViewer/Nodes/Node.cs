@@ -84,11 +84,11 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         public abstract int GetOutputCount();
+        public abstract List<Node> GetParents();
     }
 
     public abstract class Node<S> : Node where S : Slot {
         public readonly List<S> Inputs;
-
         public readonly List<S> Outputs;
 
         protected virtual Vector2 BodySize => new( 200, SlotSpacing * ( Inputs.Count + Outputs.Count ) + Style.GetHandleSize().Y );
@@ -112,10 +112,11 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         }
 
         protected abstract List<S> GetInputSlots();
-
         protected abstract List<S> GetOutputSlots();
-
         public bool ChildOf( Node node ) => Inputs.Any( x => x.Connected.Node == node );
+
+        public override List<Node> GetParents() => Inputs.Where( x => x.Connected != null ).Select( x => x.Connected.Node ).ToList();
+        public override int GetOutputCount() => Outputs.Count;
 
         protected virtual void Refresh() {
             SetHeader( Name );
@@ -177,7 +178,5 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             _connection = connection;
         }
-
-        public override int GetOutputCount() => Outputs.Count;
     }
 }
