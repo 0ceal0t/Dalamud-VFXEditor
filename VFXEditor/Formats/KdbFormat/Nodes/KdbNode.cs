@@ -75,7 +75,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             // TODO
         }
 
-        private KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
+        private static KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
 
         public KdbSlot FindInput( ConnectionType type ) => FindSlot( Inputs, type );
 

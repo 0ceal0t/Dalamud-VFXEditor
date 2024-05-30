@@ -3,9 +3,9 @@ using System.IO;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeEffectorEZParamLink : KdbNode {
-        public KdbNodeEffectorEZParamLink() : base( KdbNodeType.EffectorExpr ) { }
+        public KdbNodeEffectorEZParamLink() : base( KdbNodeType.EffectorEZParamLink ) { }
 
-        public KdbNodeEffectorEZParamLink( BinaryReader reader ) : base( KdbNodeType.EffectorExpr, reader ) { }
+        public KdbNodeEffectorEZParamLink( BinaryReader reader ) : base( KdbNodeType.EffectorEZParamLink, reader ) { }
 
         public override void ReadBody( BinaryReader reader ) { }
 

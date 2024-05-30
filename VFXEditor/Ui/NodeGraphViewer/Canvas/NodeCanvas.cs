@@ -37,8 +37,9 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
         public readonly NodeMap Map = new();
         public readonly OccupiedRegion<T> Region = new();
         public readonly List<T> Nodes = [];
-        public readonly HashSet<T> SelectedNodes = [];
         public readonly LinkedList<T> NodeOrder = new();
+
+        public readonly HashSet<T> SelectedNodes = [];
 
         private NodeCanvasConfig Config { get; set; } = new();
 
@@ -47,11 +48,10 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
 
         private Node SnappingNode = null;
         private Vector2? LastSnapDelta = null;
+        private Vector2? SelectAreaPosition = null;
 
         private FirstClickType FirstClickInDrag = FirstClickType.None;
         private bool IsFirstFrameAfterLmbDown = true;      // specifically for Draw()
-
-        private Vector2? SelectAreaPosition = null;
 
         private Slot PendingConnection;
 
@@ -328,22 +328,25 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 if( !nodePosition.HasValue ) continue;
 
                 foreach( var slot in node.Inputs ) {
-                    if( slot.Connected == null ) continue;
-                    var parentNode = slot.Connected.Node;
-                    var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
-                    if( !parentPosition.HasValue ) continue;
+                    var connections = slot.GetConnections();
+                    if( connections == null || connections.Count == 0 ) continue;
+                    foreach( var connection in connections ) {
+                        var parentNode = connection.Node;
+                        var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
+                        if( !parentPosition.HasValue ) continue;
 
-                    if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
+                        if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
 
-                    node.DrawEdge(
-                        drawList,
-                        slot.GetSlotPosition( nodePosition.Value, Config.Scaling ),
-                        slot.Connected.GetSlotPosition( parentPosition.Value, Config.Scaling ),
-                        slot,
-                        slot.Connected,
-                        SelectedNodes.Contains( parentNode ),
-                        SelectedNodes.Contains( node )
-                    );
+                        node.DrawEdge(
+                            drawList,
+                            slot.GetSlotPosition( nodePosition.Value, Config.Scaling ),
+                            connection.GetSlotPosition( parentPosition.Value, Config.Scaling ),
+                            slot,
+                            connection,
+                            SelectedNodes.Contains( parentNode ),
+                            SelectedNodes.Contains( node )
+                        );
+                    }
                 }
             }
 
@@ -429,8 +432,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     // Select using selectArea
                     if( tSelectScreenArea != null && !NodeBeingDragged && FirstClickInDrag != FirstClickType.Handle ) {
                         if( node.Style.CheckAreaIntersect( nodePosition.Value, Config.Scaling, tSelectScreenArea ) ) {
-                            if( SelectedNodes.Add( node ) && znode != null )
-                                tNodeToFocus.Push( znode );
+                            if( SelectedNodes.Add( node ) && znode != null ) tNodeToFocus.Push( znode );
                         }
                     }
                 }
@@ -468,8 +470,12 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
             {
                 SelectedNodes.Clear();
             }
-            foreach( var tId in tNodeToSelect ) SelectedNodes.Add( tId );
-            foreach( var tId in tNodeToDeselect ) SelectedNodes.Remove( tId );
+            foreach( var tId in tNodeToSelect ) {
+                SelectedNodes.Add( tId );
+            }
+            foreach( var tId in tNodeToDeselect ) {
+                SelectedNodes.Remove( tId );
+            }
 
             // Bring to focus (only get the top node)
             if( tNodeToFocus.Count != 0 ) {

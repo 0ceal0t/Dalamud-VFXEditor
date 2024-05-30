@@ -3,14 +3,14 @@ using System.IO;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeEffectorExpr : KdbNode {
-        public KdbNodeEffectorExpr() : base( KdbNodeType.EffectorEZParamLink ) { }
+        public KdbNodeEffectorExpr() : base( KdbNodeType.EffectorExpr ) { }
 
-        public KdbNodeEffectorExpr( BinaryReader reader ) : base( KdbNodeType.EffectorEZParamLink, reader ) { }
+        public KdbNodeEffectorExpr( BinaryReader reader ) : base( KdbNodeType.EffectorExpr, reader ) { }
 
         public override void ReadBody( BinaryReader reader ) { }
 
         protected override List<KdbSlot> GetInputSlots() => [
-            new( ConnectionType.Input ),
+            new( ConnectionType.Input, true ),
         ];
 
         protected override List<KdbSlot> GetOutputSlots() => [

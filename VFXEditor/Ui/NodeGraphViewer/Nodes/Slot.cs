@@ -1,5 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.Ui.NodeGraphViewer.Commands;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
@@ -9,14 +11,18 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
         private const float SlotRadius = 5f;
 
         public readonly string Name;
+        public readonly bool AcceptMultiple;
+
+        private Slot SingleConnection;
+        private readonly List<Slot> MultiConnections = [];
 
         public Node Node { get; protected set; }
-        public Slot Connected { get; protected set; }
         public int Index { get; protected set; }
         public bool IsInput { get; protected set; }
 
-        public Slot( string name ) {
+        public Slot( string name, bool acceptMultiple ) {
             Name = name;
+            AcceptMultiple = acceptMultiple;
         }
 
         public void Setup( Node node, int index, bool isInput ) {
@@ -25,27 +31,56 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             IsInput = isInput;
         }
 
-        public void ConnectTo( Slot slot ) {
-            Connected = slot;
+        public void Connect( Slot slot ) {
+            if( AcceptMultiple ) {
+                if( !MultiConnections.Contains( slot ) ) MultiConnections.Add( slot );
+                return;
+            }
+            SingleConnection = slot;
         }
 
-        public void Draw( ImDrawListPtr drawList, Vector2 position, float scaling, bool selected, Slot connection, out Slot _connection ) {
-            var slotActive = connection == this;
-            _connection = connection;
+        public void Unconnect( Slot slot ) {
+            if( AcceptMultiple ) MultiConnections.Remove( slot );
+            else if( SingleConnection == slot ) SingleConnection = null;
+        }
+
+        public void Unconnect( Node node ) {
+            if( AcceptMultiple ) MultiConnections.RemoveAll( x => x.Node == node );
+            else if( SingleConnection?.Node == node ) SingleConnection = null;
+        }
+
+        public List<Slot> GetConnections() => AcceptMultiple ? MultiConnections : ( SingleConnection == null ? [] : [SingleConnection] );
+
+        public void SetConnections( List<Slot> slots ) {
+            if( AcceptMultiple ) {
+                MultiConnections.Clear();
+                MultiConnections.AddRange( slots );
+                return;
+            }
+            SingleConnection = slots.Count == 0 ? null : slots[0];
+        }
+
+        public bool IsConnectedTo( Node node ) => GetConnections().Any( x => x.Node == node );
+
+        public bool IsUnconnected() => GetConnections().Count == 0;
+
+        public void Draw( ImDrawListPtr drawList, Vector2 position, float scaling, bool selected, Slot pending, out Slot _pending ) {
+            var slotActive = pending == this;
+            _pending = pending;
             using var _ = ImRaii.PushId( IsInput ? $"Input{Index}" : $"Output{Index}" );
 
             Vector2 size = new( SlotRadius, SlotRadius );
             var hovered = false;
             var cursor = ImGui.GetCursorScreenPos();
             ImGui.SetCursorScreenPos( position - ( size * 3f ) / 2f );
-            if( ImGui.InvisibleButton( $"##Button", size * 3f ) ) {
-                if( connection == null ) _connection = this;
+            if( ImGui.InvisibleButton( "##Button", size * 3f ) ) {
+                if( pending == null ) _pending = this;
                 else {
-                    if( connection.Node != Node && connection.IsInput != IsInput ) { // TODO: check cycle
-                        if( IsInput ) CommandManager.Add( new NodeSlotCommand( this, connection ) );
-                        else CommandManager.Add( new NodeSlotCommand( connection, this ) );
+                    if( pending.Node != Node && pending.IsInput != IsInput ) { // TODO: check cycle
+                        if( IsInput ) CommandManager.Add( new NodeSlotCommand( this, pending, true ) );
+                        else CommandManager.Add( new NodeSlotCommand( pending, this, true ) );
                     }
-                    _connection = null;
+                    _pending = null;
                 }
 
             }
@@ -57,7 +92,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             var textSize = ImGui.CalcTextSize( Name );
             drawList.AddText(
                 position + new Vector2( IsInput ? 10f : ( -10f - textSize.X ), -textSize.Y / 2f ),
-                Connected == null && IsInput ? ImGui.GetColorU32( ImGuiCol.TextDisabled ) : ImGui.GetColorU32( ImGuiCol.Text ), Name );
+                IsUnconnected() && IsInput ? ImGui.GetColorU32( ImGuiCol.TextDisabled ) : ImGui.GetColorU32( ImGuiCol.Text ), Name );
             NodeUtils.PopFontScale();
 
             drawList.AddCircleFilled(

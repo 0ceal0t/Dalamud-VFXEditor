@@ -20,14 +20,17 @@ namespace VfxEditor.Ui.NodeGraphViewer.Utils {
     }
 
     public class NodeUtils {
-        public static float DefaultFontScale { get; } = 1;
+        private static readonly Stack<float> FontScaleStack = new();
 
         public static void PushFontScale( float scale ) {
-            ImGui.SetWindowFontScale( ImGui.GetFont().Scale * scale );
+            var newScale = ImGui.GetFont().Scale * scale;
+            FontScaleStack.Push( newScale );
+            ImGui.SetWindowFontScale( newScale );
         }
 
         public static void PopFontScale() {
-            ImGui.SetWindowFontScale( DefaultFontScale );
+            FontScaleStack.Pop();
+            ImGui.SetWindowFontScale( FontScaleStack.Count == 0 ? 1f : FontScaleStack.Peek() );
         }
 
         // https://stackoverflow.com/questions/5953552/how-to-get-the-closest-number-from-a-listint-with-linq

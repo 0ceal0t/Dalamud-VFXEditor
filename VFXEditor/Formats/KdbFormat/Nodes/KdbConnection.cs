@@ -39,6 +39,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
     }
 
     public class KdbConnection : KdbNode { // placeholder for edges and stuff
+        // https://github.com/Irastris/ValkyrieUproject/blob/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public/SQEX_KineDriverConnectEquals.h
+
         public int SourceIdx { get; private set; }
         public int TargetIdx { get; private set; }
 
@@ -63,6 +65,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             TargetType = ( ConnectionType )reader.ReadUInt32();
 
             var idk4 = reader.ReadUInt32();
+
             var idk5 = reader.ReadUInt32();
             var idk6 = reader.ReadUInt32();
 
@@ -70,7 +73,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var idk8 = reader.ReadUInt32();
             var idk9 = reader.ReadUInt32();
 
-            Dalamud.Log( $"> {SourceType} {TargetType} || {idk2} {idk4} {idk5} {idk6} || {idk7} {idk8} {idk9}" );
+            Dalamud.Log( $"> {SourceIdx} -> {TargetIdx} || {SourceType} {TargetType} || {idk2} {idk4} {idk5} {idk6} || {idk7} {idk8} {idk9}" );
         }
 
         protected override List<KdbSlot> GetInputSlots() => [];

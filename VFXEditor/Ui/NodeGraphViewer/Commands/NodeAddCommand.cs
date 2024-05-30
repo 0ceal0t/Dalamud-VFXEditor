@@ -21,6 +21,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Commands {
             base.Undo();
             Canvas.NodeOrder.Remove( Item );
             Canvas.Map.RemoveNode( Item );
+            Canvas.SelectedNodes.Clear();
             Canvas.Region.Update( Canvas.Nodes, Canvas.Map );
         }
 

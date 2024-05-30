@@ -63,7 +63,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.InvisibleButton( $"anchor{Id}{target.Node.Id}{source.Index}{target.Index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
 
             if( ImGui.IsItemActive() ) {
-                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, null ) );
+                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, target, false ) );
             }
             else {
                 anchorHovered = ImGui.IsItemHovered();
@@ -113,9 +113,9 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         protected abstract List<S> GetInputSlots();
         protected abstract List<S> GetOutputSlots();
-        public bool ChildOf( Node node ) => Inputs.Any( x => x.Connected.Node == node );
+        public bool ChildOf( Node node ) => Inputs.Any( x => x.IsConnectedTo( node ) );
 
-        public override List<Node> GetParents() => Inputs.Where( x => x.Connected != null ).Select( x => x.Connected.Node ).ToList();
+        public override List<Node> GetParents() => Inputs.SelectMany( x => x.GetConnections().Select( x => x.Node ) ).ToList();
         public override int GetOutputCount() => Outputs.Count;
 
         protected virtual void Refresh() {

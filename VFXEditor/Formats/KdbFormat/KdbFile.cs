@@ -53,7 +53,6 @@ namespace VfxEditor.Formats.KdbFormat {
             for( var i = 0; i < 7; i++ ) reader.ReadUInt32(); // reserved
 
             reader.BaseStream.Position = dataArrayPosition;
-
             var dataArrayPositions = new List<(ArrayType, long)>();
             for( var i = 0; i < dataArrayCount; i++ ) {
                 var type = ( ArrayType )reader.ReadUInt16();
@@ -68,7 +67,7 @@ namespace VfxEditor.Formats.KdbFormat {
                 var arrayPosition = reader.BaseStream.Position + reader.ReadUInt32(); // offset is 0 if count = 0
 
                 if( type == ArrayType.Operations ) {
-                    UnknownOperation.Read( reader ); // TODO
+                    UnknownOperation.Read( reader );
                     reader.BaseStream.Position = arrayPosition;
 
                     var nodes = new List<KdbNode>();
@@ -112,7 +111,10 @@ namespace VfxEditor.Formats.KdbFormat {
                             Dalamud.Error( $"Could not find input {connection.TargetType} for {targetNode.Type}" );
                             continue;
                         }
-                        targetSlot.ConnectTo( sourceSlot );
+                        if( !targetSlot.AcceptMultiple && targetSlot.GetConnections().Count > 0 ) {
+                            Dalamud.Error( $"{connection.TargetType} for {targetNode.Type} should accept multiple inputs" );
+                        }
+                        targetSlot.Connect( sourceSlot );
                     }
 
                     NodeGraph.Canvas.Organize();
