@@ -29,7 +29,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             Connected = slot;
         }
 
-        public void Draw( ImDrawListPtr drawList, Vector2 position, bool selected, Slot connection, out Slot _connection ) {
+        public void Draw( ImDrawListPtr drawList, Vector2 position, float scaling, bool selected, Slot connection, out Slot _connection ) {
             var slotActive = connection == this;
             _connection = connection;
             using var _ = ImRaii.PushId( IsInput ? $"Input{Index}" : $"Output{Index}" );
@@ -52,6 +52,14 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             else if( ImGui.IsItemHovered() ) hovered = true;
 
             ImGui.SetCursorScreenPos( cursor );
+
+            NodeUtils.PushFontScale( scaling );
+            var textSize = ImGui.CalcTextSize( Name );
+            drawList.AddText(
+                position + new Vector2( IsInput ? 10f : ( -10f - textSize.X ), -textSize.Y / 2f ),
+                Connected == null && IsInput ? ImGui.GetColorU32( ImGuiCol.TextDisabled ) : ImGui.GetColorU32( ImGuiCol.Text ), Name );
+            NodeUtils.PopFontScale();
+
             drawList.AddCircleFilled(
                 position, size.X * ( ( hovered || slotActive ) ? 2f : 1 ),
                 ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency(

@@ -204,8 +204,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                 SnappingNode = null;
             }
 
-            if( tIsCursorWithin ) tCDFRes |= CanvasDrawFlags.NoCanvasZooming;
-
             NodeInputProcessResult tRes = new() {
                 IsNodeHandleClicked = tIsNodeHandleClicked,
                 ReadClicks = pReadClicks,
@@ -428,11 +426,6 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                         if( t.IsReqqingClearSelect ) tNodesReqqingClearSelect.Add( node );
                     }
 
-                    if( node.Style.CheckPosWithin( nodePosition.Value, GetScaling(), pInputPayload.MousePos )
-                        && pInputPayload.MouseWheelValue != 0
-                        && SelectedNodes.Contains( node ) ) {
-                        pCanvasDrawFlag |= CanvasDrawFlags.NoCanvasZooming;
-                    }
                     // Select using selectArea
                     if( tSelectScreenArea != null && !NodeBeingDragged && FirstClickInDrag != FirstClickType.Handle ) {
                         if( node.Style.CheckAreaIntersect( nodePosition.Value, Config.Scaling, tSelectScreenArea ) ) {

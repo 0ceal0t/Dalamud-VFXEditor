@@ -13,7 +13,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         public static readonly Vector2 MinHandleSize = new( 50, 20 );
         public const float EdgeThickness = 2f;
         public const float EdgeAnchorSize = 7.5f;
-        public const float SlotSpacing = 15f;
+        public const float SlotSpacing = 25f;
 
         private static int NODE_ID = 0;
         public readonly int Id = NODE_ID++;
@@ -173,8 +173,8 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
             ImGui.EndChild();
 
-            foreach( var slot in Inputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), selected, connection, out connection );
-            foreach( var slot in Outputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), selected, connection, out connection );
+            foreach( var slot in Inputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), canvasScaling, selected, connection, out connection );
+            foreach( var slot in Outputs ) slot.Draw( drawList, slot.GetSlotPosition( nodePos, canvasScaling ), canvasScaling, selected, connection, out connection );
 
             _connection = connection;
         }
