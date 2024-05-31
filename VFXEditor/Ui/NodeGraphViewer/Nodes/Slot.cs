@@ -7,7 +7,7 @@ using VfxEditor.Ui.NodeGraphViewer.Commands;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
-    public class Slot {
+    public abstract class Slot {
         private const float SlotRadius = 5f;
 
         public readonly string Name;
@@ -103,6 +103,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
             drawList.AddCircleFilled( position, ( size.X * 0.7f ) * ( ( hovered || slotActive ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( Node.Style.ColorBg ) );
             drawList.AddCircleFilled( position, ( size.X * 0.5f ) * ( ( hovered || slotActive ) ? 2.5f : 1 ), ImGui.ColorConvertFloat4ToU32( NodeUtils.AdjustTransparency( Node.Style.ColorUnique, ( selected || slotActive ) ? 0.55f : 0.25f ) ) );
         }
+
+        public abstract void DrawPopup( Slot target );
 
         public Vector2 GetSlotPosition( Vector2 nodePosition, float scaling ) => nodePosition + new Vector2(
             IsInput ? 0 : Node.Style.GetHandleSizeScaled( scaling ).X,

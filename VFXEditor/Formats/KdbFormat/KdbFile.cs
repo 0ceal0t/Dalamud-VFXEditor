@@ -117,7 +117,7 @@ namespace VfxEditor.Formats.KdbFormat {
                         if( !targetSlot.AcceptMultiple && targetSlot.GetConnections().Count > 0 ) {
                             Dalamud.Error( $"{connection.TargetType} for {targetNode.Type} should accept multiple inputs" );
                         }
-                        targetSlot.Connect( sourceSlot );
+                        targetSlot.Connect( sourceSlot, connection.Coeff, connection.Unknown );
                     }
 
                     NodeGraph.Canvas.Organize();

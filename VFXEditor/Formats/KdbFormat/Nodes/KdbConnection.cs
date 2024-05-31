@@ -44,6 +44,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public int SourceIdx { get; private set; }
         public int TargetIdx { get; private set; }
 
+        public double Coeff { get; private set; }
+        public uint Unknown { get; private set; }
+
         public ConnectionType SourceType { get; private set; }
         public ConnectionType TargetType { get; private set; }
 
@@ -69,12 +72,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             reader.ReadUInt32(); // 0
             reader.ReadUInt32(); // 0
 
-            var idk7 = reader.ReadDouble(); // coeff
-            var idk8 = reader.ReadUInt32(); // 0, 1, 2 ????
+            Coeff = reader.ReadDouble();
+            Unknown = reader.ReadUInt32();
 
             reader.ReadUInt32(); // 0
-
-            Dalamud.Log( $"> {SourceIdx} -> {TargetIdx} || {SourceType} {TargetType} || {idk7} {idk8}" );
         }
 
         protected override List<KdbSlot> GetInputSlots() => [];

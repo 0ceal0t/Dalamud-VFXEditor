@@ -53,7 +53,16 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.TextColored( NodeUtils.Colors.NodeText, Name );
         }
 
-        public void DrawEdge( ImDrawListPtr drawList, Vector2 sourcePos, Vector2 targetPos, Slot source, Slot target, bool highlighted = false, bool highlightedNegative = false ) {
+        public void DrawEdge(
+            ImDrawListPtr drawList,
+            Vector2 sourcePos,
+            Vector2 targetPos,
+            Slot source,
+            Slot target,
+            bool highlighted,
+            bool highlightedNegative,
+            ref (Slot, Slot) slotPopup
+            ) {
             var cursor = ImGui.GetCursorScreenPos();
             var anchorPosition = sourcePos + ( targetPos - sourcePos ) * 0.5f;
             var anchorSize = new Vector2( EdgeAnchorSize, EdgeAnchorSize );
@@ -63,7 +72,11 @@ namespace VfxEditor.Ui.NodeGraphViewer {
             ImGui.InvisibleButton( $"anchor{Id}{target.Node.Id}{source.Index}{target.Index}", anchorSize * 3f, ImGuiButtonFlags.MouseButtonLeft | ImGuiButtonFlags.MouseButtonRight | ImGuiButtonFlags.MouseButtonMiddle );
 
             if( ImGui.IsItemActive() ) {
-                if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, target, false ) );
+                if( ImGui.GetIO().MouseClicked[0] == true ) {
+                    slotPopup = (source, target);
+                    ImGui.OpenPopup( "SlotPopup" );
+                }
+                else if( ImGui.GetIO().MouseClicked[1] == true ) CommandManager.Add( new NodeSlotCommand( source, target, false ) ); // remove with right-click
             }
             else {
                 anchorHovered = ImGui.IsItemHovered();
