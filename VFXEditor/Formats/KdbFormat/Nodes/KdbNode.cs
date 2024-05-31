@@ -1,3 +1,4 @@
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,6 +68,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public abstract void ReadBody( BinaryReader reader );
 
         public void Draw() {
+            ImGui.SameLine();
+            ImGui.TextDisabled( $"[ID]: {Id}" );
+
             NameHash.Draw();
             Unknown1.Draw();
             Unknown2.Draw();

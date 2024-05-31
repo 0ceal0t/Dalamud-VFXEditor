@@ -86,6 +86,9 @@ namespace VfxEditor.Formats.KdbFormat {
                             KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
                             KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             KdbNodeType.TargetBendRoll => new KdbNodeTargetBendRoll( reader ),
+                            KdbNodeType.TargetOrientationConstraint => new KdbNodeTargetOrientationConstraint( reader ),
+                            KdbNodeType.TargetPosContraint => new KdbTargetPosConstraint( reader ),
+                            KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null

@@ -57,23 +57,24 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             SourceIdx = reader.ReadInt32();
             SourceType = ( ConnectionType )reader.ReadUInt32();
 
-            var idk2 = reader.ReadUInt32();
+            reader.ReadUInt32(); // 0
 
             reader.ReadUInt32(); // hash
             reader.ReadUInt32(); // offset
             TargetIdx = reader.ReadInt32();
             TargetType = ( ConnectionType )reader.ReadUInt32();
 
-            var idk4 = reader.ReadUInt32();
+            reader.ReadUInt32(); // index of connection to input, if there are multiple
 
-            var idk5 = reader.ReadUInt32();
-            var idk6 = reader.ReadUInt32();
+            reader.ReadUInt32(); // 0
+            reader.ReadUInt32(); // 0
 
-            var idk7 = reader.ReadDouble();
-            var idk8 = reader.ReadUInt32();
-            var idk9 = reader.ReadUInt32();
+            var idk7 = reader.ReadDouble(); // coeff
+            var idk8 = reader.ReadUInt32(); // 0, 1, 2 ????
 
-            Dalamud.Log( $"> {SourceIdx} -> {TargetIdx} || {SourceType} {TargetType} || {idk2} {idk4} {idk5} {idk6} || {idk7} {idk8} {idk9}" );
+            reader.ReadUInt32(); // 0
+
+            Dalamud.Log( $"> {SourceIdx} -> {TargetIdx} || {SourceType} {TargetType} || {idk7} {idk8}" );
         }
 
         protected override List<KdbSlot> GetInputSlots() => [];
