@@ -113,6 +113,7 @@
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
         <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
+        <PackageReference Include="Penumbra.Api" Version="5.0.0" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0031" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />

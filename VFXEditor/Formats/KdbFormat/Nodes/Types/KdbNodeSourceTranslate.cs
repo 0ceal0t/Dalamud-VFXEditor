@@ -7,7 +7,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         public KdbNodeSourceTranslate( BinaryReader reader ) : base( KdbNodeType.SourceTranslate, reader ) { }
 
-        public override void ReadBody( BinaryReader reader ) { }
+        public override void ReadBody( BinaryReader reader ) {
+
+        }
 
         protected override List<KdbSlot> GetInputSlots() => [];
 

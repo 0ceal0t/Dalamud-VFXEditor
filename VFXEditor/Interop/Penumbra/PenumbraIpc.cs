@@ -1,5 +1,6 @@
-using Dalamud.Plugin.Ipc;
 using Newtonsoft.Json;
+using Penumbra.Api.Helpers;
+using Penumbra.Api.IpcSubscribers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,37 +9,32 @@ using System.Linq;
 using System.Text;
 
 namespace VfxEditor.Interop.Penumbra {
-    public class PenumbraIpc : IDisposable {
+    public class PenumbraIpc {
         public bool PenumbraEnabled { get; private set; }
 
-        private readonly ICallGateSubscriber<(int Breaking, int Features)> ApiVersionsSubscriber;
-        private readonly ICallGateSubscriber<string> GetModDirectorySubscriber;
-        private readonly ICallGateSubscriber<IList<(string, string)>> GetModsSubscriber;
-        private readonly ICallGateSubscriber<string, string> ResolveDefaultPathSubscriber;
+        private readonly ApiVersion ApiVersionsSubscriber;
+        private readonly GetModDirectory GetModDirectorySubscriber;
+        private readonly GetModList GetModsSubscriber;
+        private readonly ResolveDefaultPath ResolveDefaultPathSubscriber;
+        private readonly GetPlayerMetaManipulations GetPlayerMetaManipulationsSubscriber;
 
-        private readonly ICallGateSubscriber<string> GetPlayerMetaManipulationsSubscriber;
-
-        private readonly ICallGateSubscriber<object> InitializedSubscriber;
-        private readonly ICallGateSubscriber<object> DisposedSubscriber;
+        private readonly EventSubscriber InitializedSubscriber;
+        private readonly EventSubscriber DisposedSubscriber;
 
         public PenumbraIpc() {
-            ApiVersionsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<(int, int)>( "Penumbra.ApiVersions" );
-            InitializedSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Initialized" );
-            DisposedSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<object>( "Penumbra.Disposed" );
+            ApiVersionsSubscriber = new( Dalamud.PluginInterface );
+            GetModDirectorySubscriber = new( Dalamud.PluginInterface );
+            GetModsSubscriber = new( Dalamud.PluginInterface );
+            GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
+            ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
 
-            GetModDirectorySubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string>( "Penumbra.GetModDirectory" );
-            GetModsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<IList<(string, string)>>( "Penumbra.GetMods" );
+            InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
+            DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
 
-            GetPlayerMetaManipulationsSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string>( "Penumbra.GetPlayerMetaManipulations" );
-
-            ResolveDefaultPathSubscriber = Dalamud.PluginInterface.GetIpcSubscriber<string, string>( "Penumbra.ResolveDefaultPath" );
-
-            InitializedSubscriber.Subscribe( EnablePenumbra );
-            DisposedSubscriber.Subscribe( DisablePenumbra );
 
             if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
             try {
-                ApiVersionsSubscriber.InvokeFunc();
+                ApiVersionsSubscriber.Invoke();
             }
             catch( Exception ) { return; }
 
@@ -48,7 +44,7 @@ namespace VfxEditor.Interop.Penumbra {
         public string ResolveDefaultPath( string path ) {
             if( !PenumbraEnabled ) return "";
             try {
-                return ResolveDefaultPathSubscriber.InvokeFunc( path );
+                return ResolveDefaultPathSubscriber.Invoke( path );
             }
             catch( Exception ) { return ""; }
         }
@@ -56,7 +52,7 @@ namespace VfxEditor.Interop.Penumbra {
         public List<string> GetMods() {
             if( !PenumbraEnabled ) return [];
             try {
-                return GetModsSubscriber.InvokeFunc().Select( x => x.Item1 ).ToList();
+                return GetModsSubscriber.Invoke().Select( x => x.Key ).ToList();
             }
             catch( Exception ) { return []; }
         }
@@ -64,7 +60,7 @@ namespace VfxEditor.Interop.Penumbra {
         public string GetModDirectory() {
             if( !PenumbraEnabled ) return "";
             try {
-                return GetModDirectorySubscriber.InvokeFunc();
+                return GetModDirectorySubscriber.Invoke();
 
             }
             catch( Exception ) { return ""; }
@@ -73,7 +69,7 @@ namespace VfxEditor.Interop.Penumbra {
         public MetaManipulation[] GetPlayerMetaManipulations() {
             if( !PenumbraEnabled ) return [];
             try {
-                FromCompressedBase64<MetaManipulation[]>( GetPlayerMetaManipulationsSubscriber.InvokeFunc(), out var data );
+                FromCompressedBase64<MetaManipulation[]>( GetPlayerMetaManipulationsSubscriber.Invoke(), out var data );
                 return data ?? [];
             }
             catch( Exception ) { return []; }
@@ -100,8 +96,8 @@ namespace VfxEditor.Interop.Penumbra {
         }
 
         public void Dispose() {
-            InitializedSubscriber.Unsubscribe( EnablePenumbra );
-            DisposedSubscriber.Unsubscribe( DisablePenumbra );
+            InitializedSubscriber.Dispose();
+            DisposedSubscriber.Dispose();
         }
 
         // https://github.com/Ottermandias/OtterGui/blob/4673e93f5165108a7f5b91236406d527f16384a5/Functions.cs#L154

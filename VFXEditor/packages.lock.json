@@ -103,6 +103,12 @@
           "NAudio.Core": "2.2.1"
         }
       },
+      "Penumbra.Api": {
+        "type": "Direct",
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "uuQqMCoeLvItTtqU5KJfPnd4vpKAGkNCmLg4ad2EAcGc1iQis/dn5WjhfT2OPTCldou/c1ZQPm4FyL8w7EvmiQ=="
+      },
       "SharpDX.D3DCompiler": {
         "type": "Direct",
         "requested": "[4.2.0, )",

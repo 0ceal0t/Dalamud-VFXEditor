@@ -61,6 +61,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
+            Dalamud.Log( $">>> {type} {reader.BaseStream.Position:X4}" );
             ReadBody( reader );
             reader.BaseStream.Position = savePosition;
         }
