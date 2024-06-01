@@ -7,13 +7,15 @@ namespace VfxEditor.Formats.KdbFormat {
         public override string Id => "Kdb";
         public override string Extension => "kdb";
 
+        private string SklbTemp => WriteLocation.Replace( ".kdb", "_temp.sklb" );
+
         public KdbDocument( KdbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
         public KdbDocument( KdbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
             LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
         }
 
-        protected override KdbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
+        protected override KdbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, SklbTemp, verify );
 
         public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath ) => new() {
             Name = Name,

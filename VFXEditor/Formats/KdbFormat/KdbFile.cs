@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,8 @@ using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Formats.KdbFormat.Nodes.Types;
+using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
@@ -21,7 +24,12 @@ namespace VfxEditor.Formats.KdbFormat {
         F, // size = 0x08, actually has values
     }
 
-    public class KdbFile : FileManagerFile {
+    public unsafe class KdbFile : FileManagerFile {
+        public readonly string SklbTempPath;
+        public HavokData Bones;
+        public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
+        private readonly SkeletonSelector Selector;
+
         private readonly uint MajorVersion;
         private readonly uint MinorVersion;
         private readonly uint PatchVersion;
@@ -35,7 +43,12 @@ namespace VfxEditor.Formats.KdbFormat {
 
         public readonly KdbNodeGraphViewer NodeGraph = new();
 
-        public KdbFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
+        public KdbFile( BinaryReader reader, string sourcePath, string sklbTemp, bool verify ) : base() {
+            SklbTempPath = sklbTemp;
+            Selector = new( GetSklbPath( sourcePath ), UpdateSkeleton );
+
+            // ==========================
+
             MajorVersion = reader.ReadUInt32();
             MinorVersion = reader.ReadUInt32();
             PatchVersion = reader.ReadUInt32();
@@ -132,6 +145,10 @@ namespace VfxEditor.Formats.KdbFormat {
             }
         }
 
+        public void UpdateSkeleton( SimpleSklb sklbFile ) {
+
+        }
+
         public override void Write( BinaryWriter writer ) {
 
         }
@@ -145,6 +162,8 @@ namespace VfxEditor.Formats.KdbFormat {
             UnknownB1.Draw();
             UnknownB2.Draw();
 
+            ImGui.Separator();
+            Selector.Draw();
             ImGui.Separator();
 
             using( var graphChild = ImRaii.Child( "GraphChild", new( -1, ImGui.GetContentRegionAvail().Y / 2f ) ) ) {
@@ -161,6 +180,38 @@ namespace VfxEditor.Formats.KdbFormat {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) NodeGraph.Canvas.RemoveNode( node );
             }
             node.Draw();
+        }
+
+        private static string GetSklbPath( string sourcePath ) {
+            // chara/human/c0101/skeleton/met/m0005/skl_c0101m0005.sklb
+            // chara/human/c0101/skeleton/top/t6188/skl_c0101t6188.sklb
+            // chara/monster/m0011/skeleton/base/b0001/skl_m0011b0001.sklb
+            // chara/demihuman/d1002/skeleton/base/b0001/skl_d1002b0001.sklb
+            // chara/human/c0401/skeleton/base/b0001/skl_c0401b0001.sklb
+            // chara/human/c0401/skeleton/hair/h0004/skl_c0401h0004.sklb
+            // chara/human/c0401/skeleton/face/f0202/skl_c0401f0202.sklb
+
+            var combined = sourcePath.Split( "_" )[^1].Split( "." )[0]; // .../kdi_c1701f0002.kdb 0> c1701f0002
+            var part1 = combined[..5]; // c1701
+            var part2 = combined.Substring( 5, 5 ); // f0002
+            var type1 = part1[0]; // c
+            var type2 = part2[0]; // f
+
+            var string1 = type1 switch {
+                'd' => "demihuman",
+                'm' => "monster",
+                _ => "human"
+            };
+
+            var string2 = type2 switch {
+                'f' => "face",
+                'h' => "hair",
+                't' => "top",
+                'm' => "met",
+                _ => "base'"
+            };
+
+            return $"chara/{string1}/{part1}/skeleton/{string2}/{part2}/skl_{combined}.sklb";
         }
     }
 }
