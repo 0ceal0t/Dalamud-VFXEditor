@@ -9,6 +9,9 @@ namespace VfxEditor.Parsing.Int {
         private DateTime LastEditTime = DateTime.Now;
         private (string, uint) StateBeforeEdit = ("", 0);
 
+        public string Data => Value.Item1;
+        public uint Hash => Value.Item2;
+
         public ParsedFnvHash( string name ) : base( name ) { }
 
         public ParsedFnvHash( string name, (string, uint) value ) : base( name, value ) { }
@@ -25,6 +28,15 @@ namespace VfxEditor.Parsing.Int {
         public override void Read( BinaryReader reader, int size ) => Read( reader );
 
         public override void Write( BinaryWriter writer ) => writer.Write( Value.Item2 );
+
+        public bool Guess( string guess ) {
+            if( !string.IsNullOrEmpty( Data ) ) return false; // already assigned
+            if( FnvUtils.Encode( guess ) == Hash ) {
+                Value = (guess, Hash);
+                return true;
+            }
+            return false;
+        }
 
         protected override void DrawBody() {
             var prevValue = Value;

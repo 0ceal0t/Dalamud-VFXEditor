@@ -1,6 +1,5 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.Havok;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
@@ -25,10 +24,9 @@ namespace VfxEditor.Formats.KdbFormat {
     }
 
     public unsafe class KdbFile : FileManagerFile {
-        public readonly string SklbTempPath;
-        public HavokData Bones;
-        public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
+        public static string SklbTempPath => Path.Combine( Plugin.RootLocation, "Files", "kb_havok.hkx" );
         private readonly SkeletonSelector Selector;
+        public readonly List<string> BoneList = [];
 
         private readonly uint MajorVersion;
         private readonly uint MinorVersion;
@@ -43,8 +41,7 @@ namespace VfxEditor.Formats.KdbFormat {
 
         public readonly KdbNodeGraphViewer NodeGraph = new();
 
-        public KdbFile( BinaryReader reader, string sourcePath, string sklbTemp, bool verify ) : base() {
-            SklbTempPath = sklbTemp;
+        public KdbFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Selector = new( GetSklbPath( sourcePath ), UpdateSkeleton );
 
             // ==========================
@@ -145,8 +142,14 @@ namespace VfxEditor.Formats.KdbFormat {
             }
         }
 
-        public void UpdateSkeleton( SimpleSklb sklbFile ) {
-
+        public unsafe void UpdateSkeleton( SimpleSklb sklbFile ) {
+            sklbFile.SaveHavokData( SklbTempPath );
+            var bones = new HavokBones( SklbTempPath, true );
+            BoneList.Clear();
+            var skeleton = bones.AnimationContainer->Skeletons[0].ptr;
+            for( var i = 0; i < skeleton->Bones.Length; i++ ) BoneList.Add( skeleton->Bones[i].Name.String );
+            foreach( var node in NodeGraph.Canvas.Nodes ) node.UpdateBones( BoneList );
+            bones.RemoveReference();
         }
 
         public override void Write( BinaryWriter writer ) {

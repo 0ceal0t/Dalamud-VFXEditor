@@ -85,5 +85,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public KdbSlot FindInput( ConnectionType type ) => FindSlot( Inputs, type );
 
         public KdbSlot FindOutput( ConnectionType type ) => FindSlot( Outputs, type );
+
+        public virtual void UpdateBones( List<string> boneList ) { }
     }
 }
