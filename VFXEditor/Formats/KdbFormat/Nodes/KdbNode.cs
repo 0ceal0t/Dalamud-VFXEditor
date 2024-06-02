@@ -35,25 +35,24 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
     }
 
     public abstract class KdbNode : Node<KdbSlot> { // TODO: body stuff
-        public readonly KdbNodeType Type;
+        public abstract KdbNodeType Type { get; }
         public readonly ParsedByte Unknown1 = new( "Unknown 1" );
         public readonly ParsedUInt Unknown2 = new( "Unknown 2" );
         public readonly ParsedUInt Unknown3 = new( "Unknown 3" );
         public readonly ParsedFnvHash NameHash = new( "Name" );
 
-        public KdbNode( KdbNodeType type ) : base( $"{type}" ) { // TODO
-            Type = type;
+        public KdbNode() : base() { // TODO
+            Name = $"{Type}";
+            InitName();
             Style.ColorUnique = NodeUtils.Colors.NormalBar_Grey; // TODO
         }
 
-        public KdbNode( KdbNodeType type, BinaryReader reader ) : this( type ) {
+        protected void ReaderHeader( BinaryReader reader ) {
             reader.ReadByte(); // padding
             Unknown1.Read( reader );
             reader.ReadByte(); // padding
 
             NameHash.Read( reader );
-            reader.ReadUInt16(); // offset
-            reader.ReadUInt16(); // padding
 
             Unknown2.Read( reader );
             Unknown3.Read( reader );
@@ -61,7 +60,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
-            Dalamud.Log( $">>> {type} {reader.BaseStream.Position:X4}" );
+            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4}" );
             ReadBody( reader );
             reader.BaseStream.Position = savePosition;
         }
@@ -70,15 +69,17 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
         public void Draw() {
             ImGui.SameLine();
-            ImGui.TextDisabled( $"[ID]: {Id}" );
+            ImGui.TextDisabled( $"[ID] {Id}" );
 
             NameHash.Draw();
             Unknown1.Draw();
             Unknown2.Draw();
             Unknown3.Draw();
 
-            // TODO
+            DrawBody();
         }
+
+        protected abstract void DrawBody();
 
         private static KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
 

@@ -1,6 +1,6 @@
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -13,9 +13,9 @@ namespace VfxEditor.SklbFormat.Bones {
         public readonly int Id;
 
         public readonly ParsedString Name = new( "Name" );
-        public readonly ParsedFloat4 Position = new( "Position", new( 0, 0, 0, 1 ) );
-        public readonly ParsedQuat Rotation = new( "Rotation", new( 0 ) );
-        public readonly ParsedFloat4 Scale = new( "Scale", new( 1, 1, 1, 1 ) );
+        public readonly ParsedFloat4 Position = new( "Position", new Vector4( 0, 0, 0, 1 ) );
+        public readonly ParsedQuat Rotation = new( "Rotation", new Vector3( 0 ) );
+        public readonly ParsedFloat4 Scale = new( "Scale", new Vector4( 1, 1, 1, 1 ) );
         public readonly ParsedInt LockTranslation = new( "Lock Translation" );
 
         public Vector4 Pos => Position.Value;

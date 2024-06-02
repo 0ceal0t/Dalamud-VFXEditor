@@ -41,6 +41,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
     public class KdbConnection : KdbNode { // placeholder for edges and stuff
         // https://github.com/Irastris/ValkyrieUproject/blob/main/VALKYRIE_ELYSIUM/Source/KineDriverRt/Public/SQEX_KineDriverConnectEquals.h
 
+        public override KdbNodeType Type => KdbNodeType.Connection;
+
         public int SourceIdx { get; private set; }
         public int TargetIdx { get; private set; }
 
@@ -50,9 +52,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public ConnectionType SourceType { get; private set; }
         public ConnectionType TargetType { get; private set; }
 
-        public KdbConnection() : base( KdbNodeType.Connection ) { }
+        public KdbConnection() : base() { }
 
-        public KdbConnection( BinaryReader reader ) : base( KdbNodeType.Connection, reader ) { }
+        public KdbConnection( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) {
             reader.ReadUInt32(); // hash
@@ -81,5 +83,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         protected override List<KdbSlot> GetInputSlots() => [];
 
         protected override List<KdbSlot> GetOutputSlots() => [];
+
+        protected override void DrawBody() { }
     }
 }

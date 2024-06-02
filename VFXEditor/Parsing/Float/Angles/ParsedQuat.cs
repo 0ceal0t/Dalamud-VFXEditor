@@ -5,6 +5,8 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedQuat : ParsedSimpleBase<Vector3> {
+        private readonly int Size;
+
         public Quaternion Quat {
             get => ToQuaternion( Value );
             set {
@@ -13,26 +15,40 @@ namespace VfxEditor.Parsing {
         }
 
         // Value is XYZ angles in radians
-        public ParsedQuat( string name, Vector3 value ) : base( name, value ) { }
+        public ParsedQuat( string name, Vector3 value, int size = 4 ) : base( name, value ) {
+            Size = size;
+        }
 
-        public ParsedQuat( string name ) : base( name ) { }
+        public ParsedQuat( string name, int size = 4 ) : base( name ) {
+            Size = size;
+        }
+
+        private float ReadElement( BinaryReader reader ) => Size switch {
+            8 => ( float )reader.ReadDouble(),
+            _ => reader.ReadSingle()
+        };
+
+        private void WriteElement( BinaryWriter writer, float data ) {
+            if( Size == 8 ) writer.Write( ( double )data );
+            else writer.Write( data );
+        }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
         public override void Read( BinaryReader reader, int size ) {
-            var x = reader.ReadSingle();
-            var y = reader.ReadSingle();
-            var z = reader.ReadSingle();
-            var w = reader.ReadSingle();
+            var x = ReadElement( reader );
+            var y = ReadElement( reader );
+            var z = ReadElement( reader );
+            var w = ReadElement( reader );
             Value = ToEuler( new( x, y, z, w ) );
         }
 
         public override void Write( BinaryWriter writer ) {
             var q = Quat;
-            writer.Write( q.X );
-            writer.Write( q.Y );
-            writer.Write( q.Z );
-            writer.Write( q.W );
+            WriteElement( writer, q.X );
+            WriteElement( writer, q.Y );
+            WriteElement( writer, q.Z );
+            WriteElement( writer, q.W );
         }
 
         protected override void DrawBody() {

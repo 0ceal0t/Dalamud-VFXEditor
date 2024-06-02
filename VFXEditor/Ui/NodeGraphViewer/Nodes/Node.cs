@@ -23,9 +23,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         protected string Name;
 
-        public Node( string name ) {
-            Name = name;
-        }
+        public Node() { }
 
         public string GetText() => Name;
 
@@ -106,21 +104,26 @@ namespace VfxEditor.Ui.NodeGraphViewer {
 
         protected virtual Vector2 BodySize => new( 200, SlotSpacing * ( Inputs.Count + Outputs.Count ) + Style.GetHandleSize().Y );
 
-        public Node( string name ) : base( name ) {
-            Name = name;
+        public Node() {
             Inputs = GetInputSlots();
             Outputs = GetOutputSlots();
 
             foreach( var (slot, idx) in Inputs.WithIndex() ) slot.Setup( this, idx, true );
             foreach( var (slot, idx) in Outputs.WithIndex() ) slot.Setup( this, idx, false );
+        }
 
+        public Node( string name ) : this() {
+            Name = name;
+            InitName();
+        }
+
+        protected void InitName() {
             if( Plugin.IsImguiSafe ) SetHeader( Name );
             else {
                 Style.SetHandleTextSize( new Vector2( Name.Length * 6, 11 ) );
                 Style.SetSize( new Vector2( Name.Length * 6, 11 ) + NodeInsidePadding * 2 );
                 NeedReinit = true;
             }
-
             Style.SetSize( BodySize );
         }
 

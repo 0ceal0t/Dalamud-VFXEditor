@@ -3,11 +3,17 @@ using System.IO;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeTargetOrientationConstraint : KdbNode {
-        public KdbNodeTargetOrientationConstraint() : base( KdbNodeType.TargetOrientationConstraint ) { }
+        public override KdbNodeType Type => KdbNodeType.TargetOrientationConstraint;
 
-        public KdbNodeTargetOrientationConstraint( BinaryReader reader ) : base( KdbNodeType.TargetOrientationConstraint, reader ) { }
+        public KdbNodeTargetOrientationConstraint() : base() { }
+
+        public KdbNodeTargetOrientationConstraint( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) { }
+
+        protected override void DrawBody() {
+
+        }
 
         protected override List<KdbSlot> GetInputSlots() => [
         ];

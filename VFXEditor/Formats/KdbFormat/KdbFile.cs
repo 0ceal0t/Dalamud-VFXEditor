@@ -53,8 +53,6 @@ namespace VfxEditor.Formats.KdbFormat {
             reader.ReadUInt32(); // file size
 
             FileName.Read( reader, sourcePath.Split( '\\' )[^1].Split( '.' )[0] ); // encoded like kdi_c0101t0778
-            reader.ReadUInt16(); // name offset, 0
-            reader.ReadUInt16(); // padding
 
             var dataArrayCount = reader.ReadUInt32();
             if( dataArrayCount != 5 ) Dalamud.Error( $"Data array count is {dataArrayCount}" );

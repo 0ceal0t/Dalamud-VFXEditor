@@ -3,11 +3,17 @@ using System.IO;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeSourceOther : KdbNode {
-        public KdbNodeSourceOther() : base( KdbNodeType.SourceOther ) { }
+        public override KdbNodeType Type => KdbNodeType.SourceOther;
 
-        public KdbNodeSourceOther( BinaryReader reader ) : base( KdbNodeType.SourceOther, reader ) { }
+        public KdbNodeSourceOther() : base() { }
+
+        public KdbNodeSourceOther( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) { }
+
+        protected override void DrawBody() {
+
+        }
 
         protected override List<KdbSlot> GetInputSlots() => [];
 

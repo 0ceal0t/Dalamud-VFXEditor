@@ -1,13 +1,82 @@
+using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Ui.Components.Tables;
+using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeSourceRotate : KdbNode {
-        public KdbNodeSourceRotate() : base( KdbNodeType.SourceRotate ) { }
+        public override KdbNodeType Type => KdbNodeType.SourceRotate;
 
-        public KdbNodeSourceRotate( BinaryReader reader ) : base( KdbNodeType.SourceRotate, reader ) { }
+        public readonly List<KdbBoneRow> Bones = [];
+        private readonly CommandTable<KdbBoneRow> BoneTable;
 
-        public override void ReadBody( BinaryReader reader ) { }
+        public readonly ParsedQuat SourceQuat = new( "Source", size: 8 );
+        public readonly ParsedQuat TargetQuat = new( "Target", size: 8 );
+        public readonly ParsedFloat3 Aim = new( "Aim Vector", size: 8 );
+        public readonly ParsedFloat3 Up = new( "Up Vector", size: 8 );
+
+        public KdbNodeSourceRotate() : base() {
+            BoneTable = new( "Bones", true, false, Bones, [
+                ( "Bone", ImGuiTableColumnFlags.None, -1 ),
+                ( "Weight", ImGuiTableColumnFlags.None, -1 ),
+            ],
+            () => new() );
+        }
+
+        public KdbNodeSourceRotate( BinaryReader reader ) : this() { ReaderHeader( reader ); }
+
+        public override void ReadBody( BinaryReader reader ) {
+            var boneCount = reader.ReadUInt32();
+            var bonePosition = reader.BaseStream.Position + reader.ReadUInt32();
+            _ = reader.ReadUInt32(); // weight count, same as bone count
+            var weightPosition = reader.BaseStream.Position + reader.ReadUInt32();
+
+            SourceQuat.Read( reader );
+            TargetQuat.Read( reader );
+            Aim.Read( reader );
+            Up.Read( reader );
+
+            // TODO
+
+            for( var i = 0; i < boneCount; i++ ) Bones.Add( new() );
+            reader.BaseStream.Position = bonePosition;
+            foreach( var bone in Bones ) bone.Name.Read( reader );
+            reader.BaseStream.Position = weightPosition;
+            foreach( var bone in Bones ) bone.Weight.Read( reader );
+        }
+
+        public override void UpdateBones( List<string> boneList ) {
+            foreach( var bone in Bones ) bone.Name.Guess( boneList );
+        }
+
+        protected override void DrawBody() {
+            using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
+            if( !tabBar ) return;
+
+            using( var tab = ImRaii.TabItem( "Bones" ) ) {
+                if( tab ) {
+                    BoneTable.Draw();
+                }
+            }
+
+            using( var tab = ImRaii.TabItem( "Parameters" ) ) {
+                if( tab ) {
+                    using var _ = ImRaii.PushId( "Parameters" );
+                    using var child = ImRaii.Child( "Child" );
+
+                    SourceQuat.Draw();
+                    TargetQuat.Draw();
+                    Aim.Draw();
+                    Up.Draw();
+
+                    // TODO
+                }
+            }
+        }
 
         protected override List<KdbSlot> GetInputSlots() => [];
 
@@ -25,5 +94,20 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             new( ConnectionType.RotateQuat ),
             new( ConnectionType.BendingQuat ),
         ];
+    }
+
+    public class KdbBoneRow : IUiItem {
+        public readonly ParsedFnvHash Name = new( "##Bone" );
+        public readonly ParsedDouble Weight = new( "##Weight" );
+
+        public void Draw() {
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 200 );
+            Name.Draw();
+
+            ImGui.TableNextColumn();
+            ImGui.SetNextItemWidth( 200 );
+            Weight.Draw();
+        }
     }
 }

@@ -3,11 +3,17 @@ using System.IO;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeSourceTranslate : KdbNode {
-        public KdbNodeSourceTranslate() : base( KdbNodeType.SourceTranslate ) { }
+        public override KdbNodeType Type => KdbNodeType.SourceTranslate;
 
-        public KdbNodeSourceTranslate( BinaryReader reader ) : base( KdbNodeType.SourceTranslate, reader ) { }
+        public KdbNodeSourceTranslate() : base() { }
+
+        public KdbNodeSourceTranslate( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) {
+
+        }
+
+        protected override void DrawBody() {
 
         }
 
