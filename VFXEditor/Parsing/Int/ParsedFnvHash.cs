@@ -19,12 +19,12 @@ namespace VfxEditor.Parsing.Int {
             Value = ("", 0);
         }
 
-        public ParsedFnvHash( string name, (string, uint) value ) : base( name, value ) { }
-
         public override void Read( BinaryReader reader ) {
             Value = ("", reader.ReadUInt32());
             NameOffset = reader.ReadUInt16();
             reader.ReadUInt16(); // padding
+
+            Dalamud.Log( $"FNV > {Hash:X8} {NameOffset:X4}" );
         }
 
         public void Read( BinaryReader reader, string guess ) {

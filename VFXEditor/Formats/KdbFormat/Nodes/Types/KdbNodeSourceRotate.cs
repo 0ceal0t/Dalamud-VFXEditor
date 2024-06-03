@@ -8,6 +8,11 @@ using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
+    public enum LinkType {
+        None = 0,
+        Bone = 2,
+    }
+
     public class KdbNodeSourceRotate : KdbNode {
         public override KdbNodeType Type => KdbNodeType.SourceRotate;
 
@@ -18,6 +23,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public readonly ParsedQuat TargetQuat = new( "Target", size: 8 );
         public readonly ParsedFloat3 Aim = new( "Aim Vector", size: 8 );
         public readonly ParsedFloat3 Up = new( "Up Vector", size: 8 );
+
+        public readonly ParsedFloat4 Unknown1 = new( "Unknown 1", size: 8 );
+        public readonly ParsedEnum<LinkType> Link = new( "Link Type" );
+        public readonly ParsedFnvHash LinkHash = new( "Link" );
+        public readonly ParsedBool Unknown2 = new( "Unknown 2", size: 2 );
+        public readonly ParsedBool Unknown3 = new( "Unknown 3", size: 2 );
 
         public KdbNodeSourceRotate() : base() {
             BoneTable = new( "Bones", true, false, Bones, [
@@ -40,7 +51,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Aim.Read( reader );
             Up.Read( reader );
 
-            // TODO
+            Unknown1.Read( reader );
+            Link.Read( reader );
+            LinkHash.Read( reader );
+            Unknown2.Read( reader );
+            Unknown3.Read( reader );
 
             for( var i = 0; i < boneCount; i++ ) Bones.Add( new() );
             reader.BaseStream.Position = bonePosition;
@@ -51,6 +66,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         public override void UpdateBones( List<string> boneList ) {
             foreach( var bone in Bones ) bone.Name.Guess( boneList );
+            LinkHash.Guess( boneList );
         }
 
         protected override void DrawBody() {
@@ -73,7 +89,13 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
                     Aim.Draw();
                     Up.Draw();
 
-                    // TODO
+                    Unknown1.Draw();
+                    Link.Draw();
+                    using( var disabled = ImRaii.Disabled( Link.Value == LinkType.None ) ) {
+                        LinkHash.Draw();
+                    }
+                    Unknown2.Draw();
+                    Unknown3.Draw();
                 }
             }
         }

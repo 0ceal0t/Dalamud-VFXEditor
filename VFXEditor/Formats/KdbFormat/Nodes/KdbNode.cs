@@ -1,8 +1,6 @@
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
@@ -36,31 +34,28 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
     public abstract class KdbNode : Node<KdbSlot> { // TODO: body stuff
         public abstract KdbNodeType Type { get; }
-        public readonly ParsedByte Unknown1 = new( "Unknown 1" );
-        public readonly ParsedUInt Unknown2 = new( "Unknown 2" );
-        public readonly ParsedUInt Unknown3 = new( "Unknown 3" );
         public readonly ParsedFnvHash NameHash = new( "Name" );
 
         public KdbNode() : base() { // TODO
-            Name = $"{Type}";
+            Name = $"{Type} [{Id}]";
             InitName();
             Style.ColorUnique = NodeUtils.Colors.NormalBar_Grey; // TODO
         }
 
         protected void ReaderHeader( BinaryReader reader ) {
             reader.ReadByte(); // padding
-            Unknown1.Read( reader );
+            reader.ReadByte(); // 0x01
             reader.ReadByte(); // padding
 
             NameHash.Read( reader );
 
-            Unknown2.Read( reader );
-            Unknown3.Read( reader );
+            reader.ReadUInt32(); // 0
+            reader.ReadUInt32(); // 0
 
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
-            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4}" );
+            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4} // {NameHash.Hash:X8}" );
             ReadBody( reader );
             reader.BaseStream.Position = savePosition;
         }
@@ -68,14 +63,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public abstract void ReadBody( BinaryReader reader );
 
         public void Draw() {
-            ImGui.SameLine();
-            ImGui.TextDisabled( $"[ID] {Id}" );
-
             NameHash.Draw();
-            Unknown1.Draw();
-            Unknown2.Draw();
-            Unknown3.Draw();
-
             DrawBody();
         }
 

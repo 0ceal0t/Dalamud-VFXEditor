@@ -69,13 +69,8 @@ namespace VfxEditor.Ui.NodeGraphViewer.Utils {
             public static readonly Vector4 NodeBg = RgbatoVec4( 49, 48, 49, 255 );
             public static readonly Vector4 NodeFg = RgbatoVec4( 148, 121, 74, 255 );
             public static readonly Vector4 NodeText = RgbatoVec4( 223, 211, 185, 255 );
-            public static readonly Vector4 NodePack = RgbatoVec4( 157, 189, 99, 255 );
             public static readonly Vector4 NodeEdgeHighlightNeg = RgbatoVec4( 246, 132, 118, 255 );
-            public static readonly Vector4 NodeGraphViewer_BackdropGrey = RgbatoVec4( 165, 165, 165, 255 );
             public static readonly Vector4 NodeGraphViewer_SnaplineGold = RgbatoVec4( 148, 121, 74, 255 );
-            public static readonly Vector4 NodeNotifInfo = RgbatoVec4( 223, 211, 185, 255 );
-            public static readonly Vector4 NodeNotifWarning = RgbatoVec4( 240, 160, 19, 255 );
-            public static readonly Vector4 NodeNotifError = RgbatoVec4( 216, 148, 148, 255 );
         }
     }
 }
