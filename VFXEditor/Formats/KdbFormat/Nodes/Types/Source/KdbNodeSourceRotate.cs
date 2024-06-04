@@ -4,20 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
-using VfxEditor.Ui.Components.Tables;
-using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
+namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
     public enum LinkType {
         None = 0,
         Bone = 2,
     }
 
-    public class KdbNodeSourceRotate : KdbNode {
+    public class KdbNodeSourceRotate : KdbNodeSource {
         public override KdbNodeType Type => KdbNodeType.SourceRotate;
-
-        public readonly List<KdbBoneRow> Bones = [];
-        private readonly CommandTable<KdbBoneRow> BoneTable;
 
         public readonly ParsedQuat SourceQuat = new( "Source", size: 8 );
         public readonly ParsedQuat TargetQuat = new( "Target", size: 8 );
@@ -30,13 +25,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public readonly ParsedBool Unknown2 = new( "Unknown 2", size: 2 );
         public readonly ParsedBool Unknown3 = new( "Unknown 3", size: 2 );
 
-        public KdbNodeSourceRotate() : base() {
-            BoneTable = new( "Bones", true, false, Bones, [
-                ( "Bone", ImGuiTableColumnFlags.None, -1 ),
-                ( "Weight", ImGuiTableColumnFlags.None, -1 ),
-            ],
-            () => new() );
-        }
+        public KdbNodeSourceRotate() : base() { }
 
         public KdbNodeSourceRotate( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
@@ -65,18 +54,16 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         }
 
         public override void UpdateBones( List<string> boneList ) {
-            foreach( var bone in Bones ) bone.Name.Guess( boneList );
+            base.UpdateBones( boneList );
             LinkHash.Guess( boneList );
         }
 
-        protected override void DrawBody() {
+        protected override void DrawBody( List<string> bones ) {
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
             using( var tab = ImRaii.TabItem( "Bones" ) ) {
-                if( tab ) {
-                    BoneTable.Draw();
-                }
+                if( tab ) { BoneTable.Draw(); }
             }
 
             using( var tab = ImRaii.TabItem( "Parameters" ) ) {
@@ -116,20 +103,5 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             new( ConnectionType.RotateQuat ),
             new( ConnectionType.BendingQuat ),
         ];
-    }
-
-    public class KdbBoneRow : IUiItem {
-        public readonly ParsedFnvHash Name = new( "##Bone" );
-        public readonly ParsedDouble Weight = new( "##Weight" );
-
-        public void Draw() {
-            ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( 200 );
-            Name.Draw();
-
-            ImGui.TableNextColumn();
-            ImGui.SetNextItemWidth( 200 );
-            Weight.Draw();
-        }
     }
 }

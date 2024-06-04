@@ -23,8 +23,6 @@ namespace VfxEditor.Parsing.Int {
             Value = ("", reader.ReadUInt32());
             NameOffset = reader.ReadUInt16();
             reader.ReadUInt16(); // padding
-
-            Dalamud.Log( $"FNV > {Hash:X8} {NameOffset:X4}" );
         }
 
         public void Read( BinaryReader reader, string guess ) {

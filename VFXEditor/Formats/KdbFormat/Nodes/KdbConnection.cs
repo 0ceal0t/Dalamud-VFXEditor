@@ -81,9 +81,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         }
 
         protected override List<KdbSlot> GetInputSlots() => [];
-
         protected override List<KdbSlot> GetOutputSlots() => [];
-
-        protected override void DrawBody() { }
+        protected override void DrawBody( List<string> bones ) { }
     }
 }

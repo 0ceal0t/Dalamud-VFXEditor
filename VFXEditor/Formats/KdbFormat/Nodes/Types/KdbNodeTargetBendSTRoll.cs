@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
 
         public override void ReadBody( BinaryReader reader ) { }
 
-        protected override void DrawBody() {
+        protected override void DrawBody( List<string> bones ) {
 
         }
 

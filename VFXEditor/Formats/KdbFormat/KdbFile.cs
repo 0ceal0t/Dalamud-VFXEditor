@@ -7,6 +7,7 @@ using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Formats.KdbFormat.Nodes.Types;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
@@ -84,19 +85,9 @@ namespace VfxEditor.Formats.KdbFormat {
                         var nodeType = ( KdbNodeType )reader.ReadByte();
 
                         KdbNode newNode = nodeType switch {
-                            KdbNodeType.EffectorExpr => new KdbNodeEffectorExpr( reader ),
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
-                            KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
-                            KdbNodeType.SourceOther => new KdbNodeSourceOther( reader ),
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
-                            KdbNodeType.SourceTranslate => new KdbNodeSourceTranslate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
-                            KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
-                            KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
-                            KdbNodeType.TargetBendRoll => new KdbNodeTargetBendRoll( reader ),
-                            KdbNodeType.TargetOrientationConstraint => new KdbNodeTargetOrientationConstraint( reader ),
-                            KdbNodeType.TargetPosContraint => new KdbTargetPosConstraint( reader ),
-                            KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null
@@ -180,7 +171,7 @@ namespace VfxEditor.Formats.KdbFormat {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) NodeGraph.Canvas.RemoveNode( node );
             }
-            node.Draw();
+            node.Draw( BoneList );
         }
 
         private static string GetSklbPath( string sourcePath ) {

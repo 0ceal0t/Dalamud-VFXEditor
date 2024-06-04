@@ -37,7 +37,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         public readonly ParsedFnvHash NameHash = new( "Name" );
 
         public KdbNode() : base() { // TODO
-            Name = $"{Type} [{Id}]";
+            Name = $"{Type}";
             InitName();
             Style.ColorUnique = NodeUtils.Colors.NormalBar_Grey; // TODO
         }
@@ -55,19 +55,19 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
-            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4} // {NameHash.Hash:X8}" );
+            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4}" );
             ReadBody( reader );
             reader.BaseStream.Position = savePosition;
         }
 
         public abstract void ReadBody( BinaryReader reader );
 
-        public void Draw() {
+        public void Draw( List<string> bones ) {
             NameHash.Draw();
-            DrawBody();
+            DrawBody( bones );
         }
 
-        protected abstract void DrawBody();
+        protected abstract void DrawBody( List<string> bones );
 
         private static KdbSlot FindSlot( List<KdbSlot> slots, ConnectionType type ) => slots.FirstOrDefault( x => x.Type == type, null );
 
