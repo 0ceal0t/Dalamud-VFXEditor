@@ -12,6 +12,39 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public override void ReadBody( BinaryReader reader ) { }
 
         protected override void DrawBody( List<string> bones ) {
+            /*
+             * target_node: Identifier,
+
+    a: f64, // No idea about these 3
+    b: f64, //
+    c: f64, //
+
+    #[br(count = 3)]
+    vec1: Vec<f64>,
+
+    #[br(count = 3)]
+    vec2: Vec<f64>,
+
+    #[br(count = 3)]
+    vec3: Vec<f64>,
+
+    d: f64,
+
+    #[br(count = 4)]
+    vec4: Vec<f64>,
+
+    #[br(count = 4)]
+    vec5: Vec<f64>,
+
+    e: f64,
+
+    j: u32,
+
+    k: u8,
+
+    #[br(count = 3)]
+    padding: Vec<u8>
+             */
 
         }
 

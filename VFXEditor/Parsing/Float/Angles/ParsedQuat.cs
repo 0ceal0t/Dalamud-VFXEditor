@@ -4,18 +4,18 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedQuat : ParsedSimpleBase<Vector3> {
+    public class ParsedQuat : ParsedSimpleBase<Double3> {
         private readonly int Size;
 
         public Quaternion Quat {
             get => ToQuaternion( Value );
             set {
-                Value = ToEuler( value );
+                Value = ToEuler( value.X, value.Y, value.Z, value.W );
             }
         }
 
         // Value is XYZ angles in radians
-        public ParsedQuat( string name, Vector3 value, int size = 4 ) : base( name, value ) {
+        public ParsedQuat( string name, Double3 value, int size = 4 ) : base( name, value ) {
             Size = size;
         }
 
@@ -23,14 +23,14 @@ namespace VfxEditor.Parsing {
             Size = size;
         }
 
-        private float ReadElement( BinaryReader reader ) => Size switch {
-            8 => ( float )reader.ReadDouble(),
+        private double ReadElement( BinaryReader reader ) => Size switch {
+            8 => reader.ReadDouble(),
             _ => reader.ReadSingle()
         };
 
-        private void WriteElement( BinaryWriter writer, float data ) {
+        private void WriteElement( BinaryWriter writer, double data ) {
             if( Size == 8 ) writer.Write( ( double )data );
-            else writer.Write( data );
+            else writer.Write( ( float )data );
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -40,7 +40,7 @@ namespace VfxEditor.Parsing {
             var y = ReadElement( reader );
             var z = ReadElement( reader );
             var w = ReadElement( reader );
-            Value = ToEuler( new( x, y, z, w ) );
+            Value = ToEuler( x, y, z, w );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -52,16 +52,15 @@ namespace VfxEditor.Parsing {
         }
 
         protected override void DrawBody() {
-            if( UiUtils.DrawRadians3( Name, Value, out var newValue ) ) {
-                Update( newValue );
-            }
+            var value = Value.Vec3;
+            if( UiUtils.DrawRadians3( Name, value, out var newValue ) ) Update( new( newValue ) );
         }
 
         // Yoinked from Ktisis, but in radians instead of degrees
-        public static Quaternion ToQuaternion( Vector3 euler ) {
-            double yaw = euler.Y;
-            double pitch = euler.X;
-            double roll = euler.Z;
+        public static Quaternion ToQuaternion( Double3 euler ) {
+            var yaw = euler.Y;
+            var pitch = euler.X;
+            var roll = euler.Z;
 
             var c1 = Math.Cos( yaw / 2 );
             var s1 = Math.Sin( yaw / 2 );
@@ -81,47 +80,47 @@ namespace VfxEditor.Parsing {
             return new Quaternion( ( float )x, ( float )y, ( float )z, ( float )w );
         }
 
-        public static Vector3 ToEuler( Quaternion q ) {
-            var v = new Vector3();
+        public static Double3 ToEuler( double x, double y, double z, double w ) {
+            var v = new Double3();
 
-            double test = ( q.X * q.Y ) + ( q.Z * q.W );
+            var test = ( x * y ) + ( z * w );
 
-            if( test > 0.4995f ) {
-                v.Y = 2f * ( float )Math.Atan2( q.X, q.Y );
-                v.X = ( float )Math.PI / 2;
+            if( test > 0.4995d ) {
+                v.Y = 2d * Math.Atan2( x, y );
+                v.X = Math.PI / 2;
                 v.Z = 0;
             }
-            else if( test < -0.4995f ) {
-                v.Y = -2f * ( float )Math.Atan2( q.X, q.W );
-                v.X = -( float )Math.PI / 2;
+            else if( test < -0.4995d ) {
+                v.Y = -2d * Math.Atan2( x, w );
+                v.X = -Math.PI / 2;
                 v.Z = 0;
             }
             else {
-                double sqx = q.X * q.X;
-                double sqy = q.Y * q.Y;
-                double sqz = q.Z * q.Z;
+                var sqx = x * x;
+                var sqy = y * y;
+                var sqz = z * z;
 
-                v.Y = ( float )Math.Atan2( ( 2 * q.Y * q.W ) - ( 2 * q.X * q.Z ), 1 - ( 2 * sqy ) - ( 2 * sqz ) );
-                v.X = ( float )Math.Asin( 2 * test );
-                v.Z = ( float )Math.Atan2( ( 2 * q.X * q.W ) - ( 2 * q.Y * q.Z ), 1 - ( 2 * sqx ) - ( 2 * sqz ) );
+                v.Y = Math.Atan2( ( 2 * y * w ) - ( 2 * x * z ), 1 - ( 2 * sqy ) - ( 2 * sqz ) );
+                v.X = Math.Asin( 2 * test );
+                v.Z = Math.Atan2( ( 2 * x * w ) - ( 2 * y * z ), 1 - ( 2 * sqx ) - ( 2 * sqz ) );
             }
 
             return NormalizeAngles( v );
         }
 
-        public static Vector3 NormalizeAngles( Vector3 v ) {
+        public static Double3 NormalizeAngles( Double3 v ) {
             v.X = NormalizeAngle( v.X );
             v.Y = NormalizeAngle( v.Y );
             v.Z = NormalizeAngle( v.Z );
             return v;
         }
 
-        public static float NormalizeAngle( float angle ) {
-            while( angle > 180 )
-                angle -= 360;
+        public static double NormalizeAngle( double angle ) {
+            while( angle > Math.PI / 2 )
+                angle -= Math.PI;
 
-            while( angle < -180 )
-                angle += 360;
+            while( angle < -Math.PI / 2 )
+                angle += Math.PI;
 
             return angle;
         }

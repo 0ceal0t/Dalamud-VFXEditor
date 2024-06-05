@@ -16,10 +16,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
 
         public readonly ParsedQuat SourceQuat = new( "Source", size: 8 );
         public readonly ParsedQuat TargetQuat = new( "Target", size: 8 );
-        public readonly ParsedFloat3 Aim = new( "Aim Vector", size: 8 );
-        public readonly ParsedFloat3 Up = new( "Up Vector", size: 8 );
+        public readonly ParsedDouble3 Aim = new( "Aim Vector" );
+        public readonly ParsedDouble3 Up = new( "Up Vector" );
 
-        public readonly ParsedFloat4 Unknown1 = new( "Unknown 1", size: 8 );
+        public readonly ParsedDouble4 Unknown1 = new( "Unknown 1" );
         public readonly ParsedEnum<LinkType> Link = new( "Link Type" );
         public readonly ParsedFnvHash LinkHash = new( "Link" );
         public readonly ParsedBool Unknown2 = new( "Unknown 2", size: 2 );
