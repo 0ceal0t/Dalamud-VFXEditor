@@ -227,9 +227,4 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Formats\KdbFormat\Components\" />
-      <Folder Include="Formats\KdbFormat\UnknownF\" />
-    </ItemGroup>
 </Project>

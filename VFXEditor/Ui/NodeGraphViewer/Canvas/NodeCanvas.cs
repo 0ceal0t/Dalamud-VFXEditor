@@ -334,12 +334,15 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                         var parentPosition = Map.GetNodeScreenPos( parentNode, tCanvasOSP, Config.Scaling );
                         if( !parentPosition.HasValue ) continue;
 
-                        if( !NodeUtils.IsLineIntersectRect( nodePosition.Value, parentPosition.Value, new( pViewerOSP, pViewerSize ) ) ) continue;
+                        var startPos = slot.GetSlotPosition( nodePosition.Value, Config.Scaling );
+                        var endPos = connection.GetSlotPosition( parentPosition.Value, Config.Scaling );
+
+                        if( !NodeUtils.IsLineIntersectRect( startPos, endPos, new( pViewerOSP, pViewerSize ) ) ) continue;
 
                         node.DrawEdge(
                             drawList,
-                            slot.GetSlotPosition( nodePosition.Value, Config.Scaling ),
-                            connection.GetSlotPosition( parentPosition.Value, Config.Scaling ),
+                            startPos,
+                            endPos,
                             slot,
                             connection,
                             SelectedNodes.Contains( parentNode ),

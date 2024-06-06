@@ -62,8 +62,6 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         }
 
         public void Write( BinaryWriter writer, Dictionary<KdbNode, long> positions ) {
-            var a = writer.BaseStream.Position;
-
             writer.Write( ( byte )0 );
             writer.Write( ( byte )0x01 );
             writer.Write( ( byte )0 );
@@ -75,8 +73,6 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
             positions[this] = writer.BaseStream.Position;
             writer.Write( 0 ); // placeholder
-
-            Dalamud.Log( $"<<<< {Type} / {a:X4} -> {writer.BaseStream.Position:X4}" );
         }
 
         public abstract void ReadBody( BinaryReader reader );
