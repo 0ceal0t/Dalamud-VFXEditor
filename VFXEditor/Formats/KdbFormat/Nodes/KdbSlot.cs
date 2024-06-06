@@ -1,12 +1,13 @@
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
     public class KdbSlot : Slot {
         public readonly ConnectionType Type;
-        private readonly Dictionary<Slot, KdbSlotData> Data = [];
+        public readonly Dictionary<Slot, KdbSlotData> Data = [];
 
         public KdbSlot( ConnectionType type, bool acceptMultiple = false ) : base( $"{type}", acceptMultiple ) {
             Type = type;
@@ -23,25 +24,28 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             newData.Draw();
         }
 
-        public void Connect( Slot target, double coeff, uint unknown ) {
+        public void Connect( Slot target, ParsedFnvHash name, double coeff, uint unknown ) {
             Connect( target );
-            Data[target] = new( coeff, unknown );
+            Data[target] = new( name, coeff, unknown );
         }
     }
 
     public class KdbSlotData {
+        public readonly ParsedFnvHash Name = new( "Name" );
         public readonly ParsedDouble Coeff = new( "Coefficient", 1 );
         public readonly ParsedUInt Unknown = new( "Unknown", 0 );
 
         public KdbSlotData() { }
 
-        public KdbSlotData( double coeff, uint unknown ) {
+        public KdbSlotData( ParsedFnvHash name, double coeff, uint unknown ) {
+            Name = name;
             Coeff.Value = coeff;
             Unknown.Value = unknown;
         }
 
         public void Draw() {
             using var _ = ImRaii.PushId( "SlotData" );
+            Name.Draw();
             Coeff.Draw();
             Unknown.Draw();
         }

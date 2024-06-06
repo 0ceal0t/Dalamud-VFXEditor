@@ -14,8 +14,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
     public class KdbNodeSourceRotate : KdbNodeSource {
         public override KdbNodeType Type => KdbNodeType.SourceRotate;
 
-        public readonly ParsedQuat SourceQuat = new( "Source", size: 8 );
-        public readonly ParsedQuat TargetQuat = new( "Target", size: 8 );
+        public readonly ParsedDouble4 SourceQuat = new( "Source" );
+        public readonly ParsedDouble4 TargetQuat = new( "Target" );
         public readonly ParsedDouble3 Aim = new( "Aim Vector" );
         public readonly ParsedDouble3 Up = new( "Up Vector" );
 
@@ -51,6 +51,38 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             foreach( var bone in Bones ) bone.Name.Read( reader );
             reader.BaseStream.Position = weightPosition;
             foreach( var bone in Bones ) bone.Weight.Read( reader );
+        }
+
+        public override void WriteBody( BinaryWriter writer ) {
+            var placeHolderPos = writer.BaseStream.Position;
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( 0 );
+            writer.Write( 0 );
+
+            SourceQuat.Write( writer );
+            TargetQuat.Write( writer );
+            Aim.Write( writer );
+            Up.Write( writer );
+
+            Unknown1.Write( writer );
+            Link.Write( writer );
+            LinkHash.Write( writer );
+            Unknown2.Write( writer );
+            Unknown3.Write( writer );
+
+            var bonePosition = writer.BaseStream.Position;
+            foreach( var bone in Bones ) bone.Name.Write( writer );
+            var weightPosition = writer.BaseStream.Position;
+            foreach( var bone in Bones ) bone.Weight.Write( writer );
+
+            var savePos = writer.BaseStream.Position;
+            writer.BaseStream.Position = placeHolderPos;
+            writer.Write( Bones.Count );
+            writer.Write( ( uint )( bonePosition - writer.BaseStream.Position ) );
+            writer.Write( Bones.Count );
+            writer.Write( ( uint )( weightPosition - writer.BaseStream.Position ) );
+            writer.BaseStream.Position = savePos;
         }
 
         public override void UpdateBones( List<string> boneList ) {

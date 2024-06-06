@@ -45,6 +45,21 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Unknown4.Read( reader );
         }
 
+        public override void WriteBody( BinaryWriter writer ) {
+            Start.Write( writer );
+            Middle.Write( writer );
+            End.Write( writer );
+
+            StartTangent.Write( writer );
+            MiddleTangent.Write( writer );
+            EndTangent.Write( writer );
+
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
+            Unknown3.Write( writer );
+            Unknown4.Write( writer );
+        }
+
         protected override void DrawBody( List<string> bones ) {
             Start.Draw();
             Middle.Draw();

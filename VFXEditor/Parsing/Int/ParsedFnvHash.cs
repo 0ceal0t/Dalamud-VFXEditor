@@ -13,7 +13,7 @@ namespace VfxEditor.Parsing.Int {
         public string Data => Value.Item1;
         public uint Hash => Value.Item2;
 
-        private ushort NameOffset;
+        public ushort NameOffset { get; set; }
 
         public ParsedFnvHash( string name ) : base( name ) {
             Value = ("", 0);

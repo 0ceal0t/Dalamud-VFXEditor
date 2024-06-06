@@ -43,6 +43,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         }
 
         protected void ReaderHeader( BinaryReader reader ) {
+            var a = reader.BaseStream.Position;
             reader.ReadByte(); // padding
             reader.ReadByte(); // 0x01
             reader.ReadByte(); // padding
@@ -55,12 +56,32 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
-            Dalamud.Log( $">>> {Type} {reader.BaseStream.Position:X4}" );
             ReadBody( reader );
+            Dalamud.Log( $">>> {Type} / {a:X4} -> {bodyPosition:X4} -> {reader.BaseStream.Position:X4} -> {savePosition:X4} / {NameHash.Hash:X8}" );
             reader.BaseStream.Position = savePosition;
         }
 
+        public void Write( BinaryWriter writer, Dictionary<KdbNode, long> positions ) {
+            var a = writer.BaseStream.Position;
+
+            writer.Write( ( byte )0 );
+            writer.Write( ( byte )0x01 );
+            writer.Write( ( byte )0 );
+
+            NameHash.Write( writer );
+
+            writer.Write( 0 );
+            writer.Write( 0 );
+
+            positions[this] = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
+
+            Dalamud.Log( $"<<<< {Type} / {a:X4} -> {writer.BaseStream.Position:X4}" );
+        }
+
         public abstract void ReadBody( BinaryReader reader );
+
+        public abstract void WriteBody( BinaryWriter writer );
 
         public void Draw( List<string> bones ) {
             NameHash.Draw();
