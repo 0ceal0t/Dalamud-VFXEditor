@@ -13,8 +13,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public ParsedDouble3 Unknown5 = new( "Unknown 5" );
         public ParsedDouble3 Unknown6 = new( "Unknown 6" );
         public ParsedDouble Unknown7 = new( "Unknown 7" );
-        public ParsedDouble4 Unknown8 = new( "Unknown 8" );
-        public ParsedDouble4 Unknown9 = new( "Unknown 9" );
+        public ParsedQuat Unknown8 = new( "Unknown 8", size: 8 );
+        public ParsedQuat Unknown9 = new( "Unknown 9", size: 8 );
         public ParsedDouble Unknown10 = new( "Unknown 10" );
         public ParsedDouble Unknown11 = new( "Unknown 11" );
         public ParsedUInt Unknown12 = new( "Unknown 12" );
@@ -70,40 +70,6 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Unknown11.Draw();
             Unknown12.Draw();
             Unknown13.Draw();
-
-            /*
-             * target_node: Identifier,
-
-                a: f64, // No idea about these 3
-                b: f64, //
-                c: f64, //
-
-                #[br(count = 3)]
-                vec1: Vec<f64>,
-
-                #[br(count = 3)]
-                vec2: Vec<f64>,
-
-                #[br(count = 3)]
-                vec3: Vec<f64>,
-
-                d: f64,
-
-                #[br(count = 4)]
-                vec4: Vec<f64>,
-
-                #[br(count = 4)]
-                vec5: Vec<f64>,
-
-                e: f64,
-
-                j: u32,
-
-                k: u8,
-
-                #[br(count = 3)]
-                padding: Vec<u8>
-             */
         }
 
         protected override List<KdbSlot> GetInputSlots() => [

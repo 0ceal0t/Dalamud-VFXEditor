@@ -173,7 +173,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     // New bone
                     using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                         if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
-                            var newId = BONE_ID++;
+                            var newId = NEW_BONE_ID;
                             var newBone = new SklbBone( newId );
                             newBone.Name.Value = $"bone_{newId}";
                             CommandManager.Add( new ListAddCommand<SklbBone>( Bones, newBone ) );
@@ -290,7 +290,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( ImGui.BeginPopupContextItem() ) {
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "Create sub-bone" ) ) {
-                    var newId = BONE_ID++;
+                    var newId = NEW_BONE_ID;
                     var newBone = new SklbBone( newId );
                     newBone.Name.Value = $"bone_{newId}";
                     var commands = new List<ICommand> {
@@ -324,7 +324,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( string.IsNullOrEmpty( SearchText ) ) return null;
             var searchSet = new HashSet<SklbBone>();
 
-            var validBones = Bones.Where( x => x.Name.Value.ToLower().Contains( SearchText.ToLower() ) ).ToList();
+            var validBones = Bones.Where( x => x.Name.Value.Contains( SearchText, StringComparison.CurrentCultureIgnoreCase ) ).ToList();
             validBones.ForEach( x => PopulateSearchSet( searchSet, x ) );
 
             return searchSet;

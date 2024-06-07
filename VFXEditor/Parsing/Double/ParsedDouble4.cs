@@ -9,6 +9,13 @@ namespace VfxEditor.Parsing {
         public double Z;
         public double W;
 
+        public Double4( double x, double y, double z, double w ) {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
+
         public Double4( Vector4 vec4 ) {
             X = vec4.X;
             Y = vec4.Y;
@@ -17,6 +24,8 @@ namespace VfxEditor.Parsing {
         }
 
         public readonly Vector4 Vec4 => new( ( float )X, ( float )Y, ( float )Z, ( float )W );
+
+        public readonly Quaternion Quat => new( ( float )X, ( float )Y, ( float )Z, ( float )W );
     }
 
     public class ParsedDouble4 : ParsedSimpleBase<Double4> {

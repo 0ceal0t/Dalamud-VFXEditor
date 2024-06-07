@@ -153,8 +153,8 @@ namespace VfxEditor.Formats.KdbFormat {
                     reader.BaseStream.Position = arrayPosition;
                     for( var i = 0; i < count; i++ ) ItemsF.Add( new( reader ) );
                 }
-                else {
-                    Dalamud.Log( $"{type} >>> {count} {reader.BaseStream.Position:X8}" ); // TODO: F
+                else if( count > 0 ) {
+                    Dalamud.Log( $"{type} >>> {count} {reader.BaseStream.Position:X8}" );
                 }
             }
 

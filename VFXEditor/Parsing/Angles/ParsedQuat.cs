@@ -4,23 +4,14 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedQuat : ParsedSimpleBase<Double3> {
+    public class ParsedQuat : ParsedSimpleBase<(Double4, Vector3)> { // value is (Quat, Euler)
         private readonly int Size;
-
-        public Quaternion Quat {
-            get => ToQuaternion( Value );
-            set {
-                Value = ToEuler( value.X, value.Y, value.Z, value.W );
-            }
-        }
-
-        // Value is XYZ angles in radians
-        public ParsedQuat( string name, Double3 value, int size = 4 ) : base( name, value ) {
-            Size = size;
-        }
+        public Double4 Quaternion => Value.Item1;
+        public Vector3 Eueler => Value.Item2;
 
         public ParsedQuat( string name, int size = 4 ) : base( name ) {
             Size = size;
+            Value = (new( 0, 0, 0, 1 ), new( 0 ));
         }
 
         private double ReadElement( BinaryReader reader ) => Size switch {
@@ -40,24 +31,31 @@ namespace VfxEditor.Parsing {
             var y = ReadElement( reader );
             var z = ReadElement( reader );
             var w = ReadElement( reader );
-            Value = ToEuler( x, y, z, w );
+            Value = (new( x, y, z, w ), ToEuler( x, y, z, w ).Vec3);
         }
 
         public override void Write( BinaryWriter writer ) {
-            var q = Quat;
-            WriteElement( writer, q.X );
-            WriteElement( writer, q.Y );
-            WriteElement( writer, q.Z );
-            WriteElement( writer, q.W );
+            WriteElement( writer, Quaternion.X );
+            WriteElement( writer, Quaternion.Y );
+            WriteElement( writer, Quaternion.Z );
+            WriteElement( writer, Quaternion.W );
+        }
+
+        public void SetQuaternion( double x, double y, double z, double w ) {
+            Value = (new( x, y, z, w ), ToEuler( x, y, z, w ).Vec3);
+        }
+
+        public void SetEueler( Vector3 euler ) {
+            Value = (ToQuaternion( euler ), euler);
         }
 
         protected override void DrawBody() {
-            var value = Value.Vec3;
-            if( UiUtils.DrawRadians3( Name, value, out var newValue ) ) Update( new( newValue ) );
+            var euler = Eueler;
+            if( UiUtils.DrawRadians3( Name, euler, out var newEuler ) ) Update( (ToQuaternion( newEuler ), newEuler) );
         }
 
         // Yoinked from Ktisis, but in radians instead of degrees
-        public static Quaternion ToQuaternion( Double3 euler ) {
+        public static Double4 ToQuaternion( Vector3 euler ) {
             var yaw = euler.Y;
             var pitch = euler.X;
             var roll = euler.Z;
@@ -77,7 +75,7 @@ namespace VfxEditor.Parsing {
             var z = ( c1 * s2 * c3 ) - ( s1 * c2 * s3 );
             var w = ( c1c2 * c3 ) - ( s1s2 * s3 );
 
-            return new Quaternion( ( float )x, ( float )y, ( float )z, ( float )w );
+            return new Double4( x, y, z, w );
         }
 
         public static Double3 ToEuler( double x, double y, double z, double w ) {

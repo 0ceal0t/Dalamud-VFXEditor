@@ -28,7 +28,7 @@ namespace VfxEditor.Utils.Gltf {
             foreach( var node in nodes ) {
                 if( node == null || node.Name == null ) continue;
                 var name = node.Name;
-                if( name.ToLower().Contains( "armature" ) || name.ToLower().Contains( "mesh" ) ) continue;
+                if( name.Contains( "armature", StringComparison.CurrentCultureIgnoreCase ) || name.Contains( "mesh", StringComparison.CurrentCultureIgnoreCase ) ) continue;
 
                 var bone = new SklbBone( boneId++ );
                 var transform = node.LocalTransform;
@@ -37,7 +37,7 @@ namespace VfxEditor.Utils.Gltf {
                 var scl = transform.Scale;
 
                 bone.Position.Value = new( pos.X, pos.Y, pos.Z, 1 );
-                bone.Rotation.Quat = new(
+                bone.Rotation.SetQuaternion(
                     Cleanup( rot.X ),
                     Cleanup( rot.Y ),
                     Cleanup( rot.Z ),
@@ -102,7 +102,7 @@ namespace VfxEditor.Utils.Gltf {
                 var node = new NodeBuilder( bone.Name.Value );
                 var pos = new Vector3( bone.Pos.X, bone.Pos.Y, bone.Pos.Z );
                 var quat = bone.Rot;
-                var rot = new Quaternion( quat.X, quat.Y, quat.Z, quat.W );
+                var rot = new Quaternion( ( float )quat.X, ( float )quat.Y, ( float )quat.Z, ( float )quat.W );
                 var scl = new Vector3( bone.Scl.X, bone.Scl.Y, bone.Scl.Z );
                 node.SetLocalTransform( new AffineTransform( scl, rot, pos ), false );
                 bones.Add( node );
