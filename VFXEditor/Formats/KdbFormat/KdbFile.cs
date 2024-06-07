@@ -108,8 +108,10 @@ namespace VfxEditor.Formats.KdbFormat {
 
                         KdbNode newNode = nodeType switch {
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
+                            KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
+                            KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null

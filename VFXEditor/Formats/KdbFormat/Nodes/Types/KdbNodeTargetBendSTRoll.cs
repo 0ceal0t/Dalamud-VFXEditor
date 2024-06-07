@@ -6,9 +6,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
     public class KdbNodeTargetBendSTRoll : KdbNode {
         public override KdbNodeType Type => KdbNodeType.TargetBendSTRoll;
 
-        public ParsedDouble Unknown1 = new( "Unknown 1" );
-        public ParsedDouble Unknown2 = new( "Unknown 2" );
-        public ParsedDouble Unknown3 = new( "Unknown 3" );
+        public ParsedDouble BendSource = new( "Bend Source" );
+        public ParsedDouble BendTarget = new( "Bend Target" );
+        public ParsedDouble Roll = new( "Roll" );
         public ParsedDouble3 Unknown4 = new( "Unknown 4" );
         public ParsedDouble3 Unknown5 = new( "Unknown 5" );
         public ParsedDouble3 Unknown6 = new( "Unknown 6" );
@@ -25,9 +25,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public KdbNodeTargetBendSTRoll( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         public override void ReadBody( BinaryReader reader ) {
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
-            Unknown3.Read( reader );
+            BendSource.Read( reader );
+            BendTarget.Read( reader );
+            Roll.Read( reader );
             Unknown4.Read( reader );
             Unknown5.Read( reader );
             Unknown6.Read( reader );
@@ -41,9 +41,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         }
 
         public override void WriteBody( BinaryWriter writer ) {
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
-            Unknown3.Write( writer );
+            BendSource.Write( writer );
+            BendTarget.Write( writer );
+            Roll.Write( writer );
             Unknown4.Write( writer );
             Unknown5.Write( writer );
             Unknown6.Write( writer );
@@ -57,9 +57,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         }
 
         protected override void DrawBody( List<string> bones ) {
-            Unknown1.Draw();
-            Unknown2.Draw();
-            Unknown3.Draw();
+            BendSource.Draw();
+            BendTarget.Draw();
+            Roll.Draw();
             Unknown4.Draw();
             Unknown5.Draw();
             Unknown6.Draw();
