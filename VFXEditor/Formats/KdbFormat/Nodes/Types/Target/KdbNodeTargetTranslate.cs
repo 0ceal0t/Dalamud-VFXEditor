@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Utils;
 
-namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
+namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
     public class KdbNodeTargetTranslate : KdbNode {
         public override KdbNodeType Type => KdbNodeType.TargetTranslate;
 
@@ -11,7 +12,6 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
         public readonly ParsedDouble3 Translate = new( "Translate" );
         public readonly ParsedDouble3 NeutralTranslate = new( "Neutral Translate" );
         public readonly ParsedQuat NeutralRotate = new( "Neutral Rotate", size: 8 );
-        public readonly ParsedDouble Unknown = new( "Unknown" );
 
         public KdbNodeTargetTranslate() : base() { }
 
@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Translate.Read( reader );
             NeutralTranslate.Read( reader );
             NeutralRotate.Read( reader );
-            Unknown.Read( reader );
+            reader.ReadBytes( 8 ); // padding
         }
 
         public override void WriteBody( BinaryWriter writer ) {
@@ -30,7 +30,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Translate.Write( writer );
             NeutralTranslate.Write( writer );
             NeutralRotate.Write( writer );
-            Unknown.Write( writer );
+            FileUtils.Pad( writer, 8 ); // padding
         }
 
         protected override void DrawBody( List<string> bones ) {
@@ -38,12 +38,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
             Translate.Draw();
             NeutralTranslate.Draw();
             NeutralRotate.Draw();
-            Unknown.Draw();
         }
 
-        public override void UpdateBones( List<string> boneList ) {
-            Bone.Guess( boneList );
-        }
+        public override void UpdateBones( List<string> boneList ) => Bone.Guess( boneList );
 
         protected override List<KdbSlot> GetInputSlots() => [
             new( ConnectionType.TranslateX ),

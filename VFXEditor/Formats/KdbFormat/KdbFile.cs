@@ -6,8 +6,9 @@ using System.IO;
 using System.Linq;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.KdbFormat.Nodes;
-using VfxEditor.Formats.KdbFormat.Nodes.Types;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
 using VfxEditor.Formats.KdbFormat.UnknownB;
 using VfxEditor.Formats.KdbFormat.UnknownF;
 using VfxEditor.Interop.Havok;
@@ -29,6 +30,8 @@ namespace VfxEditor.Formats.KdbFormat {
     }
 
     public unsafe class KdbFile : FileManagerFile {
+        public static List<(int, int)> VerifyIgnore { get; private set; } = null;
+
         public static string SklbTempPath => Path.Combine( Plugin.RootLocation, "Files", "kb_havok.hkx" );
         private readonly SkeletonSelector Selector;
         public readonly List<string> BoneList = [];
@@ -65,6 +68,8 @@ namespace VfxEditor.Formats.KdbFormat {
             SplitViewB = new( "Item", ItemsB, false, null, () => new( Nodes ) );
 
             // ==========================
+
+            VerifyIgnore = [];
 
             MajorVersion = reader.ReadUInt32();
             MinorVersion = reader.ReadUInt32();
@@ -107,11 +112,13 @@ namespace VfxEditor.Formats.KdbFormat {
                         var nodeType = ( KdbNodeType )reader.ReadByte();
 
                         KdbNode newNode = nodeType switch {
+                            KdbNodeType.EffectorExpr => new KdbNodeEffectorExpr( reader ),
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
                             KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
                             KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
+                            KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null
@@ -120,6 +127,10 @@ namespace VfxEditor.Formats.KdbFormat {
                         if( newNode == null ) Dalamud.Error( $"Unknown node type {nodeType}" );
                         else nodes.Add( newNode );
                     }
+
+                    var ignoreStart = ( int )reader.BaseStream.Position;
+                    FileUtils.PadTo( reader, 8 );
+                    VerifyIgnore.Add( (ignoreStart, ( int )reader.BaseStream.Position) );
 
                     foreach( var node in nodes.Where( x => x is not KdbConnection ) ) NodeGraph.AddToCanvas( node, false );
                     foreach( var node in nodes ) {
@@ -160,7 +171,7 @@ namespace VfxEditor.Formats.KdbFormat {
                 }
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), VerifyIgnore );
         }
 
         public unsafe void UpdateSkeleton( SimpleSklb sklbFile ) {

@@ -1,8 +1,9 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using VfxEditor.Formats.KdbFormat.Nodes.Types;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
 using VfxEditor.Ui.NodeGraphViewer;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
@@ -18,11 +19,13 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
             using( var popup = ImRaii.Popup( "NewPopup" ) ) {
                 if( popup ) {
+                    if( ImGui.Selectable( "EffectorExpr" ) ) AddToCanvas( new KdbNodeEffectorExpr(), true );
                     if( ImGui.Selectable( "EffectorEZParamLink" ) ) AddToCanvas( new KdbNodeEffectorEZParamLink(), true );
                     if( ImGui.Selectable( "EffectorEZParamLinkLinear" ) ) AddToCanvas( new KdbNodeEffectorEZParamLinkLinear(), true );
                     if( ImGui.Selectable( "SourceRotate" ) ) AddToCanvas( new KdbNodeSourceRotate(), true );
                     if( ImGui.Selectable( "TargetBendSTRoll" ) ) AddToCanvas( new KdbNodeTargetBendSTRoll(), true );
                     if( ImGui.Selectable( "TargetTranslate" ) ) AddToCanvas( new KdbNodeTargetTranslate(), true );
+                    if( ImGui.Selectable( "TargetScale" ) ) AddToCanvas( new KdbNodeTargetScale(), true );
                 }
             }
 

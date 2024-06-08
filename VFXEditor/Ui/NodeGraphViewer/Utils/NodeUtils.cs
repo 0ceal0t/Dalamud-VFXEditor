@@ -61,7 +61,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Utils {
 
         public static Vector4 AdjustTransparency( Vector4 pColor, float pTransparency ) => new( pColor.X, pColor.Y, pColor.Z, pTransparency );
 
-        public static Vector4 RgbatoVec4( int R, int G, int B, int A ) => new( ( float )R / 255, ( float )G / 255, ( float )B / 255, ( float )A / 255 );
+        public static Vector4 RgbatoVec4( int r, int g, int b, int a ) => new( ( float )r / 255, ( float )g / 255, ( float )b / 255, ( float )a / 255 );
 
         internal class Colors {
             public static readonly Vector4 GenObj_BlueAction = new( 0.61f, 0.79f, 0.92f, 0.4f );

@@ -15,14 +15,14 @@ namespace VfxEditor.Formats.KdbFormat.Components {
 
         protected override void DrawBody() {
             var selected = Nodes.FirstOrDefault( x => x.NameHash.Hash == Hash, null );
-            var text = selected == null ? $"[NONE] 0x{Hash:X8}" : selected.GetText();
+            var text = selected == null ? $"[NONE] 0x{Hash:X8}" : $"{selected.GetText()} [0x{selected.NameHash.Hash:X8}]";
 
             using var combo = ImRaii.Combo( Name, text );
             if( !combo ) return;
             if( ImGui.Selectable( "[NONE]" ) ) Update( ("", 0) );
             foreach( var (node, idx) in Nodes.WithIndex() ) {
                 using var _ = ImRaii.PushId( idx );
-                if( ImGui.Selectable( node.GetText(), node == selected ) ) Update( node.NameHash.Value );
+                if( ImGui.Selectable( $"{node.GetText()} [0x{node.NameHash.Hash:X8}]", node == selected ) ) Update( node.NameHash.Value );
                 if( node == selected ) ImGui.SetItemDefaultFocus();
             }
         }

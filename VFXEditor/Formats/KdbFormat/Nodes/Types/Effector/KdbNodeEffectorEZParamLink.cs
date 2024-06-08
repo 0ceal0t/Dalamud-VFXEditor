@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.Formats.KdbFormat.Nodes.Types {
+namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
     public enum ParamLinkTangent {
         Step,
         Linear,
