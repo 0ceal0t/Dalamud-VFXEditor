@@ -30,6 +30,10 @@ namespace VfxEditor.Formats.KdbFormat {
         F, // size = 0x08, actually has values
     }
 
+    /*
+     * HUGE THANKS FOR WINTER FOR FIGURING MOST OF THIS OUT
+     */
+
     public unsafe class KdbFile : FileManagerFile {
         public static List<(int, int)> VerifyIgnore { get; private set; } = null;
 
@@ -166,7 +170,6 @@ namespace VfxEditor.Formats.KdbFormat {
                     var bCount = reader.ReadUInt32();
                     var bArrayPosition = reader.BaseStream.Position + reader.ReadUInt32();
                     reader.BaseStream.Position = bArrayPosition;
-                    Dalamud.Log( $"B >>> {reader.BaseStream.Position:X4}" );
                     for( var i = 0; i < bCount; i++ ) ItemsB.Add( new( reader, Nodes ) );
                 }
                 else if( type == ArrayType.F ) {
@@ -174,7 +177,7 @@ namespace VfxEditor.Formats.KdbFormat {
                     for( var i = 0; i < count; i++ ) ItemsF.Add( new( reader ) );
                 }
                 else if( count > 0 ) {
-                    Dalamud.Log( $"{type} >>> {count} {reader.BaseStream.Position:X8}" );
+                    Dalamud.Error( $"{type} >>> {count} {reader.BaseStream.Position:X8}" );
                 }
             }
 

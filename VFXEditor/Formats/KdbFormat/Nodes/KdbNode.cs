@@ -43,7 +43,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
         }
 
         protected void ReaderHeader( BinaryReader reader ) {
-            var a = reader.BaseStream.Position;
+            // var a = reader.BaseStream.Position;
             reader.ReadByte(); // padding
             reader.ReadByte(); // 0x01
             reader.ReadByte(); // padding
@@ -57,7 +57,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
             ReadBody( reader );
-            Dalamud.Log( $">>> {Type} / {a:X4} [{bodyPosition:X4} -> {reader.BaseStream.Position:X4}]" );
+            // Dalamud.Log( $">>> {Type} / {a:X4} [{bodyPosition:X4} -> {reader.BaseStream.Position:X4}]" );
             reader.BaseStream.Position = savePosition;
         }
 
