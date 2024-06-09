@@ -116,9 +116,11 @@ namespace VfxEditor.Formats.KdbFormat {
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
                             KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
+                            KdbNodeType.SourceTranslate => new KdbNodeSourceTranslate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
                             KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
+                            KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null

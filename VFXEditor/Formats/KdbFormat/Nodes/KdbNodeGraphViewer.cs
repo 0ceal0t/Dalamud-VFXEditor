@@ -23,9 +23,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
                     if( ImGui.Selectable( "EffectorEZParamLink" ) ) AddToCanvas( new KdbNodeEffectorEZParamLink(), true );
                     if( ImGui.Selectable( "EffectorEZParamLinkLinear" ) ) AddToCanvas( new KdbNodeEffectorEZParamLinkLinear(), true );
                     if( ImGui.Selectable( "SourceRotate" ) ) AddToCanvas( new KdbNodeSourceRotate(), true );
+                    if( ImGui.Selectable( "SourceTranslate" ) ) AddToCanvas( new KdbNodeSourceTranslate(), true );
                     if( ImGui.Selectable( "TargetBendSTRoll" ) ) AddToCanvas( new KdbNodeTargetBendSTRoll(), true );
                     if( ImGui.Selectable( "TargetTranslate" ) ) AddToCanvas( new KdbNodeTargetTranslate(), true );
                     if( ImGui.Selectable( "TargetScale" ) ) AddToCanvas( new KdbNodeTargetScale(), true );
+                    if( ImGui.Selectable( "TargetRotate" ) ) AddToCanvas( new KdbNodeTargetRotate(), true );
                 }
             }
 

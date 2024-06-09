@@ -6,11 +6,6 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
-    public enum LinkType {
-        None = 0,
-        Bone = 2,
-    }
-
     public class KdbNodeSourceRotate : KdbNodeSource {
         public override KdbNodeType Type => KdbNodeType.SourceRotate;
 
@@ -29,12 +24,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
 
         public KdbNodeSourceRotate( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
-        public override void ReadBody( BinaryReader reader ) {
-            var boneCount = reader.ReadUInt32();
-            var bonePosition = reader.BaseStream.Position + reader.ReadUInt32();
-            _ = reader.ReadUInt32(); // weight count, same as bone count
-            var weightPosition = reader.BaseStream.Position + reader.ReadUInt32();
-
+        protected override void ReadSourceBody( BinaryReader reader ) {
             SourceQuat.Read( reader );
             TargetQuat.Read( reader );
             Aim.Read( reader );
@@ -45,21 +35,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             LinkHash.Read( reader );
             Unknown2.Read( reader );
             Unknown3.Read( reader );
-
-            for( var i = 0; i < boneCount; i++ ) Bones.Add( new() );
-            reader.BaseStream.Position = bonePosition;
-            foreach( var bone in Bones ) bone.Name.Read( reader );
-            reader.BaseStream.Position = weightPosition;
-            foreach( var bone in Bones ) bone.Weight.Read( reader );
         }
 
-        public override void WriteBody( BinaryWriter writer ) {
-            var placeHolderPos = writer.BaseStream.Position;
-            writer.Write( 0 );
-            writer.Write( 0 );
-            writer.Write( 0 );
-            writer.Write( 0 );
-
+        protected override void WriteSourceBody( BinaryWriter writer ) {
             SourceQuat.Write( writer );
             TargetQuat.Write( writer );
             Aim.Write( writer );
@@ -70,19 +48,6 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             LinkHash.Write( writer );
             Unknown2.Write( writer );
             Unknown3.Write( writer );
-
-            var bonePosition = writer.BaseStream.Position;
-            foreach( var bone in Bones ) bone.Name.Write( writer );
-            var weightPosition = writer.BaseStream.Position;
-            foreach( var bone in Bones ) bone.Weight.Write( writer );
-
-            var savePos = writer.BaseStream.Position;
-            writer.BaseStream.Position = placeHolderPos;
-            writer.Write( Bones.Count );
-            writer.Write( ( uint )( bonePosition - writer.BaseStream.Position ) );
-            writer.Write( Bones.Count );
-            writer.Write( ( uint )( weightPosition - writer.BaseStream.Position ) );
-            writer.BaseStream.Position = savePos;
         }
 
         public override void UpdateBones( List<string> boneList ) {
