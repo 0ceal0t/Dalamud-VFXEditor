@@ -4,6 +4,7 @@ using ImGuiNET;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint;
 using VfxEditor.Ui.NodeGraphViewer;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
@@ -25,9 +26,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
                     if( ImGui.Selectable( "SourceRotate" ) ) AddToCanvas( new KdbNodeSourceRotate(), true );
                     if( ImGui.Selectable( "SourceTranslate" ) ) AddToCanvas( new KdbNodeSourceTranslate(), true );
                     if( ImGui.Selectable( "TargetBendSTRoll" ) ) AddToCanvas( new KdbNodeTargetBendSTRoll(), true );
+                    if( ImGui.Selectable( "TargetBendRoll" ) ) AddToCanvas( new KdbNodeTargetBendRoll(), true );
                     if( ImGui.Selectable( "TargetTranslate" ) ) AddToCanvas( new KdbNodeTargetTranslate(), true );
                     if( ImGui.Selectable( "TargetScale" ) ) AddToCanvas( new KdbNodeTargetScale(), true );
                     if( ImGui.Selectable( "TargetRotate" ) ) AddToCanvas( new KdbNodeTargetRotate(), true );
+                    if( ImGui.Selectable( "TargetPosConstraint" ) ) AddToCanvas( new KdbNodeTargetPosConstraint(), true );
+                    if( ImGui.Selectable( "TargetOrientationConstraint" ) ) AddToCanvas( new KdbNodeTargetOrientationConstraint(), true );
                 }
             }
 

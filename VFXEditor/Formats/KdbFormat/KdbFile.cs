@@ -9,6 +9,7 @@ using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
+using VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint;
 using VfxEditor.Formats.KdbFormat.UnknownB;
 using VfxEditor.Formats.KdbFormat.UnknownF;
 using VfxEditor.Interop.Havok;
@@ -118,9 +119,12 @@ namespace VfxEditor.Formats.KdbFormat {
                             KdbNodeType.SourceRotate => new KdbNodeSourceRotate( reader ),
                             KdbNodeType.SourceTranslate => new KdbNodeSourceTranslate( reader ),
                             KdbNodeType.TargetBendSTRoll => new KdbNodeTargetBendSTRoll( reader ),
+                            KdbNodeType.TargetBendRoll => new KdbNodeTargetBendRoll( reader ),
                             KdbNodeType.TargetTranslate => new KdbNodeTargetTranslate( reader ),
                             KdbNodeType.TargetScale => new KdbNodeTargetScale( reader ),
                             KdbNodeType.TargetRotate => new KdbNodeTargetRotate( reader ),
+                            KdbNodeType.TargetPosContraint => new KdbNodeTargetPosConstraint( reader ),
+                            KdbNodeType.TargetOrientationConstraint => new KdbNodeTargetOrientationConstraint( reader ),
                             // ========================
                             KdbNodeType.Connection => new KdbConnection( reader ),
                             _ => null
@@ -162,6 +166,7 @@ namespace VfxEditor.Formats.KdbFormat {
                     var bCount = reader.ReadUInt32();
                     var bArrayPosition = reader.BaseStream.Position + reader.ReadUInt32();
                     reader.BaseStream.Position = bArrayPosition;
+                    Dalamud.Log( $"B >>> {reader.BaseStream.Position:X4}" );
                     for( var i = 0; i < bCount; i++ ) ItemsB.Add( new( reader, Nodes ) );
                 }
                 else if( type == ArrayType.F ) {
@@ -269,15 +274,20 @@ namespace VfxEditor.Formats.KdbFormat {
 
             // ==== B =======
 
-            UpdatePlaceholder( bPlaceholder2, writer.BaseStream.Position, writer );
-            foreach( var item in ItemsB ) item.Write( writer );
+            if( ItemsB.Count > 0 ) {
+                UpdatePlaceholder( bPlaceholder2, writer.BaseStream.Position, writer );
+                foreach( var item in ItemsB ) item.Write( writer );
+            }
 
             // ==== F =======
 
-            UpdatePlaceholder( fPlaceholder.Item2, writer.BaseStream.Position, writer );
-            foreach( var item in ItemsF ) item.Write( writer );
+            if( ItemsF.Count > 0 ) {
+                UpdatePlaceholder( fPlaceholder.Item2, writer.BaseStream.Position, writer );
+                foreach( var item in ItemsF ) item.Write( writer );
+            }
 
             // ===== FILE SIZE ========
+
             writer.BaseStream.Position = fileSizePlaceholder;
             writer.Write( ( uint )writer.BaseStream.Length );
         }

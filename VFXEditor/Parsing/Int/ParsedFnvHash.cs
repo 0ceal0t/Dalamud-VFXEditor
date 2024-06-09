@@ -56,10 +56,12 @@ namespace VfxEditor.Parsing.Int {
             return false;
         }
 
+        public string GetText() => string.IsNullOrEmpty( Data ) ? $"0x{Hash:X8}" : Data;
+
         protected override void DrawBody() {
             var prevValue = Value;
             var inputValue = Value.Item1;
-            if( ImGui.InputTextWithHint( Name, $"0x{Value.Item2:X8}", ref inputValue, 255 ) ) {
+            if( ImGui.InputTextWithHint( Name, $"0x{Hash:X8}", ref inputValue, 255 ) ) {
                 Value = (inputValue, FnvUtils.Encode( inputValue ));
 
                 if( !Editing ) {

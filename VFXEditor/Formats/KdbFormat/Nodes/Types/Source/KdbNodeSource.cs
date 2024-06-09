@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
         public override void ReadBody( BinaryReader reader ) {
             var boneCount = reader.ReadUInt32();
             var bonePosition = reader.BaseStream.Position + reader.ReadUInt32();
-            _ = reader.ReadUInt32(); // weight count, same as bone count
+            reader.ReadUInt32(); // weight count, same as bone count
             var weightPosition = reader.BaseStream.Position + reader.ReadUInt32();
 
             ReadSourceBody( reader );
