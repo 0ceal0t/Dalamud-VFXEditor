@@ -47,13 +47,14 @@ namespace VfxEditor.PhybFormat {
             reader.BaseStream.Position = collisionOffset;
             Collision = new( this, reader, collisionOffset == simOffset );
 
-            reader.BaseStream.Position = simOffset;
-            Simulation = new( this, reader, simOffset == reader.BaseStream.Length );
-
-            // New to dawntrail
-            if( reader.BaseStream.Position != reader.BaseStream.Length ) {
-                Extended = new( reader ); // TODO: can be optionally assigned
+            // New to Dawntrail
+            reader.BaseStream.Position = reader.BaseStream.Length - 0x18;
+            if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
+                Extended = new( reader );
             }
+
+            reader.BaseStream.Position = simOffset;
+            Simulation = new( this, reader, simOffset == ( reader.BaseStream.Length - ( Extended == null ? 0 : Extended.Size ) ) );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
@@ -84,13 +85,12 @@ namespace VfxEditor.PhybFormat {
             var simWriter = new SimulationWriter();
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
-            var endPos = writer.BaseStream.Position;
 
             writer.BaseStream.Position = offsetPos;
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
 
-            writer.BaseStream.Position = endPos;
+            writer.BaseStream.Position = writer.BaseStream.Length;
             Extended?.Write( writer );
         }
 
