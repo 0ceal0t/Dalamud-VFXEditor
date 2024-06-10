@@ -6,8 +6,8 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
     public class KdbNodeTargetConstraintBoneRow : IUiItem {
         public readonly ParsedFnvHash Bone = new( "##Bone" );
-        public readonly ParsedDouble Unknown1 = new( "##Unknown 1" );
-        public readonly ParsedDouble3 Unknown2 = new( "##Unknown 2" );
+        public readonly ParsedDouble Weight = new( "##Weight" );
+        public readonly ParsedDouble3 Unknown = new( "##Unknown" );
 
         public void Draw() {
             ImGui.TableNextColumn();
@@ -16,11 +16,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
 
             ImGui.TableNextColumn();
             ImGui.SetNextItemWidth( 200 );
-            Unknown1.Draw();
+            Weight.Draw();
 
             ImGui.TableNextColumn();
             ImGui.SetNextItemWidth( 200 );
-            Unknown2.Draw();
+            Unknown.Draw();
         }
     }
 }

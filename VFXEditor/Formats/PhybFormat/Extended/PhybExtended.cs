@@ -8,6 +8,13 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
 
         public PhybExtended( BinaryReader reader ) : this() {
             reader.ReadUInt32(); // EPHB
+            reader.ReadUInt32();
+            var size = reader.ReadUInt32();
+            reader.ReadUInt32();
+            var data = reader.ReadBytes( ( int )size );
+
+
+
             // int
             // int (size of stuff after)
             // int (padding?)

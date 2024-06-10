@@ -31,7 +31,7 @@ namespace VfxEditor.Formats.KdbFormat {
     }
 
     /*
-     * HUGE THANKS FOR WINTER FOR FIGURING MOST OF THIS OUT
+     * HUGE THANKS TO WINTER FOR FIGURING OUT MOST OF THIS
      */
 
     public unsafe class KdbFile : FileManagerFile {
