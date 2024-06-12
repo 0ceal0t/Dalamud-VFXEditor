@@ -150,8 +150,6 @@ namespace VfxEditor.Formats.AtchFormat {
                 Entries[i].Accessory.Value = ( ( bitField >> ( i & 0x1F ) ) & 1 ) == 1;
             }
 
-            var dataEnd = reader.BaseStream.Position;
-
             Entries.ForEach( x => x.ReadBody( reader, NumStates ) );
             EntryView = new( Entries );
         }

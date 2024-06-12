@@ -52,11 +52,14 @@ namespace VfxEditor.PhybFormat {
             if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
                 Extended = new( reader );
             }
+            var ephbSize = Extended == null ? 0 : Extended.Size;
+            var endPos = ( int )reader.BaseStream.Length - ephbSize;
+            var ignore = Extended == null ? null : new List<(int, int)> { (endPos, ( int )reader.BaseStream.Length) };
 
             reader.BaseStream.Position = simOffset;
-            Simulation = new( this, reader, simOffset == ( reader.BaseStream.Length - ( Extended == null ? 0 : Extended.Size ) ) );
+            Simulation = new( this, reader, simOffset == endPos );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), ignore );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
