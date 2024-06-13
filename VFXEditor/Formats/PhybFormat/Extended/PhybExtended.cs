@@ -1,4 +1,5 @@
 using System.IO;
+using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended {
     public class PhybExtended {
@@ -9,6 +10,8 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
         private readonly byte[] PackData;
 
         public int Size => EphbData.Length + 0x10 + PackData.Length;
+
+        public readonly PhybEphbTable Table;
 
         public PhybExtended() { }
 
@@ -34,16 +37,22 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
                 return;
             }
 
-            // TODO: read flatbuffers
+            Table = new( EphbTable.GetRootAsEphbTable( new( EphbData ) ).UnPack() );
+
+            // TODO: pack data
         }
 
         public void Write( BinaryWriter writer ) {
+            var data = Table.Export().SerializeToBinary();
+
             writer.Write( MAGIC_EPHB );
             writer.Write( 1 );
-            writer.Write( EphbData.Length );
+            writer.Write( data.Length );
             writer.Write( 0 );
-            writer.Write( EphbData );
+            writer.Write( data );
             writer.Write( PackData );
         }
+
+        public void Draw() => Table.Draw();
     }
 }

@@ -34,7 +34,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
-        private PhybExtended Extended;
+        public readonly PhybExtended Extended;
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
@@ -54,12 +54,11 @@ namespace VfxEditor.PhybFormat {
             }
             var ephbSize = Extended == null ? 0 : Extended.Size;
             var endPos = ( int )reader.BaseStream.Length - ephbSize;
-            var ignore = Extended == null ? null : new List<(int, int)> { (endPos, ( int )reader.BaseStream.Length) };
 
             reader.BaseStream.Position = simOffset;
             Simulation = new( this, reader, simOffset == endPos );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), ignore );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
 
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
@@ -107,8 +106,6 @@ namespace VfxEditor.PhybFormat {
             using( var child = ImRaii.Child( "Child", size, false ) ) {
                 Version.Draw();
                 DataType.Draw();
-                var extended = Extended != null;
-                if( ImGui.Checkbox( "Extended", ref extended ) ) Extended = extended ? new() : null;
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
 
@@ -130,6 +127,11 @@ namespace VfxEditor.PhybFormat {
                         Skeleton.Draw();
                         SkeletonTabOpen = true;
                     }
+                }
+
+                if( Extended != null ) {
+                    using var tab = ImRaii.TabItem( "Extended" );
+                    if( tab ) Extended.Draw();
                 }
             }
 
