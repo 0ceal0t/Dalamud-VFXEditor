@@ -124,7 +124,7 @@ namespace VfxEditor.TmbFormat {
             using var reader = new BinaryReader( ms );
             var tmbReader = new TmbReader( reader );
 
-            var verified = VerifiedStatus.OK;
+            var verified = VerifiedStatus.VERIFIED;
             var actors = new List<Tmac>();
             var tracks = new List<Tmtr>();
             var entries = new List<TmbEntry>();

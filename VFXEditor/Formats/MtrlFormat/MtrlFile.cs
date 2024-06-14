@@ -154,7 +154,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             MaterialParameterView = new( "Constant", MaterialParameters, false, null, () => new( this ) );
             SamplerView = new( "Sampler", Samplers, false, ( MtrlSampler item, int idx ) => item.GetText( idx ), () => new( this ) );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Write( BinaryWriter writer ) {

@@ -35,7 +35,7 @@ namespace VfxEditor.EidFormat {
                 BindPoints.Add( NewData ? new EidBindPointNew( this, reader ) : new EidBindPointOld( this, reader ) );
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
             Dropdown = new( "Bind Point", BindPoints,
                 ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew( this ) );

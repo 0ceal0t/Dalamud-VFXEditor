@@ -183,8 +183,8 @@ public struct EphbEpsilon : IFlatbufferObject
     builder.StartTable(5);
     EphbEpsilon.AddUnknown5(builder, unknown5);
     EphbEpsilon.AddUnknown4(builder, unknown4);
-    EphbEpsilon.AddUnknown2(builder, unknown2Offset);
     EphbEpsilon.AddUnknown3(builder, unknown3);
+    EphbEpsilon.AddUnknown2(builder, unknown2Offset);
     EphbEpsilon.AddUnknown1(builder, unknown1);
     return EphbEpsilon.EndEphbEpsilon(builder);
   }
@@ -677,10 +677,10 @@ public struct EphbAlpha : IFlatbufferObject
       Offset<VFXEditor.Flatbuffer.Ephb.EphbZeta> zetaOffset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbZeta>)) {
     builder.StartTable(5);
     EphbAlpha.AddZeta(builder, zetaOffset);
+    EphbAlpha.AddUnknown1(builder, unknown1);
     EphbAlpha.AddEpsilon(builder, epsilonOffset);
     EphbAlpha.AddEta(builder, etaOffset);
     EphbAlpha.AddBeta(builder, betaOffset);
-    EphbAlpha.AddUnknown1(builder, unknown1);
     return EphbAlpha.EndEphbAlpha(builder);
   }
 

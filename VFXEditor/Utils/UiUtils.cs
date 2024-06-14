@@ -15,11 +15,12 @@ using VfxEditor.FileBrowser;
 
 namespace VfxEditor.Utils {
     public enum VerifiedStatus {
-        OK,
+        VERIFIED,
         ERROR,
         WORKSPACE,
         UNKNOWN,
-        UNSUPPORTED
+        UNSUPPORTED,
+        PARTIAL
     };
 
     public enum DraggingState {
@@ -144,7 +145,7 @@ namespace VfxEditor.Utils {
 
         public static void ShowVerifiedStatus( VerifiedStatus verified ) {
             var color = verified switch {
-                VerifiedStatus.OK => GREEN_COLOR,
+                VerifiedStatus.VERIFIED or VerifiedStatus.PARTIAL => GREEN_COLOR,
                 VerifiedStatus.ERROR => RED_COLOR,
                 VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
                 VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => DALAMUD_ORANGE,
@@ -152,7 +153,7 @@ namespace VfxEditor.Utils {
             };
 
             var icon = verified switch {
-                VerifiedStatus.OK => FontAwesomeIcon.Check.ToIconString(),
+                VerifiedStatus.VERIFIED or VerifiedStatus.PARTIAL => FontAwesomeIcon.Check.ToIconString(),
                 VerifiedStatus.ERROR => FontAwesomeIcon.Times.ToIconString(),
                 VerifiedStatus.WORKSPACE => FontAwesomeIcon.Circle.ToIconString(),
                 VerifiedStatus.UNKNOWN => FontAwesomeIcon.QuestionCircle.ToIconString(),
@@ -161,7 +162,8 @@ namespace VfxEditor.Utils {
             };
 
             var text = verified switch {
-                VerifiedStatus.OK => "Verified",
+                VerifiedStatus.VERIFIED => "Verified",
+                VerifiedStatus.PARTIAL => "Partial",
                 VerifiedStatus.ERROR => "Parsing Issues",
                 VerifiedStatus.WORKSPACE => "Workspace",
                 VerifiedStatus.UNKNOWN => "Unknown",

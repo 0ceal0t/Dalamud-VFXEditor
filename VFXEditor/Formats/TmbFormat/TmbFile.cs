@@ -59,7 +59,7 @@ namespace VfxEditor.TmbFormat {
 
             RefreshIds();
 
-            if( verify ) Verified = FileUtils.Verify( binaryReader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( binaryReader, ToBytes() );
 
             binaryReader.BaseStream.Position = startPos + size;
 

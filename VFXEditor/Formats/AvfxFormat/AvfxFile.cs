@@ -29,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
             Main = AvfxMain.FromStream( reader );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
             NodeGroupSet = Main.NodeGroupSet;
 

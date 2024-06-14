@@ -51,7 +51,7 @@ namespace VfxEditor.SklbFormat {
 
             Bones = new( this, HkxTempLocation, init );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Update() {

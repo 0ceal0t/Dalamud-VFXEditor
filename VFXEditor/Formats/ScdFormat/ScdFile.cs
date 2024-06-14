@@ -68,7 +68,7 @@ namespace VfxEditor.ScdFormat {
                 Sounds.Add( newSound );
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
             if( offsets.Modded || Audio.Any( x => x.Data is ScdVorbis vorbis && vorbis.LegacyImported ) ) {
                 Verified = VerifiedStatus.UNSUPPORTED;
             }

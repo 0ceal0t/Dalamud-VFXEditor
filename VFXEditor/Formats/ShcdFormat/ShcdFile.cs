@@ -30,7 +30,7 @@ namespace VfxEditor.Formats.ShcdFormat {
             Shader = new( reader, Stage.Value, DxVersion, !Shcd3, ShaderFileType.Shcd );
             Shader.Read( reader, parameterOffset, shaderOffset );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Write( BinaryWriter writer ) {

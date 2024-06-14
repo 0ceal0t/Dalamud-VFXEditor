@@ -82,7 +82,7 @@ namespace VfxEditor.PapFormat {
                 EmptyHavok = true;
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Update() {

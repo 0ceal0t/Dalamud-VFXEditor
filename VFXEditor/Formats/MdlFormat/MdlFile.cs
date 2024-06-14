@@ -240,7 +240,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 ( MdlBoneBoundingBox item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
                 () => new() );
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Draw() {

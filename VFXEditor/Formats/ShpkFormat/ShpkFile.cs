@@ -136,7 +136,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             // TODO: don't be dumb when adding keys, actually update selectors and stuff
             // TOOD: when adding keys, make sure to do it everywhere
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), null );
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Write( BinaryWriter writer ) {
