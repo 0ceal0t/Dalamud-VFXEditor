@@ -2,7 +2,6 @@ using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
 using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -49,32 +48,22 @@ namespace VfxEditor.PhybFormat {
             Collision = new( this, reader, collisionOffset == simOffset );
 
             // New to Dawntrail
+            List<(int, int)> ignoreRange = null;
+            var diff = 0;
             var ephbPos = reader.BaseStream.Length;
 
-            reader.BaseStream.Position = reader.BaseStream.Length - 0x18;
+            reader.BaseStream.Position = reader.BaseStream.Length <= 0x18 ? 0 : reader.BaseStream.Length - 0x18;
+
             if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
-                var ephbCount = 0;
-                for( var pos = reader.BaseStream.Length - 0x18; pos >= 0; pos-- ) { // go backwards from the end
-                    reader.BaseStream.Position = pos;
-                    if( reader.ReadUInt32() == PhybExtended.MAGIC_EPHB ) {
-                        ephbCount++;
-                        if( ephbCount == 2 ) { // found it. kinda jank but it works
-                            ephbPos = pos;
-                            Extended = new( reader );
-                            break;
-                        }
-                    }
-                }
+                reader.BaseStream.Position += 0xC;
+                var offset = reader.ReadInt64();
+                reader.BaseStream.Position -= offset;
+                ephbPos = reader.BaseStream.Position;
+                Extended = new( reader );
 
-                if( Extended == null ) Dalamud.Error( "Could not find EPHB data" );
+                ignoreRange = [(( int )ephbPos, ( int )reader.BaseStream.Length)];
+                diff = ( int )( reader.BaseStream.Length - ephbPos - 0x18 - 0x10 ) - Extended.Table.Export().SerializeToBinary().Length;
             }
-
-            var ignoreRange = Extended == null ? null : new List<(int, int)> {
-                ((int)ephbPos, (int)reader.BaseStream.Length)
-            };
-            var diff = Extended == null ? 0 : Math.Abs(
-                ( int )( reader.BaseStream.Length - ephbPos - 0x18 - 0x10 ) - Extended.Table.Export().SerializeToBinary().Length
-            );
 
             reader.BaseStream.Position = simOffset;
             Simulation = new( this, reader, simOffset == ephbPos );
