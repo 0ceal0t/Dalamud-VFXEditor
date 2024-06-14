@@ -18,14 +18,14 @@ namespace VfxEditor.Select.Lists {
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "RecentPopup" );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );
-            if( ImGui.BeginPopup( "RecentPopup" ) ) {
+            using var popup = ImRaii.Popup( "RecentPopup" );
+            if( popup ) {
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
                     Items.Remove( item );
                     Plugin.Configuration.Save();
                     return true;
                 }
                 if( item.Type != SelectResultType.Local ) Dialog.PlayPopupItems( item.Path );
-                ImGui.EndPopup();
             }
 
             return false;

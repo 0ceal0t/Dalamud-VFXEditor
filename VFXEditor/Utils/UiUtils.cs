@@ -163,7 +163,7 @@ namespace VfxEditor.Utils {
 
             var text = verified switch {
                 VerifiedStatus.VERIFIED => "Verified",
-                VerifiedStatus.PARTIAL => "Partial",
+                VerifiedStatus.PARTIAL => "Partially Verified",
                 VerifiedStatus.ERROR => "Parsing Issues",
                 VerifiedStatus.WORKSPACE => "Workspace",
                 VerifiedStatus.UNKNOWN => "Unknown",
@@ -178,9 +178,7 @@ namespace VfxEditor.Utils {
             ImGui.SameLine();
             ImGui.TextColored( color, text );
 
-            if( verified == VerifiedStatus.UNSUPPORTED ) {
-                Tooltip( "Verification is not supported for this file or file type" );
-            }
+            if( verified == VerifiedStatus.UNSUPPORTED ) Tooltip( "Verification is not supported for this file or file type" );
 
             if( verified == VerifiedStatus.ERROR ) {
                 ImGui.SameLine();
