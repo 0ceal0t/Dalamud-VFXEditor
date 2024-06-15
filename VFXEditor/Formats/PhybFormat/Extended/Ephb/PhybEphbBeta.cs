@@ -4,7 +4,7 @@ using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VFXEditor.Flatbuffer.Ephb;
 
-namespace VfxEditor.Formats.PhybFormat.Extended {
+namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbBeta : IUiItem {
         public readonly List<PhybEphbGamma> Gamma = [];
         private readonly CommandSplitView<PhybEphbGamma> GammaView;

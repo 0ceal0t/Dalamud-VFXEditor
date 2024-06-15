@@ -2,7 +2,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 using VFXEditor.Flatbuffer.Ephb;
 
-namespace VfxEditor.Formats.PhybFormat.Extended {
+namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbTheta : IUiItem {
         public readonly ParsedBool Unknown1 = new( "Unknown 1" );
         public readonly ParsedFloat Unknown2 = new( "Unknown 2" );

@@ -3,7 +3,7 @@ using System.Linq;
 using VfxEditor.Ui.Components;
 using VFXEditor.Flatbuffer.Ephb;
 
-namespace VfxEditor.Formats.PhybFormat.Extended {
+namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbTable {
         public readonly EphbUnknownTT Unknown1;
         public readonly EphbUnknownTT Unknown2;

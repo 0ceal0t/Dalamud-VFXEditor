@@ -53,16 +53,10 @@ namespace VfxEditor.PhybFormat {
             var ephbPos = reader.BaseStream.Length;
 
             reader.BaseStream.Position = reader.BaseStream.Length <= 0x18 ? 0 : reader.BaseStream.Length - 0x18;
-
             if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
-                reader.BaseStream.Position += 0xC;
-                var offset = reader.ReadInt64();
-                reader.BaseStream.Position -= offset;
-                ephbPos = reader.BaseStream.Position;
-                Extended = new( reader );
-
+                Extended = new( reader, out ephbPos, out var ephbSize );
                 ignoreRange = [(( int )ephbPos, ( int )reader.BaseStream.Length)];
-                diff = ( int )( reader.BaseStream.Length - ephbPos - 0x18 - 0x10 ) - Extended.Table.Export().SerializeToBinary().Length;
+                diff = ephbSize - Extended.Table.Export().SerializeToBinary().Length;
             }
 
             reader.BaseStream.Position = simOffset;

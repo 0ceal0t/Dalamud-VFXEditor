@@ -8,7 +8,7 @@ using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VFXEditor.Flatbuffer.Ephb;
 
-namespace VfxEditor.Formats.PhybFormat.Extended {
+namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbAlpha : IUiItem {
         public readonly ParsedBool Unknown1 = new( "Unknown 1" );
         public readonly AssignableData<PhybEphbZeta> Zeta = new( "Zeta" );

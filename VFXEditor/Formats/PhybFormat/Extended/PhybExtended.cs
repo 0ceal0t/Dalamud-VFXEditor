@@ -1,4 +1,5 @@
 using System.IO;
+using VfxEditor.Formats.PhybFormat.Extended.Ephb;
 using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended {
@@ -9,19 +10,25 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
         public readonly PhybEphbTable Table;
 
         /*
-         * ..\flatc.exe --csharp --gen-object-api --gen-onefile .\Ephb.fbs
+         *       ..\flatc.exe --csharp --gen-object-api --gen-onefile .\Ephb.fbs
          */
 
         public PhybExtended() { }
 
-        public PhybExtended( BinaryReader reader ) : this() {
+        public PhybExtended( BinaryReader reader, out long startPos, out int size ) : this() {
+            // already read PACK
+            reader.BaseStream.Position += 0xC; // skip to [offset]
+            var offset = reader.ReadInt64();
+            reader.BaseStream.Position -= offset;
+            startPos = reader.BaseStream.Position;
+
             reader.ReadUInt32(); // Magic
             reader.ReadUInt32(); // 1
-            var size = reader.ReadUInt32();
+            size = reader.ReadInt32();
             reader.ReadUInt32(); // 0
-            Table = new( EphbTable.GetRootAsEphbTable( new( reader.ReadBytes( ( int )size ) ) ).UnPack() );
+            Table = new( EphbTable.GetRootAsEphbTable( new( reader.ReadBytes( size ) ) ).UnPack() );
 
-            reader.ReadBytes( 0x18 ); // Pack data
+            // back to PACK
         }
 
         public void Write( BinaryWriter writer ) {
