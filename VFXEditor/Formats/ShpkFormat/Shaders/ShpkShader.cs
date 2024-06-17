@@ -1,7 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
-using System;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -18,6 +17,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
         public readonly ShaderStage Stage;
         public readonly DX DxVersion;
+        public readonly bool IsV7;
         public string Extension => DxVersion == DX.DX11 ? "dxbc" : "cso";
         public readonly bool HasResources;
 
@@ -29,13 +29,15 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly List<ShpkParameterInfo> Constants = [];
         private readonly List<ShpkParameterInfo> Samplers = [];
         private readonly List<ShpkParameterInfo> Resources = [];
+        private readonly List<ShpkParameterInfo> Textures = [];
 
         private readonly CommandSplitView<ShpkParameterInfo> ConstantView;
         private readonly CommandSplitView<ShpkParameterInfo> SamplerView;
         private readonly CommandSplitView<ShpkParameterInfo> ResourceView;
+        private readonly CommandSplitView<ShpkParameterInfo> TextureView;
 
-        private byte[] ExtraData = Array.Empty<byte>();
-        private byte[] Data = Array.Empty<byte>();
+        private byte[] ExtraData = [];
+        private byte[] Data = [];
 
         private int ExtraSize => Stage switch {
             ShaderStage.Vertex => DxVersion == DX.DX9 ? 4 : 8,
@@ -51,35 +53,39 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private bool BinLoaded = false;
         private string BinDump = "";
 
-        public ShpkShader( ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type ) {
+        public ShpkShader( ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type, bool isV7 ) {
             Stage = stage;
             HasResources = hasResources;
             DxVersion = dxVersion;
             Type = type;
+            IsV7 = isV7;
 
             ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
             SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
             if( HasResources ) {
                 ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+                TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
             }
         }
 
-        public ShpkShader( BinaryReader reader, ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type ) : this( stage, dxVersion, hasResources, type ) {
+        public ShpkShader( BinaryReader reader, ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type, bool isV7 ) : this( stage, dxVersion, hasResources, type, isV7 ) {
             TempOffset = reader.ReadInt32();
             TempSize = reader.ReadInt32();
 
             var numConstants = reader.ReadInt16();
             var numSamplers = reader.ReadInt16();
             var numRw = 0;
+            var numTextures = 0;
             if( HasResources ) {
                 numRw = reader.ReadInt16();
-                reader.ReadInt16(); // Padding
+                numTextures = reader.ReadInt16();
             }
 
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, Type ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, Type ) );
             if( HasResources ) {
                 for( var i = 0; i < numRw; i++ ) Resources.Add( new( reader, Type ) );
+                for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, Type ) );
             }
         }
 
@@ -87,6 +93,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             Constants.ForEach( x => x.Read( reader, parameterOffset ) );
             Samplers.ForEach( x => x.Read( reader, parameterOffset ) );
             Resources.ForEach( x => x.Read( reader, parameterOffset ) );
+            Textures.ForEach( x => x.Read( reader, parameterOffset ) );
 
             reader.BaseStream.Position = shaderOffset + TempOffset;
             ExtraData = reader.ReadBytes( ExtraSize );
@@ -102,13 +109,14 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             writer.Write( ( short )Samplers.Count );
             if( HasResources ) {
                 writer.Write( ( short )Resources.Count );
-                writer.Write( ( short )0 );
+                writer.Write( ( short )Textures.Count );
             }
 
             Constants.ForEach( x => x.Write( writer, stringPositions ) );
             Samplers.ForEach( x => x.Write( writer, stringPositions ) );
             if( HasResources ) {
                 Resources.ForEach( x => x.Write( writer, stringPositions ) );
+                Textures.ForEach( x => x.Write( writer, stringPositions ) );
             }
         }
 
@@ -142,9 +150,15 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 if( tab ) SamplerView.Draw();
             }
 
-            if( HasResources ) {
-                using var tab = ImRaii.TabItem( "Resources" );
+            if( !HasResources ) return;
+
+            using( var tab = ImRaii.TabItem( "Resources" ) ) {
                 if( tab ) ResourceView.Draw();
+            }
+
+            if( IsV7 ) {
+                using var tab = ImRaii.TabItem( "Textures" );
+                if( tab ) TextureView.Draw();
             }
         }
 

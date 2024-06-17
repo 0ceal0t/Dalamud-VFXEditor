@@ -27,7 +27,7 @@ namespace VfxEditor.Formats.ShcdFormat {
             var shaderOffset = reader.ReadUInt32();
             var parameterOffset = reader.ReadUInt32();
 
-            Shader = new( reader, Stage.Value, DxVersion, !Shcd3, ShaderFileType.Shcd );
+            Shader = new( reader, Stage.Value, DxVersion, !Shcd3, ShaderFileType.Shcd, false );
             Shader.Read( reader, parameterOffset, shaderOffset );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
