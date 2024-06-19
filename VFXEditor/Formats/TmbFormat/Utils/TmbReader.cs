@@ -156,5 +156,19 @@ namespace VfxEditor.TmbFormat.Utils {
             Reader.BaseStream.Position = currentPos;
             return result;
         }
+
+        public static void Import( TmbFile file, byte[] data, out List<Tmac> actors, out List<Tmtr> tracks, out List<TmbEntry> entries, out List<Tmfc> tmfcs ) {
+            using var ms = new MemoryStream( data );
+            using var reader = new BinaryReader( ms );
+            var tmbReader = new TmbReader( reader );
+
+            var verified = VerifiedStatus.VERIFIED;
+            actors = [];
+            tracks = [];
+            entries = [];
+            tmfcs = [];
+
+            tmbReader.ParseItem( file, actors, tracks, entries, tmfcs, ref verified );
+        }
     }
 }

@@ -9,9 +9,7 @@ using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Tmfcs;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
@@ -30,7 +28,7 @@ namespace VfxEditor.TmbFormat {
         private readonly ParsedByteBool LuaAssigned = new( "Use Lua Condition", value: false );
         public readonly List<TmtrLuaEntry> LuaEntries = [];
 
-        private int AllEntriesIdx => Entries.Count == 0 ? 0 : File.AllEntries.IndexOf( Entries.Last() ) + 1;
+        public int AllEntriesIdx => Entries.Count == 0 ? 0 : Entries.Max( File.AllEntries.IndexOf ) + 1;
 
         private string NewSearchInput = "";
 
@@ -117,30 +115,27 @@ namespace VfxEditor.TmbFormat {
             }
         }
 
+        // ====== ENTRY MANIPULATION ========
+
         public void DuplicateEntry( TmbEntry entry ) => ImportEntry( entry.ToBytes() );
 
         private void ImportEntry( byte[] data ) {
-            using var ms = new MemoryStream( data );
-            using var reader = new BinaryReader( ms );
-            var tmbReader = new TmbReader( reader );
-
-            var verified = VerifiedStatus.VERIFIED;
-            var actors = new List<Tmac>();
-            var tracks = new List<Tmtr>();
-            var entries = new List<TmbEntry>();
-            var tmfcs = new List<Tmfc>();
-
-            tmbReader.ParseItem( File, actors, tracks, entries, tmfcs, ref verified );
-            var newEntry = entries[0];
-
+            TmbReader.Import( File, data, out var _, out var _, out var entries, out var _ );
             var commands = new List<ICommand>();
-            AddEntry( commands, newEntry );
+            AddEntry( commands, entries[0] );
             CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         public void AddEntry( List<ICommand> commands, TmbEntry entry ) {
             commands.Add( new ListAddCommand<TmbEntry>( Entries, entry ) );
             commands.Add( new ListAddCommand<TmbEntry>( File.AllEntries, entry, AllEntriesIdx ) );
+        }
+
+        private void AddEntry( Type type ) {
+            var constructor = type.GetConstructor( [typeof( TmbFile )] );
+            var commands = new List<ICommand>();
+            AddEntry( commands, ( TmbEntry )constructor.Invoke( [File] ) );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         public void DeleteEntry( TmbEntry entry ) {
@@ -161,6 +156,21 @@ namespace VfxEditor.TmbFormat {
                 commands.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
                 commands.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
             }
+        }
+
+        // =========================
+
+        public byte[] ToBytes() {
+            var tmbWriter = new TmbWriter( Entries.Sum( x => x.Size ), Entries.Sum( x => x.ExtraSize ), 0 );
+            tmbWriter.StartPosition = tmbWriter.Position;
+            Write( tmbWriter );
+            foreach( var entry in Entries ) entry.Write( tmbWriter );
+
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+            tmbWriter.WriteTo( writer );
+            tmbWriter.Dispose();
+            return ms.ToArray();
         }
 
         private void DrawNewPopup() {
@@ -190,22 +200,13 @@ namespace VfxEditor.TmbFormat {
             foreach( var option in TmbUtils.ItemTypes ) {
                 if( !string.IsNullOrEmpty( NewSearchInput ) ) {
                     var combinedText = $"{option.Key} {option.Value.DisplayName}".ToLower();
-                    if( !combinedText.Contains( NewSearchInput.ToLower() ) ) continue;
+                    if( !combinedText.Contains( NewSearchInput, StringComparison.CurrentCultureIgnoreCase ) ) continue;
                 }
 
                 ImGui.TextDisabled( option.Key );
                 ImGui.SameLine();
                 if( ImGui.Selectable( $"{option.Value.DisplayName}##{option.Key}", false, ImGuiSelectableFlags.SpanAllColumns ) ) AddEntry( option.Value.Type );
             }
-        }
-
-        private void AddEntry( Type type ) {
-            var constructor = type.GetConstructor( [typeof( TmbFile )] );
-            var newEntry = ( TmbEntry )constructor.Invoke( [File] );
-
-            var commands = new List<ICommand>();
-            AddEntry( commands, newEntry );
-            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
         }
 
         private void ImportDialog() {

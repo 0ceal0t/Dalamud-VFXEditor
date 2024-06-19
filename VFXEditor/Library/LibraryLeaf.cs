@@ -1,6 +1,6 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -16,7 +16,7 @@ namespace VfxEditor.Library {
 
         public override bool Matches( string input ) {
             if( string.IsNullOrEmpty( input ) ) return true;
-            if( Name.ToLower().Contains( input.ToLower() ) ) return true;
+            if( Name.Contains( input, System.StringComparison.CurrentCultureIgnoreCase ) ) return true;
             return false;
         }
 

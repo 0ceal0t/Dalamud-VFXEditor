@@ -94,10 +94,8 @@ namespace VfxEditor.TmbFormat.Entries {
 
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
-
             tmbWriter.WriteTo( writer );
             tmbWriter.Dispose();
-
             return ms.ToArray();
         }
 

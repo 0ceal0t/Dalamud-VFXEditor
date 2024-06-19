@@ -21,7 +21,7 @@ namespace VfxEditor.TmbFormat {
 
         public readonly List<Tmfc> Tmfcs = [];
         public readonly List<Tmac> Actors = [];
-        public readonly List<Tmtr> Tracks = [];
+        public readonly List<Tmtr> AllTracks = [];
         public readonly List<TmbEntry> AllEntries = [];
 
         public readonly TmbActorDropdown ActorsDropdown;
@@ -50,12 +50,12 @@ namespace VfxEditor.TmbFormat {
             HeaderTmal = new Tmal( this, reader );
 
             for( var i = 0; i < numEntries - ( HeaderTmpp.IsAssigned ? 3 : 2 ); i++ ) {
-                reader.ParseItem( this, Actors, Tracks, AllEntries, Tmfcs, ref Verified );
+                reader.ParseItem( this, Actors, AllTracks, AllEntries, Tmfcs, ref Verified );
             }
 
             HeaderTmal.PickActors( reader );
             Actors.ForEach( x => x.PickTracks( reader ) );
-            Tracks.ForEach( x => x.PickEntries( reader ) );
+            AllTracks.ForEach( x => x.PickEntries( reader ) );
 
             RefreshIds();
 
@@ -63,7 +63,7 @@ namespace VfxEditor.TmbFormat {
 
             binaryReader.BaseStream.Position = startPos + size;
 
-            UnusedTracks = Tracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
+            UnusedTracks = AllTracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
             UnusedTrackView = new( "Track", UnusedTracks, false );
         }
 
@@ -74,13 +74,13 @@ namespace VfxEditor.TmbFormat {
 
             RefreshIds();
 
-            var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + Tracks.Select( x => x.Entries.Count ).Sum();
+            var timelineCount = Actors.Count + Actors.Select( x => x.Tracks.Count ).Sum() + AllTracks.Select( x => x.Entries.Count ).Sum();
 
             var items = new List<TmbItem> { HeaderTmdh };
             if( HeaderTmpp.IsAssigned ) items.Add( HeaderTmpp );
             items.Add( HeaderTmal );
             items.AddRange( Actors );
-            items.AddRange( Tracks );
+            items.AddRange( AllTracks );
             items.AddRange( AllEntries );
 
             var itemLength = items.Sum( x => x.Size );
@@ -147,7 +147,7 @@ namespace VfxEditor.TmbFormat {
         public void RefreshIds() {
             short id = 2;
             foreach( var actor in Actors ) actor.Id = id++;
-            foreach( var track in Tracks ) track.Id = id++;
+            foreach( var track in AllTracks ) track.Id = id++;
             foreach( var entry in AllEntries ) entry.Id = id++;
         }
 
@@ -162,7 +162,7 @@ namespace VfxEditor.TmbFormat {
             if( payload.NativePtr == null ) return;
 
             var commands = new List<ICommand>();
-            foreach( var track in Tracks ) {
+            foreach( var track in AllTracks ) {
                 track.DeleteEntry( commands, DraggingEntry ); // will add to command
             }
             destination.AddEntry( commands, DraggingEntry );

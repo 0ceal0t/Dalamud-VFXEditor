@@ -51,8 +51,8 @@ namespace VfxEditor.TmbFormat.Utils {
         }
 
         public void WriteOffsetString( string str ) {
-            if( WrittenStrings.ContainsKey( str ) ) {
-                var stringOffset = WrittenStrings[str];
+            if( WrittenStrings.TryGetValue( str, out var value ) ) {
+                var stringOffset = value;
                 var actualPos = ( int )( ( BodySize - ( StartPosition + 8 ) ) + ExtraSize + TimelineSize + stringOffset );
                 Writer.Write( actualPos );
             }
