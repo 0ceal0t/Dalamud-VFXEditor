@@ -85,6 +85,7 @@ namespace VfxEditor {
 
         public List<LibraryProps> VFXNodeLibraryItems = [];
         public List<LibraryProps> VfxTextureLibraryItems = [];
+        public List<LibraryProps> TmbTrackLibraryItems = [];
         public bool VfxTextureDefaultLoaded = false;
 
         public bool LoopMusic = true;

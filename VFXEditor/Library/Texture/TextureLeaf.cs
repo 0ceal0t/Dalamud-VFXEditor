@@ -1,7 +1,8 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Numerics;
+using VfxEditor.Library.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library.Texture {

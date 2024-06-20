@@ -4,7 +4,7 @@ using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Library {
+namespace VfxEditor.Library.Components {
     public abstract class LibraryLeaf : LibraryGeneric {
         protected Vector4 Color;
 

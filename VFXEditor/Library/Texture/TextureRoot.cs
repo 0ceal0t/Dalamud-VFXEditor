@@ -1,17 +1,18 @@
 using Dalamud.Interface;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.FileBrowser;
+using VfxEditor.Library.Components;
 using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library.Node {
-    public class TextureRoot : LibraryFolder {
+    public class TextureRoot : LibraryRoot {
         private string AddPath = "";
 
-        public TextureRoot( List<LibraryProps> items ) : base( null, "", "", items ) { }
+        public TextureRoot( List<LibraryProps> items ) : base( "Textures", items ) { }
 
         public override unsafe bool Draw( LibraryManager library, string searchInput ) {
             ImGui.InputTextWithHint( "##Add", "vfx/action/some_texture.atex", ref AddPath, 256 );

@@ -1,9 +1,13 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using System;
+using VfxEditor.FileBrowser;
 using VfxEditor.TmbFormat;
 using VfxEditor.TmbFormat.Actor;
 using VfxEditor.TmbFormat.Entries;
 using VfxEditor.Ui.Components.SplitViews;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TmbFormat.Track {
     public class TmbTrackSplitView : ItemSplitView<Tmtr> {
@@ -13,7 +17,39 @@ namespace VfxEditor.Formats.TmbFormat.Track {
             Actor = actor;
         }
 
-        protected override void DrawControls() => DrawNewDeleteControls( Actor.AddTrack, Actor.DeleteTrack );
+        protected override void DrawControls() {
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+
+            if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) Actor.AddTrack();
+
+            ImGui.SameLine();
+            if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
+                FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbtrack},.*", ( bool ok, string res ) => {
+                    if( !ok ) return;
+                    try {
+                        Actor.ImportTrack( System.IO.File.ReadAllBytes( res ) );
+                    }
+                    catch( Exception e ) {
+                        Dalamud.Error( e, "Could not import data" );
+                    }
+                } );
+            }
+
+            using var disabled = ImRaii.Disabled( Selected == null );
+
+            ImGui.SameLine();
+            if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbtrack,.*", "ExportedTmbTrack", "tmbtrack", ( bool ok, string res ) => {
+                    if( ok ) System.IO.File.WriteAllBytes( res, Selected.ToBytes() );
+                } );
+            }
+
+            ImGui.SameLine();
+            if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                Actor.DeleteTrack( Selected );
+                Selected = null;
+            }
+        }
 
         protected override bool DrawLeftItem( Tmtr item, int idx ) {
             using var _ = ImRaii.PushId( idx );

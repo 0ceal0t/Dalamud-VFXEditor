@@ -4,6 +4,7 @@ using System.Linq;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Formats.TmbFormat.Track;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Entries;
 using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
@@ -59,6 +60,17 @@ namespace VfxEditor.TmbFormat.Actor {
         }
 
         // ====== TRACK MANIPLUATION ==========
+
+        public void ImportTrack( byte[] data ) {
+            TmbReader.Import( File, data, out var _, out var tracks, out var entries, out var _, true );
+            Dalamud.Log( $"{tracks.Count} {entries.Count}" );
+            var commands = new List<ICommand>();
+            var track = tracks[0];
+            AddTrack( commands, track );
+            track.Entries.AddRange( entries );
+            commands.Add( new ListAddRangeCommand<TmbEntry>( File.AllEntries, entries ) );
+            CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
+        }
 
         public void AddTrack() {
             var commands = new List<ICommand>();

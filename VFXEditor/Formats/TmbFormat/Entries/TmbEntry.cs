@@ -99,11 +99,10 @@ namespace VfxEditor.TmbFormat.Entries {
             return ms.ToArray();
         }
 
-        private void SaveDialog() {
+        private void SaveDialog() =>
             FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
                 if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
             } );
-        }
 
         public static bool DoColor( DangerLevel level, out Vector4 color ) {
             color = new( 1 );

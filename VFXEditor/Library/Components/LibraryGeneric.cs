@@ -1,6 +1,6 @@
 using ImGuiNET;
 
-namespace VfxEditor.Library {
+namespace VfxEditor.Library.Components {
     public abstract class LibraryGeneric {
         public LibraryFolder Parent;
         protected string Name;

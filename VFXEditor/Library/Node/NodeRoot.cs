@@ -1,10 +1,11 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System.Collections.Generic;
+using VfxEditor.Library.Components;
 
 namespace VfxEditor.Library.Node {
-    public class NodeRoot : LibraryFolder {
-        public NodeRoot( List<LibraryProps> items ) : base( null, "", "", items ) { }
+    public class NodeRoot : LibraryRoot {
+        public NodeRoot( List<LibraryProps> items ) : base( "Nodes", items ) { }
 
         public override bool Draw( LibraryManager library, string searchInput ) {
             using var child = ImRaii.Child( "Child", ImGui.GetContentRegionAvail(), false );

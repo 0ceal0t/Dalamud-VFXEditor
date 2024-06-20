@@ -120,7 +120,7 @@ namespace VfxEditor.TmbFormat {
         public void DuplicateEntry( TmbEntry entry ) => ImportEntry( entry.ToBytes() );
 
         private void ImportEntry( byte[] data ) {
-            TmbReader.Import( File, data, out var _, out var _, out var entries, out var _ );
+            TmbReader.Import( File, data, out var _, out var _, out var entries, out var _, false );
             var commands = new List<ICommand>();
             AddEntry( commands, entries[0] );
             CommandManager.Add( new CompoundCommand( commands, File.RefreshIds ) );
@@ -161,13 +161,19 @@ namespace VfxEditor.TmbFormat {
         // =========================
 
         public byte[] ToBytes() {
-            var tmbWriter = new TmbWriter( Entries.Sum( x => x.Size ), Entries.Sum( x => x.ExtraSize ), 0 );
+            var tmbWriter = new TmbWriter( Size + Entries.Sum( x => x.Size ), ExtraSize + Entries.Sum( x => x.ExtraSize ), Entries.Count * sizeof( short ) );
+
             tmbWriter.StartPosition = tmbWriter.Position;
             Write( tmbWriter );
-            foreach( var entry in Entries ) entry.Write( tmbWriter );
+
+            foreach( var entry in Entries ) {
+                tmbWriter.StartPosition = tmbWriter.Position;
+                entry.Write( tmbWriter );
+            }
 
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
+            writer.Write( Entries.Count + 1 );
             tmbWriter.WriteTo( writer );
             tmbWriter.Dispose();
             return ms.ToArray();
@@ -177,7 +183,7 @@ namespace VfxEditor.TmbFormat {
             using var _ = ImRaii.PushId( "NewEntry" );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.FileImport.ToIconString() ) ) ImportDialog();
+                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ImportDialog();
             }
 
             var resetScroll = false;

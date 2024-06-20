@@ -39,12 +39,12 @@ namespace VfxEditor.Ui.Components.SplitViews {
 
             if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
 
-            if( Selected != null ) {
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    onDelete( Selected );
-                    Selected = null;
-                }
+            using var disabled = ImRaii.Disabled( Selected == null );
+
+            ImGui.SameLine();
+            if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                onDelete( Selected );
+                Selected = null;
             }
         }
     }

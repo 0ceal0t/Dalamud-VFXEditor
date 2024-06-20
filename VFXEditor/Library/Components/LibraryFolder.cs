@@ -8,7 +8,7 @@ using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Library {
+namespace VfxEditor.Library.Components {
     public unsafe class LibraryFolder : LibraryGeneric {
         public readonly List<LibraryGeneric> Children = [];
         public bool IsRoot => Parent == null;

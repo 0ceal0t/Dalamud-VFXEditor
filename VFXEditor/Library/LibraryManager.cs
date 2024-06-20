@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Library.Components;
 using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;
 using VfxEditor.Ui;
@@ -18,7 +19,7 @@ namespace VfxEditor.Library {
 
         private string SearchInput = string.Empty;
         private LibraryGeneric DraggingItem = null;
-        private LibraryFolder LastDrawnRoot;
+        private LibraryRoot LastDrawnRoot;
 
         private string ComboSearchInput = string.Empty;
 
@@ -29,7 +30,6 @@ namespace VfxEditor.Library {
 
             if( !Plugin.Configuration.VfxTextureDefaultLoaded ) {
                 ImportTextures( Path.Combine( Plugin.RootLocation, "Files", "useful_textures.txt" ) );
-
                 Plugin.Configuration.VfxTextureDefaultLoaded = true;
                 Save();
             }
@@ -40,8 +40,7 @@ namespace VfxEditor.Library {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.FolderPlus.ToIconString() ) ) {
-                    var newFolder = new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), [] );
-                    LastDrawnRoot.Add( newFolder );
+                    LastDrawnRoot.Add( new LibraryFolder( NodeRoot, "New Folder", UiUtils.RandomString( 12 ), [] ) );
                     Save();
                 }
             }
@@ -62,26 +61,13 @@ namespace VfxEditor.Library {
             using var tabBar = ImRaii.TabBar( "TabBar" );
             if( !tabBar ) return;
 
-            DrawRoot( NodeRoot, "Nodes" );
-            DrawRoot( TextureRoot, "Textures" );
-        }
-
-        private void DrawRoot( LibraryFolder root, string name ) {
-            using var tab = ImRaii.TabItem( name );
-            if( !tab ) return;
-
-            LastDrawnRoot = root;
-
-            root.Draw( this, SearchInput );
+            NodeRoot.Draw( this, SearchInput, ref LastDrawnRoot );
+            TextureRoot.Draw( this, SearchInput, ref LastDrawnRoot );
         }
 
         public void Save() {
-            Plugin.Configuration.VFXNodeLibraryItems.Clear();
-            Plugin.Configuration.VFXNodeLibraryItems.AddRange( NodeRoot.ChildrenToProps() );
-
-            Plugin.Configuration.VfxTextureLibraryItems.Clear();
-            Plugin.Configuration.VfxTextureLibraryItems.AddRange( TextureRoot.ChildrenToProps() );
-
+            NodeRoot.Save();
+            TextureRoot.Save();
             Plugin.Configuration.Save();
         }
 

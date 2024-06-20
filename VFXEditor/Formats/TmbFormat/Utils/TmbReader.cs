@@ -157,7 +157,7 @@ namespace VfxEditor.TmbFormat.Utils {
             return result;
         }
 
-        public static void Import( TmbFile file, byte[] data, out List<Tmac> actors, out List<Tmtr> tracks, out List<TmbEntry> entries, out List<Tmfc> tmfcs ) {
+        public static void Import( TmbFile file, byte[] data, out List<Tmac> actors, out List<Tmtr> tracks, out List<TmbEntry> entries, out List<Tmfc> tmfcs, bool hasCount ) {
             using var ms = new MemoryStream( data );
             using var reader = new BinaryReader( ms );
             var tmbReader = new TmbReader( reader );
@@ -168,7 +168,10 @@ namespace VfxEditor.TmbFormat.Utils {
             entries = [];
             tmfcs = [];
 
-            tmbReader.ParseItem( file, actors, tracks, entries, tmfcs, ref verified );
+            var count = hasCount ? reader.ReadInt32() : 1;
+            for( var i = 0; i < count; i++ ) {
+                tmbReader.ParseItem( file, actors, tracks, entries, tmfcs, ref verified );
+            }
         }
     }
 }
