@@ -92,7 +92,9 @@ namespace VfxEditor.Ui.Components {
                 if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
             }
 
-            if( onDelete != null && Selected != null ) {
+            using var disabled = ImRaii.Disabled( Selected == null );
+
+            if( onDelete != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );

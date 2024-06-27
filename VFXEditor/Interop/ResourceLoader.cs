@@ -46,9 +46,9 @@ namespace VfxEditor.Interop {
             var luaManagerOffset = Marshal.ReadInt32( luaManagerStart );
             LuaManager = luaManagerStart + 4 + luaManagerOffset;
 
-            var luaActorVariableStart = Dalamud.SigScanner.ScanText( Constants.LuaActorVariableSig ) + 2;
+            var luaActorVariableStart = Dalamud.SigScanner.ScanText( Constants.LuaActorVariableSig ) + 3;
             var luaActorVariableOffset = Marshal.ReadInt32( luaActorVariableStart );
-            LuaActorVariables = luaActorVariableStart + 8 + luaActorVariableOffset;
+            LuaActorVariables = luaActorVariableStart + 4 + luaActorVariableOffset;
 
             VfxUseTriggerHook = Dalamud.Hooks.HookFromSignature<VfxUseTriggerDelete>( Constants.CallTriggerSig, VfxUseTriggerDetour );
 

@@ -32,7 +32,9 @@ namespace VfxEditor.AvfxFormat {
 
                 if( allowNew && ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) ImGui.OpenPopup( "NewPopup" );
 
-                if( selected != null && allowDelete ) {
+                using var disabled = ImRaii.Disabled( selected == null );
+
+                if( allowDelete ) {
                     if( allowNew ) ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
                         file.ShowExportDialog( selected );
