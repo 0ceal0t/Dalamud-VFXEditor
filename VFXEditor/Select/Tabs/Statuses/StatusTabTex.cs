@@ -1,7 +1,6 @@
 using Lumina.Excel.GeneratedSheets2;
 using System.Collections.Generic;
 using System.Linq;
-using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabTex : SelectTab<StatusRow> {
@@ -17,8 +16,8 @@ namespace VfxEditor.Select.Tabs.Statuses {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            var icon = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.None );
-            var hd = Dalamud.TextureProvider.GetIconPath( Selected.Icon, IconFlags.HiRes );
+            var icon = Dalamud.TextureProvider.GetIconPath( Selected.Icon );
+            var hd = Dalamud.TextureProvider.GetIconPath( new( Selected.Icon, hiRes: true ) );
 
             var paths = new Dictionary<string, string>() {
                 { "Icon", icon }

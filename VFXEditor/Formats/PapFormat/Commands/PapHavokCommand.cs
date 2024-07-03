@@ -1,4 +1,6 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Animation;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
+using FFXIVClientStructs.Havok.Common.Base.Types;
 using System;
 
 namespace VfxEditor.PapFormat {

@@ -1,4 +1,10 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
+using FFXIVClientStructs.Havok.Common.Base.Object;
+using FFXIVClientStructs.Havok.Common.Base.System.IO.OStream;
+using FFXIVClientStructs.Havok.Common.Base.Types;
+using FFXIVClientStructs.Havok.Common.Serialize.Resource;
+using FFXIVClientStructs.Havok.Common.Serialize.Util;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

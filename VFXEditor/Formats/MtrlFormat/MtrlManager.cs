@@ -1,4 +1,5 @@
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
@@ -33,20 +34,23 @@ namespace VfxEditor.Formats.MtrlFormat {
             ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
 
             // Tiling textures
-            TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_d.tex" );
-            TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/-tile_n.tex" );
-            // ==== In DT =====
-            // chara/common/texture/tile_orb_array.tex
-            // chara/common/texture/tile_norm_array.tex
+            // TODO
+            // TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_orb_array.tex" );
+            // TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_norm_array.tex" );
 
             // the G buffer shader only uses red and green from the normal map
             // but all 4 channels from the "orb" map
 
-            foreach( var layer in TileDiffuseFile.Layers ) {
-                TileDiffuse.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height, 4 ) );
+            if( TileDiffuseFile == null || TileNormalFile == null ) {
+                Dalamud.Error( "Could not load tile files" );
             }
-            foreach( var layer in TileNormalFile.Layers ) {
-                TileNormal.Add( Dalamud.PluginInterface.UiBuilder.LoadImageRaw( layer, TileNormalFile.Header.Width, TileNormalFile.Header.Height, 4 ) );
+            else {
+                foreach( var layer in TileDiffuseFile.Layers ) {
+                    TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );
+                }
+                foreach( var layer in TileNormalFile.Layers ) {
+                    TileNormal.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileNormalFile.Header.Width, TileNormalFile.Header.Height ), layer ) );
+                }
             }
 
             // Dye Templates

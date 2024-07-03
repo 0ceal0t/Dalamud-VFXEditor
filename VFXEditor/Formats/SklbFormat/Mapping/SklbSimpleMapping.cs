@@ -1,4 +1,6 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
+using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
 using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Interop.Structs.Animation;

@@ -1,6 +1,8 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Object;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
-using static FFXIVClientStructs.Havok.hkRootLevelContainer;
+using static FFXIVClientStructs.Havok.Common.Serialize.Util.hkRootLevelContainer;
 
 namespace VfxEditor.SklbFormat.Bones {
     public enum BoneDisplay {

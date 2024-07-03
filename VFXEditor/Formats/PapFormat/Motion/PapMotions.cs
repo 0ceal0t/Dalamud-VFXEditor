@@ -1,4 +1,4 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;

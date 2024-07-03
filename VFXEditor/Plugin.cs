@@ -93,7 +93,7 @@ namespace VfxEditor {
         private static bool ClearKeyState = false;
         public static bool IsImguiSafe = false;
 
-        public Plugin( DalamudPluginInterface pluginInterface ) {
+        public Plugin( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
 
             Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );

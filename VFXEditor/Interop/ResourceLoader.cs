@@ -1,8 +1,7 @@
-using System;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop {
-    public unsafe partial class ResourceLoader : IDisposable {
+    public unsafe partial class ResourceLoader {
         public ResourceLoader() {
             ReadSqpackHook = Dalamud.Hooks.HookFromSignature<ReadSqpackPrototype>( Constants.ReadSqpackSig, ReadSqpackDetour );
             GetResourceSyncHook = Dalamud.Hooks.HookFromSignature<GetResourceSyncPrototype>( Constants.GetResourceSyncSig, GetResourceSyncDetour );

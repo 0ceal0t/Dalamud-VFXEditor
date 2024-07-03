@@ -15,9 +15,9 @@ using VfxEditor.Utils;
 namespace VfxEditor {
     public unsafe partial class Plugin {
         public static bool InGpose => Dalamud.ClientState.IsGPosing;
-        public static GameObject GposeTarget => Dalamud.Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
-        public static GameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
-        public static GameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
+        public static IGameObject GposeTarget => Dalamud.Objects.CreateObjectReference( new IntPtr( TargetSystem.Instance()->GPoseTarget ) );
+        public static IGameObject PlayerObject => InGpose ? GposeTarget : Dalamud.ClientState?.LocalPlayer;
+        public static IGameObject TargetObject => InGpose ? GposeTarget : Dalamud.TargetManager?.Target;
 
         private static readonly List<string> ModalsToOpen = [];
         public static readonly Dictionary<string, Modal> Modals = [];

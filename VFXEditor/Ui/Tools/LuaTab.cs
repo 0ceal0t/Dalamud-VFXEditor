@@ -1,7 +1,7 @@
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -10,7 +10,7 @@ using static VfxEditor.Interop.ResourceLoader;
 
 namespace VfxEditor.Ui.Tools {
     public unsafe class LuaTab {
-        private uint ObjectId = 0;
+        private ulong ObjectId = 0;
 
         public void Draw() {
             using var _ = ImRaii.PushId( "Lua" );
@@ -22,7 +22,7 @@ namespace VfxEditor.Ui.Tools {
             var objectName = "";
 
             foreach( var item in Dalamud.Objects ) {
-                if( item.ObjectId == ObjectId ) {
+                if( item.GameObjectId == ObjectId ) {
                     objectAddress = item.Address;
                     objectName = GetObjectName( item );
                     break;
@@ -35,7 +35,7 @@ namespace VfxEditor.Ui.Tools {
 
                 // Try to reset back to player character
                 if( Plugin.PlayerObject != null && Plugin.PlayerObject.Address != IntPtr.Zero ) {
-                    ObjectId = Plugin.PlayerObject.ObjectId;
+                    ObjectId = Plugin.PlayerObject.GameObjectId;
                     objectAddress = Plugin.PlayerObject.Address;
                     objectName = GetObjectName( Plugin.PlayerObject );
                 }
@@ -69,19 +69,19 @@ namespace VfxEditor.Ui.Tools {
                     item.ObjectKind != ObjectKind.EventNpc &&
                     item.ObjectKind != ObjectKind.Companion &&
                     item.ObjectKind != ObjectKind.BattleNpc ) continue;
-                if( item.ObjectId == 0xE0000000 ) continue;
+                if( item.GameObjectId == 0xE0000000 ) continue;
 
                 var name = GetObjectName( item );
-                if( ImGui.Selectable( $"{name}##{item.ObjectId}", item.ObjectId == ObjectId ) ) {
-                    ObjectId = item.ObjectId;
+                if( ImGui.Selectable( $"{name}##{item.GameObjectId}", item.GameObjectId == ObjectId ) ) {
+                    ObjectId = item.GameObjectId;
                 }
             }
         }
 
-        private static string GetObjectName( GameObject item ) {
+        private static string GetObjectName( IGameObject item ) {
             var name = item.Name.ToString();
             if( !string.IsNullOrEmpty( name ) ) return name;
-            return $"[0x{item.ObjectId:X4}]";
+            return $"[0x{item.GameObjectId:X4}]";
         }
 
         private static void DrawPool( LuaPool pool, IntPtr manager, IntPtr objectAddress ) {

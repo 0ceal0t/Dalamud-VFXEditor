@@ -29,34 +29,32 @@ namespace VfxEditor.Ui.Tools {
 
             if( !ImGui.BeginChild( "##ResourceManager", -Vector2.One, true ) ) return;
 
-            DrawCategoryContainer( ResourceCategory.Common, resourceHandler->ResourceGraph->ContainerArraySpan[0] );
-            DrawCategoryContainer( ResourceCategory.BgCommon, resourceHandler->ResourceGraph->ContainerArraySpan[1] );
-            DrawCategoryContainer( ResourceCategory.Bg, resourceHandler->ResourceGraph->ContainerArraySpan[2] );
-            DrawCategoryContainer( ResourceCategory.Cut, resourceHandler->ResourceGraph->ContainerArraySpan[3] );
-            DrawCategoryContainer( ResourceCategory.Chara, resourceHandler->ResourceGraph->ContainerArraySpan[4] );
-            DrawCategoryContainer( ResourceCategory.Shader, resourceHandler->ResourceGraph->ContainerArraySpan[5] );
-            DrawCategoryContainer( ResourceCategory.Ui, resourceHandler->ResourceGraph->ContainerArraySpan[6] );
-            DrawCategoryContainer( ResourceCategory.Sound, resourceHandler->ResourceGraph->ContainerArraySpan[7] );
-            DrawCategoryContainer( ResourceCategory.Vfx, resourceHandler->ResourceGraph->ContainerArraySpan[8] );
-            DrawCategoryContainer( ResourceCategory.UiScript, resourceHandler->ResourceGraph->ContainerArraySpan[9] );
-            DrawCategoryContainer( ResourceCategory.Exd, resourceHandler->ResourceGraph->ContainerArraySpan[10] );
-            DrawCategoryContainer( ResourceCategory.GameScript, resourceHandler->ResourceGraph->ContainerArraySpan[11] );
-            DrawCategoryContainer( ResourceCategory.Music, resourceHandler->ResourceGraph->ContainerArraySpan[12] );
-            DrawCategoryContainer( ResourceCategory.SqpackTest, resourceHandler->ResourceGraph->ContainerArraySpan[13] );
-            DrawCategoryContainer( ResourceCategory.Debug, resourceHandler->ResourceGraph->ContainerArraySpan[14] );
+            DrawCategoryContainer( ResourceCategory.Common, resourceHandler->ResourceGraph->Containers[0] );
+            DrawCategoryContainer( ResourceCategory.BgCommon, resourceHandler->ResourceGraph->Containers[1] );
+            DrawCategoryContainer( ResourceCategory.Bg, resourceHandler->ResourceGraph->Containers[2] );
+            DrawCategoryContainer( ResourceCategory.Cut, resourceHandler->ResourceGraph->Containers[3] );
+            DrawCategoryContainer( ResourceCategory.Chara, resourceHandler->ResourceGraph->Containers[4] );
+            DrawCategoryContainer( ResourceCategory.Shader, resourceHandler->ResourceGraph->Containers[5] );
+            DrawCategoryContainer( ResourceCategory.Ui, resourceHandler->ResourceGraph->Containers[6] );
+            DrawCategoryContainer( ResourceCategory.Sound, resourceHandler->ResourceGraph->Containers[7] );
+            DrawCategoryContainer( ResourceCategory.Vfx, resourceHandler->ResourceGraph->Containers[8] );
+            DrawCategoryContainer( ResourceCategory.UiScript, resourceHandler->ResourceGraph->Containers[9] );
+            DrawCategoryContainer( ResourceCategory.Exd, resourceHandler->ResourceGraph->Containers[10] );
+            DrawCategoryContainer( ResourceCategory.GameScript, resourceHandler->ResourceGraph->Containers[11] );
+            DrawCategoryContainer( ResourceCategory.Music, resourceHandler->ResourceGraph->Containers[12] );
+            DrawCategoryContainer( ResourceCategory.SqpackTest, resourceHandler->ResourceGraph->Containers[13] );
+            DrawCategoryContainer( ResourceCategory.Debug, resourceHandler->ResourceGraph->Containers[14] );
 
             ImGui.EndChild();
         }
 
         private void DrawCategoryContainer( ResourceCategory category, ResourceGraph.CategoryContainer container ) {
-            var map = container.CategoryMapsSpan[0].Value;
+            var map = container.CategoryMaps[0].Value;
             if( map == null || !ImGui.TreeNodeEx( $"({( uint )category:D2}) {category} - {map->Count}###{( uint )category}Debug" ) ) return;
 
-            var node = map->SmallestValue;
-            while( !node->IsNil ) {
-                DrawResourceMap( GetNodeLabel( ( uint )category, node->KeyValuePair.Item1, node->KeyValuePair.Item2.Value->Count ),
-                    node->KeyValuePair.Item2.Value );
-                node = node->Next();
+            foreach( var key in map->Keys ) {
+                var value = map->GetValueOrDefault( key ).Value;
+                DrawResourceMap( GetNodeLabel( ( uint )category, key, ( ulong )value->Count ), value );
             }
 
             ImGui.TreePop();
@@ -67,19 +65,18 @@ namespace VfxEditor.Ui.Tools {
 
             var itemList = new List<ResourceItemStruct>();
             if( typeMap->Count > 0 ) {
-                var node = typeMap->SmallestValue;
-                while( !node->IsNil ) {
-                    var path = node->KeyValuePair.Item2.Value->FileName.ToString();
+                foreach( var key in typeMap->Keys ) {
+                    var value = typeMap->GetValueOrDefault( key ).Value;
+                    var path = value->FileName.ToString();
 
-                    if( string.IsNullOrEmpty( Search ) || path.ToLower().Contains( Search.ToLower() ) ) { // match against search
+                    if( string.IsNullOrEmpty( Search ) || path.Contains( Search, System.StringComparison.CurrentCultureIgnoreCase ) ) { // match against search
                         itemList.Add( new ResourceItemStruct {
-                            Hash = node->KeyValuePair.Item1,
-                            Address = ( ulong )node->KeyValuePair.Item2.Value,
+                            Hash = key,
+                            Address = ( ulong )value,
                             Path = path,
-                            Refs = node->KeyValuePair.Item2.Value->RefCount
+                            Refs = value->RefCount
                         } );
                     }
-                    node = node->Next();
                 }
             }
 

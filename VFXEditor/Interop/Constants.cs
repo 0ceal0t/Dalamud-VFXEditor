@@ -27,7 +27,7 @@ namespace VfxEditor.Interop {
 
         public const string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 4C 8B C8 ";
         public const string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
-        public const string LoadTexFileExternSig = "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 54 41 56 41 57 48 81 EC ? ? ? ? 49 8B 80 ? ? ? ?";
+        public const string LoadTexFileExternSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 54 41 56 41 57 48 81 EC ?? ?? ?? ?? 49 8B 80 ?? ?? ?? ??";
         public const string LoadMdlFileLocalSig = "48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B 72";
         public const string LoadMdlFileExternSig = "E8 ?? ?? ?? ?? EB 02 B0 F1";
 
@@ -73,7 +73,7 @@ namespace VfxEditor.Interop {
 
         public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 5D 77";
 
-        // https://github.com/Ottermandias/Penumbra.GameData/blob/34e3299f28c5e1d2b7d071ba8a3f851f5d1fa057/Offsets.cs#L32
+        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
 
         public const int ResourceHandleGetDataVfunc = 23;
 

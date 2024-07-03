@@ -6,7 +6,6 @@ using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using VfxEditor.Select.Base;
-using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
     public abstract class SelectTab {
@@ -126,7 +125,7 @@ namespace VfxEditor.Select {
                                     ImGui.Dummy( new( itemHeight, itemHeight ) );
                                 }
                                 else {
-                                    var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+                                    var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
                                     if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
                                         ImGui.Image( icon.ImGuiHandle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
                                     }
@@ -192,7 +191,7 @@ namespace VfxEditor.Select {
         protected static void DrawIcon( uint iconId ) {
             if( iconId <= 0 ) return;
 
-            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
             if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );

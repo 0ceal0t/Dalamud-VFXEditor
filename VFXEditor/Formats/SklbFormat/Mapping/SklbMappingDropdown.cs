@@ -1,13 +1,14 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Types;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Havok;
+using VfxEditor.Interop.Havok.Structs;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Ui.Components;
-using static FFXIVClientStructs.Havok.hkBaseObject;
 
 namespace VfxEditor.SklbFormat.Mapping {
     public class SklbMappingDropdown : Dropdown<SklbMapping> {
@@ -36,7 +37,9 @@ namespace VfxEditor.SklbFormat.Mapping {
                 var mapper = ( SkeletonMapper* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( SkeletonMapper ) ) );
                 File.Handles.Add( ( nint )mapper );
                 mapper->hkReferencedObject.MemSizeAndRefCount = 0;
-                mapper->hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObjectVtbl* )ResourceLoader.HavokMapperVtbl;
+
+                ( ( HkBaseObject* )mapper )->vfptr = ( HkBaseObject.HkBaseObjectVtbl* )ResourceLoader.HavokMapperVtbl;
+
                 mapper->Mapping.SkeletonA = new() {
                     ptr = havokData.Skeleton
                 };

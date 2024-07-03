@@ -46,7 +46,7 @@ namespace VfxEditor.Tracker {
                 // Something like battle/idle
                 // var actionString = Marshal.PtrToStringAnsi( action + 74 );
 
-                var objectId = obj->ObjectID;
+                var objectId = obj->EntityId;
 
                 var resource = ( ResourceHandle* )Marshal.ReadIntPtr( action + 24 );
                 if( resource == null ) return;

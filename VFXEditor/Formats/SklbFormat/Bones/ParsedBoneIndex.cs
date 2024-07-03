@@ -1,6 +1,6 @@
-using FFXIVClientStructs.Havok;
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Parsing;

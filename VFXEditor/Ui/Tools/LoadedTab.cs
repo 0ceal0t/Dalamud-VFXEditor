@@ -1,7 +1,7 @@
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,7 +17,7 @@ namespace VfxEditor.Ui.Tools {
                 var gameObject = ( GameObject* )item.Address;
                 if( gameObject == null ) continue;
 
-                var id = gameObject->ObjectID;
+                var id = gameObject->EntityId;
                 if( id == 0 ) continue;
 
                 var drawObject = gameObject->DrawObject;

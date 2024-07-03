@@ -64,7 +64,7 @@ namespace VfxEditor.Structs.Vfx {
             };
         }
 
-        public void UpdatePosition( GameObject actor ) {
+        public void UpdatePosition( IGameObject actor ) {
             if( Vfx == null ) return;
             Vfx->Position = actor.Position;
         }

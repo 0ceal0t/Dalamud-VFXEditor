@@ -1,4 +1,5 @@
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
@@ -21,7 +22,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Width = file.Header.Width;
             Height = file.Header.Height;
             Depth = file.Header.Depth;
-            Wrap = Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
+            Wrap = Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( file.Header.Width, file.Header.Height ), file.ImageData );
             Penumbra = penumbra;
 
             if( Wrap != null ) Plugin.TextureManager.Wraps.Add( Wrap );

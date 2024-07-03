@@ -1,4 +1,8 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Animation;
+using FFXIVClientStructs.Havok.Animation.Playback;
+using FFXIVClientStructs.Havok.Animation.Playback.Control;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Container.String;
 using ImGuiNET;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

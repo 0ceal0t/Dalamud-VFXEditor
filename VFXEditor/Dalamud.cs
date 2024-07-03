@@ -1,6 +1,6 @@
 using Dalamud.Game;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -8,7 +8,7 @@ using System;
 
 namespace VfxEditor {
     public class Dalamud {
-        [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+        [PluginService] public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
         [PluginService] public static IClientState ClientState { get; private set; } = null!;
         [PluginService] public static IFramework Framework { get; private set; } = null!;
         [PluginService] public static ICondition Condition { get; private set; } = null!;

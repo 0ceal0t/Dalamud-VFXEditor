@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using ImGuiNET;
 using ImPlotNET;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         private static int MATERIAL_ID = 0;
         private readonly int Id = MATERIAL_ID++;
 
-        private bool IsColor => Plugin.Configuration.PapMaterialDisplay == 1;
+        private static bool IsColor => Plugin.Configuration.PapMaterialDisplay == 1;
 
         private string BoneSelected = "";
         private double[] AllFrames;
@@ -92,9 +92,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 }
 
                 ImGui.SameLine();
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    if( ImGui.Button( FontAwesomeIcon.ArrowsLeftRightToLine.ToIconString() ) ) ImPlot.SetNextAxesToFit();
-                }
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                if( ImGui.Button( FontAwesomeIcon.ArrowsLeftRightToLine.ToIconString() ) ) ImPlot.SetNextAxesToFit();
             }
 
             // ====================

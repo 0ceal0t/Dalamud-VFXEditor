@@ -1,5 +1,6 @@
 using Dalamud.Interface;
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
@@ -140,7 +141,7 @@ namespace VfxEditor.FileBrowser.Preview {
             var data = reader.ReadBytes( ( int )ms.Length - headerSize );
 
             var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
-            return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( convertedData, width, height, 4 );
+            return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), convertedData );
         }
 
         private static IDalamudTextureWrap LoadTex( string path, out string format, out int mips ) {
@@ -152,13 +153,13 @@ namespace VfxEditor.FileBrowser.Preview {
 
             format = $"{file.Header.Format}";
             mips = file.Header.MipLevelsCount;
-            return Dalamud.PluginInterface.UiBuilder.LoadImageRaw( file.ImageData, file.Header.Width, file.Header.Height, 4 );
+            return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( file.Header.Width, file.Header.Height ), file.ImageData );
         }
 
         private static IDalamudTextureWrap LoadImage( string path, out string format, out int mips ) {
             format = path.Split( "." )[^1].ToUpper();
             mips = 1;
-            return Dalamud.PluginInterface.UiBuilder.LoadImage( path );
+            return Dalamud.TextureProvider.GetFromFile( path ).GetWrapOrDefault();
         }
 
         public void Clear() => Dispose();

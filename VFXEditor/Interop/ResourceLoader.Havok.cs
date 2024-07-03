@@ -7,9 +7,9 @@ namespace VfxEditor.Interop {
 
         public static IntPtr HavokMapperVtbl { get; private set; }
 
-        public delegate hkaSplineCompressedAnimation* HavokSplineCtorDelegate(
-            hkaSplineCompressedAnimation* spline,
-            hkaInterleavedUncompressedAnimation* interleaved );
+        public delegate HkaSplineCompressedAnimation* HavokSplineCtorDelegate(
+            HkaSplineCompressedAnimation* spline,
+            HkaInterleavedUncompressedAnimation* interleaved );
 
         public HavokSplineCtorDelegate HavokSplineCtor { get; private set; }
     }

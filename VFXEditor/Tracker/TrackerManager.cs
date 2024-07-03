@@ -1,8 +1,8 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using ImGuiNET;
-using Dalamud.Interface.Utility.Raii;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -101,7 +101,7 @@ namespace VfxEditor.Tracker {
 
                 var paths = new HashSet<TrackerItem>();
 
-                if( actorIdToItems.TryGetValue( ( int )actor.ObjectId, out var _p1 ) ) {
+                if( actorIdToItems.TryGetValue( ( int )actor.GameObjectId, out var _p1 ) ) {
                     foreach( var p in _p1 ) paths.Add( p );
                 }
 

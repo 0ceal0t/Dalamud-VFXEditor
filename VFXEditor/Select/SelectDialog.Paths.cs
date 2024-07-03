@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Select.Tabs.BgmQuest;
-using static Dalamud.Plugin.Services.ITextureProvider;
 
 namespace VfxEditor.Select {
     public partial class SelectDialog {
@@ -26,7 +25,7 @@ namespace VfxEditor.Select {
 
         public static bool DrawIcon( uint iconId, Vector2 size ) {
             if( iconId <= 0 ) return false;
-            var icon = Dalamud.TextureProvider.GetIcon( iconId, IconFlags.None );
+            var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
             if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
                 ImGui.Image( icon.ImGuiHandle, size );
                 if( ImGui.IsItemHovered() ) {

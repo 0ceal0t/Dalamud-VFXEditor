@@ -37,7 +37,7 @@ namespace VfxEditor.Tracker {
 
         private void PopulateSklbs( GameObject* gameObject, HashSet<TrackerItem> paths ) {
             if( gameObject == null ) return;
-            if( gameObject->ObjectID == 0 ) return;
+            if( gameObject->EntityId == 0 ) return;
 
             var drawObject = gameObject->DrawObject;
             if( drawObject == null ) return;

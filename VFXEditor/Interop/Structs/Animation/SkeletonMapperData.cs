@@ -1,4 +1,7 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Types;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop.Structs.Animation {

@@ -11,10 +11,10 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 ### DT TODO
 - [ ] Offsets
 - [ ] Test Lua actor table
-- [ ] Add PCT/VPR/Fem Hrothgar
 - [ ] Double-Check new files
 - [ ] Update stain
 - [ ] Update tile textures
+- [ ] Timeline to action
 
 ### Supported File Types
 

@@ -41,7 +41,7 @@ namespace VfxEditor.Select {
             new RacialData( "Aura M", "c1301", 20 ),
             new RacialData( "Aura F", "c1401", 21 ),
             new RacialData( "Hrothgar M", "c1501", 24 ),
-            // 1601 coming soon (tm)
+            new RacialData( "Hrothgar F", "c1601", 25 ),
             new RacialData( "Viera M", "c1701", 28 ),
             new RacialData( "Viera F", "c1801", 29 )
         ];
@@ -67,8 +67,8 @@ namespace VfxEditor.Select {
             { "Black Mage", "bt_jst_sld" },
             { "Summoner", "bt_2bk_emp" },
             { "Blue Mage", "bt_rod_emp" },
-            // Pictomancer = bt_brs_plt
-            // Viper = bt_bld_bld
+            { "Pictomancer", "bt_brs_plt" },
+            { "Viper", "bt_bld_bld" },
         };
 
         public static readonly Dictionary<string, string> JobMovementOverride = new() {

@@ -1,4 +1,5 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Object;
 using HelixToolkit.SharpDX.Core.Animations;
 using SharpDX;
 using System.Collections.Generic;

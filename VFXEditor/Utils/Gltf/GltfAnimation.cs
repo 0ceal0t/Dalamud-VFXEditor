@@ -1,4 +1,8 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Animation;
+using FFXIVClientStructs.Havok.Animation.Motion;
+using FFXIVClientStructs.Havok.Animation.Rig;
+using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
+using FFXIVClientStructs.Havok.Common.Base.Types;
 using SharpGLTF.Animations;
 using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
@@ -255,13 +259,15 @@ namespace VfxEditor.Utils.Gltf {
             var currentBinding = motion.AnimationControl->Binding;
             var currentAnim = currentBinding.ptr->Animation;
 
-            var anim = ( hkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaInterleavedUncompressedAnimation ) ) );
+            var anim = ( HkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaInterleavedUncompressedAnimation ) ) );
             handles.Add( ( nint )anim );
-            anim->Animation.hkReferencedObject.hkBaseObject.vfptr = ( hkBaseObject.hkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
+
+            ( ( HkBaseObject* )anim )->vfptr = ( HkBaseObject.HkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
 
             var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
             handles.Add( ( nint )binding );
-            binding->hkReferencedObject.hkBaseObject.vfptr = currentBinding.ptr->hkReferencedObject.hkBaseObject.vfptr;
+
+            ( ( HkBaseObject* )binding )->vfptr = ( ( HkBaseObject* )currentBinding.ptr )->vfptr;
 
             // Set up binding
             binding->OriginalSkeletonName = currentBinding.ptr->OriginalSkeletonName;
@@ -289,7 +295,7 @@ namespace VfxEditor.Utils.Gltf {
             if( compress ) {
                 Dalamud.Log( "Compressing animation..." );
 
-                var spline = ( hkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaSplineCompressedAnimation ) ) );
+                var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaSplineCompressedAnimation ) ) );
                 handles.Add( ( nint )spline );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
                 finalAnim = ( hkaAnimation* )spline;

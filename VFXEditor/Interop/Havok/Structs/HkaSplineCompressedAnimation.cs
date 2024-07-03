@@ -1,11 +1,12 @@
-using FFXIVClientStructs.Havok;
+using FFXIVClientStructs.Havok.Animation.Animation;
+using FFXIVClientStructs.Havok.Common.Base.Container.Array;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop.Havok.Structs {
     // https://github.com/Bewolf2/projectanarchy/blob/bec6e7270c9dc797a12d167d3e8942866065364e/Source/Animation/Animation/Animation/SplineCompressed/hkaSplineCompressedAnimation.h#L297
 
     [StructLayout( LayoutKind.Sequential )]
-    public struct hkaSplineCompressedAnimation {
+    public unsafe struct HkaSplineCompressedAnimation {
         public hkaAnimation Animation;
 
         public int NumFrames;
