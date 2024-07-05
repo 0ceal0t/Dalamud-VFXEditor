@@ -26,8 +26,11 @@ namespace VfxEditor.Interop {
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Signatures.cs
 
         public const string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 4C 8B C8 ";
+
         public const string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
-        public const string LoadTexFileExternSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 54 41 56 41 57 48 81 EC ?? ?? ?? ?? 49 8B 80 ?? ?? ?? ??";
+        public const string LodConfigSig = "48 8B 05 ?? ?? ?? ?? B3";
+        public const string TexResourceHandleOnLoadSig = "40 53 55 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B D9";
+
         public const string LoadMdlFileLocalSig = "48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B 72";
         public const string LoadMdlFileExternSig = "E8 ?? ?? ?? ?? EB 02 B0 F1";
 

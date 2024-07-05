@@ -81,4 +81,19 @@ namespace VfxEditor.Structs {
         [FieldOffset( 0xAC )]
         public uint RefCount;
     }
+
+    [StructLayout( LayoutKind.Explicit )]
+    public unsafe struct TextureResourceHandle {
+        [FieldOffset( 0x0 )]
+        public ResourceHandle Handle;
+
+        [FieldOffset( 0x0 )]
+        public FFXIVClientStructs.FFXIV.Client.System.Resource.Handle.TextureResourceHandle CsHandle;
+
+        [FieldOffset( 0x104 )]
+        public byte SomeLodFlag;
+
+        public readonly bool ChangeLod
+            => ( SomeLodFlag & 1 ) != 0;
+    }
 }

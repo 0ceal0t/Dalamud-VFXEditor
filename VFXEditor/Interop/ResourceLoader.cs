@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
         public ResourceLoader() {
+            Dalamud.Hooks.InitializeFromAttributes( this );
+
             ReadSqpackHook = Dalamud.Hooks.HookFromSignature<ReadSqpackPrototype>( Constants.ReadSqpackSig, ReadSqpackDetour );
             GetResourceSyncHook = Dalamud.Hooks.HookFromSignature<GetResourceSyncPrototype>( Constants.GetResourceSyncSig, GetResourceSyncDetour );
             GetResourceAsyncHook = Dalamud.Hooks.HookFromSignature<GetResourceAsyncPrototype>( Constants.GetResourceAsyncSig, GetResourceAsyncDetour );
@@ -31,9 +33,8 @@ namespace VfxEditor.Interop {
             DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( Dalamud.SigScanner.ScanText( Constants.DecRefSig ) );
             RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( Dalamud.SigScanner.ScanText( Constants.RequestFileSig ) );
 
-            CheckFileStateHook = Dalamud.Hooks.HookFromSignature<CheckFileStateDelegate>( Constants.CheckFileStateSig, CheckFileStateDetour );
+            CheckFileStateHook = Dalamud.Hooks.HookFromSignature<CheckFileStatePrototype>( Constants.CheckFileStateSig, CheckFileStateDetour );
             LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadTexFileLocalSig ) );
-            LoadTexFileExternHook = Dalamud.Hooks.HookFromSignature<LoadTexFileExternDelegate>( Constants.LoadTexFileExternSig, LoadTexFileExternDetour );
             LoadMdlFileLocal = Marshal.GetDelegateForFunctionPointer<LoadMdlFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadMdlFileLocalSig ) );
             LoadMdlFileExternHook = Dalamud.Hooks.HookFromSignature<LoadMdlFileExternDelegate>( Constants.LoadMdlFileExternSig, LoadMdlFileExternDetour );
 
@@ -69,16 +70,20 @@ namespace VfxEditor.Interop {
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
+
             StaticVfxCreateHook.Enable();
             StaticVfxRemoveHook.Enable();
             ActorVfxCreateHook.Enable();
             ActorVfxRemoveHook.Enable();
+
             CheckFileStateHook.Enable();
-            LoadTexFileExternHook.Enable();
             LoadMdlFileExternHook.Enable();
+            TextureOnLoadHook.Enable();
+
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
+
             PathResolved += AddCrc;
         }
 
@@ -88,13 +93,16 @@ namespace VfxEditor.Interop {
             ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
+
             StaticVfxCreateHook.Dispose();
             StaticVfxRemoveHook.Dispose();
             ActorVfxCreateHook.Dispose();
             ActorVfxRemoveHook.Dispose();
+
             CheckFileStateHook.Dispose();
-            LoadTexFileExternHook.Dispose();
             LoadMdlFileExternHook.Dispose();
+            TextureOnLoadHook.Dispose();
+
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();

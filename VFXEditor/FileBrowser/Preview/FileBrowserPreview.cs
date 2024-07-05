@@ -108,6 +108,7 @@ namespace VfxEditor.FileBrowser.Preview {
                     };
 
                     FileName = file.FileName;
+                    Texture?.Dispose();
                     if( newTexture != null ) Texture = newTexture;
                 }
                 catch( Exception e ) {
@@ -159,7 +160,7 @@ namespace VfxEditor.FileBrowser.Preview {
         private static IDalamudTextureWrap LoadImage( string path, out string format, out int mips ) {
             format = path.Split( "." )[^1].ToUpper();
             mips = 1;
-            return Dalamud.TextureProvider.GetFromFile( path ).GetWrapOrDefault();
+            return Dalamud.TextureProvider.GetFromFile( path ).RentAsync().Result;
         }
 
         public void Clear() => Dispose();

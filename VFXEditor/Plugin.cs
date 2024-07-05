@@ -91,7 +91,7 @@ namespace VfxEditor {
 #endif
 
         private static bool ClearKeyState = false;
-        public static bool IsImguiSafe = false;
+        public static bool IsImguiSafe { get; set; } = false;
 
         public Plugin( IDalamudPluginInterface pluginInterface ) {
             pluginInterface.Create<Dalamud>();
