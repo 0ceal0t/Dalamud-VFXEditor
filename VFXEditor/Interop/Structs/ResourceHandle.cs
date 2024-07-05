@@ -80,36 +80,5 @@ namespace VfxEditor.Structs {
 
         [FieldOffset( 0xAC )]
         public uint RefCount;
-
-        // May return null.
-        public static byte* GetData( ResourceHandle* handle )
-            => ( ( delegate* unmanaged< ResourceHandle*, byte* > )handle->VTable[Constants.ResourceHandleGetDataVfunc] )( handle );
-
-        public static ulong GetLength( ResourceHandle* handle )
-            => ( ( delegate* unmanaged< ResourceHandle*, ulong > )handle->VTable[Constants.ResourceHandleGetLengthVfunc] )( handle );
-
-
-        // Only use these if you know what you are doing.
-        // Those are actually only sure to be accessible for DefaultResourceHandles.
-        [FieldOffset( 0xB0 )]
-        public DataIndirection* Data;
-
-        [FieldOffset( 0xB8 )]
-        public uint DataLength;
-
-        public (IntPtr Data, int Length) GetData()
-            => Data != null
-                ? (( IntPtr )Data->DataPtr, ( int )Data->DataLength)
-                : (IntPtr.Zero, 0);
-
-        public bool SetData( IntPtr data, int length ) {
-            if( Data == null )
-                return false;
-
-            Data->DataPtr = length != 0 ? ( byte* )data : null;
-            Data->DataLength = ( ulong )length;
-            DataLength = ( uint )length;
-            return true;
-        }
     }
 }

@@ -35,8 +35,13 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // Tiling textures
             // TODO
-            // TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_orb_array.tex" );
-            // TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_norm_array.tex" );
+            try {
+                TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_orb_array.tex" );
+                TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_norm_array.tex" );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error loading files" );
+            }
 
             // the G buffer shader only uses red and green from the normal map
             // but all 4 channels from the "orb" map

@@ -30,6 +30,7 @@ namespace VfxEditor.Interop {
             GetFileManager2 = Marshal.GetDelegateForFunctionPointer<GetFileManagerDelegate>( Dalamud.SigScanner.ScanText( Constants.GetFileManager2Sig ) );
             DecRef = Marshal.GetDelegateForFunctionPointer<DecRefDelegate>( Dalamud.SigScanner.ScanText( Constants.DecRefSig ) );
             RequestFile = Marshal.GetDelegateForFunctionPointer<RequestFileDelegate>( Dalamud.SigScanner.ScanText( Constants.RequestFileSig ) );
+            RequestFileHook = Dalamud.Hooks.HookFromSignature<RequestFilePrototype>( Constants.RequestFileSig, RequestFileDetour );
 
             CheckFileStateHook = Dalamud.Hooks.HookFromSignature<CheckFileStateDelegate>( Constants.CheckFileStateSig, CheckFileStateDetour );
             LoadTexFileLocal = Marshal.GetDelegateForFunctionPointer<LoadTexFileLocalDelegate>( Dalamud.SigScanner.ScanText( Constants.LoadTexFileLocalSig ) );
@@ -79,6 +80,7 @@ namespace VfxEditor.Interop {
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
+            RequestFileHook.Enable();
             PathResolved += AddCrc;
         }
 
@@ -97,6 +99,7 @@ namespace VfxEditor.Interop {
             LoadMdlFileExternHook.Dispose();
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
+            RequestFileHook.Dispose();
             InitSoundHook.Dispose();
         }
     }

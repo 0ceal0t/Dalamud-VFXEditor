@@ -43,9 +43,9 @@ namespace VfxEditor.Interop {
 
         public const int PrepPapOffset = 105;
 
-        public const byte PrepPapValue = 0xec;
+        public const byte PrepPapValue = 0xEC;
 
-        // https://github.com/xivdev/Penumbra/blob/master/Penumbra.GameData/Offsets.cs#L18
+        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
 
         public const int GetGameObjectIdxVfunc = 28;
 
@@ -72,11 +72,5 @@ namespace VfxEditor.Interop {
         public const string PlaySoundSig = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? FE C2";
 
         public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 5D 77";
-
-        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
-
-        public const int ResourceHandleGetDataVfunc = 23;
-
-        public const int ResourceHandleGetLengthVfunc = 17;
     }
 }

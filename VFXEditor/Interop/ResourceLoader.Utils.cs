@@ -1,3 +1,4 @@
+using Dalamud.Hooking;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Penumbra.String;
 using System;
@@ -44,6 +45,19 @@ namespace VfxEditor.Interop {
         private delegate void* RequestFileDelegate( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
 
         private readonly RequestFileDelegate RequestFile;
+
+        // ======== FOR DEBUGGING =============
+
+        public delegate void* RequestFilePrototype( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 );
+
+        public Hook<RequestFilePrototype> RequestFileHook { get; private set; }
+
+        private void* RequestFileDetour( IntPtr a1, IntPtr a2, IntPtr a3, byte a4 ) {
+            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[RequestFile] {a1:X4} {a2:X4} {a3:X4} {a4}" );
+            return RequestFileHook.Original( a1, a2, a3, a4 );
+        }
+
+        // ======================
 
         public void ReRender() {
             if( CurrentRedrawState != RedrawState.None || Plugin.PlayerObject == null ) return;

@@ -98,8 +98,8 @@ namespace VfxEditor.Interop.Penumbra {
         }
 
         public void Dispose() {
-            InitializedSubscriber.Dispose();
-            DisposedSubscriber.Dispose();
+            InitializedSubscriber?.Dispose();
+            DisposedSubscriber?.Dispose();
         }
 
         // https://github.com/Ottermandias/OtterGui/blob/4673e93f5165108a7f5b91236406d527f16384a5/Functions.cs#L154

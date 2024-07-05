@@ -8,14 +8,6 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
-### DT TODO
-- [ ] Offsets
-- [ ] Test Lua actor table
-- [ ] Double-Check new files
-- [ ] Update stain
-- [ ] Update tile textures
-- [ ] Timeline to action
-
 ### Supported File Types
 
 | Extension | Description |
