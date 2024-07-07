@@ -62,6 +62,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt CreateIntervalRandom = new( "Create Interval Random", "CrIR" );
         public readonly AvfxInt CreateIntervalCount = new( "Create Interval Count", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "Create Interval Life", "CrIL" );
+        public readonly AvfxInt CrLR = new( "CrLR", "CrLR" ); // New to DT
         public readonly AvfxInt CreateNewAfterDelete = new( "Create New After Death", "bCrN", size: 1 );
         public readonly AvfxInt UvReverse = new( "UV Reverse", "bRUV", size: 1 );
         public readonly AvfxInt ScaleRandomLink = new( "Scale Random Link", "bSRL", size: 1 );
@@ -138,6 +139,7 @@ namespace VfxEditor.AvfxFormat {
                 CreateIntervalRandom,
                 CreateIntervalCount,
                 CreateIntervalLife,
+                CrLR,
                 CreateNewAfterDelete,
                 UvReverse,
                 ScaleRandomLink,
@@ -164,6 +166,7 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( CreateIntervalRandom );
             Display.Add( CreateIntervalCount );
             Display.Add( CreateIntervalLife );
+            Display.Add( CrLR );
             Display.Add( CreateNewAfterDelete );
 
             DisplayTabs.Add( AnimationDisplay = new UiDisplayList( "Animation" ) );

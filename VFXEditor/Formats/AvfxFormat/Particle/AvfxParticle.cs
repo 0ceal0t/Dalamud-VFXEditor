@@ -29,6 +29,9 @@ namespace VfxEditor.AvfxFormat {
         // New to dawntrail
         public readonly AvfxInt ShUT = new( "ShUT", "ShUT" );
         public readonly AvfxInt ShR = new( "ShR", "ShR" );
+        public readonly AvfxInt ShT = new( "ShT", "ShT" );
+        public readonly AvfxInt UniV = new( "UniV", "UniV" );
+        public readonly AvfxInt HybV = new( "HybV", "HybV" );
         public readonly AvfxBool E24Enabled = new( "E24 Enabled", "bE24" );
 
         public readonly AvfxBool IsApplyToneMap = new( "Apply Tone Map", "bATM" );
@@ -122,6 +125,9 @@ namespace VfxEditor.AvfxFormat {
                 S11Enabled,
                 ShUT,
                 ShR,
+                ShT,
+                UniV,
+                HybV,
                 E24Enabled,
                 IsApplyToneMap,
                 IsApplyFog,
