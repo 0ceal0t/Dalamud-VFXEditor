@@ -55,7 +55,7 @@ namespace VfxEditor.AvfxFormat {
             DecalRing = 11,
             Disc = 12,
             LightModel = 13,
-            Unknown_14 = 14,
+            ModelSkin = 14,
             Dissolve = 15,
         }
         public enum RotationDirectionBase {

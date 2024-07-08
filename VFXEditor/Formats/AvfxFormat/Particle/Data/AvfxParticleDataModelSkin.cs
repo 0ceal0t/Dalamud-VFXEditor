@@ -1,7 +1,7 @@
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataUnknown14 : AvfxDataWithParameters {
+    public class AvfxParticleDataModelSkin : AvfxDataWithParameters {
         // All-new to dawntrail
         public readonly AvfxEnum<FresnelType> FresnelType = new( "Fresnel Type", "FrsT" );
         public readonly AvfxInt AuTT = new( "AuTT", "AuTT" );
@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve EEM = new( "EEM", "EEM" );
         public readonly AvfxCurve3Axis UVPD = new( "UVPD", "UVPD" );
 
-        public AvfxParticleDataUnknown14() : base() {
+        public AvfxParticleDataModelSkin() : base() {
             Parsed = [
                 FresnelType,
                 AuTT,
