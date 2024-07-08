@@ -111,10 +111,7 @@ namespace VfxEditor.Interop {
         }
 
         private byte ReadSqpackDetour( IntPtr fileHandler, SeFileDescriptor* fileDesc, int priority, bool isSync ) {
-            if( fileDesc->ResourceHandle == null ) {
-                Dalamud.Error( $"Invalid File Descriptor {( nint )fileDesc:X4}" );
-                return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
-            }
+            if( fileDesc->ResourceHandle == null ) return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );
 
             if( !fileDesc->ResourceHandle->GamePath( out var originalGamePath ) ) {
                 return ReadSqpackHook.Original( fileHandler, fileDesc, priority, isSync );

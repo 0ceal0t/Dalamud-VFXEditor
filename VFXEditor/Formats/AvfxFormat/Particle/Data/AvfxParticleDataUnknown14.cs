@@ -1,0 +1,41 @@
+using static VfxEditor.AvfxFormat.Enums;
+
+namespace VfxEditor.AvfxFormat {
+    public class AvfxParticleDataUnknown14 : AvfxDataWithParameters {
+        // All-new to dawntrail
+        public readonly AvfxEnum<FresnelType> FresnelType = new( "Fresnel Type", "FrsT" );
+        public readonly AvfxInt AuTT = new( "AuTT", "AuTT" );
+        public readonly AvfxCurve FresnelCurve = new( "Fresnel Curve", "FrC" );
+        public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
+        public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
+        public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
+        public readonly AvfxCurve SEM = new( "SEM", "SEM" );
+        public readonly AvfxCurve EEM = new( "EEM", "EEM" );
+        public readonly AvfxCurve3Axis UVPD = new( "UVPD", "UVPD" );
+
+        public AvfxParticleDataUnknown14() : base() {
+            Parsed = [
+                FresnelType,
+                AuTT,
+                FresnelCurve,
+                FresnelRotation,
+                ColorBegin,
+                ColorEnd,
+                SEM,
+                EEM,
+                UVPD
+            ];
+
+            ParameterTab.Add( FresnelType );
+            ParameterTab.Add( AuTT );
+
+            Tabs.Add( FresnelCurve );
+            Tabs.Add( FresnelRotation );
+            Tabs.Add( ColorBegin );
+            Tabs.Add( ColorEnd );
+            Tabs.Add( SEM );
+            Tabs.Add( EEM );
+            Tabs.Add( UVPD );
+        }
+    }
+}
