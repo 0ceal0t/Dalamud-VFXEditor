@@ -1,42 +1,42 @@
 namespace VfxEditor.AvfxFormat {
-    public class AvfxParticleDataUnknown15 : AvfxDataWithParameters {
+    public class AvfxParticleDataDissolve : AvfxDataWithParameters {
         // All-new to dawntrail
-        public readonly AvfxBool bRev = new( "Rev Enabled", "bRev" );
+        public readonly AvfxBool Reverse = new( "Reverse", "bRev" );
         public readonly AvfxInt BST = new( "BST", "BST" );
         public readonly AvfxInt NPT = new( "NPT", "NPT" );
         public readonly AvfxInt DTT = new( "DTT", "DTT" );
         public readonly AvfxCurve EroR = new( "EroR", "EroR" );
-        public readonly AvfxCurve EdW = new( "EdW", "EdW" );
-        public readonly AvfxCurveUnknown15 EdC = new( "EdC", "EdC" );
+        public readonly AvfxCurve EndWidth = new( "End Width", "EdW" );
+        public readonly AvfxCurveDissolve EndColor = new( "End Color", "EdC" );
         public readonly AvfxCurve EdCW = new( "EdCW", "EdCW" );
         public readonly AvfxCurve ECMP = new( "ECMP", "ECMP" );
-        public readonly AvfxCurve Int = new( "Int", "Int" );
+        public readonly AvfxCurve Intensity = new( "Intensity", "Int" );
 
-        public AvfxParticleDataUnknown15() : base() {
+        public AvfxParticleDataDissolve() : base() {
             Parsed = [
-                bRev,
+                Reverse,
                 BST,
                 NPT,
                 DTT,
                 EroR,
-                EdW,
-                EdC,
+                EndWidth,
+                EndColor,
                 EdCW,
                 ECMP,
-                Int
+                Intensity
             ];
 
-            ParameterTab.Add( bRev );
+            ParameterTab.Add( Reverse );
             ParameterTab.Add( BST );
             ParameterTab.Add( NPT );
             ParameterTab.Add( DTT );
 
             Tabs.Add( EroR );
-            Tabs.Add( EdW );
-            Tabs.Add( EdC );
+            Tabs.Add( EndWidth );
+            Tabs.Add( EndColor );
             Tabs.Add( EdCW );
             Tabs.Add( ECMP );
-            Tabs.Add( Int );
+            Tabs.Add( Intensity );
         }
     }
 }

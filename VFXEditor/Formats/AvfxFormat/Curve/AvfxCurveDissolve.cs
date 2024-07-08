@@ -4,7 +4,7 @@ using System.IO;
 using VfxEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxCurveUnknown15 : AvfxCurveBase {
+    public class AvfxCurveDissolve : AvfxCurveBase {
         public readonly AvfxCurveColor StartColor = new( "Start Color", "StrC" );
         public readonly AvfxCurveColor MidColor = new( "Mid Color", "MidC" );
         public readonly AvfxCurveColor EndColor = new( "End Color", "EndC" );
@@ -15,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxCurveBase> Curves;
 
-        public AvfxCurveUnknown15( string name, string avfxName, bool locked = false ) : base( name, avfxName, locked ) {
+        public AvfxCurveDissolve( string name, string avfxName, bool locked = false ) : base( name, avfxName, locked ) {
             Curves = [
                 StartColor,
                 MidColor,

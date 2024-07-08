@@ -296,7 +296,7 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Disc => new AvfxParticleDataDisc(),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
-                ParticleType.Unknown_15 => new AvfxParticleDataUnknown15(),
+                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
                 _ => null,
             };
 
