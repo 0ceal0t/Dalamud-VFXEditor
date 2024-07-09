@@ -29,9 +29,9 @@ namespace VfxEditor.Structs.Animation {
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct ActorMemoryStruct {
-        [FieldOffset( 0x0980 )] public AnimationMemory Animation;
-        [FieldOffset( 0x1BB6 )] public byte CharacterMode;
-        [FieldOffset( 0x1BB7 )] public byte CharacterModeInput;
+        [FieldOffset( 0x09C0 )] public AnimationMemory Animation;
+        [FieldOffset( 0x226C )] public byte CharacterMode;
+        [FieldOffset( 0x226D )] public byte CharacterModeInput;
 
         public readonly bool CanAnimate => ( CharacterModes )CharacterMode == CharacterModes.Normal || ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
         public readonly bool IsAnimationOverride => ( CharacterModes )CharacterMode == CharacterModes.AnimLock;
