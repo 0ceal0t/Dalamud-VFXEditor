@@ -1,17 +1,17 @@
 namespace VFXEditor.Flatbuffer.Ephb;
 
-table EphbDelta (original_order) {
+table EphbDelta {
     unknown1: EphbUnknownT;
     unknown2: EphbUnknownT;
     unknown3: float;
 }
 
-table EphbTheta (original_order) {
+table EphbTheta {
     unknown1: bool;
     unknown2: float;
 }
 
-table EphbEpsilon (original_order) {
+table EphbEpsilon {
     unknown1: ushort;
     unknown2: EphbUnknownT;
     unknown3: ushort;
@@ -19,47 +19,54 @@ table EphbEpsilon (original_order) {
     unknown5: float;
 }
 
-table EphbZeta (original_order) {
+table EphbZeta {
     unknown1: EphbUnknownT;
     unknown2: float;
 }
 
-table EphbEta (original_order) {
+table EphbEta {
     unknown1: ushort;
     unknown2: ushort;
     unknown3: ushort;
     unknown4: ushort;
 }
 
-table EphbGamma (original_order) {
-    bone: uint; // fnv1a32(bone_name)
+table EphbIota {
     unknown1: EphbUnknownT;
     unknown2: EphbUnknownT;
     unknown3: EphbUnknownT;
     unknown4: float;
+}
+
+table EphbGamma {
+    bone: uint; // fnv1a32(bone_name)
+    iota: EphbIota;
+    unknown1: EphbUnknownT;
+    unknown2: EphbUnknownT;
+    unknown3: float;
     theta: EphbTheta;
     delta: EphbDelta;
 }
 
-table EphbBeta (original_order) {
-    gamma:[EphbGamma] (force_align: 16);
+table EphbBeta {
+    gamma:[EphbGamma];
 }
 
-table EphbUnknownT (original_order) {
+table EphbUnknownT {
 }
 
-table EphbAlpha (original_order) {
-    beta:[EphbBeta] (force_align: 16);
-    eta:[EphbEta] (force_align: 16);
-    epsilon:[EphbEpsilon] (force_align: 16);
+table EphbAlpha {
+    beta:[EphbBeta];
+    eta:[EphbEta];
+    epsilon:[EphbEpsilon];
     unknown1:bool;
     zeta:EphbZeta;
 }
 
-table EphbTable (original_order) {
+table EphbTable {
     unknown1:EphbUnknownT;
     unknown2:EphbUnknownT;
-    alpha:[EphbAlpha] (force_align: 16);
+    alpha:[EphbAlpha];
 }
 
 file_identifier "EPHB";

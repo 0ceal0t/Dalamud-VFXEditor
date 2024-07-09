@@ -7,6 +7,8 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
         public const uint MAGIC_PACK = 0x4B434150;
         public const uint MAGIC_EPHB = 0x42485045;
 
+        private bool Padded = true;
+
         public readonly PhybEphbTable Table;
 
         /*
@@ -20,6 +22,10 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
             reader.BaseStream.Position += 0xC; // skip to [offset]
             var offset = reader.ReadInt64();
             reader.BaseStream.Position -= offset;
+            if( reader.ReadUInt32() != 0 ) { // sometimes there's a zero
+                reader.BaseStream.Position -= 4; // TODO: double-check this
+                Padded = false;
+            }
             startPos = reader.BaseStream.Position;
 
             reader.ReadUInt32(); // Magic
@@ -33,6 +39,8 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
 
         public void Write( BinaryWriter writer ) {
             var data = Table.Export().SerializeToBinary();
+
+            if( Padded ) writer.Write( 0 );
 
             var startPos = writer.BaseStream.Position;
             writer.Write( MAGIC_EPHB );

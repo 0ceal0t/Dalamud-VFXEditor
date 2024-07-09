@@ -183,8 +183,8 @@ public struct EphbEpsilon : IFlatbufferObject
     builder.StartTable(5);
     EphbEpsilon.AddUnknown5(builder, unknown5);
     EphbEpsilon.AddUnknown4(builder, unknown4);
-    EphbEpsilon.AddUnknown3(builder, unknown3);
     EphbEpsilon.AddUnknown2(builder, unknown2Offset);
+    EphbEpsilon.AddUnknown3(builder, unknown3);
     EphbEpsilon.AddUnknown1(builder, unknown1);
     return EphbEpsilon.EndEphbEpsilon(builder);
   }
@@ -412,6 +412,96 @@ static public class EphbEtaVerify
       && verifier.VerifyTableEnd(tablePos);
   }
 }
+public struct EphbIota : IFlatbufferObject
+{
+  private Table __p;
+  public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_24_3_25(); }
+  public static EphbIota GetRootAsEphbIota(ByteBuffer _bb) { return GetRootAsEphbIota(_bb, new EphbIota()); }
+  public static EphbIota GetRootAsEphbIota(ByteBuffer _bb, EphbIota obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
+  public EphbIota __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown1 { get { int o = __p.__offset(4); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown2 { get { int o = __p.__offset(6); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown3 { get { int o = __p.__offset(8); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public float Unknown4 { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+
+  public static Offset<VFXEditor.Flatbuffer.Ephb.EphbIota> CreateEphbIota(FlatBufferBuilder builder,
+      Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown1Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
+      Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown2Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
+      Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown3Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
+      float unknown4 = 0.0f) {
+    builder.StartTable(4);
+    EphbIota.AddUnknown4(builder, unknown4);
+    EphbIota.AddUnknown3(builder, unknown3Offset);
+    EphbIota.AddUnknown2(builder, unknown2Offset);
+    EphbIota.AddUnknown1(builder, unknown1Offset);
+    return EphbIota.EndEphbIota(builder);
+  }
+
+  public static void StartEphbIota(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void AddUnknown1(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown1Offset) { builder.AddOffset(0, unknown1Offset.Value, 0); }
+  public static void AddUnknown2(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown2Offset) { builder.AddOffset(1, unknown2Offset.Value, 0); }
+  public static void AddUnknown3(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown3Offset) { builder.AddOffset(2, unknown3Offset.Value, 0); }
+  public static void AddUnknown4(FlatBufferBuilder builder, float unknown4) { builder.AddFloat(3, unknown4, 0.0f); }
+  public static Offset<VFXEditor.Flatbuffer.Ephb.EphbIota> EndEphbIota(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<VFXEditor.Flatbuffer.Ephb.EphbIota>(o);
+  }
+  public EphbIotaT UnPack() {
+    var _o = new EphbIotaT();
+    this.UnPackTo(_o);
+    return _o;
+  }
+  public void UnPackTo(EphbIotaT _o) {
+    _o.Unknown1 = this.Unknown1.HasValue ? this.Unknown1.Value.UnPack() : null;
+    _o.Unknown2 = this.Unknown2.HasValue ? this.Unknown2.Value.UnPack() : null;
+    _o.Unknown3 = this.Unknown3.HasValue ? this.Unknown3.Value.UnPack() : null;
+    _o.Unknown4 = this.Unknown4;
+  }
+  public static Offset<VFXEditor.Flatbuffer.Ephb.EphbIota> Pack(FlatBufferBuilder builder, EphbIotaT _o) {
+    if (_o == null) return default(Offset<VFXEditor.Flatbuffer.Ephb.EphbIota>);
+    var _unknown1 = _o.Unknown1 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown1);
+    var _unknown2 = _o.Unknown2 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown2);
+    var _unknown3 = _o.Unknown3 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown3);
+    return CreateEphbIota(
+      builder,
+      _unknown1,
+      _unknown2,
+      _unknown3,
+      _o.Unknown4);
+  }
+}
+
+public class EphbIotaT
+{
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown1 { get; set; }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown2 { get; set; }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown3 { get; set; }
+  public float Unknown4 { get; set; }
+
+  public EphbIotaT() {
+    this.Unknown1 = null;
+    this.Unknown2 = null;
+    this.Unknown3 = null;
+    this.Unknown4 = 0.0f;
+  }
+}
+
+
+static public class EphbIotaVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyTable(tablePos, 4 /*Unknown1*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 6 /*Unknown2*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 8 /*Unknown3*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 10 /*Unknown4*/, 4 /*float*/, 4, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}
 public struct EphbGamma : IFlatbufferObject
 {
   private Table __p;
@@ -423,38 +513,38 @@ public struct EphbGamma : IFlatbufferObject
   public EphbGamma __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Bone { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown1 { get { int o = __p.__offset(6); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown2 { get { int o = __p.__offset(8); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown3 { get { int o = __p.__offset(10); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public float Unknown4 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public VFXEditor.Flatbuffer.Ephb.EphbIota? Iota { get { int o = __p.__offset(6); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbIota?)(new VFXEditor.Flatbuffer.Ephb.EphbIota()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown1 { get { int o = __p.__offset(8); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public VFXEditor.Flatbuffer.Ephb.EphbUnknownT? Unknown2 { get { int o = __p.__offset(10); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbUnknownT?)(new VFXEditor.Flatbuffer.Ephb.EphbUnknownT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public float Unknown3 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public VFXEditor.Flatbuffer.Ephb.EphbTheta? Theta { get { int o = __p.__offset(14); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbTheta?)(new VFXEditor.Flatbuffer.Ephb.EphbTheta()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public VFXEditor.Flatbuffer.Ephb.EphbDelta? Delta { get { int o = __p.__offset(16); return o != 0 ? (VFXEditor.Flatbuffer.Ephb.EphbDelta?)(new VFXEditor.Flatbuffer.Ephb.EphbDelta()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<VFXEditor.Flatbuffer.Ephb.EphbGamma> CreateEphbGamma(FlatBufferBuilder builder,
       uint bone = 0,
+      Offset<VFXEditor.Flatbuffer.Ephb.EphbIota> iotaOffset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbIota>),
       Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown1Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
       Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown2Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
-      Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown3Offset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>),
-      float unknown4 = 0.0f,
+      float unknown3 = 0.0f,
       Offset<VFXEditor.Flatbuffer.Ephb.EphbTheta> thetaOffset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbTheta>),
       Offset<VFXEditor.Flatbuffer.Ephb.EphbDelta> deltaOffset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbDelta>)) {
     builder.StartTable(7);
     EphbGamma.AddDelta(builder, deltaOffset);
     EphbGamma.AddTheta(builder, thetaOffset);
-    EphbGamma.AddUnknown4(builder, unknown4);
-    EphbGamma.AddUnknown3(builder, unknown3Offset);
+    EphbGamma.AddUnknown3(builder, unknown3);
     EphbGamma.AddUnknown2(builder, unknown2Offset);
     EphbGamma.AddUnknown1(builder, unknown1Offset);
+    EphbGamma.AddIota(builder, iotaOffset);
     EphbGamma.AddBone(builder, bone);
     return EphbGamma.EndEphbGamma(builder);
   }
 
   public static void StartEphbGamma(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddBone(FlatBufferBuilder builder, uint bone) { builder.AddUint(0, bone, 0); }
-  public static void AddUnknown1(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown1Offset) { builder.AddOffset(1, unknown1Offset.Value, 0); }
-  public static void AddUnknown2(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown2Offset) { builder.AddOffset(2, unknown2Offset.Value, 0); }
-  public static void AddUnknown3(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown3Offset) { builder.AddOffset(3, unknown3Offset.Value, 0); }
-  public static void AddUnknown4(FlatBufferBuilder builder, float unknown4) { builder.AddFloat(4, unknown4, 0.0f); }
+  public static void AddIota(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbIota> iotaOffset) { builder.AddOffset(1, iotaOffset.Value, 0); }
+  public static void AddUnknown1(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown1Offset) { builder.AddOffset(2, unknown1Offset.Value, 0); }
+  public static void AddUnknown2(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT> unknown2Offset) { builder.AddOffset(3, unknown2Offset.Value, 0); }
+  public static void AddUnknown3(FlatBufferBuilder builder, float unknown3) { builder.AddFloat(4, unknown3, 0.0f); }
   public static void AddTheta(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbTheta> thetaOffset) { builder.AddOffset(5, thetaOffset.Value, 0); }
   public static void AddDelta(FlatBufferBuilder builder, Offset<VFXEditor.Flatbuffer.Ephb.EphbDelta> deltaOffset) { builder.AddOffset(6, deltaOffset.Value, 0); }
   public static Offset<VFXEditor.Flatbuffer.Ephb.EphbGamma> EndEphbGamma(FlatBufferBuilder builder) {
@@ -468,27 +558,27 @@ public struct EphbGamma : IFlatbufferObject
   }
   public void UnPackTo(EphbGammaT _o) {
     _o.Bone = this.Bone;
+    _o.Iota = this.Iota.HasValue ? this.Iota.Value.UnPack() : null;
     _o.Unknown1 = this.Unknown1.HasValue ? this.Unknown1.Value.UnPack() : null;
     _o.Unknown2 = this.Unknown2.HasValue ? this.Unknown2.Value.UnPack() : null;
-    _o.Unknown3 = this.Unknown3.HasValue ? this.Unknown3.Value.UnPack() : null;
-    _o.Unknown4 = this.Unknown4;
+    _o.Unknown3 = this.Unknown3;
     _o.Theta = this.Theta.HasValue ? this.Theta.Value.UnPack() : null;
     _o.Delta = this.Delta.HasValue ? this.Delta.Value.UnPack() : null;
   }
   public static Offset<VFXEditor.Flatbuffer.Ephb.EphbGamma> Pack(FlatBufferBuilder builder, EphbGammaT _o) {
     if (_o == null) return default(Offset<VFXEditor.Flatbuffer.Ephb.EphbGamma>);
+    var _iota = _o.Iota == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbIota>) : VFXEditor.Flatbuffer.Ephb.EphbIota.Pack(builder, _o.Iota);
     var _unknown1 = _o.Unknown1 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown1);
     var _unknown2 = _o.Unknown2 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown2);
-    var _unknown3 = _o.Unknown3 == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbUnknownT>) : VFXEditor.Flatbuffer.Ephb.EphbUnknownT.Pack(builder, _o.Unknown3);
     var _theta = _o.Theta == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbTheta>) : VFXEditor.Flatbuffer.Ephb.EphbTheta.Pack(builder, _o.Theta);
     var _delta = _o.Delta == null ? default(Offset<VFXEditor.Flatbuffer.Ephb.EphbDelta>) : VFXEditor.Flatbuffer.Ephb.EphbDelta.Pack(builder, _o.Delta);
     return CreateEphbGamma(
       builder,
       _o.Bone,
+      _iota,
       _unknown1,
       _unknown2,
-      _unknown3,
-      _o.Unknown4,
+      _o.Unknown3,
       _theta,
       _delta);
   }
@@ -497,19 +587,19 @@ public struct EphbGamma : IFlatbufferObject
 public class EphbGammaT
 {
   public uint Bone { get; set; }
+  public VFXEditor.Flatbuffer.Ephb.EphbIotaT Iota { get; set; }
   public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown1 { get; set; }
   public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown2 { get; set; }
-  public VFXEditor.Flatbuffer.Ephb.EphbUnknownTT Unknown3 { get; set; }
-  public float Unknown4 { get; set; }
+  public float Unknown3 { get; set; }
   public VFXEditor.Flatbuffer.Ephb.EphbThetaT Theta { get; set; }
   public VFXEditor.Flatbuffer.Ephb.EphbDeltaT Delta { get; set; }
 
   public EphbGammaT() {
     this.Bone = 0;
+    this.Iota = null;
     this.Unknown1 = null;
     this.Unknown2 = null;
-    this.Unknown3 = null;
-    this.Unknown4 = 0.0f;
+    this.Unknown3 = 0.0f;
     this.Theta = null;
     this.Delta = null;
   }
@@ -522,10 +612,10 @@ static public class EphbGammaVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*Bone*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyTable(tablePos, 6 /*Unknown1*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 8 /*Unknown2*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 10 /*Unknown3*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 12 /*Unknown4*/, 4 /*float*/, 4, false)
+      && verifier.VerifyTable(tablePos, 6 /*Iota*/, VFXEditor.Flatbuffer.Ephb.EphbIotaVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 8 /*Unknown1*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 10 /*Unknown2*/, VFXEditor.Flatbuffer.Ephb.EphbUnknownTVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 12 /*Unknown3*/, 4 /*float*/, 4, false)
       && verifier.VerifyTable(tablePos, 14 /*Theta*/, VFXEditor.Flatbuffer.Ephb.EphbThetaVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 16 /*Delta*/, VFXEditor.Flatbuffer.Ephb.EphbDeltaVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
@@ -677,10 +767,10 @@ public struct EphbAlpha : IFlatbufferObject
       Offset<VFXEditor.Flatbuffer.Ephb.EphbZeta> zetaOffset = default(Offset<VFXEditor.Flatbuffer.Ephb.EphbZeta>)) {
     builder.StartTable(5);
     EphbAlpha.AddZeta(builder, zetaOffset);
-    EphbAlpha.AddUnknown1(builder, unknown1);
     EphbAlpha.AddEpsilon(builder, epsilonOffset);
     EphbAlpha.AddEta(builder, etaOffset);
     EphbAlpha.AddBeta(builder, betaOffset);
+    EphbAlpha.AddUnknown1(builder, unknown1);
     return EphbAlpha.EndEphbAlpha(builder);
   }
 
