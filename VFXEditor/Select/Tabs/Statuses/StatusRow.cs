@@ -16,9 +16,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
         public StatusRow( Status status ) {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
-            // Icon = ( uint )status.Icon;
-            Icon = status.ParamModifier; // temp until it's fixed
-            // https://github.com/NotAdam/Lumina.Excel/commit/17f027682a3ff6b2d565c3c8d15d6f3146abd556#diff-917643f11f9c3f4ee19f19e4adb28e085d259d29322636b41d5c73fde427a510
+            Icon = ( uint )status.Icon;
 
             HitPath = GetVfxPath( status.HitEffect.Value?.Location.Value?.Location );
 
