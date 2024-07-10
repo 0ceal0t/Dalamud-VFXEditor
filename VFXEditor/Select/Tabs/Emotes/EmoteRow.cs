@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
 
         public EmoteRow( Emote emote ) {
             RowId = ( int )emote.RowId;
-            Icon = emote.Icon;
+            Icon = ( ushort )( emote.Icon == 64350 ? 405 : emote.Icon );
             Name = emote.Name.ToString();
 
             Keys = emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x?.Value?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) ).ToList();
@@ -39,8 +39,8 @@ namespace VfxEditor.Select.Tabs.Emotes {
             if( string.IsNullOrEmpty( key ) ) return (null, 0);
 
             var loadType = item.Item2;
-            if( loadType == 2 ) return (key, EmoteRowType.PerJob);
-            else if( loadType == 1 ) return (key, EmoteRowType.Normal);
+            if( loadType == 2 ) return (key, EmoteRowType.Normal);
+            else if( loadType == 1 ) return (key, EmoteRowType.PerJob);
             else if( loadType == 0 ) {
                 if( key.StartsWith( "facial/pose/" ) ) return (key.Replace( "facial/pose/", "" ), EmoteRowType.Facial);
                 return (key, EmoteRowType.Normal);
