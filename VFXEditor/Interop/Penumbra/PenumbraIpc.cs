@@ -22,16 +22,14 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly EventSubscriber DisposedSubscriber;
 
         public PenumbraIpc() {
-            // TODO
+            ApiVersionsSubscriber = new( Dalamud.PluginInterface );
+            GetModDirectorySubscriber = new( Dalamud.PluginInterface );
+            GetModsSubscriber = new( Dalamud.PluginInterface );
+            GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
+            ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
 
-            //ApiVersionsSubscriber = new( Dalamud.PluginInterface );
-            //GetModDirectorySubscriber = new( Dalamud.PluginInterface );
-            //GetModsSubscriber = new( Dalamud.PluginInterface );
-            //GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
-            //ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
-
-            //InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
-            //DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
+            InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
+            DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
 
 
             if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
