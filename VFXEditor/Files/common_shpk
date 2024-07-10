@@ -33,6 +33,5 @@ shader/shpk/apricot_decal_dummy.shpk
 shader/shpk/pointlighting.shpk
 shader/shpk/bg.shpk
 shader/shpk/createviewposition.shpk
-shader/shpk/channeling.shpk
 shader/shpk/directionalshadow.shpk
 shader/shpk/apricot_decal.shpk
