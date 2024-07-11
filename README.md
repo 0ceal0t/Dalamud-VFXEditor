@@ -62,6 +62,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 
 ## TODO
 - [ ] DT stain files
+- [ ] `.png` file imports
+- [ ] F Hrothgar icons in select dialog
 - [ ] New `.pap` animation from gLTF (currently can only replace)
 - [ ] Hex editor for replacing arbitrary files
 - [ ] More investigation into `.pap` _Type_ and animation names

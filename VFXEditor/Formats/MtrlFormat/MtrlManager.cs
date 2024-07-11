@@ -1,8 +1,9 @@
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.GeneratedSheets2;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.FileManager;
@@ -26,6 +27,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly List<IDalamudTextureWrap> TileNormal = [];
 
         public readonly StmDataFile StmFile;
+        public readonly StmDataFile StmFileDawntrail;
+
         public readonly int[] Templates;
         public readonly List<MtrlStain> Stains = [];
 
@@ -33,11 +36,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
             ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
 
-            // Tiling textures
-            // TODO
             try {
-                TileDiffuseFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_orb_array.tex" );
-                TileNormalFile = Dalamud.DataManager.GetFile<TextureDataFile>( "chara/common/texture/tile_norm_array.tex" );
+                TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
+                TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error loading files" );
@@ -46,9 +47,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             // the G buffer shader only uses red and green from the normal map
             // but all 4 channels from the "orb" map
 
-            if( TileDiffuseFile == null || TileNormalFile == null ) {
-                Dalamud.Error( "Could not load tile files" );
-            }
+            if( TileDiffuseFile == null || TileNormalFile == null ) Dalamud.Error( "Could not load tile files" );
             else {
                 foreach( var layer in TileDiffuseFile.Layers ) {
                     TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );
@@ -60,6 +59,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // Dye Templates
             StmFile = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" );
+            StmFileDawntrail = Dalamud.DataManager.GetFile<StmDataFileDawntrail>( "chara/base_material/stainingtemplate_gud.stm" );
             // DT: chara/base_material/stainingtemplate_gud.stm
             // https://github.com/TexTools/xivModdingFramework/blob/35d0ca49b5db25332756d2762e16c95b46a7f299/xivModdingFramework/Materials/FileTypes/STM.cs#L28
             // ======== TODO: DT stain changes =======

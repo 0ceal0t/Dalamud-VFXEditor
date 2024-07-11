@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -7,15 +6,10 @@ using System.Runtime.InteropServices;
 namespace VfxEditor.Formats.MtrlFormat.Stm {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/15ae65921468a2407ecdd068ca79947e596e24be/Files/StmFile.StainingTemplateEntry.cs
 
-    [StructLayout( LayoutKind.Sequential )]
-    public struct Triple {
-        public Half R;
-        public Half G;
-        public Half B;
-    }
-
     public class StmEntry {
         public const int MAX = 128;
+
+        public readonly bool IsDawntrail;
 
         public readonly IReadOnlyList<Triple> Diffuse;
         public readonly IReadOnlyList<Triple> Specular;
@@ -23,7 +17,16 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public readonly IReadOnlyList<Half> Gloss;
         public readonly IReadOnlyList<Half> Power;
 
-        public StmEntry( BinaryReader reader, long offset ) {
+        public readonly IReadOnlyList<Half> Unknown1;
+        public readonly IReadOnlyList<Half> Unknown2;
+        public readonly IReadOnlyList<Half> Unknown3;
+        public readonly IReadOnlyList<Half> Unknown4;
+        public readonly IReadOnlyList<Half> Unknown5;
+        public readonly IReadOnlyList<Half> Unknown6;
+        public readonly IReadOnlyList<Half> Unknown7;
+
+        public StmEntry( BinaryReader reader, long offset, bool isDawntrail ) {
+            IsDawntrail = isDawntrail;
             reader.BaseStream.Position = offset;
 
             // In bytes
@@ -33,13 +36,31 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
             var glossEnd = reader.ReadUInt16() * 2;
             var powerEnd = reader.ReadUInt16() * 2;
 
-            offset += 5 * 2;
+            var unknown1End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown2End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown3End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown4End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown5End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown6End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+            var unknown7End = IsDawntrail ? ( reader.ReadUInt16() * 2 ) : 0;
+
+            offset += ( IsDawntrail ? 12 : 5 ) * 2;
 
             Diffuse = Read( reader, offset, diffuseEnd, ReadTriple );
             Specular = Read( reader, offset + diffuseEnd, specularEnd - diffuseEnd, ReadTriple );
             Emissive = Read( reader, offset + specularEnd, emissiveEnd - specularEnd, ReadTriple );
             Gloss = Read( reader, offset + emissiveEnd, glossEnd - emissiveEnd, ReadSingle );
             Power = Read( reader, offset + glossEnd, powerEnd - glossEnd, ReadSingle );
+
+            if( IsDawntrail ) {
+                Unknown1 = Read( reader, offset + powerEnd, unknown1End - powerEnd, ReadSingle );
+                Unknown2 = Read( reader, offset + unknown1End, unknown2End - unknown1End, ReadSingle );
+                Unknown3 = Read( reader, offset + unknown2End, unknown3End - unknown2End, ReadSingle );
+                Unknown4 = Read( reader, offset + unknown3End, unknown4End - unknown3End, ReadSingle );
+                Unknown5 = Read( reader, offset + unknown4End, unknown5End - unknown4End, ReadSingle );
+                Unknown6 = Read( reader, offset + unknown5End, unknown6End - unknown5End, ReadSingle );
+                Unknown7 = Read( reader, offset + unknown6End, unknown7End - unknown6End, ReadSingle );
+            }
         }
 
         private static Triple ReadTriple( BinaryReader reader ) => new() {
@@ -65,59 +86,10 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
             };
         }
 
-        private static IReadOnlyList<T> ReadStandard<T>( BinaryReader reader, Func<BinaryReader, T> read ) {
+        private static List<T> ReadStandard<T>( BinaryReader reader, Func<BinaryReader, T> read ) {
             var ret = new List<T>();
             for( var i = 0; i < MAX; i++ ) ret.Add( read( reader ) );
             return ret;
         }
-    }
-
-    public class RepeatingList<T> : IReadOnlyList<T> {
-        private readonly T Value;
-        public int Count { get; }
-
-        public RepeatingList( T value, int count ) {
-            Value = value;
-            Count = count;
-        }
-
-        public IEnumerator<T> GetEnumerator() {
-            for( var i = 0; i < Count; ++i ) yield return Value;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public T this[int index] => index >= 0 && index < Count ? Value : throw new IndexOutOfRangeException();
-    }
-
-    public class IndexedList<T> : IReadOnlyList<T> {
-        private readonly T[] Values;
-        private readonly byte[] Indexes;
-
-        public IndexedList( BinaryReader br, int count, Func<BinaryReader, T> read ) {
-            Values = new T[count + 1];
-            Indexes = new byte[StmEntry.MAX];
-            Indexes[0] = default!;
-
-            for( var i = 1; i < count + 1; ++i ) Values[i] = read( br );
-
-            // Seems to be an unused 0xFF byte marker.
-            // Necessary for correct offsets.
-            br.ReadByte();
-            for( var i = 0; i < StmEntry.MAX; ++i ) {
-                Indexes[i] = br.ReadByte();
-                if( Indexes[i] > count ) Indexes[i] = 0;
-            }
-        }
-
-        public IEnumerator<T> GetEnumerator() {
-            for( var i = 0; i < StmEntry.MAX; ++i ) yield return Values[Indexes[i]];
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public int Count => Indexes.Length;
-
-        public T this[int index] => index >= 0 && index < Count ? Values[Indexes[index]] : default!;
     }
 }
