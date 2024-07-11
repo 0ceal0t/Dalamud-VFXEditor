@@ -24,6 +24,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected override TextureDataFile GetRawData() => null;
 
-        protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
+        protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath, TextureFormat.Null );
     }
 }

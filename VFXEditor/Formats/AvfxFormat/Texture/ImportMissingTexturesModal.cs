@@ -25,7 +25,7 @@ namespace VfxEditor.Formats.AvfxFormat.Texture {
                             Show();
                             if( !ok ) return;
                             try {
-                                Plugin.TextureManager.ReplaceTexture( res, path );
+                                Plugin.TextureManager.ReplaceTexture( res, path, TextureFormat.TextureFormat.Null );
                                 Paths.Remove( path );
                             }
                             catch( Exception e ) {

@@ -165,7 +165,7 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
             else file.SaveTexDialog( result.Path.Split( '.' )[^1].ToLower() );
         }
 
-        public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result );
+        public static void Import( SelectResult result ) => Plugin.TextureManager.Import( result, TextureFormat.Null );
 
         public static void DrawPngSettings() {
             ImGui.SetNextItemWidth( 150 );
@@ -174,6 +174,8 @@ namespace VfxEditor.Formats.TextureFormat.Ui {
                 ImGui.SameLine();
             }
             ImGui.TextDisabled( "(.png)" );
+
+            if( ImGui.Checkbox( "Use Existing Format when Possible", ref Plugin.Configuration.PngCopyFormat ) ) Plugin.Configuration.Save();
 
             ImGui.SetNextItemWidth( 150 );
             if( UiUtils.EnumComboBox( "Format", ValidPngFormat, Plugin.Configuration.PngFormat, out var newPngFormat ) ) {

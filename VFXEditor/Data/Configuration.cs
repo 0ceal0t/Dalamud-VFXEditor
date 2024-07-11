@@ -158,6 +158,7 @@ namespace VfxEditor {
         public List<ExcludedBonesConfiguration> ExcludedBones = [];
 
         public int PngMips = 9;
+        public bool PngCopyFormat = true;
         public TextureFormat PngFormat = TextureFormat.DXT5;
 
         public string CustomPathPrefix = "vfx/custom/";
