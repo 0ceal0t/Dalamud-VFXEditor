@@ -1,12 +1,9 @@
 using Lumina.Excel.GeneratedSheets2;
 using System;
-using System.Collections.Generic;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Items {
     public struct ItemIds {
-        public ulong Raw;
-
         public int Id1;
         public int Id2;
         public int Id3;
@@ -18,7 +15,6 @@ namespace VfxEditor.Select.Tabs.Items {
         public readonly int WeaponVariant => Id3;
 
         public ItemIds( ulong modelDataRaw ) {
-            Raw = modelDataRaw;
             /*
              * Gear: [Id, Var, -, -] / [-,-,-,-]
              * Weapon: [Id, Body, Var, -] / [Id, Body, Var, -]
@@ -30,14 +26,12 @@ namespace VfxEditor.Select.Tabs.Items {
             Id4 = BitConverter.ToInt16( bytes, 6 );
         }
 
-
-        public static ulong ToLong( int id1, int id2, int id3, int id4 ) {
-            var bytes = new List<byte>();
-            bytes.AddRange( BitConverter.GetBytes( ( short )id1 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id2 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id3 ) );
-            bytes.AddRange( BitConverter.GetBytes( ( short )id4 ) );
-            return ( ulong )BitConverter.ToInt64( bytes.ToArray() );
+        public ItemIds( uint modelDataRaw ) {
+            var bytes = BitConverter.GetBytes( modelDataRaw );
+            Id1 = BitConverter.ToInt16( bytes, 0 );
+            Id2 = BitConverter.ToInt16( bytes, 2 );
+            Id3 = 0;
+            Id4 = 0;
         }
     }
 
@@ -54,13 +48,14 @@ namespace VfxEditor.Select.Tabs.Items {
         LFinger,
         Wrists,
         Ears,
-        Other
+        Other,
+        Glasses
     }
 
     public abstract class ItemRow : ISelectItemWithIcon {
         public readonly string Name;
         public readonly int RowId;
-        public readonly ushort Icon;
+        public readonly uint Icon;
         public readonly ItemIds Ids;
         public readonly ItemIds SecondaryIds;
         public readonly ItemType Type = ItemType.Other;
@@ -76,14 +71,15 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public abstract int Variant { get; }
 
-        public ItemRow( string name, uint rowId, ushort icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category ) {
+        public ItemRow( string name, uint rowId, uint icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category ) {
             Name = name;
             RowId = ( int )rowId;
             Icon = icon;
             Ids = ids;
             SecondaryIds = secondaryIds;
 
-            if( category?.MainHand == 1 ) Type = ItemType.MainHand;
+            if( category == null || ids.Id1 > 0 ) Type = ItemType.Glasses; // TODO: find a better way to do this
+            else if( category?.MainHand == 1 ) Type = ItemType.MainHand;
             else if( category?.OffHand == 1 ) Type = ItemType.OffHand;
             else if( category?.Head == 1 ) Type = ItemType.Head;
             else if( category?.Body == 1 ) Type = ItemType.Body;
