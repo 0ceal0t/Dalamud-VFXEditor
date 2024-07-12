@@ -95,9 +95,8 @@ namespace VfxEditor.Utils {
             var ret = true;
             var original = GetOriginal( originalReader );
 
-            if( diff > 0 ) Dalamud.Log( $"File difference: 0x{diff:X4}" );
-            if( Math.Abs( data.Length - original.Length ) != diff ) {
-                Dalamud.Error( $"Files have different lengths 0x{data.Length:X8} / 0x{original.Length:X8}" );
+            if( ( original.Length - data.Length ) != diff ) {
+                Dalamud.Error( $"Files have different lengths 0x{data.Length:X8} / 0x{original.Length:X8} (allowed={diff}, actual={original.Length - data.Length})" );
                 ret = false; // Don't return yet since we still want to see the diffIdx
             }
 

@@ -17,8 +17,7 @@ namespace VfxEditor.Select.Tabs.Items {
             Filter = filter;
         }
 
-        protected override bool CheckMatch( ItemRow item, string searchInput ) =>
-            SelectUiUtils.Matches( item.Name, searchInput ) || SelectUiUtils.Matches( item.ModelString, searchInput );
+        protected override bool CheckMatch( ItemRow item, string searchInput ) => item.CheckMatch( searchInput );
 
         // ======== LOADING =========
 

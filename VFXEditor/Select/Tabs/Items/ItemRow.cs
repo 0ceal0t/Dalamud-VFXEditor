@@ -100,5 +100,7 @@ namespace VfxEditor.Select.Tabs.Items {
         public string GetName() => Name;
 
         public uint GetIconId() => Icon;
+
+        public bool CheckMatch( string searchInput ) => SelectUiUtils.Matches( Name, searchInput ) || SelectUiUtils.Matches( ModelString, searchInput );
     }
 }

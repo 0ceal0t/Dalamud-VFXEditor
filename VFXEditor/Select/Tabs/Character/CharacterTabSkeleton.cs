@@ -39,7 +39,8 @@ namespace VfxEditor.Select.Tabs.Character {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            Dialog.DrawPaths( Loaded.BodyPath, $"{Selected.Name} Body", SelectResultType.GameCharacter );
+            if( Dalamud.DataManager.FileExists( Loaded.BodyPath ) )
+                Dialog.DrawPaths( Loaded.BodyPath, $"{Selected.Name} Body", SelectResultType.GameCharacter );
 
             if( !HairFace ) return;
 

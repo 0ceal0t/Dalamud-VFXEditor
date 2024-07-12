@@ -37,5 +37,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
         protected override void DrawSelected() {
             Dialog.DrawPaths( Loaded, Selected.Name, SelectResultType.GameItem );
         }
+
+        protected override bool CheckMatch( ItemRowArmor item, string searchInput ) => item.CheckMatch( searchInput );
     }
 }
