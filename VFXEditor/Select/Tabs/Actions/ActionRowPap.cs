@@ -46,7 +46,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             }
             else if( loadType == 1 ) return $"bt_common/{key}.pap";
             else if( loadType == 0 ) return $"bt_common/resident/action.pap";
-            return $"{loadType}/{key}";
+            return "";
         }
 
         public string GetName() => Name;
