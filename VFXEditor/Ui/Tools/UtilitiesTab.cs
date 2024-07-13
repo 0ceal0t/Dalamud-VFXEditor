@@ -1,5 +1,5 @@
-using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
+using ImGuiNET;
 using System;
 using System.Numerics;
 using VfxEditor.FileBrowser;
@@ -14,7 +14,7 @@ namespace VfxEditor.Ui.Tools {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.TextDisabled( "Extract Raw Game File" );
 
-            using( var indent = ImRaii.PushIndent() )
+            using( ImRaii.PushIndent() )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 4, 3 ) ) ) {
                 ImGui.InputTextWithHint( "##Extract", "Game Path", ref ExtractPath, 255 );
 
@@ -43,7 +43,7 @@ namespace VfxEditor.Ui.Tools {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             ImGui.TextDisabled( "Image Conversion" );
 
-            using var indent2 = ImRaii.PushIndent();
+            using var _ = ImRaii.PushIndent();
 
             if( ImGui.Button( ".atex to PNG" ) ) {
                 FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {

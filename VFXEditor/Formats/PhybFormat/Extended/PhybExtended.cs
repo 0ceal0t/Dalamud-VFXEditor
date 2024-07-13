@@ -7,7 +7,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended {
         public const uint MAGIC_PACK = 0x4B434150;
         public const uint MAGIC_EPHB = 0x42485045;
 
-        private bool Padded = true;
+        private readonly bool Padded = true;
 
         public readonly PhybEphbTable Table;
 
