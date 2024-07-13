@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.GeneratedSheets;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Base;
@@ -39,8 +39,8 @@ namespace VfxEditor.Select.Tabs.Emotes {
             if( string.IsNullOrEmpty( key ) ) return (null, 0);
 
             var loadType = item.Item2;
-            if( loadType == 2 ) return (key, EmoteRowType.Normal);
-            else if( loadType == 1 ) return (key, EmoteRowType.PerJob);
+            if( loadType == 1 ) return (key, EmoteRowType.Normal);
+            else if( loadType == 2 ) return (key, EmoteRowType.PerJob);
             else if( loadType == 0 ) {
                 if( key.StartsWith( "facial/pose/" ) ) return (key.Replace( "facial/pose/", "" ), EmoteRowType.Facial);
                 return (key, EmoteRowType.Normal);

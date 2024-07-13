@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.GeneratedSheets;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -36,7 +36,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             if( key.Contains( "[SKL_ID]" ) ) return "";
 
             var loadType = timeline.LoadType;
-            if( loadType == 1 && key.StartsWith( "ws" ) ) {
+            if( loadType == 2 && key.StartsWith( "ws" ) ) {
                 // human_sp/c0501/human_sp103
                 // emote/b_pose01_loop
                 // ws/bt_2sw_emp/ws_s02
@@ -44,9 +44,9 @@ namespace VfxEditor.Select.Tabs.Actions {
                 var weapon = split[1];
                 return $"{weapon}/{key}.pap";
             }
-            else if( loadType == 2 ) return $"bt_common/{key}.pap";
+            else if( loadType == 1 ) return $"bt_common/{key}.pap";
             else if( loadType == 0 ) return $"bt_common/resident/action.pap";
-            return "";
+            return $"{loadType}/{key}";
         }
 
         public string GetName() => Name;
