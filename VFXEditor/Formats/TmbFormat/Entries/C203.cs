@@ -25,7 +25,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "Object Control" );
         private readonly ParsedBool NoulithAlignment = new( "Noulith Alignment" );
         private readonly ParsedBool ScaleEnabled = new( "Scale Enabled", size: 2 );
-        private readonly ParsedBool Unk3 = new( "Unknown 3", size: 2 );
+        private readonly ParsedShort Unk3 = new( "Unknown 3" );
         private readonly ParsedFloat Scale = new( "Scale" );
 
         public C203( TmbFile file ) : base( file ) { }
