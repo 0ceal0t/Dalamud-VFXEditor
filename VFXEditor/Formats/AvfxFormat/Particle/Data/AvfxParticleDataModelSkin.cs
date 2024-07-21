@@ -4,7 +4,7 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataModelSkin : AvfxDataWithParameters {
         // All-new to dawntrail
         public readonly AvfxEnum<FresnelType> FresnelType = new( "Fresnel Type", "FrsT" );
-        public readonly AvfxInt AuTT = new( "AuTT", "AuTT" );
+        public readonly AvfxFlag<AuraFilter> AuraTarget = new( "Aura Target", "AuTT" );
         public readonly AvfxCurve FresnelCurve = new( "Fresnel Curve", "FrC" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
         public AvfxParticleDataModelSkin() : base() {
             Parsed = [
                 FresnelType,
-                AuTT,
+                AuraTarget,
                 FresnelCurve,
                 FresnelRotation,
                 ColorBegin,
@@ -27,7 +27,7 @@ namespace VfxEditor.AvfxFormat {
             ];
 
             ParameterTab.Add( FresnelType );
-            ParameterTab.Add( AuTT );
+            ParameterTab.Add( AuraTarget );
 
             Tabs.Add( FresnelCurve );
             Tabs.Add( FresnelRotation );

@@ -158,7 +158,6 @@ namespace VfxEditor {
         public List<ExcludedBonesConfiguration> ExcludedBones = [];
 
         public int PngMips = 9;
-        public bool PngCopyFormat = true;
         public TextureFormat PngFormat = TextureFormat.DXT5;
 
         public string CustomPathPrefix = "vfx/custom/";
@@ -174,7 +173,7 @@ namespace VfxEditor {
             try { Directory.CreateDirectory( WriteLocation ); }
             catch( Exception ) { WriteLocationError = true; }
 
-            Dalamud.Log( "Write location: " + WriteLocation );
+            Dalamud.Log( $"Write location: {WriteLocation}" );
 
             if( CurveEditorPalette.Count == 0 ) {
                 CurveEditorPalette.AddRange( ImGuiHelpers.DefaultColorPalette( 56 ) );

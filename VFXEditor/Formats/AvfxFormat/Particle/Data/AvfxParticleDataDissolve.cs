@@ -1,19 +1,12 @@
-using System;
+using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    [Flags]
-    public enum DissolveFilter {
-        Character = 0x01,
-        Weapon = 0x02,
-        OffHand = 0x04
-    }
-
     public class AvfxParticleDataDissolve : AvfxDataWithParameters {
         // All-new to dawntrail
         public readonly AvfxBool Reverse = new( "Reverse", "bRev" );
         public readonly AvfxInt BST = new( "BST", "BST" );
         public readonly AvfxInt NPT = new( "NPT", "NPT" );
-        public readonly AvfxFlag<DissolveFilter> DissolveTarget = new( "Dissolve Target", "DTT" );
+        public readonly AvfxFlag<AuraFilter> DissolveTarget = new( "Dissolve Target", "DTT" );
         public readonly AvfxCurve EroR = new( "EroR", "EroR" );
         public readonly AvfxCurve EndColorWidth = new( "End Color Width", "EdW" );
         public readonly AvfxCurveDissolve Color = new( "Color", "EdC" );

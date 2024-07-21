@@ -44,9 +44,9 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public bool IsWindowOpen() => IsOpen;
 
-        public void ReplaceTexture( string importPath, string gamePath, TextureFormat previousFormat ) {
+        public void ReplaceTexture( string importPath, string gamePath ) {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
-            replace.ImportFile( importPath, previousFormat );
+            replace.ImportFile( importPath );
             Textures.Add( replace );
         }
 
@@ -56,12 +56,12 @@ namespace VfxEditor.Formats.TextureFormat {
             ExportDialog.RemoveDocument( replace );
         }
 
-        public void Import( SelectResult result, TextureFormat previousFormat ) {
+        public void Import( SelectResult result ) {
             FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
                 try {
                     AddRecent( result );
-                    ReplaceTexture( res, result.Path, previousFormat );
+                    ReplaceTexture( res, result.Path );
                 }
                 catch( Exception e ) {
                     Dalamud.Error( e, "Could not import data" );
@@ -138,7 +138,7 @@ namespace VfxEditor.Formats.TextureFormat {
             }
 
             Dalamud.DataManager.GetFile( path )?.SaveFile( TempAtex );
-            ReplaceTexture( TempAtex, newPath, TextureFormat.Null );
+            ReplaceTexture( TempAtex, newPath );
             Dalamud.Log( $"Converted {path} -> {newPath}" );
             return true;
         }
@@ -151,7 +151,7 @@ namespace VfxEditor.Formats.TextureFormat {
             foreach( var item in items ) {
                 var fullPath = WorkspaceUtils.ResolveWorkspacePath( item.RelativeLocation, Path.Combine( loadLocation, "Tex" ) );
                 var newReplace = new TextureReplace( GetNewWriteLocation( item.ReplacePath ), item );
-                newReplace.ImportFile( fullPath, TextureFormat.Null );
+                newReplace.ImportFile( fullPath );
                 Textures.Add( newReplace );
             }
         }

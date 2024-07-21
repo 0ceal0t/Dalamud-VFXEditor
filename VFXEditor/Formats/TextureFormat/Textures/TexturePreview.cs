@@ -75,7 +75,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             DrawExportReplaceButtons();
         }
 
-        protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath, Format );
+        protected override void OnReplace( string importPath ) => Plugin.TextureManager.ReplaceTexture( importPath, GamePath );
 
         protected override TextureDataFile GetRawData() => Dalamud.DataManager.GetFile<TextureDataFile>( GamePath );
 

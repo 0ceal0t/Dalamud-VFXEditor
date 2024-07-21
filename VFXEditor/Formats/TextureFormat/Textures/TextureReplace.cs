@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
         }
 
-        public void ImportFile( string importPath, TextureFormat previousFormat ) {
+        public void ImportFile( string importPath ) {
             Preview = null;
 
             try {
@@ -53,7 +53,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     File.Copy( importPath, WriteLocation, true );
                 }
                 else if( importFileExtension == ".png" ) {
-                    var pngFormat = ( !Plugin.Configuration.PngCopyFormat || previousFormat == TextureFormat.Null ) ? Plugin.Configuration.PngFormat : previousFormat;
+                    var pngFormat = Plugin.Configuration.PngFormat;
 
                     using var surface = Surface.LoadFromFile( importPath );
                     surface.FlipVertically();
@@ -261,7 +261,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         protected override void OnReplace( string importPath ) { // since already replaced, need to refresh it
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
-            ImportFile( importPath, Preview.Format );
+            ImportFile( importPath );
         }
 
         // ===========================
