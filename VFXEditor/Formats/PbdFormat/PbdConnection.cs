@@ -29,5 +29,11 @@ namespace VfxEditor.Formats.PbdFormat {
             if( _ChildIdx >= 0 ) Child = connections[_ChildIdx];
             if( _SiblingIdx >= 0 ) Sibling = connections[_SiblingIdx];
         }
+
+        public bool IsChildOf( PbdConnection parent ) {
+            if( parent == null || Parent == null ) return false;
+            if( Parent == parent ) return true;
+            return Parent.IsChildOf( parent );
+        }
     }
 }
