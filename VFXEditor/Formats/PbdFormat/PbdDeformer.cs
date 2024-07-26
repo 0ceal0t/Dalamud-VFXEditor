@@ -11,14 +11,14 @@ namespace VfxEditor.Formats.PbdFormat {
 
         public PbdDeformer( BinaryReader reader ) : this() {
             SkeletonId.Read( reader );
-            var treeIndex = reader.ReadUInt16();
+            reader.ReadUInt16(); // connection index
             var offset = reader.ReadInt32();
             Scale.Read( reader );
-            Dalamud.Log( $"Deformer: {treeIndex} {offset:X4} | {reader.BaseStream.Position:X4} | {SkeletonId.Value}" );
         }
 
         public void Draw() {
-
+            SkeletonId.Draw();
+            Scale.Draw();
         }
     }
 }
