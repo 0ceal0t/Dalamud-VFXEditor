@@ -116,6 +116,7 @@ namespace VfxEditor {
                     EidManager,
                     AtchManager,
                     KdbManager,
+                    PbdManager,
                 },
                 new IFileManager[]{
                     MdlManager,

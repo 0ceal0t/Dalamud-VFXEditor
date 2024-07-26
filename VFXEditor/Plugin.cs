@@ -14,6 +14,7 @@ using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.KdbFormat;
 using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
+using VfxEditor.Formats.PbdFormat;
 using VfxEditor.Formats.ShcdFormat;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SkpFormat;
@@ -82,6 +83,7 @@ namespace VfxEditor {
         public static MtrlManager MtrlManager { get; private set; }
         public static MdlManager MdlManager { get; private set; }
         public static KdbManager KdbManager { get; private set; }
+        public static PbdManager PbdManager { get; private set; }
 
         public static string RootLocation { get; private set; }
 #if BETA
@@ -126,6 +128,7 @@ namespace VfxEditor {
             MtrlManager = new();
             MdlManager = new();
             KdbManager = new();
+            PbdManager = new();
 
             ToolsDialog = new();
             PenumbraIpc = new();
