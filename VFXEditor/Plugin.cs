@@ -64,7 +64,8 @@ namespace VfxEditor {
             ShcdManager,
             MtrlManager,
             MdlManager,
-            KdbManager
+            KdbManager,
+            PbdManager,
         ];
 
         public static AvfxManager AvfxManager { get; private set; }
