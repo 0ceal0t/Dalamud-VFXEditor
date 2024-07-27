@@ -32,10 +32,27 @@ namespace VfxEditor.Formats.PbdFormat {
                 Connections.Add( new( Deformers, reader ) );
             }
             foreach( var connection in Connections ) connection.Populate( Connections );
+
+            if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
         }
 
         public override void Write( BinaryWriter writer ) {
-            // TODO: make sure to handle siblings for root nodes as well
+            writer.Write( Deformers.Count );
+
+            var offsetPositions = new Dictionary<PbdDeformer, long>();
+            foreach( var deformer in Deformers ) deformer.Write( writer, Connections, offsetPositions );
+            foreach( var connection in Connections ) connection.Write( writer, Connections, Deformers );
+
+            var dataPositions = new Dictionary<PbdDeformer, long>();
+            foreach( var deformer in Deformers ) {
+                dataPositions[deformer] = writer.BaseStream.Position;
+                deformer.WriteData( writer );
+            }
+
+            foreach( var (deformer, placeholder) in offsetPositions ) {
+                writer.BaseStream.Position = placeholder;
+                writer.Write( ( int )dataPositions[deformer] );
+            }
         }
 
         public override void Draw() {

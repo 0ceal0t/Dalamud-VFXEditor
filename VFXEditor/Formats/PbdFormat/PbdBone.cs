@@ -1,5 +1,6 @@
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -12,20 +13,17 @@ namespace VfxEditor.Formats.PbdFormat {
         public readonly ParsedFloat3 Scale = new( "Scale" );
         public readonly ParsedQuat Rotation = new( "Rotation" );
 
+        private TransformMatrix Matrix;
+
         public PbdBone() { }
 
         public PbdBone( BinaryReader reader ) {
             var xRow = new Vector4( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() );
             var yRow = new Vector4( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() );
             var zRow = new Vector4( reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() );
+            Matrix = new TransformMatrix( xRow, yRow, zRow );
 
-            var matrix = new Matrix4x4(
-                xRow.X, yRow.X, zRow.X, 0.0f,
-                xRow.Y, yRow.Y, zRow.Y, 0.0f,
-                xRow.Z, yRow.Z, zRow.Z, 0.0f,
-                xRow.W, yRow.W, zRow.W, 1.0f );
-
-            Matrix4x4.Decompose( matrix, out var scale, out var rot, out var translate );
+            Matrix.TryDecompose( out var scale, out var rot, out var translate );
             Translate.Value = translate;
             Scale.Value = scale;
             Rotation.SetQuaternion( rot.X, rot.Y, rot.Z, rot.W );
@@ -33,9 +31,31 @@ namespace VfxEditor.Formats.PbdFormat {
 
         public void Draw() {
             Name.Draw();
+
+            using var edited = new Edited();
             Translate.Draw();
             Scale.Draw();
             Rotation.Draw();
+
+            if( edited.IsEdited ) Matrix = TransformMatrix.Compose( Scale.Value, Rotation.Quaternion.Quat, Translate.Value );
+        }
+
+        public void Write( BinaryWriter writer ) {
+            // xRow
+            writer.Write( Matrix.XRow.X );
+            writer.Write( Matrix.XRow.Y );
+            writer.Write( Matrix.XRow.Z );
+            writer.Write( Matrix.XRow.W );
+            // yRow
+            writer.Write( Matrix.YRow.X );
+            writer.Write( Matrix.YRow.Y );
+            writer.Write( Matrix.YRow.Z );
+            writer.Write( Matrix.YRow.W );
+            // zRow
+            writer.Write( Matrix.ZRow.X );
+            writer.Write( Matrix.ZRow.Y );
+            writer.Write( Matrix.ZRow.Z );
+            writer.Write( Matrix.ZRow.W );
         }
     }
 }

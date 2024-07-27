@@ -34,12 +34,10 @@ namespace VfxEditor.Formats.PbdFormat {
             reader.BaseStream.Position = offset;
 
             var boneCount = reader.ReadInt32();
-
             var stringOffsets = new List<short>();
             for( var i = 0; i < boneCount; i++ ) stringOffsets.Add( reader.ReadInt16() );
             FileUtils.PadTo( reader, 4 );
-
-            for( var i = 0; i < boneCount; i++ ) Bones.Add( new( reader ) );
+            for( var i = 0; i < boneCount; i++ ) Bones.Add( new( reader ) ); // read matrixes
             for( var i = 0; i < boneCount; i++ ) {
                 reader.BaseStream.Position = offset + stringOffsets[i];
                 Bones[i].Name.Read( reader );
@@ -57,6 +55,42 @@ namespace VfxEditor.Formats.PbdFormat {
                 ImGui.Separator();
                 BoneView.Draw();
             }
+        }
+
+        public void Write( BinaryWriter writer, List<PbdConnection> connections, Dictionary<PbdDeformer, long> offsets ) {
+            SkeletonId.Write( writer );
+            writer.Write( ( ushort )connections.IndexOf( x => x.Item == this ) );
+
+            if( Enabled.Value ) offsets[this] = writer.BaseStream.Position;
+            writer.Write( 0 ); // placeholder
+
+            UnknownScale.Write( writer );
+        }
+
+        public void WriteData( BinaryWriter writer ) {
+            if( !Enabled.Value ) return;
+            var startPosition = writer.BaseStream.Position;
+
+            writer.Write( Bones.Count );
+            for( var i = 0; i < Bones.Count; i++ ) writer.Write( ( ushort )0 ); // placeholder
+            FileUtils.PadTo( writer, 4 );
+
+            foreach( var bone in Bones ) bone.Write( writer ); // write matrixes
+
+            var boneNamePositions = new Dictionary<string, long>();
+            foreach( var bone in Bones ) {
+                boneNamePositions[bone.Name.Value] = writer.BaseStream.Position;
+                bone.Name.Write( writer );
+            }
+            FileUtils.PadTo( writer, 4 );
+
+            var endPosition = writer.BaseStream.Position;
+            writer.BaseStream.Position = startPosition + 4;
+            foreach( var bone in Bones ) {
+                writer.Write( ( short )( boneNamePositions[bone.Name.Value] - startPosition ) );
+            }
+
+            writer.BaseStream.Position = endPosition;
         }
     }
 }

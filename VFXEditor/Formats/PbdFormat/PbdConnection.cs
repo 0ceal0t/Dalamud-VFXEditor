@@ -35,5 +35,12 @@ namespace VfxEditor.Formats.PbdFormat {
             if( Parent == parent ) return true;
             return Parent.IsChildOf( parent );
         }
+
+        public void Write( BinaryWriter writer, List<PbdConnection> connections, List<PbdDeformer> deformers ) {
+            writer.Write( ( short )( Parent == null ? -1 : connections.IndexOf( Parent ) ) );
+            writer.Write( ( short )( Child == null ? -1 : connections.IndexOf( Child ) ) );
+            writer.Write( ( short )( Sibling == null ? -1 : connections.IndexOf( Sibling ) ) );
+            writer.Write( ( short )deformers.IndexOf( Item ) );
+        }
     }
 }
