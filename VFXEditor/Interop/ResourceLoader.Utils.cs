@@ -124,7 +124,7 @@ namespace VfxEditor.Interop {
 
             if( string.IsNullOrEmpty( localPath ) ) return;
 
-            var localGameResource = GetResource( gamePath, false, !gamePath.EndsWith( ".pbd" ) ); // get local path resource
+            var localGameResource = GetResource( gamePath, false ); // get local path resource
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} / {localPath} -> " + localGameResource.ToString( "X8" ) );
 
             if( localGameResource != IntPtr.Zero ) {

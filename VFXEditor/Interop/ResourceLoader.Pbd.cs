@@ -25,13 +25,18 @@ namespace VfxEditor.Interop {
         }
 
         private void SetupScaling( CharacterBase* drawObject, uint slotIndex ) {
+            var prev = ( *CharacterUtilityAddress )->HumanPbdResource;
             if( CurrentPbd != null ) ( *CharacterUtilityAddress )->HumanPbdResource = CurrentPbd;
             HumanSetupScalingHook.Original( drawObject, slotIndex );
+            ( *CharacterUtilityAddress )->HumanPbdResource = prev;
         }
 
         private void* CreateDeformer( CharacterBase* drawObject, uint slotIndex ) {
+            var prev = ( *CharacterUtilityAddress )->HumanPbdResource;
             if( CurrentPbd != null ) ( *CharacterUtilityAddress )->HumanPbdResource = CurrentPbd;
-            return HumanCreateDeformerHook.Original( drawObject, slotIndex );
+            var res = HumanCreateDeformerHook.Original( drawObject, slotIndex );
+            ( *CharacterUtilityAddress )->HumanPbdResource = prev;
+            return res;
         }
     }
 }
