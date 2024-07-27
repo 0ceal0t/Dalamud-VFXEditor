@@ -67,6 +67,9 @@ namespace VfxEditor.Interop {
 
             LuaRead = Marshal.GetDelegateForFunctionPointer<LuaReadDelegate>( Dalamud.SigScanner.ScanText( Constants.LuaReadSig ) );
 
+            HumanSetupScalingHook = Dalamud.Hooks.HookFromAddress<CharacterBaseSetupScalingDelegate>( HumanVTable[58], SetupScaling );
+            HumanCreateDeformerHook = Dalamud.Hooks.HookFromAddress<CharacterBaseCreateDeformerDelegate>( HumanVTable[101], CreateDeformer );
+
             ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
@@ -83,6 +86,9 @@ namespace VfxEditor.Interop {
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
+
+            HumanSetupScalingHook.Enable();
+            HumanCreateDeformerHook.Enable();
 
             PathResolved += AddCrc;
         }
@@ -106,6 +112,9 @@ namespace VfxEditor.Interop {
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();
+
+            HumanSetupScalingHook.Dispose();
+            HumanCreateDeformerHook.Dispose();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using VfxEditor.Structs;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Interop {
@@ -123,17 +124,19 @@ namespace VfxEditor.Interop {
 
             if( string.IsNullOrEmpty( localPath ) ) return;
 
-            var localGameResource = GetResource( gamePath, false ); // get local path resource
+            var localGameResource = GetResource( gamePath, false, !gamePath.EndsWith( ".pbd" ) ); // get local path resource
             if( Plugin.Configuration?.LogDebug == true && DoDebug( gamePath ) ) Dalamud.Log( $"[ReloadPath] {gamePath} / {localPath} -> " + localGameResource.ToString( "X8" ) );
 
             if( localGameResource != IntPtr.Zero ) {
+                if( gamePath.EndsWith( ".pbd" ) ) ReplacePbd( ( ResourceHandle* )localGameResource );
+
                 InteropUtils.PrepPap( localGameResource, papIds, papTypes );
                 RequestFile( GetFileManager2(), localGameResource + Constants.GameResourceOffset, localGameResource, 1 );
                 InteropUtils.WritePapIds( localGameResource, papIds, papTypes );
             }
         }
 
-        private IntPtr GetResource( string path, bool original ) {
+        private IntPtr GetResource( string path, bool original, bool decRef = true ) {
             var extension = FileUtils.Reverse( path.Split( '.' )[1] );
             var typeBytes = Encoding.ASCII.GetBytes( extension );
             var bType = stackalloc byte[typeBytes.Length + 1];
@@ -169,7 +172,7 @@ namespace VfxEditor.Interop {
 
             var resource = original ? new IntPtr( GetResourceSyncHook.Original( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) ) :
                 new IntPtr( GetResourceSyncDetour( GetFileManager(), pCategoryId, pResourceType, pResourceHash, resolvedPath.Path, null ) );
-            DecRef( resource );
+            if( decRef ) DecRef( resource );
 
             return resource;
         }

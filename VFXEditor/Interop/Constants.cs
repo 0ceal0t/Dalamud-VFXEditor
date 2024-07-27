@@ -75,5 +75,12 @@ namespace VfxEditor.Interop {
         public const string PlaySoundSig = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? FE C2";
 
         public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 5D 77";
+
+        // https://github.com/xivdev/Penumbra/blob/246f4f65f5bf60a9c1ee8ecc7bc65075346c6229/Penumbra/Interop/Services/CharacterUtility.cs#L15
+        // https://github.com/xivdev/Penumbra/blob/246f4f65f5bf60a9c1ee8ecc7bc65075346c6229/Penumbra/Interop/Hooks/PostProcessing/PreBoneDeformerReplacer.cs#L70
+
+        public const string CharacterUtilitySig = "48 8B 05 ?? ?? ?? ?? 83 B9";
+
+        public const string HumanVTable = "48 8D 05 ?? ?? ?? ?? 48 89 03 89 8B";
     }
 }
