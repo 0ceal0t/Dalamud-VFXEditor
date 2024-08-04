@@ -48,11 +48,11 @@ namespace VfxEditor.Interop.Havok {
                 var rot = bone.Rot;
                 var scl = bone.Scl;
 
-                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = Matrix.AffineTransformation(
                     scl.X,
                     new Quaternion( ( float )rot.X, ( float )rot.Y, ( float )rot.Z, ( float )rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
-                ) );
+                );
 
                 parents.Add( ParentIdx( bone ) );
                 refPoses.Add( matrix );

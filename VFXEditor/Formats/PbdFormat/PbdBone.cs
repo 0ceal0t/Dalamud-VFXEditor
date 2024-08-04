@@ -26,7 +26,7 @@ namespace VfxEditor.Formats.PbdFormat {
             Matrix.TryDecompose( out var scale, out var rot, out var translate );
             Translate.Value = translate;
             Scale.Value = scale;
-            Rotation.SetQuaternion( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Quaternion = rot;
         }
 
         public void Draw() {
@@ -37,7 +37,7 @@ namespace VfxEditor.Formats.PbdFormat {
             Scale.Draw();
             Rotation.Draw();
 
-            if( edited.IsEdited ) Matrix = TransformMatrix.Compose( Scale.Value, Rotation.Quaternion.Quat, Translate.Value );
+            if( edited.IsEdited ) Matrix = TransformMatrix.Compose( Scale.Value, Rotation.Quaternion, Translate.Value );
         }
 
         public void Write( BinaryWriter writer ) {

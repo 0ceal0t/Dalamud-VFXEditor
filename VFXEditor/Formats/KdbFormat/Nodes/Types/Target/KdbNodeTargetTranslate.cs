@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
         public readonly ParsedFnvHash Bone = new( "Bone" );
         public readonly ParsedDouble3 Translate = new( "Translate" );
         public readonly ParsedDouble3 NeutralTranslate = new( "Neutral Translate" );
-        public readonly ParsedQuat NeutralRotate = new( "Neutral Rotate", size: 8 );
+        public readonly ParsedQuatDouble NeutralRotate = new( "Neutral Rotate" );
 
         public KdbNodeTargetTranslate() : base() { }
 

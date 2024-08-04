@@ -38,7 +38,7 @@ namespace VfxEditor.SklbFormat.Mapping {
             var scale = transform.Scale;
 
             Translation.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.SetQuaternion( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Quaternion = new( rot.X, rot.Y, rot.Z, rot.W );
             Scale.Value = new( scale.X, scale.Y, scale.Z, scale.W );
         }
 

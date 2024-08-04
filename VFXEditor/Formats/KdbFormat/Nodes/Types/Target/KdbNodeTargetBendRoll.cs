@@ -13,8 +13,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
         public readonly ParsedDouble3 Unknown2 = new( "Unknown 2" );
         public readonly ParsedDouble3 Unknown3 = new( "Unknown 3" );
         public readonly ParsedInt Unknown4 = new( "Unknown 4" );
-        public readonly ParsedQuat Unknown5 = new( "Unknown 5", size: 8 );
-        public readonly ParsedQuat Unknown6 = new( "Unknown 6", size: 8 );
+        public readonly ParsedQuatDouble Unknown5 = new( "Unknown 5" );
+        public readonly ParsedQuatDouble Unknown6 = new( "Unknown 6" );
         public readonly ParsedByteBool Unknown7 = new( "Unknown 7" );
 
         public KdbNodeTargetBendRoll() : base() { }

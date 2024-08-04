@@ -23,7 +23,7 @@ namespace VfxEditor.SklbFormat.Bones {
         public readonly ParsedInt LockTranslation = new( "Lock Translation" );
 
         public Vector4 Pos => Position.Value;
-        public Double4 Rot => Rotation.Quaternion;
+        public Quaternion Rot => Rotation.Quaternion;
         public Vector4 Scl => Scale.Value;
 
         public SklbBone( int id ) {
@@ -36,7 +36,7 @@ namespace VfxEditor.SklbFormat.Bones {
             var rot = pose.Rotation;
             var scl = pose.Scale;
             Position.Value = new( pos.X, pos.Y, pos.Z, pos.W );
-            Rotation.SetQuaternion( rot.X, rot.Y, rot.Z, rot.W );
+            Rotation.Quaternion = new( rot.X, rot.Y, rot.Z, rot.W );
             Scale.Value = new( scl.X, scl.Y, scl.Z, scl.W );
             LockTranslation.Value = bone.LockTranslation;
         }

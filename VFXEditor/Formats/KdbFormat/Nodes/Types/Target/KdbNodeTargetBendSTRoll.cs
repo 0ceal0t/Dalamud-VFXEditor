@@ -16,8 +16,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
         public readonly ParsedDouble3 Aim = new( "Aim" );
         public readonly ParsedDouble3 Up = new( "Up" );
         public readonly ParsedDouble Unknown1 = new( "Unknown 1" );
-        public readonly ParsedQuat Unknown2 = new( "Unknown 2", size: 8 );
-        public readonly ParsedQuat Unknown3 = new( "Unknown 3", size: 8 );
+        public readonly ParsedQuatDouble Unknown2 = new( "Unknown 2" );
+        public readonly ParsedQuatDouble Unknown3 = new( "Unknown 3" );
         public readonly ParsedDouble Unknown4 = new( "Unknown 4" );
         public readonly ParsedUInt Unknown5 = new( "Unknown 5" );
         public readonly ParsedByteBool Unknown6 = new( "Unknown 6" );

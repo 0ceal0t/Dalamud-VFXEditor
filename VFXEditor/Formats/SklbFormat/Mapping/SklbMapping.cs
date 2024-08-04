@@ -15,7 +15,7 @@ using VfxEditor.SklbFormat.Bones;
 
 namespace VfxEditor.SklbFormat.Mapping {
     public unsafe class SklbMapping {
-        public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, $"temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
+        public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, "temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
 
         public readonly ParsedString Name = new( "Name" );
         public readonly ParsedFloat4 Position = new( "Translation" );
@@ -39,7 +39,7 @@ namespace VfxEditor.SklbFormat.Mapping {
 
             var transform = mapper->Mapping.ExtractedMotionMapping;
             Position.Value = new( transform.Translation.X, transform.Translation.Y, transform.Translation.Z, transform.Translation.W );
-            Rotation.SetQuaternion( transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W );
+            Rotation.Quaternion = new( transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W );
             Scale.Value = new( transform.Scale.X, transform.Scale.Y, transform.Scale.Z, transform.Scale.W );
 
             var data = Mapper->Mapping;
@@ -62,10 +62,10 @@ namespace VfxEditor.SklbFormat.Mapping {
                     W = Position.Value.W
                 },
                 Rotation = new() {
-                    X = ( float )rotation.X,
-                    Y = ( float )rotation.Y,
-                    Z = ( float )rotation.Z,
-                    W = ( float )rotation.W
+                    X = rotation.X,
+                    Y = rotation.Y,
+                    Z = rotation.Z,
+                    W = rotation.W
                 },
                 Scale = new() {
                     X = Scale.Value.X,
@@ -189,15 +189,12 @@ namespace VfxEditor.SklbFormat.Mapping {
                 var resultScl = mappedPos.Length() < 0.01f ? 1 : thisPos.Length() / mappedPos.Length();
                 var resultPos = thisPos - ( mappedPos * resultScl );
 
-                var resultRot = Quaternion.Multiply( thisRot.Quat, Quaternion.Inverse( mappedRot ) );
+                var resultRot = Quaternion.Multiply( thisRot, Quaternion.Inverse( mappedRot ) );
                 if( resultRot.W < 0 ) resultRot *= -1f;
                 if( idx % 2 == 0 ) resultRot = new( 0f, 0f, 0f, 1f );
 
                 commands.Add( new ParsedSimpleCommand<Vector4>( simple.Translation, new( resultPos, 0 ) ) );
-                commands.Add( new ParsedSimpleCommand<(Double4, Vector3)>( simple.Rotation, (
-                        new( resultRot.X, resultRot.Y, resultRot.Z, resultRot.W ),
-                        ParsedQuat.ToEuler( resultRot.X, resultRot.Y, resultRot.Z, resultRot.W ).Vec3
-                    ) ) );
+                commands.Add( new ParsedSimpleCommand<(Quaternion, Vector3)>( simple.Rotation, (resultRot, ParsedQuat.ToEuler( resultRot )) ) );
                 commands.Add( new ParsedSimpleCommand<Vector4>( simple.Scale, new( resultScl ) ) );
             }
 

@@ -37,7 +37,7 @@ namespace VfxEditor.Utils.Gltf {
                 var scl = transform.Scale;
 
                 bone.Position.Value = new( pos.X, pos.Y, pos.Z, 1 );
-                bone.Rotation.SetQuaternion(
+                bone.Rotation.Quaternion = new(
                     Cleanup( rot.X ),
                     Cleanup( rot.Y ),
                     Cleanup( rot.Z ),
