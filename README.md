@@ -179,4 +179,9 @@ chara/xls/animation/animation_work_table-weapon.awt
 chara/xls/animation_extension/animext.anxb
 chara/xls/charadb/extra_met.est
 chara/xls/charadb/hairskeletontemplate.est
+
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/FileTypes/PDB.cs#L331
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1207
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1145
+https://github.com/TexTools/xivModdingFramework/blob/44f0d031d3caa5b813a8c72c08f40313c3029d2e/xivModdingFramework/Models/Helpers/ModelModifiers.cs#L1145
 ```

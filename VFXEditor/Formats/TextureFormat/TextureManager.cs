@@ -179,8 +179,7 @@ namespace VfxEditor.Formats.TextureFormat {
             WrapsToCleanup.Clear();
             WrapsToCleanup.AddRange( Wraps );
             Wraps.Clear();
-            if( Plugin.State == WorkspaceState.Loading ) Plugin.OnMainThread += CleanupWraps;
-            else CleanupWraps();
+            Dalamud.Framework.RunOnFrameworkThread( CleanupWraps );
 
             TEX_ID = 0;
         }

@@ -20,7 +20,7 @@ namespace VfxEditor.Interop.Havok {
             Path = havokPath;
 
             if( init ) Init();
-            else Plugin.OnMainThread += Init;
+            else Dalamud.Framework.RunOnFrameworkThread( Init );
         }
 
         public virtual void Init() {

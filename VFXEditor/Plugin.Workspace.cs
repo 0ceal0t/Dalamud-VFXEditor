@@ -33,18 +33,12 @@ namespace VfxEditor {
         private static readonly SemaphoreSlim SavingLock = new( 1, 1 );
         private static int BackupId = 0;
 
-        // Havok init and texture wrap dispose
-        public static Action OnMainThread { get; set; }
-
         private static int WorkspaceFileCount = 0;
         private static DateTime LastAutoSave = DateTime.Now;
 
         // Return true if it's loading and the UI needs to be hidden
         private static bool CheckLoadState() {
             if( State == WorkspaceState.Cleanup ) {
-                OnMainThread?.Invoke();
-                OnMainThread = null;
-
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;
                 return true;
