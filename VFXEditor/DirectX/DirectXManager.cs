@@ -19,7 +19,7 @@ namespace VfxEditor.DirectX {
         public readonly BoneNamePreview PhybPreview;
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
-        public readonly MaterialPreview MaterialPreview;
+        public readonly MaterialPreviewLegacy MaterialPreviewLegacy;
         public readonly MeshPreview MeshPreview;
 
         private readonly List<ModelRenderer> Renderers = [];
@@ -39,7 +39,7 @@ namespace VfxEditor.DirectX {
             PhybPreview = new( Device, Ctx, shaderPath );
             SklbPreview = new( Device, Ctx, shaderPath );
             EidPreview = new( Device, Ctx, shaderPath );
-            MaterialPreview = new( Device, Ctx, shaderPath );
+            MaterialPreviewLegacy = new( Device, Ctx, shaderPath );
             MeshPreview = new( Device, Ctx, shaderPath );
 
             Renderers = [
@@ -48,13 +48,13 @@ namespace VfxEditor.DirectX {
                 PhybPreview,
                 SklbPreview,
                 EidPreview,
-                MaterialPreview,
+                MaterialPreviewLegacy,
                 MeshPreview,
             ];
         }
 
         public void RedrawMaterials() {
-            MaterialPreview.Redraw();
+            MaterialPreviewLegacy.Redraw();
         }
 
         public void Redraw() => Renderers.ForEach( x => x.Redraw() );

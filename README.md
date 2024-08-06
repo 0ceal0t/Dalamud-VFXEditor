@@ -61,8 +61,12 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
 ## TODO
+- [ ] Add gizmo to `.sklb` bones
+- [ ] Copy/paste `.atch` entry
+- [ ] `.uld` node type 10
 - [ ] Fix `.scd` looping issues?
-- [ ] DT stain files
+- [ ] DT stain files (https://github.com/Ottermandias/Penumbra.GameData/commit/fad2671d70df79e6b46668b5f6ac4aee35e1e078#diff-1675af0b153a065f21e2fd58777f8e294ade4a25eeee737a894fb804ab08a99c)
+- [ ] DT color table (https://github.com/Ottermandias/Penumbra.GameData/commit/ffa624936a1de13a64c6fa6a5f899e41375d58b1)
 - [ ] F Hrothgar icons in select dialog
 - [ ] New `.pap` animation from gLTF (currently can only replace)
 - [ ] Hex editor for replacing arbitrary files

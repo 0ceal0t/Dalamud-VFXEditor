@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
+using VfxEditor.Formats.MtrlFormat.Data.Table;
 using VfxEditor.Formats.MtrlFormat.Shader;
-using VfxEditor.Formats.MtrlFormat.Table;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Parsing;
@@ -53,7 +54,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         public bool ColorTableEnabled => Flags.HasFlag( TableFlags.Has_Color_Table );
         public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
 
-        public readonly MtrlTables Tables;
+        private MtrlTableBase Table;
 
         private readonly ParsedFlag<ShaderFlagOptions> ShaderOptions = new( "Shader Options" );
         private readonly ParsedUIntHex ShaderFlags = new( "Shader Flags" );
@@ -123,8 +124,13 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-
-            Tables = ColorTableEnabled ? new( this, reader, dataEnd ) : new( this );
+            var size = ( int )( dataEnd - reader.BaseStream.Position );
+            Table = ( !ColorTableEnabled || size < ( int )ColorTableSize.Legacy ) ?
+                null : // default
+                ( !( size >= ( int )ColorTableSize.Extended ) ?
+                    new MtrlTableLegacy( this, reader, dataEnd ) :
+                    new MtrlTable( this, reader, dataEnd )
+                );
 
             reader.BaseStream.Position = dataEnd;
 
@@ -208,7 +214,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             var dataStart = writer.BaseStream.Position;
-            Tables.Write( writer );
+            Table?.Write( writer );
             var dataEnd = writer.BaseStream.Position;
 
             writer.Write( ( ushort )MaterialParameters.Select( x => x.Values.Count * 4 ).Sum() );
@@ -267,9 +273,9 @@ namespace VfxEditor.Formats.MtrlFormat {
                 if( tab ) ColorSetView.Draw();
             }
 
-            if( ColorTableEnabled ) {
+            if( ColorTableEnabled && Table != null ) {
                 using var tab = ImRaii.TabItem( "Color Table" );
-                if( tab ) Tables.Draw();
+                if( tab ) Table?.Draw();
             }
         }
 
@@ -284,10 +290,12 @@ namespace VfxEditor.Formats.MtrlFormat {
                 ImGui.SameLine();
                 ImGui.Text( $"[{ShaderFileState}]" );
             }
-
             ShaderFlags.Draw();
             ShaderOptions.Draw();
-            Flags.Draw();
+            using( var edited = new Edited() ) {
+                Flags.Draw();
+                if( edited.IsEdited && ColorTableEnabled && Table == null ) Table = new MtrlTable( this );
+            }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 

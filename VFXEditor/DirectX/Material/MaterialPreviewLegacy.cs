@@ -6,8 +6,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
-using VfxEditor.Formats.MtrlFormat.Table.Color;
-using VfxEditor.Formats.MtrlFormat.Table.Dye;
+using VfxEditor.Formats.MtrlFormat.Data.Color;
+using VfxEditor.Formats.MtrlFormat.Data.Dye;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -60,7 +60,7 @@ namespace VfxEditor.DirectX {
         public Matrix InvProjectionMatrix;
     }
 
-    public class MaterialPreview : ModelDeferredRenderer {
+    public class MaterialPreviewLegacy : ModelDeferredRenderer {
         private readonly D3dDrawable Model;
 
         protected Buffer MaterialPixelShaderBuffer;
@@ -75,7 +75,7 @@ namespace VfxEditor.DirectX {
 
         private bool SkipDraw => DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed;
 
-        public MaterialPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
+        public MaterialPreviewLegacy( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
@@ -102,7 +102,7 @@ namespace VfxEditor.DirectX {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadColorRow( MtrlColorTableRow row ) {
+        public void LoadColorRow( MtrlColorRowLegacy row ) {
             CurrentRenderId = row.RenderId;
             if( row == null ) return;
 
@@ -115,11 +115,11 @@ namespace VfxEditor.DirectX {
             var dyeRow = row.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value ),
-                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value ),
-                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular ) ? row.StainTemplate.Specular : row.Specular.Value ),
-                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Specular_Strength ) ? row.StainTemplate.Power : row.SpecularStrength.Value,
-                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags.Apply_Gloss ) ? row.StainTemplate.Gloss : row.GlossStrength.Value,
+                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value ),
+                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value ),
+                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? row.StainTemplate.Specular : row.Specular.Value ),
+                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular_Strength ) ? row.StainTemplate.Power : row.SpecularStrength.Value,
+                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Gloss ) ? row.StainTemplate.Gloss : row.GlossStrength.Value,
             };
 
             // Clear out the old

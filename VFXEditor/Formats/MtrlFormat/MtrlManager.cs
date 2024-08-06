@@ -26,11 +26,11 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly List<IDalamudTextureWrap> TileDiffuse = [];
         public readonly List<IDalamudTextureWrap> TileNormal = [];
 
+        public readonly StmDataFile StmFileLegacy;
         public readonly StmDataFile StmFile;
-        public readonly StmDataFile StmFileDawntrail;
 
         public readonly int[] Templates;
-        public readonly List<MtrlStain> Stains = [];
+        public readonly List<MtrlStain> LegacyStains = [];
 
         public MtrlManager() : base( "Mtrl Editor", "Mtrl" ) {
             SourceSelect = new MtrlSelectDialog( "Mtrl Select [LOADED]", this, true );
@@ -39,6 +39,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             try {
                 TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
                 TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
+                // TODO: sphere
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error loading files" );
@@ -58,22 +59,21 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             // Dye Templates
-            StmFile = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" );
-            StmFileDawntrail = Dalamud.DataManager.GetFile<StmDataFileDawntrail>( "chara/base_material/stainingtemplate_gud.stm" );
-            // DT: chara/base_material/stainingtemplate_gud.stm
+            StmFileLegacy = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" );
+            StmFile = Dalamud.DataManager.GetFile<StmDataFileDawntrail>( "chara/base_material/stainingtemplate_gud.stm" );
             // https://github.com/TexTools/xivModdingFramework/blob/35d0ca49b5db25332756d2762e16c95b46a7f299/xivModdingFramework/Materials/FileTypes/STM.cs#L28
             // ======== TODO: DT stain changes =======
 
             var templates = new List<int> {
                 0
             };
-            foreach( var entry in StmFile.Entries ) templates.Add( entry.Key );
+            foreach( var entry in StmFileLegacy.Entries ) templates.Add( entry.Key );
             Templates = [.. templates];
 
             // Dyes
             foreach( var item in Dalamud.DataManager.GetExcelSheet<Stain>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
                 var bytes = BitConverter.GetBytes( item.Color );
-                Stains.Add( new() {
+                LegacyStains.Add( new() {
                     Name = item.Name.ToString(),
                     Id = item.RowId,
                     Color = new( bytes[2] / 255f, bytes[1] / 255f, bytes[0] / 255f )

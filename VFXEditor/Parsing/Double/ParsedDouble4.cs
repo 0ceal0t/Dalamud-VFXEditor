@@ -24,8 +24,6 @@ namespace VfxEditor.Parsing {
         }
 
         public readonly Vector4 Vec4 => new( ( float )X, ( float )Y, ( float )Z, ( float )W );
-
-        public readonly Quaternion Quat => new( ( float )X, ( float )Y, ( float )Z, ( float )W );
     }
 
     public class ParsedDouble4 : ParsedSimpleBase<Double4> {

@@ -5,7 +5,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.Formats.MtrlFormat.Table.Color {
+namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class ParsedTileMaterial : ParsedInt {
         public ParsedTileMaterial( string name, int size = 4 ) : base( name, size ) { }
 

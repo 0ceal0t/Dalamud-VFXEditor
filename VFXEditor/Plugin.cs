@@ -3,6 +3,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
+using ImGuizmoNET;
 using ImPlotNET;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
@@ -105,6 +106,7 @@ namespace VfxEditor {
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );
+            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
 
             WindowSystem = new();
 
