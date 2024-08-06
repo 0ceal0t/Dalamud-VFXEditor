@@ -1,9 +1,8 @@
 using ImGuiNET;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.UldFormat.PartList;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.UldFormat.PartList;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
     public enum GridPartsType : int {
@@ -17,8 +16,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
     }
 
     public class NineGridNodeData : UldGenericData {
-        private readonly ParsedIntSelect<UldPartList> PartListId;
-        private readonly ParsedUIntPicker<UldPartItem> PartId;
+        private readonly PartListSelect PartListId;
+        private readonly PartItemSelect PartId;
 
         private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
         private readonly ParsedEnum<GridPartsType> GridParts = new( "Grid Parts Type", size: 1 );
@@ -31,17 +30,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedInt Unknown3 = new( "Unknown 2", size: 1 );
 
         public NineGridNodeData() {
-            PartListId = new( "Part List", 0,
-                () => Plugin.UldManager.File.PartsSplitView,
-                ( UldPartList item ) => ( int )item.Id.Value,
-                ( UldPartList item, int _ ) => item.GetText(),
-                size: 2
-            );
-            PartId = new( "Part",
-                () => PartListId.Selected?.Parts,
-                ( UldPartItem item, int idx ) => item.GetText( idx ),
-                null
-            );
+            PartListId = new();
+            PartId = new( PartListId );
         }
 
         public override void Read( BinaryReader reader ) {

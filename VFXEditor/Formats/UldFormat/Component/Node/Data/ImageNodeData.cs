@@ -1,12 +1,11 @@
 using System.IO;
+using VfxEditor.Formats.UldFormat.PartList;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.UldFormat.PartList;
 
 namespace VfxEditor.UldFormat.Component.Node.Data {
     public class ImageNodeData : UldGenericData {
-        private readonly ParsedIntSelect<UldPartList> PartListId;
-        private readonly ParsedUIntPicker<UldPartItem> PartId;
+        private readonly PartListSelect PartListId;
+        private readonly PartItemSelect PartId;
 
         private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
         private readonly ParsedByteBool FlipH = new( "Flip H" );
@@ -15,17 +14,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedInt DrawMode = new( "Draw Mode", size: 1 );
 
         public ImageNodeData() {
-            PartListId = new( "Part List", 0,
-                () => Plugin.UldManager.File.PartsSplitView,
-                ( UldPartList item ) => ( int )item.Id.Value,
-                ( UldPartList item, int _ ) => item.GetText(),
-                size: 2
-            );
-            PartId = new( "Part",
-                () => PartListId.Selected?.Parts,
-                ( UldPartItem item, int idx ) => item.GetText( idx ),
-                null
-            );
+            PartListId = new();
+            PartId = new( PartListId );
         }
 
         public override void Read( BinaryReader reader ) {

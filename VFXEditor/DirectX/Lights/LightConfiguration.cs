@@ -1,6 +1,7 @@
 using ImGuiNET;
 using System;
 using System.Numerics;
+using VfxEditor.DirectX.Renderers;
 
 namespace VfxEditor.DirectX.Lights {
     [Serializable]

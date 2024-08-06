@@ -63,22 +63,6 @@ float3 computeDiffuse(LightData light, float3 worldPos, float3 N)
 
 float3 computeSpecular(LightData light, float3 worldPos, float3 N)
 {
-    /*
-    float3 L = light.Position - worldPos;
-    float distance = length(L);
-    L = L / distance;
-    float att = attenuation(light.Radius, light.Falloff, distance);
-    
-    float3 V = normalize(EyePosition - worldPos);
-    float3 R = normalize(reflect(-L, N));
-    float RdotV = max(0, dot(R, V));
-    
-    float3 H = normalize(L + V);
-    float NdotH = max(0, dot(N, H));
-    
-    float specular = pow(RdotV, SpecularPower * 10) * SpecularIntensity * att;
-    */
-    
     float3 L = light.Position - worldPos;
     L = normalize(L);
     float NdotL = dot(N, L);

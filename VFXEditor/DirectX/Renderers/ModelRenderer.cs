@@ -33,6 +33,14 @@ namespace VfxEditor.DirectX.Renderers {
         public float _Pad0;
     }
 
+    [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
+    public struct LightData {
+        public Vector3 Color;
+        public float Radius;
+        public Vector3 Position;
+        public float Falloff;
+    }
+
     public abstract class ModelRenderer : Renderer {
         public nint Output => RenderResource.NativePointer;
         public bool IsDragging = false;

@@ -19,19 +19,10 @@ namespace VfxEditor.DirectX {
     // https://github.com/TexTools/FFXIV_TexTools_UI/blob/8bad2178db77e75830136a04fdc48f257fabb572/FFXIV_TexTools/ViewModels/ColorsetEditorViewModel.cs#L235
     // https://github.com/stackgl/glsl-lighting-walkthrough/blob/master/lib/shaders/phong.frag
 
-
     [StructLayout( LayoutKind.Sequential, Size = 0x10 )]
     public struct VSMaterialBuffer {
         public Vector2 Repeat; // 0x00
         public Vector2 Skew; // 0x08
-    }
-
-    [StructLayout( LayoutKind.Sequential, Size = 0x20 )]
-    public struct LightData {
-        public Vector3 Color;
-        public float Radius;
-        public Vector3 Position;
-        public float Falloff;
     }
 
     [StructLayout( LayoutKind.Sequential, Size = 0xA0 )]
@@ -90,7 +81,7 @@ namespace VfxEditor.DirectX {
                     new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
                     new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
                 ] );
-            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialGBuffer.fx" ), ShaderPassFlags.Pixel );
+            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialLegacyGBuffer.fx" ), ShaderPassFlags.Pixel );
 
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
@@ -171,25 +162,6 @@ namespace VfxEditor.DirectX {
                 Ctx, PassType.Final,
                     [VertexShaderBuffer, MaterialVertexShaderBuffer],
                     [PixelShaderBuffer, MaterialPixelShaderBuffer] );
-        }
-
-        private ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {
-            var stream = DataStream.Create( data, true, true );
-            var rect = new DataRectangle( stream.DataPointer, width * 4 );
-            texture = new( Device, new() {
-                Width = width,
-                Height = height,
-                ArraySize = 1,
-                BindFlags = BindFlags.ShaderResource,
-                Usage = ResourceUsage.Default,
-                CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.B8G8R8A8_UNorm,
-                MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.None,
-                SampleDescription = new SampleDescription( 1, 0 ),
-            }, rect );
-
-            return new ShaderResourceView( Device, texture );
         }
 
         protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();

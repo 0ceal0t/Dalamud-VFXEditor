@@ -220,10 +220,10 @@
         <None Update="Shaders\SsaoQuad.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\MaterialGBuffer.fx">
+        <None Update="Shaders\MaterialLegacyGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="Shaders\MaterialUtils.fx">
+        <None Update="Shaders\PhongUtils.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="Shaders\ModelUtils.fx">

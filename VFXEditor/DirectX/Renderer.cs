@@ -1,4 +1,6 @@
+using SharpDX;
 using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -30,5 +32,24 @@ namespace VfxEditor.DirectX {
         public abstract void Draw();
 
         public abstract void Dispose();
+
+        public ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {
+            var stream = DataStream.Create( data, true, true );
+            var rect = new DataRectangle( stream.DataPointer, width * 4 );
+            texture = new( Device, new() {
+                Width = width,
+                Height = height,
+                ArraySize = 1,
+                BindFlags = BindFlags.ShaderResource,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags = CpuAccessFlags.None,
+                Format = Format.B8G8R8A8_UNorm,
+                MipLevels = 1,
+                OptionFlags = ResourceOptionFlags.None,
+                SampleDescription = new SampleDescription( 1, 0 ),
+            }, rect );
+
+            return new ShaderResourceView( Device, texture );
+        }
     }
 }
