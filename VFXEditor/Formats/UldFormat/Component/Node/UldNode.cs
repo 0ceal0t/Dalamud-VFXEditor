@@ -21,6 +21,7 @@ namespace VfxEditor.UldFormat.Component.Node {
         NineGrid = 4,
         Counter = 5,
         Collision = 8,
+        ClippingMask = 10,
     }
 
     [Flags]
@@ -78,9 +79,9 @@ namespace VfxEditor.UldFormat.Component.Node {
         );
 
         // need to wait until all components are initialized, so store this until then
-        private readonly long DelayedPosition;
-        private readonly int DelayedSize;
-        private readonly int DelayedNodeType;
+        private readonly long _Position;
+        private readonly int _Size;
+        private readonly int _Type;
 
         public UldNode( uint id, List<UldComponent> components, UldWorkspaceItem parent, SelectView<UldNode> nodeView ) : base( id ) {
             Parent = parent;
@@ -154,22 +155,22 @@ namespace VfxEditor.UldFormat.Component.Node {
             Parsed.ForEach( x => x.Read( reader ) );
             TimelineId.Read( reader );
 
-            DelayedPosition = reader.BaseStream.Position;
-            DelayedSize = ( int )( pos + size - reader.BaseStream.Position ) - 12;
-            DelayedNodeType = nodeType;
+            _Position = reader.BaseStream.Position;
+            _Size = ( int )( pos + size - reader.BaseStream.Position ) - 12;
+            _Type = nodeType;
 
             reader.BaseStream.Position = pos + size;
         }
 
         // Needs to be initialized later since it depends on component list being filled
         public void InitData( BinaryReader reader ) {
-            reader.BaseStream.Position = DelayedPosition;
+            reader.BaseStream.Position = _Position;
 
             UpdateData();
-            if( Data == null && DelayedNodeType > 1 ) {
-                Dalamud.Log( $"Unknown node type {DelayedNodeType} / {DelayedSize} @ {reader.BaseStream.Position:X8}" );
+            if( Data == null && _Type > 1 ) {
+                Dalamud.Log( $"Unknown node type {_Type} / {_Size} @ {reader.BaseStream.Position:X8}" );
             }
-            if( Data is BaseNodeData custom ) custom.Read( reader, DelayedSize );
+            if( Data is BaseNodeData custom ) custom.Read( reader, _Size );
             else Data?.Read( reader );
         }
 
@@ -230,6 +231,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                     NodeType.NineGrid => new NineGridNodeData(),
                     NodeType.Counter => new CounterNodeData(),
                     NodeType.Collision => new CollisionNodeData(),
+                    NodeType.ClippingMask => new ClippingMaskNodeData(),
                     _ => null
                 };
             }
