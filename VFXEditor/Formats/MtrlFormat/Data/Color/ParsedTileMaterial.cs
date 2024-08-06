@@ -27,9 +27,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             if( !combo ) return;
 
             for( var i = 0; i < size; i++ ) {
-                if( ImGui.Selectable( $"Tile {i}", i == Value ) ) {
-                    Update( i );
-                }
+                if( ImGui.Selectable( $"Tile {i}", i == Value ) ) Update( i );
                 if( i == Value ) ImGui.SetItemDefaultFocus();
 
                 if( ImGui.IsItemHovered() ) {

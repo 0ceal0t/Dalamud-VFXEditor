@@ -190,6 +190,9 @@
         <None Update="Files\oggenc2.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Files\sphere_d_array.tex">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Files\tile_norm_array.tex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

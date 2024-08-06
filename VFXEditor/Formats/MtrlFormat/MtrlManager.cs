@@ -23,8 +23,10 @@ namespace VfxEditor.Formats.MtrlFormat {
     public unsafe class MtrlManager : FileManager<MtrlDocument, MtrlFile, WorkspaceMetaBasic> {
         public readonly TextureDataFile TileDiffuseFile;
         public readonly TextureDataFile TileNormalFile;
+        public readonly TextureDataFile SphereFile;
         public readonly List<IDalamudTextureWrap> TileDiffuse = [];
         public readonly List<IDalamudTextureWrap> TileNormal = [];
+        public readonly List<IDalamudTextureWrap> Sphere = [];
 
         public readonly StmDataFile StmFileLegacy;
         public readonly StmDataFile StmFile;
@@ -39,22 +41,22 @@ namespace VfxEditor.Formats.MtrlFormat {
             try {
                 TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
                 TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
-                // TODO: sphere
+                SphereFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "sphere_d_array.tex" ) );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error loading files" );
             }
 
-            // the G buffer shader only uses red and green from the normal map
-            // but all 4 channels from the "orb" map
-
-            if( TileDiffuseFile == null || TileNormalFile == null ) Dalamud.Error( "Could not load tile files" );
+            if( TileDiffuseFile == null || TileNormalFile == null || SphereFile == null ) Dalamud.Error( "Could not load tile files" );
             else {
                 foreach( var layer in TileDiffuseFile.Layers ) {
                     TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );
                 }
                 foreach( var layer in TileNormalFile.Layers ) {
                     TileNormal.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileNormalFile.Header.Width, TileNormalFile.Header.Height ), layer ) );
+                }
+                foreach( var layer in SphereFile.Layers ) {
+                    Sphere.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( SphereFile.Header.Width, SphereFile.Header.Height ), layer ) );
                 }
             }
 
@@ -93,10 +95,12 @@ namespace VfxEditor.Formats.MtrlFormat {
                 try {
                     foreach( var wrap in TileDiffuse ) wrap?.Dispose();
                     foreach( var wrap in TileNormal ) wrap?.Dispose();
+                    foreach( var wrap in Sphere ) wrap?.Dispose();
                 }
                 catch( Exception ) { }
                 TileDiffuse.Clear();
                 TileNormal.Clear();
+                Sphere.Clear();
             }
         }
     }

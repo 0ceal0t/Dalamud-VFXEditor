@@ -84,6 +84,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Update "try on" preview
 
 ```
+chara/xls/charadb/equipmentdeformerparameter/c0101.eqdp
+
 .kdlb
 .bklb
 .kdb (kinedriver)
