@@ -37,14 +37,20 @@ namespace VfxEditor.Interop {
             }
         }
 
-        public static int ComputeHash( ByteString path, GetResourceParameters* resParams ) {
-            if( resParams == null || !resParams->IsPartialRead ) return path.Crc32;
+        // https://github.com/xivdev/Penumbra/blob/7710d9249675e6550f9db2eaaf94e1c570929c23/Penumbra/Interop/Hooks/ResourceLoading/ResourceLoader.cs#L269
 
-            return ByteString.Join(
+        public static int ComputeHash( CiByteString path, GetResourceParameters* resParams ) {
+            if( resParams == null || !resParams->IsPartialRead )
+                return path.Crc32;
+
+            // When the game requests file only partially, crc32 includes that information, in format of:
+            // path/to/file.ext.hex_offset.hex_size
+            // ex) music/ex4/BGM_EX4_System_Title.scd.381adc.30000
+            return CiByteString.Join(
                 ( byte )'.',
                 path,
-                ByteString.FromStringUnsafe( resParams->SegmentOffset.ToString( "x" ), true ),
-                ByteString.FromStringUnsafe( resParams->SegmentLength.ToString( "x" ), true )
+                CiByteString.FromString( resParams->SegmentOffset.ToString( "x" ), out var s1, MetaDataComputation.None ) ? s1 : CiByteString.Empty,
+                CiByteString.FromString( resParams->SegmentLength.ToString( "x" ), out var s2, MetaDataComputation.None ) ? s2 : CiByteString.Empty
             ).Crc32;
         }
 

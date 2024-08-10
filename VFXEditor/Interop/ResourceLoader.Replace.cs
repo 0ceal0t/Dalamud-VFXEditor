@@ -79,7 +79,7 @@ namespace VfxEditor.Interop {
             GetResourceParameters* resParams,
             bool isUnknown
         ) {
-            if( !Utf8GamePath.FromPointer( path, out var gamePath ) ) {
+            if( !Utf8GamePath.FromPointer( path, MetaDataComputation.None, out var gamePath ) ) {
                 return CallOriginalHandler( isSync, resourceManager, categoryId, resourceType, resourceHash, path, resParams, isUnknown );
             }
 

@@ -135,7 +135,7 @@ namespace VfxEditor.Ui.Tools {
             if( resourcePtr <= 256 || resourcePtr == 0x3F800000 ) return false;
 
             var resource = ( ResourceHandle* )resourcePtr;
-            if( resource->FileNamePtr() == null ) return false;
+            if( resource->FileName().IsEmpty ) return false;
 
             fileName = resource->FileName().ToString();
             if( string.IsNullOrEmpty( fileName ) ) return false;
