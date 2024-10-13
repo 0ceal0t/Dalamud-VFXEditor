@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.PbdFormat {
         public readonly ParsedFloat3 Scale = new( "Scale" );
         public readonly ParsedQuat Rotation = new( "Rotation" );
 
-        private TransformMatrix Matrix;
+        public TransformMatrix Matrix { get; private set; }
 
         public PbdBone() { }
 

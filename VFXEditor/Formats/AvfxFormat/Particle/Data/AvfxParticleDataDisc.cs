@@ -5,6 +5,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt PartsCountV = new( "Parts Count V", "PCnV" );
         public readonly AvfxFloat PointIntervalFactoryV = new( "Point Interval Factor V", "PIFU" );
         public readonly AvfxCurve Angle = new( "Angle", "Ang", CurveType.Angle );
+        public readonly AvfxCurve AngleRandom = new( "Angle Random", "AngR", CurveType.Angle );
         public readonly AvfxCurve HeightBeginInner = new( "Height Begin Inner", "HBI" );
         public readonly AvfxCurve HeightEndInner = new( "Height End Inner", "HEI" );
         public readonly AvfxCurve HeightBeginOuter = new( "Height Begin Outer", "HBO" );
@@ -24,6 +25,7 @@ namespace VfxEditor.AvfxFormat {
                 PartsCountV,
                 PointIntervalFactoryV,
                 Angle,
+                AngleRandom,
                 HeightBeginInner,
                 HeightEndInner,
                 HeightBeginOuter,
@@ -44,6 +46,7 @@ namespace VfxEditor.AvfxFormat {
             ParameterTab.Add( SS );
 
             Tabs.Add( Angle );
+            Tabs.Add( AngleRandom );
             Tabs.Add( HeightBeginInner );
             Tabs.Add( HeightEndInner );
             Tabs.Add( HeightBeginOuter );
