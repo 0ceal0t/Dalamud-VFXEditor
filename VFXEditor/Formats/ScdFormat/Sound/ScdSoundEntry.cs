@@ -64,6 +64,8 @@ namespace VfxEditor.ScdFormat {
         public SoundAtomos Atomos = new();
         public SoundExtra Extra = new();
         public SoundBypass BypassPLIIz = new();
+        public SoundEmptyLoop EmptyLoop = new();
+
         public SoundRandomTracks RandomTracks = new(); // Includes Cycle
         public SoundTracks Tracks = new();
 
@@ -74,6 +76,7 @@ namespace VfxEditor.ScdFormat {
         private bool ExtraEnabled => Attributes.Value.HasFlag( SoundAttribute.Extra_Desc );
         private bool BypassEnabled => Attributes.Value.HasFlag( SoundAttribute.Bypass_PLIIz );
         private bool RandomTracksEnabled => Type.Value == SoundType.Random || Type.Value == SoundType.Cycle || Type.Value == SoundType.GroupRandom || Type.Value == SoundType.GroupOrder;
+        private bool IsEmptyLoop => Type.Value == SoundType.Empty && Attributes.Value.HasFlag( SoundAttribute.Loop );
 
         public readonly ScdLayoutEntry Layout;
 
@@ -100,6 +103,7 @@ namespace VfxEditor.ScdFormat {
             if( AtomosEnabled ) Atomos.Read( reader );
             if( ExtraEnabled ) Extra.Read( reader );
             if( BypassEnabled ) BypassPLIIz.Read( reader );
+            if( IsEmptyLoop ) EmptyLoop.Read( reader ); // kind of a guess
 
             if( RandomTracksEnabled ) RandomTracks.Read( reader, Type.Value, trackCount );
             else Tracks.Read( reader, trackCount );
@@ -122,6 +126,7 @@ namespace VfxEditor.ScdFormat {
             if( AtomosEnabled ) Atomos.Write( writer );
             if( ExtraEnabled ) Extra.Write( writer );
             if( BypassEnabled ) BypassPLIIz.Write( writer );
+            if( IsEmptyLoop ) EmptyLoop.Write( writer );
 
             if( RandomTracksEnabled ) RandomTracks.Write( writer, Type.Value );
             else Tracks.Write( writer );
@@ -193,6 +198,12 @@ namespace VfxEditor.ScdFormat {
             if( BypassEnabled && ImGui.BeginTabItem( "Bypass PLIIz" ) ) {
                 using( var child = ImRaii.Child( "Child" ) ) {
                     BypassPLIIz.Draw();
+                }
+                ImGui.EndTabItem();
+            }
+            if( IsEmptyLoop && ImGui.BeginTabItem( "Empty Loop" ) ) {
+                using( var child = ImRaii.Child( "Child" ) ) {
+                    EmptyLoop.Draw();
                 }
                 ImGui.EndTabItem();
             }
