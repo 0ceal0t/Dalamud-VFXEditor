@@ -44,7 +44,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone {
                     writer.Write( ( ushort )0 );
                     continue;
                 }
-                writer.Write( ( ushort )data.BoneStrings.IndexOf( Bones[i].Value ) );
+                writer.Write( ( ushort )data.StringTable.BoneStrings.IndexOf( Bones[i].Value ) );
             }
 
             writer.Write( ( byte )Bones.Count );

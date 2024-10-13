@@ -50,6 +50,8 @@ namespace VfxEditor.Formats.MdlFormat {
 
         private readonly uint Version;
 
+        private readonly MdlStringTable OldStringTable = new();
+
         private readonly ParsedByteBool IndexBufferStreaming = new( "Index Buffer Streaming" );
         private readonly ParsedByteBool EdgeGeometry = new( "Edge Geometry" );
         private readonly ParsedFloat Radius = new( "Radius" );
@@ -133,6 +135,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 var pos = reader.BaseStream.Position - stringStartPos;
                 var value = FileUtils.ReadString( reader );
                 data.OffsetToString[( uint )pos] = value;
+                Dalamud.Log( value );
             }
 
             StringTablePadding = ( uint )( stringEndPos - reader.BaseStream.Position );
@@ -192,12 +195,14 @@ namespace VfxEditor.Formats.MdlFormat {
             // ===== MESHES ========
 
             for( var i = 0; i < meshCount; i++ ) data.Meshes.Add( new( this, vertexFormats[i], reader ) );
-            for( var i = 0; i < attributeCount; i++ ) data.AttributeStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
+            for( var i = 0; i < attributeCount; i++ ) data.StringTable.AttributeStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < terrainShadowMeshCount; i++ ) data.TerrainShadowMeshes.Add( new( this, reader ) );
             for( var i = 0; i < submeshCount; i++ ) data.SubMeshes.Add( new( reader ) );
             for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
-            for( var i = 0; i < materialCount; i++ ) data.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
-            for( var i = 0; i < boneCount; i++ ) data.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
+            for( var i = 0; i < materialCount; i++ ) data.StringTable.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
+            for( var i = 0; i < boneCount; i++ ) data.StringTable.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
+
+            OldStringTable = data.StringTable;
 
             BoneTables = Version == VERSION_6 ? new MdlBoneTablesV6( reader, boneTableCount, data ) : new MdlBoneTables( reader, boneTableCount, data );
 
@@ -219,7 +224,7 @@ namespace VfxEditor.Formats.MdlFormat {
             ModelBoundingBox = new( reader );
             WaterBoundingBox = new( reader );
             VerticalFogBoundingBox = new( reader );
-            for( var i = 0; i < data.BoneStrings.Count; i++ ) BoneBoundingBoxes.Add( new( data.BoneStrings[i], reader ) );
+            for( var i = 0; i < data.StringTable.BoneStrings.Count; i++ ) BoneBoundingBoxes.Add( new( data.StringTable.BoneStrings[i], reader ) );
             for( var i = 0; i < unknownCount; i++ ) UnknownBoundingBoxes.Add( new( reader ) );
 
             // ===== POPULATE =======
@@ -321,14 +326,14 @@ namespace VfxEditor.Formats.MdlFormat {
         }
 
         public override void Write( BinaryWriter writer ) {
-            var data = new MdlWriteData( this );
+            var data = new MdlWriteData( this, OldStringTable );
 
             writer.Write( Version );
             writer.Write( data.Meshes.Count * 136 ); // stack size
             var runtimePlaceholder = writer.BaseStream.Position;
             writer.Write( 0 ); // placeholder: runtime size
             writer.Write( ( ushort )data.Meshes.Count ); // vertex declaration count
-            writer.Write( ( ushort )data.MaterialStrings.Count );
+            writer.Write( ( ushort )data.StringTable.MaterialStrings.Count );
 
             var placeholders = writer.BaseStream.Position;
             for( var i = 0; i < 12; i++ ) writer.Write( 0 ); // 3 x vertex offsets, 3 x index offsets, 3 x vertex size, 3 x index size
@@ -349,10 +354,10 @@ namespace VfxEditor.Formats.MdlFormat {
 
             Radius.Write( writer );
             writer.Write( ( ushort )data.Meshes.Count );
-            writer.Write( ( ushort )data.AttributeStrings.Count );
+            writer.Write( ( ushort )data.StringTable.AttributeStrings.Count );
             writer.Write( ( ushort )data.SubMeshes.Count );
-            writer.Write( ( ushort )data.MaterialStrings.Count );
-            writer.Write( ( ushort )data.BoneStrings.Count );
+            writer.Write( ( ushort )data.StringTable.MaterialStrings.Count );
+            writer.Write( ( ushort )data.StringTable.BoneStrings.Count );
             writer.Write( ( ushort )BoneTables.Tables.Count );
             writer.Write( ( ushort )data.Shapes.Count );
             writer.Write( ( ushort )data.ShapesMeshes.Count );
@@ -380,12 +385,12 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in ExtraLods ) item.Write( writer, data );
 
             foreach( var item in data.Meshes ) item.Write( writer, data );
-            foreach( var item in data.AttributeStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in data.StringTable.AttributeStrings ) writer.Write( data.StringToOffset[item] );
             foreach( var item in data.TerrainShadowMeshes ) item.Write( writer, data );
             foreach( var item in data.SubMeshes ) item.Write( writer, data );
             foreach( var item in data.TerrainShadowSubmeshes ) item.Write( writer );
-            foreach( var item in data.MaterialStrings ) writer.Write( data.StringToOffset[item] );
-            foreach( var item in data.BoneStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in data.StringTable.MaterialStrings ) writer.Write( data.StringToOffset[item] );
+            foreach( var item in data.StringTable.BoneStrings ) writer.Write( data.StringToOffset[item] );
 
             BoneTables.Write( writer, data );
 
@@ -406,7 +411,7 @@ namespace VfxEditor.Formats.MdlFormat {
             WaterBoundingBox.Write( writer );
             VerticalFogBoundingBox.Write( writer );
 
-            foreach( var bone in data.BoneStrings ) {
+            foreach( var bone in data.StringTable.BoneStrings ) {
                 if( BoneBoundingBoxes.FindFirst( x => x.Name.Value.Equals( bone ), out var box ) ) {
                     box.Write( writer );
                     continue;

@@ -37,16 +37,16 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             for( var i = 0; i < _BoneCount; i++ ) {
                 var bone = new ParsedString( "##Bone" ) {
                     Value = ( ( _BoneStartIndex + i ) < data.SubmeshBoneMap.Count ) ?
-                        ( data.SubmeshBoneMap[_BoneStartIndex + i] < data.BoneStrings.Count ?
-                            data.BoneStrings[data.SubmeshBoneMap[_BoneStartIndex + i]] : "[ERROR]" ) : "[ERROR]"
+                        ( data.SubmeshBoneMap[_BoneStartIndex + i] < data.StringTable.BoneStrings.Count ?
+                            data.StringTable.BoneStrings[data.SubmeshBoneMap[_BoneStartIndex + i]] : "[ERROR]" ) : "[ERROR]"
                 };
                 Bones.Add( bone );
             }
 
-            for( var i = 0; i < data.AttributeStrings.Count; i++ ) {
+            for( var i = 0; i < data.StringTable.AttributeStrings.Count; i++ ) {
                 if( ( _AttributeIndexMask & ( 1u << i ) ) != 0 ) {
                     var attr = new ParsedString( "##Atribute" ) {
-                        Value = ( i < data.AttributeStrings.Count ) ? data.AttributeStrings[i] : "[ERROR]"
+                        Value = ( i < data.StringTable.AttributeStrings.Count ) ? data.StringTable.AttributeStrings[i] : "[ERROR]"
                     };
                     Attributes.Add( attr );
                 }
@@ -82,9 +82,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
 
             var attributeMask = _AttributeIndexMask;
             var selected = Attributes.Select( x => x.Value ).ToList();
-            for( var i = 0; i < data.AttributeStrings.Count; i++ ) {
+            for( var i = 0; i < data.StringTable.AttributeStrings.Count; i++ ) {
                 var value = 1u << i;
-                if( selected.Contains( data.AttributeStrings[i] ) ) {
+                if( selected.Contains( data.StringTable.AttributeStrings[i] ) ) {
                     attributeMask |= value;
                 }
                 else {
@@ -97,7 +97,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             writer.Write( ( ushort )Bones.Count );
 
             foreach( var bone in Bones ) {
-                data.SubmeshBoneMap.Add( ( ushort )data.BoneStrings.IndexOf( bone.Value ) );
+                data.SubmeshBoneMap.Add( ( ushort )data.StringTable.BoneStrings.IndexOf( bone.Value ) );
             }
         }
     }

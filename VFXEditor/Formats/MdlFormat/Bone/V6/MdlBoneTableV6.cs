@@ -15,7 +15,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone.V6 {
         }
 
         public override void Write( BinaryWriter writer, MdlWriteData data ) {
-            foreach( var item in Bones ) writer.Write( ( ushort )data.BoneStrings.IndexOf( item.Value ) );
+            foreach( var item in Bones ) writer.Write( ( ushort )data.StringTable.BoneStrings.IndexOf( item.Value ) );
         }
     }
 }

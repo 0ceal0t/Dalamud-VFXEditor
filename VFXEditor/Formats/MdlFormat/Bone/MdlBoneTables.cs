@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone {
         }
 
         public MdlBoneTables( BinaryReader reader, int count, MdlFileData data ) : this() {
-            for( var i = 0; i < count; i++ ) Tables.Add( new( reader, data.BoneStrings ) );
+            for( var i = 0; i < count; i++ ) Tables.Add( new( reader, data.StringTable.BoneStrings ) );
         }
 
         public virtual void Write( BinaryWriter writer, MdlWriteData data ) {

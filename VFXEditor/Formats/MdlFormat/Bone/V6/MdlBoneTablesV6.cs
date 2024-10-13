@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone.V6 {
 
             for( var i = 0; i < count; i++ ) {
                 var (_, tableCount) = header[i];
-                Tables.Add( new MdlBoneTableV6( reader, data.BoneStrings, tableCount ) );
+                Tables.Add( new MdlBoneTableV6( reader, data.StringTable.BoneStrings, tableCount ) );
                 FileUtils.PadTo( reader, 4 );
             }
         }

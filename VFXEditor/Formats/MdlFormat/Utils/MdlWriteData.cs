@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
@@ -8,9 +9,13 @@ using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
 namespace VfxEditor.Formats.MdlFormat.Utils {
     public class MdlWriteData : MdlFileData {
         public uint TotalStringLength { get; private set; } = 0;
+
+        public readonly MdlStringTable OldStringTable;
+
         public readonly List<string> AllStrings = [];
         public readonly Dictionary<string, uint> StringToOffset = [];
         public readonly List<string> ShapeStrings = [];
+        public readonly List<string> BoneTableStrings = [];
 
         public readonly Dictionary<MdlLod, long> LodPlaceholders = [];
 
@@ -25,9 +30,10 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<List<MdlShapeMesh>> ShapeMeshesPerLod = [[], [], []];
         public readonly List<List<MdlShapeValue>> ShapeValuesPerLod = [[], [], []];
 
-        public readonly List<string> BoneTableStrings = [];
 
-        public MdlWriteData( MdlFile file ) {
+        public MdlWriteData( MdlFile file, MdlStringTable oldStringTable ) {
+            OldStringTable = oldStringTable;
+
             for( var j = 0; j < 3; j++ ) {
                 var vMs = new MemoryStream();
                 var vWriter = new BinaryWriter( vMs );
@@ -54,11 +60,11 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
             // ======= GENERATE STRING OFFSETS ==========
 
-            AddStringOffsets( AttributeStrings );
-            AddStringOffsets( BoneStrings );
-            AddStringOffsets( MaterialStrings );
-            AddStringOffsets( BoneTableStrings );
-            AddStringOffsets( ShapeStrings );
+            AddStringOffsets( StringTable.AttributeStrings, OldStringTable.AttributeStrings );
+            AddStringOffsets( StringTable.BoneStrings, OldStringTable.BoneStrings );
+            AddStringOffsets( StringTable.MaterialStrings, OldStringTable.MaterialStrings );
+            AddStringOffsets( BoneTableStrings, null );
+            AddStringOffsets( ShapeStrings, null );
         }
 
         public void Dispose() {
@@ -117,17 +123,24 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
 
         // ========= STRINGS =================
 
-        public void AddBone( string item ) => AddString( BoneStrings, item );
+        public void AddBone( string item ) => AddString( StringTable.BoneStrings, item );
         public void AddBoneTable( string item ) => AddString( BoneTableStrings, item );
-        public void AddAttribute( string item ) => AddString( AttributeStrings, item );
-        public void AddMaterial( string item ) => AddString( MaterialStrings, item );
+        public void AddAttribute( string item ) => AddString( StringTable.AttributeStrings, item );
+        public void AddMaterial( string item ) => AddString( StringTable.MaterialStrings, item );
         public void AddShape( string item ) => AddString( ShapeStrings, item );
 
         private static void AddString( List<string> list, string item ) {
             if( !list.Contains( item ) ) list.Add( item );
         }
 
-        private void AddStringOffsets( List<string> list ) {
+        private void AddStringOffsets( List<string> list, List<string> oldList ) {
+            // Weird shit to try and keep the order of strings the same, since SE doesn't have a convention for it
+            if( oldList != null && oldList.Count > 0 ) {
+                var intersection = oldList.Where( list.Contains ).ToList();
+                list.RemoveAll( intersection.Contains );
+                list.InsertRange( 0, intersection );
+            }
+
             foreach( var item in list ) {
                 if( AllStrings.Contains( item ) ) continue;
                 AllStrings.Add( item );

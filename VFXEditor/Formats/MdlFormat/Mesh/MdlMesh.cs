@@ -112,7 +112,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             Submeshes.AddRange( data.SubMeshes.GetRange( _SubmeshIndex, _SubmeshCount ) );
             foreach( var submesh in Submeshes ) submesh.Populate( this, data, reader, data.IndexBufferOffsets[lod] );
 
-            Material.Value = data.MaterialStrings[_MaterialStringIdx];
+            Material.Value = data.StringTable.MaterialStrings[_MaterialStringIdx];
 
             foreach( var shape in data.Shapes ) Shapes.AddRange( shape.ShapeMeshes[lod].Where( x => x._MeshIndexOffset == _IndexOffset / 2 ) );
         }
@@ -128,7 +128,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
             writer.Write( VertexCount );
             writer.Write( ( ushort )0 ); // padding
             writer.Write( IndexCount );
-            writer.Write( ( ushort )data.MaterialStrings.IndexOf( Material.Value ) );
+            writer.Write( ( ushort )data.StringTable.MaterialStrings.IndexOf( Material.Value ) );
             data.WriteIndexCount( writer, Submeshes, _SubmeshIndex );
             writer.Write( ( ushort )( BoneTableIndex.Value == -1 ? 255 : BoneTableIndex.Value ) );
 

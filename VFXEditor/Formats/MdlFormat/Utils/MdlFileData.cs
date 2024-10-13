@@ -16,9 +16,7 @@ namespace VfxEditor.Formats.MdlFormat.Utils {
         public readonly List<MdlTerrainShadowSubmesh> TerrainShadowSubmeshes = [];
 
         public readonly Dictionary<uint, string> OffsetToString = [];
-        public readonly List<string> AttributeStrings = [];
-        public readonly List<string> MaterialStrings = [];
-        public readonly List<string> BoneStrings = [];
+        public MdlStringTable StringTable = new();
 
         public readonly List<ushort> SubmeshBoneMap = [];
 
