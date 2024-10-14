@@ -18,7 +18,7 @@ namespace VfxEditor.Select.Tabs.Actions {
         // ===== DRAWING ======
 
         protected override void DrawSelected() {
-            var path = Dalamud.TextureProvider.GetIconPath( ( uint )Selected.Icon );
+            var path = Dalamud.TextureProvider.GetIconPath( new( Selected.Icon, hiRes: false ) );
             var hdPath = Dalamud.TextureProvider.GetIconPath( new( Selected.Icon, hiRes: true ) );
 
             var paths = new Dictionary<string, string> {
