@@ -19,7 +19,6 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;
 
-        private readonly ParsedUInt Unknown1 = new( "Unknown 1", size: 2 );
         private readonly ParsedEnum<GridPartsType> GridParts = new( "Grid Parts Type", size: 1 );
         private readonly ParsedEnum<GridRenderType> GridRender = new( "Grid Render Type", size: 1 );
         private readonly ParsedShort TopOffset = new( "Top Offset" );
@@ -36,7 +35,6 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
         public override void Read( BinaryReader reader ) {
             PartListId.Read( reader );
-            Unknown1.Read( reader );
             PartId.Read( reader );
             GridParts.Read( reader );
             GridRender.Read( reader );
@@ -50,7 +48,6 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
 
         public override void Write( BinaryWriter writer ) {
             PartListId.Write( writer );
-            Unknown1.Write( writer );
             PartId.Write( writer );
             GridParts.Write( writer );
             GridRender.Write( writer );
@@ -95,7 +92,6 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Draw();
             LeftOffset.Draw();
             RightOffset.Draw();
-            Unknown1.Draw();
             Unknown2.Draw();
             Unknown3.Draw();
         }
