@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
@@ -10,7 +12,8 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         public readonly ParsedFloat3 Offset = new( "Offset" );
         public readonly ParsedRadians3 Rotation = new( "Rotation" );
 
-        public AtchEntryState( BinaryReader reader ) {
+        public AtchEntryState( BinaryReader reader )
+        {
             var stringPos = reader.ReadUInt32();
             var savePos = reader.BaseStream.Position;
 
@@ -23,6 +26,14 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
             Scale.Read( reader );
             Offset.Read( reader );
             Rotation.Read( reader );
+        }
+
+        public AtchEntryState( string bone, int scale, Vector3 offset, Vector3 rotation)
+        {
+            Bone.Value = bone;
+            Scale.Value = BitConverter.Int32BitsToSingle(scale);
+            Offset.Value = offset;
+            Rotation.Value = rotation;
         }
 
         public void Write( BinaryWriter writer, int stringStartPos, BinaryWriter stringWriter, Dictionary<string, int> stringPos ) {
