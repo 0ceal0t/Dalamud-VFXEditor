@@ -152,8 +152,9 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void DeleteAllEntries( List<ICommand> commands ) {
-            for( int i = Entries.Count - 1; i >= 0; i-- ) {
-                commands.Add( new ListRemoveCommand<TmbEntry>( Entries, Entries.ElementAt( i ) ) );
+            foreach( var entry in new List<TmbEntry>( Entries ) ) {
+                commands.Add( new ListRemoveCommand<TmbEntry>( Entries, entry ) );
+                commands.Add( new ListRemoveCommand<TmbEntry>( File.AllEntries, entry ) );
             }
         }
 
