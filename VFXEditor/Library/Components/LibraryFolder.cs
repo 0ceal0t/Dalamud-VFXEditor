@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library.Components {
@@ -120,9 +121,15 @@ namespace VfxEditor.Library.Components {
             }
 
             if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
-                Cleanup();
-                Parent.Remove( this );
-                library.Save();
+                Plugin.AddModal( new TextModal(
+                    "Delete Folder",
+                    "Are you sure you want to delete this folder?",
+                    () => {
+                        Cleanup();
+                        Parent.Remove( this );
+                        library.Save();
+                    }
+                ) );
                 return true;
             }
 
