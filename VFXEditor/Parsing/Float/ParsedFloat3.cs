@@ -1,9 +1,12 @@
 using ImGuiNET;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat3 : ParsedSimpleBase<Vector3> {
+        public bool HighPrecision = false;
+
         public ParsedFloat3( string name, Vector3 value ) : base( name, value ) { }
 
         public ParsedFloat3( string name ) : base( name ) { }
@@ -25,7 +28,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputFloat3( Name, ref value ) ) Update( value );
+            if( ImGui.InputFloat3( Name, ref value, HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) Update( value );
         }
     }
 }

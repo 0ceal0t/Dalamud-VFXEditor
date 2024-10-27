@@ -44,6 +44,8 @@ namespace VfxEditor.Utils {
 
         public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
 
+        public static readonly string HIGH_PRECISION_FORMAT = "%.5f";
+
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
 
         public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) =>
