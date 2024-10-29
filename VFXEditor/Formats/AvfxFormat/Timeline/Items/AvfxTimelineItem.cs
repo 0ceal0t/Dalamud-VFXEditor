@@ -89,6 +89,11 @@ namespace VfxEditor.AvfxFormat {
                 return $"Clip {ClipIdx.Value}";
             }
 
+            if( EffectorIdx.IsAssigned() && EffectorSelect.Selected != null )
+            {
+                return EffectorSelect.GetText();
+            }
+
             return "[NONE]";
         }
 
