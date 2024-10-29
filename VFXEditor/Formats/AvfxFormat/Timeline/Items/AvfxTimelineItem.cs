@@ -96,6 +96,6 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxEmitter Emitter => EmitterSelect.Selected;
 
-        public bool HasValue => EmitterIdx.Value >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.Value >= 0 );
+        public bool HasValue => EmitterIdx.Value >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.Value >= 0 ) || ( EffectorIdx.IsAssigned() && EffectorSelect.Selected != null );
     }
 }
