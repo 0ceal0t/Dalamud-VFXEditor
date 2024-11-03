@@ -89,6 +89,11 @@ namespace VfxEditor.AvfxFormat {
                 return $"Clip {ClipIdx.Value}";
             }
 
+            if( EffectorIdx.IsAssigned() && EffectorSelect.Selected != null )
+            {
+                return EffectorSelect.GetText();
+            }
+
             return "[NONE]";
         }
 
@@ -96,6 +101,6 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxEmitter Emitter => EmitterSelect.Selected;
 
-        public bool HasValue => EmitterIdx.Value >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.Value >= 0 );
+        public bool HasValue => EmitterIdx.Value >= 0 || ( ClipIdx.IsAssigned() && ClipIdx.Value >= 0 ) || ( EffectorIdx.IsAssigned() && EffectorSelect.Selected != null );
     }
 }
