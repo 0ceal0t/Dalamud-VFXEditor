@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool InfluenceCoordRot = new( "Influence on Rotation", "ICbR", value: false );
         public readonly AvfxBool InfluenceCoordPos = new( "Influence on Position", "ICbP", value: true );
         public readonly AvfxBool InfluenceCoordBinderPosition = new( "Influence on Binder Position", "ICbB", value: false );
-        public readonly AvfxInt InfluenceCoordUnstickiness = new( "Influence Coordinate Unstickiness", "ICSK", value: 0 );
+        public readonly AvfxFloat InfluenceCoordUnstickiness = new( "Influence Coordinate Unstickiness", "ICSK", value: 0 );
         public readonly AvfxBool InheritParentVelocity = new( "Inherit Parent Velocity", "IPbV", value: false );
         public readonly AvfxBool InheritParentLife = new( "Inherit Parent Life", "IPbL", value: false );
         public readonly AvfxBool OverrideLife = new( "Override Life", "bOvr", value: false );
