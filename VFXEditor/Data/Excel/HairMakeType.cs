@@ -1,27 +1,40 @@
-using Lumina.Data;
 using Lumina.Excel;
 using System.Collections.Generic;
+using System.Linq;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Data.Excel {
     [Sheet( "HairMakeType" )]
-    public class HairMakeType : ExcelRow {
-        private const uint HAIR_LENGTH = 100;
-        private const uint FACEPAINT_LENGTH = 50;
+    public struct HairMakeType( uint row ) : IExcelRow<HairMakeType> {
+        public readonly uint RowId => row;
 
-        public uint HairStartIndex { get; set; }
-        public uint FacepaintStartIndex { get; set; }
+        // Properties
 
-        public List<LazyRow<CharaMakeCustomize>> HairStyles { get; set; } = [];
-        public List<LazyRow<CharaMakeCustomize>> Facepaints { get; set; } = [];
+        public const uint HairLength = 100;
+        public const uint FacepaintLength = 50;
 
-        public override void PopulateData( RowParser parser, Lumina.GameData gameData, Language language ) {
-            base.PopulateData( parser, gameData, language );
+        public uint HairStartIndex { get; set; } // 66
+        public uint FacepaintStartIndex { get; set; } // 82
 
-            HairStartIndex = parser.ReadColumn<uint>( 66 );
-            FacepaintStartIndex = parser.ReadColumn<uint>( 82 );
+        public List<RowRef<CharaMakeCustomize>> HairStyles { get; set; }
+        public List<RowRef<CharaMakeCustomize>> Facepaints { get; set; }
 
-            for( var i = HairStartIndex; i < HairStartIndex + HAIR_LENGTH; i++ ) HairStyles.Add( new LazyRow<CharaMakeCustomize>( gameData, i, language ) );
-            for( var i = FacepaintStartIndex; i < FacepaintStartIndex + FACEPAINT_LENGTH; i++ ) Facepaints.Add( new LazyRow<CharaMakeCustomize>( gameData, i, language ) );
+        // Build sheet
+
+        static HairMakeType IExcelRow<HairMakeType>.Create( ExcelPage page, uint offset, uint row ) {
+            var hairStartIndex = page.ReadColumn<uint>( 66, offset );
+            var facePaintStartIndex = page.ReadColumn<uint>( 82, offset );
+            return new HairMakeType( row ) {
+                HairStartIndex = hairStartIndex,
+                FacepaintStartIndex = facePaintStartIndex,
+                HairStyles = GetRange( page, hairStartIndex, HairLength ).ToList(),
+                Facepaints = GetRange( page, facePaintStartIndex, FacepaintLength ).ToList()
+            };
+        }
+
+        private static IEnumerable<RowRef<CharaMakeCustomize>> GetRange( ExcelPage page, uint start, uint length ) {
+            for( var i = start; i < start + length; i++ )
+                yield return new RowRef<CharaMakeCustomize>( page.Module, i, page.Language );
         }
     }
 }

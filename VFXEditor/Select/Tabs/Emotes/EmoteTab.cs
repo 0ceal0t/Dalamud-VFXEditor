@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Emotes {
@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         // ===== LOADING =====
 
         public override void LoadData() {
-            foreach( var item in Dalamud.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
+            foreach( var item in Dalamud.DataManager.GetExcelSheet<Emote>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) ) ) {
                 var emote = new EmoteRow( item );
                 if( emote.Keys.Count > 0 ) Items.Add( emote );
             }

@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Select.Base;
@@ -30,8 +30,8 @@ namespace VfxEditor.Select.Tabs.Emotes {
             Icon = ( ushort )( emote.Icon == 64350 ? 405 : emote.Icon );
             Name = emote.Name.ToString();
 
-            Keys = emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x?.Value?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) ).ToList();
-            Command = emote.TextCommand.Value?.Command.ToString() ?? "";
+            Keys = emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x.ValueNullable?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) ).ToList();
+            Command = emote.TextCommand.ValueNullable?.Command.ToString() ?? "";
         }
 
         private static (string, EmoteRowType) ToPap( (string, byte) item ) {

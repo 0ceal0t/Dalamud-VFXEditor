@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Mounts {
@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Mounts {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Mount>().Where( x => !string.IsNullOrEmpty( x.Singular.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new MountRow( item ) );
         }
     }

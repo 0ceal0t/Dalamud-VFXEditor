@@ -1,6 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +11,10 @@ namespace VfxEditor.Select.Tabs.Gimmick {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var territories = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) ).ToList();
+            var territories = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) ).ToList();
             var suffixToName = new Dictionary<string, string>();
             foreach( var zone in territories ) {
-                suffixToName[zone.Name.ToString()] = zone.PlaceName.Value?.Name.ToString();
+                suffixToName[zone.Name.ToString()] = zone.PlaceName.ValueNullable?.Name.ToString();
             }
 
             var sheet = Dalamud.DataManager.GetExcelSheet<ActionTimeline>().Where( x => x.Key.ToString().Contains( "gimmick" ) );

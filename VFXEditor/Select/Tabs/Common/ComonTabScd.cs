@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Common {
@@ -17,7 +17,7 @@ namespace VfxEditor.Select.Tabs.Common {
                 new( idx++, "sound/strm/gaya_village_01.scd", "Gaya_Village_01", 0 ),
             ] );
 
-            foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
+            foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) ) ) {
                 var name = line.Name.ToString();
                 var path = name.StartsWith( '/' ) ? $"sound{line.Name.ToString().ToLower()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLower()}.scd";
                 Items.Add( new( idx++, path, name, 0 ) );

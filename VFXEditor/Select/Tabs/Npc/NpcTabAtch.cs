@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;

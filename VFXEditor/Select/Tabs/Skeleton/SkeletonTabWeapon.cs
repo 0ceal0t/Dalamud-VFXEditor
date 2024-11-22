@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using VfxEditor.Select.Tabs.Items;
 
@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Skeleton {
 
         public override void LoadData() {
             foreach( var row in Dalamud.DataManager.GetExcelSheet<Item>() ) {
-                if( row.EquipSlotCategory.Value?.MainHand == 1 || row.EquipSlotCategory.Value?.OffHand == 1 ) {
+                if( row.EquipSlotCategory.ValueNullable?.MainHand == 1 || row.EquipSlotCategory.ValueNullable?.OffHand == 1 ) {
                     var weapon = new ItemRowWeapon( row );
                     if( weapon.HasModel ) Items.Add( weapon );
                     if( weapon.HasSubModel ) Items.Add( weapon.SubItem );

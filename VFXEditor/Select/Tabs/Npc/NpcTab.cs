@@ -1,5 +1,5 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -72,15 +72,15 @@ namespace VfxEditor.Select.Tabs.Npc {
         // ====== UTILS ===========
 
         public static Dictionary<uint, string> NameToString => Dalamud.DataManager.GetExcelSheet<BNpcName>()
-                .Where( x => !string.IsNullOrEmpty( x.Singular ) )
+                .Where( x => !string.IsNullOrEmpty( x.Singular.ExtractText() ) )
                 .ToDictionary(
                     x => x.RowId,
                     x => x.Singular.ToString()
                 );
 
-        public static bool BnpcValid( BNpcBase bnpcRow ) {
-            if( bnpcRow == null || bnpcRow.ModelChara.Value == null || bnpcRow.ModelChara.Value.Model == 0 ) return false;
-            if( bnpcRow.ModelChara.Value.Type != 2 && bnpcRow.ModelChara.Value.Type != 3 ) return false;
+        public static bool BnpcValid( BNpcBase? bnpcRow ) {
+            if( bnpcRow?.ModelChara.ValueNullable == null || bnpcRow?.ModelChara.Value.Model == 0 ) return false;
+            if( bnpcRow?.ModelChara.Value.Type != 2 && bnpcRow?.ModelChara.Value.Type != 3 ) return false;
             return true;
         }
     }

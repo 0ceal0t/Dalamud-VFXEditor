@@ -1,5 +1,5 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Housing {

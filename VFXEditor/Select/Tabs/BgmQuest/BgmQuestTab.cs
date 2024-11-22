@@ -1,5 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
-using System.Linq;
+using Lumina.Excel.Sheets;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
     public struct BgmSituationStruct {
@@ -21,8 +20,8 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.Quest.Row > 0 );
-            foreach( var item in sheet ) Items.Add( new BgmQuestRow( item ) );
+            //var sheet = Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.Quest.RowId > 0 );
+            //foreach( var item in sheet ) Items.Add( new BgmQuestRow( item ) );
         }
 
         public override void LoadSelection( BgmQuestRow item, out SelectedBgmQuest loaded ) {
@@ -40,17 +39,17 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         public static BgmSituationStruct GetBgmSituation( uint bgmId ) {
             if( bgmId < 1000 ) {
                 return new BgmSituationStruct {
-                    Path = Dalamud.DataManager.GetExcelSheet<BGM>().GetRow( bgmId )?.File.ToString(),
+                    Path = Dalamud.DataManager.GetExcelSheet<BGM>().GetRow( bgmId ).File.ToString(),
                     IsSituation = false
                 };
             }
             else {
                 var situation = Dalamud.DataManager.GetExcelSheet<BGMSituation>().GetRow( bgmId );
                 return new BgmSituationStruct {
-                    DayPath = situation?.DaytimeID.Value?.File.ToString(),
-                    NightPath = situation?.NightID.Value?.File.ToString(),
-                    BattlePath = situation?.BattleID.Value?.File.ToString(),
-                    DaybreakPath = situation?.DaybreakID.Value?.File.ToString(),
+                    DayPath = situation.DaytimeID.ValueNullable?.File.ToString(),
+                    NightPath = situation.NightID.ValueNullable?.File.ToString(),
+                    BattlePath = situation.BattleID.ValueNullable?.File.ToString(),
+                    DaybreakPath = situation.DaybreakID.ValueNullable?.File.ToString(),
                     IsSituation = true
                 };
             }

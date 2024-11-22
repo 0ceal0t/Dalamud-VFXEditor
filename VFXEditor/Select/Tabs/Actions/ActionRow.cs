@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
@@ -24,17 +24,17 @@ namespace VfxEditor.Select.Tabs.Actions {
             RowId = ( int )action.RowId;
             Icon = action.Icon;
 
-            StartVfxPath = ToVfxPath( action.AnimationStart.Value?.VFX.Value?.Location.ToString() );
-            CastVfxPath = ToVfxPath( action.VFX.Value?.VFX.Value?.Location.ToString() );
+            StartVfxPath = ToVfxPath( action.AnimationStart.ValueNullable?.VFX.ValueNullable?.Location.ToString() );
+            CastVfxPath = ToVfxPath( action.VFX.ValueNullable?.VFX.ValueNullable?.Location.ToString() );
 
-            var start = action.AnimationStart.Value?.Name.Value;
-            var end = action.AnimationEnd.Value;
-            var hit = action.ActionTimelineHit.Value;
+            var start = action.AnimationStart.ValueNullable?.Name.ValueNullable;
+            var end = action.AnimationEnd.ValueNullable;
+            var hit = action.ActionTimelineHit.ValueNullable;
 
             StartTmbPath = ToTmbPath( start?.Key.ToString() );
             EndTmbPath = ToTmbPath( end?.Key.ToString() );
             HitTmbPath = ToTmbPath( hit?.Key.ToString() );
-            WeaponTmbPath = ToTmbPath( action.AnimationEnd.Value?.WeaponTimeline.Value?.File.ToString() );
+            WeaponTmbPath = ToTmbPath( action.AnimationEnd.ValueNullable?.WeaponTimeline.ValueNullable?.File.ToString() );
 
             StartMotion = start?.IsMotionCanceledByMoving ?? false;
             EndMotion = end?.IsMotionCanceledByMoving ?? false;

@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Instance {
@@ -14,7 +14,7 @@ namespace VfxEditor.Select.Tabs.Instance {
             RowId = ( int )content.RowId;
             Image = content.Image;
             ContentType = content.ContentLinkType;
-            ContentRowId = content.Content.Row; // only = 1 is ok
+            ContentRowId = content.Content.RowId; // only = 1 is ok
         }
 
         public string GetName() => Name;

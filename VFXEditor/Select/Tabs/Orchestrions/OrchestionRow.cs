@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Orchestrions {

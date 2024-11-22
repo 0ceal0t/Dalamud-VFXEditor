@@ -1,6 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<CompleteJournal>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<CompleteJournal>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new JournalCutsceneRow( item ) );
         }
 

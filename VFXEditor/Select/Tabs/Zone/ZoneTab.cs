@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Zone {
@@ -8,7 +8,7 @@ namespace VfxEditor.Select.Tabs.Zone {
         // ===== LOADING =====
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<TerritoryType>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new ZoneRow( item ) );
         }
     }

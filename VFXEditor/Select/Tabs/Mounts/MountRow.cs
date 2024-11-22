@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using VfxEditor.Select.Base;
 using VfxEditor.Select.Tabs.Npc;
@@ -22,9 +22,9 @@ namespace VfxEditor.Select.Tabs.Mounts {
 
         public MountRow( Mount mount ) : base( mount.ModelChara.Value, mount.Singular.ToString() ) {
             Icon = mount.Icon;
-            Bgm = mount.RideBGM?.Value.File.ToString();
+            Bgm = mount.RideBGM.ValueNullable?.File.ToString();
             Seats = mount.ExtraSeats + 1;
-            SePack = mount.ModelChara?.Value.SEPack ?? 0;
+            SePack = mount.ModelChara.ValueNullable?.SEPack ?? 0;
         }
 
         public List<string> GetSeatPaps() {

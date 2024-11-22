@@ -1,28 +1,32 @@
-using Lumina.Data;
 using Lumina.Excel;
-using Lobby = Lumina.Excel.GeneratedSheets.Lobby;
+using Lumina.Excel.Sheets;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Data.Excel {
     // https://github.com/ktisis-tools/Ktisis/blob/748922b02395ef9a700e3fe446f2fa2d6db0a63f/Ktisis/Data/Excel/CharaMakeCustomize.cs
 
     [Sheet( "CharaMakeCustomize" )]
-    public class CharaMakeCustomize : ExcelRow {
-        public byte FeatureId { get; private set; }
-        public uint Icon { get; private set; }
-        public ushort Data { get; private set; }
-        public bool IsPurchasable { get; private set; }
-        public LazyRow<Lobby> Hint { get; private set; } = null!;
-        public byte FaceType { get; private set; }
+    public struct CharaMakeCustomize( uint row ) : IExcelRow<CharaMakeCustomize> {
+        public readonly uint RowId => row;
 
-        public override void PopulateData( RowParser parser, Lumina.GameData gameData, Language language ) {
-            base.PopulateData( parser, gameData, language );
+        public string Name { get; set; } = "";
 
-            FeatureId = parser.ReadColumn<byte>( 0 );
-            Icon = parser.ReadColumn<uint>( 1 );
-            Data = parser.ReadColumn<ushort>( 2 );
-            IsPurchasable = parser.ReadColumn<bool>( 3 );
-            Hint = new LazyRow<Lobby>( gameData, parser.ReadColumn<uint>( 4 ), language );
-            FaceType = parser.ReadColumn<byte>( 6 );
+        public byte FeatureId { get; set; }
+        public uint Icon { get; set; }
+        public ushort Data { get; set; }
+        public bool IsPurchasable { get; set; }
+        public RowRef<Lobby> Hint { get; set; }
+        public byte FaceType { get; set; }
+
+        static CharaMakeCustomize IExcelRow<CharaMakeCustomize>.Create( ExcelPage page, uint offset, uint row ) {
+            return new CharaMakeCustomize( row ) {
+                FeatureId = page.ReadColumn<byte>( 0, offset ),
+                Icon = page.ReadColumn<uint>( 1, offset ),
+                Data = page.ReadColumn<ushort>( 2, offset ),
+                IsPurchasable = page.ReadColumn<bool>( 3, offset ),
+                Hint = page.ReadRowRef<Lobby>( 4, offset ),
+                FaceType = page.ReadColumn<byte>( 6, offset )
+            };
         }
     }
 }

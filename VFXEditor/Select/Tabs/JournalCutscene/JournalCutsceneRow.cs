@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using VfxEditor.Select.Base;
 
@@ -13,7 +13,7 @@ namespace VfxEditor.Select.Tabs.JournalCutscene {
             Name = journal.Name.ToString();
 
             foreach( var cutscene in journal.Cutscene ) {
-                var path = cutscene.Value?.Path.ToString();
+                var path = cutscene.ValueNullable?.Path.ToString();
                 if( !string.IsNullOrEmpty( path ) ) Paths.Add( $"cut/{path}.cutb" );
             }
         }

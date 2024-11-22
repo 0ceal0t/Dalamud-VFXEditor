@@ -27,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Common {
                 new( 15, "vfx/common/eff/ab_chk012c0c.avfx", "Improvisation", 3477 ),
             ] );
 
-            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.VFX>().Where( x => !string.IsNullOrEmpty( x.Location.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new( ( int )item.RowId, $"vfx/common/eff/{item.Location}.avfx", item.Location.ToString(), 0 ) );
 
             var idx = 0;

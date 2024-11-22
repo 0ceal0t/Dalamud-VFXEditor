@@ -1,5 +1,5 @@
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System.Linq;
 
 namespace VfxEditor.Select.Tabs.Cutscenes {
@@ -7,7 +7,7 @@ namespace VfxEditor.Select.Tabs.Cutscenes {
         public CutsceneTab( SelectDialog dialog, string name ) : base( dialog, name, "Cutscene" ) { }
 
         public override void LoadData() {
-            var sheet = Dalamud.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path ) );
+            var sheet = Dalamud.DataManager.GetExcelSheet<Cutscene>().Where( x => !string.IsNullOrEmpty( x.Path.ExtractText() ) );
             foreach( var item in sheet ) Items.Add( new CutsceneRow( item ) );
         }
 

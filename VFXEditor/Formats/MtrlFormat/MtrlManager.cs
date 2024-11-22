@@ -1,6 +1,6 @@
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,7 +73,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             Templates = [.. templates];
 
             // Dyes
-            foreach( var item in Dalamud.DataManager.GetExcelSheet<Stain>().Where( x => !string.IsNullOrEmpty( x.Name ) ) ) {
+            foreach( var item in Dalamud.DataManager.GetExcelSheet<Stain>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) ) ) {
                 var bytes = BitConverter.GetBytes( item.Color );
                 LegacyStains.Add( new() {
                     Name = item.Name.ToString(),

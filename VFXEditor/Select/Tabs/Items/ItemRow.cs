@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using System;
 using VfxEditor.Select.Base;
 
@@ -71,7 +71,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
         public abstract int Variant { get; }
 
-        public ItemRow( string name, uint rowId, uint icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory category ) {
+        public ItemRow( string name, uint rowId, uint icon, ItemIds ids, ItemIds secondaryIds, EquipSlotCategory? category ) {
             Name = name;
             RowId = ( int )rowId;
             Icon = icon;
@@ -93,7 +93,7 @@ namespace VfxEditor.Select.Tabs.Items {
             else if( category?.Ears == 1 ) Type = ItemType.Ears;
         }
 
-        public ItemRow( Item item ) : this( item.Name.ToString(), item.RowId, item.Icon, new( item.ModelMain ), new( item.ModelSub ), item.EquipSlotCategory.Value ) { }
+        public ItemRow( Item item ) : this( item.Name.ToString(), item.RowId, item.Icon, new( item.ModelMain ), new( item.ModelSub ), item.EquipSlotCategory.ValueNullable ) { }
 
         public string GetVfxPath( int idx ) => $"{RootPath}{idx:D4}.avfx";
 

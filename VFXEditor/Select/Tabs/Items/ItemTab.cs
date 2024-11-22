@@ -22,10 +22,10 @@ namespace VfxEditor.Select.Tabs.Items {
         // ======== LOADING =========
 
         public override void LoadData() {
-            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Item>() ) {
+            foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Item>() ) {
                 if(
-                    row.EquipSlotCategory.Value?.MainHand == 1 ||
-                    row.EquipSlotCategory.Value?.OffHand == 1
+                    row.EquipSlotCategory.ValueNullable?.MainHand == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.OffHand == 1
                 ) {
                     if( !Filter.HasFlag( ItemTabFilter.Weapon ) ) continue;
                     var weapon = new ItemRowWeapon( row );
@@ -35,22 +35,22 @@ namespace VfxEditor.Select.Tabs.Items {
                     if( weapon.HasSubModel ) Items.Add( weapon.SubItem );
                 }
                 else if(
-                    row.EquipSlotCategory.Value?.Head == 1 ||
-                    row.EquipSlotCategory.Value?.Body == 1 ||
-                    row.EquipSlotCategory.Value?.Gloves == 1 ||
-                    row.EquipSlotCategory.Value?.Legs == 1 ||
-                    row.EquipSlotCategory.Value?.Feet == 1
+                    row.EquipSlotCategory.ValueNullable?.Head == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Body == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Gloves == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Legs == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Feet == 1
                 ) {
                     if( !Filter.HasFlag( ItemTabFilter.Armor ) ) continue;
                     var armor = new ItemRowArmor( row );
                     if( armor.HasModel ) Items.Add( armor );
                 }
                 else if(
-                    row.EquipSlotCategory.Value?.Neck == 1 ||
-                    row.EquipSlotCategory.Value?.FingerR == 1 ||
-                    row.EquipSlotCategory.Value?.FingerL == 1 ||
-                    row.EquipSlotCategory.Value?.Wrists == 1 ||
-                    row.EquipSlotCategory.Value?.Ears == 1
+                    row.EquipSlotCategory.ValueNullable?.Neck == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.FingerR == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.FingerL == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Wrists == 1 ||
+                    row.EquipSlotCategory.ValueNullable?.Ears == 1
                 ) {
                     if( !Filter.HasFlag( ItemTabFilter.Accessory ) ) continue;
                     var armor = new ItemRowArmor( row );
@@ -59,7 +59,7 @@ namespace VfxEditor.Select.Tabs.Items {
             }
 
             if( Filter.HasFlag( ItemTabFilter.Glasses ) ) {
-                foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.GeneratedSheets2.Glasses>() ) {
+                foreach( var row in Dalamud.DataManager.GetExcelSheet<Lumina.Excel.Sheets.Glasses>() ) {
                     var glasses = new ItemRowArmor( row );
                     if( glasses.HasModel ) Items.Add( glasses );
                 }

@@ -1,4 +1,4 @@
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
@@ -8,9 +8,9 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         public readonly uint BgmId;
 
         public BgmQuestRow( BGMSwitch bgm ) {
-            Name = bgm.Quest.Value?.Name.ToString();
+            Name = bgm.Quest.ValueNullable?.Name.ToString();
             RowId = ( int )bgm.RowId;
-            BgmId = bgm.BGM.Row;
+            BgmId = bgm.BGM.RowId;
         }
 
         public string GetName() => Name;
