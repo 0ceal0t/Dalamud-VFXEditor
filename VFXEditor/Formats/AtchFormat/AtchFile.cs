@@ -11,6 +11,8 @@ using VfxEditor.Formats.AtchFormat.Entry;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat {
+    // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Files/AtchFile.cs
+
     public class AtchFile : FileManagerFile {
         public static readonly Dictionary<string, string> WeaponNames = new() {
             { "2ax", "Greataxe" },
@@ -128,11 +130,13 @@ namespace VfxEditor.Formats.AtchFormat {
             { "ytk", "Armorer" },
         };
 
+        public const int BitFieldSize = 32;
+
         public readonly ushort NumStates;
         public readonly List<AtchEntry> Entries = [];
         private readonly AtchEntrySplitView EntryView;
 
-        public AtchFile( BinaryReader reader ) : base() {
+        public unsafe AtchFile( BinaryReader reader ) : base() {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
 
             var numEntries = reader.ReadUInt16();
@@ -142,12 +146,14 @@ namespace VfxEditor.Formats.AtchFormat {
                 Entries.Add( new( reader ) );
             }
 
-            var bitFields = new List<uint>();
-            for( var i = 0; i < 4; i++ ) bitFields.Add( reader.ReadUInt32() );
+            var bitfield = stackalloc ulong[BitFieldSize / 8];
+            for( var i = 0; i < BitFieldSize / 8; ++i )
+                bitfield[i] = reader.ReadUInt64();
 
-            for( var i = 0; i < numEntries; i++ ) {
-                var bitField = bitFields[i >> 5];
-                Entries[i].Accessory.Value = ( ( bitField >> ( i & 0x1F ) ) & 1 ) == 1;
+            for( var i = 0; i < numEntries; ++i ) {
+                var bitIdx = i & 0x3F;
+                var ulongIdx = i >> 6;
+                Entries[i].Accessory.Value = ( ( bitfield[ulongIdx] >> bitIdx ) & 1 ) == 1;
             }
 
             Entries.ForEach( x => x.ReadBody( reader, NumStates ) );
@@ -160,18 +166,17 @@ namespace VfxEditor.Formats.AtchFormat {
 
             Entries.ForEach( x => x.Write( writer ) );
 
-            var bitFields = new List<uint>();
-            for( var i = 0; i < 4; i++ ) bitFields.Add( 0 );
-
-            for( var i = 0; i < Entries.Count; i++ ) {
-                var idx = i >> 5;
-                var value = ( Entries[i].Accessory.Value ? 1u : 0u ) << ( i & 0x1F );
-                bitFields[idx] = bitFields[idx] | value;
+            Span<byte> bitfield = stackalloc byte[BitFieldSize];
+            foreach( var (entry, i) in Entries.WithIndex() ) {
+                var bitIdx = i & 0x7;
+                var byteIdx = i >> 3;
+                if( Entries[i].Accessory.Value )
+                    bitfield[byteIdx] |= ( byte )( 1 << bitIdx );
             }
 
-            bitFields.ForEach( writer.Write );
+            writer.Write( bitfield );
 
-            var stringStartPos = 2 + 2 + ( 4 * Entries.Count ) + 16 + ( 32 * Entries.Count * NumStates );
+            var stringStartPos = 2 + 2 + ( 4 * Entries.Count ) + BitFieldSize + ( 32 * Entries.Count * NumStates );
             using var stringMs = new MemoryStream();
             using var stringWriter = new BinaryWriter( stringMs );
             var stringPos = new Dictionary<string, int>();
