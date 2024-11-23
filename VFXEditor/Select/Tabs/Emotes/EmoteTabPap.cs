@@ -18,27 +18,26 @@ namespace VfxEditor.Select.Tabs.Emotes {
         public override void LoadSelection( EmoteRow item, out Dictionary<string, SelectedPapEntry> loaded ) {
             loaded = [];
 
-            foreach( var papFile in item.Items ) {
-                var key = papFile.Item1;
+            foreach( var (key, type) in item.Items ) {
                 if( string.IsNullOrEmpty( key ) ) continue;
 
                 var entry = new SelectedPapEntry() {
-                    Type = papFile.Item2
+                    Type = type
                 };
 
-                if( papFile.Item2 == EmoteRowType.Normal ) {
+                if( type == EmoteRowType.Normal ) {
                     // bt_common, per race (chara/human/{RACE}/animation/a0001/bt_common/emote/add_yes.pap)
                     entry.ActionData = SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"bt_common/{key}.pap" ) );
 
                 }
-                else if( papFile.Item2 == EmoteRowType.PerJob ) {
+                else if( type == EmoteRowType.PerJob ) {
                     // chara/human/c0101/animation/a0001/bt_swd_sld/emote/battle01.pap
                     entry.JobData = SelectDataUtils.JobAnimationIds.ToDictionary(
                         x => x.Key,
                         x => SelectDataUtils.FileExistsFilter( SelectDataUtils.GetAllSkeletonPaths( $"{x.Value}/{key}.pap" ) )
                     );
                 }
-                else if( papFile.Item2 == EmoteRowType.Facial ) {
+                else if( type == EmoteRowType.Facial ) {
                     // chara/human/c0101/animation/f0003/resident/face.pap
                     // chara/human/c0101/animation/f0003/resident/smile.pap
                     // chara/human/c0101/animation/f0003/nonresident/angry_cl.pap
