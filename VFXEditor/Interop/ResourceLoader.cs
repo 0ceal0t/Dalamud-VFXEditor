@@ -82,6 +82,7 @@ namespace VfxEditor.Interop {
             CheckFileStateHook.Enable();
             LoadMdlFileExternHook.Enable();
             TextureOnLoadHook.Enable();
+            SoundOnLoadHook.Enable();
 
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
@@ -108,6 +109,7 @@ namespace VfxEditor.Interop {
             CheckFileStateHook.Dispose();
             LoadMdlFileExternHook.Dispose();
             TextureOnLoadHook.Dispose();
+            SoundOnLoadHook.Dispose();
 
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
