@@ -48,5 +48,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SetNextItemWidth( 100 );
             StartTime.Draw();
         }
+
+        public bool HasValue => TimelineIdx.Value >= 0;
     }
 }
