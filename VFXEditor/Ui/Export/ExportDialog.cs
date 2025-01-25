@@ -20,6 +20,8 @@ namespace VfxEditor.Ui.Export {
                 ImGui.SetNextItemWidth( inputWidth );
                 ImGui.InputTextWithHint( "##Name", "Mod Name", ref ModName, 255 );
 
+                if( string.IsNullOrEmpty( Author ) ) Author = Plugin.Configuration.DefaultAuthor;
+
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth( inputWidth );
                 ImGui.InputTextWithHint( "##Author", "Author", ref Author, 255 );

@@ -72,7 +72,6 @@ namespace VfxEditor.Ui.Export {
         private readonly List<PenumbraGroup> Groups = [];
         private PenumbraGroup Selected;
 
-
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
