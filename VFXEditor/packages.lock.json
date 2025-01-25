@@ -25,21 +25,21 @@
       },
       "HelixToolkit": {
         "type": "Direct",
-        "requested": "[2.25.0, )",
-        "resolved": "2.25.0",
-        "contentHash": "UzF6KXadTdzrjTA8G00+V7RaQNpH+0729xByD6zhCgvDLvZ63CvH84/x2sjUO52bzHFphYixXtzf8G/OGVtz3w==",
+        "requested": "[2.26.0, )",
+        "resolved": "2.26.0",
+        "contentHash": "OLJQyUh7CUbCpOyhcRt+T+B7A5CsnwO4RuA/wyVfMK60wTe3bSy+24WpWZ3qqwCvgloh5OyxBJfwaQoZ6aBjtQ==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "HelixToolkit.SharpDX.Core": {
         "type": "Direct",
-        "requested": "[2.25.0, )",
-        "resolved": "2.25.0",
-        "contentHash": "QYnuUTfnGfOvGHgsAhTsZazuKalDH7JVYNTG5E7GlwvizA9ZB424JMuyLE73jmVsGo7Ql9wQi24U9fFALM2yjQ==",
+        "requested": "[2.26.0, )",
+        "resolved": "2.26.0",
+        "contentHash": "I8spEmMAZ+ufwi7TuU1PRbdPtez8Ydg8CVqtiBpZEaFQR8JbiJM0nR6+SlGPhgN7IKCqH5M/yIpBYx9kuR0a5w==",
         "dependencies": {
           "Cyotek.Drawing.BitmapFont": "2.0.0",
-          "HelixToolkit": "[2.25.0]",
+          "HelixToolkit": "[2.26.0]",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "SharpDX": "4.2.0",
           "SharpDX.D3DCompiler": "4.2.0",

@@ -20,6 +20,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool FollowingTargetOrientation = new( "Following Target Orientation", "bFTO" );
         public readonly AvfxBool DocumentScaleEnabled = new( "Document Scale Enabled", "bDSE" );
         public readonly AvfxBool AdjustToScreenEnabled = new( "Adjust to Screen", "bATS" );
+        public readonly AvfxBool IFY_Unknown = new( "IFY (Unknown)", "bIFY" );
         public readonly AvfxBool BET_Unknown = new( "BET (Unknown)", "bBET" );
         public readonly AvfxInt Life = new( "Life", "Life" );
         public readonly AvfxEnum<BinderRotation> BinderRotationType = new( "Binder Rotation Type", "RoTp" );
@@ -46,6 +47,7 @@ namespace VfxEditor.AvfxFormat {
                 FollowingTargetOrientation,
                 DocumentScaleEnabled,
                 AdjustToScreenEnabled,
+                IFY_Unknown,
                 BET_Unknown,
                 Life,
                 BinderRotationType,

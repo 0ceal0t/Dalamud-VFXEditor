@@ -107,8 +107,8 @@
         <PackageReference Include="BCnEncoder.Net" Version="2.1.0" />
         <PackageReference Include="DalamudPackager" Version="11.0.0" />
         <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
-        <PackageReference Include="HelixToolkit" Version="2.25.0" />
-        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.25.0" />
+        <PackageReference Include="HelixToolkit" Version="2.26.0" />
+        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.26.0" />
         <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
