@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
@@ -48,10 +49,24 @@ namespace VfxEditor.PapFormat {
                 hkxPath = TempHkx;
             }
 
+            var newAnimation = new HavokData( hkxPath, true );
+            var newAnimationsLength = newAnimation.AnimationContainer->Animations.Length;
+            var OkResult = "Havok data added";
+            if( Index < 0 )
+            {
+                Index = 0;
+                OkResult = "Index defaulted to 0. Havok data added";
+            }
+            else if( Index >= newAnimationsLength )
+            {
+                var animationsMax = newAnimationsLength - 1;
+                Index = animationsMax;
+                OkResult = "Index defaulted to " + animationsMax + ". Havok data added";
+            }
+
             var commands = new List<ICommand> {
                 new ListAddCommand<PapAnimation>( PapFile.Animations, animation, ( PapAnimation item, bool add ) => item.File.RefreshHavokIndexes()  ),
                 new PapHavokCommand( PapFile, () => {
-                    var newAnimation = new HavokData( hkxPath, true );
                     var container = PapFile.MotionData.AnimationContainer;
 
                     var anims = HavokData.ToList( container->Animations );
@@ -65,7 +80,7 @@ namespace VfxEditor.PapFormat {
             };
             Command.AddAndExecute( new CompoundCommand( commands ) );
 
-            Dalamud.OkNotification( "Havok data added" );
+            Dalamud.OkNotification( OkResult );
         }
     }
 }
