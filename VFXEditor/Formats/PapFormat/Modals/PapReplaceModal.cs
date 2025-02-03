@@ -28,8 +28,22 @@ namespace VfxEditor.PapFormat {
         protected override void OnCancel() { }
 
         protected override void OnOk() {
+            var newAnimation = new HavokData( ImportPath, true );
+            var newAnimationsLength = newAnimation.AnimationContainer->Animations.Length;
+            var OkResult = "Havok data replaced";
+            if( Index < 0 )
+            {
+                Index = 0;
+                OkResult = "Index defaulted to 0. Havok data replaced";
+            }
+            else if( Index >= newAnimationsLength )
+            {
+                var animationsMax = newAnimationsLength - 1;
+                Index = animationsMax;
+                OkResult = "Index defaulted to " + animationsMax + ". Havok data replaced";
+            }
+
             Command.AddAndExecute( new PapHavokCommand( Motion.File, () => {
-                var newAnimation = new HavokData( ImportPath, true );
                 var container = Motion.File.MotionData.AnimationContainer;
 
                 // Do this so we can undo the change later if necessary
@@ -41,7 +55,7 @@ namespace VfxEditor.PapFormat {
                 container->Animations = HavokData.CreateArray( Motion.File.Handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
                 container->Bindings = HavokData.CreateArray( Motion.File.Handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
             } ) );
-            Dalamud.OkNotification( "Havok data replaced" );
+            Dalamud.OkNotification( OkResult );
         }
     }
 }
