@@ -1,4 +1,5 @@
 using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Command.ListCommands;
@@ -11,11 +12,40 @@ namespace VfxEditor.PapFormat {
 
         private readonly PapFile PapFile;
         private readonly string ImportPath;
+        private string IndexPreview = "0";
         private int Index;
+        private int AnimationsLength;
+
+        private string OkResult = "Havok data added";
 
         public PapAddModal( PapFile file, string importPath ) : base( "Animation Import Index", true ) {
             PapFile = file;
             ImportPath = importPath;
+
+            SetAnimationsLength();
+        }
+
+        protected void SetAnimationsLength()
+        {
+            var hkxPath = ImportPath;
+            if( ImportPath.Contains( ".pap" ) )
+            {
+                // Need to extract the havok data
+                using var file = File.Open( ImportPath, FileMode.Open );
+                using var reader = new BinaryReader( file );
+
+                reader.BaseStream.Position = 0x12;
+                var havokPosition = reader.ReadInt32();
+                var footerPosition = reader.ReadInt32();
+                var havokDataSize = footerPosition - havokPosition;
+                reader.BaseStream.Position = havokPosition;
+                File.WriteAllBytes( TempHkx, reader.ReadBytes( havokDataSize ) );
+
+                hkxPath = TempHkx;
+            }
+            var newAnimation = new HavokData( hkxPath, true );
+
+            AnimationsLength = newAnimation.AnimationContainer->Animations.Length;
         }
 
         protected override void DrawBody() {
@@ -23,7 +53,31 @@ namespace VfxEditor.PapFormat {
             ImGui.TextWrapped( "Select the index of the animation being imported" );
             ImGui.PopTextWrapPos();
 
-            ImGui.InputInt( "##Index", ref Index );
+            int LimitToArrayBounds( ImGuiInputTextCallbackData* data )
+            {
+                //not ideal but I can't figure out how to update the preview directly, this'll do.
+                int parsedIndex = 0;
+                Int32.TryParse( data->Buf->ToString(), out parsedIndex );
+                parsedIndex = ( int )char.GetNumericValue( ( char )parsedIndex  ) ;
+                if( parsedIndex < 0 )
+                {
+                    Index = 0;
+                    OkResult = "Index defaulted to 0. Havok data added";
+                }
+                else if( parsedIndex >= AnimationsLength )
+                {
+                    var animationsMax = AnimationsLength - 1;
+                    Index = animationsMax;
+                    OkResult = "Index defaulted to " + animationsMax + ". Havok data added";
+                }
+                else
+                {
+                    Index = parsedIndex;
+                    OkResult = "Havok data added";
+                }
+                return 0;
+            }
+            ImGui.InputText( "", ref IndexPreview, 255, ImGuiInputTextFlags.CharsDecimal | ImGuiInputTextFlags.CallbackEdit, LimitToArrayBounds );
         }
 
         protected override void OnCancel() { }
@@ -65,7 +119,7 @@ namespace VfxEditor.PapFormat {
             };
             Command.AddAndExecute( new CompoundCommand( commands ) );
 
-            Dalamud.OkNotification( "Havok data added" );
+            Dalamud.OkNotification( OkResult );
         }
     }
 }
