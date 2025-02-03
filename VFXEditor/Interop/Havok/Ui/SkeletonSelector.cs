@@ -18,6 +18,7 @@ namespace VfxEditor.Interop.Havok.Ui {
         public SkeletonSelector( string sklbPath, Action<SimpleSklb> onUpdate ) {
             OnUpdate = onUpdate;
             if( !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
+            Init();
         }
 
         public void Init() {
@@ -29,8 +30,6 @@ namespace VfxEditor.Interop.Havok.Ui {
         }
 
         public void Draw() {
-            Init();
-
             using var _ = ImRaii.PushId( "Selector" );
 
             var checkSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
