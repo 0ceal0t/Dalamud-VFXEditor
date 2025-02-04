@@ -181,6 +181,13 @@ namespace VfxEditor.AvfxFormat {
                 if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) Paste();
 
                 ImGui.SameLine();
+                if( UiUtils.DisabledButton( "Replace", CopiedKeys.Count > 0, true ) )
+                {
+                    Clear();
+                    Paste();
+                }
+
+                ImGui.SameLine();
                 if( UiUtils.RemoveButton( "Clear", true ) ) Clear();
             }
 
