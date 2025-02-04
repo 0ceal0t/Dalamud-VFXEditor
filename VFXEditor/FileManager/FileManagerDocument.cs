@@ -411,18 +411,15 @@ namespace VfxEditor.FileManager {
             }
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-            {
-                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRawDialog();
-            }
+            if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRawDialog();
             UiUtils.Tooltip( "Export as a raw file" );
 
             if( Source.Type == SelectResultType.Local )
             {
+                ImGui.SameLine();
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-                {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ExportRawSilent();
-                }
+                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ExportRawSilent();
                 UiUtils.Tooltip( "Overwrite selected file path" );
             }
 
