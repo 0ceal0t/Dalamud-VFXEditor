@@ -356,6 +356,14 @@ namespace VfxEditor.FileManager {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
             }
+            if(Source != null && Source.Type == SelectResultType.Local )
+            {
+                ImGui.SameLine();
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+                {
+                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) Manager.RefreshSource( Source );
+                }
+            }
         }
 
         protected void DisplayReplaceBar( float inputSize ) {

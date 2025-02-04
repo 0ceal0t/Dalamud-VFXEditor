@@ -1,4 +1,5 @@
 using Dalamud.Interface.Windowing;
+using SharpDX.Win32;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
@@ -37,6 +38,8 @@ namespace VfxEditor.FileManager {
         public ManagerConfiguration GetConfig() => Configuration;
 
         public void ShowSource() => SourceSelect?.Show();
+
+        public void RefreshSource( SelectResult source ) => SourceSelect.Invoke( new SelectResult( SelectResultType.Local, source.Name, source.DisplayString, source.Path ) );
 
         public void ShowReplace() => ReplaceSelect?.Show();
 
