@@ -361,8 +361,13 @@ namespace VfxEditor.FileManager {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
                 {
-                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) Manager.RefreshSource( Source );
+                    if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) )
+                    {
+                        Manager.RefreshSource( Source );
+                        Dalamud.OkNotification( "Reloaded " + Source.Path );
+                    }
                 }
+                UiUtils.Tooltip( "Reload file" );
             }
         }
 
