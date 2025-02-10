@@ -95,8 +95,9 @@ namespace VfxEditor
             } );
         }
 
-        private static void NewWorkspaceFromPenumbra()
+        private static void OpenWorkspacePenumbra( bool reset )
         {
+            ImportDialog.SetReset( reset );
             ImportDialog.SetCallback( CreateWorkspaceFromPenumbra );
             ImportDialog.Show();
         }
@@ -117,7 +118,10 @@ namespace VfxEditor
             WorkspaceFileCount = loadCount;
             await Task.Run( () =>
             {
-                foreach( var manager in Managers.Where( x => x != null ) ) manager.Reset( ResetType.ToDefault );
+                if( res.Reset )
+                {
+                    foreach( var manager in Managers.Where( x => x != null ) ) manager.Reset( ResetType.ToDefault );
+                }
                 foreach( var option in mod.SourceFiles )
                 {
                     var optionName = option.Key;

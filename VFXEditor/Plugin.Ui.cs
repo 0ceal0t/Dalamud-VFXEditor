@@ -53,7 +53,7 @@ namespace VfxEditor {
                 if( ImGui.BeginMenu( "New" ) )
                 {
                     if( ImGui.MenuItem( "Blank" ) ) NewWorkspace();
-                    if( ImGui.MenuItem( "From Penumbra" ) ) NewWorkspaceFromPenumbra();
+                    if( ImGui.MenuItem( "From Penumbra" ) ) OpenWorkspacePenumbra( true );
                     ImGui.EndMenu();
                 }
                 if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
@@ -71,7 +71,12 @@ namespace VfxEditor {
                     }
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Append" ) ) OpenWorkspace( false );
+                if( ImGui.BeginMenu( "Append" ) )
+                {
+                    if( ImGui.MenuItem( "From Workspace" ) ) OpenWorkspace( false );
+                    if( ImGui.MenuItem( "From Penumbra" ) ) OpenWorkspacePenumbra( false );
+                    ImGui.EndMenu();
+                }
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
 

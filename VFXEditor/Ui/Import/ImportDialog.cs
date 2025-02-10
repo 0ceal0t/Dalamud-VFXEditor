@@ -31,6 +31,8 @@ namespace VfxEditor.Ui.Import
 
         protected Dictionary<string, bool> SelectedTypes = new Dictionary<string, bool>();
 
+        protected bool Reset = false;
+
         public ImportDialog() : base( "Import from Penumbra", false, new( 800, 600 ), Plugin.WindowSystem )
         {
             foreach( var type in AllowedTypes )
@@ -115,6 +117,7 @@ namespace VfxEditor.Ui.Import
 
                 Result = new();
                 Result.Extensions = typesList;
+                Result.Reset = Reset;
                 PenumbraMod LoadedPenumbraMod = new();
                 PenumbraUtils.LoadFromName( SelectedPenumbraMod.Name, Result.Extensions, out LoadedPenumbraMod );
 
@@ -124,6 +127,11 @@ namespace VfxEditor.Ui.Import
             }
 
             return false;
+        }
+
+        public void SetReset( bool reset )
+        {
+            Reset = reset;
         }
 
         private void ExtensionAll()
@@ -203,6 +211,7 @@ namespace VfxEditor.Ui.Import
         {
             public List<string> Extensions;
             public PenumbraMod Mod;
+            public bool Reset;
             public ImportResult()
             { }
         }
