@@ -140,7 +140,9 @@ namespace VfxEditor.FileManager {
             System.IO.File.WriteAllBytes( path, File.ToBytes() );
         }
 
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", File.ToBytes(), Extension, "ExportedFile" );
+        protected void ExportRawDialog() => UiUtils.WriteBytesDialog( $".{Extension}", File.ToBytes(), Extension, "ExportedFile" );
+
+        protected void ExportRawSilent() => UiUtils.WriteBytesSilent( $".{Extension}", File.ToBytes(), Source.Path );
 
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
@@ -421,10 +423,22 @@ namespace VfxEditor.FileManager {
                 ImGui.SameLine();
             }
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
-            }
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+            if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRawDialog();
             UiUtils.Tooltip( "Export as a raw file" );
+
+            if( Source.Type == SelectResultType.Local )
+            {
+                ImGui.SameLine();
+                using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
+                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
+                    if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) )
+                    {
+                        ExportRawSilent();
+                        Dalamud.OkNotification( "Exported to " + Source.Path );
+                    }
+                UiUtils.Tooltip( "Overwrite selected file path" );
+            }
 
             ImGui.SameLine();
             UiUtils.ShowVerifiedStatus( Verified );
