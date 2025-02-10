@@ -154,28 +154,33 @@ namespace VfxEditor.Ui.Import
                 var toggle = vfxCheck;
                 SelectedTypes["avfx"] = toggle;
                 SelectedTypes["atex"] = toggle;
+                RefreshLoadedMod();
             }
             if( ImGui.Checkbox( "Animation", ref aniCheck ) )
             {
                 var toggle = aniCheck;
                 SelectedTypes["tmb"] = toggle;
                 SelectedTypes["pap"] = toggle;
+                RefreshLoadedMod();
             }
             if( ImGui.Checkbox( "Sound", ref sndCheck ) )
             {
                 var toggle = sndCheck;
                 SelectedTypes["scd"] = toggle;
+                RefreshLoadedMod();
             }
             if( ImGui.Checkbox( "Model", ref modCheck ) )
             {
                 var toggle = modCheck;
                 SelectedTypes["mdl"] = toggle;
                 SelectedTypes["mtrl"] = toggle;
+                RefreshLoadedMod();
             }
             if( ImGui.Checkbox( "UI", ref uiPicker ) )
             {
                 var toggle = uiPicker;
                 SelectedTypes["uld"] = toggle;
+                RefreshLoadedMod();
             }
             ImGui.EndChild();
         }
