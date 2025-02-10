@@ -181,6 +181,9 @@ namespace VfxEditor.AvfxFormat {
                 if( UiUtils.DisabledButton( "Paste", CopiedKeys.Count > 0, true ) ) Paste();
 
                 ImGui.SameLine();
+                if( UiUtils.DisabledButton( "Replace", CopiedKeys.Count > 0, true ) ) Replace();
+
+                ImGui.SameLine();
                 if( UiUtils.RemoveButton( "Clear", true ) ) Clear();
             }
 
@@ -294,6 +297,14 @@ namespace VfxEditor.AvfxFormat {
 
         private void Clear() {
             CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
+        }
+
+        private void Replace()
+        {
+            var commands = new List<ICommand>();
+            commands.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
+            foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
+            CommandManager.Add( new CompoundCommand( commands, Update ) );
         }
 
         // ======== GRADIENT ==========
