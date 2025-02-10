@@ -36,8 +36,9 @@ namespace VfxEditor.Ui.Import
         {
             foreach( var type in AllowedTypes )
             {
-                SelectedTypes.Add( type, true );
+                SelectedTypes.Add( type, false );
             }
+            ResetSelectedTypes();
         }
 
         public override void DrawBody()
@@ -54,6 +55,8 @@ namespace VfxEditor.Ui.Import
 
             if( ImGui.CollapsingHeader( "Extensions" ) )
             {
+                DrawExtensionsBasic();
+                ImGui.SameLine();
                 DrawExtensionPicker();
             }
             if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) )
@@ -104,9 +107,10 @@ namespace VfxEditor.Ui.Import
                 OnImport();
             }
         }
+
         private void DrawExtensionButtons()
         {
-            if( ImGui.Button( "Select All" ) )
+            if( ImGui.Button( "Select All Extensions" ) )
             {
                 ExtensionSelectAll();
             }
@@ -119,8 +123,9 @@ namespace VfxEditor.Ui.Import
 
         private void DrawExtensionPicker()
         {
+            ImGui.BeginChild( "ExtAdvanced", new Vector2( -1, ImGui.GetContentRegionAvail().Y * .3f ) );
             DrawExtensionButtons();
-            if( ImGui.BeginListBox( "##Extensions", new Vector2( ImGui.GetContentRegionAvail().X * .5f, 160 ) ) )
+            if( ImGui.BeginListBox( "##Extensions", new Vector2( -1, -1 ) ) )
             {
                 foreach( var type in SelectedTypes )
                 {
@@ -130,6 +135,61 @@ namespace VfxEditor.Ui.Import
                     }
                 }
                 ImGui.EndListBox();
+            }
+            ImGui.EndChild();
+        }
+
+        private void DrawExtensionsBasic()
+        {
+            var vfxCheck = SelectedTypes["avfx"] && SelectedTypes["atex"];
+            var aniCheck = SelectedTypes["tmb"] && SelectedTypes["pap"];
+            var sndCheck = SelectedTypes["scd"];
+            var modCheck = SelectedTypes["mdl"] && SelectedTypes["mtrl"];
+            var uiPicker = SelectedTypes["uld"];
+
+            ImGui.BeginChild( "ExtBasic", new Vector2( ImGui.GetContentRegionAvail().X * .4f, ImGui.GetContentRegionAvail().Y * .3f ) );
+            ImGui.Text( "Quick Picker" );
+            if( ImGui.Checkbox( "VFX", ref vfxCheck ) )
+            {
+                var toggle = vfxCheck;
+                SelectedTypes["avfx"] = toggle;
+                SelectedTypes["atex"] = toggle;
+            }
+            if( ImGui.Checkbox( "Animation", ref aniCheck ) )
+            {
+                var toggle = aniCheck;
+                SelectedTypes["tmb"] = toggle;
+                SelectedTypes["pap"] = toggle;
+            }
+            if( ImGui.Checkbox( "Sound", ref sndCheck ) )
+            {
+                var toggle = sndCheck;
+                SelectedTypes["scd"] = toggle;
+            }
+            if( ImGui.Checkbox( "Model", ref modCheck ) )
+            {
+                var toggle = modCheck;
+                SelectedTypes["mdl"] = toggle;
+                SelectedTypes["mtrl"] = toggle;
+            }
+            if( ImGui.Checkbox( "UI", ref uiPicker ) )
+            {
+                var toggle = uiPicker;
+                SelectedTypes["uld"] = toggle;
+            }
+            ImGui.EndChild();
+        }
+
+        private void DrawModBtn()
+        {
+            if( ImGui.Button( "Select All Options" ) )
+            {
+                OptionsSelectAll();
+            }
+            ImGui.SameLine();
+            if( ImGui.Button( "Unselect All" ) )
+            {
+                OptionsSelectNone();
             }
         }
 
@@ -142,6 +202,7 @@ namespace VfxEditor.Ui.Import
             {
                 ImGui.TextDisabled( $"by {LoadedPenumbraMod.Meta.Author}" );
             }
+            DrawModBtn();
             DrawModOptions();
             ImGui.EndChild();
         }
@@ -300,6 +361,31 @@ namespace VfxEditor.Ui.Import
             RefreshLoadedMod();
         }
 
+        private void OptionsReset()
+        {
+            SelectedModOptions = [];
+            foreach( var source in LoadedPenumbraMod.SourceFiles )
+            {
+                SelectedModOptions.Add( source.Key, true );
+            }
+        }
+
+        private void OptionsSelectAll()
+        {
+            foreach( var option in SelectedModOptions )
+            {
+                SelectedModOptions[option.Key] = true;
+            }
+        }
+
+        private void OptionsSelectNone()
+        {
+            foreach( var option in SelectedModOptions )
+            {
+                SelectedModOptions[option.Key] = false;
+            }
+        }
+
         private bool PostRow( PenumbraItem item, int idx )
         {
             if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() )
@@ -319,12 +405,20 @@ namespace VfxEditor.Ui.Import
             PenumbraUtils.LoadFromName( SelectedPenumbraMod.Name, GetSelectedTypes(), out LoadedPenumbraMod );
             if( !sameMod )
             {
-                SelectedModOptions = new();
-                foreach( var source in LoadedPenumbraMod.SourceFiles )
-                {
-                    SelectedModOptions.Add( source.Key, true );
-                }
+                OptionsReset();
             }
+        }
+
+        private void ResetSelectedTypes()
+        {
+            SelectedTypes["avfx"] = true;
+            SelectedTypes["atex"] = true;
+            SelectedTypes["pap"] = true;
+            SelectedTypes["tmb"] = true;
+            SelectedTypes["scd"] = true;
+            SelectedTypes["mdl"] = true;
+            SelectedTypes["mtrl"] = true;
+            SelectedTypes["uld"] = true;
         }
 
         private void ToggleSelectedOption( string name )
