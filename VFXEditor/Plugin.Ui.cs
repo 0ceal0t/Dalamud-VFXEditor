@@ -50,13 +50,14 @@ namespace VfxEditor {
             using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.BeginMenu( "File" ) ) {
-                if( ImGui.BeginMenu( "New" ) )
+                if( ImGui.MenuItem( "New" ) ) NewWorkspace();
+                if( ImGui.BeginMenu( "Open" ) )
                 {
-                    if( ImGui.MenuItem( "Blank" ) ) NewWorkspace();
-                    if( ImGui.MenuItem( "From Penumbra" ) ) OpenWorkspacePenumbra( true );
+                    if( ImGui.MenuItem( "Workspace" ) ) OpenWorkspace( true );
+                    if( ImGui.MenuItem( "Penumbra Mod" ) ) OpenWorkspacePenumbra( true );
                     ImGui.EndMenu();
                 }
-                if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
@@ -74,9 +75,10 @@ namespace VfxEditor {
                 if( ImGui.BeginMenu( "Append" ) )
                 {
                     if( ImGui.MenuItem( "From Workspace" ) ) OpenWorkspace( false );
-                    if( ImGui.MenuItem( "From Penumbra" ) ) OpenWorkspacePenumbra( false );
+                    if( ImGui.MenuItem( "From Penumbra Mod" ) ) OpenWorkspacePenumbra( false );
                     ImGui.EndMenu();
                 }
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) OpenWorkspace( false );
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
 
