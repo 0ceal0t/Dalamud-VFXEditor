@@ -1,10 +1,16 @@
 using Dalamud.Interface;
+using Dalamud.Interface.FontIdentifier;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Xml.Linq;
+using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Select;
 using VfxEditor.Select.Base;
 using VfxEditor.Utils;
 
@@ -34,7 +40,13 @@ namespace VfxEditor.Ui.Import
 
         public ImportDialog() : base( "Import from Penumbra", false, new( 800, 600 ), Plugin.WindowSystem )
         {
+            foreach( var type in AllowedTypes )
+            {
+                SelectedTypes.Add( type, true );
+            }
         }
+
+        protected readonly List<string> AllowedTypes = ["avfx", "atex", "tmb", "pap", "uld", "sklb", "skp", "eid", "phyb", "atch", "shcd", "shpk", "sgb"];
 
         protected readonly List<PenumbraItem> Items = new();
         protected readonly string Name;
@@ -42,6 +54,7 @@ namespace VfxEditor.Ui.Import
         protected Vector2 DefaultWindowPadding = new();
         protected string SearchInput = "";
 
+        protected Dictionary<string, bool> SelectedTypes = new Dictionary<string, bool>();
         protected PenumbraItem SelectedPenumbraMod;
         protected ImportResult Result = new();
 
@@ -69,9 +82,14 @@ namespace VfxEditor.Ui.Import
             Items.AddRange( Plugin.PenumbraIpc.GetMods().Select( x => new PenumbraItem( x ) ) );
         }
 
+        public void ToggleType( string key )
+        {
+            SelectedTypes[key] = !SelectedTypes[key];
+        }
+
         public override void DrawBody()
         {
-            Load();
+            Load(); // mods can change externally
             if( Items.Count == 0 ) return;
 
             using var _ = ImRaii.PushId( WindowName );
@@ -80,8 +98,17 @@ namespace VfxEditor.Ui.Import
 
             ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
 
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 4, 3 ) );
-            using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 4, 3 ) );
+            ExtensionPicker();
+            if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) )
+            {
+                ModsTable();
+            }
+        }
+
+        private void ModsTable()
+        {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 8, 3 ) );
+            using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 8, 3 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
             using var table = ImRaii.Table( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit );
             if( !table ) return;
@@ -101,15 +128,23 @@ namespace VfxEditor.Ui.Import
             }
         }
 
+        private void ExtensionPicker()
+        {
+            if( ImGui.CollapsingHeader( "Extensions", ImGuiTreeNodeFlags.CollapsingHeader ) )
+            {
+                foreach( var type in SelectedTypes )
+                {
+                    if( ImGui.Selectable( type.Key, type.Value ) )
+                    {
+                        ToggleType( type.Key );
+                    }
+                }
+            }
+        }
+
         protected bool DrawRow( PenumbraItem item, int idx )
         {
             using var _ = ImRaii.PushId( idx );
-
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN ) )
-            {
-                ImGui.Text( FontAwesomeIcon.Check.ToIconString() );
-            }
 
             ImGui.TableNextColumn();
             ImGui.Selectable( item.Name, false, ImGuiSelectableFlags.SpanAllColumns );
@@ -123,8 +158,14 @@ namespace VfxEditor.Ui.Import
             if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() )
             {
                 SelectedPenumbraMod = item;
+                var typesList = new List<string>();
+                foreach( var type in SelectedTypes )
+                {
+                    if(type.Value) typesList.Add( type.Key );
+                }
+
                 Result = new();
-                Result.Extensions = ["avfx", "tmb", "pap", "uld", "sklb", "skp", "eid", "phyb", "atch", "shcd", "shpk", "sgb", "atex"];
+                Result.Extensions = typesList;
                 PenumbraMod LoadedPenumbraMod = new();
                 PenumbraUtils.LoadFromName( SelectedPenumbraMod.Name, Result.Extensions, out LoadedPenumbraMod );
 
