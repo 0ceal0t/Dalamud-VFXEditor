@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
-using System.Threading.Tasks;
 using VfxEditor.Select.Base;
 using VfxEditor.Utils;
 
@@ -23,15 +22,15 @@ namespace VfxEditor.Ui.Import
 
         protected Vector2 DefaultWindowPadding = new();
 
+        protected PenumbraMod LoadedPenumbraMod;
+        protected bool Reset = false;
         protected ImportResult Result = new();
 
         protected string SearchInput = "";
 
+        protected Dictionary<string, bool> SelectedModOptions = [];
         protected PenumbraItem SelectedPenumbraMod;
-
-        protected Dictionary<string, bool> SelectedTypes = new Dictionary<string, bool>();
-
-        protected bool Reset = false;
+        protected Dictionary<string, bool> SelectedTypes = [];
 
         public ImportDialog() : base( "Import from Penumbra", false, new( 800, 600 ), Plugin.WindowSystem )
         {
@@ -51,34 +50,39 @@ namespace VfxEditor.Ui.Import
             DefaultWindowPadding = ImGui.GetStyle().WindowPadding;
 
             ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
+            ImGui.Separator();
 
-            if( ImGui.CollapsingHeader( "Extensions", ImGuiTreeNodeFlags.CollapsingHeader ) )
+            if( ImGui.CollapsingHeader( "Extensions" ) )
             {
-                ExtensionPicker();
+                DrawExtensionPicker();
             }
             if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) )
             {
-                ModsTable();
-                ImGui.SameLine();
-                ModDesc();
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
+                using var table = ImRaii.Table( "ModsTable", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY, new( -1, ImGui.GetContentRegionAvail().Y ) );
+                if( !table ) return;
+                style.Dispose();
+
+                ImGui.TableSetupColumn( "##Left", ImGuiTableColumnFlags.WidthFixed, 200 );
+                ImGui.TableSetupColumn( "##Right", ImGuiTableColumnFlags.WidthStretch );
+
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+
+                using( var tree = ImRaii.Child( "ModsList" ) )
+                {
+                    DrawModsTable();
+                }
+
+                ImGui.TableNextColumn();
+                ImGui.Separator();
+                if( SelectedPenumbraMod == null ) ImGui.Text( "Select a mod or double click it to import all options..." );
+                else
+                {
+                    DrawModDesc();
+                    DrawButtonsDesc();
+                }
             }
-        }
-
-        public void Load()
-        {
-            LoadData();
-        }
-
-        public void LoadData()
-        {
-            Items.Clear();
-            Items.AddRange( Plugin.PenumbraIpc.GetMods().Select( x => new PenumbraItem( x ) ) );
-        }
-
-        public void OnImport()
-        {
-            Callback( Result );
-            Hide();
         }
 
         public void SetCallback( Action<ImportResult> callback )
@@ -86,87 +90,37 @@ namespace VfxEditor.Ui.Import
             Callback = callback;
         }
 
-        public void ToggleType( string key )
-        {
-            SelectedTypes[key] = !SelectedTypes[key];
-        }
-
-        protected bool DrawRow( PenumbraItem item, int idx )
-        {
-            using var _ = ImRaii.PushId( idx );
-
-            ImGui.TableNextColumn();
-            if( ImGui.Selectable( item.Name, SelectedPenumbraMod?.Name == item.Name, ImGuiSelectableFlags.SpanAllColumns ) )
-            {
-                SelectedPenumbraMod = item;
-            }
-
-            if( PostRow( item, idx ) ) return true;
-            return false;
-        }
-
-        protected virtual bool PostRow( PenumbraItem item, int idx )
-        {
-            if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() )
-            {
-                var typesList = new List<string>();
-                foreach( var type in SelectedTypes )
-                {
-                    if( type.Value ) typesList.Add( type.Key );
-                }
-
-                Result = new();
-                Result.Extensions = typesList;
-                Result.Reset = Reset;
-                PenumbraMod LoadedPenumbraMod = new();
-                PenumbraUtils.LoadFromName( SelectedPenumbraMod.Name, Result.Extensions, out LoadedPenumbraMod );
-
-                Result.Mod = LoadedPenumbraMod;
-                OnImport();
-                return true;
-            }
-
-            return false;
-        }
-
         public void SetReset( bool reset )
         {
             Reset = reset;
         }
 
-        private void ExtensionAll()
+        private void DrawButtonsDesc()
         {
-            foreach( var type in SelectedTypes )
+            ImGui.Separator();
+            var text = Reset ? "Import Modpack into Workspace" : "Append Modpack to Workspace";
+            if( ImGui.Button( text ) )
             {
-                SelectedTypes[type.Key] = true;
+                OnImport();
             }
         }
-
-        private void ExtensionButtons()
+        private void DrawExtensionButtons()
         {
             if( ImGui.Button( "Select All" ) )
             {
-                ExtensionAll();
+                ExtensionSelectAll();
             }
             ImGui.SameLine();
             if( ImGui.Button( "Unselect All" ) )
             {
-                ExtensionNone();
+                ExtensionSelectNone();
             }
         }
 
-        private void ExtensionNone()
+        private void DrawExtensionPicker()
         {
-            foreach( var type in SelectedTypes )
-            {
-                SelectedTypes[type.Key] = false;
-            }
-        }
-
-        private void ExtensionPicker()
-        {
-            ExtensionButtons();
-            if( ImGui.BeginListBox( "##Extensions" ) )
+            DrawExtensionButtons();
+            if( ImGui.BeginListBox( "##Extensions", new Vector2( ImGui.GetContentRegionAvail().X * .5f, 160 ) ) )
             {
                 foreach( var type in SelectedTypes )
                 {
@@ -179,17 +133,80 @@ namespace VfxEditor.Ui.Import
             }
         }
 
-        private void ModDesc()
+        private void DrawModDesc()
         {
-            ImGui.Text( "test" );
+            ImGui.BeginChild( "ModDesc", new Vector2( ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y * .9f ) );
+            ImGui.Text( SelectedPenumbraMod.GetName() );
+            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+            if( LoadedPenumbraMod.Meta != null )
+            {
+                ImGui.TextDisabled( $"by {LoadedPenumbraMod.Meta.Author}" );
+            }
+            DrawModOptions();
+            ImGui.EndChild();
         }
 
-        private void ModsTable()
+        private void DrawModOptions()
         {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 8, 3 ) );
+            var idx = 0;
+            foreach( var option in LoadedPenumbraMod.SourceFiles )
+            {
+                var optionName = option.Key;
+                var selected = SelectedModOptions[optionName];
+                if( ImGui.Checkbox( "##SelectedOption" + idx, ref selected ) )
+                {
+                    ToggleSelectedOption( optionName );
+                }
+                ImGui.SameLine();
+                if( ImGui.CollapsingHeader( optionName, ImGuiTreeNodeFlags.DefaultOpen ) )
+                {
+                    if( selected ) DrawModPaths( option.Value );
+                    else DrawModPathsDisabled( option.Value );
+                }
+                idx++;
+            }
+        }
+
+        private void DrawModPaths( List<string> option )
+        {
+            foreach( var path in option )
+            {
+                var split = path.Split( '|' );
+                var gamePath = split[0];
+                var filePath = split[1];
+
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 32 );
+                ImGui.Text( gamePath );
+                if( ImGui.IsItemHovered() )
+                {
+                    ImGui.SetTooltip( filePath );
+                }
+            }
+        }
+
+        private void DrawModPathsDisabled( List<string> option )
+        {
+            foreach( var path in option )
+            {
+                var split = path.Split( '|' );
+                var gamePath = split[0];
+                var filePath = split[1];
+
+                ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 32 );
+                ImGui.TextDisabled( gamePath );
+                if( ImGui.IsItemHovered() )
+                {
+                    ImGui.SetTooltip( filePath );
+                }
+            }
+        }
+
+        private void DrawModsTable()
+        {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 0, 3 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 8, 3 ) );
-            using var child = ImRaii.Child( "Child", new Vector2( -1, -1 ), true );
-            using var table = ImRaii.Table( "Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit );
+            using var child = ImRaii.Child( "ModsListRow", new Vector2( -1, -1 ), true );
+            using var table = ImRaii.Table( "ModsList", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit );
             if( !table ) return;
             padding.Dispose();
 
@@ -207,11 +224,127 @@ namespace VfxEditor.Ui.Import
             }
         }
 
+        private bool DrawRow( PenumbraItem item, int idx )
+        {
+            using var _ = ImRaii.PushId( idx );
+
+            ImGui.TableNextColumn();
+            if( ImGui.Selectable( item.Name, SelectedPenumbraMod?.Name == item.Name, ImGuiSelectableFlags.SpanAllColumns ) )
+            {
+                SelectedPenumbraMod = item;
+                OnRefresh();
+            }
+
+            if( PostRow( item, idx ) ) return true;
+            return false;
+        }
+
+        private void ExtensionSelectAll()
+        {
+            foreach( var type in SelectedTypes )
+            {
+                SelectedTypes[type.Key] = true;
+            }
+            OnRefresh();
+        }
+
+        private void ExtensionSelectNone()
+        {
+            foreach( var type in SelectedTypes )
+            {
+                SelectedTypes[type.Key] = false;
+            }
+            OnRefresh();
+        }
+
+        private List<string> GetSelectedTypes()
+        {
+            var typesList = new List<string>();
+            foreach( var type in SelectedTypes )
+            {
+                if( type.Value ) typesList.Add( type.Key );
+            }
+
+            return typesList;
+        }
+
+        private void Load()
+        {
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            Items.Clear();
+            Items.AddRange( Plugin.PenumbraIpc.GetMods().Select( x => new PenumbraItem( x ) ) );
+        }
+
+        private void OnImport()
+        {
+            Result = new();
+            Result.Extensions = GetSelectedTypes();
+            Result.Reset = Reset;
+            Result.Mod = LoadedPenumbraMod;
+            var listOptions = new List<string>();
+            foreach( var option in SelectedModOptions )
+            {
+                if( option.Value ) listOptions.Add( option.Key );
+            }
+            Result.Options = listOptions;
+            Callback( Result );
+            Hide();
+        }
+
+        private void OnRefresh()
+        {
+            RefreshLoadedMod();
+        }
+
+        private bool PostRow( PenumbraItem item, int idx )
+        {
+            if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() )
+            {
+                OnImport();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void RefreshLoadedMod()
+        {
+            if( SelectedPenumbraMod == null ) return;
+            var sameMod = LoadedPenumbraMod != null && LoadedPenumbraMod.Meta != null && SelectedPenumbraMod.Name == LoadedPenumbraMod.Meta.Name;
+            LoadedPenumbraMod = new();
+            PenumbraUtils.LoadFromName( SelectedPenumbraMod.Name, GetSelectedTypes(), out LoadedPenumbraMod );
+            if( !sameMod )
+            {
+                SelectedModOptions = new();
+                foreach( var source in LoadedPenumbraMod.SourceFiles )
+                {
+                    SelectedModOptions.Add( source.Key, true );
+                }
+            }
+        }
+
+        private void ToggleSelectedOption( string name )
+        {
+            SelectedModOptions[name] = !SelectedModOptions[name];
+        }
+
+        private void ToggleType( string key )
+        {
+            SelectedTypes[key] = !SelectedTypes[key];
+            OnRefresh();
+        }
+
         public class ImportResult
         {
             public List<string> Extensions;
             public PenumbraMod Mod;
+            public List<string> Options;
             public bool Reset;
+
             public ImportResult()
             { }
         }

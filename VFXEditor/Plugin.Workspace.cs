@@ -125,6 +125,7 @@ namespace VfxEditor
                 foreach( var option in mod.SourceFiles )
                 {
                     var optionName = option.Key;
+                    if( !res.Options.Contains( optionName ) ) continue;
 
                     foreach( var file in option.Value )
                     {
