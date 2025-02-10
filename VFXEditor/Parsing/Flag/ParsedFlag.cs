@@ -39,10 +39,10 @@ namespace VfxEditor.Parsing {
         }
 
         protected override void DrawBody() {
-            if ( ShowIntField ) {
+            if( ShowIntField ) {
                 var value = IntValue;
                 if( InTable ? ImGui.InputInt( Name, ref value, 0, 0 ) : ImGui.InputInt( Name, ref value ) ) {
-                    Update( (T)(object)value );
+                    Update( ( T )( object )value );
                 }
             }
 

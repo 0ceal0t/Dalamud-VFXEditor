@@ -193,16 +193,10 @@ namespace VfxEditor.Utils {
             }
         }
 
-        public static void WriteBytesDialog( string filter, byte[] data, string ext, string fileName )
-        {
+        public static void WriteBytesDialog( string filter, byte[] data, string ext, string fileName ) {
             FileBrowserManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( bool ok, string res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
             } );
-        }
-
-        public static void WriteBytesSilent( string filter, byte[] data, string filePath )
-        {
-            File.WriteAllBytes( filePath, data );
         }
 
         public static void OpenUrl( string url ) => Process.Start( new ProcessStartInfo {

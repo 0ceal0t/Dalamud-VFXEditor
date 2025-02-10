@@ -299,12 +299,8 @@ namespace VfxEditor.AvfxFormat {
             CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
         }
 
-        private void Replace()
-        {
-            var commands = new List<ICommand>();
-            commands.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
-            foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
-            CommandManager.Add( new CompoundCommand( commands, Update ) );
+        private void Replace() {
+            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, CopiedKeys.Select( x => new AvfxCurveKey( this, x ) ), Update ) );
         }
 
         // ======== GRADIENT ==========
