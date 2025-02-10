@@ -1,6 +1,8 @@
 using Dalamud.Interface;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Render;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,7 @@ using System.Xml.Linq;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;
 using VfxEditor.Select.Base;
+using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Import
@@ -46,7 +49,7 @@ namespace VfxEditor.Ui.Import
             }
         }
 
-        protected readonly List<string> AllowedTypes = ["avfx", "atex", "tmb", "pap", "uld", "sklb", "skp", "eid", "phyb", "atch", "shcd", "shpk", "sgb"];
+        protected readonly List<string> AllowedTypes = ["avfx", "atex", "tmb", "pap", "scd", "uld", "sklb", "skp", "phyb", "eid", "atch", "kdb", "pbd", "mdl", "mtrl", "shpk", "shcd"];
 
         protected readonly List<PenumbraItem> Items = new();
         protected readonly string Name;
@@ -98,7 +101,10 @@ namespace VfxEditor.Ui.Import
 
             ImGui.InputTextWithHint( "##Search", "Search", ref SearchInput, 255 );
 
-            ExtensionPicker();
+            if( ImGui.CollapsingHeader( "Extensions", ImGuiTreeNodeFlags.CollapsingHeader ) )
+            {
+                ExtensionPicker();
+            }
             if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) )
             {
                 ModsTable();
@@ -130,15 +136,46 @@ namespace VfxEditor.Ui.Import
 
         private void ExtensionPicker()
         {
-            if( ImGui.CollapsingHeader( "Extensions", ImGuiTreeNodeFlags.CollapsingHeader ) )
+            ExtensionButtons();
+            if( ImGui.BeginListBox( "##Extensions" ) )
             {
                 foreach( var type in SelectedTypes )
                 {
-                    if( ImGui.Selectable( type.Key, type.Value ) )
+                    if( ImGui.Selectable( type.Key, type.Value, ImGuiSelectableFlags.None ) )
                     {
                         ToggleType( type.Key );
                     }
                 }
+                ImGui.EndListBox();
+            }
+        }
+
+        private void ExtensionButtons()
+        {
+            if( ImGui.Button( "Select All" ) )
+            {
+                SelAll();
+            }
+            ImGui.SameLine();
+            if( ImGui.Button( "Unselect All" ) )
+            {
+                UnselAll();
+            }
+        }
+
+        private void SelAll()
+        {
+            foreach( var type in SelectedTypes )
+            {
+                SelectedTypes[type.Key] = true;
+            }
+        }
+
+        private void UnselAll()
+        {
+            foreach( var type in SelectedTypes )
+            {
+                SelectedTypes[type.Key] = false;
             }
         }
 
