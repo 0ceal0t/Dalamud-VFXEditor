@@ -9,13 +9,21 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using VfxEditor.AvfxFormat;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Select;
+using VfxEditor.Select.Formats;
+using VfxEditor.Select.Lists;
 using VfxEditor.Ui.Export;
+using VfxEditor.Ui.Import;
 using VfxEditor.Utils;
+using static FFXIVClientStructs.FFXIV.Client.UI.RaptureAtkHistory.Delegates;
+using static VfxEditor.Ui.Import.ImportDialog;
 
-namespace VfxEditor {
+namespace VfxEditor
+{
     public enum WorkspaceState {
         None,
         Loading,
@@ -69,7 +77,8 @@ namespace VfxEditor {
             else ExportWorkspace(); // Overwrite current file
         }
 
-        private static async void NewWorkspace() {
+        private static async void NewWorkspace()
+        {
             State = WorkspaceState.Loading;
             await Task.Run( async () => {
                 await Task.Delay( 100 );
@@ -81,6 +90,44 @@ namespace VfxEditor {
                 CurrentWorkspaceLocation = "";
                 State = WorkspaceState.Cleanup;
             } );
+        }
+
+        private static void NewWorkspaceFromPenumbra()
+        {
+            var callback = ( ImportResult res ) => {
+                CreateWorkspaceFromPenumbra( res );
+            };
+            ImportDialog.SetCallback( callback );
+            ImportDialog.Show();
+        }
+
+        private static void CreateWorkspaceFromPenumbra( ImportResult res )
+        {
+            var mod = res.Mod;
+            WorkspaceFileCount = Managers.Count - 1;
+            foreach( var manager in Managers.Where( x => x != null ) ) manager.Reset( ResetType.ToDefault );
+            foreach( var option in mod.SourceFiles ) {
+                var optionName = option.Key;
+                foreach( var file in option.Value ) {
+                    Dalamud.Log( "file " + file + "" );
+                    var gamePath = "";
+                    var filePath = "";
+                    if( file.Contains( '|' ) )
+                    {
+                        var split = file.Split( "|" );
+                        gamePath = split[0];
+                        filePath = split[1];
+                    }
+                    var selectedFile = new SelectResult(SelectResultType.Local, gamePath, $"[PEN] {optionName} : {gamePath}", filePath );
+                    var replacedFile = new SelectResult(SelectResultType.Local, gamePath, $"{gamePath}", gamePath );
+                    foreach( var manager in Managers.Where( x => x != null ) )
+                    {
+                        if(manager.AcceptsExt( gamePath ) ) {
+                            manager.PenumbraImport(selectedFile, replacedFile);
+                        }
+                    }
+                }
+            }
         }
 
         private static void OpenWorkspace( bool reset ) {

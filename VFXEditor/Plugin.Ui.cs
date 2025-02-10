@@ -50,7 +50,12 @@ namespace VfxEditor {
             using var _ = ImRaii.PushId( "Menu" );
 
             if( ImGui.BeginMenu( "File" ) ) {
-                if( ImGui.MenuItem( "New" ) ) NewWorkspace();
+                if( ImGui.BeginMenu( "New" ) )
+                {
+                    if( ImGui.MenuItem( "Blank" ) ) NewWorkspace();
+                    if( ImGui.MenuItem( "From Penumbra" ) ) NewWorkspaceFromPenumbra();
+                    ImGui.EndMenu();
+                }
                 if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
