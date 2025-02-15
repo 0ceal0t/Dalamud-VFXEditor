@@ -51,13 +51,7 @@ namespace VfxEditor {
 
             if( ImGui.BeginMenu( "File" ) ) {
                 if( ImGui.MenuItem( "New" ) ) NewWorkspace();
-                if( ImGui.BeginMenu( "Open" ) )
-                {
-                    if( ImGui.MenuItem( "Workspace" ) ) OpenWorkspace( true );
-                    if( ImGui.MenuItem( "Penumbra Mod" ) ) OpenWorkspacePenumbra( true );
-                    ImGui.EndMenu();
-                }
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) OpenWorkspace( true );
+                if( ImGui.MenuItem( "Open" ) ) OpenWorkspace( true );
                 if( ImGui.BeginMenu( "Open Recent" ) ) {
                     foreach( var (recent, idx) in Configuration.RecentWorkspaces.WithIndex() ) {
                         if( ImGui.MenuItem( $"{recent.Item1}##{idx}" ) ) {
@@ -72,15 +66,17 @@ namespace VfxEditor {
                     }
                     ImGui.EndMenu();
                 }
-                if( ImGui.BeginMenu( "Append" ) )
-                {
-                    if( ImGui.MenuItem( "From Workspace" ) ) OpenWorkspace( false );
-                    if( ImGui.MenuItem( "From Penumbra Mod" ) ) OpenWorkspacePenumbra( false );
-                    ImGui.EndMenu();
-                }
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) OpenWorkspace( false );
+                if( ImGui.MenuItem( "Append" ) ) OpenWorkspace( false );
                 if( ImGui.MenuItem( "Save" ) ) SaveWorkspace();
                 if( ImGui.MenuItem( "Save As" ) ) SaveAsWorkspace();
+
+                ImGui.Separator();
+                if( ImGui.BeginMenu( "Penumbra" ) )
+                {
+                    if( ImGui.MenuItem( "Open Mod" ) ) OpenWorkspacePenumbra( true );
+                    if( ImGui.MenuItem( "Append Mod" ) ) OpenWorkspacePenumbra( false );
+                    ImGui.EndMenu();
+                }
 
                 ImGui.Separator();
                 if( ImGui.MenuItem( "Settings" ) ) Configuration.Show();
