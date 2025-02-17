@@ -8,9 +8,24 @@ using ImGuiNET;
 
 namespace VfxEditor.Ui.Components {
     public class CommandSaveDropdown<T> : CommandDropdown<T> where T : class, IUiItem {
-        public CommandSaveDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null )
-        : base( id, items, getTextAction, newAction, onChangeAction ) {
 
+        protected readonly Action<T> OnSaveAction;
+
+        public CommandSaveDropdown(
+            string id,
+            List<T> items,
+            Func<T, int, string> getTextAction,
+            Func<T> newAction,
+            Action<T> onSaveAction,
+            Action<T, bool> onChangeAction = null
+        ) : base( id, items, getTextAction, newAction, onChangeAction ) {
+            OnSaveAction = onSaveAction;
+        }
+
+        // doesn't need a CommandManager add for OnSaveAction as we won't need to undo/redo the save
+        protected override void DrawControls() {
+            if( NewAction == null ) return;
+            DrawNewDeleteControls( OnNew, OnDelete, OnSaveAction );
         }
 
         protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete, Action<T> onSave ) {
@@ -20,7 +35,7 @@ namespace VfxEditor.Ui.Components {
                 if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
             }
 
-            // draw a save button and run onSave() for the selected item when clicked 
+            // draw a save button and run onSave() for the selected item when clicked
             if( onSave != null) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
