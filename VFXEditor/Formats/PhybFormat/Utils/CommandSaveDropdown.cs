@@ -13,11 +13,20 @@ namespace VfxEditor.Ui.Components {
 
         }
 
-        protected override void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+        protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete, Action<T> onSave ) {
             if( onNew != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
+            }
+
+            // draw a save button and run onSave() for the selected item when clicked 
+            if( onSave != null) {
+                using var font = ImRaii.PushFont( UiBuilder.IconFont );
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) && Items.Contains( Selected ) ) {
+                    onSave( Selected );
+                }
             }
 
             using var disabled = ImRaii.Disabled( Selected == null );
