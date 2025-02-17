@@ -8,6 +8,7 @@ using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Components.SplitViews;
+using VfxEditor.FileBrowser;
 
 namespace VfxEditor.PhybFormat.Simulator.Chain {
     public enum ChainType {
@@ -121,5 +122,14 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             foreach( var item in Collisions ) item.AddPhysicsObjects( meshes, boneMatrixes );
             foreach( var item in Nodes ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
+
+        private byte[] ToBytes() {
+            return [];
+        }
+
+        public void SaveDialog() =>
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".phybchain,.*", "ExportedPhybChain", "phybchain", ( bool ok, string res ) => {
+                if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
+            } );
     }
 }

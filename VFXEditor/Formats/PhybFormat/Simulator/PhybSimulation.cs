@@ -12,7 +12,7 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         public readonly List<PhybSimulator> Simulators = [];
 
-        private readonly CommandDropdown<PhybSimulator> SimulatorDropdown;
+        private readonly CommandSaveDropdown<PhybSimulator> SimulatorDropdown;
 
         public PhybSimulation( PhybFile file, BinaryReader reader, bool isEmpty ) {
             File = file;
@@ -23,8 +23,13 @@ namespace VfxEditor.PhybFormat.Simulator {
                 for( var i = 0; i < numSimulators; i++ ) Simulators.Add( new PhybSimulator( file, reader, startPos ) );
             }
 
-            SimulatorDropdown = new( "Simulator", Simulators,
-                null, () => new PhybSimulator( File ) );
+            SimulatorDropdown = new(
+                "Simulator",
+                Simulators,
+                null,
+                () => new PhybSimulator( File ),
+                (PhybSimulator _) => _.SaveDialog()
+            );
         }
 
         public void Write( SimulationWriter writer ) {

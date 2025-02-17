@@ -17,6 +17,7 @@ using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.FileBrowser;
 
 namespace VfxEditor.PhybFormat.Simulator {
     public class PhybSimulator : IUiItem, IPhysicsObject {
@@ -35,7 +36,7 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         private readonly CommandSplitView<PhybCollisionData> CollisionSplitView;
         private readonly CommandSplitView<PhybCollisionData> CollisionConnectorSplitView;
-        private readonly CommandDropdown<PhybChain> ChainDropdown;
+        private readonly CommandSaveDropdown<PhybChain> ChainDropdown;
         private readonly CommandSplitView<PhybConnector> ConnectorSplitView;
         private readonly CommandSplitView<PhybAttract> AttractSplitView;
         private readonly CommandSplitView<PhybPin> PinSplitView;
@@ -52,8 +53,14 @@ namespace VfxEditor.PhybFormat.Simulator {
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
                 ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
 
-            ChainDropdown = new( "Chain", Chains,
-                null, () => new( File, this ), ( PhybChain _, bool _ ) => File.OnChange() );
+            ChainDropdown = new(
+                "Chain",
+                Chains,
+                null,
+                () => new( File, this ),
+                ( PhybChain _ ) => _.SaveDialog(),
+                ( PhybChain _, bool _ ) => File.OnChange()
+            );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
                 null, () => new( File, this ), ( PhybConnector _, bool _ ) => File.OnChange() );
@@ -252,5 +259,14 @@ namespace VfxEditor.PhybFormat.Simulator {
 
             return true;
         }
+
+        private byte[] ToBytes() {
+            return [];
+        }
+
+        public void SaveDialog() =>
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".phybsimulator,.*", "ExportedPhybSimulator", "phybsimulator", ( bool ok, string res ) => {
+                if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
+            } );
     }
 }

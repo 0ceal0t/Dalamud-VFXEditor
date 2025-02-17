@@ -9,23 +9,23 @@ using ImGuiNET;
 namespace VfxEditor.Ui.Components {
     public class CommandSaveDropdown<T> : CommandDropdown<T> where T : class, IUiItem {
 
-        protected readonly Action<T> OnSaveAction;
+        protected readonly Action<T> OnSave;
 
         public CommandSaveDropdown(
             string id,
             List<T> items,
             Func<T, int, string> getTextAction,
             Func<T> newAction,
-            Action<T> onSaveAction,
+            Action<T> onSave,
             Action<T, bool> onChangeAction = null
         ) : base( id, items, getTextAction, newAction, onChangeAction ) {
-            OnSaveAction = onSaveAction;
+            OnSave = onSave;
         }
 
         // doesn't need a CommandManager add for OnSaveAction as we won't need to undo/redo the save
         protected override void DrawControls() {
             if( NewAction == null ) return;
-            DrawNewDeleteControls( OnNew, OnDelete, OnSaveAction );
+            DrawNewDeleteControls( OnNew, OnDelete, OnSave );
         }
 
         protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete, Action<T> onSave ) {
