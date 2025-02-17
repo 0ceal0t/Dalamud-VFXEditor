@@ -85,7 +85,7 @@ namespace VfxEditor.Ui.Components {
 
         // ===========
 
-        protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+        protected virtual void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
             if( onNew != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();

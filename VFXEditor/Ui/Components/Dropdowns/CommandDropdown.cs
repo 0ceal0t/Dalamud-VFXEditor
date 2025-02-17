@@ -5,9 +5,9 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Ui.Components {
     public class CommandDropdown<T> : UiDropdown<T> where T : class, IUiItem {
-        private readonly Func<T, int, string> GetTextAction;
-        private readonly Func<T> NewAction;
-        private readonly Action<T, bool> OnChangeAction;
+        protected readonly Func<T, int, string> GetTextAction;
+        protected readonly Func<T> NewAction;
+        protected readonly Action<T, bool> OnChangeAction;
 
         public CommandDropdown( string id, List<T> items, Func<T, int, string> getTextAction, Func<T> newAction, Action<T, bool> onChangeAction = null ) : base( id, items ) {
             GetTextAction = getTextAction;
