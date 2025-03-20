@@ -6,8 +6,8 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurve2Axis : AvfxCurveBase {
-        public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
-        public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
+        public readonly AvfxEnum<AxisConnect2> AxisConnectType = new( "Axis Connect", "ACT" );
+        public readonly AvfxEnum<AxisConnect2> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
         public readonly AvfxCurve X;
         public readonly AvfxCurve Y;
         public readonly AvfxCurve RX;
