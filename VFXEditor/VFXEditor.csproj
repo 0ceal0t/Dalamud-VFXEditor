@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.Sdk/12.0.2">
     <PropertyGroup>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
@@ -12,35 +12,10 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        <PlatformTarget>x64</PlatformTarget>
         <Deterministic>true</Deterministic>
         <OutputType>Library</OutputType>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <Configurations>Debug;Release;Beta</Configurations>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
-      <DebugType>pdbonly</DebugType>
-      <Optimize>true</Optimize>
-      <DefineConstants>BETA;TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-        <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
@@ -49,66 +24,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Dalamud">
-            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGuiScene">
-            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina">
-            <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina.Excel">
-            <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.DXGI">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.DXGI.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.DXGI.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.Mathematics">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Mathematics.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.Mathematics.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.Direct3D11">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Direct3D11.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.Direct3D11.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Reloaded.Hooks.Definitions">
-            <HintPath>$(DalamudLibPath)Reloaded.Hooks.Definitions.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="FFXIVClientStructs">
-            <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="BCnEncoder.Net" Version="2.1.0" />
-        <PackageReference Include="DalamudPackager" Version="11.0.0" />
-        <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
-        <PackageReference Include="HelixToolkit" Version="2.26.0" />
-        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.26.0" />
+        <PackageReference Include="BCnEncoder.Net" Version="2.2.0" />
+        <PackageReference Include="Google.FlatBuffers" Version="25.2.10" />
+        <PackageReference Include="HelixToolkit" Version="2.27.0" />
+        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.27.0" />
         <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -118,7 +37,7 @@
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
         <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-        <PackageReference Include="Penumbra.Api" Version="5.3.0" />
+        <PackageReference Include="Penumbra.Api" Version="5.6.1" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.3" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
