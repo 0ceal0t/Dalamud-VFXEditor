@@ -20,7 +20,7 @@ namespace VfxEditor.Utils {
             int b;
             while( ( b = reader.ReadByte() ) != 0x00 )
                 strBytes.Add( ( byte )b );
-            return Encoding.ASCII.GetString( strBytes.ToArray() );
+            return Encoding.ASCII.GetString( [.. strBytes] );
         }
 
         public static string ReadStringOffset( long startPos, BinaryReader reader ) {
@@ -113,7 +113,12 @@ namespace VfxEditor.Utils {
             return ret ? VerifiedStatus.VERIFIED : VerifiedStatus.ERROR;
         }
 
-        public static string Reverse( string data ) => new( data.ToCharArray().Reverse().ToArray() );
+        public static string Reverse( string data ) {
+            var reversed = new List<char>( data.ToCharArray() );
+            reversed.Reverse();
+
+            return new( [.. reversed] );
+        }
 
         public static long PadTo( BinaryWriter writer, long multiple ) => PadTo( writer, writer.BaseStream.Position, multiple );
 

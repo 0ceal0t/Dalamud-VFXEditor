@@ -1,8 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleSimple : AvfxParticleAttribute {
@@ -213,22 +210,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "Simple" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Simple Animation" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "Simple" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( UiUtils.RemoveButton( "Delete", small: true ) ) {
-                Unassign();
-                return;
-            }
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

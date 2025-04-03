@@ -8,7 +8,7 @@ using VfxEditor.Utils.Stacks;
 
 namespace VfxEditor {
     public class CommandManager {
-        public static CommandManager Current => Stack.Count == 0 ? null : Stack.Peek();
+        public static CommandManager? Current => Stack.Count == 0 ? null : Stack.Peek();
         private static readonly Stack<CommandManager> Stack = new();
 
         public static void Push( CommandManager current ) {

@@ -7,7 +7,7 @@ using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.AvfxFormat {
     public abstract class AvfxData : AvfxItem, IData {
-        protected List<AvfxBase> Parsed;
+        protected List<AvfxBase>? Parsed;
 
         public readonly bool Optional;
         public readonly List<AvfxItem> Tabs = [];
@@ -19,12 +19,12 @@ namespace VfxEditor.AvfxFormat {
             SplitView = new AvfxDisplaySplitView<AvfxItem>( "Data", Tabs );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed!, size );
 
-        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed! );
 
         protected override IEnumerable<AvfxBase> GetChildren() {
-            foreach( var item in Parsed ) yield return item;
+            foreach( var item in Parsed! ) yield return item;
         }
 
         public override string GetDefaultText() => "Data";

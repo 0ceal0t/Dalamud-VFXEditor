@@ -120,7 +120,7 @@ namespace VfxEditor.FileBrowser.Preview {
             } );
         }
 
-        private static IDalamudTextureWrap LoadDds( string path, out string format, out int mips ) {
+        private static IDalamudTextureWrap? LoadDds( string path, out string format, out int mips ) {
             format = "";
             mips = 1;
 
@@ -145,7 +145,7 @@ namespace VfxEditor.FileBrowser.Preview {
             return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), convertedData );
         }
 
-        private static IDalamudTextureWrap LoadTex( string path, out string format, out int mips ) {
+        private static IDalamudTextureWrap? LoadTex( string path, out string format, out int mips ) {
             format = "";
             mips = 1;
 

@@ -6,6 +6,7 @@ using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -25,31 +26,31 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ParticleCount = new( "Particle Count", "PrCn" );
         public readonly AvfxInt EmitterCount = new( "Emitter Count", "EmCn" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve CreateCount = new( "Create Count", "CrC", locked: true );
-        public readonly AvfxCurve CreateCountRandom = new( "Create Count Random", "CrCR" );
-        public readonly AvfxCurve CreateInterval = new( "Create Count Interval", "CrI", locked: true );
-        public readonly AvfxCurve CreateIntervalRandom = new( "Create Count Interval Random", "CrIR" );
-        public readonly AvfxCurve Gravity = new( "Gravity", "Gra" );
-        public readonly AvfxCurve GravityRandom = new( "Gravity Random", "GraR" );
-        public readonly AvfxCurve AirResistance = new( "Air Resistance", "ARs", locked: true );
-        public readonly AvfxCurve AirResistanceRandom = new( "Air Resistance Random", "ARsR" );
+        public readonly AvfxCurve1Axis CreateCount = new( "Create Count", "CrC", locked: true );
+        public readonly AvfxCurve1Axis CreateCountRandom = new( "Create Count Random", "CrCR" );
+        public readonly AvfxCurve1Axis CreateInterval = new( "Create Count Interval", "CrI", locked: true );
+        public readonly AvfxCurve1Axis CreateIntervalRandom = new( "Create Count Interval Random", "CrIR" );
+        public readonly AvfxCurve1Axis Gravity = new( "Gravity", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "Gravity Random", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "Air Resistance", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "Air Resistance Random", "ARsR" );
         public readonly AvfxCurveColor Color = new( "Color", locked: true );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
 
-        public readonly AvfxCurve InjectionAngleX = new( "Injection Angle X", "IAX", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomX = new( "Injection Angle X Random", "IAXR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleX = new( "Injection Angle X", "IAX", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomX = new( "Injection Angle X Random", "IAXR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleY = new( "Injection Angle Y", "IAY", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomY = new( "Injection Angle Y Random", "IAYR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleY = new( "Injection Angle Y", "IAY", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomY = new( "Injection Angle Y Random", "IAYR", CurveType.Angle );
 
-        public readonly AvfxCurve InjectionAngleZ = new( "Injection Angle Z", "IAZ", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleZ = new( "Injection Angle Z", "IAZ", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandomZ = new( "Injection Angle Z Random", "IAZR", CurveType.Angle );
 
-        public readonly AvfxCurve VelocityRandomX = new( "Velocity Random X", "VRX" );
-        public readonly AvfxCurve VelocityRandomY = new( "Velocity Random Y", "VRY" );
-        public readonly AvfxCurve VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
+        public readonly AvfxCurve1Axis VelocityRandomX = new( "Velocity Random X", "VRX" );
+        public readonly AvfxCurve1Axis VelocityRandomY = new( "Velocity Random Y", "VRY" );
+        public readonly AvfxCurve1Axis VelocityRandomZ = new( "Velocity Random Z", "VRZ" );
 
         private readonly List<AvfxBase> Parsed;
 

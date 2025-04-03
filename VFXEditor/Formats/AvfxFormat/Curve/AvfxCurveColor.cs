@@ -1,27 +1,30 @@
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Curve.Lines;
+using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveColor : AvfxCurveBase {
-        public readonly AvfxCurve RGB = new( "RGB", "RGB", type: CurveType.Color );
-        public readonly AvfxCurve A = new( "A", "A" );
-        public readonly AvfxCurve SclR = new( "Scale R", "SclR" );
-        public readonly AvfxCurve SclG = new( "Scale G", "SclG" );
-        public readonly AvfxCurve SclB = new( "Scale B", "SclB" );
-        public readonly AvfxCurve SclA = new( "Scale A", "SclA" );
-        public readonly AvfxCurve Bri = new( "Brightness", "Bri" );
-        public readonly AvfxCurve RanR = new( "Random R", "RanR" );
-        public readonly AvfxCurve RanG = new( "Random G", "RanG" );
-        public readonly AvfxCurve RanB = new( "Random B", "RanB" );
-        public readonly AvfxCurve RanA = new( "Random A", "RanA" );
-        public readonly AvfxCurve RBri = new( "Random Bright", "RBri" );
+        public readonly AvfxCurveData RGB = new( "RGB", "RGB", type: CurveType.Color );
+        public readonly AvfxCurveData A = new( "A", "A" );
+        public readonly AvfxCurveData SclR = new( "Scale R", "SclR" );
+        public readonly AvfxCurveData SclG = new( "Scale G", "SclG" );
+        public readonly AvfxCurveData SclB = new( "Scale B", "SclB" );
+        public readonly AvfxCurveData SclA = new( "Scale A", "SclA" );
+        public readonly AvfxCurveData Bri = new( "Brightness", "Bri" );
+        public readonly AvfxCurveData RanR = new( "Random R", "RanR" );
+        public readonly AvfxCurveData RanG = new( "Random G", "RanG" );
+        public readonly AvfxCurveData RanB = new( "Random B", "RanB" );
+        public readonly AvfxCurveData RanA = new( "Random A", "RanA" );
+        public readonly AvfxCurveData RBri = new( "Random Bright", "RBri" );
 
-        private readonly List<AvfxCurveBase> Curves;
+        private readonly List<AvfxCurveBase> Parsed;
+
+        private readonly LineEditor LineEditor;
 
         public AvfxCurveColor( string name, string avfxName = "Col", bool locked = false ) : base( name, avfxName, locked ) {
-            Curves = [
+            Parsed = [
                 RGB,
                 A,
                 SclR,
@@ -35,20 +38,25 @@ namespace VfxEditor.AvfxFormat {
                 RanA,
                 RBri
             ];
+
+            LineEditor = new( name, [
+                new( RGB ),
+                new( "Brightness", [A, Bri], null ),
+                new( "Scale", [SclR, SclG, SclB, SclA], null),
+                new( "Random", [RanR, RanG, RanB, RanA, RBri], null)
+            ] );
         }
 
-        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Curves, size );
+        public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
 
-        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Curves );
+        public override void WriteContents( BinaryWriter writer ) => WriteNested( writer, Parsed );
 
         protected override IEnumerable<AvfxBase> GetChildren() {
-            foreach( var item in Curves ) yield return item;
+            foreach( var item in Parsed ) yield return item;
         }
 
-        protected override void DrawBody() {
-            DrawUnassignedCurves( Curves );
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawAssignedCurves( Curves );
+        public override void DrawBody() {
+            LineEditor.Draw();
         }
     }
 }

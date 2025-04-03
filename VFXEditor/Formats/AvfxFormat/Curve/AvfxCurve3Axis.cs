@@ -1,22 +1,24 @@
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Curve.Lines;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurve3Axis : AvfxCurveBase {
         public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
         public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
-        public readonly AvfxCurve X;
-        public readonly AvfxCurve Y;
-        public readonly AvfxCurve Z;
-        public readonly AvfxCurve RX;
-        public readonly AvfxCurve RY;
-        public readonly AvfxCurve RZ;
+        public readonly AvfxCurveData X;
+        public readonly AvfxCurveData Y;
+        public readonly AvfxCurveData Z;
+        public readonly AvfxCurveData RX;
+        public readonly AvfxCurveData RY;
+        public readonly AvfxCurveData RZ;
 
         private readonly List<AvfxBase> Parsed;
-        private readonly List<AvfxCurveBase> Curves;
+
+        private readonly LineEditor LineEditor;
 
         public AvfxCurve3Axis( string name, string avfxName, CurveType type = CurveType.Base, bool locked = false ) : base( name, avfxName, locked ) {
             X = new( "X", "X", type );
@@ -37,14 +39,10 @@ namespace VfxEditor.AvfxFormat {
                 RZ
             ];
 
-            Curves = [
-                X,
-                Y,
-                Z,
-                RX,
-                RY,
-                RZ
-            ];
+            LineEditor = new( name, [
+                new( "Value", [X, Y, Z], AxisConnectType ),
+                new( "Random", [RX, RY, RZ], AxisConnectRandomType )
+            ] );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );
@@ -55,12 +53,8 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        protected override void DrawBody() {
-            DrawUnassignedCurves( Curves );
-            AxisConnectType.Draw();
-            AxisConnectRandomType.Draw();
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawAssignedCurves( Curves );
+        public override void DrawBody() {
+            LineEditor.Draw();
         }
     }
 }

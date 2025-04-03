@@ -334,10 +334,10 @@ namespace VfxEditor.FileManager {
             using var _ = ImRaii.PushId( "Source" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
-            var reloadWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Sync );
-            var replaceWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Upload );
+            var reloadWidth = UiUtils.GetIconSize( FontAwesomeIcon.Sync ).X;
+            var replaceWidth = UiUtils.GetIconSize( FontAwesomeIcon.Upload ).Y;
 
-            inputSize -= ( reloadWidth + replaceWidth );
+            inputSize -= ( reloadWidth + replaceWidth + ( ImGui.GetStyle().FramePadding.X * 4 ) + 6 );
 
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {

@@ -1,21 +1,9 @@
-using Dalamud.Interface;
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
-using ImPlotNET;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using VfxEditor.Data.Command.ListCommands;
-using VfxEditor.Utils;
-using static VfxEditor.AvfxFormat.Enums;
-
 namespace VfxEditor.AvfxFormat {
-    public partial class AvfxCurve {
+    /*public partial class AvfxCurve {
         private static readonly List<(KeyType, Vector4)> CopiedKeys = [];
 
         private readonly List<AvfxCurveKey> Selected = [];
-        private AvfxCurveKey SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
+        private AvfxCurveKey? SelectedPrimary => Selected.Count == 0 ? null : Selected[0];
 
         private bool DrawOnce = false;
         public bool IsColor => Type == CurveType.Color;
@@ -59,14 +47,14 @@ namespace VfxEditor.AvfxFormat {
                 var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
                 if( Keys.Count > 0 ) {
-                    GetDrawLine( Keys, IsColor, out var lineXs, out var lineYs );
+                    GetDrawLine( out var lineXs, out var lineYs );
                     var xs = lineXs.ToArray();
                     var ys = lineYs.ToArray();
 
                     ImPlot.SetNextLineStyle( Plugin.Configuration.CurveEditorLineColor, Plugin.Configuration.CurveEditorLineWidth );
                     ImPlot.PlotLine( AvfxName, ref xs[0], ref ys[0], xs.Length );
 
-                    DrawGradient();
+                    //DrawGradient();
                     var draggingAnyPoint = false;
                     foreach( var (key, idx) in Keys.WithIndex() ) {
                         var isSelected = Selected.Contains( key );
@@ -109,7 +97,7 @@ namespace VfxEditor.AvfxFormat {
                         Editing = false;
                         var commands = new List<ICommand>();
                         Selected.ForEach( x => x.StopDragging( commands ) );
-                        CommandManager.Add( new CompoundCommand( commands, Update ) );
+                        CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
                     }
 
                     // Selecting point [Left Click]
@@ -149,7 +137,7 @@ namespace VfxEditor.AvfxFormat {
 
             ImPlot.PopStyleVar( 1 );
 
-            if( wrongOrder ) DrawWrongOrder();
+            //if( wrongOrder ) DrawWrongOrder();
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             SelectedPrimary?.Draw();
@@ -213,14 +201,10 @@ namespace VfxEditor.AvfxFormat {
             }
         }
 
-        private void DrawWrongOrder() {
-            ImGui.TextColored( UiUtils.RED_COLOR, "POINTS ARE IN THE WRONG ORDER" );
-            ImGui.SameLine();
-            if( UiUtils.RemoveButton( "Sort", true ) ) {
-                var sorted = new List<AvfxCurveKey>( Keys );
-                sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
-                CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, Update ) );
-            }
+        public void Sort( List<ICommand> commands ) {
+            var sorted = new List<AvfxCurveKey>( Keys );
+            sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
+            commands.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, OnUpdate ) );
         }
 
         public double ToRadians( double value ) {
@@ -271,7 +255,7 @@ namespace VfxEditor.AvfxFormat {
                 Keys,
                 new AvfxCurveKey( this, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )ToRadians( pos.y ) ),
                 insertIdx,
-                ( AvfxCurveKey _, bool _ ) => Update()
+                ( AvfxCurveKey _, bool _ ) => OnUpdate()
             ) );
         }
 
@@ -283,7 +267,7 @@ namespace VfxEditor.AvfxFormat {
         private void Paste() {
             var commands = new List<ICommand>();
             foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys, new( this, key ) ) );
-            CommandManager.Add( new CompoundCommand( commands, Update ) );
+            CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
         }
 
         private void PasteAtFrame( float frame ) {
@@ -292,61 +276,41 @@ namespace VfxEditor.AvfxFormat {
             foreach( var key in CopiedKeys ) commands.Add( new ListAddCommand<AvfxCurveKey>( Keys,
                     new( this, (key.Item1, key.Item2 with { X = key.Item2.X - firstFrame + frame }) )
                 ) );
-            CommandManager.Add( new CompoundCommand( commands, Update ) );
+            CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
         }
 
         private void Clear() {
-            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], Update ) );
+            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, [], OnUpdate ) );
         }
 
         private void Replace() {
-            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, CopiedKeys.Select( x => new AvfxCurveKey( this, x ) ), Update ) );
+            CommandManager.Add( new ListSetCommand<AvfxCurveKey>( Keys, CopiedKeys.Select( x => new AvfxCurveKey( this, x ) ), OnUpdate ) );
         }
 
         // ======== GRADIENT ==========
 
-        public void Update() {
+        public void OnUpdate() {
             KeyList.SetAssigned( true );
-
             if( !IsColor || Keys.Count < 2 ) return;
-            if( !Keys.FindFirst( x => x.Time.Value != Keys[0].Time.Value, out var _ ) ) { // All have the same time
-                Keys[^1].Time.Value++;
-            }
-
-            UpdateGradient();
-        }
-
-        private void DrawGradient() {
-            if( !IsColor || Keys.Count < 2 ) return;
-            if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) UpdateGradient();
-
-            var topLeft = new ImPlotPoint { x = Keys[0].DisplayX, y = 1 };
-            var bottomRight = new ImPlotPoint { x = Keys[^1].DisplayX, y = -1 };
-            ImPlot.PlotImage( "##Gradient", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
-        }
-
-        private void UpdateGradient() {
-            Plugin.DirectXManager.GradientView.SetGradient( RenderId, [
-                Keys.Select( x => (x.Time.Value, x.Color)).ToList()
-            ] );
+            if( !Keys.FindFirst( x => x.Time.Value != Keys[0].Time.Value, out var _ ) ) Keys[^1].Time.Value++;
         }
 
         // ======== UTILS ===========
 
-        private static void GetDrawLine( List<AvfxCurveKey> points, bool color, out List<double> xs, out List<double> ys ) {
+        public void GetDrawLine( out List<double> xs, out List<double> ys ) {
             xs = [];
             ys = [];
 
-            if( points.Count > 0 ) {
-                xs.Add( points[0].DisplayX );
-                ys.Add( points[0].DisplayY );
+            if( Keys.Count > 0 ) {
+                xs.Add( Keys[0].DisplayX );
+                ys.Add( Keys[0].DisplayY );
             }
 
-            for( var idx = 1; idx < points.Count; idx++ ) {
-                var p1 = points[idx - 1];
-                var p2 = points[idx];
+            for( var idx = 1; idx < Keys.Count; idx++ ) {
+                var p1 = Keys[idx - 1];
+                var p2 = Keys[idx];
 
-                if( p1.Type.Value == KeyType.Linear || color ) {
+                if( p1.Type.Value == KeyType.Linear || IsColor ) {
                     // p1 should already be added
                     xs.Add( p2.DisplayX );
                     ys.Add( p2.DisplayY );
@@ -405,5 +369,5 @@ namespace VfxEditor.AvfxFormat {
             x = w1 * p1X + w2 * handle1X + w3 * handle2X + w4 * p2X;
             y = w1 * p1Y + w2 * handle1Y + w3 * handle2Y + w4 * p2Y;
         }
-    }
+    }*/
 }

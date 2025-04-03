@@ -1,3 +1,4 @@
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -11,9 +12,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsLightning = new( "Is Lightning", "bLgt" );
         public readonly AvfxBool IsMorph = new( "Is Morph", "bShp" );
         public AvfxIntList ModelIdx = new( "Model Index", "MdNo", value: -1 );
-        public readonly AvfxCurve AnimationNumber = new( "Animation Number", "NoAn" );
-        public readonly AvfxCurve Morph = new( "Morph", "Moph" );
-        public readonly AvfxCurve FresnelCurve = new( "Fresnel Curve", "FrC" );
+        public readonly AvfxCurve1Axis AnimationNumber = new( "Animation Number", "NoAn" );
+        public readonly AvfxCurve1Axis Morph = new( "Morph", "Moph" );
+        public readonly AvfxCurve1Axis FresnelCurve = new( "Fresnel Curve", "FrC" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );

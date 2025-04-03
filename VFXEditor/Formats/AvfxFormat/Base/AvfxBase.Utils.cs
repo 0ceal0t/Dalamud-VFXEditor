@@ -57,7 +57,10 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public static void WriteAvfxName( BinaryWriter writer, string avfxName ) {
-            var nameBytes = Encoding.ASCII.GetBytes( avfxName ).Reverse().ToArray();
+            var reversed = new List<byte>( Encoding.ASCII.GetBytes( avfxName ) );
+            reversed.Reverse();
+
+            var nameBytes = reversed.ToArray();
             writer.Write( nameBytes );
             WritePad( writer, 4 - avfxName.Length );
         }
@@ -65,7 +68,10 @@ namespace VfxEditor.AvfxFormat {
         public static string ReadAvfxName( BinaryReader reader ) => ReadAvfxName( BitConverter.GetBytes( reader.ReadInt32() ) );
 
         public static string ReadAvfxName( byte[] bytes ) {
-            var nonZeroBytes = bytes.Reverse().Where( x => x != 0 ).ToArray();
+            var reversed = new List<byte>( bytes );
+            reversed.Reverse();
+
+            var nonZeroBytes = reversed.Where( x => x != 0 ).ToArray();
             return Encoding.ASCII.GetString( nonZeroBytes );
         }
 

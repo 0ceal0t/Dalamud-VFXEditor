@@ -22,6 +22,10 @@ namespace VfxEditor.AvfxFormat {
 
         protected abstract IEnumerable<AvfxBase> GetChildren();
 
+        public virtual IEnumerable<AvfxNodeSelect> GetNodeSelects() {
+            yield break;
+        }
+
         public virtual void SetAssigned( bool assigned, bool recurse = false ) {
             Assigned = assigned;
         }

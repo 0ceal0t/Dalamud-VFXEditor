@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -51,19 +52,19 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat DepthOffset = new( "Depth Offset", "DpOf" );
         public readonly AvfxBool SimpleAnimEnable = new( "Use Simple Animation", "bSCt" );
         public readonly AvfxLife Life = new();
-        public readonly AvfxCurve Gravity = new( "Gravity", "Gra" );
-        public readonly AvfxCurve GravityRandom = new( "Gravity Random", "GraR" );
-        public readonly AvfxCurve AirResistance = new( "Air Resistance", "ARs", locked: true );
-        public readonly AvfxCurve AirResistanceRandom = new( "Air Resistance Random", "ARsR", locked: true );
+        public readonly AvfxCurve1Axis Gravity = new( "Gravity", "Gra" );
+        public readonly AvfxCurve1Axis GravityRandom = new( "Gravity Random", "GraR" );
+        public readonly AvfxCurve1Axis AirResistance = new( "Air Resistance", "ARs", locked: true );
+        public readonly AvfxCurve1Axis AirResistanceRandom = new( "Air Resistance Random", "ARsR", locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
-        public readonly AvfxCurve RotVelX = new( "Rotation Velocity X", "VRX" );
-        public readonly AvfxCurve RotVelY = new( "Rotation Velocity Y", "VRY" );
-        public readonly AvfxCurve RotVelZ = new( "Rotation Velocity Z", "VRZ" );
-        public readonly AvfxCurve RotVelXRandom = new( "Rotation Velocity X Random", "VRXR" );
-        public readonly AvfxCurve RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
-        public readonly AvfxCurve RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
+        public readonly AvfxCurve1Axis RotVelX = new( "Rotation Velocity X", "VRX" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
+        public readonly AvfxCurve1Axis RotVelXRandom = new( "Rotation Velocity X Random", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
         public readonly AvfxCurveColor Color = new( "Color", locked: true );
 
         // initialize these later

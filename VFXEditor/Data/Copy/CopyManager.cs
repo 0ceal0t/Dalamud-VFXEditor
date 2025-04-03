@@ -5,7 +5,7 @@ using VfxEditor.AvfxFormat;
 
 namespace VfxEditor.Data.Copy {
     public class CopyManager {
-        public static CopyManager Current => Stack.Count == 0 ? null : Stack.Peek();
+        public static CopyManager? Current => Stack.Count == 0 ? null : Stack.Peek();
         private static readonly Stack<CopyManager> Stack = new();
 
         public static bool IsCopying => Current != null && Current.Copying;

@@ -43,7 +43,7 @@ namespace VfxEditor.DirectX.Drawable {
             }
         }
 
-        public D3dPass GetPass( PassType type ) => Passes.TryGetValue( type, out var pass ) ? pass : null;
+        public D3dPass? GetPass( PassType type ) => Passes.TryGetValue( type, out var pass ) ? pass : null;
 
         // ====== SET DATA =============
 

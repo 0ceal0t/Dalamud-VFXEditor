@@ -206,7 +206,7 @@ namespace VfxEditor.ScdFormat {
                 var rightStreamIsolated = new MultiplexingWaveProvider( [RightStream], 1 );
                 rightStreamIsolated.ConnectInputToOutput( secondChannel, 0 );
 
-                LeftRightCombined = new MultiplexingWaveProvider( new[] { leftStreamIsolated, rightStreamIsolated }, 2 );
+                LeftRightCombined = new MultiplexingWaveProvider( [leftStreamIsolated, rightStreamIsolated], 2 );
                 LeftRightCombined.ConnectInputToOutput( 0, 0 );
                 LeftRightCombined.ConnectInputToOutput( 1, 1 );
 
