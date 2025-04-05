@@ -1,3 +1,4 @@
+using Dalamud.Interface.Utility.Raii;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
 
 namespace VFXEditor.Formats.AvfxFormat.Curve {
@@ -10,6 +11,19 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
 
         public override void DrawBody() {
             LineEditor.Draw();
+        }
+
+        public override void Draw() {
+            if( IsAssigned() ) {
+                using var _ = ImRaii.PushId( GetDefaultText() );
+                DrawBody();
+            }
+            else {
+                // Don't want to show unassign button b/c it can already be done with the checkbox
+                using var _ = ImRaii.PushId( GetDefaultText() );
+                AssignedCopyPaste( GetDefaultText() );
+                DrawAssignButton( GetDefaultText(), true );
+            }
         }
     }
 }

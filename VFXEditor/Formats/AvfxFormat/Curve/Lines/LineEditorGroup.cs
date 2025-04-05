@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.AvfxFormat;
+using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.DirectX;
 using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Parsing;
@@ -52,11 +53,15 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         private readonly List<(AvfxCurveData, AvfxCurveKey)> Selected = [];
         private (AvfxCurveData?, AvfxCurveKey?) SelectedPrimary => Selected.Count == 0 ? (null, null) : Selected[0];
 
-        private AvfxCurveData? PrimaryCurve => SelectedPrimary.Item1;
         private AvfxCurveKey? PrimaryKey => SelectedPrimary.Item2;
+
+        private bool PrevClickState = false;
+        private DateTime PrevClickTime = DateTime.Now;
 
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;
+
+        private ImPlotPoint SavedPoint = new();
 
         public LineEditorGroup( AvfxCurveData curve ) {
             Name = curve.Name;
@@ -142,6 +147,8 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             using var _ = ImRaii.PushId( "##Lines" );
 
+            Selected.RemoveAll( x => !Curves.Contains( x.Item1 ) || !x.Item1.Keys.Contains( x.Item2 ) );
+
             var fit = false;
             if( !DrawOnce ) {
                 fit = true;
@@ -159,7 +166,10 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                     ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
                 }
 
+                ImPlot.SetupLegend( ImPlotLocation.NorthWest, ImPlotLegendFlags.NoButtons );
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
+
+                var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
                 var draggingAnyPoint = false;
                 var dragPointId = 0;
@@ -197,7 +207,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                         var y = key.DisplayY;
 
                         // Dragging point
-                        if( ImPlot.DragPoint( dragPointId, ref x, ref y, IsColor ? new Vector4( key.Color, 1 ) : lineColor, pointSize ) ) {
+                        if( ImPlot.DragPoint( dragPointId, ref x, ref y, IsColor ? new Vector4( key.Color, 1 ) : lineColor, pointSize, ImPlotDragToolFlags.Delayed ) ) {
                             if( !isSelected ) {
                                 Selected.Clear();
                                 Selected.Add( (curve, key) );
@@ -231,22 +241,33 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                         CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
                     }
 
+                    // Selecting point [Left Click]
+                    // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
+                    var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
+                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) SingleSelect();
+
                     // TODO: box select and right click
                 }
 
                 // Inserting point [Ctrl + Left Click]
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) {
-                    // TODO
-                    // new point
+                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) NewPoint();
+                using( var popup = ImRaii.Popup( "NewPointPopup" ) ) {
+                    if( popup ) {
+                        foreach( var curve in AssignedCurves ) {
+                            if( ImGui.Selectable( curve.GetText() ) ) NewPoint( curve, SavedPoint );
+                        }
+                    }
                 }
 
-                ImPlot.EndPlot();
+                if( clickState && !PrevClickState ) PrevClickTime = DateTime.Now;
+                PrevClickState = clickState;
 
-                ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-                PrimaryKey?.Draw();
+                ImPlot.EndPlot();
             }
 
             ImPlot.PopStyleVar( 1 );
+
+            // TODO: make this cleaner
 
             if( wrongOrder ) {
                 ImGui.TextColored( UiUtils.RED_COLOR, "POINTS ARE IN THE WRONG ORDER" );
@@ -260,6 +281,50 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             PrimaryKey?.Draw();
+        }
+
+        private void SingleSelect() {
+            var mousePos = ImGui.GetMousePos();
+            foreach( var curve in AssignedCurves ) {
+                foreach( var key in curve.Keys ) {
+                    if( ( ImPlot.PlotToPixels( key.Point ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
+                        if( !ImGui.GetIO().KeyShift ) Selected.Clear();
+                        if( !Selected.Contains( (curve, key) ) ) Selected.Add( (curve, key) );
+                        return;
+                    }
+                }
+            }
+
+            if( !ImGui.GetIO().KeyShift ) Selected.Clear(); // nothing clicked, clear everything
+        }
+
+        private void NewPoint() {
+            var point = ImPlot.GetPlotMousePos();
+            if( AssignedCurves.Count() == 1 ) NewPoint( AssignedCurves.First(), point ); // only one possible curve
+            else {
+                var selectedCurves = Selected.Select( x => x.Item1 ).Distinct(); // add to currently selected curve
+                if( selectedCurves.Count() == 1 ) NewPoint( selectedCurves.First(), point );
+                else { // need to create popup to pick
+                    SavedPoint = point;
+                    ImGui.OpenPopup( "NewPointPopup" );
+                }
+            }
+        }
+
+        private void NewPoint( AvfxCurveData curve, ImPlotPoint point ) {
+            var time = Math.Round( point.x );
+            var insertIdx = 0;
+            foreach( var key in curve.Keys ) {
+                if( key.DisplayX > time ) break;
+                insertIdx++;
+            }
+
+            CommandManager.Add( new ListAddCommand<AvfxCurveKey>(
+                curve.Keys,
+                new AvfxCurveKey( curve, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )curve.ToRadians( point.y ) ),
+                insertIdx,
+                ( AvfxCurveKey _, bool _ ) => OnUpdate()
+            ) );
         }
 
         public void OnUpdate() {
@@ -281,20 +346,6 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             Plugin.DirectXManager.GradientView.SetGradient( RenderId, [
                 ColorCurve.Keys.Select( x => (x.Time.Value, x.Color)).ToList()
             ] );
-        }
-
-        // TODO: allow hiding in legend
-        private void SingleSelect() {
-            var mousePos = ImGui.GetMousePos();
-            foreach( var curve in Curves.Where( x => x.IsAssigned() ) ) {
-                foreach( var key in curve.Keys ) {
-                    if( ( ImPlot.PlotToPixels( key.Point ) - mousePos ).Length() < Plugin.Configuration.CurveEditorGrabbingDistance ) {
-                        if( !ImGui.GetIO().KeyShift ) Selected.Clear();
-                        if( !Selected.Any( x => x.Item2 == key ) ) Selected.Add( (curve, key) );
-                        break;
-                    }
-                }
-            }
         }
 
         private static uint Invert( Vector3 color ) => color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
