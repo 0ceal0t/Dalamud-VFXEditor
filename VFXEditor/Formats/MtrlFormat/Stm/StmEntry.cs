@@ -74,7 +74,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         private static IReadOnlyList<T> Read<T>( BinaryReader reader, long start, int length, Func<BinaryReader, T> read ) {
             reader.BaseStream.Position = start;
 
-            var entrySize = Marshal.SizeOf( typeof( T ) );
+            var entrySize = Marshal.SizeOf<T>();
             var entryCount = length / entrySize;
 
             return entryCount switch {

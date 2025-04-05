@@ -29,8 +29,8 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         public readonly int RenderId = Renderer.NewId;
 
-        private static readonly CurveBehavior[] CurveBehaviorOptions = ( CurveBehavior[] )Enum.GetValues( typeof( CurveBehavior ) );
-        private static readonly RandomType[] RandomTypeOptions = ( RandomType[] )Enum.GetValues( typeof( RandomType ) );
+        private static readonly CurveBehavior[] CurveBehaviorOptions = Enum.GetValues<CurveBehavior>();
+        private static readonly RandomType[] RandomTypeOptions = Enum.GetValues<RandomType>();
         private static readonly Vector4[] LineColors = [ // TODO
             new( 1, 1, 0, 1),
             new( 0, 1, 1, 1),
@@ -144,6 +144,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         public unsafe void DrawEditor() {
             // TODO: copy paste, try to match up names
+            // TODO: fit controls
 
             using var _ = ImRaii.PushId( "##Lines" );
 
@@ -181,7 +182,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                     var xs = _xs.ToArray();
                     var ys = _ys.ToArray();
 
-                    var lineColor = curve.Name switch {
+                    var lineColor = curve.GetAvfxName() switch {
                         "X" or "RX" => new( 1, 0, 0, 1 ),
                         "Y" or "RY" => new( 0, 1, 0, 1 ),
                         "Z" or "RZ" => new( 0, 0, 1, 1 ),
@@ -280,7 +281,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            PrimaryKey?.Draw();
+            PrimaryKey?.Draw( this );
         }
 
         private void SingleSelect() {
@@ -328,7 +329,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         }
 
         public void OnUpdate() {
-            foreach( var curve in Curves.Where( x => x.IsAssigned() ) ) curve.OnUpdate();
+            foreach( var curve in Curves.Where( x => x.IsAssigned() ) ) curve.Cleanup();
             UpdateGradient();
         }
 
@@ -344,7 +345,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         private void UpdateGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
             Plugin.DirectXManager.GradientView.SetGradient( RenderId, [
-                ColorCurve.Keys.Select( x => (x.Time.Value, x.Color)).ToList()
+                [.. ColorCurve.Keys.Select( x => (x.Time.Value, x.Color))]
             ] );
         }
 

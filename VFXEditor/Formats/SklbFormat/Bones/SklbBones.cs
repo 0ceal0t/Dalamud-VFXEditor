@@ -29,7 +29,7 @@ namespace VfxEditor.SklbFormat.Bones {
     }
 
     public unsafe class SklbBones : HavokBones {
-        private static readonly BoneDisplay[] BoneDisplayOptions = ( BoneDisplay[] )Enum.GetValues( typeof( BoneDisplay ) );
+        private static readonly BoneDisplay[] BoneDisplayOptions = Enum.GetValues<BoneDisplay>();
 
         public readonly int RenderId = Renderer.NewId;
         private readonly SklbFile File;

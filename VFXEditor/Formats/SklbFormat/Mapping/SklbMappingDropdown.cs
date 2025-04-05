@@ -34,7 +34,7 @@ namespace VfxEditor.SklbFormat.Mapping {
 
                 var havokData = new HavokBones( hkxPath, true );
 
-                var mapper = ( SkeletonMapper* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( SkeletonMapper ) ) );
+                var mapper = ( SkeletonMapper* )Marshal.AllocHGlobal( Marshal.SizeOf<SkeletonMapper>() );
                 File.Handles.Add( ( nint )mapper );
                 mapper->hkReferencedObject.MemSizeAndRefCount = 0;
 

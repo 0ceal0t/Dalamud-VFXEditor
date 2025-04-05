@@ -109,7 +109,7 @@ namespace VfxEditor.Formats.TextureFormat {
         public List<byte[]> Layers { get; private set; }
         public byte[] ImageData => Layers[0];
 
-        private static int HeaderLength => Marshal.SizeOf( typeof( TexHeader ) );
+        private static int HeaderLength => Marshal.SizeOf<TexHeader>();
         private byte[] DdsData;
 
         public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
@@ -121,7 +121,7 @@ namespace VfxEditor.Formats.TextureFormat {
             var buffer = Reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
             Marshal.Copy( buffer, 0, handle, HeaderLength );
-            Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
+            Header = Marshal.PtrToStructure<TexHeader>( handle );
             Marshal.FreeHGlobal( handle );
 
             Layers = Convert( DataSpan[HeaderLength..].ToArray(), Header.Format, Header.Width, Header.Height, Header.Depth );
@@ -139,7 +139,7 @@ namespace VfxEditor.Formats.TextureFormat {
             var headerBuffer = reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
             Marshal.Copy( headerBuffer, 0, handle, HeaderLength );
-            Header = ( TexHeader )Marshal.PtrToStructure( handle, typeof( TexHeader ) );
+            Header = Marshal.PtrToStructure<TexHeader>( handle );
             Marshal.FreeHGlobal( handle );
 
             DdsData = reader.ReadBytes( localData.Length - HeaderLength );

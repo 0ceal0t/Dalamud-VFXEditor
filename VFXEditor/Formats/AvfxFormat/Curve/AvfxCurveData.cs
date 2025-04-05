@@ -56,7 +56,7 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
         public void Sort( List<ICommand> commands ) {
             var sorted = new List<AvfxCurveKey>( Keys );
             sorted.Sort( ( x, y ) => x.Time.Value.CompareTo( y.Time.Value ) );
-            commands.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, OnUpdate ) );
+            commands.Add( new ListSetCommand<AvfxCurveKey>( Keys, sorted, Cleanup ) );
         }
 
         public double ToRadians( double value ) {
@@ -69,7 +69,7 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
             return ( 180 / Math.PI ) * value;
         }
 
-        public void OnUpdate() {
+        public virtual void Cleanup() {
             KeyList.SetAssigned( true );
             if( !IsColor || Keys.Count < 2 ) return;
             if( !Keys.FindFirst( x => x.Time.Value != Keys[0].Time.Value, out var _ ) ) Keys[^1].Time.Value++;
