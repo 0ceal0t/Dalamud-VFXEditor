@@ -134,7 +134,9 @@ namespace VfxEditor.Ui.Tools {
                 0x10000034 or
                 0x10000039 or
                 0x1000003A or
-                0x1000003B
+                0x1000003C or
+                0x1000003B or
+                0x1000003D
                 => GetActorVariableValue( value, manager, objectAddress ),
                 _ => Plugin.ResourceLoader.GetLuaVariable( manager, value )
             };

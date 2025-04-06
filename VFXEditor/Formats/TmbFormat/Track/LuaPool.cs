@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Root {
             { 0x00, "[CUTSCENE] Game Language" },
             { 0x01, "[CUTSCENE] Caption Language" },
             { 0x02, "[CUTSCENE] Voice Language" },
-            { 0x03, "[CUTSCENE] Skeleton Id" },
+            { 0x03, "[CUTSCENE] Skeleton ID" },
             { 0x04, "[CUTSCENE] Starting Town" },
             { 0x10, "[CUTSCENE] Legacy Player" },
             { 0x12, "[CUTSCENE] Class/Job" },
@@ -28,7 +28,9 @@ namespace VfxEditor.TmbFormat.Root {
             { 0x27, "Swimming" },
             { 0x28, "Underwater" },
             { 0x29, "Class/Job" },
-            { 0x33, "Mount Id" },
+            { 0x33, "Mount ID" },
+            { 0x3C, "Skeleton ID" },
+            { 0x3D, "Mount Flying" },
             { 0x39, "GPose" },
         } );
 
