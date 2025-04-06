@@ -196,6 +196,9 @@ namespace VfxEditor.AvfxFormat {
                 IsSoftParticle,
                 CollisionType,
                 S11Enabled,
+                ShT,
+                UniV,
+                HybV,
                 ShUT,
                 ShR,
                 E24Enabled,
@@ -210,7 +213,7 @@ namespace VfxEditor.AvfxFormat {
                 ApplyRateDirectional,
                 ApplyRateLightBuffer,
                 DOTy,
-                DepthOffset
+                DepthOffset,
             ] );
 
             AnimationSplitDisplay = new( "Animation", [

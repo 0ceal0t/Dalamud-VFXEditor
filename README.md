@@ -15,6 +15,7 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 - Re-implement curve editor copy/paste
 - Curve editor fit
 - Better curve colors
+- Update NPC list
 
 ### Supported File Types
 

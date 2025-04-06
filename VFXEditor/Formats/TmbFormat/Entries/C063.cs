@@ -17,7 +17,9 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Interrupt = new( "Interrupt" );
         private readonly TmbOffsetString Path = new( "Path", null, true );
         private readonly ParsedInt SoundIndex = new( "Sound Index" );
-        private readonly ParsedInt SoundPosition = new( "Sound Position", value: 1 );
+        private readonly ParsedByte SoundPosition = new( "Sound Position", value: 1 );
+        private readonly ParsedByte BindId = new( "Bind Id" );
+        private readonly ParsedShort Unknown1 = new( "Unknown 1" );
 
         public C063( TmbFile file ) : base( file ) {
             SetupIcon();
@@ -40,7 +42,9 @@ namespace VfxEditor.TmbFormat.Entries {
             Interrupt,
             Path,
             SoundIndex,
-            SoundPosition
+            SoundPosition,
+            BindId,
+            Unknown1
         ];
     }
 }

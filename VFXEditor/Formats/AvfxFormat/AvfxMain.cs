@@ -202,7 +202,7 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "Fade Inner", FadeInnerX, FadeInnerY, FadeInnerZ ),
                 new UiFloat3( "Fade Outer", FadeOuterX, FadeOuterY, FadeOuterZ ),
                 GlobalFogEnabled,
-                GlobalFogEnabled,
+                GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
                 APRi,
@@ -304,7 +304,8 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleX.Value = ScaleCombined;
                 RevisedValuesScaleY.Value = ScaleCombined;
                 RevisedValuesScaleZ.Value = ScaleCombined;
-            };
+            }
+            ;
 
             ImGui.SameLine();
             UiUtils.HelpMarker( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );

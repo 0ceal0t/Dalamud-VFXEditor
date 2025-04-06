@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
 
             using var popup = ImRaii.Popup( $"Unassign/{name}" );
             if( popup ) {
-                if( ImGui.Selectable( $"Unassign {name.TrimStart( '#' )}" ) ) {
+                if( ImGui.Selectable( $"— {name.TrimStart( '#' )}" ) ) {
                     ImGui.CloseCurrentPopup();
                     return true;
                 }

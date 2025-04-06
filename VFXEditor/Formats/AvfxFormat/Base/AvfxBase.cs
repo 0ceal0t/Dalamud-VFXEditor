@@ -62,7 +62,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public bool DrawUnassignButton( string name ) {
-            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
+            if( UiUtils.RemoveButton( $"- {name}", small: true ) ) {
                 CommandManager.Add( new AvfxAssignCommand( this, false ) );
                 return true;
             }
