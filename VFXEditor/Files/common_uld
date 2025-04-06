@@ -1,10 +1,13 @@
-ui/uld/configbackupcharactercopylist.uld
-ui/uld/configbackupcharactercopydialogue.uld
-ui/uld/mirageprismsetconvesion.uld
-ui/uld/mirageprismsetconvesiondialogue.uld
-ui/uld/contentsinfosatisfaction.uld
-ui/uld/housinginteriorpattern.uld
-ui/uld/emjvoicemirageprism.uld
+ui/uld/pvpfrontlineinfo.uld
+ui/uld/imagearcadioncwm2.uld
+ui/uld/ChatLogPanel.uld
+ui/uld/BlackListInputMemo.uld
+ui/uld/SnipeHudBg.uld
+ui/uld/ItemSearch.uld
+ui/uld/LetterViewer.uld
+ui/uld/PvPTeam.uld
+ui/uld/PurifyResult.uld
+ui/uld/SelectString.uld
 ui/uld/LFGSearch.uld
 ui/uld/GroupPoseStampImage.uld
 ui/uld/BuddyInventory.uld
@@ -109,6 +112,7 @@ ui/uld/Casting.uld
 ui/uld/ConfigPadCustomize.uld
 ui/uld/RetainerInventory.uld
 ui/uld/FashionCheckScoreGauge.uld
+ui/uld/housinginteriorpattern.uld
 ui/uld/configcharacteroperationgeneral_ps3.uld
 ui/uld/TripleTriadPlayerInfo.uld
 ui/uld/CharacterStatus.uld
@@ -173,7 +177,6 @@ ui/uld/BattleTalk.uld
 ui/uld/HousingSelectBlock.uld
 ui/uld/ReadyCheck.uld
 ui/uld/CharacterCardPermissionSetting.uld
-ui/uld/mirageprismarchiveitem.uld
 ui/uld/MainCommand.uld
 ui/uld/configpadcustomize_ps4.uld
 ui/uld/PerformanceGamePadGuide.uld
@@ -187,10 +190,12 @@ ui/uld/HousingFurnitureCatalog.uld
 ui/uld/Trade.uld
 ui/uld/OrchestrionPlayList.uld
 ui/uld/ShopCard.uld
+ui/uld/mirageprismarchiveitem.uld
 ui/uld/JobHudPLD0.uld
 ui/uld/MJIDisposeShopShippingBulk.uld
 ui/uld/Mobhunt2.uld
 ui/uld/CircleInputString.uld
+ui/uld/configbackuprecommend.uld
 ui/uld/JobHudDRK1.uld
 ui/uld/configkeybind_ps3.uld
 ui/uld/BasketBall.uld
@@ -207,9 +212,9 @@ ui/uld/TripleTriadTournamentResult.uld
 ui/uld/MYCRelicGrowth2.uld
 ui/uld/FgsResultWinner.uld
 ui/uld/MovieSubtitle_Trailer_en.uld
-ui/uld/configbackuprecommend.uld
 ui/uld/RetainerInventoryGrid.uld
 ui/uld/HousingSelectDeed.uld
+ui/uld/ContentGauge.uld
 ui/uld/JobHudSCH0.uld
 ui/uld/MovieSubtitle_Voyage_en.uld
 ui/uld/ContentsNoteBook.uld
@@ -227,7 +232,7 @@ ui/uld/Performance.uld
 ui/uld/RelicSphereScroll.uld
 ui/uld/PVPSimulationHeader2.uld
 ui/uld/TalkAutoMessageSelector.uld
-ui/uld/journalrewarditem.uld
+ui/uld/NgWordEdit.uld
 ui/uld/CharaMake_Feature_Color_FacePaint.uld
 ui/uld/FlyText.uld
 ui/uld/LFGSearchLogSetting.uld
@@ -235,6 +240,7 @@ ui/uld/RideShootingResult.uld
 ui/uld/LovmStatus.uld
 ui/uld/BuddyInspect.uld
 ui/uld/ConfigCharacterOperationCharacter.uld
+ui/uld/journalrewarditem.uld
 ui/uld/FGSStageIntroBanner.uld
 ui/uld/Title_DataCenter.uld
 ui/uld/BannerList.uld
@@ -248,6 +254,7 @@ ui/uld/CharaMake_Feature_ListIcon_Tail.uld
 ui/uld/configcharacteroperationmouse_ps4.uld
 ui/uld/Jigsaw.uld
 ui/uld/ActionMenu.uld
+ui/uld/Exp.uld
 ui/uld/MiragePrismRemove.uld
 ui/uld/MiragePrismPlateDialogue.uld
 ui/uld/Mount_speed.uld
@@ -308,6 +315,7 @@ ui/uld/Cursor.uld
 ui/uld/CharaSelect_Info_Progress.uld
 ui/uld/ConfigCharacterHudPartyList.uld
 ui/uld/CharaMake_Feature_ListIcon_Feature.uld
+ui/uld/CircleFinderSetting.uld
 ui/uld/WebLauncher.uld
 ui/uld/turnbreaktitle.uld
 ui/uld/TextGimmickHint.uld
@@ -323,9 +331,9 @@ ui/uld/SocialDetailB.uld
 ui/uld/MJIMissionComplete.uld
 ui/uld/WorkshopSupply3.uld
 ui/uld/PVPFrontlineGauge.uld
+ui/uld/mirageprismsetcheck.uld
 ui/uld/CharaSelect_ListMenu.uld
 ui/uld/BuddyAppearance.uld
-ui/uld/mirageprismsetcheck.uld
 ui/uld/CharaMake_Feature_Option2.uld
 ui/uld/LovmActionDetail.uld
 ui/uld/Emj.uld
@@ -358,6 +366,7 @@ ui/uld/TalkSpeed.uld
 ui/uld/NeedGreedTargeting.uld
 ui/uld/PVPPresetView.uld
 ui/uld/Text0.uld
+ui/uld/contentsinfosatisfaction.uld
 ui/uld/freecompanyrename.uld
 ui/uld/EmjRankResult.uld
 ui/uld/CircleMemberGroupEdit.uld
@@ -553,6 +562,7 @@ ui/uld/MJIBuildingMove.uld
 ui/uld/configcharacterhotbardisplay_ps4.uld
 ui/uld/JigsawEvent.uld
 ui/uld/QteButton.uld
+ui/uld/QTEScreenInfo.uld
 ui/uld/HousingWareHouseStatus.uld
 ui/uld/ItemFinder.uld
 ui/uld/JobHudNIN1.uld
@@ -574,7 +584,6 @@ ui/uld/FreeCompanyProfileEdit.uld
 ui/uld/Journal.uld
 ui/uld/MJIGatheringHouse.uld
 ui/uld/JobHudGFF1.uld
-ui/uld/ItemSearch.uld
 ui/uld/MYCBattleAreaInfo.uld
 ui/uld/EventSkip.uld
 ui/uld/HousingConfig.uld
@@ -582,6 +591,7 @@ ui/uld/Orchestrion.uld
 ui/uld/GateResult.uld
 ui/uld/PvPMKSHeader.uld
 ui/uld/PVPRankEmblem2.uld
+ui/uld/mirageprismsetconvesiondialogue.uld
 ui/uld/HudLayoutCurrentTarget.uld
 ui/uld/Tips.uld
 ui/uld/MJIGatheringHouseExplore.uld
@@ -630,7 +640,6 @@ ui/uld/TextMonsterNote0.uld
 ui/uld/FishingBait.uld
 ui/uld/LetterList.uld
 ui/uld/GoldSaucerCardDeck.uld
-ui/uld/LetterViewer.uld
 ui/uld/ActionBar.uld
 ui/uld/Mobhunt5.uld
 ui/uld/BagStatus.uld
@@ -662,7 +671,6 @@ ui/uld/JobHudMNK1.uld
 ui/uld/Puzzle.uld
 ui/uld/FreeCompanyCrestEditor.uld
 ui/uld/BalloonMessage.uld
-ui/uld/ChatLogPanel.uld
 ui/uld/CharaMake_Shadow.uld
 ui/uld/LovmConfirm.uld
 ui/uld/LimitBreak.uld
@@ -705,8 +713,6 @@ ui/uld/Concentration.uld
 ui/uld/CharaSelect_WorldServer.uld
 ui/uld/CharaSelect_Return.uld
 ui/uld/CharaMake_Return.uld
-ui/uld/PvPTeam.uld
-ui/uld/PurifyResult.uld
 ui/uld/ActionContents.uld
 ui/uld/SelectStringDD.uld
 ui/uld/ImageEndingMessage210.uld
@@ -750,13 +756,13 @@ ui/uld/QteStreak.uld
 ui/uld/GoldSaucerRacePedigree.uld
 ui/uld/TutorialContents.uld
 ui/uld/MerchantEquipSelect.uld
+ui/uld/emjvoicecharacter.uld
 ui/uld/configcharacterhudpartylist_ps4.uld
 ui/uld/ReturnerDialogueDetail.uld
 ui/uld/MJIRecipeNoteBook.uld
 ui/uld/Title_Worldmap.uld
 ui/uld/JobHudSMN0.uld
 ui/uld/SubCommandSetting.uld
-ui/uld/emjvoicecharacter.uld
 ui/uld/GcArmyMiragePrismDialogue.uld
 ui/uld/CursorLocation.uld
 ui/uld/EurekaElementalEdit.uld
@@ -786,7 +792,6 @@ ui/uld/RetainerTask.uld
 ui/uld/EurekaLogosShardList.uld
 ui/uld/Title_Menu.uld
 ui/uld/TripleTriadApplication.uld
-ui/uld/SnipeHudBg.uld
 ui/uld/ActionCross.uld
 ui/uld/configcharacteroperationcircle_ps3.uld
 ui/uld/PerformanceReadyCheckReceive.uld
@@ -862,6 +867,7 @@ ui/uld/FreeCompanyChestLog.uld
 ui/uld/FgsScreenQualified.uld
 ui/uld/GatheringNoteBook.uld
 ui/uld/RecipeMaterialList.uld
+ui/uld/configbackupcharactercopylist.uld
 ui/uld/GroupPoseStampEditor.uld
 ui/uld/LovmTypeInfo.uld
 ui/uld/ConfigCharacterOperationMouse.uld
@@ -912,6 +918,7 @@ ui/uld/Title_Rights.uld
 ui/uld/TripleTriadTournamentPlayer.uld
 ui/uld/Currency.uld
 ui/uld/PvPTeamStatus.uld
+ui/uld/JobHudSAM1.uld
 ui/uld/PVPSimulationHeader.uld
 ui/uld/RelicNoteBook.uld
 ui/uld/WebLink.uld
@@ -946,6 +953,7 @@ ui/uld/HWDMonument.uld
 ui/uld/bannerpreview.uld
 ui/uld/StorageCheck.uld
 ui/uld/CheckBoxDialogue.uld
+ui/uld/emjvoicemirageprism.uld
 ui/uld/ListColorChooser.uld
 ui/uld/ToDoQuest.uld
 ui/uld/InputString.uld
@@ -1022,6 +1030,7 @@ ui/uld/GearSetView.uld
 ui/uld/TextError.uld
 ui/uld/LetterAddress.uld
 ui/uld/CharacterBestEquipment.uld
+ui/uld/configbackupcharactercopydialogue.uld
 ui/uld/RaceChocoboConfirm.uld
 ui/uld/SatisfactionSupplyResult.uld
 ui/uld/SelectOk.uld
@@ -1065,14 +1074,13 @@ ui/uld/CharaMake_Help.uld
 ui/uld/SelectOkTitle.uld
 ui/uld/ConfigCharacterChatLogNameSetting.uld
 ui/uld/DawnParty.uld
+ui/uld/mirageprismsetconvesion.uld
 ui/uld/HousingBlackListEviction.uld
-ui/uld/SelectString.uld
 ui/uld/GcArmyMemberList.uld
 ui/uld/PerformancePlayGuideSetting.uld
 ui/uld/configcharacternameplatemyself_ps3.uld
 ui/uld/configsystem_ps3.uld
 ui/uld/MaterializeDialog.uld
-ui/uld/gatheringnotebookfiltersetting.uld
 ui/uld/BannerUpdateView.uld
 ui/uld/BannerEditor.uld
 ui/uld/TargetCursorGrand.uld
@@ -1082,6 +1090,7 @@ ui/uld/HotobarCopy.uld
 ui/uld/BuddyEquipList.uld
 ui/uld/JobHudWHM0.uld
 ui/uld/ArchiveItem.uld
+ui/uld/gatheringnotebookfiltersetting.uld
 ui/uld/ContactList.uld
 ui/uld/CountDownSettingDialog.uld
 ui/uld/LovmPartyList.uld
@@ -1094,17 +1103,10 @@ ui/uld/ConfigCharacterHotBarXHBCustom.uld
 ui/uld/ExplorationSubMarine.uld
 ui/uld/ActionBarCustom.uld
 ui/uld/PVPCalendar.uld
+ui/uld/beginnersroomtutorial.uld
 ui/uld/SynthesisSimulator.uld
 ui/uld/CharaMake_Feature_Option5.uld
 ui/uld/FgsResult.uld
 ui/uld/TheStarlightCelebration2020.uld
 ui/uld/GoldSaucerReward.uld
 ui/uld/ExplorationShip.uld
-ui/uld/beginnersroomtutorial.uld
-ui/uld/Exp.uld
-ui/uld/CircleFinderSetting.uld
-ui/uld/QTEScreenInfo.uld
-ui/uld/JobHudSAM1.uld
-ui/uld/ContentGauge.uld
-ui/uld/NgWordEdit.uld
-ui/uld/BlackListInputMemo.uld
