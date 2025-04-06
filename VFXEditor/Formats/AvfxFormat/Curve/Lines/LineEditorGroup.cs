@@ -1,3 +1,4 @@
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using ImPlotNET;
@@ -62,6 +63,8 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         private DateTime LastEditTime = DateTime.Now;
 
         private ImPlotPoint SavedPoint = new();
+
+        private static readonly Dictionary<string, List<(KeyType, Vector4)>> CopiedKeys = [];
 
         public LineEditorGroup( AvfxCurveData curve ) {
             Name = curve.Name;
@@ -142,21 +145,100 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             }
         }
 
+        private void DrawControls( out bool fit ) {
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) )
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                fit = ImGui.Button( $"{FontAwesomeIcon.ExpandArrowsAlt.ToIconString()}" );
+
+                ImGui.SameLine();
+                if( ImGui.Button( $"{FontAwesomeIcon.Clipboard.ToIconString()}" ) ) {
+                    // TODO
+                }
+
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.Paste.ToIconString()}", CopiedKeys.Count > 0 ) ) {
+
+                }
+
+                ImGui.SameLine();
+                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.ArrowRightToBracket.ToIconString()}", CopiedKeys.Count > 0 ) ) {
+
+                }
+
+                ImGui.SameLine();
+                if( UiUtils.RemoveButton( $"{FontAwesomeIcon.Times.ToIconString()}" ) ) {
+
+                }
+            }
+
+            if( Curves.Any( x => x.Type == CurveType.Angle ) ) {
+                ImGui.SameLine();
+                if( ImGui.RadioButton( "Radians", !Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = false;
+                    Plugin.Configuration.Save();
+                }
+                ImGui.SameLine();
+                if( ImGui.RadioButton( "Degrees", Plugin.Configuration.UseDegreesForAngles ) ) {
+                    Plugin.Configuration.UseDegreesForAngles = true;
+                    Plugin.Configuration.Save();
+                }
+            }
+
+            ImGui.SameLine();
+            UiUtils.IconText( FontAwesomeIcon.InfoCircle, true );
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+
+                var color = UiUtils.PARSED_GREEN;
+                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
+
+                ImGui.TextColored( color, "Ctrl+Left Click" );
+                ImGui.SameLine();
+                ImGui.Text( "to add a new point" );
+
+                ImGui.TextColored( color, "Left Click" );
+                ImGui.SameLine();
+                ImGui.Text( "to selected a point" );
+
+                ImGui.Text( "Hold" );
+                ImGui.SameLine();
+                ImGui.TextColored( color, "Shift" );
+                ImGui.SameLine();
+                ImGui.Text( "to select multiple points" );
+
+                ImGui.EndTooltip();
+            }
+
+            foreach( var curve in AssignedCurves ) {
+                foreach( var (key, idx) in curve.Keys.WithIndex() ) {
+                    if( idx > 0 && key.DisplayX < curve.Keys[idx - 1].DisplayX ) {
+                        // Two points in the wrong order
+                        ImGui.SameLine();
+                        if( UiUtils.RemoveButton( "Sort" ) ) {
+                            var commands = new List<ICommand>();
+                            foreach( var x in AssignedCurves ) x.Sort( commands );
+                            CommandManager.Add( new CompoundCommand( commands, UpdateGradient ) );
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+
         public unsafe void DrawEditor() {
             // TODO: copy paste, try to match up names
             // TODO: fit controls
+
+            DrawControls( out var fit );
 
             using var _ = ImRaii.PushId( "##Lines" );
 
             Selected.RemoveAll( x => !Curves.Contains( x.Item1 ) || !x.Item1.Keys.Contains( x.Item2 ) );
 
-            var fit = false;
             if( !DrawOnce ) {
                 fit = true;
                 DrawOnce = true;
             }
-
-            var wrongOrder = false;
 
             var height = ImGui.GetContentRegionAvail().Y - ( 4 * ImGui.GetFrameHeightWithSpacing() + 5 );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
@@ -229,8 +311,6 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
                             draggingAnyPoint = true;
                         }
-
-                        if( keyIdx > 0 && key.DisplayX < curve.Keys[keyIdx - 1].DisplayX ) wrongOrder = true;
                     }
 
                     // ======================
@@ -267,18 +347,6 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             }
 
             ImPlot.PopStyleVar( 1 );
-
-            // TODO: make this cleaner
-
-            if( wrongOrder ) {
-                ImGui.TextColored( UiUtils.RED_COLOR, "POINTS ARE IN THE WRONG ORDER" );
-                ImGui.SameLine();
-                if( UiUtils.RemoveButton( "Sort", true ) ) {
-                    var commands = new List<ICommand>();
-                    foreach( var curve in AssignedCurves ) curve.Sort( commands );
-                    CommandManager.Add( new CompoundCommand( commands, UpdateGradient ) );
-                }
-            }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             PrimaryKey?.Draw( this );
