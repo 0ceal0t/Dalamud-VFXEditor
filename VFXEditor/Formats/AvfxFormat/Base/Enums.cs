@@ -262,10 +262,10 @@ namespace VfxEditor.AvfxFormat {
         public enum EffectorType {
             PointLight = 0,
             DirectionalLight = 1,
-            Reserve1 = 2,
-            Reserve2 = 3,
-            Reserve3 = 4,
-            Reserve4 = 5,
+            Reserve2 = 2,
+            Reserve3 = 3,
+            Unknown_4 = 4,
+            Reserve5 = 5,
             CameraQuake2_Unknown = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,

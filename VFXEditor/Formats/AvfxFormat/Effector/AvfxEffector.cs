@@ -70,6 +70,7 @@ namespace VfxEditor.AvfxFormat {
                 EffectorType.RadialBlur => new AvfxEffectorDataRadialBlur(),
                 EffectorType.BlackHole => null,
                 EffectorType.CameraQuake2_Unknown or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
+                EffectorType.Unknown_4 => new AvfxEffectorDataUnknown4(),
                 _ => null
             };
             Data?.SetAssigned( true );

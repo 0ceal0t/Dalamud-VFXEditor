@@ -17,6 +17,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
+        public readonly AvfxBool UOS = new( "UOS", "bUOS" );
         public readonly AvfxIntList MaskTextureIdx = new( "Mask Index", "TLst", value: -1 );
         public readonly AvfxCurve1Axis TexN = new( "TexN", "TxN" );
         public readonly AvfxCurve1Axis TexNRandom = new( "TexN Random", "TxNR" );
@@ -39,6 +40,7 @@ namespace VfxEditor.AvfxFormat {
                 TextureCalculateColor,
                 TextureCalculateAlpha,
                 TextureIdx,
+                UOS,
                 MaskTextureIdx,
                 TexN,
                 TexNRandom
@@ -54,7 +56,11 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( TextureBorderV );
             Display.Add( TextureCalculateColor );
             Display.Add( TextureCalculateAlpha );
+            Display.Add( TextureIdx );
+            Display.Add( UOS );
+            Display.Add( MaskTextureIdx );
             DisplayTabs.Add( TexN );
+            DisplayTabs.Add( TexNRandom );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
