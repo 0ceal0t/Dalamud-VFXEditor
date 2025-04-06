@@ -69,8 +69,8 @@ namespace VfxEditor.AvfxFormat {
                 EffectorType.DirectionalLight => new AvfxEffectorDataDirectionalLight(),
                 EffectorType.RadialBlur => new AvfxEffectorDataRadialBlur(),
                 EffectorType.BlackHole => null,
-                EffectorType.CameraQuake2_Unknown or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
-                EffectorType.Unknown_4 => new AvfxEffectorDataUnknown4(),
+                EffectorType.CameraQuake_Unknown or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
+                EffectorType.RadialBlur_Unknown => new AvfxEffectorDataRadialBlurUnknown(),
                 _ => null
             };
             Data?.SetAssigned( true );

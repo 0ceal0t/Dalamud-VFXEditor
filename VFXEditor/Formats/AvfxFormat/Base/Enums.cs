@@ -264,9 +264,9 @@ namespace VfxEditor.AvfxFormat {
             DirectionalLight = 1,
             Reserve2 = 2,
             Reserve3 = 3,
-            Unknown_4 = 4,
+            RadialBlur_Unknown = 4,
             Reserve5 = 5,
-            CameraQuake2_Unknown = 6, // NOTE: seen in Akh Rai
+            CameraQuake_Unknown = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,
             CameraQuake = 9
