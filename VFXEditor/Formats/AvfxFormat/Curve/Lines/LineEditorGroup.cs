@@ -81,6 +81,9 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         public void Draw() {
             ConnectType?.Draw();
             DrawTable();
+            using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.Separator();
+            }
             DrawEditor();
         }
 
@@ -226,9 +229,6 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         }
 
         public unsafe void DrawEditor() {
-            // TODO: copy paste, try to match up names
-            // TODO: fit controls
-
             DrawControls( out var fit );
 
             using var _ = ImRaii.PushId( "##Lines" );

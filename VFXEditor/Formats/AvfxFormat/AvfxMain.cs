@@ -36,6 +36,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat BiasZmaxDistance = new( "Bias Z Max Distance", "ZBMd" );
         public readonly AvfxBool IsCameraSpace = new( "Camera Space", "bCmS" );
         public readonly AvfxBool IsFullEnvLight = new( "Full Env Light", "bFEL" );
+        public readonly AvfxBool OSE = new( "OSE", "bOSE" );
         public readonly AvfxBool IsClipOwnSetting = new( "Clip Own Setting", "bOSt" );
         public readonly AvfxFloat NearClipBegin = new( "Near Clip Begin", "NCB" );
         public readonly AvfxFloat NearClipEnd = new( "Near Clip End", "NCE" );
@@ -119,6 +120,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
@@ -184,6 +186,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
