@@ -154,24 +154,16 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                 fit = ImGui.Button( $"{FontAwesomeIcon.ExpandArrowsAlt.ToIconString()}" );
 
                 ImGui.SameLine();
-                if( ImGui.Button( $"{FontAwesomeIcon.Clipboard.ToIconString()}" ) ) {
-                    // TODO
-                }
+                if( ImGui.Button( $"{FontAwesomeIcon.Copy.ToIconString()}" ) ) Copy();
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.Paste.ToIconString()}", CopiedKeys.Count > 0 ) ) {
-
-                }
+                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.Paste.ToIconString()}", CopiedKeys.Count > 0 ) ) Paste();
 
                 ImGui.SameLine();
-                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.ArrowRightToBracket.ToIconString()}", CopiedKeys.Count > 0 ) ) {
-
-                }
+                if( UiUtils.DisabledButton( $"{FontAwesomeIcon.ArrowRightToBracket.ToIconString()}", CopiedKeys.Count > 0 ) ) Replace();
 
                 ImGui.SameLine();
-                if( UiUtils.RemoveButton( $"{FontAwesomeIcon.Times.ToIconString()}" ) ) {
-
-                }
+                if( UiUtils.RemoveButton( $"{FontAwesomeIcon.Times.ToIconString()}" ) ) Clear();
             }
 
             if( Curves.Any( x => x.Type == CurveType.Angle ) ) {
@@ -417,7 +409,8 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             ] );
         }
 
-        private static uint Invert( Vector3 color ) => color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
+        private static uint Invert( Vector3 color ) =>
+            color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
 
         private static bool IsHovering() {
             var mousePos = ImGui.GetMousePos();
@@ -425,6 +418,40 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             var plotSize = ImPlot.GetPlotSize();
             if( mousePos.X >= topLeft.X && mousePos.X < topLeft.X + plotSize.X && mousePos.Y >= topLeft.Y && mousePos.Y < topLeft.Y + plotSize.Y ) return true;
             return false;
+        }
+
+        private void Copy() {
+            CopiedKeys.Clear();
+            foreach( var curve in AssignedCurves ) CopiedKeys.Add( curve.GetAvfxName(), [.. curve.Keys.Select( x => x.CopyPasteData )] );
+        }
+
+        private void Paste() => PerformOnCopiedKeys( ( List<ICommand> commands, List<(KeyType, Vector4)> keys, AvfxCurveData curve ) => {
+            foreach( var key in keys ) {
+                commands.Add( new ListAddCommand<AvfxCurveKey>( curve.Keys, new( curve, key ) ) );
+            }
+        } );
+
+        private void Replace() => PerformOnCopiedKeys( ( List<ICommand> commands, List<(KeyType, Vector4)> keys, AvfxCurveData curve ) => {
+            commands.Add( new ListSetCommand<AvfxCurveKey>( curve.Keys, [.. keys.Select( x => new AvfxCurveKey( curve, x ) )] ) );
+        } );
+
+        private void PerformOnCopiedKeys( Action<List<ICommand>, List<(KeyType, Vector4)>, AvfxCurveData> action ) {
+            var commands = new List<ICommand>();
+            if( CopiedKeys.Count == 0 || AssignedCurves.Count() == 0 ) return;
+            if( CopiedKeys.Count == 1 && AssignedCurves.Count() == 1 ) {
+                action( commands, CopiedKeys.First().Value, AssignedCurves.First() );
+            }
+            else {
+                foreach( var (name, keys) in CopiedKeys ) {
+                    if( !AssignedCurves.FindFirst( x => x.GetAvfxName() == name, out var curve ) ) continue;
+                    action( commands, keys, curve );
+                }
+            }
+            CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
+        }
+
+        private void Clear() {
+            CommandManager.Add( new CompoundCommand( AssignedCurves.Select( curve => new ListSetCommand<AvfxCurveKey>( curve.Keys, [] ) ), OnUpdate ) );
         }
     }
 }
