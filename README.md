@@ -12,10 +12,7 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 - Double-check offsets
 - Double-check sigs
 - Fix STM files
-- Re-implement curve editor copy/paste
-- Curve editor fit
 - Better curve colors
-- Update NPC list
 
 ### Supported File Types
 

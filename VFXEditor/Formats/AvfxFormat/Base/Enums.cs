@@ -289,7 +289,12 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Step = 2
         }
-        public enum AxisConnect {
+        public enum AxisConnect2 {
+            None = 0,
+            X_Y = 1,
+            Y_X = 2
+        }
+        public enum AxisConnect3 {
             None = 0,
             X_YZ = 1,
             X_Y = 2,

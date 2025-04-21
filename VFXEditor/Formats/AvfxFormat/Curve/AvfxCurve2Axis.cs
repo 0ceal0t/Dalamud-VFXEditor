@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.AvfxFormat;
 using VfxEditor.Formats.AvfxFormat.Curve;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
-using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VFXEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurve2Axis : AvfxCurveBase {
-        public readonly AvfxEnum<AxisConnect> AxisConnectType = new( "Axis Connect", "ACT" );
-        public readonly AvfxEnum<RandomType> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
+        public readonly AvfxEnum<AxisConnect2> AxisConnectType = new( "Axis Connect", "ACT" );
+        public readonly AvfxEnum<AxisConnect2> AxisConnectRandomType = new( "Axis Connect Random", "ACTR" );
         public readonly AvfxCurveData X;
         public readonly AvfxCurveData Y;
         public readonly AvfxCurveData RX;

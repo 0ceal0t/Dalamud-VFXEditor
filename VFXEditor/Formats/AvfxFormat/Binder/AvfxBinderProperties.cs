@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Binder;
 using VfxEditor.Ui.Interfaces;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
