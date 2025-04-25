@@ -144,6 +144,7 @@ namespace VfxEditor
                             if( manager.AcceptsExt( gamePath ) )
                             {
                                 manager.PenumbraImport( selectedFile, replacedFile );
+                                Dalamud.Log( "Imported " + selectedFile.Path );
                             }
                         }
                     }
