@@ -1,6 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileBrowser.FolderFiles;
@@ -86,57 +85,19 @@ namespace VfxEditor.FileBrowser {
                     var file = SearchedFiles[idx];
                     using var __ = ImRaii.PushId( idx );
 
-                    var isSelected = MultiSelect ? SelectedFiles.Contains(file) : file == Selected;
-                    if( file.Draw( isSelected, out var doubleClicked ) ) {
-                        var ctrlHeld = ImGui.GetIO().KeyCtrl;
-                        var shiftHeld = ImGui.GetIO().KeyShift;
-                        
+                    if( file.Draw( file == Selected, out var doubleClicked ) ) {
                         if( file.Type == FilePickerFileType.Directory ) {
                             if( doubleClicked ) {
                                 if( NavigateTo( file ) ) break;
                             }
                             else if( FolderDialog ) {
-                                if (MultiSelect && ctrlHeld) {
-                                    if (SelectedFiles.Contains(file)) SelectedFiles.Remove(file);
-                                    else SelectedFiles.Add(file);
-                                }
-                                else {
-                                    SelectedFiles.Clear();
-                                    Selected = file;
-                                    SelectedFiles.Add(file);
-                                }
+                                Selected = file;
                                 FileNameInput = file.FileName;
                             }
                         }
                         else {
-                            if (MultiSelect) {
-                                if (ctrlHeld) {
-                                    if (SelectedFiles.Contains(file)) SelectedFiles.Remove(file);
-                                    else SelectedFiles.Add(file);
-                                    LastSelectedIndex = idx;
-                                }
-                                else if (shiftHeld && LastSelectedIndex.HasValue) {
-                                    var start = Math.Min(LastSelectedIndex.Value, idx);
-                                    var end = Math.Max(LastSelectedIndex.Value, idx);
-                                    SelectedFiles.Clear();
-                                    for (int i = start; i <= end; i++) {
-                                        SelectedFiles.Add(SearchedFiles[i]);
-                                    }
-                                    Selected = file;
-                                }
-                                else {
-                                    SelectedFiles.Clear();
-                                    Selected = file;
-                                    SelectedFiles.Add(file);
-                                    LastSelectedIndex = idx;
-                                }
-                            }
-                            else {
-                                SelectedFiles.Clear();
-                                Selected = file;
-                                SelectedFiles.Add(file);
-                            }
-                            FileNameInput = SelectedFiles.Count > 1 ? $"{SelectedFiles.Count} files selected" : file.FileName;
+                            Selected = file;
+                            FileNameInput = file.FileName;
                             if( doubleClicked ) {
                                 WantsToQuit = true;
                                 IsOk = true;
