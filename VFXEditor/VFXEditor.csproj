@@ -1,46 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.Sdk/12.0.2">
     <PropertyGroup>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>1.9.1.4</FileVersion>
-        <AssemblyVersion>1.9.1.4</AssemblyVersion>
+        <FileVersion>1.9.2.4</FileVersion>
+        <AssemblyVersion>1.9.2.4</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        <PlatformTarget>x64</PlatformTarget>
         <Deterministic>true</Deterministic>
         <OutputType>Library</OutputType>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <Configurations>Debug;Release;Beta</Configurations>
-    </PropertyGroup>
-    
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <DefineConstants>TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Beta|AnyCPU'">
-      <DebugType>pdbonly</DebugType>
-      <Optimize>true</Optimize>
-      <DefineConstants>BETA;TRACE</DefineConstants>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-        <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
@@ -49,66 +24,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Dalamud">
-            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="ImGuiScene">
-            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina">
-            <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Lumina.Excel">
-            <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.DXGI">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.DXGI.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.DXGI.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.Mathematics">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Mathematics.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.Mathematics.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SharpDX.Direct3D11">
-            <HintPath>$(DALAMUD_ROOT)\SharpDX.Direct3D11.dll</HintPath>
-            <HintPath>$(DalamudLibPath)SharpDX.Direct3D11.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Reloaded.Hooks.Definitions">
-            <HintPath>$(DalamudLibPath)Reloaded.Hooks.Definitions.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="FFXIVClientStructs">
-            <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="BCnEncoder.Net" Version="2.1.0" />
-        <PackageReference Include="DalamudPackager" Version="11.0.0" />
-        <PackageReference Include="Google.FlatBuffers" Version="24.3.25" />
-        <PackageReference Include="HelixToolkit" Version="2.25.0" />
-        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.25.0" />
+        <PackageReference Include="BCnEncoder.Net" Version="2.2.0" />
+        <PackageReference Include="Google.FlatBuffers" Version="25.2.10" />
+        <PackageReference Include="HelixToolkit" Version="2.27.0" />
+        <PackageReference Include="HelixToolkit.SharpDX.Core" Version="2.27.0" />
         <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -118,7 +37,7 @@
         <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
         <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
         <PackageReference Include="NAudio.WinMM" Version="2.2.1" />
-        <PackageReference Include="Penumbra.Api" Version="5.3.0" />
+        <PackageReference Include="Penumbra.Api" Version="5.6.1" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.3" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
@@ -129,117 +48,117 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Files\adpcmencode3.exe">
+        <Content Include="Files\adpcmencode3.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\bnpc.json">
+        </Content>
+        <Content Include="Files\bnpc.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_racial">
+        </Content>
+        <Content Include="Files\common_racial">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_shcd">
+        </Content>
+        <Content Include="Files\common_shcd">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_shpk">
+        </Content>
+        <Content Include="Files\common_shpk">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_tmb">
+        </Content>
+        <Content Include="Files\common_tmb">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_uld">
+        </Content>
+        <Content Include="Files\common_uld">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\common_vfx">
+        </Content>
+        <Content Include="Files\common_vfx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\d3d\fxc.exe">
+        </Content>
+        <Content Include="Files\d3d\fxc.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_binder.vfxedit">
+        </Content>
+        <Content Include="Files\default_binder.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_model.vfxedit2">
+        </Content>
+        <Content Include="Files\default_model.vfxedit2">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_pap_tmb.tmb">
+        </Content>
+        <Content Include="Files\default_pap_tmb.tmb">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_scd_audio.scd">
+        </Content>
+        <Content Include="Files\default_scd_audio.scd">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_texture.vfxedit2">
+        </Content>
+        <Content Include="Files\default_texture.vfxedit2">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_vfx.avfx">
+        </Content>
+        <Content Include="Files\default_vfx.avfx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_weapon.avfx">
+        </Content>
+        <Content Include="Files\default_weapon.avfx">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_effector.vfxedit">
+        </Content>
+        <Content Include="Files\default_effector.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_emitter.vfxedit">
+        </Content>
+        <Content Include="Files\default_emitter.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\npc_files.json">
+        </Content>
+        <Content Include="Files\npc_files.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_particle.vfxedit">
+        </Content>
+        <Content Include="Files\default_particle.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\default_timeline.vfxedit">
+        </Content>
+        <Content Include="Files\default_timeline.vfxedit">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\oggenc2.exe">
+        </Content>
+        <Content Include="Files\oggenc2.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\sphere_d_array.tex">
+        </Content>
+        <Content Include="Files\sphere_d_array.tex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\tile_norm_array.tex">
+        </Content>
+        <Content Include="Files\tile_norm_array.tex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\tile_orb_array.tex">
+        </Content>
+        <Content Include="Files\tile_orb_array.tex">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\useful_textures.txt">
+        </Content>
+        <Content Include="Files\useful_textures.txt">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Files\vorbis_header.bin">
+        </Content>
+        <Content Include="Files\vorbis_header.bin">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\Cube.fx">
+        </Content>
+        <Content Include="Shaders\Cube.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\Emitter.fx">
+        </Content>
+        <Content Include="Shaders\Emitter.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\Gradient.fx">
+        </Content>
+        <Content Include="Shaders\Gradient.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\MeshGBuffer.fx">
+        </Content>
+        <Content Include="Shaders\MeshGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\SsaoQuad.fx">
+        </Content>
+        <Content Include="Shaders\SsaoQuad.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\MaterialLegacyGBuffer.fx">
+        </Content>
+        <Content Include="Shaders\MaterialLegacyGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\PhongUtils.fx">
+        </Content>
+        <Content Include="Shaders\PhongUtils.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\ModelUtils.fx">
+        </Content>
+        <Content Include="Shaders\ModelUtils.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Shaders\Model.fx">
+        </Content>
+        <Content Include="Shaders\Model.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Update="VFXEditor.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
+        </Content>
+        <Content Include="VFXEditor.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>

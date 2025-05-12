@@ -11,7 +11,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.FileManager {
     public abstract partial class FileManager<T, R, S> : FileManagerBase, IFileManager where T : FileManagerDocument<R, S> where R : FileManagerFile {
         public T ActiveDocument { get; protected set; }
-        public R File => ActiveDocument?.File;
+        public R? File => ActiveDocument?.File;
 
         private int DOC_ID = 0;
         public override string NewWriteLocation => Path.Combine( Plugin.Configuration.WriteLocation, $"{Id}Temp{DOC_ID++}.{Extension}" ).Replace( '\\', '/' );

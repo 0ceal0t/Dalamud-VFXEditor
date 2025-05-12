@@ -22,6 +22,10 @@ namespace VfxEditor.AvfxFormat {
 
         protected abstract IEnumerable<AvfxBase> GetChildren();
 
+        public virtual IEnumerable<AvfxNodeSelect> GetNodeSelects() {
+            yield break;
+        }
+
         public virtual void SetAssigned( bool assigned, bool recurse = false ) {
             Assigned = assigned;
         }
@@ -58,7 +62,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public bool DrawUnassignButton( string name ) {
-            if( UiUtils.RemoveButton( $"Delete {name}", small: true ) ) {
+            if( UiUtils.RemoveButton( $"- {name}", small: true ) ) {
                 CommandManager.Add( new AvfxAssignCommand( this, false ) );
                 return true;
             }

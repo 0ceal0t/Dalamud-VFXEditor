@@ -1,8 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleSimple : AvfxParticleAttribute {
@@ -63,10 +60,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt CreateIntervalCount = new( "Create Interval Count", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "Create Interval Life", "CrIL" );
         public readonly AvfxInt CrLR = new( "CrLR", "CrLR" ); // New to DT
-        public readonly AvfxInt CreateNewAfterDelete = new( "Create New After Death", "bCrN", size: 1 );
-        public readonly AvfxInt UvReverse = new( "UV Reverse", "bRUV", size: 1 );
-        public readonly AvfxInt ScaleRandomLink = new( "Scale Random Link", "bSRL", size: 1 );
-        public readonly AvfxInt BindParent = new( "Bind Parent", "bBnP", size: 1 );
+        public readonly AvfxBool CreateNewAfterDelete = new( "Create New After Death", "bCrN", size: 1 );
+        public readonly AvfxBool UvReverse = new( "UV Reverse", "bRUV", size: 1 );
+        public readonly AvfxBool ScaleRandomLink = new( "Scale Random Link", "bSRL", size: 1 );
+        public readonly AvfxBool BindParent = new( "Bind Parent", "bBnP", size: 1 );
         public readonly AvfxInt ScaleByParent = new( "Scale by Parent", "bSnP", size: 1 );
         public readonly AvfxInt PolyLineTag = new( "Polyline Tag", "PolT" );
 
@@ -213,22 +210,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "Simple" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Simple Animation" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "Simple" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( UiUtils.RemoveButton( "Delete", small: true ) ) {
-                Unassign();
-                return;
-            }
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

@@ -1,3 +1,4 @@
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -6,15 +7,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<GenerateMethod> GenerateMethodType = new( "Generate Method", "GeMT" );
         public readonly AvfxInt DivideX = new( "Divide X", "DivX" );
         public readonly AvfxInt DivideY = new( "Divide Y", "DivY" );
-        public readonly AvfxCurve AX = new( "Angle X", "AnX", CurveType.Angle );
-        public readonly AvfxCurve AY = new( "Angle Y", "AnY", CurveType.Angle );
-        public readonly AvfxCurve AXR = new( "Angle X Random", "AnXR", CurveType.Angle );
-        public readonly AvfxCurve AYR = new( "Angle Y Random", "AnYR", CurveType.Angle );
-        public readonly AvfxCurve Radius = new( "Radius", "Rad" );
-        public readonly AvfxCurve InjectionSpeed = new( "Injection Speed", "IjS" );
-        public readonly AvfxCurve InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
-        public readonly AvfxCurve InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
-        public readonly AvfxCurve InjectionAngleRandom = new( "Injection Angle Random", "IjAR", CurveType.Angle );
+        public readonly AvfxCurve1Axis AX = new( "Angle X", "AnX", CurveType.Angle );
+        public readonly AvfxCurve1Axis AY = new( "Angle Y", "AnY", CurveType.Angle );
+        public readonly AvfxCurve1Axis AXR = new( "Angle X Random", "AnXR", CurveType.Angle );
+        public readonly AvfxCurve1Axis AYR = new( "Angle Y Random", "AnYR", CurveType.Angle );
+        public readonly AvfxCurve1Axis Radius = new( "Radius", "Rad" );
+        public readonly AvfxCurve1Axis InjectionSpeed = new( "Injection Speed", "IjS" );
+        public readonly AvfxCurve1Axis InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
+        public readonly AvfxCurve1Axis InjectionAngle = new( "Injection Angle", "IjA", CurveType.Angle );
+        public readonly AvfxCurve1Axis InjectionAngleRandom = new( "Injection Angle Random", "IjAR", CurveType.Angle );
 
         public AvfxEmitterDataConeModel() : base() {
             Parsed = [

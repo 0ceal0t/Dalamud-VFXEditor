@@ -1,45 +1,51 @@
 {
   "version": 1,
   "dependencies": {
-    "net8.0-windows7.0": {
+    "net9.0-windows7.0": {
       "BCnEncoder.Net": {
         "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "bBKYUDhpYenmp8vy5BVUHmS2LFym0NMga9V+S1eMJ+4zQLBwDw63Bs83AKOyqBKC2AqqgxXdTFA2a2V+SmGoIw==",
+        "requested": "[2.2.0, )",
+        "resolved": "2.2.0",
+        "contentHash": "bJg23yquVTodLWYBCDu28Dk82Coi138ZnjFlWI4sqaOtjRIvftAZHaQHbm2SdCWUShcG9sEZ4BdOnePY9qB7tA==",
         "dependencies": {
-          "Microsoft.Toolkit.HighPerformance": "7.0.2"
+          "CommunityToolkit.HighPerformance": "8.4.0"
         }
       },
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[11.0.0, )",
-        "resolved": "11.0.0",
-        "contentHash": "bjT7XUlhIJSmsE/O76b7weUX+evvGQctbQB8aKXt94o+oPWxHpCepxAGMs7Thow3AzCyqWs7cOpp9/2wcgRRQA=="
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "J5TJLV3f16T/E2H2P17ClWjtfEBPpq3yxvqW46eN36JCm6wR+EaoaYkqG9Rm5sHqs3/nK/vKjWWyvEs/jhKoXw=="
+      },
+      "DotNet.ReproducibleBuilds": {
+        "type": "Direct",
+        "requested": "[1.2.25, )",
+        "resolved": "1.2.25",
+        "contentHash": "xCXiw7BCxHJ8pF6wPepRUddlh2dlQlbr81gXA72hdk4FLHkKXas7EH/n+fk5UCA/YfMqG1Z6XaPiUjDbUNBUzg=="
       },
       "Google.FlatBuffers": {
         "type": "Direct",
-        "requested": "[24.3.25, )",
-        "resolved": "24.3.25",
-        "contentHash": "w1mv5UCKLPMYj1aVymTlrtUOOtdbOEPsn4XxwUGvpS35j+WrWSxyqvB7EhSel1mXgKZ1DaPTIKr1bORXBRVhGQ=="
+        "requested": "[25.2.10, )",
+        "resolved": "25.2.10",
+        "contentHash": "z3ykbSRsy6oqMzeZ84a+K8rnMJ/ysVikar8r2yUhHz0HSxIjBpj53mZvpu6LjLEm5fLLWQsCdelJwL1nu7lloA=="
       },
       "HelixToolkit": {
         "type": "Direct",
-        "requested": "[2.25.0, )",
-        "resolved": "2.25.0",
-        "contentHash": "UzF6KXadTdzrjTA8G00+V7RaQNpH+0729xByD6zhCgvDLvZ63CvH84/x2sjUO52bzHFphYixXtzf8G/OGVtz3w==",
+        "requested": "[2.27.0, )",
+        "resolved": "2.27.0",
+        "contentHash": "sXq9gXWIA/QYlx1Po9ac36hGwPT8BkpzSpGO7RgpGIuCOdJGXRASA9mJa6GJeTLfs5BYPzVwjKmyghw5ivM0bQ==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "HelixToolkit.SharpDX.Core": {
         "type": "Direct",
-        "requested": "[2.25.0, )",
-        "resolved": "2.25.0",
-        "contentHash": "QYnuUTfnGfOvGHgsAhTsZazuKalDH7JVYNTG5E7GlwvizA9ZB424JMuyLE73jmVsGo7Ql9wQi24U9fFALM2yjQ==",
+        "requested": "[2.27.0, )",
+        "resolved": "2.27.0",
+        "contentHash": "IkivjYXuM2YusPrJDCQQf9qsZgPnD0FLO33wZsch9m1BmoRTDOoGTgs6W6gdRu1PpP39Uo7BUwsmLgOIusSXBA==",
         "dependencies": {
           "Cyotek.Drawing.BitmapFont": "2.0.0",
-          "HelixToolkit": "[2.25.0]",
+          "HelixToolkit": "[2.27.0]",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
           "SharpDX": "4.2.0",
           "SharpDX.D3DCompiler": "4.2.0",
@@ -105,9 +111,9 @@
       },
       "Penumbra.Api": {
         "type": "Direct",
-        "requested": "[5.3.0, )",
-        "resolved": "5.3.0",
-        "contentHash": "WThL0e5UnkIESgsvihzss91h6Ny/UUq3ghSR0/npC7rBgqnWjml7/KWcUkDMWTpw6NLUp8DAivJwOtcZR95wLA=="
+        "requested": "[5.6.1, )",
+        "resolved": "5.6.1",
+        "contentHash": "pZesXuBB9cMXKN10EfLJclLay3vjRYQy376PXXcPdx33kNI0jHwgPXGcy6BtVmoaMvn4UvK+EqGVYlt2b/Ns9Q=="
       },
       "SharpDX.D3DCompiler": {
         "type": "Direct",
@@ -137,6 +143,11 @@
           "NETStandard.Library": "1.6.1"
         }
       },
+      "CommunityToolkit.HighPerformance": {
+        "type": "Transitive",
+        "resolved": "8.4.0",
+        "contentHash": "flxspiBs0G/0GMp7IK2J2ijV9bTG6hEwFc/z6ekHqB6nwRJ4Ry2yLdx+TkbCUYFCl4XhABkAwomeKbT6zM2Zlg=="
+      },
       "Cyotek.Drawing.BitmapFont": {
         "type": "Transitive",
         "resolved": "2.0.0",
@@ -156,11 +167,6 @@
         "type": "Transitive",
         "resolved": "1.1.0",
         "contentHash": "aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg=="
-      },
-      "Microsoft.Toolkit.HighPerformance": {
-        "type": "Transitive",
-        "resolved": "7.0.2",
-        "contentHash": "tG6v0AhDw/yJMtiH/tI4F6I/+sNIfu4++6WFfN73FyNcPh31et33w45wo8Lx1sfxcfLtkYk+w2fvU/MubYg4VQ=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",

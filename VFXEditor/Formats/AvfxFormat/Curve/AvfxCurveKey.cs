@@ -7,14 +7,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Command.ListCommands;
+using VfxEditor.Formats.AvfxFormat.Curve.Lines;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveKey {
-        public static readonly KeyType[] KeyTypeOptions = ( KeyType[] )Enum.GetValues( typeof( KeyType ) );
-        private readonly AvfxCurve Curve;
+        public static readonly KeyType[] KeyTypeOptions = Enum.GetValues<KeyType>();
+        private readonly AvfxCurveData Curve;
         private bool IsColor => Curve.IsColor;
 
         private bool Editing = false;
@@ -49,27 +51,24 @@ namespace VfxEditor.AvfxFormat {
 
         private (int, Vector3) StateBeforeEditing;
 
-        public AvfxCurveKey( AvfxCurve curve ) {
+        public AvfxCurveKey( AvfxCurveData curve ) {
             Curve = curve;
-            Type.OnChangeAction = Curve.Update;
-            Time.OnChangeAction = Curve.Update;
-            // Don't need to bother with X, Y, Z since they have their own weird inputs
         }
 
-        public AvfxCurveKey( AvfxCurve curve, (KeyType, Vector4) copyPaste ) : this( curve ) {
+        public AvfxCurveKey( AvfxCurveData curve, (KeyType, Vector4) copyPaste ) : this( curve ) {
             Type.Value = copyPaste.Item1;
             var data = copyPaste.Item2;
             Time.Value = ( int )data.X;
             Data.Value = new( data.Y, data.Z, data.W );
         }
 
-        public AvfxCurveKey( AvfxCurve curve, KeyType type, int time, float x, float y, float z ) : this( curve ) {
+        public AvfxCurveKey( AvfxCurveData curve, KeyType type, int time, float x, float y, float z ) : this( curve ) {
             Type.Value = type;
             Time.Value = time;
             Data.Value = new( x, y, z );
         }
 
-        public AvfxCurveKey( AvfxCurve curve, BinaryReader reader ) : this( curve ) {
+        public AvfxCurveKey( AvfxCurveData curve, BinaryReader reader ) : this( curve ) {
             Time.Read( reader );
             Type.Read( reader );
             Data.Read( reader );
@@ -81,7 +80,7 @@ namespace VfxEditor.AvfxFormat {
             Data.Write( writer );
         }
 
-        // ======= DRAG/DROP =======
+        // ======= EDITING =======
 
         public void StartDragging() {
             StateBeforeEditing = (Time.Value, Data.Value);
@@ -94,14 +93,18 @@ namespace VfxEditor.AvfxFormat {
 
         // ======= DRAWING =========
 
-        public void Draw() {
+        public void Draw( LineEditorGroup editor ) {
+            Type.OnChangeAction = editor.OnUpdate;
+            Time.OnChangeAction = editor.OnUpdate;
+            // Don't need to bother with X, Y, Z since they have their own weird inputs
+
             using var _ = ImRaii.PushId( "Key" );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _, bool _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _, bool _ ) => editor.OnUpdate() ) );
                     return;
                 }
 
@@ -109,37 +112,37 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
-                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _, bool _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _, bool _ ) => editor.OnUpdate() ) );
                 }
 
                 // Shift left/right
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[0] == this ) ) ) {
-                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => editor.OnUpdate() ) );
                 }
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[^1] == this ) ) ) {
-                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => Curve.Update() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => editor.OnUpdate() ) );
                 }
             }
 
             Time.Draw();
             Type.Draw();
 
-            if( IsColor ) DrawColor();
+            if( IsColor ) DrawColor( editor );
             else {
                 var data = Converted;
                 if( ImGui.InputFloat3( "Value", ref data ) ) {
                     CommandManager.Add( new CompoundCommand( new[] {
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
-                    }, onChangeAction: Curve.Update ) );
+                    }, onChangeAction: editor.OnUpdate ) );
                 }
             }
         }
 
         // ======== DRAW COLOR ============
 
-        private void DrawColor() {
+        private void DrawColor( LineEditorGroup editor ) {
             var changed = false;
             var color = Color;
             var prevColor = Color;
@@ -177,7 +180,7 @@ namespace VfxEditor.AvfxFormat {
                 Editing = false;
                 CommandManager.Add( new CompoundCommand( new[] {
                     new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color )
-                }, onChangeAction: Curve.Update ) );
+                }, onChangeAction: editor.OnUpdate ) );
             }
         }
 

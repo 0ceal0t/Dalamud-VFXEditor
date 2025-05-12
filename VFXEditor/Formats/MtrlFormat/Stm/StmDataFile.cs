@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public override void LoadFile() {
             Reader.BaseStream.Position = 0;
 
-            Reader.ReadUInt32();
+            /*(Reader.ReadUInt32();
             var numEntries = Reader.ReadUInt16();
             Reader.ReadUInt16();
 
@@ -26,7 +26,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
             for( var i = 0; i < numEntries; i++ ) {
                 var offset = offsets[i] * 2 + 8 + 4 * numEntries;
                 Entries[keys[i]] = new( Reader, offset, IsDawntrail );
-            }
+            }*/
         }
 
         public StmDyeData GetDye( int template, int idx ) {

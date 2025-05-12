@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly List<AvfxItem> DisplayTabs;
         public readonly UiDisplayList Display;
 
-        public AvfxParticleAttribute( string avfxName, AvfxParticle particle ) : base( avfxName ) {
+        public AvfxParticleAttribute( string avfxName, AvfxParticle particle, bool locked = false ) : base( avfxName, locked ) {
             Particle = particle;
             DisplayTabs = [
                 ( Display = new UiDisplayList( "Parameters" ) )
@@ -21,11 +21,5 @@ namespace VfxEditor.AvfxFormat {
         }
 
         protected void EnableAllSelectors() => NodeSelects.ForEach( x => x.Enable() );
-
-        protected void Assign() => CommandManager.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, true ) );
-
-        protected void Unassign() => CommandManager.Add( new AvfxParticleAttributeAssignCommand( this, NodeSelects, false ) );
-
-        public abstract List<AvfxNodeSelect> GetNodeSelects();
     }
 }

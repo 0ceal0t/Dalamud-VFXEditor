@@ -15,7 +15,7 @@ namespace VfxEditor.Data {
             UiColorsInitialized = true;
 
             foreach( var item in Dalamud.DataManager.GetExcelSheet<UIColor>() ) {
-                var bytes = BitConverter.GetBytes( item.UIForeground );
+                var bytes = BitConverter.GetBytes( item.Dark );
                 UiColors[item.RowId] = new( bytes[3] / 255f, bytes[2] / 255f, bytes[1] / 255f, bytes[0] / 255f );
             }
         }

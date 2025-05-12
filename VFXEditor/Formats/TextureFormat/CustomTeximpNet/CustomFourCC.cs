@@ -79,7 +79,7 @@ namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
         }
 
         public static implicit operator string( CustomFourCC fourCharacterCode ) {
-            return new string( new char[] { fourCharacterCode.First, fourCharacterCode.Second, fourCharacterCode.Third, fourCharacterCode.Fourth } );
+            return new string( [fourCharacterCode.First, fourCharacterCode.Second, fourCharacterCode.Third, fourCharacterCode.Fourth] );
         }
 
         public static implicit operator CustomFourCC( uint packedValue ) {
@@ -102,7 +102,7 @@ namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
             return a.m_packedValue != b.m_packedValue;
         }
 
-        public override bool Equals( object obj ) {
+        public override bool Equals( object? obj ) {
             if( obj is CustomFourCC cC ) return Equals( cC );
             return false;
         }
@@ -119,7 +119,7 @@ namespace VfxEditor.Formats.TextureFormat.CustomTeximpNet {
 
         public override string ToString() {
             if( m_packedValue == 0 ) return "0";
-            return new string( new char[] { First, Second, Third, Fourth } );
+            return new string( [First, Second, Third, Fourth] );
         }
     }
 }

@@ -1,8 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -13,11 +12,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureBorderType> TextureBorderU = new( "Texture Border U", "TBUT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorderV = new( "Texture Border V", "TBVT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
-        public readonly AvfxCurve NPow = new( "Power", "NPow" );
+        public readonly AvfxCurve1Axis NPow = new( "Power", "NPow" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTextureNormal( AvfxParticle particle ) : base( "TN", particle ) {
+        public AvfxParticleTextureNormal( AvfxParticle particle ) : base( "TN", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
@@ -51,17 +50,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "TN" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Normal" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "TN" );
-
-            AssignedCopyPaste( GetDefaultText() );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

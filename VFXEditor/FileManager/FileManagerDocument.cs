@@ -15,6 +15,7 @@ namespace VfxEditor.FileManager {
         public R File { get; protected set; }
         protected VerifiedStatus Verified => File == null ? VerifiedStatus.UNKNOWN : File.Verified;
         public bool Unsaved => File != null && File.Unsaved;
+        public bool LocalSource => Source != null && Source.Type == SelectResultType.Local;
 
         public string DisplayName => string.IsNullOrEmpty( Name ) ? ReplaceDisplay : Name;
         protected string Name = "";
@@ -140,7 +141,7 @@ namespace VfxEditor.FileManager {
             System.IO.File.WriteAllBytes( path, File.ToBytes() );
         }
 
-        protected void ExportRaw() => UiUtils.WriteBytesDialog( $".{Extension}", File.ToBytes(), Extension, "ExportedFile" );
+        protected void ExportRawDialog() => UiUtils.WriteBytesDialog( $".{Extension}", File.ToBytes(), Extension, "ExportedFile" );
 
         public void Update() {
             if( ( DateTime.Now - LastUpdate ).TotalSeconds <= 0.2 ) return;
@@ -333,6 +334,11 @@ namespace VfxEditor.FileManager {
             using var _ = ImRaii.PushId( "Source" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
+            var reloadWidth = UiUtils.GetIconSize( FontAwesomeIcon.Sync ).X;
+            var replaceWidth = UiUtils.GetIconSize( FontAwesomeIcon.Upload ).Y;
+
+            inputSize -= ( reloadWidth + replaceWidth + ( ImGui.GetStyle().FramePadding.X * 4 ) + 6 );
+
             // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveSource();
@@ -350,6 +356,21 @@ namespace VfxEditor.FileManager {
                 }
             }
             DrawCopy( Source );
+
+            // Local files
+            using( var disabled = ImRaii.Disabled( !LocalSource ) )
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
+                    Manager.SetSource( Source );
+                    Dalamud.OkNotification( "Reloaded " + Source.Path );
+                }
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
+                    System.IO.File.WriteAllBytes( Source.Path, File.ToBytes() );
+                    Dalamud.OkNotification( "Exported to " + Source.Path );
+                }
+            }
 
             // Search
             ImGui.SameLine();
@@ -409,7 +430,7 @@ namespace VfxEditor.FileManager {
             }
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRaw();
+                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRawDialog();
             }
             UiUtils.Tooltip( "Export as a raw file" );
 

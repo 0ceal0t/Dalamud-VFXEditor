@@ -1,4 +1,3 @@
-using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -16,7 +15,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<AvfxBase> Parsed;
         private readonly List<IUiItem> Display;
 
-        public AvfxLife() : base( "Life" ) {
+        public AvfxLife() : base( "Life", locked: true ) {
             Parsed = [
                 Value,
                 ValRandom,
@@ -51,17 +50,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "Life" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            DrawAssignButton( GetDefaultText(), true );
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "Life" );
-
-            AssignedCopyPaste( GetDefaultText() );
+        public override void DrawBody() {
             DrawItems( Display );
         }
 

@@ -259,12 +259,12 @@ namespace VfxEditor.Utils.Gltf {
             var currentBinding = motion.AnimationControl->Binding;
             var currentAnim = currentBinding.ptr->Animation;
 
-            var anim = ( HkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaInterleavedUncompressedAnimation ) ) );
+            var anim = ( HkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf<HkaInterleavedUncompressedAnimation>() );
             handles.Add( ( nint )anim );
 
             ( ( HkBaseObject* )anim )->vfptr = ( HkBaseObject.HkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
 
-            var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationBinding ) ) );
+            var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf<hkaAnimationBinding>() );
             handles.Add( ( nint )binding );
 
             ( ( HkBaseObject* )binding )->vfptr = ( ( HkBaseObject* )currentBinding.ptr )->vfptr;
@@ -286,16 +286,16 @@ namespace VfxEditor.Utils.Gltf {
             anim->Animation.NumberOfTransformTracks = tracks.Count;
             anim->Animation.NumberOfFloatTracks = 0;
             anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
-            anim->Animation.AnnotationTracks = HavokData.CreateArray( handles, ( uint )flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf( typeof( hkaAnnotationTrack ) ) );
+            anim->Animation.AnnotationTracks = HavokData.CreateArray( handles, ( uint )flags, new List<hkaAnnotationTrack>(), Marshal.SizeOf<hkaAnnotationTrack>() );
             anim->Floats = HavokData.CreateArray( handles, ( uint )flags, new List<float>(), sizeof( float ) );
-            anim->Transforms = HavokData.CreateArray( handles, ( uint )flags, transforms, Marshal.SizeOf( typeof( hkQsTransformf ) ) );
+            anim->Transforms = HavokData.CreateArray( handles, ( uint )flags, transforms, Marshal.SizeOf<hkQsTransformf>() );
 
             var finalAnim = ( hkaAnimation* )anim;
 
             if( compress ) {
                 Dalamud.Log( "Compressing animation..." );
 
-                var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( HkaSplineCompressedAnimation ) ) );
+                var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf<HkaSplineCompressedAnimation>() );
                 handles.Add( ( nint )spline );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
                 finalAnim = ( hkaAnimation* )spline;

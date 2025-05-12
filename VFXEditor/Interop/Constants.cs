@@ -1,8 +1,8 @@
 namespace VfxEditor.Interop {
     public static class Constants {
         public const string ReadFileSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 63 42";
-        public const string ReadSqpackSig = "40 56 41 56 48 83 EC ?? 0F BE 02 ";
-        public const string GetResourceSyncSig = "E8 ?? ?? ?? ?? 48 8B D8 8B C7 ";
+        public const string ReadSqpackSig = "40 56 41 56 48 83 EC ?? 0F BE 02";
+        public const string GetResourceSyncSig = "E8 ?? ?? ?? ?? 48 8B D8 8B C7";
         public const string GetResourceAsyncSig = "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00";
 
         public const string StaticVfxCreateSig = "E8 ?? ?? ?? ?? F3 0F 10 35 ?? ?? ?? ?? 48 89 43 08";
@@ -27,7 +27,7 @@ namespace VfxEditor.Interop {
 
         public const string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 4C 8B C8 ";
 
-        public const string LoadTexFileLocalSig = "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 48 83 EC 30 49 8B F0 44 88 4C 24 20";
+        public const string LoadTexFileLocalSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 49 8B E8 44 88 4C 24";
         public const string LodConfigSig = "48 8B 05 ?? ?? ?? ?? B3";
         public const string TexResourceHandleOnLoadSig = "40 53 55 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B D9";
 
@@ -40,6 +40,8 @@ namespace VfxEditor.Interop {
         public const string PlayActionSig = "E8 ?? ?? ?? ?? 84 C0 75 04 32 DB EB 14";
 
         // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs
+
+        // TODO
 
         public const int GameResourceOffset = 0x38;
 

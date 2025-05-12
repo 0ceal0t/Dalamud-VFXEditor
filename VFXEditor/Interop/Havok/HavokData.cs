@@ -112,10 +112,10 @@ namespace VfxEditor.Interop.Havok {
         // ====================
 
         public static hkArray<T> CreateArray<T>( HashSet<nint> handles, List<T> data ) where T : unmanaged =>
-            CreateArray( handles, 0x80000000, data, Marshal.SizeOf( typeof( T ) ) );
+            CreateArray( handles, 0x80000000, data, Marshal.SizeOf<T>() );
 
         public static hkArray<T> CreateArray<T>( HashSet<nint> handles, hkArray<T> currentArray, List<T> data ) where T : unmanaged =>
-            CreateArray( handles, ( uint )currentArray.Flags, data, Marshal.SizeOf( typeof( T ) ) );
+            CreateArray( handles, ( uint )currentArray.Flags, data, Marshal.SizeOf<T>() );
 
         public static hkArray<T> CreateArray<T>( HashSet<nint> handles, uint f, List<T> data, int size ) where T : unmanaged {
             var count = data == null ? 0 : data.Count;

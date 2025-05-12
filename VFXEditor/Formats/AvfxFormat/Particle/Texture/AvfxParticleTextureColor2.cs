@@ -1,9 +1,6 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
-using VfxEditor.Utils;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -21,10 +18,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
+        public readonly AvfxBool UOS = new( "UOS", "bUOS" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTextureColor2( string name, string avfxName, AvfxParticle particle ) : base( avfxName, particle ) {
+        public AvfxParticleTextureColor2( string name, string avfxName, AvfxParticle particle ) : base( avfxName, particle, locked: avfxName == "TC2" ) {
             Name = name;
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
@@ -40,7 +38,8 @@ namespace VfxEditor.AvfxFormat {
                 TextureBorderV,
                 TextureCalculateColor,
                 TextureCalculateAlpha,
-                TextureIdx
+                TextureIdx,
+                UOS
             ];
 
             Display.Add( Enabled );
@@ -53,6 +52,8 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( TextureBorderV );
             Display.Add( TextureCalculateColor );
             Display.Add( TextureCalculateAlpha );
+            Display.Add( TextureIdx );
+            Display.Add( UOS );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -66,23 +67,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( ImGui.SmallButton( $"+ {Name}" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( Name );
-
-            AssignedCopyPaste( Name );
-            if( AvfxName != "TC2" && UiUtils.RemoveButton( $"Delete {Name}", small: true ) ) {
-                Unassign();
-                return;
-            }
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

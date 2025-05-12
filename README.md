@@ -8,6 +8,12 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
+## 7.2 TODO
+- Double-check offsets
+- Double-check sigs
+- Fix STM files
+- Better curve colors
+
 ### Supported File Types
 
 | Extension | Description |
@@ -60,7 +66,19 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [.scd research document](https://docs.google.com/document/d/1L9GKap9u703QJH9u1ymXCUEx4BMi1Tov4J5tvFRWp-w/edit)
 - [.sklb research document](https://docs.google.com/document/d/13TBozIOwKHCMm1SMIhVUQtzaCg9bU18gDATHmXtqO1U/edit#heading=h.4fswckssvps1)
 
+## Misc Notes
+[Flatbuffer download](https://github.com/google/flatbuffers/releases)
+```
+.\flatc.exe --json --raw-binary .\ephb.fbs -- .\304_1.phyb
+.\flatc.exe --binary .\ephb.fbs .\304_1.json
+..\flatc.exe --csharp --gen-object-api --gen-onefile .\Ephb.fbs
+```
+
 ## TODO
+- [ ] Display multiple axes at the same time in curve editor
+- [ ] Use job codes in search bar
+- [ ] Add particle/emitter toggles
+
 - [ ] Add gizmo to `.sklb` bones
 - [ ] Copy/paste `.atch` entry
 - [ ] `.uld` node type 10

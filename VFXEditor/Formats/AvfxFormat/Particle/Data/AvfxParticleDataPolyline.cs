@@ -1,3 +1,4 @@
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -17,17 +18,17 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsSpline = new( "Is Spline", "bSpl" );
         public readonly AvfxBool IsLocal = new( "Is Local", "bLcl" );
 
-        public readonly AvfxCurve CF = new( "CF (Unknown)", "CF" );
-        public readonly AvfxCurve Width = new( "Width", "Wd" );
-        public readonly AvfxCurve WidthRandom = new( "Width Random", "WdR" );
-        public readonly AvfxCurve WidthBegin = new( "Width Begin", "WdB" );
-        public readonly AvfxCurve WidthCenter = new( "Width Center", "WdC" );
-        public readonly AvfxCurve WidthEnd = new( "Width End", "WdE" );
-        public readonly AvfxCurve Length = new( "Length", "Len" );
-        public readonly AvfxCurve LengthRandom = new( "Length Random", "LenR" );
-        public readonly AvfxCurve Softness = new( "Softness", "Sft" );
-        public readonly AvfxCurve SoftRandom = new( "Softness Random", "SftR" );
-        public readonly AvfxCurve PnDs = new( "PnDs (Unknown)", "PnDs" );
+        public readonly AvfxCurve1Axis CF = new( "CF (Unknown)", "CF" );
+        public readonly AvfxCurve1Axis Width = new( "Width", "Wd" );
+        public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WdR" );
+        public readonly AvfxCurve1Axis WidthBegin = new( "Width Begin", "WdB" );
+        public readonly AvfxCurve1Axis WidthCenter = new( "Width Center", "WdC" );
+        public readonly AvfxCurve1Axis WidthEnd = new( "Width End", "WdE" );
+        public readonly AvfxCurve1Axis Length = new( "Length", "Len" );
+        public readonly AvfxCurve1Axis LengthRandom = new( "Length Random", "LenR" );
+        public readonly AvfxCurve1Axis Softness = new( "Softness", "Sft" );
+        public readonly AvfxCurve1Axis SoftRandom = new( "Softness Random", "SftR" );
+        public readonly AvfxCurve1Axis PnDs = new( "PnDs (Unknown)", "PnDs" );
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorCenter = new( name: "Color Center", "ColC" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );

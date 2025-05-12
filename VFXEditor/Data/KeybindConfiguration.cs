@@ -19,7 +19,7 @@ namespace VfxEditor {
         }
 
         [NonSerialized]
-        private static readonly KeybindModifierKeys[] ValidKeybindModifiers = ( KeybindModifierKeys[] )Enum.GetValues( typeof( KeybindModifierKeys ) );
+        private static readonly KeybindModifierKeys[] ValidKeybindModifiers = Enum.GetValues<KeybindModifierKeys>();
         [NonSerialized]
         private static readonly Dictionary<VirtualKey, bool> LastState = [];
 

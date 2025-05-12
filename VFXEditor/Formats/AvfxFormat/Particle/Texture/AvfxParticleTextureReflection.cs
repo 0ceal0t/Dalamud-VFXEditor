@@ -1,8 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -12,12 +11,12 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColorType = new( "Calculate Color", "TCCT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
-        public readonly AvfxCurve Rate = new( "Rate", "Rate" );
-        public readonly AvfxCurve RPow = new( "Power", "RPow" );
+        public readonly AvfxCurve1Axis Rate = new( "Rate", "Rate" );
+        public readonly AvfxCurve1Axis RPow = new( "Power", "RPow" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTextureReflection( AvfxParticle particle ) : base( "TR", particle ) {
+        public AvfxParticleTextureReflection( AvfxParticle particle ) : base( "TR", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
@@ -51,17 +50,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "TR" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Reflection" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "TR" );
-
-            AssignedCopyPaste( GetDefaultText() );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

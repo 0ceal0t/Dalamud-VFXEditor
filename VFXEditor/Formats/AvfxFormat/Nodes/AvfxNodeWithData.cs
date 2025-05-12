@@ -5,7 +5,7 @@ using VfxEditor.Parsing.Data;
 
 namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public abstract class AvfxNodeWithData<T> : AvfxNode, IItemWithData<AvfxData> where T : Enum {
-        protected AvfxData Data;
+        protected AvfxData? Data;
         protected AvfxDataEnum<T> Type;
 
         public AvfxNodeWithData( string avfxName, uint graphColor, string typeAvfxName ) : base( avfxName, graphColor ) {

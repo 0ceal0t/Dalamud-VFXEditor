@@ -3,6 +3,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -10,8 +11,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateUV> CalculateUVType = new( "Calculate UV", "CUvT" );
         public readonly AvfxCurve2Axis Scale = new( "Scale", "Scl" );
         public readonly AvfxCurve2Axis Scroll = new( "Scroll", "Scr" );
-        public readonly AvfxCurve Rot = new( "Rotation", "Rot", CurveType.Angle );
-        public readonly AvfxCurve RotRandom = new( "Rotation Random", "RotR", CurveType.Angle );
+        public readonly AvfxCurve1Axis Rot = new( "Rotation", "Rot", CurveType.Angle );
+        public readonly AvfxCurve1Axis RotRandom = new( "Rotation Random", "RotR", CurveType.Angle );
 
         private readonly List<AvfxBase> Parsed;
         private readonly List<AvfxItem> Curves;

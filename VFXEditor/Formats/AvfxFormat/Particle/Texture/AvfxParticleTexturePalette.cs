@@ -1,8 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.AvfxFormat.Particle.Texture;
+using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
@@ -11,11 +10,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
         public readonly AvfxEnum<TextureBorderType> TextureBorder = new( "Texture Border", "TBT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
-        public readonly AvfxCurve Offset = new( "Offset", "POff" );
+        public readonly AvfxCurve1Axis Offset = new( "Offset", "POff" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle ) {
+        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
@@ -45,17 +44,7 @@ namespace VfxEditor.AvfxFormat {
             foreach( var item in Parsed ) yield return item;
         }
 
-        public override void DrawUnassigned() {
-            using var _ = ImRaii.PushId( "TP" );
-
-            AssignedCopyPaste( GetDefaultText() );
-            if( ImGui.SmallButton( "+ Texture Palette" ) ) Assign();
-        }
-
-        public override void DrawAssigned() {
-            using var _ = ImRaii.PushId( "TP" );
-
-            AssignedCopyPaste( GetDefaultText() );
+        public override void DrawBody() {
             DrawNamedItems( DisplayTabs );
         }
 

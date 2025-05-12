@@ -42,8 +42,8 @@ namespace VfxEditor.PapFormat.Motion {
 
         public PapMotion( PapFile file, HavokData bones, hkaAnimationBinding* binding ) {
             File = file;
-            AnimatedSkeleton = ( hkaAnimatedSkeleton* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimatedSkeleton ) ) );
-            AnimationControl = ( hkaAnimationControl* )Marshal.AllocHGlobal( Marshal.SizeOf( typeof( hkaAnimationControl ) ) );
+            AnimatedSkeleton = ( hkaAnimatedSkeleton* )Marshal.AllocHGlobal( Marshal.SizeOf<hkaAnimatedSkeleton>() );
+            AnimationControl = ( hkaAnimationControl* )Marshal.AllocHGlobal( Marshal.SizeOf<hkaAnimationControl>() );
 
             AnimationControl->Ctor1( binding );
             AnimatedSkeleton->Ctor1( bones.AnimationContainer->Skeletons[0].ptr );

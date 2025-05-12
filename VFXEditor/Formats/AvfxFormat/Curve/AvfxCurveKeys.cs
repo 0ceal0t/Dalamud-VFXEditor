@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
+using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveKeys : AvfxBase {
-        private readonly AvfxCurve Curve;
+        private readonly AvfxCurveData Curve;
         public readonly List<AvfxCurveKey> Keys = [];
 
-        public AvfxCurveKeys( AvfxCurve curve ) : base( "Keys" ) {
+        public AvfxCurveKeys( AvfxCurveData curve ) : base( "Keys" ) {
             Curve = curve;
         }
 

@@ -262,11 +262,11 @@ namespace VfxEditor.AvfxFormat {
         public enum EffectorType {
             PointLight = 0,
             DirectionalLight = 1,
-            Reserve1 = 2,
-            Reserve2 = 3,
-            Reserve3 = 4,
-            Reserve4 = 5,
-            CameraQuake2_Unknown = 6, // NOTE: seen in Akh Rai
+            Reserve2 = 2,
+            Reserve3 = 3,
+            RadialBlur_Unknown = 4,
+            Reserve5 = 5,
+            CameraQuake_Unknown = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,
             CameraQuake = 9
@@ -289,7 +289,12 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Step = 2
         }
-        public enum AxisConnect {
+        public enum AxisConnect2 {
+            None = 0,
+            X_Y = 1,
+            Y_X = 2
+        }
+        public enum AxisConnect3 {
             None = 0,
             X_YZ = 1,
             X_Y = 2,

@@ -36,6 +36,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat BiasZmaxDistance = new( "Bias Z Max Distance", "ZBMd" );
         public readonly AvfxBool IsCameraSpace = new( "Camera Space", "bCmS" );
         public readonly AvfxBool IsFullEnvLight = new( "Full Env Light", "bFEL" );
+        public readonly AvfxBool OSE = new( "OSE", "bOSE" );
         public readonly AvfxBool IsClipOwnSetting = new( "Clip Own Setting", "bOSt" );
         public readonly AvfxFloat NearClipBegin = new( "Near Clip Begin", "NCB" );
         public readonly AvfxFloat NearClipEnd = new( "Near Clip End", "NCE" );
@@ -119,6 +120,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
@@ -184,6 +186,7 @@ namespace VfxEditor.AvfxFormat {
                 BiasZmaxDistance,
                 IsCameraSpace,
                 IsFullEnvLight,
+                OSE,
                 IsClipOwnSetting,
                 NearClipBegin,
                 NearClipEnd,
@@ -202,7 +205,7 @@ namespace VfxEditor.AvfxFormat {
                 new UiFloat3( "Fade Inner", FadeInnerX, FadeInnerY, FadeInnerZ ),
                 new UiFloat3( "Fade Outer", FadeOuterX, FadeOuterY, FadeOuterZ ),
                 GlobalFogEnabled,
-                GlobalFogEnabled,
+                GlobalFogInfluence,
                 LTSEnabled,
                 AGSEnabled,
                 APRi,
@@ -304,7 +307,8 @@ namespace VfxEditor.AvfxFormat {
                 RevisedValuesScaleX.Value = ScaleCombined;
                 RevisedValuesScaleY.Value = ScaleCombined;
                 RevisedValuesScaleZ.Value = ScaleCombined;
-            };
+            }
+            ;
 
             ImGui.SameLine();
             UiUtils.HelpMarker( "Revised scale, position, and rotation only work on effects which are not attached to a binder. See the \"Binders\" tab for more information." );

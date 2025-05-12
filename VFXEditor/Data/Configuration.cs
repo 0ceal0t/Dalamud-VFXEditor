@@ -48,7 +48,7 @@ namespace VfxEditor {
         public bool HideWithUI = true;
         public bool ShowTabBar = true;
         public bool DocumentPopoutShowSource = false;
-        public bool UseDegreesForAngles = false;
+        public bool UseDegreesForAngles = true;
 
         public bool SelectDialogLogOpen = true;
         public bool SelectDialogIconsOnLeft = true;
@@ -63,6 +63,8 @@ namespace VfxEditor {
             "pluginConfigs",
             "VFXEditor",
         ] );
+
+        public string DefaultAuthor = "";
 
         public List<(string, string)> RecentWorkspaces = [];
 
@@ -333,6 +335,7 @@ namespace VfxEditor {
                 if( ImGui.InputFloat( "Overlay Remove Delay", ref OverlayRemoveDelay ) ) Save();
                 if( ImGui.Checkbox( "Limit Overlay by Distance", ref OverlayLimit ) ) Save();
                 if( ImGui.Checkbox( "Show Icons in Select Dialog", ref SelectDialogIconsOnLeft ) ) Save();
+                if( ImGui.InputText( "Default Mod Author", ref DefaultAuthor, 255 ) ) Save();
             }
         }
 

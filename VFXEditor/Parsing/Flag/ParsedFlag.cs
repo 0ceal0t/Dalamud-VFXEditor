@@ -6,6 +6,7 @@ using System.IO;
 namespace VfxEditor.Parsing {
     public class ParsedFlag<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
+        private readonly bool ShowIntField;
 
         public int IntValue => ( int )( object )Value;
 
@@ -13,8 +14,9 @@ namespace VfxEditor.Parsing {
             Size = size;
         }
 
-        public ParsedFlag( string name, int size = 4 ) : base( name ) {
+        public ParsedFlag( string name, int size = 4, bool showIntField = false ) : base( name ) {
             Size = size;
+            ShowIntField = showIntField;
         }
 
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
@@ -37,6 +39,13 @@ namespace VfxEditor.Parsing {
         }
 
         protected override void DrawBody() {
+            if( ShowIntField ) {
+                var value = IntValue;
+                if( InTable ? ImGui.InputInt( Name, ref value, 0, 0 ) : ImGui.InputInt( Name, ref value ) ) {
+                    Update( ( T )( object )value );
+                }
+            }
+
             var options = ( T[] )Enum.GetValues( typeof( T ) );
             foreach( var option in options ) {
                 var intOption = ( int )( object )option;
