@@ -21,15 +21,24 @@ namespace VfxEditor.PhybFormat.Simulator.Pin {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => [
+        protected override List<ParsedBase> GetParsed() => new() {
             BoneName,
             BoneOffset,
             ChainId,
             NodeId,
-        ];
+        };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodeToBone( ChainId.Value, NodeId.Value, BoneName.Value, meshes.Spring, boneMatrixes );
+        }
+
+        public PhybPin Clone(PhybFile newFile, PhybSimulator newSimulator) {
+            var clone = new PhybPin(newFile, newSimulator);
+            clone.BoneName.Value = BoneName.Value;
+            clone.BoneOffset.Value = BoneOffset.Value;
+            clone.ChainId.Value = ChainId.Value;
+            clone.NodeId.Value = NodeId.Value;
+            return clone;
         }
     }
 }

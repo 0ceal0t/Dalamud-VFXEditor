@@ -6,6 +6,7 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.FileBrowser;
 using VfxEditor.PhybFormat.Simulator.Attract;
 using VfxEditor.PhybFormat.Simulator.Chain;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
@@ -146,6 +147,51 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         public void Draw() {
             using var _ = ImRaii.PushId( "Simulator" );
+
+            if (ImGui.Button("Copy Simulator Data")) PhybSimulatorClipboard.CopySimulator(this);
+            ImGui.SameLine();
+            if (ImGui.Button("Paste Simulator Data") && PhybSimulatorClipboard.HasCopiedData()) PhybSimulatorClipboard.PasteSimulator(this);
+            ImGui.SameLine();
+            if (ImGui.Button("Bulk Save") && PhybSimulatorClipboard.HasCopiedData()) {
+                var targetSimulatorIndex = PhybSimulatorClipboard.GetCopiedSimulatorIndex();
+                if (targetSimulatorIndex >= 0) {
+                    FileBrowserManager.OpenFileDialogMultiple("Select Files for Bulk Save", "PHYB files{.phyb}", (bool ok, string[] paths) => {
+                        if (!ok || paths.Length == 0) return;
+                        
+                        foreach (var path in paths) {
+                            try {
+                                using var fileStream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                                using var reader = new BinaryReader(fileStream);
+                                var phybFile = new PhybFile(reader, path, false);
+
+                                // Ensure the simulator index exists or create a new one
+                                if (targetSimulatorIndex >= 0) {
+                                    // Get or create the simulator at the specified index
+                                    var targetSimulator = phybFile.GetOrCreateSimulatorAtIndex(targetSimulatorIndex);
+
+                                    // Paste the simulator data into the target simulator
+                                    PhybSimulatorClipboard.PasteSimulator(targetSimulator);
+                                    phybFile.OnChange(); // Mark file as changed
+
+                                    // Reset stream position and write
+                                    fileStream.Position = 0;
+                                    fileStream.SetLength(0); // Clear the file
+                                    using var writer = new BinaryWriter(fileStream);
+                                    phybFile.Write(writer);
+                                }
+                            }
+                            catch (Exception ex) {
+                                // TODO: Show error message to user
+                                Console.WriteLine($"Error processing file {path}: {ex.Message}");
+                            }
+                        }
+                    });
+                }
+            }
+            if (!PhybSimulatorClipboard.HasCopiedData()) {
+                ImGui.SameLine();
+                ImGui.TextColored(new System.Numerics.Vector4(0.5f, 0.5f, 0.5f, 1.0f), "(Copy simulator data first)");
+            }
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;

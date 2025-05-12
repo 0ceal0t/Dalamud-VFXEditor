@@ -3,6 +3,7 @@ using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
@@ -62,7 +63,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             reader.BaseStream.Position = resetPos;
         }
 
-        protected override List<ParsedBase> GetParsed() => [
+        protected override List<ParsedBase> GetParsed() => new() {
             Dampening,
             MaxSpeed,
             Friction,
@@ -70,7 +71,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             RepulsionStrength,
             LastBoneOffset,
             Type,
-        ];
+        };
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Chain" );
@@ -120,6 +121,26 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             foreach( var item in Collisions ) item.AddPhysicsObjects( meshes, boneMatrixes );
             foreach( var item in Nodes ) item.AddPhysicsObjects( meshes, boneMatrixes );
+        }
+
+        public PhybChain Clone(PhybFile newFile, PhybSimulator newSimulator) {
+            var clone = new PhybChain(newFile, newSimulator);
+            
+            // Copy values from matching parsed items by index
+            var targetParsed = clone.GetParsed();
+            for (var i = 0; i < Parsed.Count; i++) {
+                if (Parsed[i] is ParsedFloat pFloat && targetParsed[i] is ParsedFloat tFloat) 
+                    tFloat.Value = pFloat.Value;
+                if (Parsed[i] is ParsedFloat3 pFloat3 && targetParsed[i] is ParsedFloat3 tFloat3) 
+                    tFloat3.Value = pFloat3.Value;
+                if (Parsed[i] is ParsedEnum<ChainType> pEnum && targetParsed[i] is ParsedEnum<ChainType> tEnum) 
+                    tEnum.Value = pEnum.Value;
+            }
+
+            foreach (var collision in Collisions) clone.Collisions.Add(collision.Clone(newFile, newSimulator));
+            foreach (var node in Nodes) clone.Nodes.Add(node.Clone(newFile, newSimulator));
+            
+            return clone;
         }
     }
 }

@@ -20,14 +20,22 @@ namespace VfxEditor.PhybFormat.Simulator.PostAlignment {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => [
+        protected override List<ParsedBase> GetParsed() => new() {
             CollisionName,
             ChainId,
             NodeId,
-        ];
+        };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 
+        }
+
+        public PhybPostAlignment Clone(PhybFile newFile, PhybSimulator newSimulator) {
+            var clone = new PhybPostAlignment(newFile, newSimulator);
+            clone.CollisionName.Value = CollisionName.Value;
+            clone.ChainId.Value = ChainId.Value;
+            clone.NodeId.Value = NodeId.Value;
+            return clone;
         }
     }
 }

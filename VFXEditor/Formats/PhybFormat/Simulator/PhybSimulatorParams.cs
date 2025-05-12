@@ -26,7 +26,16 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         public PhybSimulatorParams( PhybFile file, BinaryReader reader ) : base( file, reader ) { }
 
-        protected override List<ParsedBase> GetParsed() => [
+        public void CopyFrom(PhybSimulatorParams other) {
+            Gravity.Value = other.Gravity.Value;
+            Wind.Value = other.Wind.Value;
+            ConstraintLoop.Value = other.ConstraintLoop.Value;
+            CollisionLoop.Value = other.CollisionLoop.Value;
+            Flags.Value = other.Flags.Value;
+            Group.Value = other.Group.Value;
+        }
+
+        protected override List<ParsedBase> GetParsed() => new() {
             Gravity,
             Wind,
             ConstraintLoop,
@@ -34,6 +43,6 @@ namespace VfxEditor.PhybFormat.Simulator {
             Flags,
             Group,
             Padding,
-        ];
+        };
     }
 }

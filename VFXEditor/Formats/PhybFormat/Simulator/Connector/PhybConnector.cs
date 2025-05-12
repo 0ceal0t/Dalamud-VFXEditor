@@ -1,6 +1,7 @@
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.PhybFormat.Simulator.Connector {
@@ -26,7 +27,7 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => [
+        protected override List<ParsedBase> GetParsed() => new() {
             ChainId1,
             ChainId2,
             NodeId1,
@@ -37,10 +38,25 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
             Repulsion,
             CollisionFlag,
             ContinuousCollisionFlag,
-        ];
+        };
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, CollisionRadius.Value, meshes.Simulation, boneMatrixes );
+        }
+
+        public PhybConnector Clone(PhybFile newFile, PhybSimulator newSimulator) {
+            var clone = new PhybConnector(newFile, newSimulator);
+            // Copy values from matching parsed items by index
+            var targetParsed = clone.GetParsed();
+            for (var i = 0; i < Parsed.Count; i++) {
+                if (Parsed[i] is ParsedFloat pFloat && targetParsed[i] is ParsedFloat tFloat) 
+                    tFloat.Value = pFloat.Value;
+                if (Parsed[i] is ParsedShort pShort && targetParsed[i] is ParsedShort tShort) 
+                    tShort.Value = pShort.Value;
+                if (Parsed[i] is ParsedUInt pUInt && targetParsed[i] is ParsedUInt tUInt) 
+                    tUInt.Value = pUInt.Value;
+            }
+            return clone;
         }
     }
 }

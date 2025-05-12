@@ -11,10 +11,10 @@ using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.PhybFormat.Collision;
-using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
+using VfxEditor.PhybFormat.Simulator;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {
@@ -152,6 +152,19 @@ namespace VfxEditor.PhybFormat {
 
         public override void OnChange() {
             PhysicsUpdated = true;
+            base.OnChange();
+        }
+
+        public void Save() {
+        }
+
+        public PhybSimulator GetOrCreateSimulatorAtIndex(int index) {
+            var simulators = Simulation.Simulators;
+            while (simulators.Count <= index) {
+                var newSimulator = new PhybSimulator(this);
+                simulators.Add(newSimulator);
+            }
+            return simulators[index];
         }
     }
-}
+    }

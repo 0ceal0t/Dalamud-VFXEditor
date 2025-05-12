@@ -22,13 +22,15 @@ namespace VfxEditor.FileBrowser {
     public enum ImGuiFileDialogFlags {
         None = 0,
         ConfirmOverwrite = 1,
-        SelectOnly = 2
+        SelectOnly = 2,
+        MultiSelect = 4
     }
 
     public partial class FileBrowserDialog {
         public readonly string Id;
         public readonly string Title;
         public readonly bool Modal;
+        public readonly ImGuiFileDialogFlags Flags;
         public readonly bool SelectOnly;
         public readonly bool ConfirmOverwrite;
         public readonly bool FolderDialog;
@@ -45,6 +47,9 @@ namespace VfxEditor.FileBrowser {
         private string FileNameInput = "";
 
         private FileBrowserFile Selected;
+        private readonly List<FileBrowserFile> SelectedFiles = [];
+        private readonly bool MultiSelect;
+        private int? LastSelectedIndex = null;
         private readonly List<FileBrowserFile> Files = [];
         private readonly List<FileBrowserFile> SearchedFiles = [];
         private SortingField CurrentSortingField = SortingField.FileName;
@@ -79,6 +84,7 @@ namespace VfxEditor.FileBrowser {
             Id = id;
             Title = title;
             Modal = modal;
+            Flags = flags;
             SelectOnly = flags.HasFlag( ImGuiFileDialogFlags.SelectOnly );
             ConfirmOverwrite = flags.HasFlag( ImGuiFileDialogFlags.ConfirmOverwrite ) && !Plugin.Configuration.FileBrowserOverwriteDontAsk;
             FolderDialog = folderDialog;
@@ -87,6 +93,7 @@ namespace VfxEditor.FileBrowser {
             DefaultExtension = defaultExtension;
             FileNameInput = DefaultFileName;
             Command = command;
+            MultiSelect = flags.HasFlag(ImGuiFileDialogFlags.MultiSelect);
 
             SideBar = new( this );
             Filters = new( this, filters );
@@ -113,6 +120,7 @@ namespace VfxEditor.FileBrowser {
 
             SearchInput = "";
             Selected = null;
+            SelectedFiles.Clear();
             if( FolderDialog ) FileNameInput = DefaultFileName;
             SideBar.Clear();
             Preview.Clear();
@@ -198,6 +206,20 @@ namespace VfxEditor.FileBrowser {
                 return drivePath;
             }
             return Path.Combine( [.. parts] );
+        }
+
+        public string[] GetResults() {
+            if (!GetIsOk()) return Array.Empty<string>();
+            
+            if (Flags.HasFlag(ImGuiFileDialogFlags.MultiSelect) && SelectedFiles.Count > 0) {
+                return SelectedFiles.Select(f => Path.Combine(CurrentPath, f.FileName)).ToArray();
+            }
+            
+            if (Selected != null) {
+                return new[] { Path.Combine(CurrentPath, Selected.FileName) };
+            }
+            
+            return Array.Empty<string>();
         }
 
         public void Dispose() => Preview.Dispose();
