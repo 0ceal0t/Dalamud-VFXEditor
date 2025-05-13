@@ -1,7 +1,6 @@
 using HelixToolkit.SharpDX.Core.Animations;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.PhybFormat.Simulator.Connector {

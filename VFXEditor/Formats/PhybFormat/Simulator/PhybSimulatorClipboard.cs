@@ -1,12 +1,3 @@
-using System.Collections.Generic;
-using VfxEditor.PhybFormat.Simulator.Attract;
-using VfxEditor.PhybFormat.Simulator.Chain;
-using VfxEditor.PhybFormat.Simulator.CollisionData;
-using VfxEditor.PhybFormat.Simulator.Connector;
-using VfxEditor.PhybFormat.Simulator.Pin;
-using VfxEditor.PhybFormat.Simulator.PostAlignment;
-using VfxEditor.PhybFormat.Simulator.Spring;
-
 namespace VfxEditor.PhybFormat.Simulator {
     public static class PhybSimulatorClipboard {
         private static PhybSimulator? CopiedSimulator;

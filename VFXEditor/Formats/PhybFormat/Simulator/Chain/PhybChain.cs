@@ -3,7 +3,6 @@ using ImGuiNET;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
