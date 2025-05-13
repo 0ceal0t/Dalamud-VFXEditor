@@ -154,17 +154,5 @@ namespace VfxEditor.PhybFormat {
             PhysicsUpdated = true;
             base.OnChange();
         }
-
-        public void Save() {
-        }
-
-        public PhybSimulator GetOrCreateSimulatorAtIndex(int index) {
-            var simulators = Simulation.Simulators;
-            while (simulators.Count <= index) {
-                var newSimulator = new PhybSimulator(this);
-                simulators.Add(newSimulator);
-            }
-            return simulators[index];
-        }
     }
-    }
+}

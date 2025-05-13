@@ -6,7 +6,6 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.FileBrowser;
 using VfxEditor.PhybFormat.Simulator.Attract;
 using VfxEditor.PhybFormat.Simulator.Chain;
 using VfxEditor.PhybFormat.Simulator.CollisionData;
