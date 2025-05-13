@@ -68,12 +68,5 @@ namespace VfxEditor.PhybFormat.Simulator {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             foreach( var item in Simulators ) item.AddPhysicsObjects( meshes, boneMatrixes );
         }
-
-        public void BulkSaveSimulators( List<PhybFile> targetFiles ) {
-            foreach( var targetFile in targetFiles ) {
-                PhybSimulatorClipboard.PasteSimulatorToFile( targetFile );
-                targetFile.Save();
-            }
-        }
     }
 }

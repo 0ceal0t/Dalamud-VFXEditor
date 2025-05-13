@@ -9,7 +9,7 @@ using VfxEditor.PhybFormat.Simulator.Spring;
 
 namespace VfxEditor.PhybFormat.Simulator {
     public static class PhybSimulatorClipboard {
-        private static PhybSimulator CopiedSimulator;
+        private static PhybSimulator? CopiedSimulator;
         private static int CopiedSimulatorIndex = -1;
 
         public static void CopySimulator(PhybSimulator source) {
@@ -30,6 +30,8 @@ namespace VfxEditor.PhybFormat.Simulator {
             foreach (var item in source.Pins) CopiedSimulator.Pins.Add(item.Clone(CopiedSimulator.File, CopiedSimulator));
             foreach (var item in source.Springs) CopiedSimulator.Springs.Add(item.Clone(CopiedSimulator.File, CopiedSimulator));
             foreach (var item in source.PostAlignments) CopiedSimulator.PostAlignments.Add(item.Clone(CopiedSimulator.File, CopiedSimulator));
+
+            Dalamud.InfoNotification( $"Copied Simulator {CopiedSimulatorIndex}" );
         }
 
         public static void PasteSimulator(PhybSimulator target) {
@@ -59,41 +61,15 @@ namespace VfxEditor.PhybFormat.Simulator {
             foreach (var item in CopiedSimulator.PostAlignments) target.PostAlignments.Add(item.Clone(target.File, target));
 
             target.File.OnChange();
+            var target_simulator_index = target.File.Simulation.Simulators.IndexOf(target);
+            Dalamud.OkNotification( $"Pasted to Simulator {target_simulator_index}" );
+        }
+
+        public static void Clear() {
+            if (CopiedSimulator == null) return;
+            CopiedSimulator = null;
         }
 
         public static bool HasCopiedData() => CopiedSimulator != null;
-
-        public static int GetCopiedSimulatorIndex() => CopiedSimulatorIndex;
-
-        public static void PasteSimulatorToFile(PhybFile targetFile) {
-            if (CopiedSimulator == null) return;
-
-            var targetSimulator = targetFile.GetOrCreateSimulatorAtIndex(CopiedSimulatorIndex);
-
-            // Copy parameters
-            targetSimulator.Params.CopyFrom(CopiedSimulator.Params);
-
-            // Clear existing collections
-            targetSimulator.Collisions.Clear();
-            targetSimulator.CollisionConnectors.Clear();
-            targetSimulator.Chains.Clear();
-            targetSimulator.Connectors.Clear();
-            targetSimulator.Attracts.Clear();
-            targetSimulator.Pins.Clear();
-            targetSimulator.Springs.Clear();
-            targetSimulator.PostAlignments.Clear();
-
-            // Deep copy from clipboard to target
-            foreach (var item in CopiedSimulator.Collisions) targetSimulator.Collisions.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.CollisionConnectors) targetSimulator.CollisionConnectors.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.Chains) targetSimulator.Chains.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.Connectors) targetSimulator.Connectors.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.Attracts) targetSimulator.Attracts.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.Pins) targetSimulator.Pins.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.Springs) targetSimulator.Springs.Add(item.Clone(targetFile, targetSimulator));
-            foreach (var item in CopiedSimulator.PostAlignments) targetSimulator.PostAlignments.Add(item.Clone(targetFile, targetSimulator));
-
-            targetFile.OnChange();
-        }
     }
 }
