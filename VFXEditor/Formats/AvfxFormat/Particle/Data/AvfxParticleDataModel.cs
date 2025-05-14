@@ -15,6 +15,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis AnimationNumber = new( "Animation Number", "NoAn" );
         public readonly AvfxCurve1Axis Morph = new( "Morph", "Moph" );
         public readonly AvfxCurve1Axis FresnelCurve = new( "Fresnel Curve", "FrC" );
+        public readonly AvfxCurve1Axis FresnelCurveRandom = new( "Fresnel Curve Random", "FrCR" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
@@ -35,6 +36,7 @@ namespace VfxEditor.AvfxFormat {
                 AnimationNumber,
                 Morph,
                 FresnelCurve,
+                FresnelCurveRandom,
                 FresnelRotation,
                 ColorBegin,
                 ColorEnd
@@ -52,6 +54,7 @@ namespace VfxEditor.AvfxFormat {
 
             Tabs.Add( Morph );
             Tabs.Add( FresnelCurve );
+            Tabs.Add( FresnelCurveRandom );
             Tabs.Add( FresnelRotation );
             Tabs.Add( ColorBegin );
             Tabs.Add( ColorEnd );
