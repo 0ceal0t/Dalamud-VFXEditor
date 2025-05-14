@@ -5,7 +5,7 @@ using VfxEditor.TmbFormat.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C204 : TmbEntry {
         public const string MAGIC = "C204";
-        public const string DISPLAY_NAME = "Reaper Shroud";
+        public const string DISPLAY_NAME = "Shroud Transform"; //applies to both RPR and SCH
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 

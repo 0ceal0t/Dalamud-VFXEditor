@@ -18,17 +18,21 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool IsSpline = new( "Is Spline", "bSpl" );
         public readonly AvfxBool IsLocal = new( "Is Local", "bLcl" );
 
-        public readonly AvfxCurve1Axis CF = new( "CF (Unknown)", "CF" );
+        public readonly AvfxCurve1Axis CF = new( "CF", "CF" );
+        public readonly AvfxCurve1Axis CFR = new( "CF Random", "CFR" );
         public readonly AvfxCurve1Axis Width = new( "Width", "Wd" );
         public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WdR" );
         public readonly AvfxCurve1Axis WidthBegin = new( "Width Begin", "WdB" );
+        public readonly AvfxCurve1Axis WidthBeginRandom = new( "Width Begin Random", "WdBR" );
         public readonly AvfxCurve1Axis WidthCenter = new( "Width Center", "WdC" );
+        public readonly AvfxCurve1Axis WidthCenterRandom = new( "Width Center Random", "WdCR" );
         public readonly AvfxCurve1Axis WidthEnd = new( "Width End", "WdE" );
+        public readonly AvfxCurve1Axis WidthEndRandom = new( "Width End Random", "WdER" );
         public readonly AvfxCurve1Axis Length = new( "Length", "Len" );
         public readonly AvfxCurve1Axis LengthRandom = new( "Length Random", "LenR" );
         public readonly AvfxCurve1Axis Softness = new( "Softness", "Sft" );
         public readonly AvfxCurve1Axis SoftRandom = new( "Softness Random", "SftR" );
-        public readonly AvfxCurve1Axis PnDs = new( "PnDs (Unknown)", "PnDs" );
+        public readonly AvfxCurve1Axis PnDs = new( "Point Distortion", "PnDs" );
         public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
         public readonly AvfxCurveColor ColorCenter = new( name: "Color Center", "ColC" );
         public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
@@ -53,11 +57,15 @@ namespace VfxEditor.AvfxFormat {
                 IsSpline,
                 IsLocal,
                 CF,
+                CFR,
                 Width,
                 WidthRandom,
                 WidthBegin,
+                WidthBeginRandom,
                 WidthCenter,
+                WidthCenterRandom,
                 WidthEnd,
+                WidthEndRandom,
                 Length,
                 LengthRandom,
                 Softness,
@@ -88,8 +96,11 @@ namespace VfxEditor.AvfxFormat {
 
             Tabs.Add( Width );
             Tabs.Add( WidthBegin );
+            Tabs.Add( WidthBeginRandom );
             Tabs.Add( WidthCenter );
+            Tabs.Add( WidthCenterRandom );
             Tabs.Add( WidthEnd );
+            Tabs.Add( WidthEndRandom );
             Tabs.Add( Length );
             Tabs.Add( LengthRandom );
 
@@ -101,6 +112,7 @@ namespace VfxEditor.AvfxFormat {
             Tabs.Add( ColorEdgeEnd );
 
             Tabs.Add( CF );
+            Tabs.Add( CFR );
             Tabs.Add( Softness );
             Tabs.Add( SoftRandom );
             Tabs.Add( PnDs );

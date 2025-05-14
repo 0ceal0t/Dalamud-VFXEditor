@@ -4,21 +4,21 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public enum ObjectControlPosition {
-        Stowed = 0,
-        RightHand = 1,
-        Unknown = 2,
-        SwitchHand = 3,
-        RootBone = 4,
-        SwitchReverse = 5
+        Stowed_State1 = 0,
+        Drawn_State0 = 1,
+        CraftGather_State2 = 2,
+        SwitchHand_State3 = 3,
+        n_throw_State4 = 4,
+        SwitchReverse_State5 = 5
     }
 
     public enum ObjectControlFinal {
-        Stowed = 0,
-        Drawn = 1,
-        Weapon = 2,
-        OffHand = 3,
-        RootBone = 4,
-        UncontrolledRoot = 5,
+        Stowed_State1 = 0,
+        Drawn_State0 = 1,
+        CraftGather_State2 = 2,
+        SwitchHand_State3 = 3,
+        n_throw_State4 = 4,
+        SwitchReverse_State5 = 5,
         Original = 6,
     }
 
