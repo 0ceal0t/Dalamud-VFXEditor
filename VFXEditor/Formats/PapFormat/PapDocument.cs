@@ -33,7 +33,7 @@ namespace VfxEditor.PapFormat {
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            DrawAnimationWarning();
+            //DrawAnimationWarning();
             base.DrawBody();
         }
     }
