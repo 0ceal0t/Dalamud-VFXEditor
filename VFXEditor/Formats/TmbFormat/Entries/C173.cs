@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x44;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1", value: 1 );
+        private readonly ParsedInt Loop = new( "Loop / Wait", value: 1 );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly TmbOffsetString Path = new( "Path", [
             new() {
@@ -28,8 +28,8 @@ namespace VfxEditor.TmbFormat.Entries {
         ], false );
         private readonly ParsedShort BindPoint1 = new( "Bind Point 1", value: 1 );
         private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: 0xFF );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedInt Visibility = new( "Visibility" ); //doesn't seem to use the same enum
+        private readonly ParsedInt Limit = new( "Limit" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );
@@ -44,13 +44,13 @@ namespace VfxEditor.TmbFormat.Entries {
         public C173( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => [
-            Unk1,
+            Loop,
             Unk2,
             Path,
             BindPoint1,
             BindPoint2,
-            Unk3,
-            Unk4,
+            Visibility,
+            Limit,
             Unk5,
             Unk6,
             Unk7,

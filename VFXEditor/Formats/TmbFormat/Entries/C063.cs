@@ -13,7 +13,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x20;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Loop = new( "Loop", value: 1 );
+        private readonly ParsedInt Loop = new( "Loop/Duration", value: 1 );
         private readonly ParsedInt Interrupt = new( "Interrupt" );
         private readonly TmbOffsetString Path = new( "Path", null, true );
         private readonly ParsedInt SoundIndex = new( "Sound Index" );
