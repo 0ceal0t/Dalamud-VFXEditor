@@ -28,6 +28,12 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
         }
 
         protected void PopulateIndexData( MdlFileData data, BinaryReader reader, int lod ) {
+            // prevents total failure to load MDL if index buffer is malformed for LOD
+            // TODO: why/when does this happen when enqueueing?
+            if( data.IndexBufferPositions[lod].Count == 0) {
+                Dalamud.Error($"IndexBufferPositions Queue empty for LOD #{lod}, aborting populate");
+                return;
+            }
             var padding = data.IndexBufferPositions[lod].Dequeue() - ( ( IndexCount * 2 ) + _IndexOffset );
             reader.BaseStream.Position = data.IndexBufferOffsets[lod] + _IndexOffset;
             RawIndexData = reader.ReadBytes( ( int )( IndexCount * 2 + padding ) );
