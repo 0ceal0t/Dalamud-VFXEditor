@@ -11,10 +11,10 @@ using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.PhybFormat.Collision;
+using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
-using VfxEditor.PhybFormat.Simulator;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {
