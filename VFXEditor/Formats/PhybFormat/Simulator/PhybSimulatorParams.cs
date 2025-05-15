@@ -35,7 +35,7 @@ namespace VfxEditor.PhybFormat.Simulator {
             Group.Value = other.Group.Value;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Gravity,
             Wind,
             ConstraintLoop,
@@ -43,6 +43,6 @@ namespace VfxEditor.PhybFormat.Simulator {
             Flags,
             Group,
             Padding,
-        };
+        ];
     }
 }

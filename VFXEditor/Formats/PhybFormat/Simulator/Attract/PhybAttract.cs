@@ -22,13 +22,13 @@ namespace VfxEditor.PhybFormat.Simulator.Attract {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             BoneName,
             BoneOffset,
             ChainId,
             NodeId,
             Stiffness,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodeToBone( ChainId.Value, NodeId.Value, BoneName.Value, meshes.Spring, boneMatrixes );

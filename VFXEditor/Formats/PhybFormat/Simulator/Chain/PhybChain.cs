@@ -62,7 +62,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             reader.BaseStream.Position = resetPos;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             Dampening,
             MaxSpeed,
             Friction,
@@ -70,7 +70,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             RepulsionStrength,
             LastBoneOffset,
             Type,
-        };
+        ];
 
         public override void Draw() {
             using var _ = ImRaii.PushId( "Chain" );

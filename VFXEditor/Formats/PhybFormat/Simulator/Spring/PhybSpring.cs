@@ -22,14 +22,14 @@ namespace VfxEditor.PhybFormat.Simulator.Spring {
             Simulator = simulator;
         }
 
-        protected override List<ParsedBase> GetParsed() => new() {
+        protected override List<ParsedBase> GetParsed() => [
             ChainId1,
             ChainId2,
             NodeId1,
             NodeId2,
             StretchStiffness,
             CompressStiffness,
-        };
+        ];
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, 0.02f, meshes.Spring, boneMatrixes );
