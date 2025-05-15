@@ -6,10 +6,10 @@ using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
     public enum VfxVisibility {
-        Unknown_0 = 0,
-        Unknown_1 = 1,
-        Everyone = 2,
-        Unknown_3 = 3,
+        Default_no_Triggers = 0,
+        Default_with_Triggers = 1,
+        Always_no_Triggers = 2,
+        Always_with_Triggers = 3,
     }
 
     public class C012 : TmbEntry {

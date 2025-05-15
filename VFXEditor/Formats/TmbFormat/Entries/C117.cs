@@ -6,7 +6,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.TmbFormat.Entries {
     public class C117 : TmbEntry {
         public const string MAGIC = "C117";
-        public const string DISPLAY_NAME = "";
+        public const string DISPLAY_NAME = "Forced Forward Movement";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
         public override DangerLevel Danger => DangerLevel.Detectable;
