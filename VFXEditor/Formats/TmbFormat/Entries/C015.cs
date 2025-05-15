@@ -3,6 +3,14 @@ using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
+    public enum AtchState {
+        State_1 = 0,
+        State_0 = 1,
+        State_2 = 2,
+        State_3 = 3,
+        State_4 = 4,
+        State_5 = 5,
+    }
     public class C015 : TmbEntry {
         public const string MAGIC = "C015";
         public const string DISPLAY_NAME = "Weapon Size";
@@ -12,9 +20,9 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Unk1 = new( "Unknown 1" );
+        private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt WeaponSize = new( "Size" );
+        private readonly ParsedEnum<AtchState> WeaponSize = new( "ATCH Object Scale" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
 
         public C015( TmbFile file ) : base( file ) { }
@@ -22,7 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public C015( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => [
-            Unk1,
+            Duration,
             Unk2,
             WeaponSize,
             ObjectControl
