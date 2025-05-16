@@ -152,6 +152,7 @@ namespace VfxEditor.PhybFormat {
 
         public override void OnChange() {
             PhysicsUpdated = true;
+            base.OnChange();
         }
     }
 }
