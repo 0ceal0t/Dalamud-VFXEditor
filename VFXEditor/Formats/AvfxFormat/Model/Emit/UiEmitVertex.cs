@@ -3,24 +3,20 @@ using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat
-{
-    public class UiEmitVertex : IUiItem
-    {
+namespace VfxEditor.AvfxFormat {
+    public class UiEmitVertex : IUiItem {
         public readonly AvfxEmitVertex Vertex;
         private readonly AvfxModel Model;
 
         public Vector3 Position => Vertex.Position.Value;
         public Vector3 Normal => Vertex.Normal.Value;
 
-        public UiEmitVertex( AvfxModel model, AvfxEmitVertex vertex )
-        {
+        public UiEmitVertex( AvfxModel model, AvfxEmitVertex vertex ) {
             Model = model;
             Vertex = vertex;
         }
 
-        public void Draw()
-        {
+        public void Draw() {
             using var edited = new Edited();
 
             ImGui.TableNextColumn();
