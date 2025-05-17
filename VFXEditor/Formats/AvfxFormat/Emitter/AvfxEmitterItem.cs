@@ -1,6 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;
@@ -115,7 +116,7 @@ namespace VfxEditor.AvfxFormat {
             ];
         }
 
-        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );
+        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, int size, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, size );
 
         public void InitializeNodeSelects() {
             if( IsParticle ) ParticleSelect = new AvfxNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );

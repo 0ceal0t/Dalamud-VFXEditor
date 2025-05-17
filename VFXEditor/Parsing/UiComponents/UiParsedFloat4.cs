@@ -2,6 +2,7 @@ using ImGuiNET;
 using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class UiParsedFloat4 : IUiItem {
@@ -10,6 +11,7 @@ namespace VfxEditor.Parsing {
         public readonly ParsedFloat P2;
         public readonly ParsedFloat P3;
         public readonly ParsedFloat P4;
+        public bool HighPrecision = true;
 
         private Vector4 Value => new( P1.Value, P2.Value, P3.Value, P4.Value );
 
@@ -34,7 +36,7 @@ namespace VfxEditor.Parsing {
             }
 
             var value = Value;
-            if( ImGui.InputFloat4( Name, ref value ) ) {
+            if( ImGui.InputFloat4( Name, ref value, HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) {
                 CommandManager.Add( new CompoundCommand( new[] {
                      new ParsedSimpleCommand<float>( P1, value.X ),
                      new ParsedSimpleCommand<float>( P2, value.Y ),

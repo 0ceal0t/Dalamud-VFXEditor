@@ -49,10 +49,12 @@ namespace VfxEditor.AvfxFormat {
 
         public void LinkParentChild( AvfxNode node ) {
             if( node == null ) return;
-
-            Node.ChildNodes.Add( node );
-            node.Parents.Add( this );
-            OutdatedGraph( node );
+            if( !( Node == node ) )
+            {
+                Node.ChildNodes.Add( node );
+                node.Parents.Add( this );
+                OutdatedGraph( node );
+            }
         }
 
         private void OutdatedGraph( AvfxNode node ) {
