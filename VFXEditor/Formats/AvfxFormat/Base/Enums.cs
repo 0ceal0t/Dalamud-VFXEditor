@@ -248,7 +248,7 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Spline = 2,
             Camera = 3,
-            Unknown_4 = 4,
+            LinearAdjust = 4,
         }
         public enum BindPoint {
             Caster = 0,
@@ -268,7 +268,7 @@ namespace VfxEditor.AvfxFormat {
             Reserve3 = 3,
             RadialBlur_Unknown = 4,
             MirrorBlur = 5,
-            CameraQuake_Unknown = 6, // NOTE: seen in Akh Rai
+            CameraQuake_Variable = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,
             CameraQuake = 9
