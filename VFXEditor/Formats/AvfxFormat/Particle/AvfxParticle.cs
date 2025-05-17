@@ -60,10 +60,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve1Axis RotVelX = new( "Rotation Velocity X", "VRX" );
-        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
-        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
         public readonly AvfxCurve1Axis RotVelXRandom = new( "Rotation Velocity X Random", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
         public readonly AvfxCurve1Axis RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
         public readonly AvfxCurve1Axis RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
         public readonly AvfxCurveColor Color = new( "Color", locked: true );
 
@@ -156,10 +156,10 @@ namespace VfxEditor.AvfxFormat {
                 Rotation,
                 Position,
                 RotVelX,
-                RotVelY,
-                RotVelZ,
                 RotVelXRandom,
+                RotVelY,
                 RotVelYRandom,
+                RotVelZ,
                 RotVelZRandom,
                 Color
             ];
@@ -227,10 +227,10 @@ namespace VfxEditor.AvfxFormat {
                 Rotation,
                 Position,
                 RotVelX,
-                RotVelY,
-                RotVelZ,
                 RotVelXRandom,
+                RotVelY,
                 RotVelYRandom,
+                RotVelZ,
                 RotVelZRandom,
                 Color
             ] );
