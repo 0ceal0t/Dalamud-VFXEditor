@@ -36,7 +36,7 @@ namespace VfxEditor.UldFormat.Component {
         Multipurpose = 0x15,
         Map = 0x16,
         Preview = 0x17,
-        //HoldButton = 0x18,
+        HoldButton = 0x18,
         Unknown_25 = 0x19,
     }
 
@@ -138,6 +138,7 @@ namespace VfxEditor.UldFormat.Component {
                 ComponentType.Map => new MapComponentData(),
                 ComponentType.Preview => new PreviewComponentData(),
 
+                ComponentType.HoldButton => new HoldButtonComponentData(),
                 ComponentType.Unknown_25 => new Unknown25ComponentData(),
                 _ => null
             };

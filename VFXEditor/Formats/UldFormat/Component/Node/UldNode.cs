@@ -220,6 +220,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                         ComponentType.Tabbed => new TabbedNodeData(),
                         ComponentType.ListItem => new ListItemNodeData(),
                         ComponentType.NineGridText => new NineGridTextNodeData(),
+                        ComponentType.HoldButton => new HoldButtonNodeData(),
                         _ => new UldNodeComponentData()
                     };
                 }

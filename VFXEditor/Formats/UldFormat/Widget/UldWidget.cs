@@ -10,6 +10,7 @@ using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Widget {
     public enum AlignmentType : int {
+        Unknown = 0xFF,
         TopLeft = 0x0,
         Top = 0x1,
         TopRight = 0x2,
