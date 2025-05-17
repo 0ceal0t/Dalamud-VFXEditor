@@ -4,9 +4,9 @@ namespace VfxEditor.UldFormat.Component.Data {
     public class SliderComponentData : UldGenericData {
         public SliderComponentData() {
             Parsed.AddRange( [
-                new ParsedUInt( "Unknown Node Id 1" ),
+                new ParsedUInt( "Ninegrid Node Id" ),
                 new ParsedUInt( "Unknown Node Id 2" ),
-                new ParsedUInt( "Unknown Node Id 3" ),
+                new ParsedUInt( "Text Node Id" ),
                 new ParsedUInt( "Unknown Node Id 4" ),
                 new ParsedByteBool( "Is Vertical" ),
                 new ParsedUInt( "Left Offset", size: 1 ),

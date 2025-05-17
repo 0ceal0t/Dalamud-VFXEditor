@@ -45,7 +45,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 new ParsedEnum<SheetType>( "Sheet Type", size: 1 ),
                 new ParsedInt( "Character Spacing", size: 1 ),
                 new ParsedInt( "Line Spacing", size: 1 ),
-                new ParsedUInt( "Unknown 3", size: 2 ),
+                new ParsedUInt( "Fill/Outline", size: 2 ),
                 new ParsedUInt( "Unknown 4", size: 2 ),
             ] );
         }

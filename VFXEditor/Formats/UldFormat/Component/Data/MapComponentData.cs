@@ -14,6 +14,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Unknown Node Id 8" ),
                 new ParsedUInt( "Unknown Node Id 9" ),
                 new ParsedUInt( "Unknown Node Id 10"),
+                new ParsedUInt( "Unknown Node Id 11"),
             ] );
         }
     }

@@ -1,10 +1,10 @@
 using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxBinderDataUnknown4 : AvfxData {
+    public class AvfxBinderDataLinearAdjust : AvfxData {
         public readonly AvfxCurve1Axis CarryOverFactor = new( "Carry Over Factor", "COF" );
 
-        public AvfxBinderDataUnknown4() : base() {
+        public AvfxBinderDataLinearAdjust() : base() {
             Parsed = [
                 CarryOverFactor
             ];

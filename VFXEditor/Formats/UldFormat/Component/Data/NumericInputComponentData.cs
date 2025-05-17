@@ -1,4 +1,5 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Color;
 
 namespace VfxEditor.UldFormat.Component.Data {
     public class NumericInputComponentData : UldGenericData {
@@ -9,7 +10,7 @@ namespace VfxEditor.UldFormat.Component.Data {
                 new ParsedUInt( "Unknown Node Id 3" ),
                 new ParsedUInt( "Unknown Node Id 4" ),
                 new ParsedUInt( "Unknown Node Id 5" ),
-                new ParsedUInt( "Color" ),
+                new ParsedSheetColor( "Color" ),
             ] );
         }
     }

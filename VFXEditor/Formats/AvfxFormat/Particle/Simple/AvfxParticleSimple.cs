@@ -13,9 +13,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat CoordAccuracyX = new( "Coord Accuracy X", "CAX" );
         public readonly AvfxFloat CoordAccuracyY = new( "Coord Accuracy Y", "CAY" );
         public readonly AvfxFloat CoordAccuracyZ = new( "Coord Accuracy Z", "CAZ" );
-        public readonly AvfxFloat CoordGraX = new( "Coord Gra X", "CGX" );
-        public readonly AvfxFloat CoordGraY = new( "Coord Gra Y", "CGY" );
-        public readonly AvfxFloat CoordGraZ = new( "Coord Gra Z", "CGZ" );
+        public readonly AvfxFloat CoordGraX = new( "Coord Gravity X", "CGX" );
+        public readonly AvfxFloat CoordGraY = new( "Coord Gravity Y", "CGY" );
+        public readonly AvfxFloat CoordGraZ = new( "Coord Gravity Z", "CGZ" );
         public readonly AvfxFloat ScaleXStart = new( "Scale Start X", "SBX" );
         public readonly AvfxFloat ScaleYStart = new( "Scale Start Y", "SBY" );
         public readonly AvfxFloat ScaleXEnd = new( "Scale End X", "SEX" );
@@ -59,12 +59,12 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt CreateIntervalRandom = new( "Create Interval Random", "CrIR" );
         public readonly AvfxInt CreateIntervalCount = new( "Create Interval Count", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "Create Interval Life", "CrIL" );
-        public readonly AvfxInt CrLR = new( "CrLR", "CrLR" ); // New to DT
+        public readonly AvfxInt CrLR = new( "Create Life Random", "CrLR" ); // New to DT
         public readonly AvfxBool CreateNewAfterDelete = new( "Create New After Death", "bCrN", size: 1 );
         public readonly AvfxBool UvReverse = new( "UV Reverse", "bRUV", size: 1 );
         public readonly AvfxBool ScaleRandomLink = new( "Scale Random Link", "bSRL", size: 1 );
         public readonly AvfxBool BindParent = new( "Bind Parent", "bBnP", size: 1 );
-        public readonly AvfxInt ScaleByParent = new( "Scale by Parent", "bSnP", size: 1 );
+        public readonly AvfxBool ScaleByParent = new( "Scale by Parent", "bSnP", size: 1 );
         public readonly AvfxInt PolyLineTag = new( "Polyline Tag", "PolT" );
 
         public readonly AvfxSimpleColors Colors = new();
