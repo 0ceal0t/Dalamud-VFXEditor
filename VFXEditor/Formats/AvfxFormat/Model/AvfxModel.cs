@@ -28,7 +28,6 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly UiNodeGraphView NodeView;
         private readonly CommandTable<UiEmitVertex> VertexTable;
-
         private readonly CommandTable<UiVertexNumber> VertexNumberTable;
 
         private int Mode = ( int )RenderMode.Color;
@@ -62,16 +61,13 @@ namespace VfxEditor.AvfxFormat {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             ReadNested( reader, Parsed, size );
-            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count )
-            {
+            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count ) {
                 Dalamud.Error( $"Mismatched emit vertex counts {EmitVertexes.EmitVertexes.Count} {EmitVertexNumbers.VertexNumbers.Count}" );
             }
-            for( var i = 0; i < EmitVertexes.EmitVertexes.Count; i++ )
-            {
+            for( var i = 0; i < EmitVertexes.EmitVertexes.Count; i++ ) {
                 AllEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i] ) );
             }
-            for( var i = 0; i < EmitVertexNumbers.VertexNumbers.Count; i++ )
-            {
+            for( var i = 0; i < EmitVertexNumbers.VertexNumbers.Count; i++ ) {
                 AllVertexNumbers.Add( new UiVertexNumber( EmitVertexNumbers.VertexNumbers[i] ) );
             }
         }
@@ -83,26 +79,22 @@ namespace VfxEditor.AvfxFormat {
             EmitVertexes.EmitVertexes.Clear();
             EmitVertexes.EmitVertexes.AddRange( AllEmitVertexes.Select( x => x.Vertex ) );
 
-            if( EmitVertexNumbers.VertexNumbers.Count > 0 )
-            {
+            if( EmitVertexNumbers.VertexNumbers.Count > 0 ) {
                 EmitVertexNumbers.SetAssigned( true );
                 EmitVertexNumbers.Write( writer );
             }
 
-            if( EmitVertexes.EmitVertexes.Count > 0 )
-            {
+            if( EmitVertexes.EmitVertexes.Count > 0 ) {
                 EmitVertexes.SetAssigned( true );
                 EmitVertexes.Write( writer );
             }
 
-            if( Vertexes.Vertexes.Count > 0 )
-            {
+            if( Vertexes.Vertexes.Count > 0 ) {
                 Vertexes.SetAssigned( true );
                 Vertexes.Write( writer );
             }
 
-            if( Indexes.Indexes.Count > 0 )
-            {
+            if( Indexes.Indexes.Count > 0 ) {
                 Indexes.SetAssigned( true );
                 Indexes.Write( writer );
             }
@@ -236,8 +228,7 @@ namespace VfxEditor.AvfxFormat {
         private void ImportDialog() {
             FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( bool ok, string res ) => {
                 if( !ok ) return;
-                try
-                {
+                try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
                         CommandManager.Add( new AvfxModelImportCommand( this, newIndexes, newVertexes ) );
                     }

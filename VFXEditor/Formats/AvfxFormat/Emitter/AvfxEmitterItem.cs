@@ -1,7 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.AvfxFormat.Enums;

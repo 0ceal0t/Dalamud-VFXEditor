@@ -62,8 +62,7 @@ namespace VfxEditor.DirectX {
         public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
 
         public void LoadModel( List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
-            if( modelIndexes.Count == 0 )
-            {
+            if( modelIndexes.Count == 0 ) {
                 Model.ClearVertexes();
             }
             else {
@@ -116,8 +115,7 @@ namespace VfxEditor.DirectX {
             if( normal.Equals( originalNormal ) ) return Quaternion.Identity;
 
             var rotationAxis = Vector3.Cross( normal, originalNormal );
-            if( rotationAxis.Length() == 0f )
-            { // N = -N'
+            if( rotationAxis.Length() == 0f ) { // N = -N'
                 return Quaternion.RotationAxis( Vector3.UnitX, ( float )Math.PI );
             }
 
@@ -128,8 +126,7 @@ namespace VfxEditor.DirectX {
 
         protected override void DrawPasses() {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
-            if( Plugin.Configuration.ModelShowEmitters )
-            {
+            if( Plugin.Configuration.ModelShowEmitters ) {
                 Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
             }
         }
