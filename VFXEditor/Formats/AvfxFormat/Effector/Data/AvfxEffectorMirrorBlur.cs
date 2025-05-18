@@ -10,7 +10,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat FadeStartDistance = new( "Fade Start Distance", "FSDc" );
         public readonly AvfxFloat FadeEndDistance = new( "Fade End Distance", "FEDc" );
         public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "Fade Base Point", "FaBP" );
-        public readonly AvfxBool OneSide = new( "bOS", "Single Side" );
+        public readonly AvfxBool OneSide = new( "Single Side", "bOS" );
 
 
         public AvfxEffectorMirrorBlur() : base() {
