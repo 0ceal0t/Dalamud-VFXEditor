@@ -81,7 +81,7 @@ namespace VfxEditor.AvfxFormat {
         public override string GetDefaultText() => "Texture Color 1";
 
         public override List<AvfxNodeSelect> GetNodeSelects() => [
-            new AvfxNodeSelectList<AvfxTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, MaskTextureIdx )
+            new AvfxNodeSelectList<AvfxTexture>( Particle, "Mask Texture", Particle.NodeGroups.Textures, MaskTextureIdx, 256 )
         ];
     }
 }

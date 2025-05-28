@@ -42,7 +42,7 @@ namespace VfxEditor.AvfxFormat {
                 ColorEnd
             ];
 
-            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
+            ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx, 8 ) );
             ParameterTab.Add( ModelNumberRandomValue );
             ParameterTab.Add( ModelNumberRandomType );
             ParameterTab.Add( ModelNumberRandomInterval );
