@@ -48,7 +48,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ApplyRateEnvironment = new( "Apply Rate Environment", "EvAR" );
         public readonly AvfxInt ApplyRateDirectional = new( "Apply Rate Directional", "DlAR" );
         public readonly AvfxInt ApplyRateLightBuffer = new( "Apply Rate Light Buffer", "LBAR" );
-        public readonly AvfxBool DOTy = new( "DOTy", "DOTy" );
+        public readonly AvfxEnum<DepthOffsetType> DOTy = new( "Depth Offset Type", "DOTy" );
         public readonly AvfxFloat DepthOffset = new( "Depth Offset", "DpOf" );
         public readonly AvfxBool SimpleAnimEnable = new( "Use Simple Animation", "bSCt" );
         public readonly AvfxLife Life = new();
