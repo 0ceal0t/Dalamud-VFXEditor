@@ -129,7 +129,13 @@ namespace VfxEditor.AvfxFormat {
             Camera = 0,
             Caster = 1
         }
-        public enum RandomType {
+        public enum DepthOffsetType
+        {
+            Legacy = 0,
+            FixedIntervalNDC = 1
+        }
+        public enum RandomType
+        {
             FirstPlusMinus = 0,
             FirstPlus = 1,
             FirstMinus = 2,
