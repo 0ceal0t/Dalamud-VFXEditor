@@ -37,10 +37,19 @@ namespace VfxEditor.EidFormat {
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
-            Dropdown = new( "Bind Point", BindPoints,
-                ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew( this ) );
 
-            Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
+            if( NewData )
+            {
+                Dropdown = new( "Bind Point", BindPoints,
+                    ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointNew( this ) );
+            }
+            else
+            {
+                Dropdown = new( "Bind Point", BindPoints,
+                    ( EidBindPoint item, int idx ) => $"Bind Point {item.GetName()}", () => new EidBindPointOld( this ) );
+
+            }
+                Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
 
         public override void Write( BinaryWriter writer ) {
