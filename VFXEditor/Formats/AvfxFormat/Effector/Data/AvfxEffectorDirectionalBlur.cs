@@ -2,7 +2,7 @@ using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxEffectorMirrorBlur : AvfxDataWithParameters {
+    public class AvfxEffectorDirectionalBlur : AvfxDataWithParameters {
         public readonly AvfxCurve1Axis Length = new( "Length", "Len" );
         public readonly AvfxCurve1Axis Strength = new( "Strength", "Str" );
         public readonly AvfxCurve1Axis AStrength = new( "Angle Strength", "AStr" );
@@ -13,7 +13,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool OneSide = new( "Single Side", "bOS" );
 
 
-        public AvfxEffectorMirrorBlur() : base() {
+        public AvfxEffectorDirectionalBlur() : base() {
             Parsed = [
                 Length,
                 Strength,
