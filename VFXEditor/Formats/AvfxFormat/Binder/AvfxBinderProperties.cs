@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBinderPropertiesName BinderName = new();
         public readonly AvfxInt BindPointId = new( "Bind Point Id", "BPID", value: 3 );
         public readonly AvfxInt GenerateDelay = new( "Generate Delay", "GenD" );
-        public readonly AvfxInt CoordUpdateFrame = new( "Coord Update Frame", "CoUF", value: -1 );
+        public readonly AvfxInt CoordUpdateFrame = new( "Coordinate Update Frame", "CoUF", value: -1 );
         public readonly AvfxBool RingEnable = new( "Ring Enabled", "bRng" );
         public readonly AvfxInt RingProgressTime = new( "Ring Progress Time", "RnPT", value: 1 );
         public readonly AvfxFloat RingPositionX = new( "Ring Position X", "RnPX" );
@@ -30,10 +30,11 @@ namespace VfxEditor.AvfxFormat {
         private readonly List<INamedUiItem> DisplayTabs;
 
         private static readonly Dictionary<int, string> BinderIds = new() {
-            { 0, "Not working" },
-            { 1, "Head" },
-            { 3, "Left hand weapon" },
-            { 4, "Right hand weapon" },
+            { 0, "(null)" },
+            { 1, "Face (j_kao)" },
+            { 3, "Base of weapon (relative)" },
+            { 4, "Center of weapon" },
+            { 5, "Tip of weapon (relative)" },
             { 6, "Right shoulder" },
             { 7, "Left shoulder" },
             { 8, "Right forearm" },
@@ -41,21 +42,30 @@ namespace VfxEditor.AvfxFormat {
             { 10, "Right calves" },
             { 11, "Left calves" },
             { 16, "Front of character" },
-            { 25, "Head" },
-            { 26, "Head" },
-            { 27, "Head" },
-            { 28, "Cervical" },
-            { 29, "Center of the character" },
-            { 30, "Center of the character" },
-            { 31, "Center of the character" },
-            { 32, "Right hand" },
-            { 33, "Left hand" },
+            { 25, "Top of head" },
+            { 26, "Middle of head" },
+            { 27, "Front of head" },
+            { 28, "Chest (j_sebo_c)" },
+            { 29, "Center of character (n_root)" },
+            { 30, "Center of character (n_hara)" },
+            { 31, "Waist (j_kosi)" },
+            { 32, "Right hand (j_te_r)" },
+            { 33, "Left hand (j_te_l)" },
             { 34, "Right foot" },
             { 35, "Left foot" },
-            { 42, "Above character?" },
+            { 42, "Above character (n_root)" },
             { 43, "Head (near right eye)" },
-            { 44, "Head (near left eye )" },
-            { 77, "Monsters weapon" },
+            { 44, "Head (near left eye)" },
+            { 71, "Character origin (n_root)" },
+            { 77, "Right hand (n_buki_r)" },
+            { 78, "Left hand (n_buki_l)" },
+            { 107, "n_throw" },
+            { 108, "SGE: noulith 3, front / RPR avatar: neck" },
+            { 109, "SGE: noulith 3, back / RPR avatar: spine" },
+            { 110, "SGE: noulith 2, front / RPR avatar: left hand" },
+            { 111, "SGE: noulith 2, back / RPR avatar: face" },
+            { 112, "SGE: noulith 4, front / RPR avatar: origin" },
+            { 113, "SGE: noulith 4, back" },
         };
 
         public AvfxBinderProperties( string name, string avfxName ) : base( avfxName ) {
