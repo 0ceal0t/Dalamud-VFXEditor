@@ -10,10 +10,12 @@ namespace VfxEditor.Select {
         public static string NpcFilesPath => Path.Combine( Plugin.RootLocation, "Files", "npc_files.json" );
         public static string CommonVfxPath => Path.Combine( Plugin.RootLocation, "Files", "common_vfx" );
         public static string CommonTmbPath => Path.Combine( Plugin.RootLocation, "Files", "common_tmb" );
+        public static string ExtraTmbPath => Path.Combine( Plugin.RootLocation, "Files", "extraskills_tmb" );
         public static string CommonUldPath => Path.Combine( Plugin.RootLocation, "Files", "common_uld" );
         public static string CommonShpkPath => Path.Combine( Plugin.RootLocation, "Files", "common_shpk" );
         public static string CommonShcdPath => Path.Combine( Plugin.RootLocation, "Files", "common_shcd" );
         public static string CommonRacialPath => Path.Combine( Plugin.RootLocation, "Files", "common_racial" );
+        public static string CommonPapPath => Path.Combine( Plugin.RootLocation, "Files", "common_pap" );
 
         [GeneratedRegex( "\\u0000([a-zA-Z0-9\\/_]*?)\\.avfx", RegexOptions.Compiled )]
         private static partial Regex AvfxRegexPattern();
@@ -32,14 +34,14 @@ namespace VfxEditor.Select {
             new RacialData( "Highlander F", "c0401", 3 ),
             new RacialData( "Elezen M", "c0501", 4 ),
             new RacialData( "Elezen F", "c0601", 5 ),
-            new RacialData( "Miquote M", "c0701", 12 ),
-            new RacialData( "Miquote F", "c0801", 13 ),
+            new RacialData( "Miqo'te M", "c0701", 12 ),
+            new RacialData( "Miqo'te F", "c0801", 13 ),
             new RacialData( "Roegadyn M", "c0901", 16 ),
             new RacialData( "Roegadyn F", "c1001", 17 ),
             new RacialData( "Lalafell M", "c1101",8 ),
             new RacialData( "Lalafell F", "c1201", 9 ),
-            new RacialData( "Aura M", "c1301", 20 ),
-            new RacialData( "Aura F", "c1401", 21 ),
+            new RacialData( "Au Ra M", "c1301", 20 ),
+            new RacialData( "Au Ra F", "c1401", 21 ),
             new RacialData( "Hrothgar M", "c1501", 24 ),
             new RacialData( "Hrothgar F", "c1601", 25 ),
             new RacialData( "Viera M", "c1701", 28 ),
