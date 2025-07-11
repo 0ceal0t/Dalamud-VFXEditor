@@ -1,119 +1,4 @@
-chara/human/c0201/obj/hair/h0221/material/v0001/mt_c0201h0221_hir_a.mtrl
-chara/human/c0201/obj/hair/h0221/model/c0201h0221_hir.mdl
-chara/human/c1501/obj/hair/h0116/model/c1501h0116_hir.mdl
-chara/human/c1501/obj/hair/h0116/material/v0001/mt_c1501h0116_hir_a.mtrl
-chara/human/c1601/obj/hair/h0185/model/c1601h0185_hir.mdl
-chara/human/c0201/obj/hair/h0185/material/v0001/mt_c0201h0185_acc_b.mtrl
-chara/human/c1601/obj/hair/h0106/material/v0001/mt_c1601h0106_acc_b.mtrl
-chara/human/c0804/obj/hair/h0007/material/v0001/mt_c0804h0007_acc_b.mtrl
-chara/human/c0804/obj/hair/h0007/model/c0804h0007_hir.mdl
-chara/human/c0204/obj/hair/h0010/material/v0001/mt_c0204h0010_acc_b.mtrl
-chara/human/c0204/obj/hair/h0010/material/v0001/mt_c0204h0010_hir_a.mtrl
-chara/human/c0804/obj/hair/h0003/material/v0001/mt_c0804h0003_hir_a.mtrl
-chara/human/c0104/obj/hair/h0010/material/v0001/mt_c0104h0010_hir_a.mtrl
-chara/human/c0104/obj/hair/h0010/model/c0104h0010_hir.mdl
-chara/human/c0204/obj/hair/h0012/model/c0204h0012_hir.mdl
-chara/human/c0204/obj/hair/h0011/material/v0001/mt_c0204h0011_acc_b.mtrl
-chara/human/c0204/obj/hair/h0011/material/v0001/mt_c0204h0011_hir_a.mtrl
-chara/human/c0204/obj/hair/h0015/material/v0001/mt_c0204h0015_hir_a.mtrl
-chara/human/c0204/obj/hair/h0013/material/v0001/mt_c0204h0013_hir_a.mtrl
-chara/human/c1701/obj/hair/h0146/model/c1701h0146_hir.mdl
-chara/human/c1701/obj/hair/h0138/model/c1701h0138_hir.mdl
-chara/human/c0101/obj/hair/h0185/material/v0001/mt_c0101h0185_acc_b.mtrl
-chara/human/c1701/obj/hair/h0136/model/c1701h0136_hir.mdl
-chara/human/c1501/obj/hair/h0161/model/c1501h0161_hir.mdl
-chara/human/c0801/obj/hair/h0185/model/c0801h0185_hir.mdl
-chara/human/c1501/obj/hair/h0154/material/v0001/mt_c1501h0154_hir_a.mtrl
-chara/human/c1801/obj/hair/h0138/model/c1801h0138_hir.mdl
-chara/human/c0201/obj/hair/h0185/model/c0201h0185_hir.mdl
-chara/human/c1501/obj/hair/h0156/material/v0001/mt_c1501h0156_hir_a.mtrl
-chara/human/c0601/obj/face/f0209/material/mt_c0601f0209_etc_b.mtrl
-chara/human/c0504/obj/hair/h0203/model/c0504h0203_hir.mdl
-chara/human/c1701/obj/hair/h0108/model/c1701h0108_hir.mdl
-chara/human/c1101/obj/hair/h0185/model/c1101h0185_hir.mdl
-chara/human/c0804/obj/hair/h0003/model/c0804h0003_hir.mdl
-chara/human/c0204/obj/hair/h0014/model/c0204h0014_hir.mdl
-chara/human/c0701/obj/hair/h0185/model/c0701h0185_hir.mdl
-chara/human/c1701/obj/hair/h0141/model/c1701h0141_hir.mdl
-chara/human/c0104/obj/hair/h0011/model/c0104h0011_hir.mdl
-chara/human/c1701/obj/hair/h0142/model/c1701h0142_hir.mdl
-chara/human/c1501/obj/hair/h0185/material/v0001/mt_c1501h0185_hir_a.mtrl
-chara/human/c0104/obj/hair/h0012/model/c0104h0012_hir.mdl
-chara/human/c1801/obj/hair/h0136/model/c1801h0136_hir.mdl
-chara/human/c0804/obj/hair/h0007/material/v0001/mt_c0804h0007_hir_a.mtrl
-chara/human/c1501/obj/hair/h0158/material/v0001/mt_c1501h0158_acc_b.mtrl
-chara/human/c1501/obj/hair/h0158/material/v0001/mt_c1501h0158_hir_a.mtrl
-chara/human/c1801/obj/hair/h0146/model/c1801h0146_hir.mdl
-chara/human/c0104/obj/hair/h0013/material/v0001/mt_c0104h0013_hir_a.mtrl
-chara/human/c0401/obj/hair/h0185/model/c0401h0185_hir.mdl
-chara/human/c0204/obj/hair/h0011/model/c0204h0011_hir.mdl
-chara/human/c0104/obj/hair/h0009/material/v0001/mt_c0104h0009_hir_a.mtrl
-chara/human/c1501/obj/hair/h0123/material/v0001/mt_c1501h0123_hir_a.mtrl
-chara/human/c1201/obj/hair/h0185/model/c1201h0185_hir.mdl
-chara/human/c1501/obj/hair/h0154/model/c1501h0154_hir.mdl
-chara/human/c1801/obj/hair/h0185/model/c1801h0185_hir.mdl
-chara/human/c0504/obj/hair/h0203/material/v0001/mt_c0504h0203_hir_a.mtrl
-chara/human/c1601/obj/hair/h0155/material/v0001/mt_c1601h0155_hir_a.mtrl
-chara/human/c1601/obj/hair/h0147/material/v0001/mt_c1601h0147_acc_b.mtrl
-chara/human/c1601/obj/hair/h0147/material/v0001/mt_c1601h0147_hir_a.mtrl
-chara/human/c1501/obj/hair/h0185/model/c1501h0185_hir.mdl
-chara/human/c0504/obj/face/f0203/model/c0504f0203_fac.mdl
-chara/human/c0301/obj/hair/h0185/model/c0301h0185_hir.mdl
-chara/human/c1601/obj/hair/h0185/material/v0001/mt_c1601h0185_hir_a.mtrl
-chara/human/c0901/obj/hair/h0185/model/c0901h0185_hir.mdl
-chara/human/c0201/obj/hair/h0185/material/v0001/mt_c0201h0185_hir_a.mtrl
-chara/human/c0104/obj/hair/h0013/model/c0104h0013_hir.mdl
-chara/human/c1601/obj/hair/h0103/model/c1601h0103_hir.mdl
-chara/human/c1001/obj/hair/h0185/model/c1001h0185_hir.mdl
-chara/human/c1601/obj/hair/h0105/material/v0001/mt_c1601h0105_hir_a.mtrl
-chara/human/c1501/obj/hair/h0154/material/v0001/mt_c1501h0154_acc_b.mtrl
-chara/human/c1501/obj/hair/h0123/model/c1501h0123_hir.mdl
-chara/human/c0104/obj/hair/h0012/material/v0001/mt_c0104h0012_hir_a.mtrl
-chara/human/c1501/obj/hair/h0158/model/c1501h0158_hir.mdl
-chara/human/c0601/obj/hair/h0185/model/c0601h0185_hir.mdl
-chara/human/c0204/obj/hair/h0014/material/v0001/mt_c0204h0014_hir_a.mtrl
-chara/human/c0201/obj/hair/h0222/model/c0201h0222_hir.mdl
-chara/human/c1601/obj/hair/h0155/model/c1601h0155_hir.mdl
-chara/human/c0104/obj/body/b0201/material/v0001/mt_c0104b0201_a.mtrl
-chara/human/c0201/obj/hair/h0222/material/v0001/mt_c0201h0222_hir_a.mtrl
-chara/human/c0101/obj/hair/h0185/model/c0101h0185_hir.mdl
-chara/human/c0204/obj/hair/h0015/model/c0204h0015_hir.mdl
-chara/human/c1601/obj/hair/h0170/model/c1601h0170_hir.mdl
-chara/human/c1601/obj/hair/h0106/material/v0001/mt_c1601h0106_hir_a.mtrl
-chara/human/c1501/obj/hair/h0161/material/v0001/mt_c1501h0161_hir_a.mtrl
-chara/human/c0104/obj/hair/h0011/material/v0001/mt_c0104h0011_hir_a.mtrl
-chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_iri_a.mtrl
-chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_etc_b.mtrl
-chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_fac_a.mtrl
-chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_etc_a.mtrl
-chara/human/c1701/obj/hair/h0185/model/c1701h0185_hir.mdl
-chara/human/c1601/obj/hair/h0103/material/v0001/mt_c1601h0103_hir_a.mtrl
-chara/human/c1601/obj/hair/h0103/material/v0001/mt_c1601h0103_acc_b.mtrl
-chara/human/c0501/obj/hair/h0185/model/c0501h0185_hir.mdl
-chara/human/c1501/obj/hair/h0156/model/c1501h0156_hir.mdl
-chara/human/c1601/obj/hair/h0170/material/v0001/mt_c1601h0170_hir_a.mtrl
-chara/human/c1801/obj/hair/h0142/model/c1801h0142_hir.mdl
-chara/human/c0204/obj/hair/h0012/material/v0001/mt_c0204h0012_hir_a.mtrl
-chara/human/c0101/obj/hair/h0185/material/v0001/mt_c0101h0185_hir_a.mtrl
-chara/human/c0204/obj/hair/h0013/model/c0204h0013_hir.mdl
-chara/human/c1301/obj/hair/h0185/model/c1301h0185_hir.mdl
-chara/human/c1601/obj/hair/h0106/model/c1601h0106_hir.mdl
-chara/human/c0104/obj/hair/h0009/model/c0104h0009_hir.mdl
-chara/human/c0204/obj/hair/h0010/model/c0204h0010_hir.mdl
-chara/human/c1401/obj/hair/h0185/model/c1401h0185_hir.mdl
-chara/human/c1601/obj/hair/h0105/model/c1601h0105_hir.mdl
-chara/human/c1801/obj/hair/h0108/model/c1801h0108_hir.mdl
-chara/human/c1601/obj/hair/h0147/model/c1601h0147_hir.mdl
-chara/human/c1801/obj/hair/h0141/model/c1801h0141_hir.mdl
-chara/human/c1401/obj/hair/h0061/model/c1401h0061_hir.mdl
-chara/human/c0101/obj/face/f0203/material/mt_c0101f0203_iri_a.mtrl
-chara/human/c0201/obj/face/f0211/material/mt_c0201f0211_etc_b.mtrl
-chara/human/c0601/obj/hair/h0155/model/c0601h0155_hir.mdl
-chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_b.mtrl
-chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_iri_a.mtrl
-chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_a.mtrl
-chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_fac_a.mtrl
-chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_c.mtrl
+chara/human/c1701/obj/hair/h0186/model/c1701h0186_hir.mdl
 chara/human/c0501/obj/hair/h0120/model/c0501h0120_hir.mdl
 chara/human/c0101/obj/hair/h0156/model/c0101h0156_hir.mdl
 chara/human/c1001/obj/face/f0202/material/mt_c1001f0202_iri_a.mtrl
@@ -127,6 +12,7 @@ chara/human/c0501/obj/hair/h0005/material/v0001/mt_c0501h0005_acc_b.mtrl
 chara/human/c0101/obj/body/b0002/model/c0101b0002_top.mdl
 chara/human/c1201/obj/hair/h0145/model/c1201h0145_hir.mdl
 chara/human/c0901/obj/hair/h0051/model/c0901h0051_hir.mdl
+chara/human/c0601/obj/hair/h0155/model/c0601h0155_hir.mdl
 chara/human/c1801/obj/hair/h0159/model/c1801h0159_hir.mdl
 chara/human/c0201/obj/hair/h0123/model/c0201h0123_hir.mdl
 chara/human/c1501/obj/face/f0005/material/mt_c1501f0005_etc_c.mtrl
@@ -145,6 +31,7 @@ chara/human/c1304/obj/face/f0002/material/mt_c1304f0002_fac_a.mtrl
 chara/human/c1304/obj/face/f0002/material/mt_c1304f0002_etc_a.mtrl
 chara/human/c1304/obj/face/f0002/material/mt_c1304f0002_iri_a.mtrl
 chara/human/c1304/obj/face/f0002/material/mt_c1304f0002_fac_b.mtrl
+chara/human/c0504/obj/hair/h0203/model/c0504h0203_hir.mdl
 chara/human/c0801/obj/tail/t0007/model/c0801t0007_til.mdl
 chara/human/c1801/obj/hair/h0009/material/v0001/mt_c1801h0009_acc_b.mtrl
 chara/human/c1801/obj/hair/h0009/material/v0001/mt_c1801h0009_hir_a.mtrl
@@ -359,6 +246,7 @@ chara/human/c1501/obj/hair/h0006/material/v0001/mt_c1501h0006_hir_a.mtrl
 chara/human/c1501/obj/hair/h0006/material/v0001/mt_c1501h0006_acc_b.mtrl
 chara/human/c1201/obj/hair/h0010/model/c1201h0010_hir.mdl
 chara/human/c0901/obj/hair/h0104/model/c0901h0104_hir.mdl
+chara/human/c1701/obj/hair/h0108/model/c1701h0108_hir.mdl
 chara/human/c0801/obj/hair/h0181/model/c0801h0181_hir.mdl
 chara/human/c1501/obj/hair/h0013/model/c1501h0013_hir.mdl
 chara/human/c0501/obj/face/f0003/material/mt_c0501f0003_iri_a.mtrl
@@ -390,6 +278,7 @@ chara/human/c1301/obj/hair/h0175/model/c1301h0175_hir.mdl
 chara/human/c0801/obj/hair/h0061/model/c0801h0061_hir.mdl
 chara/human/c0901/obj/face/f0201/model/c0901f0201_fac.mdl
 chara/human/c1701/obj/hair/h0103/model/c1701h0103_hir.mdl
+chara/human/c1101/obj/hair/h0185/model/c1101h0185_hir.mdl
 chara/human/c0101/obj/hair/h0013/material/v0001/mt_c0101h0013_acc_b.mtrl
 chara/human/c0101/obj/hair/h0013/material/v0001/mt_c0101h0013_hir_a.mtrl
 chara/human/c0101/obj/hair/h0001/material/v0001/mt_c0101h0001_acc_b.mtrl
@@ -439,6 +328,7 @@ chara/human/c1601/obj/hair/h0202/model/c1601h0202_hir.mdl
 chara/human/c0101/obj/face/f0211/model/c0101f0211_fac.mdl
 chara/human/c0401/obj/hair/h0007/model/c0401h0007_hir.mdl
 chara/human/c0501/obj/hair/h0169/model/c0501h0169_hir.mdl
+chara/human/c1401/obj/hair/h0061/model/c1401h0061_hir.mdl
 chara/human/c1401/obj/hair/h0061/model/c1401h0061.mdl
 chara/human/c1101/obj/hair/h0179/model/c1101h0179_hir.mdl
 chara/human/c1401/obj/hair/h0005/material/v0001/mt_c1401h0005_hir_a.mtrl
@@ -458,6 +348,7 @@ chara/human/c1401/obj/hair/h0181/model/c1401h0181_hir.mdl
 chara/human/c0901/obj/hair/h0013/model/c0901h0013_hir.mdl
 chara/human/c1201/obj/hair/h0107/model/c1201h0107_hir.mdl
 chara/human/c0201/obj/hair/h0161/model/c0201h0161_hir.mdl
+chara/human/c0104/obj/hair/h0010/material/v0001/mt_c0104h0010_hir_a.mtrl
 chara/human/c0104/obj/hair/h0002/material/v0001/mt_c0104h0002_acc_b.mtrl
 chara/human/c0104/obj/hair/h0002/material/v0001/mt_c0104h0002_hir_a.mtrl
 chara/human/c0101/obj/face/f0091/material/mt_c0101f0091_fac_a.mtrl
@@ -492,6 +383,7 @@ chara/human/c0201/obj/face/f0216/material/mt_c0201f0216_etc_a.mtrl
 chara/human/c0201/obj/face/f0216/material/mt_c0201f0216_fac_a.mtrl
 chara/human/c0201/obj/face/f0216/material/mt_c0201f0216_iri_a.mtrl
 chara/human/c0604/obj/hair/h0005/model/c0604h0005_hir.mdl
+chara/human/c0804/obj/hair/h0003/model/c0804h0003_hir.mdl
 chara/human/c1701/obj/body/b0002/model/c1701b0002_top.mdl
 chara/human/c1401/obj/hair/h0123/model/c1401h0123_hir.mdl
 chara/human/c1001/obj/hair/h0155/model/c1001h0155_hir.mdl
@@ -519,6 +411,7 @@ chara/human/c1401/obj/hair/h0144/model/c1401h0144_hir.mdl
 chara/human/c0701/obj/tail/t0003/model/c0701t0003_til.mdl
 chara/human/c1001/obj/hair/h0132/model/c1001h0132_hir.mdl
 chara/human/c0401/obj/hair/h0122/model/c0401h0122_hir.mdl
+chara/human/c1501/obj/hair/h0156/material/v0001/mt_c1501h0156_hir_a.mtrl
 chara/human/c1501/obj/hair/h0128/material/v0001/mt_c1501h0128_hir_a.mtrl
 chara/human/c1501/obj/hair/h0128/material/v0001/mt_c1501h0128_acc_b.mtrl
 chara/human/c0701/obj/body/b0003/model/c0701b0003_top.mdl
@@ -530,6 +423,8 @@ chara/human/c1401/obj/face/f0102/material/mt_c1401f0102_fac_b.mtrl
 chara/human/c1401/obj/face/f0102/material/mt_c1401f0102_etc_b.mtrl
 chara/human/c1601/obj/hair/h0179/material/v0001/mt_c1601h0179_hir_a.mtrl
 chara/human/c1601/obj/hair/h0179/material/v0001/mt_c1601h0179_acc_b.mtrl
+chara/human/c0804/obj/hair/h0008/model/c0804h0008_hir.mdl
+chara/human/c0204/obj/hair/h0014/model/c0204h0014_hir.mdl
 chara/human/c0401/obj/face/f0102/material/mt_c0401f0102_fac_a.mtrl
 chara/human/c0401/obj/face/f0102/material/mt_c0401f0102_etc_a.mtrl
 chara/human/c0401/obj/face/f0102/material/mt_c0401f0102_etc_c.mtrl
@@ -602,8 +497,10 @@ chara/human/c1701/obj/hair/h0003/material/v0001/mt_c1701h0003_acc_b.mtrl
 chara/human/c1701/obj/hair/h0003/material/v0001/mt_c1701h0003_hir_a.mtrl
 chara/human/c1701/obj/hair/h0011/material/v0001/mt_c1701h0011_acc_b.mtrl
 chara/human/c1701/obj/hair/h0011/material/v0001/mt_c1701h0011_hir_a.mtrl
+chara/human/c0804/obj/hair/h0004/material/v0001/mt_c0804h0004_hir_a.mtrl
 chara/human/c0101/obj/face/f0250/material/mt_c0101f0250_fac_a.mtrl
 chara/human/c0101/obj/hair/h0103/model/c0101h0103_hir.mdl
+chara/human/c0701/obj/hair/h0185/model/c0701h0185_hir.mdl
 chara/human/c0501/obj/hair/h0175/model/c0501h0175_hir.mdl
 chara/human/c1101/obj/hair/h0165/model/c1101h0165_hir.mdl
 chara/human/c0501/obj/face/f0217/model/c0501f0217_fac.mdl
@@ -633,6 +530,7 @@ chara/human/c1001/obj/hair/h0142/model/c1001h0142_hir.mdl
 chara/human/c0401/obj/hair/h0152/model/c0401h0152_hir.mdl
 chara/human/c0301/obj/hair/h0151/model/c0301h0151_hir.mdl
 chara/human/c0701/obj/hair/h0127/model/c0701h0127_hir.mdl
+chara/human/c1701/obj/hair/h0141/model/c1701h0141_hir.mdl
 chara/human/c1301/obj/hair/h0137/model/c1301h0137_hir.mdl
 chara/human/c0504/obj/hair/h0006/material/v0001/mt_c0504h0006_hir_a.mtrl
 chara/human/c0504/obj/hair/h0006/material/v0001/mt_c0504h0006_acc_b.mtrl
@@ -645,6 +543,7 @@ chara/human/c0201/obj/hair/h0173/material/v0001/mt_c0201h0173_acc_b.mtrl
 chara/human/c0201/obj/hair/h0173/material/v0001/mt_c0201h0173_hir_a.mtrl
 chara/human/c0201/obj/hair/h0161/material/v0001/mt_c0201h0161_acc_b.mtrl
 chara/human/c0201/obj/hair/h0161/material/v0001/mt_c0201h0161_hir_a.mtrl
+chara/human/c0104/obj/hair/h0011/model/c0104h0011_hir.mdl
 chara/human/c0201/obj/face/f0212/material/mt_c0201f0212_etc_a.mtrl
 chara/human/c0201/obj/face/f0212/material/mt_c0201f0212_fac_a.mtrl
 chara/human/c0201/obj/face/f0212/material/mt_c0201f0212_etc_b.mtrl
@@ -954,15 +853,18 @@ chara/human/c0801/obj/face/f0203/material/mt_c0801f0203_fac_a.mtrl
 chara/human/c0801/obj/face/f0203/material/mt_c0801f0203_etc_a.mtrl
 chara/human/c0801/obj/face/f0203/material/mt_c0801f0203_fac_b.mtrl
 chara/human/c0801/obj/face/f0203/material/mt_c0801f0203_iri_a.mtrl
+chara/human/c0104/obj/hair/h0012/model/c0104h0012_hir.mdl
 chara/human/c0501/obj/face/f0215/material/mt_c0501f0215_fac_a.mtrl
 chara/human/c0501/obj/face/f0215/material/mt_c0501f0215_etc_a.mtrl
 chara/human/c0501/obj/face/f0215/material/mt_c0501f0215_etc_b.mtrl
 chara/human/c0501/obj/face/f0215/material/mt_c0501f0215_iri_a.mtrl
+chara/human/c1701/obj/hair/h0142/model/c1701h0142_hir.mdl
 chara/human/c1404/obj/tail/t0001/material/v0001/mt_c1404t0001_a.mtrl
 chara/human/c0301/obj/hair/h0152/model/c0301h0152_hir.mdl
 chara/human/c0701/obj/hair/h0124/model/c0701h0124_hir.mdl
 chara/human/c0401/obj/hair/h0151/model/c0401h0151_hir.mdl
 chara/human/c1401/obj/hair/h0137/model/c1401h0137_hir.mdl
+chara/human/c1501/obj/hair/h0185/material/v0001/mt_c1501h0185_hir_a.mtrl
 chara/human/c1001/obj/hair/h0141/model/c1001h0141_hir.mdl
 chara/human/c1501/obj/hair/h0008/material/v0001/mt_c1501h0008_acc_b.mtrl
 chara/human/c1501/obj/hair/h0008/material/v0001/mt_c1501h0008_hir_a.mtrl
@@ -984,7 +886,6 @@ chara/human/c0301/obj/hair/h0135/model/c0301h0135_hir.mdl
 chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_etc_a.mtrl
 chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_fac_a.mtrl
 chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_etc_c.mtrl
-chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_etc_b.mtrl
 chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_iri_a.mtrl
 chara/human/c0701/obj/hair/h0143/model/c0701h0143_hir.mdl
 chara/human/c1401/obj/tail/t0004/model/c1401t0004_til.mdl
@@ -996,7 +897,6 @@ chara/human/c1101/obj/hair/h0201/material/v0001/mt_c1101h0201_acc_b.mtrl
 chara/human/c1101/obj/hair/h0201/material/v0001/mt_c1101h0201_hir_a.mtrl
 chara/human/c0101/obj/hair/h0182/material/v0001/mt_c0101h0182_acc_b.mtrl
 chara/human/c0101/obj/hair/h0182/material/v0001/mt_c0101h0182_hir_a.mtrl
-chara/human/c1301/obj/face/f0101/material/mt_c1301f0101_fac_c.mtrl
 chara/human/c1301/obj/face/f0101/material/mt_c1301f0101_etc_c.mtrl
 chara/human/c1301/obj/face/f0101/material/mt_c1301f0101_etc_a.mtrl
 chara/human/c1301/obj/face/f0101/material/mt_c1301f0101_fac_a.mtrl
@@ -1021,6 +921,7 @@ chara/human/c0201/obj/face/f0002/material/mt_c0201f0002_etc_a.mtrl
 chara/human/c0201/obj/face/f0002/material/mt_c0201f0002_etc_c.mtrl
 chara/human/c0201/obj/face/f0002/material/mt_c0201f0002_etc_b.mtrl
 chara/human/c0201/obj/face/f0002/material/mt_c0201f0002_iri_a.mtrl
+chara/human/c1801/obj/hair/h0136/model/c1801h0136_hir.mdl
 chara/human/c0801/obj/hair/h0150/model/c0801h0150_hir.mdl
 chara/human/c0901/obj/hair/h0007/material/v0001/mt_c0901h0007_hir_a.mtrl
 chara/human/c0901/obj/hair/h0007/material/v0001/mt_c0901h0007_acc_b.mtrl
@@ -1073,6 +974,7 @@ chara/human/c0701/obj/face/f0004/material/mt_c0701f0004_fac_a.mtrl
 chara/human/c0701/obj/face/f0004/material/mt_c0701f0004_etc_a.mtrl
 chara/human/c0204/obj/hair/h0007/material/v0001/mt_c0204h0007_acc_b.mtrl
 chara/human/c0204/obj/hair/h0007/material/v0001/mt_c0204h0007_hir_a.mtrl
+chara/human/c0204/obj/hair/h0015/material/v0001/mt_c0204h0015_hir_a.mtrl
 chara/human/c0601/obj/hair/h0131/model/c0601h0131_hir.mdl
 chara/human/c0201/obj/hair/h0147/model/c0201h0147_hir.mdl
 chara/human/c1201/obj/hair/h0121/model/c1201h0121_hir.mdl
@@ -1088,6 +990,8 @@ chara/human/c0201/obj/face/f0203/material/mt_c0201f0203_etc_a.mtrl
 chara/human/c0201/obj/face/f0203/material/mt_c0201f0203_fac_a.mtrl
 chara/human/c0201/obj/face/f0203/material/mt_c0201f0203_iri_a.mtrl
 chara/human/c0201/obj/face/f0203/material/mt_c0201f0203_etc_b.mtrl
+chara/human/c0804/obj/hair/h0007/material/v0001/mt_c0804h0007_hir_a.mtrl
+chara/human/c0804/obj/hair/h0007/material/v0001/mt_c0804h0007_acc_b.mtrl
 chara/human/c0101/obj/face/f0220/material/mt_c0101f0220_iri_a.mtrl
 chara/human/c0101/obj/face/f0220/material/mt_c0101f0220_etc_b.mtrl
 chara/human/c0101/obj/face/f0220/material/mt_c0101f0220_etc_a.mtrl
@@ -1162,10 +1066,13 @@ chara/human/c1201/obj/face/f0201/material/mt_c1201f0201_fac_a.mtrl
 chara/human/c1201/obj/face/f0201/material/mt_c1201f0201_etc_a.mtrl
 chara/human/c0104/obj/face/f0001/material/mt_c0104f0001_fac_a.mtrl
 chara/human/c0104/obj/face/f0001/material/mt_c0104f0001_etc_a.mtrl
+chara/human/c0104/obj/face/f0001/material/mt_c0104f0001_etc_b.mtrl
 chara/human/c0104/obj/face/f0001/material/mt_c0104f0001_iri_a.mtrl
 chara/human/c1701/obj/zear/z0003/model/c1701z0003_zer.mdl
 chara/human/c0101/obj/face/f0006/model/c0101f0006_fac.mdl
 chara/human/c0901/obj/hair/h0177/model/c0901h0177_hir.mdl
+chara/human/c1501/obj/hair/h0158/material/v0001/mt_c1501h0158_acc_b.mtrl
+chara/human/c1501/obj/hair/h0158/material/v0001/mt_c1501h0158_hir_a.mtrl
 chara/human/c1601/obj/hair/h0015/model/c1601h0015_hir.mdl
 chara/human/c1501/obj/hair/h0102/material/v0001/mt_c1501h0102_hir_a.mtrl
 chara/human/c1501/obj/hair/h0102/material/v0001/mt_c1501h0102_acc_b.mtrl
@@ -1231,6 +1138,7 @@ chara/human/c1801/obj/hair/h0121/model/c1801h0121_hir.mdl
 chara/human/c0801/obj/hair/h0147/model/c0801h0147_hir.mdl
 chara/human/c0801/obj/face/f0249/model/c0801f0249_fac.mdl
 chara/human/c0301/obj/hair/h0052/model/c0301h0052_hir.mdl
+chara/human/c1801/obj/hair/h0146/model/c1801h0146_hir.mdl
 chara/human/c0801/obj/hair/h0120/model/c0801h0120_hir.mdl
 chara/human/c9104/obj/face/f0001/material/mt_c9104f0001_iri_a.mtrl
 chara/human/c9104/obj/face/f0001/material/mt_c9104f0001_etc_b.mtrl
@@ -1245,6 +1153,7 @@ chara/human/c0201/obj/face/f0207/material/mt_c0201f0207_etc_a.mtrl
 chara/human/c0201/obj/face/f0207/material/mt_c0201f0207_fac_a.mtrl
 chara/human/c0201/obj/face/f0207/material/mt_c0201f0207_iri_a.mtrl
 chara/human/c0201/obj/face/f0207/material/mt_c0201f0207_etc_b.mtrl
+chara/human/c0104/obj/hair/h0013/material/v0001/mt_c0104h0013_hir_a.mtrl
 chara/human/c0104/obj/hair/h0001/material/v0001/mt_c0104h0001_hir_a.mtrl
 chara/human/c0104/obj/hair/h0001/material/v0001/mt_c0104h0001_acc_b.mtrl
 chara/human/c0101/obj/hair/h0149/model/c0101h0149_hir.mdl
@@ -1340,6 +1249,7 @@ chara/human/c0201/obj/face/f0205/material/mt_c0201f0205_iri_a.mtrl
 chara/human/c0201/obj/face/f0205/material/mt_c0201f0205_fac_a.mtrl
 chara/human/c0201/obj/face/f0205/material/mt_c0201f0205_etc_a.mtrl
 chara/human/c1601/obj/body/b0001/material/v0005/mt_c1601b0001_a.mtrl
+chara/human/c1601/obj/hair/h0185/model/c1601h0185_hir.mdl
 chara/human/c1001/obj/hair/h0103/model/c1001h0103_hir.mdl
 chara/human/c1401/obj/hair/h0175/model/c1401h0175_hir.mdl
 chara/human/c0901/obj/face/f0202/model/c0901f0202_fac.mdl
@@ -1443,6 +1353,7 @@ chara/human/c0901/obj/face/f0203/material/mt_c0901f0203_etc_a.mtrl
 chara/human/c0601/obj/face/f0103/model/c0601f0103_fac.mdl
 chara/human/c1801/obj/zear/z0001/model/c1801z0001_zer.mdl
 chara/human/c0601/obj/hair/h0175/model/c0601h0175_hir.mdl
+chara/human/c0401/obj/hair/h0185/model/c0401h0185_hir.mdl
 chara/human/c1801/obj/hair/h0179/model/c1801h0179_hir.mdl
 chara/human/c1304/obj/tail/t0101/material/v0001/mt_c1304t0101_a.mtrl
 chara/human/c0201/obj/hair/h0103/model/c0201h0103_hir.mdl
@@ -1476,9 +1387,11 @@ chara/human/c0401/obj/hair/h0127/model/c0401h0127_hir.mdl
 chara/human/c1001/obj/hair/h0137/model/c1001h0137_hir.mdl
 chara/human/c0701/obj/tail/t0006/model/c0701t0006_til.mdl
 chara/human/c1401/obj/hair/h0141/model/c1401h0141_hir.mdl
+chara/human/c0204/obj/hair/h0011/model/c0204h0011_hir.mdl
 chara/human/c0601/obj/face/f0209/material/mt_c0601f0209_etc_a.mtrl
 chara/human/c0601/obj/face/f0209/material/mt_c0601f0209_fac_a.mtrl
 chara/human/c0601/obj/face/f0209/material/mt_c0601f0209_iri_a.mtrl
+chara/human/c0601/obj/face/f0209/material/mt_c0601f0209_etc_b.mtrl
 chara/human/c1701/obj/zear/z0002/material/mt_c1701z0002_fac_a.mtrl
 chara/human/c1701/obj/zear/z0002/material/mt_c1701z0002_a.mtrl
 chara/human/c1501/obj/hair/h0166/material/v0001/mt_c1501h0166_hir_a.mtrl
@@ -1517,6 +1430,7 @@ chara/human/c0901/obj/face/f0201/material/mt_c0901f0201_iri_a.mtrl
 chara/human/c1501/obj/hair/h0024/model/c1501h0024_hir.mdl
 chara/human/c1301/obj/hair/h0001/material/v0001/mt_c1301h0001_acc_b.mtrl
 chara/human/c1301/obj/hair/h0001/material/v0001/mt_c1301h0001_hir_a.mtrl
+chara/human/c0804/obj/hair/h0006/model/c0804h0006_hir.mdl
 chara/human/c0801/obj/hair/h0106/material/v0001/mt_c0801h0106_acc_b.mtrl
 chara/human/c0801/obj/hair/h0106/material/v0001/mt_c0801h0106_hir_a.mtrl
 chara/human/c9104/obj/hair/h0202/model/c9104h0202_hir.mdl
@@ -1555,6 +1469,8 @@ chara/human/c1201/obj/hair/h0115/model/c1201h0115_hir.mdl
 chara/human/c0204/obj/hair/h0002/material/v0001/mt_c0204h0002_acc_b.mtrl
 chara/human/c0204/obj/hair/h0002/material/v0001/mt_c0204h0002_hir_a.mtrl
 chara/human/c0901/obj/hair/h0001/model/c0901h0001_hir.mdl
+chara/human/c0204/obj/hair/h0010/material/v0001/mt_c0204h0010_acc_b.mtrl
+chara/human/c0204/obj/hair/h0010/material/v0001/mt_c0204h0010_hir_a.mtrl
 chara/human/c1601/obj/hair/h0163/model/c1601h0163_hir.mdl
 chara/human/c0501/obj/hair/h0208/model/c0501h0208_hir.mdl
 chara/human/c1701/obj/zear/z0004/material/mt_c1701z0004_a.mtrl
@@ -1569,6 +1485,7 @@ chara/human/c1404/obj/face/f0102/material/mt_c1404f0102_iri_a.mtrl
 chara/human/c1404/obj/face/f0102/material/mt_c1404f0102_fac_a.mtrl
 chara/human/c1404/obj/face/f0102/material/mt_c1404f0102_etc_a.mtrl
 chara/human/c1101/obj/hair/h0160/model/c1101h0160_hir.mdl
+chara/human/c1501/obj/hair/h0116/model/c1501h0116_hir.mdl
 chara/human/c0501/obj/hair/h0170/model/c0501h0170_hir.mdl
 chara/human/c0701/obj/hair/h0180/model/c0701h0180_hir.mdl
 chara/human/c0101/obj/face/f0208/model/c0101f0208_fac.mdl
@@ -1589,6 +1506,7 @@ chara/human/c0601/obj/hair/h0169/model/c0601h0169_hir.mdl
 chara/human/c0701/obj/hair/h0007/model/c0701h0007_hir.mdl
 chara/human/c0201/obj/face/f0211/model/c0201f0211_fac.mdl
 chara/human/c1801/obj/hair/h0165/model/c1801h0165_hir.mdl
+chara/human/c0104/obj/hair/h0009/material/v0001/mt_c0104h0009_hir_a.mtrl
 chara/human/c1201/obj/hair/h0179/model/c1201h0179_hir.mdl
 chara/human/c0801/obj/hair/h0103/model/c0801h0103_hir.mdl
 chara/human/c1601/obj/face/f0201/model/c1601f0201_fac.mdl
@@ -1646,6 +1564,7 @@ chara/human/c0201/obj/face/f0092/material/mt_c0201f0092_fac_a.mtrl
 chara/human/c0201/obj/face/f0092/material/mt_c0201f0092_etc_a.mtrl
 chara/human/c1001/obj/hair/h0182/model/c1001h0182_hir.mdl
 chara/human/c1501/obj/hair/h0107/material/v0001/mt_c1501h0107_hir_a.mtrl
+chara/human/c1501/obj/hair/h0123/material/v0001/mt_c1501h0123_hir_a.mtrl
 chara/human/c0204/obj/hair/h0006/model/c0204h0006_hir.mdl
 chara/human/c1501/obj/hair/h0179/material/v0001/mt_c1501h0179_hir_a.mtrl
 chara/human/c0101/obj/face/f0215/material/mt_c0101f0215_iri_a.mtrl
@@ -1863,6 +1782,7 @@ chara/human/c0401/obj/hair/h0165/model/c0401h0165_hir.mdl
 chara/human/c0504/obj/face/f0001/material/mt_c0504f0001_iri_a.mtrl
 chara/human/c0504/obj/face/f0001/material/mt_c0504f0001_etc_a.mtrl
 chara/human/c0504/obj/face/f0001/material/mt_c0504f0001_fac_a.mtrl
+chara/human/c1201/obj/hair/h0185/model/c1201h0185_hir.mdl
 chara/human/c1401/obj/hair/h0103/model/c1401h0103_hir.mdl
 chara/human/c1001/obj/hair/h0175/model/c1001h0175_hir.mdl
 chara/human/c1601/obj/hair/h0018/model/c1601h0018_hir.mdl
@@ -1926,6 +1846,7 @@ chara/human/c1801/obj/face/f0103/material/mt_c1801f0103_etc_a.mtrl
 chara/human/c1801/obj/face/f0103/material/mt_c1801f0103_etc_c.mtrl
 chara/human/c1801/obj/face/f0103/material/mt_c1801f0103_etc_b.mtrl
 chara/human/c1801/obj/face/f0103/material/mt_c1801f0103_iri_a.mtrl
+chara/human/c1501/obj/hair/h0154/model/c1501h0154_hir.mdl
 chara/human/c1101/obj/hair/h0122/model/c1101h0122_hir.mdl
 chara/human/c0501/obj/hair/h0132/model/c0501h0132_hir.mdl
 chara/human/c0801/obj/face/f0103/material/mt_c0801f0103_etc_c.mtrl
@@ -1952,6 +1873,7 @@ chara/human/c0101/obj/hair/h0007/material/v0001/mt_c0101h0007_hir_a.mtrl
 chara/human/c0101/obj/hair/h0007/material/v0001/mt_c0101h0007_acc_b.mtrl
 chara/human/c1201/obj/face/f0004/model/c1201f0004_fac.mdl
 chara/human/c0101/obj/hair/h0061/model/c0101h0061_hir.mdl
+chara/human/c1801/obj/hair/h0185/model/c1801h0185_hir.mdl
 chara/human/c0401/obj/hair/h0179/model/c0401h0179_hir.mdl
 chara/human/c1001/obj/hair/h0169/model/c1001h0169_hir.mdl
 chara/human/c1101/obj/hair/h0007/model/c1101h0007_hir.mdl
@@ -2045,6 +1967,7 @@ chara/human/c1701/obj/hair/h0014/material/v0001/mt_c1701h0014_hir_a.mtrl
 chara/human/c0804/obj/hair/h0001/material/v0001/mt_c0804h0001_acc_b.mtrl
 chara/human/c0804/obj/hair/h0001/material/v0001/mt_c0804h0001_hir_a.mtrl
 chara/human/c0201/obj/hair/h0142/model/c0201h0142_hir.mdl
+chara/human/c1801/obj/hair/h0138/model/c1801h0138_hir.mdl
 chara/human/c1401/obj/hair/h0061/material/v0001/mt_c1401h0061_hir_a.mtrl
 chara/human/c1401/obj/hair/h0061/material/v0001/mt_c1401h0061_acc_b.mtrl
 chara/human/c0801/obj/hair/h0132/model/c0801h0132_hir.mdl
@@ -2058,6 +1981,7 @@ chara/human/c1401/obj/face/f0202/material/mt_c1401f0202_iri_a.mtrl
 chara/human/c1404/obj/body/b0001/material/v0001/mt_c1404b0001_a.mtrl
 chara/human/c0204/obj/hair/h0001/material/v0001/mt_c0204h0001_hir_a.mtrl
 chara/human/c0204/obj/hair/h0001/material/v0001/mt_c0204h0001_acc_b.mtrl
+chara/human/c0204/obj/hair/h0013/material/v0001/mt_c0204h0013_hir_a.mtrl
 chara/human/c0101/obj/face/f0005/material/mt_c0101f0005_iri_a.mtrl
 chara/human/c0101/obj/face/f0005/material/mt_c0101f0005_etc_b.mtrl
 chara/human/c0101/obj/face/f0005/material/mt_c0101f0005_etc_c.mtrl
@@ -2083,6 +2007,7 @@ chara/human/c0801/obj/hair/h0155/model/c0801h0155_hir.mdl
 chara/human/c0201/obj/hair/h0149/model/c0201h0149_hir.mdl
 chara/human/c0201/obj/hair/h0125/model/c0201h0125_hir.mdl
 chara/human/c0601/obj/hair/h0153/model/c0601h0153_hir.mdl
+chara/human/c0504/obj/hair/h0203/material/v0001/mt_c0504h0203_hir_a.mtrl
 chara/human/c0901/obj/hair/h0001/material/v0001/mt_c0901h0001_acc_b.mtrl
 chara/human/c0901/obj/hair/h0001/material/v0001/mt_c0901h0001_hir_a.mtrl
 chara/human/c0901/obj/hair/h0013/material/v0001/mt_c0901h0013_acc_b.mtrl
@@ -2098,6 +2023,9 @@ chara/human/c0101/obj/face/f0003/model/c0101f0003_fac.mdl
 chara/human/c1601/obj/hair/h0171/material/v0001/mt_c1601h0171_hir_a.mtrl
 chara/human/c1601/obj/hair/h0163/material/v0001/mt_c1601h0163_hir_a.mtrl
 chara/human/c1601/obj/hair/h0163/material/v0001/mt_c1601h0163_acc_b.mtrl
+chara/human/c1601/obj/hair/h0147/material/v0001/mt_c1601h0147_acc_b.mtrl
+chara/human/c1601/obj/hair/h0147/material/v0001/mt_c1601h0147_hir_a.mtrl
+chara/human/c1601/obj/hair/h0155/material/v0001/mt_c1601h0155_hir_a.mtrl
 chara/human/c1601/obj/hair/h0010/model/c1601h0010_hir.mdl
 chara/human/c1301/obj/hair/h0108/model/c1301h0108_hir.mdl
 chara/human/c1401/obj/face/f0205/model/c1401f0205_fac.mdl
@@ -2134,6 +2062,7 @@ chara/human/c0701/obj/hair/h0174/model/c0701h0174_hir.mdl
 chara/human/c1701/obj/hair/h0112/model/c1701h0112_hir.mdl
 chara/human/c1301/obj/hair/h0164/model/c1301h0164_hir.mdl
 chara/human/c1501/obj/hair/h0120/material/v0001/mt_c1501h0120_hir_a.mtrl
+chara/human/c1501/obj/hair/h0116/material/v0001/mt_c1501h0116_hir_a.mtrl
 chara/human/c1501/obj/hair/h0168/material/v0001/mt_c1501h0168_acc_b.mtrl
 chara/human/c1501/obj/hair/h0168/material/v0001/mt_c1501h0168_hir_a.mtrl
 chara/human/c0201/obj/face/f0225/material/mt_c0201f0225_iri_a.mtrl
@@ -2152,6 +2081,7 @@ chara/human/c1401/obj/face/f0001/material/mt_c1401f0001_fac_c.mtrl
 chara/human/c1401/obj/face/f0001/material/mt_c1401f0001_etc_c.mtrl
 chara/human/c1301/obj/hair/h0103/model/c1301h0103_hir.mdl
 chara/human/c0901/obj/hair/h0179/model/c0901h0179_hir.mdl
+chara/human/c1501/obj/hair/h0185/model/c1501h0185_hir.mdl
 chara/human/c1001/obj/hair/h0176/model/c1001h0176_hir.mdl
 chara/human/c0504/obj/hair/h0003/material/v0001/mt_c0504h0003_hir_a.mtrl
 chara/human/c0504/obj/hair/h0003/material/v0001/mt_c0504h0003_acc_b.mtrl
@@ -2207,6 +2137,7 @@ chara/human/c0801/obj/hair/h0125/model/c0801h0125_hir.mdl
 chara/human/c0701/obj/hair/h0205/material/v0001/mt_c0701h0205_hir_a.mtrl
 chara/human/c1401/obj/hair/h0012/material/v0001/mt_c1401h0012_hir_a.mtrl
 chara/human/c1401/obj/hair/h0012/material/v0001/mt_c1401h0012_acc_b.mtrl
+chara/human/c0504/obj/face/f0203/model/c0504f0203_fac.mdl
 chara/human/c1401/obj/face/f0206/material/mt_c1401f0206_etc_a.mtrl
 chara/human/c1401/obj/face/f0206/material/mt_c1401f0206_fac_a.mtrl
 chara/human/c1401/obj/face/f0206/material/mt_c1401f0206_etc_b.mtrl
@@ -2313,6 +2244,7 @@ chara/human/c0101/obj/hair/h0138/material/v0001/mt_c0101h0138_hir_a.mtrl
 chara/human/c1501/obj/hair/h0015/model/c1501h0015_hir.mdl
 chara/human/c0101/obj/hair/h0005/model/c0101h0005_hir.mdl
 chara/human/c0204/obj/face/f0002/material/mt_c0204f0002_iri_a.mtrl
+chara/human/c0204/obj/face/f0002/material/mt_c0204f0002_etc_b.mtrl
 chara/human/c0204/obj/face/f0002/material/mt_c0204f0002_fac_a.mtrl
 chara/human/c0204/obj/face/f0002/material/mt_c0204f0002_etc_a.mtrl
 chara/human/c0301/obj/face/f0210/model/c0301f0210_fac.mdl
@@ -2424,6 +2356,7 @@ chara/human/c0501/obj/hair/h0061/material/v0001/mt_c0501h0061_acc_b.mtrl
 chara/human/c1304/obj/hair/h0001/material/v0001/mt_c1304h0001_hir_a.mtrl
 chara/human/c0901/obj/face/f0004/model/c0901f0004_fac.mdl
 chara/human/c0501/obj/hair/h0103/model/c0501h0103_hir.mdl
+chara/human/c0301/obj/hair/h0185/model/c0301h0185_hir.mdl
 chara/human/c0101/obj/hair/h0175/model/c0101h0175_hir.mdl
 chara/human/c1101/obj/hair/h0113/model/c1101h0113_hir.mdl
 chara/human/c1501/obj/hair/h0165/model/c1501h0165_hir.mdl
@@ -2440,6 +2373,7 @@ chara/human/c0501/obj/face/f0104/material/mt_c0501f0104_iri_a.mtrl
 chara/human/c1404/obj/hair/h0003/material/v0001/mt_c1404h0003_hir_a.mtrl
 chara/human/c1404/obj/hair/h0003/material/v0001/mt_c1404h0003_acc_b.mtrl
 chara/human/c0901/obj/body/b0003/model/c0901b0003_top.mdl
+chara/human/c0204/obj/hair/h0012/model/c0204h0012_hir.mdl
 chara/human/c0801/obj/hair/h0055/material/v0001/mt_c0801h0055_hir_a.mtrl
 chara/human/c0801/obj/hair/h0055/material/v0001/mt_c0801h0055_acc_b.mtrl
 chara/human/c1401/obj/hair/h0142/model/c1401h0142_glv.mdl
@@ -2472,6 +2406,8 @@ chara/human/c1301/obj/hair/h0126/model/c1301h0126_hir.mdl
 chara/human/c0801/obj/tail/t0006/material/v0001/mt_c0801t0006_a.mtrl
 chara/human/c1001/obj/hair/h0153/model/c1001h0153_hir.mdl
 chara/human/c1401/obj/hair/h0125/model/c1401h0125_hir.mdl
+chara/human/c1601/obj/hair/h0185/material/v0001/mt_c1601h0185_hir_a.mtrl
+chara/human/c0804/obj/hair/h0005/model/c0804h0005_hir.mdl
 chara/human/c9104/obj/hair/h0201/model/c9104h0201_hir.mdl
 chara/human/c0604/obj/hair/h0003/model/c0604h0003_hir.mdl
 chara/human/c1401/obj/hair/h0149/model/c1401h0149_hir.mdl
@@ -2517,6 +2453,7 @@ chara/human/c0101/obj/hair/h0169/model/c0101h0169_hir.mdl
 chara/human/c1001/obj/hair/h0061/model/c1001h0061_hir.mdl
 chara/human/c1101/obj/face/f0201/model/c1101f0201_fac.mdl
 chara/human/c1501/obj/hair/h0179/model/c1501h0179_hir.mdl
+chara/human/c0901/obj/hair/h0185/model/c0901h0185_hir.mdl
 chara/human/c0501/obj/hair/h0173/model/c0501h0173_hir.mdl
 chara/human/c0101/obj/hair/h0105/model/c0101h0105_hir.mdl
 chara/human/c0701/obj/hair/h0183/model/c0701h0183_hir.mdl
@@ -2626,6 +2563,7 @@ chara/human/c1401/obj/face/f0004/material/mt_c1401f0004_etc_b.mtrl
 chara/human/c1401/obj/face/f0004/material/mt_c1401f0004_iri_a.mtrl
 chara/human/c0201/obj/hair/h0005/material/v0001/mt_c0201h0005_acc_b.mtrl
 chara/human/c0201/obj/hair/h0005/material/v0001/mt_c0201h0005_hir_a.mtrl
+chara/human/c0101/obj/face/f0203/material/mt_c0101f0203_iri_a.mtrl
 chara/human/c0101/obj/face/f0203/material/mt_c0101f0203_etc_b.mtrl
 chara/human/c0101/obj/face/f0203/material/mt_c0101f0203_fac_b.mtrl
 chara/human/c0101/obj/face/f0203/material/mt_c0101f0203_etc_a.mtrl
@@ -2687,6 +2625,7 @@ chara/human/c1501/obj/hair/h0009/material/v0001/mt_c1501h0009_hir_a.mtrl
 chara/human/c1501/obj/hair/h0184/material/v0001/mt_c1501h0184_hir_a.mtrl
 chara/human/c0301/obj/hair/h0128/model/c0301h0128_hir.mdl
 chara/human/c1304/obj/hair/h0201/model/c1304h0201_hir.mdl
+chara/human/c1701/obj/hair/h0138/model/c1701h0138_hir.mdl
 chara/human/c0101/obj/face/f0201/material/mt_c0101f0201_fac_a.mtrl
 chara/human/c0101/obj/face/f0201/material/mt_c0101f0201_etc_a.mtrl
 chara/human/c0101/obj/face/f0201/material/mt_c0101f0201_etc_c.mtrl
@@ -2720,6 +2659,7 @@ chara/human/c1101/obj/hair/h0012/material/v0001/mt_c1101h0012_hir_a.mtrl
 chara/human/c1101/obj/hair/h0012/material/v0001/mt_c1101h0012_acc_b.mtrl
 chara/human/c0601/obj/hair/h0179/model/c0601h0179_hir.mdl
 chara/human/c1801/obj/hair/h0175/model/c1801h0175_hir.mdl
+chara/human/c0201/obj/hair/h0221/material/v0001/mt_c0201h0221_hir_a.mtrl
 chara/human/c0301/obj/hair/h0061/model/c0301h0061_hir.mdl
 chara/human/c0201/obj/hair/h0205/material/v0001/mt_c0201h0205_hir_a.mtrl
 chara/human/c0201/obj/hair/h0205/material/v0001/mt_c0201h0205_acc_b.mtrl
@@ -2764,6 +2704,7 @@ chara/human/c0501/obj/face/f0209/model/c0501f0209_fac.mdl
 chara/human/c0501/obj/hair/h0107/model/c0501h0107_hir.mdl
 chara/human/c0101/obj/hair/h0171/model/c0101h0171_hir.mdl
 chara/human/c1101/obj/hair/h0117/model/c1101h0117_hir.mdl
+chara/human/c1501/obj/hair/h0161/model/c1501h0161_hir.mdl
 chara/human/c1601/obj/hair/h0202/material/v0001/mt_c1601h0202_acc_b.mtrl
 chara/human/c1601/obj/hair/h0202/material/v0001/mt_c1601h0202_hir_a.mtrl
 chara/human/c0601/obj/face/f0104/model/c0601f0104_fac.mdl
@@ -2799,6 +2740,8 @@ chara/human/c9204/obj/face/f0001/material/mt_c9204f0001_etc_b.mtrl
 chara/human/c0204/obj/hair/h0001/model/c0204h0001_hir.mdl
 chara/human/c0201/obj/hair/h0008/material/v0001/mt_c0201h0008_acc_b.mtrl
 chara/human/c0201/obj/hair/h0008/material/v0001/mt_c0201h0008_hir_a.mtrl
+chara/human/c0201/obj/hair/h0185/material/v0001/mt_c0201h0185_hir_a.mtrl
+chara/human/c0201/obj/hair/h0185/material/v0001/mt_c0201h0185_acc_b.mtrl
 chara/human/c0104/obj/face/f0002/model/c0104f0002_fac.mdl
 chara/human/c0201/obj/hair/h0052/material/v0001/mt_c0201h0052_hir_a.mtrl
 chara/human/c0201/obj/hair/h0052/material/v0001/mt_c0201h0052_acc_b.mtrl
@@ -2816,6 +2759,7 @@ chara/human/c1801/obj/face/f0249/material/mt_c1801f0249_fac_a.mtrl
 chara/human/c1801/obj/face/f0249/material/mt_c1801f0249_iri_a.mtrl
 chara/human/c1501/obj/hair/h0004/material/v0001/mt_c1501h0004_acc_b.mtrl
 chara/human/c1501/obj/hair/h0004/material/v0001/mt_c1501h0004_hir_a.mtrl
+chara/human/c0104/obj/hair/h0013/model/c0104h0013_hir.mdl
 chara/human/c0701/obj/hair/h0149/model/c0701h0149_hir.mdl
 chara/human/c0101/obj/face/f0006/material/mt_c0101f0006_etc_b.mtrl
 chara/human/c0101/obj/face/f0006/material/mt_c0101f0006_iri_a.mtrl
@@ -2897,7 +2841,9 @@ chara/human/c0101/obj/face/f0004/material/mt_c0101f0004_etc_b.mtrl
 chara/human/c0901/obj/hair/h0061/model/c0901h0061_hir.mdl
 chara/human/c1201/obj/hair/h0175/model/c1201h0175_hir.mdl
 chara/human/c0801/obj/face/f0201/model/c0801f0201_fac.mdl
+chara/human/c1601/obj/hair/h0103/model/c1601h0103_hir.mdl
 chara/human/c0801/obj/tail/t0201/material/v0001/mt_c0801t0201_a.mtrl
+chara/human/c1001/obj/hair/h0185/model/c1001h0185_hir.mdl
 chara/human/c0601/obj/hair/h0165/model/c0601h0165_hir.mdl
 chara/human/c0201/obj/hair/h0113/model/c0201h0113_hir.mdl
 chara/human/c1801/obj/hair/h0169/model/c1801h0169_hir.mdl
@@ -2945,6 +2891,7 @@ chara/human/c0701/obj/hair/h0010/material/v0001/mt_c0701h0010_hir_a.mtrl
 chara/human/c0701/obj/hair/h0010/material/v0001/mt_c0701h0010_acc_b.mtrl
 chara/human/c1001/obj/hair/h0201/model/c1001h0201_hir.mdl
 chara/human/c1401/obj/face/f0092/model/c1401f0092_fac.mdl
+chara/human/c1601/obj/hair/h0105/material/v0001/mt_c1601h0105_hir_a.mtrl
 chara/human/c0601/obj/face/f0004/model/c0601f0004_fac.mdl
 chara/human/c1401/obj/face/f0201/model/c1401f0201_fac.mdl
 chara/human/c1001/obj/hair/h0179/model/c1001h0179_hir.mdl
@@ -2955,6 +2902,8 @@ chara/human/c1001/obj/hair/h0115/model/c1001h0115_hir.mdl
 chara/human/c0401/obj/hair/h0105/model/c0401h0105_hir.mdl
 chara/human/c0201/obj/hair/h0183/model/c0201h0183_hir.mdl
 chara/human/c0801/obj/face/f0002/model/c0801f0002_fac.mdl
+chara/human/c1501/obj/hair/h0154/material/v0001/mt_c1501h0154_acc_b.mtrl
+chara/human/c1501/obj/hair/h0154/material/v0001/mt_c1501h0154_hir_a.mtrl
 chara/human/c1501/obj/hair/h0162/material/v0001/mt_c1501h0162_hir_a.mtrl
 chara/human/c1501/obj/hair/h0170/material/v0001/mt_c1501h0170_hir_a.mtrl
 chara/human/c0401/obj/hair/h0009/material/v0001/mt_c0401h0009_acc_b.mtrl
@@ -3021,7 +2970,9 @@ chara/human/c0901/obj/hair/h0111/model/c0901h0111_hir.mdl
 chara/human/c1601/obj/body/b0002/model/c1601b0002_top.mdl
 chara/human/c1601/obj/tail/t0002/model/c1601t0002_til.mdl
 chara/human/c0501/obj/hair/h0145/model/c0501h0145_hir.mdl
+chara/human/c1501/obj/hair/h0123/model/c1501h0123_hir.mdl
 chara/human/c1101/obj/hair/h0155/model/c1101h0155_hir.mdl
+chara/human/c0104/obj/hair/h0012/material/v0001/mt_c0104h0012_hir_a.mtrl
 chara/human/c1201/obj/hair/h0120/model/c1201h0120_hir.mdl
 chara/human/c0201/obj/hair/h0146/model/c0201h0146_hir.mdl
 chara/human/c0601/obj/hair/h0130/model/c0601h0130_hir.mdl
@@ -3159,10 +3110,12 @@ chara/human/c1301/obj/hair/h0008/material/v0001/mt_c1301h0008_hir_a.mtrl
 chara/human/c1401/obj/hair/h0113/model/c1401h0113_hir.mdl
 chara/human/c1601/obj/tail/t0001/material/v0003/mt_c1601t0001_a.mtrl
 chara/human/c1001/obj/hair/h0165/model/c1001h0165_hir.mdl
+chara/human/c0601/obj/hair/h0185/model/c0601h0185_hir.mdl
 chara/human/c0401/obj/hair/h0175/model/c0401h0175_hir.mdl
 chara/human/c1404/obj/hair/h0001/model/c1404h0001_hir.mdl
 chara/human/c0204/obj/hair/h0006/material/v0001/mt_c0204h0006_acc_b.mtrl
 chara/human/c0204/obj/hair/h0006/material/v0001/mt_c0204h0006_hir_a.mtrl
+chara/human/c0204/obj/hair/h0014/material/v0001/mt_c0204h0014_hir_a.mtrl
 chara/human/c0801/obj/hair/h0121/model/c0801h0121_hir.mdl
 chara/human/c1801/obj/hair/h0147/model/c1801h0147_hir.mdl
 chara/human/c1801/obj/face/f0249/model/c1801f0249_fac.mdl
@@ -3173,7 +3126,9 @@ chara/human/c1001/obj/face/f0101/material/mt_c1001f0101_etc_c.mtrl
 chara/human/c1001/obj/face/f0101/material/mt_c1001f0101_etc_a.mtrl
 chara/human/c1001/obj/face/f0101/material/mt_c1001f0101_fac_a.mtrl
 chara/human/c0101/obj/hair/h0148/model/c0101h0148_hir.mdl
+chara/human/c1501/obj/hair/h0158/model/c1501h0158_hir.mdl
 chara/human/c1304/obj/hair/h0002/model/c1304h0002_hir.mdl
+chara/human/c0804/obj/hair/h0006/material/v0001/mt_c0804h0006_hir_a.mtrl
 chara/human/c1701/obj/hair/h0001/material/v0001/mt_c1701h0001_hir_a.mtrl
 chara/human/c1701/obj/hair/h0001/material/v0001/mt_c1701h0001_acc_b.mtrl
 chara/human/c1701/obj/hair/h0013/material/v0001/mt_c1701h0013_hir_a.mtrl
@@ -3197,6 +3152,7 @@ chara/human/c0901/obj/hair/h0006/material/v0001/mt_c0901h0006_hir_a.mtrl
 chara/human/c0901/obj/hair/h0006/material/v0001/mt_c0901h0006_acc_b.mtrl
 chara/human/c0501/obj/hair/h0135/model/c0501h0135_hir.mdl
 chara/human/c1101/obj/hair/h0125/model/c1101h0125_hir.mdl
+chara/human/c0201/obj/hair/h0222/model/c0201h0222_hir.mdl
 chara/human/c0101/obj/face/f0221/model/c0101f0221_fac.mdl
 chara/human/c1101/obj/hair/h0149/model/c1101h0149_hir.mdl
 chara/human/c1401/obj/tail/t0003/material/v0001/mt_c1401t0003_a.mtrl
@@ -3306,6 +3262,7 @@ chara/human/c1801/obj/hair/h0017/material/v0001/mt_c1801h0017_acc_b.mtrl
 chara/human/c1801/obj/hair/h0017/material/v0001/mt_c1801h0017_hir_a.mtrl
 chara/human/c0201/obj/hair/h0145/model/c0201h0145_hir.mdl
 chara/human/c0601/obj/hair/h0133/model/c0601h0133_hir.mdl
+chara/human/c1601/obj/hair/h0155/model/c1601h0155_hir.mdl
 chara/human/c1701/obj/face/f0102/material/mt_c1701f0102_iri_a.mtrl
 chara/human/c1701/obj/face/f0102/material/mt_c1701f0102_etc_b.mtrl
 chara/human/c1701/obj/face/f0102/material/mt_c1701f0102_etc_d.mtrl
@@ -3423,6 +3380,7 @@ chara/human/c0601/obj/face/f0208/material/mt_c0601f0208_iri_a.mtrl
 chara/human/c0601/obj/face/f0208/material/mt_c0601f0208_etc_b.mtrl
 chara/human/c0601/obj/face/f0208/material/mt_c0601f0208_fac_a.mtrl
 chara/human/c0601/obj/face/f0208/material/mt_c0601f0208_etc_a.mtrl
+chara/human/c0101/obj/hair/h0185/model/c0101h0185_hir.mdl
 chara/human/c0701/obj/hair/h0103/model/c0701h0103_hir.mdl
 chara/human/c1701/obj/hair/h0109/model/c1701h0109_hir.mdl
 chara/human/c0701/obj/hair/h0106/material/v0001/mt_c0701h0106_hir_a.mtrl
@@ -3458,6 +3416,7 @@ chara/human/c0201/obj/hair/h0214/material/v0001/mt_c0201h0214_acc_b.mtrl
 chara/human/c0201/obj/hair/h0214/material/v0001/mt_c0201h0214_hir_a.mtrl
 chara/human/c0201/obj/hair/h0206/material/v0001/mt_c0201h0206_acc_b.mtrl
 chara/human/c0201/obj/hair/h0206/material/v0001/mt_c0201h0206_hir_a.mtrl
+chara/human/c0201/obj/hair/h0222/material/v0001/mt_c0201h0222_hir_a.mtrl
 chara/human/c0501/obj/hair/h0151/model/c0501h0151_hir.mdl
 chara/human/c0201/obj/body/b0006/model/c0201b0006_top.mdl
 chara/human/c1304/obj/hair/h0001/model/c1304h0001_hir.mdl
@@ -3471,6 +3430,7 @@ chara/human/c0901/obj/face/f0202/material/mt_c0901f0202_etc_a.mtrl
 chara/human/c0901/obj/face/f0202/material/mt_c0901f0202_fac_a.mtrl
 chara/human/c0901/obj/face/f0202/material/mt_c0901f0202_iri_a.mtrl
 chara/human/c0801/obj/hair/h0122/model/c0801h0122_hir.mdl
+chara/human/c0104/obj/body/b0201/material/v0001/mt_c0104b0201_a.mtrl
 chara/human/c1404/obj/hair/h0002/model/c1404h0002_hir.mdl
 chara/human/c1601/obj/hair/h0201/material/v0001/mt_c1601h0201_hir_a.mtrl
 chara/human/c1601/obj/hair/h0201/material/v0001/mt_c1601h0201_acc_b.mtrl
@@ -3490,6 +3450,7 @@ chara/human/c0101/obj/face/f0212/material/mt_c0101f0212_iri_a.mtrl
 chara/human/c0101/obj/face/f0212/material/mt_c0101f0212_etc_a.mtrl
 chara/human/c0101/obj/face/f0212/material/mt_c0101f0212_fac_a.mtrl
 chara/human/c0101/obj/face/f0222/model/c0101f0222_fac.mdl
+chara/human/c0201/obj/hair/h0221/model/c0201h0221_hir.mdl
 chara/human/c1101/obj/hair/h0126/model/c1101h0126_hir.mdl
 chara/human/c0101/obj/hair/h0140/model/c0101h0140_hir.mdl
 chara/human/c0501/obj/hair/h0136/model/c0501h0136_hir.mdl
@@ -3517,6 +3478,7 @@ chara/human/c0701/obj/tail/t0002/model/c0701t0002_til.mdl
 chara/human/c0401/obj/hair/h0007/material/v0001/mt_c0401h0007_hir_a.mtrl
 chara/human/c0401/obj/hair/h0007/material/v0001/mt_c0401h0007_acc_b.mtrl
 chara/human/c1301/obj/tail/t0002/material/v0001/mt_c1301t0002_a.mtrl
+chara/human/c0204/obj/hair/h0015/model/c0204h0015_hir.mdl
 chara/human/c0901/obj/hair/h0150/model/c0901h0150_hir.mdl
 chara/human/c0601/obj/hair/h0054/model/c0601h0054_hir.mdl
 chara/human/c1501/obj/hair/h0112/material/v0001/mt_c1501h0112_acc_b.mtrl
@@ -3604,6 +3566,8 @@ chara/human/c1301/obj/face/f0001/material/mt_c1301f0001_fac_c.mtrl
 chara/human/c1301/obj/face/f0001/material/mt_c1301f0001_fac_a.mtrl
 chara/human/c1301/obj/face/f0001/material/mt_c1301f0001_etc_a.mtrl
 chara/human/c0201/obj/face/f0091/model/c0201f0091_fac.mdl
+chara/human/c0804/obj/hair/h0005/material/v0001/mt_c0804h0005_acc_b.mtrl
+chara/human/c0804/obj/hair/h0005/material/v0001/mt_c0804h0005_hir_a.mtrl
 chara/human/c0101/obj/hair/h0201/model/c0101h0201_hir.mdl
 chara/human/c1701/obj/hair/h0002/material/v0001/mt_c1701h0002_acc_b.mtrl
 chara/human/c1701/obj/hair/h0002/material/v0001/mt_c1701h0002_hir_a.mtrl
@@ -3620,6 +3584,7 @@ chara/human/c1401/obj/hair/h0180/model/c1401h0180_hir.mdl
 chara/human/c1201/obj/hair/h0106/model/c1201h0106.mdl
 chara/human/c1201/obj/hair/h0106/model/c1201h0106_hir.mdl
 chara/human/c0901/obj/hair/h0012/model/c0901h0012_hir.mdl
+chara/human/c1601/obj/hair/h0170/model/c1601h0170_hir.mdl
 chara/human/c1101/obj/hair/h0173/model/c1101h0173_hir.mdl
 chara/human/c1301/obj/hair/h0183/model/c1301h0183_hir.mdl
 chara/human/c1501/obj/hair/h0105/model/c1501h0105_hir.mdl
@@ -3667,6 +3632,7 @@ chara/human/c1801/obj/face/f0104/material/mt_c1801f0104_iri_a.mtrl
 chara/human/c1801/obj/face/f0104/material/mt_c1801f0104_etc_b.mtrl
 chara/human/c1001/obj/hair/h0148/model/c1001h0148_hir.mdl
 chara/human/c0204/obj/hair/h0002/model/c0204h0002_hir.mdl
+chara/human/c1501/obj/hair/h0161/material/v0001/mt_c1501h0161_hir_a.mtrl
 chara/human/c1501/obj/hair/h0173/material/v0001/mt_c1501h0173_acc_b.mtrl
 chara/human/c1501/obj/hair/h0173/material/v0001/mt_c1501h0173_hir_a.mtrl
 chara/human/c1501/obj/hair/h0157/material/v0001/mt_c1501h0157_hir_a.mtrl
@@ -3683,6 +3649,8 @@ chara/human/c0601/obj/face/f0200/material/mt_c0601f0200_fac_a.mtrl
 chara/human/c0301/obj/hair/h0137/model/c0301h0137_hir.mdl
 chara/human/c1601/obj/hair/h0178/material/v0001/mt_c1601h0178_hir_a.mtrl
 chara/human/c1601/obj/hair/h0178/material/v0001/mt_c1601h0178_acc_b.mtrl
+chara/human/c1601/obj/hair/h0106/material/v0001/mt_c1601h0106_hir_a.mtrl
+chara/human/c1601/obj/hair/h0106/material/v0001/mt_c1601h0106_acc_b.mtrl
 chara/human/c0801/obj/face/f0104/material/mt_c0801f0104_etc_a.mtrl
 chara/human/c0801/obj/face/f0104/material/mt_c0801f0104_fac_a.mtrl
 chara/human/c0801/obj/face/f0104/material/mt_c0801f0104_etc_d.mtrl
@@ -3740,6 +3708,7 @@ chara/human/c0504/obj/face/f0201/material/mt_c0504f0201_fac_a.mtrl
 chara/human/c0504/obj/face/f0201/material/mt_c0504f0201_acc_b.mtrl
 chara/human/c0504/obj/face/f0201/material/mt_c0504f0201_etc_b.mtrl
 chara/human/c0504/obj/face/f0201/material/mt_c0504f0201_iri_a.mtrl
+chara/human/c0104/obj/hair/h0010/model/c0104h0010_hir.mdl
 chara/human/c1401/obj/body/b0101/material/v0001/mt_c1401b0101_a.mtrl
 chara/human/c0201/obj/hair/h0137/material/v0001/mt_c0201h0137_hir_a.mtrl
 chara/human/c0201/obj/hair/h0137/material/v0001/mt_c0201h0137_acc_b.mtrl
@@ -3777,6 +3746,7 @@ chara/human/c0501/obj/face/f0221/material/mt_c0501f0221_etc_a.mtrl
 chara/human/c0501/obj/face/f0221/material/mt_c0501f0221_fac_a.mtrl
 chara/human/c1201/obj/hair/h0205/model/c1201h0205_hir.mdl
 chara/human/c1101/obj/hair/h0108/model/c1101h0108_hir.mdl
+chara/human/c0104/obj/hair/h0011/material/v0001/mt_c0104h0011_hir_a.mtrl
 chara/human/c1401/obj/hair/h0010/model/c1401h0010_hir.mdl
 chara/human/c0104/obj/hair/h0003/material/v0001/mt_c0104h0003_acc_b.mtrl
 chara/human/c0104/obj/hair/h0003/material/v0001/mt_c0104h0003_hir_a.mtrl
@@ -3785,6 +3755,7 @@ chara/human/c0501/obj/face/f0216/model/c0501f0216_fac.mdl
 chara/human/c0701/obj/hair/h0003/model/c0701h0003_hir.mdl
 chara/human/c1801/obj/hair/h0161/model/c1801h0161_hir.mdl
 chara/human/c0201/obj/face/f0215/model/c0201f0215_fac.mdl
+chara/human/c0804/obj/hair/h0008/material/v0001/mt_c0804h0008_hir_a.mtrl
 chara/human/c0801/obj/hair/h0107/model/c0801h0107_hir.mdl
 chara/human/c0601/obj/face/f0202/material/mt_c0601f0202_etc_a.mtrl
 chara/human/c0601/obj/face/f0202/material/mt_c0601f0202_fac_a.mtrl
@@ -3822,6 +3793,7 @@ chara/human/c0301/obj/hair/h0008/material/v0001/mt_c0301h0008_acc_b.mtrl
 chara/human/c0301/obj/face/f0204/material/mt_c0301f0204_iri_a.mtrl
 chara/human/c0301/obj/face/f0204/material/mt_c0301f0204_fac_b.mtrl
 chara/human/c0301/obj/face/f0204/material/mt_c0301f0204_fac_a.mtrl
+chara/human/c1701/obj/hair/h0185/model/c1701h0185_hir.mdl
 chara/human/c1101/obj/hair/h0103/model/c1101h0103_hir.mdl
 chara/human/c1501/obj/hair/h0175/model/c1501h0175_hir.mdl
 chara/human/c1301/obj/face/f0192/material/mt_c1301f0192_etc_b.mtrl
@@ -3835,6 +3807,10 @@ chara/human/c0701/obj/hair/h0008/model/c0701h0008_hir.mdl
 chara/human/c0601/obj/hair/h0166/model/c0601h0166_hir.mdl
 chara/human/c0201/obj/hair/h0110/model/c0201h0110_hir.mdl
 chara/human/c0801/obj/face/f0202/model/c0801f0202_fac.mdl
+chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_iri_a.mtrl
+chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_etc_b.mtrl
+chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_fac_a.mtrl
+chara/human/c0504/obj/face/f0203/material/mt_c0504f0203_etc_a.mtrl
 chara/human/c1201/obj/hair/h0176/model/c1201h0176_hir.mdl
 chara/human/c9204/obj/hair/h0201/material/v0001/mt_c9204h0201_hir_a.mtrl
 chara/human/c9204/obj/hair/h0201/material/v0001/mt_c9204h0201_acc_b.mtrl
@@ -3924,6 +3900,8 @@ chara/human/c0801/obj/face/f0202/material/mt_c0801f0202_etc_a.mtrl
 chara/human/c0801/obj/face/f0202/material/mt_c0801f0202_fac_a.mtrl
 chara/human/c0801/obj/face/f0202/material/mt_c0801f0202_etc_c.mtrl
 chara/human/c0801/obj/face/f0202/material/mt_c0801f0202_etc_d.mtrl
+chara/human/c1601/obj/hair/h0103/material/v0001/mt_c1601h0103_hir_a.mtrl
+chara/human/c1601/obj/hair/h0103/material/v0001/mt_c1601h0103_acc_b.mtrl
 chara/human/c1001/obj/hair/h0110/model/c1001h0110_hir.mdl
 chara/human/c1501/obj/hair/h0008/model/c1501h0008_hir.mdl
 chara/human/c1401/obj/hair/h0166/model/c1401h0166_hir.mdl
@@ -3932,6 +3910,7 @@ chara/human/c1301/obj/hair/h0165/model/c1301h0165_hir.mdl
 chara/human/c1401/obj/hair/h0201/material/v0001/mt_c1401h0201_acc_b.mtrl
 chara/human/c1401/obj/hair/h0201/material/v0001/mt_c1401h0201_hir_a.mtrl
 chara/human/c0701/obj/hair/h0175/model/c0701h0175_hir.mdl
+chara/human/c0501/obj/hair/h0185/model/c0501h0185_hir.mdl
 chara/human/c0701/obj/hair/h0004/material/v0001/mt_c0701h0004_acc_b.mtrl
 chara/human/c0701/obj/hair/h0004/material/v0001/mt_c0701h0004_hir_a.mtrl
 chara/human/c1801/obj/hair/h0017/model/c1801h0017_hir.mdl
@@ -4072,6 +4051,7 @@ chara/human/c0601/obj/face/f0102/material/mt_c0601f0102_fac_a.mtrl
 chara/human/c0601/obj/face/f0102/material/mt_c0601f0102_etc_a.mtrl
 chara/human/c0601/obj/face/f0102/material/mt_c0601f0102_iri_a.mtrl
 chara/human/c0601/obj/face/f0102/material/mt_c0601f0102_etc_b.mtrl
+chara/human/c1601/obj/hair/h0170/material/v0001/mt_c1601h0170_hir_a.mtrl
 chara/human/c0701/obj/hair/h0009/material/v0001/mt_c0701h0009_acc_b.mtrl
 chara/human/c0701/obj/hair/h0009/material/v0001/mt_c0701h0009_hir_a.mtrl
 chara/human/c0601/obj/face/f0191/model/c0601f0191_fac.mdl
@@ -4114,6 +4094,7 @@ chara/human/c1501/obj/tail/t0002/model/c1501t0002_til.mdl
 chara/human/c0201/obj/hair/h0133/model/c0201h0133_hir.mdl
 chara/human/c1201/obj/hair/h0155/model/c1201h0155_hir.mdl
 chara/human/c1101/obj/hair/h0120/model/c1101h0120_hir.mdl
+chara/human/c1501/obj/hair/h0156/model/c1501h0156_hir.mdl
 chara/human/c0101/obj/face/f0248/model/c0101f0248_fac.mdl
 chara/human/c0101/obj/hair/h0146/model/c0101h0146_hir.mdl
 chara/human/c0901/obj/hair/h0012/material/v0001/mt_c0901h0012_acc_b.mtrl
@@ -4133,9 +4114,9 @@ chara/human/c0801/obj/face/f0204/material/mt_c0801f0204_etc_b.mtrl
 chara/human/c1404/obj/hair/h0004/model/c1404h0004_hir.mdl
 chara/human/c0604/obj/hair/h0201/model/c0604h0201_hir.mdl
 chara/human/c0201/obj/hair/h0138/model/c0201h0138_hir.mdl
+chara/human/c1801/obj/hair/h0142/model/c1801h0142_hir.mdl
 chara/human/c0801/obj/hair/h0124/model/c0801h0124_hir.mdl
 chara/human/c1701/obj/hair/h0007/material/v0001/mt_c1701h0007_acc_b.mtrl
-chara/human/c1701/obj/hair/h0007/material/v0001/mt_c1701h0007_hir_a.mtrl
 chara/human/c1701/obj/hair/h0015/material/v0001/mt_c1701h0015_acc_b.mtrl
 chara/human/c1701/obj/hair/h0015/material/v0001/mt_c1701h0015_hir_a.mtrl
 chara/human/c0204/obj/face/f0201/model/c0204f0201_fac.mdl
@@ -4144,6 +4125,7 @@ chara/human/c1101/obj/face/f0249/model/c1101f0249_fac.mdl
 chara/human/c0501/obj/hair/h0157/model/c0501h0157_hir.mdl
 chara/human/c0101/obj/hair/h0121/model/c0101h0121_hir.mdl
 chara/human/c0601/obj/hair/h0122/model/c0601h0122_hir.mdl
+chara/human/c0204/obj/hair/h0012/material/v0001/mt_c0204h0012_hir_a.mtrl
 chara/human/c0101/obj/face/f0229/material/mt_c0101f0229_etc_c.mtrl
 chara/human/c0101/obj/face/f0229/material/mt_c0101f0229_etc_d.mtrl
 chara/human/c0101/obj/face/f0229/material/mt_c0101f0229_fac_a.mtrl
@@ -4179,6 +4161,7 @@ chara/human/c0701/obj/face/f0003/material/mt_c0701f0003_iri_a.mtrl
 chara/human/c0701/obj/face/f0003/material/mt_c0701f0003_fac_a.mtrl
 chara/human/c0701/obj/face/f0003/material/mt_c0701f0003_etc_a.mtrl
 chara/human/c0701/obj/face/f0003/material/mt_c0701f0003_etc_c.mtrl
+chara/human/c0804/obj/hair/h0004/model/c0804h0004_hir.mdl
 chara/human/c0401/obj/hair/h0142/model/c0401h0142_hir.mdl
 chara/human/c1401/obj/hair/h0124/model/c1401h0124_hir.mdl
 chara/human/c1001/obj/hair/h0152/model/c1001h0152_hir.mdl
@@ -4229,6 +4212,7 @@ chara/human/c0201/obj/face/f0005/material/mt_c0201f0005_fac_a.mtrl
 chara/human/c0201/obj/face/f0005/material/mt_c0201f0005_etc_a.mtrl
 chara/human/c0201/obj/face/f0005/material/mt_c0201f0005_iri_a.mtrl
 chara/human/c0201/obj/face/f0005/material/mt_c0201f0005_etc_b.mtrl
+chara/human/c0204/obj/hair/h0013/model/c0204h0013_hir.mdl
 chara/human/c0901/obj/body/b0002/model/c0901b0002_top.mdl
 chara/human/c0101/obj/hair/h0051/model/c0101h0051_hir.mdl
 chara/human/c0401/obj/hair/h0149/model/c0401h0149_hir.mdl
@@ -4237,6 +4221,8 @@ chara/human/c0101/obj/hair/h0052/material/v0001/mt_c0101h0052_acc_b.mtrl
 chara/human/c0101/obj/hair/h0008/material/v0001/mt_c0101h0008_acc_b.mtrl
 chara/human/c0101/obj/hair/h0008/material/v0001/mt_c0101h0008_hir_a.mtrl
 chara/human/c1001/obj/hair/h0159/model/c1001h0159_hir.mdl
+chara/human/c0101/obj/hair/h0185/material/v0001/mt_c0101h0185_hir_a.mtrl
+chara/human/c0101/obj/hair/h0185/material/v0001/mt_c0101h0185_acc_b.mtrl
 chara/human/c0401/obj/hair/h0125/model/c0401h0125_hir.mdl
 chara/human/c0701/obj/tail/t0004/model/c0701t0004_til.mdl
 chara/human/c1001/obj/hair/h0135/model/c1001h0135_hir.mdl
@@ -4251,6 +4237,7 @@ chara/human/c1404/obj/face/f0002/material/mt_c1404f0002_fac_a.mtrl
 chara/human/c1404/obj/face/f0002/material/mt_c1404f0002_etc_b.mtrl
 chara/human/c1404/obj/face/f0002/material/mt_c1404f0002_fac_b.mtrl
 chara/human/c1404/obj/face/f0002/material/mt_c1404f0002_iri_a.mtrl
+chara/human/c1701/obj/hair/h0136/model/c1701h0136_hir.mdl
 chara/human/c0801/obj/hair/h0054/model/c0801h0054_hir.mdl
 chara/human/c1301/obj/hair/h0140/model/c1301h0140_hir.mdl
 chara/human/c0301/obj/hair/h0126/model/c0301h0126_hir.mdl
@@ -4307,6 +4294,7 @@ chara/human/c9104/obj/face/f0201/material/mt_c9104f0201_fac_a.mtrl
 chara/human/c9104/obj/face/f0201/material/mt_c9104f0201_etc_b.mtrl
 chara/human/c9104/obj/face/f0201/material/mt_c9104f0201_iri_a.mtrl
 chara/human/c0801/obj/hair/h0202/model/c0801h0202_hir.mdl
+chara/human/c1301/obj/hair/h0185/model/c1301h0185_hir.mdl
 chara/human/c1501/obj/hair/h0103/model/c1501h0103_hir.mdl
 chara/human/c1101/obj/hair/h0175/model/c1101h0175_hir.mdl
 chara/human/c0101/obj/hair/h0113/model/c0101h0113_hir.mdl
@@ -4343,6 +4331,11 @@ chara/human/c1701/obj/face/f0002/model/c1701f0002_fac.mdl
 chara/human/c0801/obj/hair/h0203/material/v0001/mt_c0801h0203_hir_a.mtrl
 chara/human/c0601/obj/hair/h0204/model/c0601h0204_hir.mdl
 chara/human/c0801/obj/tail/t0007/material/v0001/mt_c0801t0007_a.mtrl
+chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_b.mtrl
+chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_iri_a.mtrl
+chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_a.mtrl
+chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_fac_a.mtrl
+chara/human/c0101/obj/face/f0223/material/mt_c0101f0223_etc_c.mtrl
 chara/human/c1601/obj/hair/h0009/material/v0001/mt_c1601h0009_acc_b.mtrl
 chara/human/c1601/obj/hair/h0009/material/v0001/mt_c1601h0009_hir_a.mtrl
 chara/human/c1601/obj/hair/h0184/material/v0001/mt_c1601h0184_hir_a.mtrl
@@ -4352,6 +4345,7 @@ chara/human/c0501/obj/face/f0218/material/mt_c0501f0218_etc_b.mtrl
 chara/human/c0501/obj/face/f0218/material/mt_c0501f0218_iri_a.mtrl
 chara/human/c0501/obj/face/f0218/material/mt_c0501f0218_etc_a.mtrl
 chara/human/c0501/obj/face/f0218/material/mt_c0501f0218_fac_a.mtrl
+chara/human/c1701/obj/hair/h0146/model/c1701h0146_hir.mdl
 chara/human/c1501/obj/hair/h0010/material/v0001/mt_c1501h0010_hir_a.mtrl
 chara/human/c1501/obj/hair/h0010/material/v0001/mt_c1501h0010_acc_b.mtrl
 chara/human/c1501/obj/hair/h0002/material/v0001/mt_c1501h0002_hir_a.mtrl
@@ -4415,6 +4409,7 @@ chara/human/c0101/obj/face/f0221/material/mt_c0101f0221_iri_a.mtrl
 chara/human/c0201/obj/face/f0218/model/c0201f0218_fac.mdl
 chara/human/c0601/obj/hair/h0160/model/c0601h0160_hir.mdl
 chara/human/c1001/obj/hair/h0180/model/c1001h0180_hir.mdl
+chara/human/c1601/obj/hair/h0106/model/c1601h0106_hir.mdl
 chara/human/c0801/obj/face/f0204/model/c0801f0204_fac.mdl
 chara/human/c1201/obj/hair/h0170/model/c1201h0170_hir.mdl
 chara/human/c0201/obj/face/f0202/material/mt_c0201f0202_iri_a.mtrl
@@ -4535,6 +4530,7 @@ chara/human/c0901/obj/hair/h0203/material/v0001/mt_c0901h0203_hir_a.mtrl
 chara/human/c0401/obj/hair/h0141/model/c0401h0141_hir.mdl
 chara/human/c0504/obj/hair/h0001/material/v0001/mt_c0504h0001_acc_b.mtrl
 chara/human/c0504/obj/hair/h0001/material/v0001/mt_c0504h0001_hir_a.mtrl
+chara/human/c0804/obj/hair/h0007/model/c0804h0007_hir.mdl
 chara/human/c1304/obj/body/b0001/material/v0001/mt_c1304b0001_a.mtrl
 chara/human/c0501/obj/face/f0203/material/mt_c0501f0203_fac_a.mtrl
 chara/human/c0501/obj/face/f0203/material/mt_c0501f0203_etc_a.mtrl
@@ -4547,6 +4543,7 @@ chara/human/c0301/obj/hair/h0125/model/c0301h0125_hir.mdl
 chara/human/c0701/obj/hair/h0153/model/c0701h0153_hir.mdl
 chara/human/c1701/obj/hair/h0135/model/c1701h0135_hir.mdl
 chara/human/c1301/obj/hair/h0143/model/c1301h0143_hir.mdl
+chara/human/c0104/obj/hair/h0009/model/c0104h0009_hir.mdl
 chara/human/c1501/obj/hair/h0122/material/v0001/mt_c1501h0122_hir_a.mtrl
 chara/human/c0501/obj/face/f0002/material/mt_c0501f0002_etc_c.mtrl
 chara/human/c0501/obj/face/f0002/material/mt_c0501f0002_etc_a.mtrl
@@ -4567,6 +4564,7 @@ chara/human/c1401/obj/hair/h0140/model/c1401h0140_hir.mdl
 chara/human/c1001/obj/hair/h0136/model/c1001h0136_hir.mdl
 chara/human/c0401/obj/hair/h0126/model/c0401h0126_hir.mdl
 chara/human/c0101/obj/hair/h0052/model/c0101h0052_hir.mdl
+chara/human/c0204/obj/hair/h0010/model/c0204h0010_hir.mdl
 chara/human/c0301/obj/hair/h0149/model/c0301h0149_hir.mdl
 chara/human/c1501/obj/face/f0002/material/mt_c1501f0002_etc_a.mtrl
 chara/human/c1501/obj/face/f0002/material/mt_c1501f0002_fac_a.mtrl
@@ -4626,6 +4624,8 @@ chara/human/c0601/obj/hair/h0207/model/c0601h0207_hir.mdl
 chara/human/c1701/obj/face/f0001/model/c1701f0001_fac.mdl
 chara/human/c0204/obj/hair/h0003/material/v0001/mt_c0204h0003_acc_b.mtrl
 chara/human/c0204/obj/hair/h0003/material/v0001/mt_c0204h0003_hir_a.mtrl
+chara/human/c0204/obj/hair/h0011/material/v0001/mt_c0204h0011_acc_b.mtrl
+chara/human/c0204/obj/hair/h0011/material/v0001/mt_c0204h0011_hir_a.mtrl
 chara/human/c0501/obj/face/f0204/model/c0501f0204_fac.mdl
 chara/human/c0501/obj/face/f0204/model/c0501f0204_hir.mdl
 chara/human/c1401/obj/hair/h0002/model/c1401h0002_hir.mdl
@@ -4636,7 +4636,9 @@ chara/human/c0201/obj/face/f0207/model/c0201f0207_fac.mdl
 chara/human/c0701/obj/hair/h0011/model/c0701h0011_hir.mdl
 chara/human/c1001/obj/face/f0002/model/c1001f0002_fac.mdl
 chara/human/c0101/obj/hair/h0204/model/c0101h0204_hir.mdl
+chara/human/c0804/obj/hair/h0003/material/v0001/mt_c0804h0003_hir_a.mtrl
 chara/human/c1201/obj/hair/h0103/model/c1201h0103_hir.mdl
+chara/human/c1401/obj/hair/h0185/model/c1401h0185_hir.mdl
 chara/human/c0801/obj/hair/h0179/model/c0801h0179_hir.mdl
 chara/human/c0401/obj/hair/h0201/material/v0001/mt_c0401h0201_hir_a.mtrl
 chara/human/c0401/obj/hair/h0201/material/v0001/mt_c0401h0201_acc_b.mtrl
@@ -4759,6 +4761,7 @@ chara/human/c0501/obj/face/f0218/model/c0501f0218_fac.mdl
 chara/human/c1501/obj/hair/h0170/model/c1501h0170_hir.mdl
 chara/human/c1101/obj/hair/h0106/model/c1101h0106_hir.mdl
 chara/human/c1701/obj/hair/h0180/model/c1701h0180_hir.mdl
+chara/human/c1601/obj/hair/h0105/model/c1601h0105_hir.mdl
 chara/human/c1001/obj/hair/h0183/model/c1001h0183_hir.mdl
 chara/human/c1201/obj/hair/h0173/model/c1201h0173_hir.mdl
 chara/human/c0801/obj/face/f0207/model/c0801f0207_fac.mdl
@@ -4769,6 +4772,7 @@ chara/human/c0601/obj/hair/h0163/model/c0601h0163_hir.mdl
 chara/human/c1701/obj/hair/h0009/material/v0001/mt_c1701h0009_hir_a.mtrl
 chara/human/c1701/obj/hair/h0009/material/v0001/mt_c1701h0009_acc_b.mtrl
 chara/human/c0501/obj/hair/h0209/model/c0501h0209_hir.mdl
+chara/human/c1801/obj/hair/h0108/model/c1801h0108_hir.mdl
 chara/human/c0201/obj/hair/h0172/model/c0201h0172_hir.mdl
 chara/human/c0601/obj/hair/h0104/model/c0601h0104_hir.mdl
 chara/human/c0701/obj/hair/h0181/model/c0701h0181_hir.mdl
@@ -4861,6 +4865,7 @@ chara/human/c0201/obj/face/f0213/material/mt_c0201f0213_etc_a.mtrl
 chara/human/c1001/obj/hair/h0113/model/c1001h0113_hir.mdl
 chara/human/c1401/obj/hair/h0165/model/c1401h0165_hir.mdl
 chara/human/c0401/obj/hair/h0103/model/c0401h0103_hir.mdl
+chara/human/c0201/obj/hair/h0185/model/c0201h0185_hir.mdl
 chara/human/c1101/obj/hair/h0011/model/c1101h0011_hir.mdl
 chara/human/c0501/obj/hair/h0001/model/c0501h0001_hir.mdl
 chara/human/c1404/obj/hair/h0001/material/v0001/mt_c1404h0001_acc_b.mtrl
@@ -4910,6 +4915,7 @@ chara/human/c1801/obj/body/b0002/model/c1801b0002_top.mdl
 chara/human/c0201/obj/face/f0211/material/mt_c0201f0211_etc_a.mtrl
 chara/human/c0201/obj/face/f0211/material/mt_c0201f0211_fac_a.mtrl
 chara/human/c0201/obj/face/f0211/material/mt_c0201f0211_iri_a.mtrl
+chara/human/c0201/obj/face/f0211/material/mt_c0201f0211_etc_b.mtrl
 chara/human/c0501/obj/face/f0221/model/c0501f0221_fac.mdl
 chara/human/c1101/obj/hair/h0008/material/v0001/mt_c1101h0008_hir_a.mtrl
 chara/human/c1101/obj/hair/h0008/material/v0001/mt_c1101h0008_acc_b.mtrl
@@ -4991,6 +4997,7 @@ chara/human/c0201/obj/face/f0004/model/c0201f0004_fac.mdl
 chara/human/c1101/obj/hair/h0061/model/c1101h0061_hir.mdl
 chara/human/c1001/obj/face/f0201/model/c1001f0201_fac.mdl
 chara/human/c1501/obj/hair/h0017/model/c1501h0017_hir.mdl
+chara/human/c0801/obj/hair/h0185/model/c0801h0185_hir.mdl
 chara/human/c1401/obj/hair/h0179/model/c1401h0179_hir.mdl
 chara/human/c0101/obj/hair/h0007/model/c0101h0007_hir.mdl
 chara/human/c1001/obj/hair/h0168/model/c1001h0168_hir.mdl
@@ -5060,6 +5067,7 @@ chara/human/c1401/obj/face/f0101/material/mt_c1401f0101_fac_b.mtrl
 chara/human/c1401/obj/face/f0101/material/mt_c1401f0101_etc_b.mtrl
 chara/human/c1401/obj/face/f0101/material/mt_c1401f0101_iri_a.mtrl
 chara/human/c1201/obj/hair/h0131/model/c1201h0131_hir.mdl
+chara/human/c1601/obj/hair/h0147/model/c1601h0147_hir.mdl
 chara/human/c0601/obj/hair/h0121/model/c0601h0121_hir.mdl
 chara/human/c0201/obj/hair/h0157/model/c0201h0157_hir.mdl
 chara/human/c0501/obj/hair/h0154/model/c0501h0154_hir.mdl
@@ -5076,7 +5084,34 @@ chara/human/c0501/obj/hair/h0138/model/c0501h0138_hir.mdl
 chara/human/c0104/obj/hair/h0201/model/c0104h0201_hir.mdl
 chara/human/c1101/obj/hair/h0128/model/c1101h0128_hir.mdl
 chara/human/c0801/obj/hair/h0127/model/c0801h0127_hir.mdl
+chara/human/c1801/obj/hair/h0141/model/c1801h0141_hir.mdl
 chara/human/c0201/obj/face/f0215/material/mt_c0201f0215_etc_a.mtrl
 chara/human/c0201/obj/face/f0215/material/mt_c0201f0215_fac_a.mtrl
 chara/human/c0201/obj/face/f0215/material/mt_c0201f0215_iri_a.mtrl
 chara/human/c0504/obj/face/f0201/model/c0504f0201_fac.mdl
+chara/human/c0301/obj/face/f0101/material/mt_c0301f0101_etc_b.mtrl
+chara/human/c1301/obj/face/f0101/material/mt_c1301f0101_fac_c.mtrl
+chara/human/c1501/obj/hair/h0186/material/v0001/mt_c1501h0186_hir_a.mtrl
+chara/human/c1601/obj/hair/h0186/model/c1601h0186_hir.mdl
+chara/human/c1101/obj/hair/h0186/model/c1101h0186_hir.mdl
+chara/human/c0701/obj/hair/h0186/model/c0701h0186_hir.mdl
+chara/human/c0301/obj/hair/h0186/model/c0301h0186_hir.mdl
+chara/human/c0901/obj/hair/h0186/model/c0901h0186_hir.mdl
+chara/human/c1201/obj/hair/h0186/model/c1201h0186_hir.mdl
+chara/human/c1601/obj/hair/h0186/material/v0001/mt_c1601h0186_hir_a.mtrl
+chara/human/c1501/obj/hair/h0186/model/c1501h0186_hir.mdl
+chara/human/c1801/obj/hair/h0186/model/c1801h0186_hir.mdl
+chara/human/c0401/obj/hair/h0186/model/c0401h0186_hir.mdl
+chara/human/c0101/obj/hair/h0186/model/c0101h0186_hir.mdl
+chara/human/c0201/obj/hair/h0186/material/v0001/mt_c0201h0186_hir_a.mtrl
+chara/human/c0201/obj/hair/h0186/material/v0001/mt_c0201h0186_acc_b.mtrl
+chara/human/c0601/obj/hair/h0186/model/c0601h0186_hir.mdl
+chara/human/c0801/obj/hair/h0186/model/c0801h0186_hir.mdl
+chara/human/c0201/obj/hair/h0186/model/c0201h0186_hir.mdl
+chara/human/c1001/obj/hair/h0186/model/c1001h0186_hir.mdl
+chara/human/c1401/obj/hair/h0186/model/c1401h0186_hir.mdl
+chara/human/c0501/obj/hair/h0186/model/c0501h0186_hir.mdl
+chara/human/c1301/obj/hair/h0186/model/c1301h0186_hir.mdl
+chara/human/c0101/obj/hair/h0186/material/v0001/mt_c0101h0186_acc_b.mtrl
+chara/human/c0101/obj/hair/h0186/material/v0001/mt_c0101h0186_hir_a.mtrl
+chara/human/c1701/obj/hair/h0007/material/v0001/mt_c1701h0007_hir_a.mtrl

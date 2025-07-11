@@ -72,6 +72,9 @@
         <Content Include="Files\common_vfx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Files\common_pap">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Files\d3d\fxc.exe">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
