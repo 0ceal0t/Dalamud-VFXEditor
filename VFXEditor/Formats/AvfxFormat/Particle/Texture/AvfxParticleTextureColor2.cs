@@ -18,7 +18,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureCalculateColor> TextureCalculateColor = new( "Calculate Color", "TCCT" );
         public readonly AvfxEnum<TextureCalculateAlpha> TextureCalculateAlpha = new( "Calculate Alpha", "TCAT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
-        public readonly AvfxBool UOS = new( "UOS", "bUOS" );
+        public readonly AvfxBool UOS = new( "Use Chara Portrait", "bUOS" );
 
         private readonly List<AvfxBase> Parsed;
 

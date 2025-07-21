@@ -17,6 +17,7 @@ namespace VfxEditor.PapFormat {
             "cbfp",
             "cbfa",
             "cbep",
+            "cbea", //emote add
             "cbba",
             "csnw",
             "cbbm",
@@ -24,6 +25,7 @@ namespace VfxEditor.PapFormat {
             "csxm",
             "cblw",
             "csbw",
+            "cslw", //some materials
             "cblm",
             "cbem",
             "cbna",
@@ -33,6 +35,7 @@ namespace VfxEditor.PapFormat {
             "cbew",
             "cbbw",
             "f",
+            "b", //cutscenes
             "cbnw",
             "cbnp",
             "cfxl",
