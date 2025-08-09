@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -72,6 +72,7 @@ namespace VfxEditor.AvfxFormat {
                 EffectorType.CameraQuake_Variable or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
                 EffectorType.GaussianBlur => new AvfxEffectorDataGaussianBlur(),
                 EffectorType.DirectionalBlur => new AvfxEffectorDirectionalBlur(),
+                EffectorType.Unknown => new AvfxEffectorUnknown(),
                 _ => null
             };
             Data?.SetAssigned( true );
