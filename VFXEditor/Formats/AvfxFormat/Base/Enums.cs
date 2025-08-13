@@ -271,7 +271,7 @@ namespace VfxEditor.AvfxFormat {
             PointLight = 0,
             DirectionalLight = 1,
             Reserve2 = 2,
-            Reserve3 = 3,
+            ChromaticAberration = 3,
             GaussianBlur = 4,
             DirectionalBlur = 5,
             CameraQuake_Variable = 6, // NOTE: seen in Akh Rai
