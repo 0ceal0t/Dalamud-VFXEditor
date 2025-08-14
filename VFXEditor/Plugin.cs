@@ -103,6 +103,7 @@ namespace VfxEditor {
             Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
+            OtterTex.NativeDll.Initialize( pluginInterface.AssemblyLocation.DirectoryName );
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );

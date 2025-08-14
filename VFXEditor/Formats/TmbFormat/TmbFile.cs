@@ -1,6 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
-using System;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -152,14 +151,14 @@ namespace VfxEditor.TmbFormat {
         }
 
         public void StartDragging( TmbEntry entry ) {
-            ImGui.SetDragDropPayload( "TMB_ENTRY", IntPtr.Zero, 0 );
+            ImGui.SetDragDropPayload( "TMB_ENTRY", null, 0 );
             DraggingEntry = entry;
         }
 
         public unsafe void StopDragging( Tmtr destination ) {
             if( DraggingEntry == null ) return;
             var payload = ImGui.AcceptDragDropPayload( "TMB_ENTRY" );
-            if( payload.NativePtr == null ) return;
+            if( payload.Handle == null ) return;
 
             var commands = new List<ICommand>();
             foreach( var track in AllTracks ) {

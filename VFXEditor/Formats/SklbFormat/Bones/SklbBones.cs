@@ -353,14 +353,14 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void StartDragging( SklbBone bone ) {
-            ImGui.SetDragDropPayload( "SKLB_BONES", IntPtr.Zero, 0 );
+            ImGui.SetDragDropPayload( "SKLB_BONES", null, 0 );
             DraggingBone = bone;
         }
 
         public unsafe bool StopDragging( SklbBone destination ) {
             if( DraggingBone == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( "SKLB_BONES" );
-            if( payload.NativePtr == null ) return false;
+            if( payload.Handle == null ) return false;
 
             if( DraggingBone != destination ) {
                 if( destination != null && destination.IsChildOf( DraggingBone ) ) {

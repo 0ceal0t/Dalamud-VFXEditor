@@ -382,7 +382,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             CommandManager.Add( new ListAddCommand<AvfxCurveKey>(
                 curve.Keys,
-                new AvfxCurveKey( curve, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )curve.ToRadians( point.y ) ),
+                new AvfxCurveKey( curve, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )curve.ToRadians( point.Y ) ),
                 insertIdx,
                 ( AvfxCurveKey _, bool _ ) => OnUpdate()
             ) );
@@ -399,7 +399,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             var topLeft = new ImPlotPoint { X = ColorCurve.Keys[0].DisplayX, Y = 1 };
             var bottomRight = new ImPlotPoint { X = ColorCurve.Keys[^1].DisplayX, Y = -1 };
-            ImPlot.PlotImage( "##Gradient", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
+            ImPlot.PlotImage( "##Gradient", new ImTextureID( Plugin.DirectXManager.GradientView.Output ), topLeft, bottomRight );
         }
 
         private void UpdateGradient() {
@@ -437,7 +437,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         private void PerformOnCopiedKeys( Action<List<ICommand>, List<(KeyType, Vector4)>, AvfxCurveData> action ) {
             var commands = new List<ICommand>();
-            if( CopiedKeys.Count == 0 || AssignedCurves.Count() == 0 ) return;
+            if( CopiedKeys.Count == 0 || !AssignedCurves.Any() ) return;
             if( CopiedKeys.Count == 1 && AssignedCurves.Count() == 1 ) {
                 action( commands, CopiedKeys.First().Value, AssignedCurves.First() );
             }
