@@ -109,9 +109,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         protected override string GetWarningText() {
-            var invalidTimeline = File.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
-            if( invalidTimeline == null ) return "";
-            return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
+            return AvfxWarning.GetWarningText(File);
         }
 
         protected override void DisplayFileControls() {
