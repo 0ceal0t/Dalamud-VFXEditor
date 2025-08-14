@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using VfxEditor.Parsing;
 
@@ -21,7 +21,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 if( ImGui.IsItemHovered() ) {
                     ImGui.BeginTooltip();
                     var sphere = Plugin.MtrlManager.Sphere[i];
-                    ImGui.Image( sphere.ImGuiHandle, new Vector2( 100, 100 ) );
+                    ImGui.Image( sphere.Handle, new Vector2( 100, 100 ) );
                     ImGui.EndTooltip();
                 }
             }

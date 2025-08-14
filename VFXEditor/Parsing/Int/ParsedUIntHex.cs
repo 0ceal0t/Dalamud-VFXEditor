@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedUIntHex : ParsedUInt {

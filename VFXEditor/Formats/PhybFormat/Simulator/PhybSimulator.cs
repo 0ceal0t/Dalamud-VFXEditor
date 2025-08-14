@@ -1,7 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using SharpDX;
 using System;
 using System.Collections.Generic;

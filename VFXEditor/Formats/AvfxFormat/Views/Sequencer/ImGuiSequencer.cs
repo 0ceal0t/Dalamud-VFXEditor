@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -109,7 +109,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.InvisibleButton( "SeqTopBar", headerSize );
             focused |= ImGui.IsItemFocused();
 
-            drawList.AddRectFilled( canvasPos, canvasPos + headerSize, 0xFFFF0000, 0 );
+            drawList.AddRectFilled( canvasPos, canvasPos + headerSize, 0xFFFF0000, 0f );
             var childFramePos = ImGui.GetCursorScreenPos();
             var childFrameSize = new Vector2( canvasSize.X, canvasSize.Y - 8f - headerSize.Y - scrollBarSize.Y );
             var childFramePosMax = childFramePos + childFrameSize;
@@ -124,9 +124,9 @@ namespace VfxEditor.AvfxFormat {
             var contentMin = ImGui.GetItemRectMin();
             var contentMax = ImGui.GetItemRectMax();
 
-            drawList.AddRectFilled( canvasPos, canvasPos + canvasSize, 0xFF242424, 0 );
+            drawList.AddRectFilled( canvasPos, canvasPos + canvasSize, 0xFF242424, 0f );
 
-            drawList.AddRectFilled( canvasPos, new Vector2( canvasPos.X + canvasSize.X, canvasPos.Y + ItemHeight ), 0xFF3D3837, 0 );
+            drawList.AddRectFilled( canvasPos, new Vector2( canvasPos.X + canvasSize.X, canvasPos.Y + ItemHeight ), 0xFF3D3837, 0f );
 
             if( AddDeleteButton( drawList, new Vector2( canvasPos.X + LegendWidth - ItemHeight, canvasPos.Y + 2 ), true ) && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && focused ) {
                 OnNew();
@@ -193,7 +193,7 @@ namespace VfxEditor.AvfxFormat {
                 if( cursorY >= itemPosBase.Y && cursorY < itemPos.Y + ItemHeight && MovingEntry == null && cursorX > contentMin.X && cursorX < contentMin.X + canvasSize.X ) {
                     hoveredRow = i;
                     var color = ( ( i & 1 ) == 1 ? 0xFF3A3636 : 0xFF413D3D ) + 0x80201008;
-                    drawList.AddRectFilled( itemPosBase + new Vector2( 0, 1 ), itemPosBase + new Vector2( LegendWidth, ItemHeight ), color, 0 );
+                    drawList.AddRectFilled( itemPosBase + new Vector2( 0, 1 ), itemPosBase + new Vector2( LegendWidth, ItemHeight ), color, 0f );
                 }
 
                 var overCheck = CheckBox( drawList, itemPos, IsEnabled( item ) );
@@ -226,7 +226,7 @@ namespace VfxEditor.AvfxFormat {
                 var itemPos = new Vector2( contentMin.X + LegendWidth, contentMin.Y + ItemHeight * i + 1 );
                 var itemSize = new Vector2( canvasSize.X + canvasPos.X, itemPos.Y + ItemHeight - 1 );
 
-                drawList.AddRectFilled( itemPos, itemSize, color, 0 );
+                drawList.AddRectFilled( itemPos, itemSize, color, 0f );
             }
 
             drawList.PushClipRect( childFramePos + new Vector2( LegendWidth, 0 ), childFramePos + childFrameSize );
@@ -370,7 +370,7 @@ namespace VfxEditor.AvfxFormat {
             var startFrameOffset = ( ( float )( firstFrameUsed - frameMin ) / frameCount ) * ( canvasSize.X - LegendWidth );
             var scrollBarA = new Vector2( scrollBarMin.X + LegendWidth, scrollBarMin.Y - 2 );
             var scrollBarB = new Vector2( scrollBarMin.X + canvasSize.X, scrollBarMax.Y - 1 );
-            drawList.AddRectFilled( scrollBarA, scrollBarB, 0xFF222222, 0 );
+            drawList.AddRectFilled( scrollBarA, scrollBarB, 0xFF222222, 0f );
 
             var inScrollBar = UiUtils.MouseOver( scrollBarA, scrollBarB );
             drawList.AddRectFilled( scrollBarA, scrollBarB, 0xFF101010, 8 );

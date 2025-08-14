@@ -1,8 +1,8 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,7 +63,7 @@ namespace VfxEditor.FileBrowser.Preview {
                 return;
             }
 
-            if( Texture.ImGuiHandle == IntPtr.Zero ) return;
+            if( Texture.Handle == IntPtr.Zero ) return;
 
             var width = ( float )Texture.Width;
             var height = ( float )Texture.Height;
@@ -80,7 +80,7 @@ namespace VfxEditor.FileBrowser.Preview {
 
             var imageOffset = ( size - totalSize ) / 2;
             ImGui.SetCursorPos( ImGui.GetCursorPos() + imageOffset );
-            ImGui.Image( Texture.ImGuiHandle, imageSize );
+            ImGui.Image( Texture.Handle, imageSize );
 
             var descText = $"{Format} / {Mips} / {Texture.Width}x{Texture.Height}";
             var descWidth = ImGui.CalcTextSize( descText ).X;

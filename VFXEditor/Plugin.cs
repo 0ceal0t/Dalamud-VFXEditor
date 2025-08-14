@@ -1,10 +1,10 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImGuizmo;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
-using ImGuizmoNET;
-using ImPlotNET;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX;

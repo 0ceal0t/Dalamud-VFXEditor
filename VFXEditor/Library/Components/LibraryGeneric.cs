@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace VfxEditor.Library.Components {
     public abstract class LibraryGeneric {

@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
-using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;

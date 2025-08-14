@@ -1,9 +1,9 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Animation.Rig;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Object;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -290,7 +290,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             DragDrop( bone );
 
-            if( ImGui.BeginPopupContextItem() ) {
+            if( ImGui.BeginPopupContextItem( "BonePopup" ) ) {
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "Create sub-bone" ) ) {
                     var newId = NEW_BONE_ID;
                     var newBone = new SklbBone( newId );

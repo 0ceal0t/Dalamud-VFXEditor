@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.IO;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Parsing.Int;

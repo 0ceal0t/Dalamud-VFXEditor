@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.IO;
 
 namespace VfxEditor.UldFormat.Component.Data {

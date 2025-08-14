@@ -1,8 +1,8 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
-using ImGuiNET;
-using ImPlotNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;

@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
-using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -373,7 +373,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
         }
 
         private void NewPoint( AvfxCurveData curve, ImPlotPoint point ) {
-            var time = Math.Round( point.x );
+            var time = Math.Round( point.X );
             var insertIdx = 0;
             foreach( var key in curve.Keys ) {
                 if( key.DisplayX > time ) break;
@@ -397,8 +397,8 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
             if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) UpdateGradient();
 
-            var topLeft = new ImPlotPoint { x = ColorCurve.Keys[0].DisplayX, y = 1 };
-            var bottomRight = new ImPlotPoint { x = ColorCurve.Keys[^1].DisplayX, y = -1 };
+            var topLeft = new ImPlotPoint { X = ColorCurve.Keys[0].DisplayX, Y = 1 };
+            var bottomRight = new ImPlotPoint { X = ColorCurve.Keys[^1].DisplayX, Y = -1 };
             ImPlot.PlotImage( "##Gradient", Plugin.DirectXManager.GradientView.Output, topLeft, bottomRight );
         }
 
