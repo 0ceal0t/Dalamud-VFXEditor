@@ -44,7 +44,7 @@ namespace VfxEditor.Utils {
 
         public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
 
-        public static readonly string HIGH_PRECISION_FORMAT = "%.5f";
+        public static readonly string HIGH_PRECISION_FORMAT = "%.7f";
 
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
 
