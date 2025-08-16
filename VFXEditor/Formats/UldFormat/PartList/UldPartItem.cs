@@ -11,8 +11,8 @@ namespace VfxEditor.UldFormat.PartList {
 
         public readonly ParsedIntSelect<UldTexture> TextureId = new( "Texture", 0,
             () => Plugin.UldManager.File.TextureSplitView,
-            ( UldTexture item ) => ( int )item.Id.Value,
-            ( UldTexture item, int _ ) => item.GetText()
+            item => ( int )item.Id.Value,
+            ( item, _ ) => item.GetText()
         );
         public UldTexture CurrentTexture => TextureId.Selected;
 

@@ -31,8 +31,8 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             File = file;
             Id = new( "Sampler",
                 () => File.ShaderFile?.Samplers,
-                ( ShpkParameterInfo item, int _ ) => item.GetText(),
-                ( ShpkParameterInfo item ) => item.Id
+                ( item, _ ) => item.GetText(),
+                item => item.Id
             );
         }
 

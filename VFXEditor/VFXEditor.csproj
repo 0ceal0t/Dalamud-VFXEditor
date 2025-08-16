@@ -1,7 +1,5 @@
 <Project Sdk="Dalamud.NET.Sdk/13.0.0">
     <PropertyGroup>
-        <TargetFramework>net9.0-windows</TargetFramework>
-        <LangVersion>preview</LangVersion>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
         <Company></Company>
         <Product>VFXEditor</Product>
@@ -171,21 +169,5 @@
     <ItemGroup>
       <Folder Include="Flatbuffer\Ephb\" />
       <Folder Include="lib\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Dalamud.Bindings.ImGui">
-        <HintPath></HintPath>
-      </Reference>
-      <Reference Include="Dalamud.Bindings.ImGuizmo">
-        <HintPath></HintPath>
-      </Reference>
-      <Reference Include="Dalamud.Bindings.ImPlot">
-        <HintPath></HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="DalamudPackager" Version="13.0.0" />
     </ItemGroup>
 </Project>

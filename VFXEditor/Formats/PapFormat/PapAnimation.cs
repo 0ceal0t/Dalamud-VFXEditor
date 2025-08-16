@@ -140,7 +140,7 @@ namespace VfxEditor.PapFormat {
 
                 ImGui.SameLine();
                 if( ImGui.Button( "Replace" ) ) {
-                    FileBrowserManager.OpenFileDialog( "Select a File", ".tmb,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "Select a File", ".tmb,.*", ( ok, res ) => {
                         if( ok ) {
                             CommandManager.Add( new PapReplaceTmbCommand( this, TmbFile.FromPapEmbedded( res, File.Command ) ) );
                             Dalamud.OkNotification( "Tmb data imported" );

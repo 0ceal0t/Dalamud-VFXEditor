@@ -21,7 +21,7 @@ namespace VfxEditor.Formats.AvfxFormat.Texture {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) {
                         var extension = path.Split( '.' )[^1].Trim( '\0' );
-                        FileBrowserManager.OpenFileModal( "Select a File", "Image files{.png,." + extension + ",.dds},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileModal( "Select a File", "Image files{.png,." + extension + ",.dds},.*", ( ok, res ) => {
                             Show();
                             if( !ok ) return;
                             try {

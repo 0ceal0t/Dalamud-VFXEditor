@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
                 Parsed.Icons.Add( new() {
                     Icon = () => FontAwesomeIcon.Trash,
                     Remove = true,
-                    Action = ( string value ) => CommandManager.Add( new AvfxAssignCommand( this, false ) )
+                    Action = value => CommandManager.Add( new AvfxAssignCommand( this, false ) )
                 } );
             }
             Pad = pad;

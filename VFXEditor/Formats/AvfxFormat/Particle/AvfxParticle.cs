@@ -255,7 +255,7 @@ namespace VfxEditor.AvfxFormat {
 
             UpdateData(); // TODO: check if moving this here breaks anything
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     Data?.Read( _reader, _size );
                 }

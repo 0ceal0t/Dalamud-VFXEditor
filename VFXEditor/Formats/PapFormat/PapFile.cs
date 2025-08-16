@@ -153,7 +153,7 @@ namespace VfxEditor.PapFormat {
             Variant.Draw();
 
             if( ImGui.Button( $"Export Havok" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( ok, res ) => {
                     if( ok ) File.Copy( HkxTempLocation, res, true );
                 } );
             }

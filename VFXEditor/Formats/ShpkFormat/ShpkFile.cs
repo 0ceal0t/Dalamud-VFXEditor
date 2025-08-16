@@ -146,15 +146,15 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new( this ) );
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ConstantView = new( "Constant", Constants, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            SamplerView = new( "Sampler", Samplers, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            TextureView = new( "Texture", Textures, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ResourceView = new( "Resource", Resources, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
 
-            SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SystemKeyView = new( "System Key", SystemKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            SceneKeyView = new( "Scene Key", SceneKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
 
             NodeView = new( "Node", Nodes, null, () => new() );
             AliasView = new( "Alias", Aliases, false, null, () => new() );

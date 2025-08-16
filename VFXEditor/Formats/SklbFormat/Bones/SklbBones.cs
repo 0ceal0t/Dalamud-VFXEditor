@@ -382,19 +382,19 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= IMPORT EXPORT ==========
 
         private void ExportHavok() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( ok, res ) => {
                 if( ok ) System.IO.File.Copy( Path, res, true );
             } );
         }
 
         private void ExportGltf() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( ok, res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );

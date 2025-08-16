@@ -49,7 +49,7 @@ namespace VfxEditor.AvfxFormat {
                 ( "Normal", ImGuiTableColumnFlags.None, -1 ),
                 ( "Color", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new(), new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
+            () => new( this, new(), new() ), ( item, add ) => RefreshModelPreview() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -207,7 +207,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -221,7 +221,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( ok, res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );

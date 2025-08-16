@@ -14,7 +14,7 @@ namespace VfxEditor.UldFormat.Timeline.Frames {
         public readonly CommandSplitView<UldKeyGroup> KeyGroupView;
 
         public UldFrame() {
-            KeyGroupView = new( "Key Group", KeyGroups, true, ( UldKeyGroup item, int idx ) => $"{item.Usage.Value}", () => new UldKeyGroup() );
+            KeyGroupView = new( "Key Group", KeyGroups, true, ( item, idx ) => $"{item.Usage.Value}", () => new UldKeyGroup() );
         }
 
         public UldFrame( BinaryReader reader ) : this() {

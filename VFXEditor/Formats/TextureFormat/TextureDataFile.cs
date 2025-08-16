@@ -1,6 +1,5 @@
 using BCnEncoder.Decoder;
 using Lumina.Data;
-using Lumina.Data.Parsing.Tex;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -261,15 +260,15 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         private static void DecompressDxt1( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT1 ) );
+            //writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT1 ) );
         }
 
         private static void DecompressDxt3( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT3 ) );
+            //writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT3 ) );
         }
 
         private static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
+            //writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
         }
 
         private static void DecompressBc( byte[] data, BinaryWriter writer, int width, int height, BCnEncoder.Shared.CompressionFormat format ) {
@@ -380,21 +379,21 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SavePngDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( ok, res ) => {
                 if( !ok ) return;
                 SaveAsPng( res );
             } );
         }
 
         public void SaveDdsDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( ok, res ) => {
                 if( !ok ) return;
                 SaveAsDds( res );
             } );
         }
 
         public void SaveTexDialog( string ext ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( ok, res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, GetAllData() );
             } );

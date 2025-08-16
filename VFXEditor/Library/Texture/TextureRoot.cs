@@ -27,7 +27,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
-                    FileBrowserManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( bool ok, string res ) => {
+                    FileBrowserManager.SaveFileDialog( "Select a Save Location", ".txt", "Textures", "txt", ( ok, res ) => {
                         if( !ok ) return;
                         library.ExportTextures( res );
                     } );
@@ -35,7 +35,7 @@ namespace VfxEditor.Library.Node {
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
-                    FileBrowserManager.OpenFileDialog( "Select a File", ".txt,.*", ( bool ok, string res ) => {
+                    FileBrowserManager.OpenFileDialog( "Select a File", ".txt,.*", ( ok, res ) => {
                         if( !ok ) return;
                         library.ImportTextures( res );
                     } );

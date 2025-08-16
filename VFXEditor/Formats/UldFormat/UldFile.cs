@@ -100,19 +100,19 @@ namespace VfxEditor.UldFormat {
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
             TextureSplitView = new( "Texture", Textures, true,
-                ( UldTexture item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Textures ) ) );
+                ( item, idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Textures ) ) );
 
             PartsSplitView = new( "Part List", Parts, true,
-                ( UldPartList item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Parts ) ) );
+                ( item, idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Parts ) ) );
 
             ComponentDropdown = new( "Component", Components,
-                ( UldComponent item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Components ), Components ) );
+                ( item, idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Components ), Components ) );
 
             TimelineDropdown = new( "Timeline", Timelines,
-                ( UldTimeline item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Timelines ) ) );
+                ( item, idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Timelines ) ) );
 
             WidgetDropdown = new( "Widget", Widgets,
-                ( UldWidget item, int idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Widgets ), Components ) );
+                ( item, idx ) => item.GetText(), () => new( UldWorkspaceItem.GetNextId( Widgets ), Components ) );
         }
 
         public override void Write( BinaryWriter writer ) {

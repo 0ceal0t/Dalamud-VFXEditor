@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
         }
 
         public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {

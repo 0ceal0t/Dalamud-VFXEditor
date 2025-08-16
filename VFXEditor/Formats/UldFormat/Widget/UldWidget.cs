@@ -32,7 +32,7 @@ namespace VfxEditor.UldFormat.Widget {
 
         public UldWidget( uint id, List<UldComponent> components ) : base( id ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {

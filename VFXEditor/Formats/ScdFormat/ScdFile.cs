@@ -172,29 +172,29 @@ namespace VfxEditor.ScdFormat {
             writer.Write( attributeOffset );
             writer.BaseStream.Position = savePos;
 
-            UpdateOffsets( writer, Sounds.Select( x => x.Layout ).ToList(), layoutOffset, ( BinaryWriter bw, ScdLayoutEntry item ) => {
+            UpdateOffsets( writer, Sounds.Select( x => x.Layout ).ToList(), layoutOffset, ( bw, item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Sounds, soundOffset, ( BinaryWriter bw, ScdSoundEntry item ) => {
+            UpdateOffsets( writer, Sounds, soundOffset, ( bw, item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Tracks, trackOffset, ( BinaryWriter bw, ScdTrackEntry item ) => {
+            UpdateOffsets( writer, Tracks, trackOffset, ( bw, item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
-            UpdateOffsets( writer, Attributes, attributeOffset, ( BinaryWriter bw, ScdAttributeEntry item ) => {
+            UpdateOffsets( writer, Attributes, attributeOffset, ( bw, item ) => {
                 item.Write( writer );
             } );
             FileUtils.PadTo( writer, 16 );
 
             // Sounds
             long paddingSubtract = 0;
-            UpdateOffsets( writer, Audio, audioOffset, ( BinaryWriter bw, ScdAudioEntry music ) => {
+            UpdateOffsets( writer, Audio, audioOffset, ( bw, music ) => {
                 music.Write( writer, out var padding );
                 paddingSubtract += padding;
             } );

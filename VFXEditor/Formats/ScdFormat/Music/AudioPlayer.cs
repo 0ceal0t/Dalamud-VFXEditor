@@ -260,7 +260,7 @@ namespace VfxEditor.ScdFormat {
         // ======================
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Import File", "Audio files{.ogg,.wav},.*", ( ok, res ) => {
                 if( ok ) {
                     Reset();
                     Entry.File.Import( res, Entry );
@@ -269,7 +269,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveWaveDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".wav", "ExportedSound", "wav", ( ok, res ) => {
                 if( ok ) {
                     using var stream = Entry.Data.GetStream();
                     WaveFileWriter.CreateWaveFile( res, stream );
@@ -278,7 +278,7 @@ namespace VfxEditor.ScdFormat {
         }
 
         private void SaveOggDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ogg", "ExportedSound", "ogg", ( ok, res ) => {
                 if( ok ) {
                     var data = ( ScdVorbis )Entry.Data;
                     File.WriteAllBytes( res, data.Data );

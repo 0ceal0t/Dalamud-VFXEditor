@@ -384,7 +384,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                 curve.Keys,
                 new AvfxCurveKey( curve, KeyType.Linear, ( int )time, 1, 1, IsColor ? 1.0f : ( float )curve.ToRadians( point.Y ) ),
                 insertIdx,
-                ( AvfxCurveKey _, bool _ ) => OnUpdate()
+                ( _, _ ) => OnUpdate()
             ) );
         }
 
@@ -425,13 +425,13 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             foreach( var curve in AssignedCurves ) CopiedKeys.Add( curve.GetAvfxName(), [.. curve.Keys.Select( x => x.CopyPasteData )] );
         }
 
-        private void Paste() => PerformOnCopiedKeys( ( List<ICommand> commands, List<(KeyType, Vector4)> keys, AvfxCurveData curve ) => {
+        private void Paste() => PerformOnCopiedKeys( ( commands, keys, curve ) => {
             foreach( var key in keys ) {
                 commands.Add( new ListAddCommand<AvfxCurveKey>( curve.Keys, new( curve, key ) ) );
             }
         } );
 
-        private void Replace() => PerformOnCopiedKeys( ( List<ICommand> commands, List<(KeyType, Vector4)> keys, AvfxCurveData curve ) => {
+        private void Replace() => PerformOnCopiedKeys( ( commands, keys, curve ) => {
             commands.Add( new ListSetCommand<AvfxCurveKey>( curve.Keys, [.. keys.Select( x => new AvfxCurveKey( curve, x ) )] ) );
         } );
 

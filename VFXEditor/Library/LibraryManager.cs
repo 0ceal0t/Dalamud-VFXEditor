@@ -135,7 +135,7 @@ namespace VfxEditor.Library {
 
             if( resetScroll ) ImGui.SetScrollHereY();
 
-            IterateTextures( TextureRoot, ( TextureLeaf texture ) => {
+            IterateTextures( TextureRoot, texture => {
                 if( string.IsNullOrEmpty( ComboSearchInput ) || texture.Matches( ComboSearchInput ) ) perTexture( texture );
             } );
         }
@@ -162,7 +162,7 @@ namespace VfxEditor.Library {
 
         public void ExportTextures( string localPath ) {
             var lines = new List<string>();
-            IterateTextures( TextureRoot, ( TextureLeaf texture ) => {
+            IterateTextures( TextureRoot, texture => {
                 lines.Add( $"{texture.GetPath()} {texture.GetName()}" );
             } );
             File.WriteAllLines( localPath, lines );

@@ -39,7 +39,7 @@ namespace VfxEditor.Select {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.FolderOpen.ToIconString() ) ) {
-                        FileBrowserManager.OpenFileDialog( "Select a File", "Files{" + string.Join( ",", Extensions.Select( e => $".{e}" ) ) + "},.*", ( bool ok, string res ) => {
+                        FileBrowserManager.OpenFileDialog( "Select a File", "Files{" + string.Join( ",", Extensions.Select( e => $".{e}" ) ) + "},.*", ( ok, res ) => {
                             if( !ok ) return;
                             Invoke( new SelectResult( SelectResultType.Local, res, "[LOCAL] " + res, res ) );
                         } );
