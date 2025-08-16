@@ -110,12 +110,22 @@ namespace VfxEditor.Formats.TextureFormat {
         public byte[] ImageData => Layers[0];
 
         private static int HeaderLength => Marshal.SizeOf<TexHeader>();
+        private byte[] AllData;
         private byte[] DdsData;
 
-        public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
-        private byte[] LocalData;
+        public override void LoadFile() => LoadFile( Reader );
 
-        public override void LoadFile() {
+        public static TextureDataFile LoadFromLocal( string path ) {
+            var tex = new TextureDataFile();
+            using var ms = new MemoryStream( File.ReadAllBytes( path ) );
+            using var reader = new BinaryReader( ms );
+            tex.LoadFile( reader );
+            return tex;
+        }
+
+        private void LoadFile( BinaryReader reader ) {
+            Reader.BaseStream.Position = 0;
+            AllData = reader.ReadBytes( ( int )reader.BaseStream.Length );
             Reader.BaseStream.Position = 0;
 
             var buffer = Reader.ReadBytes( HeaderLength );
@@ -124,42 +134,15 @@ namespace VfxEditor.Formats.TextureFormat {
             Header = Marshal.PtrToStructure<TexHeader>( handle );
             Marshal.FreeHGlobal( handle );
 
-            InitScratchImage();
-            ValidFormat = ImageData.Length > 0;
-        }
+            DdsData = reader.ReadBytes( AllData.Length - HeaderLength );
 
-        public void LoadFile( byte[] localData ) {
-            LocalData = localData;
-            using var ms = new MemoryStream( LocalData );
-            using var reader = new BinaryReader( ms );
-
-            Local = true;
-            reader.BaseStream.Position = 0;
-
-            var buffer = Reader.ReadBytes( HeaderLength );
-            var handle = Marshal.AllocHGlobal( HeaderLength );
-            Marshal.Copy( buffer, 0, handle, HeaderLength );
-            Header = Marshal.PtrToStructure<TexHeader>( handle );
-            Marshal.FreeHGlobal( handle );
-
-            DdsData = reader.ReadBytes( localData.Length - HeaderLength );
-
-            InitScratchImage();
-
-            ValidFormat = ImageData.Length > 0;
-        }
-
-        private void InitScratchImage() {
             using var ms = new MemoryStream( GetAllData() );
             ScratchImage = Parse( ms );
-
             var layerCount = Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth;
             ScratchImage.GetRGBA( out var rgba );
             var output = rgba.Pixels.ToArray();
 
-
             var size = Header.Width * Header.Height * 4;
-
             var layers = new List<byte[]>();
             for( var i = 0; i < layerCount; i++ ) {
                 var offset = size * i;
@@ -171,12 +154,7 @@ namespace VfxEditor.Formats.TextureFormat {
             }
 
             Layers = layers;
-        }
-
-        public static TextureDataFile LoadFromLocal( string path ) {
-            var tex = new TextureDataFile();
-            tex.LoadFile( File.ReadAllBytes( path ) );
-            return tex;
+            ValidFormat = ImageData.Length > 0;
         }
 
         public static TextureFormat DXGItoTextureFormat( DXGIFormat format ) {
@@ -216,9 +194,9 @@ namespace VfxEditor.Formats.TextureFormat {
 
         // ==================
 
-        public byte[] GetAllData() => Local ? LocalData : Data;
+        public byte[] GetAllData() => AllData;
 
-        public byte[] GetDdsData() => Local ? DdsData : DataSpan[HeaderLength..].ToArray();
+        public byte[] GetDdsData() => DdsData;
 
         public Surface GetPngData( out nint pin ) {
             var data = new RGBAQuad[Header.Height * Header.Width];

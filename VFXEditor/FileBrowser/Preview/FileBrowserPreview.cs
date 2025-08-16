@@ -141,8 +141,10 @@ namespace VfxEditor.FileBrowser.Preview {
             reader.BaseStream.Position = headerSize;
             var data = reader.ReadBytes( ( int )ms.Length - headerSize );
 
-            var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
-            return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), convertedData );
+            return null; // TODO
+
+            //var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
+            //return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), convertedData );
         }
 
         private static IDalamudTextureWrap? LoadTex( string path, out string format, out int mips ) {
