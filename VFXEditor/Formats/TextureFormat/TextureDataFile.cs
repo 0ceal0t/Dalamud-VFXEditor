@@ -1,7 +1,7 @@
 using Lumina.Data;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
@@ -124,11 +124,11 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         private void LoadFile( BinaryReader reader ) {
-            Reader.BaseStream.Position = 0;
+            reader.BaseStream.Position = 0;
             AllData = reader.ReadBytes( ( int )reader.BaseStream.Length );
-            Reader.BaseStream.Position = 0;
+            reader.BaseStream.Position = 0;
 
-            var buffer = Reader.ReadBytes( HeaderLength );
+            var buffer = reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
             Marshal.Copy( buffer, 0, handle, HeaderLength );
             Header = Marshal.PtrToStructure<TexHeader>( handle );
@@ -138,22 +138,13 @@ namespace VfxEditor.Formats.TextureFormat {
 
             using var ms = new MemoryStream( GetAllData() );
             ScratchImage = Parse( ms );
+
             var layerCount = Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth;
             ScratchImage.GetRGBA( out var rgba );
-            var output = rgba.Pixels.ToArray();
 
-            var size = Header.Width * Header.Height * 4;
-            var layers = new List<byte[]>();
-            for( var i = 0; i < layerCount; i++ ) {
-                var offset = size * i;
-                var layer = new byte[size];
-                var remaining = output.Length - offset;
-                if( remaining <= 0 ) continue;
-                Array.Copy( output, offset, layer, 0, Math.Min( remaining, size ) );
-                layers.Add( layer );
-            }
+            Layers = rgba.Images.ToArray().Select(
+                image => image.Span[..( image.Width * image.Height * 4 )].ToArray() ).ToList();
 
-            Layers = layers;
             ValidFormat = ImageData.Length > 0;
         }
 
