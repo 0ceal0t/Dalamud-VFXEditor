@@ -126,7 +126,7 @@ namespace VfxEditor.FileBrowser.Preview {
             var image = rgba.Images[0];
 
             mips = rgba.ToTexHeader().MipCount;
-            format = $"{rgba.ToTexHeader().Format}";
+            format = $"{image.Format}";
 
             return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( image.Width, image.Height ), image.Span[..( image.Width * image.Height * 4 )] );
         }
