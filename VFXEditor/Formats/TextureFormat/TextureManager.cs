@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -12,6 +13,7 @@ using VfxEditor.Select;
 using VfxEditor.Ui;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : DalamudWindow, IFileManager {
@@ -230,5 +232,15 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public WindowSystem GetWindowSystem() => WindowSystem;
+
+        public bool AcceptsExt( string path )
+        {
+            return path.EndsWith( "atex" );
+        }
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile )
+        {
+            ReplaceTexture( selectedFile.Path, replacedFile.Name );
+        }
     }
 }

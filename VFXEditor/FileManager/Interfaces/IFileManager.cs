@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using VfxEditor.Select;
 
 namespace VfxEditor.FileManager.Interfaces {
     public enum ResetType {
@@ -14,6 +15,10 @@ namespace VfxEditor.FileManager.Interfaces {
         public bool GetReplacePath( string gamePath, out string replacePath );
 
         public bool FileExists( string path );
+
+        public bool AcceptsExt( string path );
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile );
 
         public void WorkspaceImport( JObject meta, string loadLocation );
 
