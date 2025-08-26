@@ -1,10 +1,10 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImGuizmo;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
-using ImGuizmoNET;
-using ImPlotNET;
 using System.Collections.Generic;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX;
@@ -103,6 +103,7 @@ namespace VfxEditor {
             Dalamud.CommandManager.AddHandler( CommandName, new CommandInfo( OnCommand ) { HelpMessage = "toggle ui" } );
 
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
+            OtterTex.NativeDll.Initialize( pluginInterface.AssemblyLocation.DirectoryName );
 
             ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
             ImPlot.SetCurrentContext( ImPlot.CreateContext() );

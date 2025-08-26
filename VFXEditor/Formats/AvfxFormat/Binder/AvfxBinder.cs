@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -14,7 +14,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat VfxScaleBias = new( "VFX Scale Bias", "bVSb" );
         public readonly AvfxBool VfxScaleDepthOffset = new( "VFX Scale Depth Offset", "bVSd" );
         public readonly AvfxBool VfxScaleInterpolation = new( "VFX Scale Interpolation", "bVSi" );
-        public readonly AvfxBool TransformScale = new( "Transform Scale", "bTSc" );
+        public readonly AvfxInt TransformScale = new( "Transform Scale", "bTSc" );
         public readonly AvfxBool TransformScaleDepthOffset = new( "Transform Scale Depth Offset", "bTSd" );
         public readonly AvfxBool TransformScaleInterpolation = new( "Transform Scale Interpolation", "bTSi" );
         public readonly AvfxBool FollowingTargetOrientation = new( "Following Target Orientation", "bFTO" );
@@ -88,7 +88,7 @@ namespace VfxEditor.AvfxFormat {
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     UpdateData();
                     Data?.Read( _reader, _size );
@@ -112,7 +112,7 @@ namespace VfxEditor.AvfxFormat {
                 BinderType.Linear => new AvfxBinderDataLinear(),
                 BinderType.Spline => new AvfxBinderDataSpline(),
                 BinderType.Camera => new AvfxBinderDataCamera(),
-                BinderType.Unknown_4 => new AvfxBinderDataUnknown4(),
+                BinderType.LinearAdjust => new AvfxBinderDataLinearAdjust(),
                 _ => null,
             };
             Data?.SetAssigned( true, false );

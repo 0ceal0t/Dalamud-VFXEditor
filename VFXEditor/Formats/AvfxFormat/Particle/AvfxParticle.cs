@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -48,7 +48,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxInt ApplyRateEnvironment = new( "Apply Rate Environment", "EvAR" );
         public readonly AvfxInt ApplyRateDirectional = new( "Apply Rate Directional", "DlAR" );
         public readonly AvfxInt ApplyRateLightBuffer = new( "Apply Rate Light Buffer", "LBAR" );
-        public readonly AvfxBool DOTy = new( "DOTy", "DOTy" );
+        public readonly AvfxEnum<DepthOffsetType> DOTy = new( "Depth Offset Type", "DOTy" );
         public readonly AvfxFloat DepthOffset = new( "Depth Offset", "DpOf" );
         public readonly AvfxBool SimpleAnimEnable = new( "Use Simple Animation", "bSCt" );
         public readonly AvfxLife Life = new();
@@ -255,7 +255,7 @@ namespace VfxEditor.AvfxFormat {
 
             UpdateData(); // TODO: check if moving this here breaks anything
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     Data?.Read( _reader, _size );
                 }

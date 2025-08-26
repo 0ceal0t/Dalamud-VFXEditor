@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.UldFormat.PartList;
@@ -25,8 +25,8 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedShort BottonOffset = new( "Bottom Offset" );
         private readonly ParsedShort LeftOffset = new( "Left Offset" );
         private readonly ParsedShort RightOffset = new( "Right Offset" );
-        private readonly ParsedInt Unknown2 = new( "Unknown 2", size: 1 );
-        private readonly ParsedInt Unknown3 = new( "Unknown 2", size: 1 );
+        private readonly ParsedEnum<UldDrawMode> DrawMode = new( "Draw Mode", size: 1 );
+        private readonly ParsedInt Unknown3 = new( "Unknown 3", size: 1 );
 
         public NineGridNodeData() {
             PartListId = new();
@@ -42,7 +42,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Read( reader );
             LeftOffset.Read( reader );
             RightOffset.Read( reader );
-            Unknown2.Read( reader );
+            DrawMode.Read( reader );
             Unknown3.Read( reader );
         }
 
@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Write( writer );
             LeftOffset.Write( writer );
             RightOffset.Write( writer );
-            Unknown2.Write( writer );
+            DrawMode.Write( writer );
             Unknown3.Write( writer );
         }
 
@@ -92,7 +92,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             BottonOffset.Draw();
             LeftOffset.Draw();
             RightOffset.Draw();
-            Unknown2.Draw();
+            DrawMode.Draw();
             Unknown3.Draw();
         }
     }

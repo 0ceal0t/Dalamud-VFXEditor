@@ -35,7 +35,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
             if( !HasSubModel ) return;
             var category = item.ItemUICategory.Value.RowId;
-            var doubleHand = ( category == 1 || category == 84 || category == 107 ); // MNK, NIN, DNC weapons
+            var doubleHand = ( category == 1 || category == 84 || category == 107 || category == 110 ); // MNK, NIN, DNC, VPR weapons
 
             SubItem = new ItemRowWeapon(
                 $"{Name} (Offhand)",

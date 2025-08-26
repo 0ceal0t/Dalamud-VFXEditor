@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,7 +60,8 @@ namespace VfxEditor.Parsing {
             }
 
             var prevValue = Value;
-            if( ImGui.InputText( HasIcons ? $"##{Name}" : label, ref Value, maxSize, flags ) ) {
+
+            if( ImGui.InputText( HasIcons ? $"##{Name}" : label, ref Value, ( int )maxSize, flags ) ) {
                 if( !Editing ) {
                     Editing = true;
                     StateBeforeEdit = prevValue;

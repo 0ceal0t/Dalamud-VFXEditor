@@ -39,7 +39,7 @@ namespace VfxEditor.Ui.Export {
         public TexToolsDialog() : base( "TexTools" ) { }
 
         protected override void OnExport() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".ttmp2,.*", ModName, "ttmp2", ( ok, res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

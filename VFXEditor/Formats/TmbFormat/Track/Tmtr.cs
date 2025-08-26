@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -216,7 +216,7 @@ namespace VfxEditor.TmbFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbentry},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbentry},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     ImportEntry( System.IO.File.ReadAllBytes( res ) );

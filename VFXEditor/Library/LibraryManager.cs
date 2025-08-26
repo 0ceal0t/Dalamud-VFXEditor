@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,14 +72,14 @@ namespace VfxEditor.Library {
         }
 
         public void StartDragging( LibraryGeneric item ) {
-            ImGui.SetDragDropPayload( "NODE_LIBRARY", IntPtr.Zero, 0 );
+            ImGui.SetDragDropPayload( "NODE_LIBRARY", null, 0 );
             DraggingItem = item;
         }
 
         public unsafe bool StopDragging( LibraryGeneric destination, bool overridePosition = false ) {
             if( DraggingItem == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( "NODE_LIBRARY" );
-            if( payload.NativePtr == null ) return false;
+            if( payload.Handle == null ) return false;
 
             // Move them here
             if( DraggingItem != destination ) {
@@ -135,7 +135,7 @@ namespace VfxEditor.Library {
 
             if( resetScroll ) ImGui.SetScrollHereY();
 
-            IterateTextures( TextureRoot, ( TextureLeaf texture ) => {
+            IterateTextures( TextureRoot, texture => {
                 if( string.IsNullOrEmpty( ComboSearchInput ) || texture.Matches( ComboSearchInput ) ) perTexture( texture );
             } );
         }
@@ -162,7 +162,7 @@ namespace VfxEditor.Library {
 
         public void ExportTextures( string localPath ) {
             var lines = new List<string>();
-            IterateTextures( TextureRoot, ( TextureLeaf texture ) => {
+            IterateTextures( TextureRoot, texture => {
                 lines.Add( $"{texture.GetPath()} {texture.GetName()}" );
             } );
             File.WriteAllLines( localPath, lines );

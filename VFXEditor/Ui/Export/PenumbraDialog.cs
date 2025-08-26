@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -75,7 +75,7 @@ namespace VfxEditor.Ui.Export {
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".pmp,.*", ModName, "pmp", ( ok, res ) => {
                 if( !ok ) return;
                 Export( res );
                 Hide();

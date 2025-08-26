@@ -129,7 +129,13 @@ namespace VfxEditor.AvfxFormat {
             Camera = 0,
             Caster = 1
         }
-        public enum RandomType {
+        public enum DepthOffsetType
+        {
+            Legacy = 0,
+            FixedIntervalNDC = 1
+        }
+        public enum RandomType
+        {
             FirstPlusMinus = 0,
             FirstPlus = 1,
             FirstMinus = 2,
@@ -248,7 +254,7 @@ namespace VfxEditor.AvfxFormat {
             Linear = 1,
             Spline = 2,
             Camera = 3,
-            Unknown_4 = 4,
+            LinearAdjust = 4,
         }
         public enum BindPoint {
             Caster = 0,
@@ -265,10 +271,10 @@ namespace VfxEditor.AvfxFormat {
             PointLight = 0,
             DirectionalLight = 1,
             Reserve2 = 2,
-            Reserve3 = 3,
-            RadialBlur_Unknown = 4,
-            MirrorBlur = 5,
-            CameraQuake_Unknown = 6, // NOTE: seen in Akh Rai
+            ChromaticAberration = 3,
+            GaussianBlur = 4,
+            DirectionalBlur = 5,
+            CameraQuake_Variable = 6, // NOTE: seen in Akh Rai
             RadialBlur = 7,
             BlackHole = 8,
             CameraQuake = 9

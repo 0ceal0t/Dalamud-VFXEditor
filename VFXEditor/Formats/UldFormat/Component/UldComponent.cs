@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace VfxEditor.UldFormat.Component {
         Multipurpose = 0x15,
         Map = 0x16,
         Preview = 0x17,
-        //HoldButton = 0x18,
+        HoldButton = 0x18,
         Unknown_25 = 0x19,
     }
 
@@ -55,7 +55,7 @@ namespace VfxEditor.UldFormat.Component {
             Type = new( this, "Type", size: 1 );
 
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new UldNode( GetNextId( Nodes, 1001 ), components, this, NodeSplitView ) );
         }
 
         public UldComponent( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {
@@ -138,6 +138,7 @@ namespace VfxEditor.UldFormat.Component {
                 ComponentType.Map => new MapComponentData(),
                 ComponentType.Preview => new PreviewComponentData(),
 
+                ComponentType.HoldButton => new HoldButtonComponentData(),
                 ComponentType.Unknown_25 => new Unknown25ComponentData(),
                 _ => null
             };

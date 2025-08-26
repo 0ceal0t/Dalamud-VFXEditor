@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Data.Copy;
@@ -14,11 +14,13 @@ namespace VfxEditor.AvfxFormat {
         public readonly string Name;
 
         private bool Enabled = true;
+        private int Limit;
 
-        public AvfxNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal ) : base( node ) {
+        public AvfxNodeSelectList( AvfxNode node, string name, NodeGroup<T> group, AvfxIntList literal, int limit = 4 ) : base( node ) {
             Name = name;
             Group = group;
             Literal = literal;
+            Limit = limit;
             if( Group.ImportInProgress ) group.OnImportFinish += ImportFinished;
             else {
                 LinkOnIndexChange();
@@ -189,7 +191,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( Group.Items.Count == 0 ) ImGui.TextColored( UiUtils.RED_COLOR, "WARNING: Add a selectable item first!" );
 
-            if( Selected.Count < 4 ) {
+            if( Selected.Count < Limit ) {
                 if( ImGui.SmallButton( $"+ {Name}" ) ) CommandManager.Add( new AvfxNodeSelectListAddCommand<T>( this ) );
                 Literal.DrawUnassignPopup( Name );
             }

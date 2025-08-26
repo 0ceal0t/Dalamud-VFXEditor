@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -236,13 +236,13 @@ namespace VfxEditor.Formats.MdlFormat {
             // ====== VIEWS ============
 
             EidView = new( "Bind Point", Eids, false,
-                ( MdlEid item, int idx ) => $"Bind Point {item.ElementId.Value} (" + ( string.IsNullOrEmpty( item.ParentBone.Value ) ? "NONE" : item.ParentBone.Value ) + ")",
+                ( item, idx ) => $"Bind Point {item.ElementId.Value} (" + ( string.IsNullOrEmpty( item.ParentBone.Value ) ? "NONE" : item.ParentBone.Value ) + ")",
                 () => new() );
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
             UnknownBoxView = new( "Bounding Box", UnknownBoundingBoxes, false, null, () => new() );
             BoneBoxView = new( "Bounding Box", BoneBoundingBoxes, false,
-                ( MdlBoneBoundingBox item, int idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
+                ( item, idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
                 () => new() );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );

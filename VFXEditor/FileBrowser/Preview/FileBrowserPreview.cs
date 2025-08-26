@@ -1,18 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using TeximpNet.DDS;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
+using VFXEditor.Formats.TextureFormat;
 
 namespace VfxEditor.FileBrowser.Preview {
     public class FileBrowserPreview {
@@ -63,7 +63,7 @@ namespace VfxEditor.FileBrowser.Preview {
                 return;
             }
 
-            if( Texture.ImGuiHandle == IntPtr.Zero ) return;
+            if( Texture.Handle == IntPtr.Zero ) return;
 
             var width = ( float )Texture.Width;
             var height = ( float )Texture.Height;
@@ -80,7 +80,7 @@ namespace VfxEditor.FileBrowser.Preview {
 
             var imageOffset = ( size - totalSize ) / 2;
             ImGui.SetCursorPos( ImGui.GetCursorPos() + imageOffset );
-            ImGui.Image( Texture.ImGuiHandle, imageSize );
+            ImGui.Image( Texture.Handle, imageSize );
 
             var descText = $"{Format} / {Mips} / {Texture.Width}x{Texture.Height}";
             var descWidth = ImGui.CalcTextSize( descText ).X;
@@ -121,28 +121,14 @@ namespace VfxEditor.FileBrowser.Preview {
         }
 
         private static IDalamudTextureWrap? LoadDds( string path, out string format, out int mips ) {
-            format = "";
-            mips = 1;
+            var dds = OtterTex.ScratchImage.LoadDDS( path );
+            dds.GetRGBA( out var rgba );
+            var image = rgba.Images[0];
 
-            using var ddsFile = DDSFile.Read( path );
-            if( ddsFile == null ) return null;
+            mips = rgba.ToTexHeader().MipCount;
+            format = $"{image.Format}";
 
-            var height = ddsFile.MipChains[0][0].Height;
-            var width = ddsFile.MipChains[0][0].Width;
-            var ddsFormat = TextureDataFile.DXGItoTextureFormat( ddsFile.Format );
-            mips = ddsFile.MipChains[0].Count;
-            format = $"{ddsFormat}";
-
-            using var ms = new MemoryStream( File.ReadAllBytes( path ) );
-            using var reader = new BinaryReader( ms );
-
-            reader.BaseStream.Position = 0x54;
-            var headerSize = ( reader.ReadUInt32() == 0x30315844 ) ? 148 : 128;
-            reader.BaseStream.Position = headerSize;
-            var data = reader.ReadBytes( ( int )ms.Length - headerSize );
-
-            var convertedData = TextureDataFile.Convert( data, ddsFormat, width, height, 1 )[0];
-            return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), convertedData );
+            return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( image.Width, image.Height ), image.Span[..( image.Width * image.Height * 4 )] );
         }
 
         private static IDalamudTextureWrap? LoadTex( string path, out string format, out int mips ) {

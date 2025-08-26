@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -45,7 +45,7 @@ namespace VfxEditor.AvfxFormat {
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size );
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     UpdateData();
                     Data?.Read( _reader, _size );
@@ -69,9 +69,10 @@ namespace VfxEditor.AvfxFormat {
                 EffectorType.DirectionalLight => new AvfxEffectorDataDirectionalLight(),
                 EffectorType.RadialBlur => new AvfxEffectorDataRadialBlur(),
                 EffectorType.BlackHole => null,
-                EffectorType.CameraQuake_Unknown or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
-                EffectorType.RadialBlur_Unknown => new AvfxEffectorDataRadialBlurUnknown(),
-                EffectorType.MirrorBlur => new AvfxEffectorMirrorBlur(),
+                EffectorType.CameraQuake_Variable or EffectorType.CameraQuake => new AvfxEffectorDataCameraQuake(),
+                EffectorType.GaussianBlur => new AvfxEffectorDataGaussianBlur(),
+                EffectorType.DirectionalBlur => new AvfxEffectorDataDirectionalBlur(),
+                EffectorType.ChromaticAberration => new AvfxEffectorDataChromaticAberration(),
                 _ => null
             };
             Data?.SetAssigned( true );

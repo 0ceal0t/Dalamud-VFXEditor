@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -10,6 +10,7 @@ using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Widget {
     public enum AlignmentType : int {
+        Unknown = 0xFF,
         TopLeft = 0x0,
         Top = 0x1,
         TopRight = 0x2,
@@ -31,7 +32,7 @@ namespace VfxEditor.UldFormat.Widget {
 
         public UldWidget( uint id, List<UldComponent> components ) : base( id ) {
             NodeSplitView = new( "Node", Nodes, true,
-                ( UldNode item, int idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
+                ( item, idx ) => item.GetText(), () => new( GetNextId( Nodes ), components, this, NodeSplitView ) );
         }
 
         public UldWidget( BinaryReader reader, List<UldComponent> components ) : this( 0, components ) {

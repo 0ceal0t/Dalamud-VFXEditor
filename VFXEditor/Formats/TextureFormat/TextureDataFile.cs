@@ -1,15 +1,14 @@
-using BCnEncoder.Decoder;
 using Lumina.Data;
-using Lumina.Data.Parsing.Tex;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
+using static VFXEditor.Formats.TextureFormat.TexFileParser;
 
 namespace VfxEditor.Formats.TextureFormat {
     public enum Attribute : uint {
@@ -106,114 +105,47 @@ namespace VfxEditor.Formats.TextureFormat {
         public bool ValidFormat { get; private set; } = false;
 
         // Used for image previews
+        private OtterTex.ScratchImage ScratchImage;
         public List<byte[]> Layers { get; private set; }
         public byte[] ImageData => Layers[0];
 
         private static int HeaderLength => Marshal.SizeOf<TexHeader>();
+        private byte[] AllData;
         private byte[] DdsData;
 
-        public bool Local { get; private set; } = false; // was this loaded from the game using Lumina, or from a local ATEX?
-        private byte[] LocalData;
+        public override void LoadFile() => LoadFile( Reader );
 
-        public override void LoadFile() {
-            Reader.BaseStream.Position = 0;
+        public static TextureDataFile LoadFromLocal( string path ) {
+            var tex = new TextureDataFile();
+            using var ms = new MemoryStream( File.ReadAllBytes( path ) );
+            using var reader = new BinaryReader( ms );
+            tex.LoadFile( reader );
+            return tex;
+        }
 
-            var buffer = Reader.ReadBytes( HeaderLength );
+        private void LoadFile( BinaryReader reader ) {
+            reader.BaseStream.Position = 0;
+            AllData = reader.ReadBytes( ( int )reader.BaseStream.Length );
+            reader.BaseStream.Position = 0;
+
+            var buffer = reader.ReadBytes( HeaderLength );
             var handle = Marshal.AllocHGlobal( HeaderLength );
             Marshal.Copy( buffer, 0, handle, HeaderLength );
             Header = Marshal.PtrToStructure<TexHeader>( handle );
             Marshal.FreeHGlobal( handle );
 
-            Layers = Convert( DataSpan[HeaderLength..].ToArray(), Header.Format, Header.Width, Header.Height, Header.Depth );
-            ValidFormat = ImageData.Length > 0;
-        }
+            DdsData = reader.ReadBytes( AllData.Length - HeaderLength );
 
-        public void LoadFile( byte[] localData ) {
-            LocalData = localData;
-            using var ms = new MemoryStream( LocalData );
-            using var reader = new BinaryReader( ms );
+            using var ms = new MemoryStream( GetAllData() );
+            ScratchImage = Parse( ms );
 
-            Local = true;
-            reader.BaseStream.Position = 0;
+            var layerCount = Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth;
+            ScratchImage.GetRGBA( out var rgba );
 
-            var headerBuffer = reader.ReadBytes( HeaderLength );
-            var handle = Marshal.AllocHGlobal( HeaderLength );
-            Marshal.Copy( headerBuffer, 0, handle, HeaderLength );
-            Header = Marshal.PtrToStructure<TexHeader>( handle );
-            Marshal.FreeHGlobal( handle );
-
-            DdsData = reader.ReadBytes( localData.Length - HeaderLength );
-
-            Layers = Convert(
-                DdsData,
-                Header.Format,
-                Header.Width,
-                Header.Height,
-                Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth
-            );
+            Layers = rgba.Images.ToArray().Select(
+                image => image.Span[..( image.Width * image.Height * 4 )].ToArray() ).ToList();
 
             ValidFormat = ImageData.Length > 0;
-        }
-
-        public static TextureDataFile LoadFromLocal( string path ) {
-            var tex = new TextureDataFile();
-            tex.LoadFile( File.ReadAllBytes( path ) );
-            return tex;
-        }
-
-        // converts various formats to A8R8G8B8
-        public static List<byte[]> Convert( byte[] data, TextureFormat format, int width, int height, int layers ) {
-            using var ms = new MemoryStream();
-            using var writer = new BinaryWriter( ms );
-
-            switch( format ) {
-                case TextureFormat.DXT1:
-                    DecompressDxt1( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.DXT3:
-                    DecompressDxt3( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.DXT5:
-                    DecompressDxt5( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.A8R8G8B8:
-                    writer.Write( data ); // already ok
-                    break;
-                case TextureFormat.R4G4B4A4:
-                    Read4444( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.R5G5B5A1:
-                    Read5551( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.A8:
-                    DecompressA8( data, writer, width, height * layers );
-                    break;
-                case TextureFormat.BC5:
-                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc5 );
-                    break;
-                case TextureFormat.BC7:
-                    DecompressBc( data, writer, width, height * layers, BCnEncoder.Shared.CompressionFormat.Bc7 );
-                    break;
-                default:
-                    Dalamud.Log( $"Unknown format {format}" );
-                    return [[]];
-            }
-
-            // TODO: R16G16B16A16F -> https://github.com/NotAdam/Lumina/blob/56a057f78ea8ee442f61f9dec3d4fb6fd109486a/src/Lumina/Data/Parsing/Tex/Buffers/R16G16B16A16FTextureBuffer.cs#L9
-
-            var output = ms.ToArray();
-            var size = width * height * 4;
-
-            var res = new List<byte[]>();
-            for( var i = 0; i < layers; i++ ) {
-                var offset = size * i;
-                var layer = new byte[size];
-                var remaining = output.Length - offset;
-                if( remaining <= 0 ) continue;
-                Array.Copy( output, offset, layer, 0, Math.Min( remaining, size ) );
-                res.Add( BgraToRgba( layer ) );
-            }
-            return res;
         }
 
         public static TextureFormat DXGItoTextureFormat( DXGIFormat format ) {
@@ -251,99 +183,11 @@ namespace VfxEditor.Formats.TextureFormat {
             return ret;
         }
 
-        private static void DecompressA8( byte[] data, BinaryWriter writer, int width, int height ) {
-            for( var i = 0; i < width * height; i++ ) {
-                writer.Write( ( byte )0xFF );
-                writer.Write( ( byte )0xFF );
-                writer.Write( ( byte )0xFF );
-                writer.Write( data[i] );
-            }
-        }
-
-        private static void DecompressDxt1( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT1 ) );
-        }
-
-        private static void DecompressDxt3( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT3 ) );
-        }
-
-        private static void DecompressDxt5( byte[] data, BinaryWriter writer, int width, int height ) {
-            writer.Write( Squish.DecompressImage( data, width, height, SquishOptions.DXT5 ) );
-        }
-
-        private static void DecompressBc( byte[] data, BinaryWriter writer, int width, int height, BCnEncoder.Shared.CompressionFormat format ) {
-            var decoder = new BcDecoder();
-            var output = decoder.DecodeRaw2D( data, width, height, format ).ToArray();
-
-            for( var i = 0; i < height; i++ ) {
-                for( var j = 0; j < width; j++ ) {
-                    var pixel = output[i, j];
-                    writer.Write( pixel.b );
-                    writer.Write( pixel.g );
-                    writer.Write( pixel.r );
-                    writer.Write( pixel.a );
-                }
-            }
-        }
-
-        private static void Read4444( byte[] src, BinaryWriter writer, int width, int height ) {
-            using var ms = new MemoryStream( src );
-            using var reader = new BinaryReader( ms );
-
-            for( var y = 0; y < height; y++ ) {
-                for( var x = 0; x < width; x++ ) {
-                    var pixel = reader.ReadUInt16() & 0xFFFF;
-                    var blue = ( pixel & 0xF ) * 16;
-                    var green = ( ( pixel & 0xF0 ) >> 4 ) * 16;
-                    var red = ( ( pixel & 0xF00 ) >> 8 ) * 16;
-                    var alpha = ( ( pixel & 0xF000 ) >> 12 ) * 16;
-
-                    writer.Write( ( byte )blue );
-                    writer.Write( ( byte )green );
-                    writer.Write( ( byte )red );
-                    writer.Write( ( byte )alpha );
-                }
-            }
-        }
-
-        private static void Read5551( byte[] src, BinaryWriter writer, int width, int height ) {
-            using var ms = new MemoryStream( src );
-            using var reader = new BinaryReader( ms );
-
-            for( var y = 0; y < height; y++ ) {
-                for( var x = 0; x < width; x++ ) {
-                    var pixel = reader.ReadUInt16() & 0xFFFF;
-                    var blue = ( pixel & 0x001F ) * 8;
-                    var green = ( ( pixel & 0x03E0 ) >> 5 ) * 8;
-                    var red = ( ( pixel & 0x7C00 ) >> 10 ) * 8;
-                    var alpha = ( ( pixel & 0x8000 ) >> 15 ) * 255;
-
-                    writer.Write( ( byte )blue );
-                    writer.Write( ( byte )green );
-                    writer.Write( ( byte )red );
-                    writer.Write( ( byte )alpha );
-                }
-            }
-        }
-
-        private static byte[] BgraToRgba( byte[] data ) {
-            var ret = new byte[data.Length];
-            for( var i = 0; i < data.Length / 4; i++ ) {
-                var idx = i * 4;
-                ret[idx + 0] = data[idx + 2];
-                ret[idx + 1] = data[idx + 1];
-                ret[idx + 2] = data[idx + 0];
-                ret[idx + 3] = data[idx + 3];
-            }
-            return ret;
-        }
-
         // ==================
 
-        public byte[] GetAllData() => Local ? LocalData : Data;
+        public byte[] GetAllData() => AllData;
 
-        public byte[] GetDdsData() => Local ? DdsData : DataSpan[HeaderLength..].ToArray();
+        public byte[] GetDdsData() => DdsData;
 
         public Surface GetPngData( out nint pin ) {
             var data = new RGBAQuad[Header.Height * Header.Width];
@@ -380,21 +224,21 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void SavePngDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".png", "ExportedTexture", "png", ( ok, res ) => {
                 if( !ok ) return;
                 SaveAsPng( res );
             } );
         }
 
         public void SaveDdsDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".dds", "ExportedTexture", "dds", ( ok, res ) => {
                 if( !ok ) return;
                 SaveAsDds( res );
             } );
         }
 
         public void SaveTexDialog( string ext ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{ext}", "ExportedTexture", ext, ( ok, res ) => {
                 if( !ok ) return;
                 File.WriteAllBytes( res, GetAllData() );
             } );

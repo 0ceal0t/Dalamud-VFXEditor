@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +26,11 @@ namespace VfxEditor.Select {
         public static bool DrawIcon( uint iconId, Vector2 size ) {
             if( iconId <= 0 ) return false;
             var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( icon.ImGuiHandle, size );
+            if( icon != null && icon.Handle != IntPtr.Zero ) {
+                ImGui.Image( icon.Handle, size );
                 if( ImGui.IsItemHovered() ) {
                     ImGui.BeginTooltip();
-                    ImGui.Image( icon.ImGuiHandle, icon.Size );
+                    ImGui.Image( icon.Handle, icon.Size );
                     ImGui.EndTooltip();
                 }
 

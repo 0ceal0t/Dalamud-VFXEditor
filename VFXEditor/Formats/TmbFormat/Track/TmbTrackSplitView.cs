@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using VfxEditor.FileBrowser;
 using VfxEditor.TmbFormat;
@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
 
             ImGui.SameLine();
             if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbtrack},.*", ( bool ok, string res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a File", "TMB entry{.tmbtrack},.*", ( ok, res ) => {
                     if( !ok ) return;
                     try {
                         Actor.ImportTrack( System.IO.File.ReadAllBytes( res ) );
@@ -39,7 +39,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
 
             ImGui.SameLine();
             if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbtrack,.*", "ExportedTmbTrack", "tmbtrack", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbtrack,.*", "ExportedTmbTrack", "tmbtrack", ( ok, res ) => {
                     if( ok ) System.IO.File.WriteAllBytes( res, Selected.ToBytes() );
                 } );
             }

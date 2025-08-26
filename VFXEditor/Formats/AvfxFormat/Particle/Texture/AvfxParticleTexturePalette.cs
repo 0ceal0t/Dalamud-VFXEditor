@@ -11,10 +11,12 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEnum<TextureBorderType> TextureBorder = new( "Texture Border", "TBT" );
         public readonly AvfxInt TextureIdx = new( "Texture Index", "TxNo", value: -1 );
         public readonly AvfxCurve1Axis Offset = new( "Offset", "POff" );
+        public readonly AvfxCurve1Axis OffsetRandom = new( "Offset Random", "POfR" );
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true ) {
+        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true )
+        {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
@@ -23,7 +25,8 @@ namespace VfxEditor.AvfxFormat {
                 TextureFilter,
                 TextureBorder,
                 TextureIdx,
-                Offset
+                Offset,
+                OffsetRandom
             ];
 
             Display.Add( Enabled );
@@ -31,6 +34,7 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( TextureBorder );
 
             DisplayTabs.Add( Offset );
+            DisplayTabs.Add( OffsetRandom );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
