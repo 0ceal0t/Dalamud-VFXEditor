@@ -2,7 +2,7 @@ using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using SharpDX;
 using System;
 using System.Collections.Generic;

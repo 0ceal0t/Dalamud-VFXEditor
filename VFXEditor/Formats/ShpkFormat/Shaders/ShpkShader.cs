@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -60,11 +60,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             Type = type;
             IsV7 = isV7;
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+            ConstantView = new( "Constant", Constants, false, ( item, idx ) => item.GetText(), () => new( type ) );
+            SamplerView = new( "Sampler", Samplers, false, ( item, idx ) => item.GetText(), () => new( type ) );
             if( HasResources ) {
-                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-                TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+                ResourceView = new( "Resource", Resources, false, ( item, idx ) => item.GetText(), () => new( type ) );
+                TextureView = new( "Texture", Textures, false, ( item, idx ) => item.GetText(), () => new( type ) );
             }
         }
 
@@ -166,7 +166,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             if( ImGui.Button( "Export" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( ok, res ) => {
                     if( !ok ) return;
                     File.WriteAllBytes( res, Data );
                 } );
@@ -174,7 +174,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( ok, res ) => {
                     if( !ok ) return;
 
                     if( Path.GetExtension( res ) == ".hlsl" ) {

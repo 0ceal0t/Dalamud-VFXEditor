@@ -64,7 +64,7 @@ namespace VfxEditor.AvfxFormat {
             List<NodePosition> timelines = [];
 
             var idx = 0;
-            AvfxBase.ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            AvfxBase.ReadNested( reader, ( _reader, _name, _size ) => {
                 var renamed = renames == null ? "" : renames[idx];
                 switch( _name ) {
                     case "Modl":

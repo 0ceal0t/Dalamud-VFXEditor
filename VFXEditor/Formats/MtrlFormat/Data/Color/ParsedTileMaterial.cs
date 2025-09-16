@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.IO;
 using System.Numerics;
@@ -34,9 +34,9 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                     ImGui.BeginTooltip();
                     var diffuse = Plugin.MtrlManager.TileDiffuse[i];
                     var normal = Plugin.MtrlManager.TileNormal[i];
-                    ImGui.Image( diffuse.ImGuiHandle, new Vector2( 100, 100 ) );
+                    ImGui.Image( diffuse.Handle, new Vector2( 100, 100 ) );
                     ImGui.SameLine();
-                    ImGui.Image( normal.ImGuiHandle, new Vector2( 100, 100 ) );
+                    ImGui.Image( normal.Handle, new Vector2( 100, 100 ) );
                     ImGui.EndTooltip();
                 }
             }

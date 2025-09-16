@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -194,7 +194,7 @@ namespace VfxEditor.Utils {
         }
 
         public static void WriteBytesDialog( string filter, byte[] data, string ext, string fileName ) {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", filter, fileName, ext, ( ok, res ) => {
                 if( ok ) File.WriteAllBytes( res, data );
             } );
         }
@@ -268,11 +268,11 @@ namespace VfxEditor.Utils {
 
         private delegate bool DrawRadiansInputDelegate<T>( string label, ref T value );
 
-        public static bool DrawRadians( string name, float oldValue, out float newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat );
+        public static bool DrawRadians( string name, float oldValue, out float newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ( string label, ref float value ) => ImGui.InputFloat( label, ref value ) );
 
-        public static bool DrawRadians3( string name, Vector3 oldValue, out Vector3 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat3 );
+        public static bool DrawRadians3( string name, Vector3 oldValue, out Vector3 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ( string label, ref Vector3 value ) => ImGui.InputFloat3( label, ref value ) );
 
-        public static bool DrawRadians4( string name, Vector4 oldValue, out Vector4 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ImGui.InputFloat4 );
+        public static bool DrawRadians4( string name, Vector4 oldValue, out Vector4 newValue ) => DrawRadians( name, oldValue, out newValue, ToDegrees, ToRadians, ( string label, ref Vector4 value ) => ImGui.InputFloat4( label, ref value ) );
 
         private static bool DrawRadians<T>( string name, T oldValue, out T newValue, Func<T, T> toDegrees, Func<T, T> toRadians, DrawRadiansInputDelegate<T> input ) {
             newValue = oldValue;
@@ -338,7 +338,7 @@ namespace VfxEditor.Utils {
             var listModified = false;
 
             if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
-                ImGui.SetDragDropPayload( id, IntPtr.Zero, 0 );
+                ImGui.SetDragDropPayload( id, null, 0 );
                 draggingItem = item;
                 ImGui.Text( text );
                 ImGui.EndDragDropSource();
@@ -355,7 +355,7 @@ namespace VfxEditor.Utils {
             if( draggingItem == null ) return false;
 
             var payload = ImGui.AcceptDragDropPayload( id );
-            if( payload.NativePtr == null ) return false;
+            if( payload.Handle == null ) return false;
 
             if( draggingItem != destination && items.Contains( draggingItem ) && items.Contains( destination ) ) {
                 var command = new ListMoveCommand<T>( items, draggingItem, destination );
@@ -394,7 +394,7 @@ namespace VfxEditor.Utils {
             var type = typeof( T );
             var forceOpen = ForceOpenTabs.Contains( type );
             if( forceOpen ) ForceOpenTabs.Remove( type );
-            return ImGuiNative.igBeginTabItem( labelRef, null, forceOpen ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None ) == 1;
+            return ImGuiNative.BeginTabItem( labelRef, null, forceOpen ? ImGuiTabItemFlags.SetSelected : ImGuiTabItemFlags.None ) == 1;
         }
     }
 }

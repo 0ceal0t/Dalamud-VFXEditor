@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public class EmoteTabVfx : EmoteTab<ParsedPaths> {

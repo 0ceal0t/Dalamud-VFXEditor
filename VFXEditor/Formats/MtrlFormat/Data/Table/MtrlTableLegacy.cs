@@ -1,5 +1,5 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MtrlFormat.Data.Color;
@@ -39,7 +39,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
 
         private void DrawDyeCombo() {
             var v = Stain == null ? new( 0 ) : Stain.Color;
-            ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+            ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
             }
@@ -57,7 +57,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             var v = stain == null ? new( 0 ) : stain.Color;
-            ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+            ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
             if( ImGui.Selectable( stain == null ? "[NONE]" : stain.Name, Stain == stain ) ) {

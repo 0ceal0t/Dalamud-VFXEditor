@@ -1,7 +1,7 @@
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using VfxEditor.Utils;
 
@@ -30,17 +30,17 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public override void DrawFullImage() {
             if( Wrap == null ) return;
-            ImGui.Image( Wrap.ImGuiHandle, new Vector2( Width, Height ) );
+            ImGui.Image( Wrap.Handle, new Vector2( Width, Height ) );
         }
 
         public override void DrawImage() {
             if( Wrap == null ) return;
             var maxWidth = ImGui.GetContentRegionAvail().X;
             if( Width > maxWidth ) {
-                ImGui.Image( Wrap.ImGuiHandle, new Vector2( maxWidth, ( ( float )Height / Width ) * maxWidth ) );
+                ImGui.Image( Wrap.Handle, new Vector2( maxWidth, ( ( float )Height / Width ) * maxWidth ) );
                 return;
             }
-            ImGui.Image( Wrap.ImGuiHandle, new Vector2( Width, Height ) );
+            ImGui.Image( Wrap.Handle, new Vector2( Width, Height ) );
         }
 
         public override void DrawImage( uint u, uint v, uint w, uint h ) {
@@ -48,7 +48,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             var size = new Vector2( Width, Height );
             var uv0 = new Vector2( u, v ) / size;
             var uv1 = uv0 + new Vector2( w, h ) / size;
-            ImGui.Image( Wrap.ImGuiHandle, new Vector2( w, h ), uv0, uv1 );
+            ImGui.Image( Wrap.Handle, new Vector2( w, h ), uv0, uv1 );
         }
 
         public override void DrawImage( float height ) {
@@ -58,7 +58,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 return;
             }
 
-            ImGui.Image( Wrap.ImGuiHandle, new Vector2( ( ( float )Width / Height ) * height, height ) );
+            ImGui.Image( Wrap.Handle, new Vector2( ( ( float )Width / Height ) * height, height ) );
         }
 
         public void DrawParams() => ImGui.TextDisabled( $"{Format} / {MipLevels} MIPs / {Depth} Layers / {Width}x{Height}" );

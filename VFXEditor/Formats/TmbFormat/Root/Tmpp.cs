@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.TmbFormat.Utils;

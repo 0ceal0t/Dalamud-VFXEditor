@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
@@ -16,7 +16,7 @@ namespace VfxEditor.Formats.PbdFormat {
         private readonly CommandSplitView<PbdBone> BoneView;
 
         public PbdDeformer() {
-            BoneView = new( "Bone", Bones, false, ( PbdBone bone, int idx ) => bone.Name.Value, () => new() );
+            BoneView = new( "Bone", Bones, false, ( bone, idx ) => bone.Name.Value, () => new() );
         }
 
         public PbdDeformer( BinaryReader reader ) : this() {

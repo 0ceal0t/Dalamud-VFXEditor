@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,8 +126,8 @@ namespace VfxEditor.Select {
                                 }
                                 else {
                                     var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
-                                    if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                                        ImGui.Image( icon.ImGuiHandle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
+                                    if( icon != null && icon.Handle != IntPtr.Zero ) {
+                                        ImGui.Image( icon.Handle, new Vector2( ( itemHeight / icon.Height ) * icon.Width, itemHeight ) );
                                     }
                                 }
 
@@ -192,8 +192,8 @@ namespace VfxEditor.Select {
             if( iconId <= 0 ) return;
 
             var icon = Dalamud.TextureProvider.GetFromGameIcon( iconId ).GetWrapOrDefault();
-            if( icon != null && icon.ImGuiHandle != IntPtr.Zero ) {
-                ImGui.Image( icon.ImGuiHandle, new Vector2( icon.Width, icon.Height ) );
+            if( icon != null && icon.Handle != IntPtr.Zero ) {
+                ImGui.Image( icon.Handle, new Vector2( icon.Width, icon.Height ) );
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 3 );
             }
         }

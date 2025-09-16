@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
@@ -61,7 +61,7 @@ namespace VfxEditor.Parsing {
             var size = ImGui.GetFrameHeight();
             var pad = new Vector2( ( float )Math.Floor( size / 6f ), size / 2.5f );
 
-            ImGui.GetWindowDrawList().AddRectFilled( pos + pad, pos + new Vector2( size, size ) - pad, color, 0 );
+            ImGui.GetWindowDrawList().AddRectFilled( pos + pad, pos + new Vector2( size, size ) - pad, color, 0f );
         }
     }
 }

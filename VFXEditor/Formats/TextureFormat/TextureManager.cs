@@ -57,7 +57,7 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void Import( SelectResult result ) {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.tex,.atex,.dds},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     AddRecent( result );

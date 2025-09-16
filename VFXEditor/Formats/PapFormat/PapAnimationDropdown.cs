@@ -17,7 +17,7 @@ namespace VfxEditor.PapFormat {
         protected override void DrawControls() => DrawNewDeleteControls( OnNew, OnDelete );
 
         private void OnNew() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Animation{.hkx,.pap}", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Animation{.hkx,.pap}", ( ok, res ) => {
                 if( ok ) Plugin.AddModal( new PapAddModal( File, res ) );
             } );
         }
@@ -26,7 +26,7 @@ namespace VfxEditor.PapFormat {
             var index = Items.IndexOf( item );
 
             var command = new CompoundCommand( [
-                new ListRemoveCommand<PapAnimation>( Items, item, ( PapAnimation item, bool remove ) => item.File.RefreshHavokIndexes() ),
+                new ListRemoveCommand<PapAnimation>( Items, item, ( item, remove ) => item.File.RefreshHavokIndexes() ),
                 new PapHavokCommand( File, () => {
                     var container = File.MotionData.AnimationContainer;
 

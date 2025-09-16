@@ -1,5 +1,5 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileBrowser.FolderFiles;
@@ -73,7 +73,7 @@ namespace VfxEditor.FileBrowser {
 
             ImGuiListClipperPtr clipper;
             unsafe {
-                clipper = new ImGuiListClipperPtr( ImGuiNative.ImGuiListClipper_ImGuiListClipper() );
+                clipper = new ImGuiListClipperPtr( ImGuiNative.ImGuiListClipper() );
             }
 
             clipper.Begin( SearchedFiles.Count );

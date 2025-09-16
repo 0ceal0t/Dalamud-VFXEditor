@@ -29,7 +29,7 @@ namespace VfxEditor.DirectX {
         public DirectXManager() {
             var shaderPath = Path.Combine( Plugin.RootLocation, "Shaders" );
             IncludeHandler = new HLSLFileIncludeHandler( shaderPath );
-            Device = Dalamud.PluginInterface.UiBuilder.Device;
+            Device = new Device( Dalamud.PluginInterface.UiBuilder.DeviceHandle );
             Ctx = Device.ImmediateContext;
 
             ModelPreview = new( Device, Ctx, shaderPath );

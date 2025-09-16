@@ -1,7 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -47,28 +47,28 @@ namespace VfxEditor.PhybFormat.Simulator {
             Params = new( file );
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
+                ( item, idx ) => item.CollisionName.Value, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
-                ( PhybCollisionData item, int idx ) => item.CollisionName.Value, () => new( File, this ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
+                ( item, idx ) => item.CollisionName.Value, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             ChainDropdown = new( "Chain", Chains,
-                null, () => new( File, this ), ( PhybChain _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             ConnectorSplitView = new( "Connector", Connectors, false,
-                null, () => new( File, this ), ( PhybConnector _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             AttractSplitView = new( "Attract", Attracts, false,
-                null, () => new( File, this ), ( PhybAttract _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             PinSplitView = new( "Pin", Pins, false,
-                null, () => new( File, this ), ( PhybPin _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             SpringSplitView = new( "Spring", Springs, false,
-                null, () => new( File, this ), ( PhybSpring _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             PostAlignmentSplitView = new( "Post Alignment", PostAlignments, false,
-                null, () => new( File, this ), ( PhybPostAlignment _, bool _ ) => File.OnChange() );
+                null, () => new( File, this ), ( _, _ ) => File.OnChange() );
         }
 
         public PhybSimulator( PhybFile file, BinaryReader reader, long simulatorStartPos ) : this( file ) {
