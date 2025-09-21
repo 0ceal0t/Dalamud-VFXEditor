@@ -10,6 +10,7 @@ shader/sm5/shpk/apricot_powder_dummy.shpk
 shader/sm5/shpk/apricot_shape.shpk
 shader/sm5/shpk/apricot_shape_dummy.shpk
 shader/sm5/shpk/bg.shpk
+shader/sm5/shpk/bg_composite.shpk
 shader/sm5/shpk/bgcolorchange.shpk
 shader/sm5/shpk/bgcrestchange.shpk
 shader/sm5/shpk/bgdecal.shpk

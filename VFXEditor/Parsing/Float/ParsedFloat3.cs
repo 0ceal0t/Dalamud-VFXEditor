@@ -5,7 +5,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat3 : ParsedSimpleBase<Vector3> {
-        public bool HighPrecision = false;
+        public bool HighPrecision = true;
 
         public ParsedFloat3( string name, Vector3 value ) : base( name, value ) { }
 

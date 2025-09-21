@@ -1,8 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat : ParsedSimpleBase<float> {
+        public bool HighPrecision = true;
         public ParsedFloat( string name, float value ) : base( name, value ) { }
 
         public ParsedFloat( string name ) : base( name ) { }
@@ -17,7 +19,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputFloat( Name, ref value ) ) {
+            if( ImGui.InputFloat( Name, ref value, 0.0f, 0.0f, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) {
                 Update( value );
             }
         }

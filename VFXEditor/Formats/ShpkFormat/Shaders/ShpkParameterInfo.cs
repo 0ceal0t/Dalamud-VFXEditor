@@ -24,6 +24,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
+            Dalamud.Log( $"Write location: {reader.ReadUInt32()}" );
             TempId = reader.ReadUInt32(); // Id
             TempStringOffset = reader.ReadInt32();
             reader.ReadUInt16(); // string size
