@@ -26,6 +26,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly int TempOffset;
         private readonly int TempSize;
 
+        private readonly int unknown1;
+
         private readonly List<ShpkParameterInfo> Constants = [];
         private readonly List<ShpkParameterInfo> Samplers = [];
         private readonly List<ShpkParameterInfo> Resources = [];
@@ -72,6 +74,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             TempOffset = reader.ReadInt32();
             TempSize = reader.ReadInt32();
 
+
             var numConstants = reader.ReadInt16();
             var numSamplers = reader.ReadInt16();
             var numRw = 0;
@@ -80,6 +83,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 numRw = reader.ReadInt16();
                 numTextures = reader.ReadInt16();
             }
+            unknown1 = reader.ReadInt32();
+
 
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, Type ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, Type ) );
@@ -111,6 +116,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 writer.Write( ( short )Resources.Count );
                 writer.Write( ( short )Textures.Count );
             }
+            writer.Write(unknown1);
 
             Constants.ForEach( x => x.Write( writer, stringPositions ) );
             Samplers.ForEach( x => x.Write( writer, stringPositions ) );

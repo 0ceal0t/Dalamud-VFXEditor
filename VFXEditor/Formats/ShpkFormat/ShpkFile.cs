@@ -101,6 +101,11 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numNode = reader.ReadUInt32();
             var numAlias = reader.ReadUInt32();
 
+            var unk3 = reader.ReadUInt32();
+            var unk4 = reader.ReadUInt32();
+            var unk5 = reader.ReadUInt32();
+            if( unk3 != 0 || unk4 != 0 || unk5 != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unk3:X4} 0x{unk4:X4} 0x{unk5:X4}" );
+
             for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
             for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 

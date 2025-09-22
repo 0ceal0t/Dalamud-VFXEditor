@@ -13,7 +13,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
         private readonly uint TempId;
         private readonly ParsedString Value = new( "Value" );
-        private readonly int TempStringOffset;
+        private readonly uint TempStringOffset;
+        private readonly ParsedShort Unknown1 = new( "Unknown1" );
+        private readonly ParsedShort Unknown2 = new( "Unknown2" );
+
+
 
         public readonly ParsedBool IsTexture = new( "Is Texture", size: 2 );
         public readonly ParsedShort Slot = new( "Slot" );
@@ -24,11 +28,16 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
-            Dalamud.Log( $"Write location: {reader.ReadUInt32()}" );
+            Dalamud.Log( $"Read location: {reader.BaseStream.Position}" );
             TempId = reader.ReadUInt32(); // Id
-            TempStringOffset = reader.ReadInt32();
+            Dalamud.Log( $"thisRead location: {reader.BaseStream.Position}" );
+            TempStringOffset = reader.ReadUInt32();
             reader.ReadUInt16(); // string size
+            //Unknown1.Read( reader );
+            //Unknown2.Read( reader );
+
             IsTexture.Read( reader );
+            Dalamud.Log( $"Subread location: {reader.BaseStream.Position}" );
             Slot.Read( reader );
             Size.Read( reader );
         }
@@ -44,6 +53,10 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             stringPositions.Add( (writer.BaseStream.Position, Value.Value) );
             writer.Write( 0 ); // placeholder
             writer.Write( ( ushort )Value.Value.Length );
+
+            //Unknown1.Write( writer );
+            //Unknown2.Write( writer );
+
             IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );
@@ -52,6 +65,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public void Draw() {
             Value.Draw();
             IsTexture.Draw();
+            //Unknown1.Draw();
+            //Unknown2.Draw();
             Slot.Draw();
             Size.Draw();
         }

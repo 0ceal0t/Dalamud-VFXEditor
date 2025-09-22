@@ -175,6 +175,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Update="DalamudPackager" Version="13.1.0" />
+      <PackageReference Update="DalamudPackager" Version="13.0.0" />
     </ItemGroup>
 </Project>
