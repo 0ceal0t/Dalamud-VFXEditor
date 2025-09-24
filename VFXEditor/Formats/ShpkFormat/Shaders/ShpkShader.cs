@@ -71,53 +71,36 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public ShpkShader( BinaryReader reader, ShaderStage stage, DX dxVersion, bool hasResources, ShaderFileType type, bool isV7 ) : this( stage, dxVersion, hasResources, type, isV7 ) {
-            Dalamud.Log( $"Scanning Shader TempOffset at: {reader.BaseStream.Position}" );
             TempOffset = reader.ReadInt32();
-            Dalamud.Log( $"Scanning Shader TempSize at: {reader.BaseStream.Position}" );
             TempSize = reader.ReadInt32();
 
-            Dalamud.Log( $"Scanning Shader NumConstants at: {reader.BaseStream.Position}" );
             var numConstants = reader.ReadInt16();
-            Dalamud.Log( $"Scanning Shader NumSamplers at: {reader.BaseStream.Position}" );
             var numSamplers = reader.ReadInt16();
             var numRw = 0;
             var numTextures = 0;
             if( HasResources ) {
-                Dalamud.Log( $"Scanning Shaders NumRw & NumTextures at: {reader.BaseStream.Position}" );
                 numRw = reader.ReadInt16();
                 numTextures = reader.ReadInt16();
             }
-            Dalamud.Log( $"ScanningUnknown1 at: {reader.BaseStream.Position}" );
             unknown1 = reader.ReadInt32();
             if( unknown1 != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unknown1:X4}" );
 
-            Dalamud.Log( $"Scanning Shader Constants at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, Type ) );
-            Dalamud.Log( $"Scanning Shader Samplers at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, Type ) );
             if( HasResources ) {
-                Dalamud.Log( $"Scanning Resources Samplers at: {reader.BaseStream.Position}" );
                 for( var i = 0; i < numRw; i++ ) Resources.Add( new( reader, Type ) );
-                Dalamud.Log( $"Scanning Shader Textures at: {reader.BaseStream.Position}" );
                 for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, Type ) );
             }
         }
 
         public void Read( BinaryReader reader, uint parameterOffset, uint shaderOffset ) {
-            Dalamud.Log( $"Scanning Shader Constants" );
-            Dalamud.Log( $"{Constants.Count} Constants" );
             Constants.ForEach( x => x.Read( reader, parameterOffset ) );
-            Dalamud.Log( $"Scanning Shader Samplers" );
             Samplers.ForEach( x => x.Read( reader, parameterOffset ) );
-            Dalamud.Log( $"Scanning Resources Samplers" );
             Resources.ForEach( x => x.Read( reader, parameterOffset ) );
-            Dalamud.Log( $"Scanning Shader Textures" );
             Textures.ForEach( x => x.Read( reader, parameterOffset ) );
 
             reader.BaseStream.Position = shaderOffset + TempOffset;
-            Dalamud.Log( $"Reading ExtraData at: {reader.BaseStream.Position}" );
             ExtraData = reader.ReadBytes( ExtraSize );
-            Dalamud.Log( $"Reading Data at: {reader.BaseStream.Position}" );
             Data = reader.ReadBytes( TempSize - ExtraSize );
         }
 
