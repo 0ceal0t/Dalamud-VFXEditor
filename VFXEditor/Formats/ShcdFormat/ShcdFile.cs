@@ -24,10 +24,12 @@ namespace VfxEditor.Formats.ShcdFormat {
             DxMagic = reader.ReadUInt32();
 
             reader.ReadInt32(); // File length
+            Dalamud.Log( $"Scanning Shaderoffset at: {reader.BaseStream.Position}" );
             var shaderOffset = reader.ReadUInt32();
+            Dalamud.Log( $"Scanning ParameterOffset at: {reader.BaseStream.Position}" );
             var parameterOffset = reader.ReadUInt32();
 
-            //Dalamud.Log( $"Read location: {reader.BaseStream.Position}" );
+            Dalamud.Log( $"Scanning Shaders at: {reader.BaseStream.Position}" );
             Shader = new( reader, Stage.Value, DxVersion, !Shcd3, ShaderFileType.Shcd, false );
             Shader.Read( reader, parameterOffset, shaderOffset );
 
@@ -51,7 +53,7 @@ namespace VfxEditor.Formats.ShcdFormat {
 
             Shader.Write( writer, stringPositions, shaderPositions );
 
-            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsetsSHCD( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {

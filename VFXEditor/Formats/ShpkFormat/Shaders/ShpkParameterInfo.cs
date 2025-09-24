@@ -14,12 +14,10 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly uint TempId;
         private readonly ParsedString Value = new( "Value" );
         private readonly uint TempStringOffset;
-        private readonly ParsedShort Unknown1 = new( "Unknown1" );
-        private readonly ParsedShort Unknown2 = new( "Unknown2" );
 
 
 
-        public readonly ParsedBool IsTexture = new( "Is Texture", size: 2 );
+        public readonly ParsedShort IsTexture = new( "Is Texture");
         public readonly ParsedShort Slot = new( "Slot" );
         public readonly ParsedShort Size = new( "Registers" );
 
@@ -28,18 +26,20 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         }
 
         public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
-            Dalamud.Log( $"Read location: {reader.BaseStream.Position}" );
+            Dalamud.Log( $"Scanning Shader Texture TempID at: {reader.BaseStream.Position}" );
             TempId = reader.ReadUInt32(); // Id
-            Dalamud.Log( $"thisRead location: {reader.BaseStream.Position}" );
+            Dalamud.Log( $"Scanning Shader Texture TempOffset at: {reader.BaseStream.Position}" );
             TempStringOffset = reader.ReadUInt32();
+            Dalamud.Log( $"Scanning Shader Texture String Size at: {reader.BaseStream.Position}" );
             reader.ReadUInt16(); // string size
-            //Unknown1.Read( reader );
-            //Unknown2.Read( reader );
 
+            Dalamud.Log( $"Scanning Shader Texture ISTexture at: {reader.BaseStream.Position}" );
             IsTexture.Read( reader );
-            Dalamud.Log( $"Subread location: {reader.BaseStream.Position}" );
+            Dalamud.Log( $"Scanning Shader Texture Slot at: {reader.BaseStream.Position}" );
             Slot.Read( reader );
+            Dalamud.Log( $"Scanning Shader Texture Size at: {reader.BaseStream.Position}" );
             Size.Read( reader );
+            //Unknown1.Read( reader );
         }
 
         public void Read( BinaryReader reader, uint parameterOffset ) {
@@ -54,21 +54,20 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             writer.Write( 0 ); // placeholder
             writer.Write( ( ushort )Value.Value.Length );
 
-            //Unknown1.Write( writer );
-            //Unknown2.Write( writer );
-
+            
             IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );
+            //Unknown1.Write( writer );
+
         }
 
         public void Draw() {
             Value.Draw();
             IsTexture.Draw();
-            //Unknown1.Draw();
-            //Unknown2.Draw();
             Slot.Draw();
             Size.Draw();
+            //Unknown1.Draw();
         }
 
         public string GetText() => Value.Value;
