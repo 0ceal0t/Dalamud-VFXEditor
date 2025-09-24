@@ -28,6 +28,12 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         public ShpkParameterInfo( BinaryReader reader, ShaderFileType type ) : this( type ) {
             TempId = reader.ReadUInt32(); // Id
             TempStringOffset = reader.ReadInt32();
+            TempStringOffset = reader.ReadUInt32();
+            Dalamud.Log( $"Scanning Shader Texture String Size at: {reader.BaseStream.Position}" );
+            TempStringOffset = reader.ReadUInt32();
+            Dalamud.Log( $"Scanning Shader Texture String Size at: {reader.BaseStream.Position}" );
+            TempStringOffset = reader.ReadUInt32();
+            Dalamud.Log( $"Scanning Shader Texture String Size at: {reader.BaseStream.Position}" );
             reader.ReadUInt16(); // string size
 
             IsTexture.Read( reader );
