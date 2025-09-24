@@ -111,12 +111,9 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             if( unknown3.Value != 0 || unknown4.Value != 0 || unknown5.Value != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unknown3.Value:X4} 0x{unknown4.Value:X4} 0x{unknown5.Value:X4}" );
 
-            //Dalamud.Log( $"Scanning Vertex Shaders at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
-            //Dalamud.Log( $"Scanning Pixel Shaders at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 
-            //Dalamud.Log( $"Scanning Material Parameters at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numMaterialParams; i++ ) MaterialParameters.Add( new( this, reader ) );
 
             if( HasDefaultMaterialValues.Value ) {
@@ -127,29 +124,19 @@ namespace VfxEditor.Formats.ShpkFormat {
                 }
                 reader.BaseStream.Position = defaultStart + materialParamsSize;
             }
-            //Dalamud.Log( $"Scanning Constants at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, ShaderFileType.Shpk ) );
-            //Dalamud.Log( $"Scanning Samplers at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, ShaderFileType.Shpk ) );
-            //Dalamud.Log( $"Scanning Textures at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, ShaderFileType.Shpk ) );
-            //Dalamud.Log( $"Scanning Resources at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numResources; i++ ) Resources.Add( new( reader, ShaderFileType.Shpk ) );
 
-            //Dalamud.Log( $"Scanning System Keys at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numSystemKey; i++ ) SystemKeys.Add( new( reader ) );
-            //Dalamud.Log( $"Scanning Scene Keys at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numSceneKey; i++ ) SceneKeys.Add( new( reader ) );
-            //Dalamud.Log( $"Scanning Material Keys at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numMaterialKey; i++ ) MaterialKeys.Add( new( reader ) );
 
-            //Dalamud.Log( $"Scanning Subview Keys at: {reader.BaseStream.Position}" );
             SubViewKeys.Add( new( 1, reader.ReadUInt32() ) );
             SubViewKeys.Add( new( 2, reader.ReadUInt32() ) );
 
-            //Dalamud.Log( $"Scanning Nodes at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numNode; i++ ) Nodes.Add( new( reader, SystemKeys.Count, SceneKeys.Count, MaterialKeys.Count, SubViewKeys.Count ) );
-            //Dalamud.Log( $"Scanning Aliases at: {reader.BaseStream.Position}" );
             for( var i = 0; i < numAlias; i++ ) Aliases.Add( new( reader ) );
 
             // ======= POPULATE ==========

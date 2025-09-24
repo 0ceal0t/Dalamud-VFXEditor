@@ -14,9 +14,6 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
 
         public readonly ParsedInt Unknown1 = new( "Unknown1" );
         public readonly ParsedInt Unknown2 = new( "Unknown2" );
-        //public readonly ParsedInt Unknown3 = new( "Unknown3" );
-        //public readonly ParsedInt Unknown4 = new( "Unknown4" );
-        //public readonly ParsedInt Unknown5 = new( "Unknown5" );
 
         private readonly List<ParsedSByte> PassIndexes = [];
         private readonly List<ShpkPass> Passes = [];
@@ -64,9 +61,6 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
 
             Unknown1.Read( reader );
             Unknown2.Read( reader );
-            //Unknown3.Read( reader );
-            //Unknown4.Read( reader );
-            //Unknown5.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
@@ -80,9 +74,6 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
             Passes.ForEach( x => x.Write( writer ) );
             Unknown1.Write( writer );
             Unknown2.Write( writer );
-            //Unknown3.Write( writer );
-            //Unknown4.Write( writer );
-            //Unknown5.Write( writer );
 
         }
 
@@ -155,9 +146,6 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
 
             Unknown1.Draw();
             Unknown2.Draw();
-            //Unknown3.Draw();
-            //Unknown4.Draw();
-            //Unknown5.Draw();
         }
     }
 }
