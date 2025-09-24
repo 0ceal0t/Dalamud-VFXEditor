@@ -33,7 +33,6 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             IsTexture.Read( reader );
             Slot.Read( reader );
             Size.Read( reader );
-            //Unknown1.Read( reader );
         }
 
         public void Read( BinaryReader reader, uint parameterOffset ) {
@@ -52,7 +51,6 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );
-            //Unknown1.Write( writer );
 
         }
 
@@ -61,7 +59,6 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             IsTexture.Draw();
             Slot.Draw();
             Size.Draw();
-            //Unknown1.Draw();
         }
 
         public string GetText() => Value.Value;
