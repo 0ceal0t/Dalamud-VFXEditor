@@ -71,7 +71,7 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
+                Dalamud.Error( e, $"Error reading file: {path}" );
                 Dalamud.ErrorNotification( "Error reading file" );
             }
         }
