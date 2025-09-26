@@ -30,7 +30,7 @@ namespace VfxEditor.Utils {
             _ => DX.UNKNOWN
         };
 
-        public static void WriteOffsets( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions ) {
+        public static void WriteOffsetsSHPK( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions ) {
             var shaderOffset = writer.BaseStream.Position;
 
             shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
@@ -50,6 +50,39 @@ namespace VfxEditor.Utils {
                 var offset = stringOffsets[item.Item2];
                 writer.BaseStream.Position = item.Item1;
                 writer.Write( offset );
+            }
+
+            writer.BaseStream.Position = placeholderPos;
+            writer.Write( ( uint )writer.BaseStream.Length );
+            writer.Write( ( uint )shaderOffset );
+            writer.Write( ( uint )parameterOffset );
+        }
+        public static void WriteOffsetsSHCD( BinaryWriter writer, long placeholderPos, List<(long, string)> stringPositions, List<(long, ShpkShader)> shaderPositions )
+        {
+            var shaderOffset = writer.BaseStream.Position;
+
+            shaderPositions.ForEach( x => x.Item2.WriteByteCode( writer, shaderOffset, x.Item1 ) );
+
+            var parameterOffset = writer.BaseStream.Position;
+
+            var stringOffsets = new Dictionary<int, uint>();
+            int index = 0;
+            foreach( var item in stringPositions )
+            {
+                var value = item.Item2;
+                
+                stringOffsets[index] = ( uint )( writer.BaseStream.Position - parameterOffset );
+                FileUtils.WriteString( writer, value, true );
+                index++;
+            }
+
+            index = 0;
+            foreach( var item in stringPositions )
+            {
+                var offset = stringOffsets[index];
+                writer.BaseStream.Position = item.Item1;
+                writer.Write( offset );
+                index++;
             }
 
             writer.BaseStream.Position = placeholderPos;

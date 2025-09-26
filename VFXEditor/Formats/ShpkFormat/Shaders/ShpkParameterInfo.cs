@@ -15,7 +15,9 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly ParsedString Value = new( "Value" );
         private readonly int TempStringOffset;
 
-        public readonly ParsedBool IsTexture = new( "Is Texture", size: 2 );
+
+
+        public readonly ParsedShort IsTexture = new( "Is Texture");
         public readonly ParsedShort Slot = new( "Slot" );
         public readonly ParsedShort Size = new( "Registers" );
 
@@ -27,6 +29,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             TempId = reader.ReadUInt32(); // Id
             TempStringOffset = reader.ReadInt32();
             reader.ReadUInt16(); // string size
+
             IsTexture.Read( reader );
             Slot.Read( reader );
             Size.Read( reader );
@@ -43,9 +46,12 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             stringPositions.Add( (writer.BaseStream.Position, Value.Value) );
             writer.Write( 0 ); // placeholder
             writer.Write( ( ushort )Value.Value.Length );
+
+            
             IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );
+
         }
 
         public void Draw() {

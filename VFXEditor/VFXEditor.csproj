@@ -173,4 +173,8 @@
       <Folder Include="Flatbuffer\Ephb\" />
       <Folder Include="lib\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="DalamudPackager" Version="13.0.0" />
+    </ItemGroup>
 </Project>

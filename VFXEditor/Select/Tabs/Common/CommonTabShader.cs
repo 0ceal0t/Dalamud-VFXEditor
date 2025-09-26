@@ -24,7 +24,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
         protected override void DrawSelected() {
             Dialog.DrawPaths( new Dictionary<string, string>() {
-                { "DX9", Selected.Path },
+                //{ "DX9", Selected.Path },
                 { "DX11", Selected.Path.Replace( "shader/", "shader/sm5/" ) }
             }, Selected.Name, SelectResultType.GameUi );
         }

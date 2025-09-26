@@ -49,7 +49,7 @@ namespace VfxEditor.Formats.ShcdFormat {
 
             Shader.Write( writer, stringPositions, shaderPositions );
 
-            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsetsSHCD( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {

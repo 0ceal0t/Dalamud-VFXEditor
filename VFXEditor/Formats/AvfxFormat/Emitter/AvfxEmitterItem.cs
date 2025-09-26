@@ -115,7 +115,7 @@ namespace VfxEditor.AvfxFormat {
             ];
         }
 
-        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, 312 );
+        public AvfxEmitterItem( bool isParticle, AvfxEmitter emitter, bool initNodeSelects, int size, BinaryReader reader ) : this( isParticle, emitter, initNodeSelects ) => AvfxBase.ReadNested( reader, Parsed, size );
 
         public void InitializeNodeSelects() {
             if( IsParticle ) ParticleSelect = new AvfxNodeSelect<AvfxParticle>( Emitter, "Target Particle", Emitter.NodeGroups.Particles, TargetIdx );
