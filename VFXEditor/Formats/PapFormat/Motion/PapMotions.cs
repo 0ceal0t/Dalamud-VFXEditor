@@ -1,5 +1,5 @@
 using FFXIVClientStructs.Havok.Animation.Rig;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.FileBrowser;
@@ -82,7 +82,7 @@ namespace VfxEditor.PapFormat.Motion {
         public void DrawExportAll() {
             Selector.Init();
             if( ImGui.Button( "Export All Motions" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( ok, res ) => {
                     if( !ok ) return;
                     GltfAnimation.ExportAnimation(
                         Skeleton,

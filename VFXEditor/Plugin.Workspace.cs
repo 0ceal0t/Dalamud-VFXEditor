@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -84,7 +84,7 @@ namespace VfxEditor {
         }
 
         private static void OpenWorkspace( bool reset ) {
-            FileBrowserManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a Workspace File", "Workspace{.vfxworkspace,.json},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     var extension = new FileInfo( res ).Extension;
@@ -180,7 +180,7 @@ namespace VfxEditor {
         }
 
         private static void SaveAsWorkspace() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxworkspace", "workspace", "vfxworkspace", ( ok, res ) => {
                 if( !ok ) return;
                 ExportWorkspace( res );
                 Configuration.AddRecentWorkspace( res );

@@ -1,8 +1,8 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
-using ImGuiNET;
-using ImPlotNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -17,19 +17,19 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         public readonly List<(int, Vector3)> Color = [];
         public double[] R {
             get {
-                _InternalR ??= Color.Select( x => ( double )x.Item2.X ).ToArray();
+                _InternalR ??= [.. Color.Select( x => ( double )x.Item2.X )];
                 return _InternalR;
             }
         }
         public double[] G {
             get {
-                _InternalG ??= Color.Select( x => ( double )x.Item2.Y ).ToArray();
+                _InternalG ??= [.. Color.Select( x => ( double )x.Item2.Y )];
                 return _InternalG;
             }
         }
         public double[] B {
             get {
-                _InternalB ??= Color.Select( x => ( double )x.Item2.Z ).ToArray();
+                _InternalB ??= [.. Color.Select( x => ( double )x.Item2.Z )];
                 return _InternalB;
             }
         }
@@ -109,9 +109,10 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 var element = Data[BoneSelected];
 
                 if( IsColor ) {
-                    var topLeft = new ImPlotPoint { x = 0, y = 1 };
-                    var bottomRight = new ImPlotPoint { x = Motion.TotalFrames, y = -1 };
-                    ImPlot.PlotImage( "##Gradient", Preview.Output, topLeft, bottomRight );
+                    var topLeft = new ImPlotPoint { X = 0, Y = 1 };
+                    var bottomRight = new ImPlotPoint { X = Motion.TotalFrames, Y = -1 };
+
+                    ImPlot.PlotImage( "##Gradient", new ImTextureID( Preview.Output ), topLeft, bottomRight );
 
                     for( var i = 0; i < Data.Count - 1; i++ ) {
                         var yPos = -1f + 2f * ( i + 1f ) / ( Data.Count );

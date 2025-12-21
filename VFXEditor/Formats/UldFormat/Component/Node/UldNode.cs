@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,8 +73,8 @@ namespace VfxEditor.UldFormat.Component.Node {
 
         public readonly ParsedIntSelect<UldTimeline> TimelineId = new( "Timeline", 0,
             () => Plugin.UldManager.File.TimelineDropdown,
-            ( UldTimeline item ) => ( int )item.Id.Value,
-            ( UldTimeline item, int _ ) => item.GetText(),
+            item => ( int )item.Id.Value,
+            ( item, _ ) => item.GetText(),
             size: 2
         );
 
@@ -111,23 +111,23 @@ namespace VfxEditor.UldFormat.Component.Node {
             NodeView = nodeView;
             ParentId = new( "Parent", 0,
                 () => NodeView,
-                ( UldNode item ) => ( int )item.Id.Value,
-                ( UldNode item, int _ ) => item.GetText()
+                item => ( int )item.Id.Value,
+                ( item, _ ) => item.GetText()
             );
             NextSiblingId = new( "Next Sibling", 0,
                 () => NodeView,
-                ( UldNode item ) => ( int )item.Id.Value,
-                ( UldNode item, int _ ) => item.GetText()
+                item => ( int )item.Id.Value,
+                ( item, _ ) => item.GetText()
             );
             PrevSiblingId = new( "Previous Sibling", 0,
                 () => NodeView,
-                ( UldNode item ) => ( int )item.Id.Value,
-                ( UldNode item, int _ ) => item.GetText()
+                item => ( int )item.Id.Value,
+                ( item, _ ) => item.GetText()
             );
             ChildNodeId = new( "Child", 0,
                 () => NodeView,
-                ( UldNode item ) => ( int )item.Id.Value,
-                ( UldNode item, int _ ) => item.GetText()
+                item => ( int )item.Id.Value,
+                ( item, _ ) => item.GetText()
             );
         }
 

@@ -1,7 +1,10 @@
 using VfxEditor.PapFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Character;
+using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Emotes;
+using VfxEditor.Select.Tabs.Event;
+using VfxEditor.Select.Tabs.EventBase;
 using VfxEditor.Select.Tabs.Items;
 using VfxEditor.Select.Tabs.Job;
 using VfxEditor.Select.Tabs.Mounts;
@@ -19,6 +22,9 @@ namespace VfxEditor.Select.Formats {
                 new MountTabPap( this, "Mount" ),
                 new CharacterTabPap( this, "Character" ),
                 new JobTab( this, "Job" ),
+                new EventTab (this, "Cutscene (Human)" ),
+                new EventBaseTab (this, "Ambient NPC (Human)" ),
+                new CommonTabPap (this, "Common" ),
             ] );
         }
     }

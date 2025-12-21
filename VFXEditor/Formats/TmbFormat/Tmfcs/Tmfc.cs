@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +35,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
 
             var diff = endOffset - startOffset;
             // need to add an extra 4 bytes to account for id+time
-            reader.ReadAtOffset( startOffset + 4, ( BinaryReader br ) => {
+            reader.ReadAtOffset( startOffset + 4, br => {
                 for( var i = 0; i < dataCount; i++ ) {
                     Data.Add( new TmfcData( br, File ) );
                 }
@@ -51,7 +51,7 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public override void Write( TmbWriter writer ) {
             base.Write( writer );
 
-            var offset = writer.WriteExtra( ( BinaryWriter bw ) => {
+            var offset = writer.WriteExtra( bw => {
                 foreach( var data in Data ) data.Write( bw );
 
                 foreach( var data in Data ) data.WriteRows( bw );

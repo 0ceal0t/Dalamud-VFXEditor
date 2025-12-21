@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -154,7 +154,7 @@ namespace VfxEditor.AvfxFormat {
             Sound.Parsed.Icons.Insert( 0, new() {
                 Icon = () => FontAwesomeIcon.VolumeUp,
                 Remove = false,
-                Action = ( string value ) => Plugin.ResourceLoader.PlaySound( value, SoundNumber.Value )
+                Action = value => Plugin.ResourceLoader.PlaySound( value, SoundNumber.Value )
             } );
         }
 
@@ -164,7 +164,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxEmitterItemContainer lastParticle = null;
             AvfxEmitterItemContainer lastEmitter = null;
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     UpdateData();
                     Data?.Read( _reader, _size );

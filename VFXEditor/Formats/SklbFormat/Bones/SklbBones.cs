@@ -1,9 +1,9 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Animation.Rig;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Object;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -290,7 +290,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             DragDrop( bone );
 
-            if( ImGui.BeginPopupContextItem() ) {
+            if( ImGui.BeginPopupContextItem( "BonePopup" ) ) {
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Plus, "Create sub-bone" ) ) {
                     var newId = NEW_BONE_ID;
                     var newBone = new SklbBone( newId );
@@ -353,14 +353,14 @@ namespace VfxEditor.SklbFormat.Bones {
         }
 
         private void StartDragging( SklbBone bone ) {
-            ImGui.SetDragDropPayload( "SKLB_BONES", IntPtr.Zero, 0 );
+            ImGui.SetDragDropPayload( "SKLB_BONES", null, 0 );
             DraggingBone = bone;
         }
 
         public unsafe bool StopDragging( SklbBone destination ) {
             if( DraggingBone == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( "SKLB_BONES" );
-            if( payload.NativePtr == null ) return false;
+            if( payload.Handle == null ) return false;
 
             if( DraggingBone != destination ) {
                 if( destination != null && destination.IsChildOf( DraggingBone ) ) {
@@ -382,19 +382,19 @@ namespace VfxEditor.SklbFormat.Bones {
         // ======= IMPORT EXPORT ==========
 
         private void ExportHavok() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".hkx", "", "hkx", ( ok, res ) => {
                 if( ok ) System.IO.File.Copy( Path, res, true );
             } );
         }
 
         private void ExportGltf() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "skeleton", "gltf", ( ok, res ) => {
                 if( ok ) GltfSkeleton.ExportSkeleton( Bones, res );
             } );
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Skeleton{.hkx,.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
                 if( res.Contains( ".hkx" ) ) {
                     var importHavok = new HavokBones( res, true );

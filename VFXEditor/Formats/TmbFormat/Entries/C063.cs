@@ -33,7 +33,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Path.Icons.Insert( 0, new() {
                 Icon = () => FontAwesomeIcon.VolumeUp,
                 Remove = false,
-                Action = ( string value ) => Plugin.ResourceLoader.PlaySound( value, SoundIndex.Value )
+                Action = value => Plugin.ResourceLoader.PlaySound( value, SoundIndex.Value )
             } );
         }
 

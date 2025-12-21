@@ -1,5 +1,5 @@
 using HelixToolkit.SharpDX.Core.Animations;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
@@ -36,10 +36,10 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
             Simulator = simulator;
 
             CollisionSplitView = new( "Collision Object", Collisions, false,
-                null, () => new( file, simulator ), ( PhybCollisionData _, bool _ ) => File.OnChange() );
+                null, () => new( file, simulator ), ( _, _ ) => File.OnChange() );
 
             NodeSplitView = new( "Node", Nodes, false,
-                ( PhybNode item, int idx ) => $"Node {idx + 1}", () => new( file, simulator ), ( PhybNode _, bool _ ) => File.OnChange() );
+                ( item, idx ) => $"Node {idx + 1}", () => new( file, simulator ), ( _, _ ) => File.OnChange() );
         }
 
         public PhybChain( PhybFile file, PhybSimulator simulator, BinaryReader reader, long simulatorStartPos ) : this( file, simulator ) {

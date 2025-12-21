@@ -59,7 +59,7 @@ namespace VfxEditor.DirectX {
             Emitters.SetVertexes( Device, data, emitterCount );
         }
 
-        public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.CombinedEmitVertexes, mode );
+        public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
 
         public void LoadModel( List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
             if( modelIndexes.Count == 0 ) {

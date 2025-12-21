@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Interfaces;
@@ -54,7 +54,7 @@ namespace VfxEditor.AvfxFormat {
 
             AvfxTimelineItemContainer lastItem = null;
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Item" ) {
                     lastItem = new AvfxTimelineItemContainer( this );
                     lastItem.Read( _reader, _size );

@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.Tables;
@@ -33,7 +33,7 @@ namespace VfxEditor.AvfxFormat {
             ];
 
             ItemTable = new( "ItEm", true, true, Items, Columns, () => new( this, "Item", true ),
-            ( AvfxSchedulerItem item, bool add ) => {
+            ( item, add ) => {
                 if( add ) item.TimelineSelect.Enable();
                 else item.TimelineSelect.Disable();
             } );
@@ -46,7 +46,7 @@ namespace VfxEditor.AvfxFormat {
             AvfxSchedulerItemContainer lastItem = null;
             AvfxSchedulerItemContainer lastTrigger = null;
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Item" ) {
                     lastItem = new AvfxSchedulerItemContainer( "Item", this );
                     lastItem.Read( _reader, _size );

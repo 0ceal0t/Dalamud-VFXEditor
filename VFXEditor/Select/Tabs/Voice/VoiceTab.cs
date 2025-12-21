@@ -4,12 +4,12 @@ using System.Linq;
 namespace VfxEditor.Select.Tabs.Voice {
     public class VoiceTab : SelectTab<VoiceRow, List<string>> {
         private static readonly Dictionary<string, string> Races = new() {
-            { "Aura", "aur" },
+            { "Au Ra", "aur" },
             { "Elezen", "ele" },
             { "Highlander", "hil" },
             { "Lalafell", "lal" },
             { "Midlander", "mid" },
-            { "Miquote", "miq" },
+            { "Miqo'te", "miq" },
             { "Roegadyn", "rog" },
             { "Hrothgar", "ros" },
             { "Viera", "vie" }

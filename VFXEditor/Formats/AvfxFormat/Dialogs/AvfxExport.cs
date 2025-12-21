@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
@@ -59,7 +59,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
         }
 
         public void SaveDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".vfxedit2,.*", "ExportedVfx", "vfxedit2", ( ok, res ) => {
                 if( !ok ) return;
                 AvfxFile.Export( GetSelected(), res, ExportDependencies );
                 Plugin.AvfxManager?.ExportDialog.Hide();

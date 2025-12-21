@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -71,7 +71,7 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
+                Dalamud.Error( e, $"Error reading file: {path}" );
                 Dalamud.ErrorNotification( "Error reading file" );
             }
         }
@@ -95,8 +95,8 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
-                Dalamud.ErrorNotification( "Error reading file" );
+                Dalamud.Error( e, $"Error Reading File at {path}");
+                Dalamud.ErrorNotification( $"Error Reading File at {path}");
             }
         }
 
@@ -532,7 +532,7 @@ namespace VfxEditor.FileManager {
             var style = ImGui.GetStyle();
             var iconSize = UiUtils.GetIconSize( FontAwesomeIcon.Globe ) + 2 * style.FramePadding;
             var textWidth = ImGui.GetContentRegionAvail().X - ( 2 * style.WindowPadding.X ) - ( 2 * style.ItemSpacing.X ) - iconSize.X;
-            var textSize = ImGui.CalcTextSize( WarningText, textWidth );
+            var textSize = ImGui.CalcTextSize( WarningText, wrapWidth: textWidth );
 
             using var child = ImRaii.Child( "Warning", new Vector2( -1, Math.Max( textSize.Y, iconSize.Y ) + ( 2 * style.WindowPadding.Y ) ), true, ImGuiWindowFlags.NoScrollbar );
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {

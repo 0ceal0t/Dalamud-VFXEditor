@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Nodes;
@@ -60,10 +60,10 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve1Axis RotVelX = new( "Rotation Velocity X", "VRX" );
-        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
-        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
         public readonly AvfxCurve1Axis RotVelXRandom = new( "Rotation Velocity X Random", "VRXR" );
+        public readonly AvfxCurve1Axis RotVelY = new( "Rotation Velocity Y", "VRY" );
         public readonly AvfxCurve1Axis RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
+        public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
         public readonly AvfxCurve1Axis RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
         public readonly AvfxCurveColor Color = new( "Color", locked: true );
 
@@ -156,10 +156,10 @@ namespace VfxEditor.AvfxFormat {
                 Rotation,
                 Position,
                 RotVelX,
-                RotVelY,
-                RotVelZ,
                 RotVelXRandom,
+                RotVelY,
                 RotVelYRandom,
+                RotVelZ,
                 RotVelZRandom,
                 Color
             ];
@@ -255,7 +255,7 @@ namespace VfxEditor.AvfxFormat {
 
             UpdateData(); // TODO: check if moving this here breaks anything
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 if( _name == "Data" ) {
                     Data?.Read( _reader, _size );
                 }

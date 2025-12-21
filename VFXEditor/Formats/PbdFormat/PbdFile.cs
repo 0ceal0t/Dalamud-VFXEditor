@@ -1,7 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -198,14 +197,14 @@ namespace VfxEditor.Formats.PbdFormat {
         }
 
         private void StartDragging( PbdConnection connection ) {
-            ImGui.SetDragDropPayload( "PBD_CONNECTION", IntPtr.Zero, 0 );
+            ImGui.SetDragDropPayload( "PBD_CONNECTION", null, 0 );
             Dragging = connection;
         }
 
         public unsafe bool StopDragging( PbdConnection destination ) {
             if( Dragging == null ) return false;
             var payload = ImGui.AcceptDragDropPayload( "PBD_CONNECTION" );
-            if( payload.NativePtr == null ) return false;
+            if( payload.Handle == null ) return false;
 
             if( Dragging != destination ) {
                 if( destination != null && destination.IsChildOf( Dragging ) ) {

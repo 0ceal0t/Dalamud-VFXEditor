@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -221,7 +221,7 @@ namespace VfxEditor.AvfxFormat {
         public override void ReadContents( BinaryReader reader, int size ) {
             Peek( reader, Parsed, size ); // read but then reset the position
 
-            ReadNested( reader, ( BinaryReader _reader, string _name, int _size ) => {
+            ReadNested( reader, ( _reader, _name, _size ) => {
                 switch( _name ) {
                     case AvfxScheduler.NAME:
                         var Scheduler = new AvfxScheduler( NodeGroupSet );

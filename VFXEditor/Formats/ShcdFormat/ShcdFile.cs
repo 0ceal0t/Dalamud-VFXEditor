@@ -1,4 +1,4 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
@@ -49,7 +49,7 @@ namespace VfxEditor.Formats.ShcdFormat {
 
             Shader.Write( writer, stringPositions, shaderPositions );
 
-            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsetsSHCD( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {

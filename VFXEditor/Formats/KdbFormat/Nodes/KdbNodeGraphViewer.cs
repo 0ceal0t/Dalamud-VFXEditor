@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Effector;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;

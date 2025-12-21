@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -100,7 +100,7 @@ namespace VfxEditor.TmbFormat.Entries {
         }
 
         private void SaveDialog() =>
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".tmbentry,.*", "ExportedTmbEntry", "tmbentry", ( ok, res ) => {
                 if( ok ) System.IO.File.WriteAllBytes( res, ToBytes() );
             } );
 

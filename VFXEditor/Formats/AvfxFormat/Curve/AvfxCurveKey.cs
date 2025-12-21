@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Bindings.ImPlot;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
-using ImPlotNET;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,8 +31,8 @@ namespace VfxEditor.AvfxFormat {
         public Vector3 Converted => new( Data.Value.X, Data.Value.Y, ( float )Curve.ToDegrees( Data.Value.Z ) );
         public Vector3 Color => Data.Value;
         public ImPlotPoint Point => new() {
-            x = ( float )DisplayX,
-            y = ( float )DisplayY
+            X = ( float )DisplayX,
+            Y = ( float )DisplayY
         };
         public (KeyType, Vector4) CopyPasteData => (Type.Value, new Vector4( Time.Value, Data.Value.X, Data.Value.Y, Data.Value.Z ));
 
@@ -104,7 +104,7 @@ namespace VfxEditor.AvfxFormat {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 // Delete
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
-                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( AvfxCurveKey _, bool _ ) => editor.OnUpdate() ) );
+                    CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( _, _ ) => editor.OnUpdate() ) );
                     return;
                 }
 
@@ -112,17 +112,17 @@ namespace VfxEditor.AvfxFormat {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
-                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( AvfxCurveKey _, bool _ ) => editor.OnUpdate() ) );
+                    CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( _, _ ) => editor.OnUpdate() ) );
                 }
 
                 // Shift left/right
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[0] == this ) ) ) {
-                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], ( AvfxCurveKey _ ) => editor.OnUpdate() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], _ => editor.OnUpdate() ) );
                 }
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[^1] == this ) ) ) {
-                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], ( AvfxCurveKey _ ) => editor.OnUpdate() ) );
+                    CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], _ => editor.OnUpdate() ) );
                 }
             }
 
@@ -225,13 +225,13 @@ namespace VfxEditor.AvfxFormat {
 
                 if( ImGui.BeginDragDropTarget() ) {
                     var payload3 = ImGui.AcceptDragDropPayload( "_COL3F" );
-                    if( payload3.NativePtr != null ) {
+                    if( payload3.Handle != null ) {
                         Plugin.Configuration.CurveEditorPalette[idx] = new Vector4( *( Vector3* )payload3.Data, 1 );
                         Plugin.Configuration.Save();
                     }
 
                     var payload4 = ImGui.AcceptDragDropPayload( "_COL4F" );
-                    if( payload4.NativePtr != null ) {
+                    if( payload4.Handle != null ) {
                         Plugin.Configuration.CurveEditorPalette[idx] = *( Vector4* )payload4.Data;
                         Plugin.Configuration.Save();
                     }

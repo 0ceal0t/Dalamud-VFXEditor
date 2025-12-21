@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +15,11 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public string GroundStart;
         public string Jmn;
-        public Dictionary<string, Dictionary<string, string>> SitPoses;
+        public string ChairStart;
+        public string Sit;
+        public Dictionary<string, Dictionary<string, string>> GroundSitPoses;
+        public Dictionary<string, Dictionary<string, string>> ChairSitPoses;
+        public Dictionary<string, Dictionary<string, string>> OrnamentPoses;
     }
 
     public class CharacterTabPap : SelectTab<CharacterRow, SelectedPap> {
@@ -46,12 +50,36 @@ namespace VfxEditor.Select.Tabs.Character {
                 }
             }
 
-            var sitPoses = new Dictionary<string, Dictionary<string, string>>();
+            var groundSitPoses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
                 var start = item.GetStartPap( i, "j_" );
                 var loop = item.GetLoopPap( i, "j_" );
                 if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    sitPoses.Add( $"Sit Pose {i}", new Dictionary<string, string>() {
+                    groundSitPoses.Add( $"Ground Sit Pose {i}", new Dictionary<string, string>() {
+                        { "Start", start },
+                        { "Loop", loop }
+                    } );
+                }
+            }
+
+            var chairSitPoses = new Dictionary<string, Dictionary<string, string>>();
+            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
+                var start = item.GetStartPap( i, "s_" );
+                var loop = item.GetLoopPap( i, "s_" );
+                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
+                    chairSitPoses.Add( $"Chair Sit Pose {i}", new Dictionary<string, string>() {
+                        { "Start", start },
+                        { "Loop", loop }
+                    } );
+                }
+            }
+
+            var ornamentPoses = new Dictionary<string, Dictionary<string, string>>();
+            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
+                var start = item.GetOrnamentStartPap( i, "onm_" );
+                var loop = item.GetOrnamentLoopPap( i, "onm_" );
+                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
+                    ornamentPoses.Add( $"Fashion Accessory Pose {i}", new Dictionary<string, string>() {
                         { "Start", start },
                         { "Loop", loop }
                     } );
@@ -60,6 +88,8 @@ namespace VfxEditor.Select.Tabs.Character {
 
             var jmn = item.GetPap( "emote/jmn" );
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
+            var sit = item.GetPap( "emote/sit" );
+            var chairStart = item.GetPap( "event_base/event_base_chair_start" );
 
             var facePaths = item.Data.FaceOptions
                 .Select( id => (id, $"chara/human/{item.SkeletonId}/animation/f{id:D4}/resident/face.pap") )
@@ -70,10 +100,14 @@ namespace VfxEditor.Select.Tabs.Character {
             loaded = new SelectedPap {
                 General = general,
                 Poses = poses,
-                SitPoses = sitPoses,
+                GroundSitPoses = groundSitPoses,
+                ChairSitPoses = chairSitPoses,
+                OrnamentPoses = ornamentPoses,
                 FacePaths = facePaths,
                 Jmn = Dalamud.DataManager.FileExists( jmn ) ? jmn : null,
                 GroundStart = Dalamud.DataManager.FileExists( groundStart ) ? groundStart : null,
+                Sit = Dalamud.DataManager.FileExists( sit ) ? sit : null,
+                ChairStart = Dalamud.DataManager.FileExists( chairStart ) ? chairStart : null,
             };
         }
 
@@ -94,11 +128,28 @@ namespace VfxEditor.Select.Tabs.Character {
             if( ImGui.BeginTabItem( "Ground Sit" ) ) {
                 Dialog.DrawPaths( new Dictionary<string, string>() {
                     { "Ground Start", Loaded.GroundStart },
-                    { "Jmn", Loaded.Jmn },
+                    { "Ground Sit Default", Loaded.Jmn },
                 }, Selected.Name, SelectResultType.GameCharacter );
 
                 ImGui.Separator();
-                Dialog.DrawPaths( Loaded.SitPoses, Selected.Name, SelectResultType.GameCharacter );
+                Dialog.DrawPaths( Loaded.GroundSitPoses, Selected.Name, SelectResultType.GameCharacter );
+
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Chair Sit" ) ) {
+                Dialog.DrawPaths( new Dictionary<string, string>() {
+                    { "Chair Start", Loaded.ChairStart },
+                    { "Chair Sit Default", Loaded.Sit },
+                }, Selected.Name, SelectResultType.GameCharacter );
+
+                ImGui.Separator();
+                Dialog.DrawPaths( Loaded.ChairSitPoses, Selected.Name, SelectResultType.GameCharacter );
+
+                ImGui.EndTabItem();
+            }
+            if( ImGui.BeginTabItem( "Fashion Accessory" ) )
+            {
+                Dialog.DrawPaths( Loaded.OrnamentPoses, Selected.Name, SelectResultType.GameCharacter );
 
                 ImGui.EndTabItem();
             }

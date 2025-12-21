@@ -1,6 +1,6 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,6 +47,10 @@ namespace VfxEditor.Formats.ShpkFormat {
 
         private readonly List<ShpkNode> Nodes = [];
         private readonly List<ShpkAlias> Aliases = [];
+
+        private readonly ParsedUInt unknown3 = new( "Unknown3" );
+        private readonly ParsedUInt unknown4 = new( "Unknown4" );
+        private readonly ParsedUInt unknown5 = new( "Unknown5" );
 
         private readonly CommandDropdown<ShpkShader> VertexView;
         private readonly CommandDropdown<ShpkShader> PixelView;
@@ -101,6 +105,12 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numNode = reader.ReadUInt32();
             var numAlias = reader.ReadUInt32();
 
+            unknown3.Read( reader );
+            unknown4.Read( reader );
+            unknown5.Read( reader );
+
+            if( unknown3.Value != 0 || unknown4.Value != 0 || unknown5.Value != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unknown3.Value:X4} 0x{unknown4.Value:X4} 0x{unknown5.Value:X4}" );
+
             for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
             for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 
@@ -114,7 +124,6 @@ namespace VfxEditor.Formats.ShpkFormat {
                 }
                 reader.BaseStream.Position = defaultStart + materialParamsSize;
             }
-
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, ShaderFileType.Shpk ) );
@@ -146,15 +155,15 @@ namespace VfxEditor.Formats.ShpkFormat {
 
             MaterialParameterView = new( "Parameter", MaterialParameters, false, null, () => new( this ) );
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
-            ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ConstantView = new( "Constant", Constants, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            SamplerView = new( "Sampler", Samplers, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            TextureView = new( "Texture", Textures, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
+            ResourceView = new( "Resource", Resources, false, ( item, idx ) => item.GetText(), () => new( ShaderFileType.Shpk ) );
 
-            SystemKeyView = new( "System Key", SystemKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SceneKeyView = new( "Scene Key", SceneKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
-            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( ShpkKey item, int idx ) => item.GetText( idx ), () => new() );
+            SystemKeyView = new( "System Key", SystemKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            SceneKeyView = new( "Scene Key", SceneKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            MaterialKeyView = new( "Material Key", MaterialKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
+            SubViewKeyView = new( "Sub-View Key", SubViewKeys, false, ( item, idx ) => item.GetText( idx ), () => new() );
 
             NodeView = new( "Node", Nodes, null, () => new() );
             AliasView = new( "Alias", Aliases, false, null, () => new() );
@@ -201,6 +210,11 @@ namespace VfxEditor.Formats.ShpkFormat {
             writer.Write( Nodes.Count );
             writer.Write( Aliases.Count );
 
+            unknown3.Write( writer );
+            unknown4.Write( writer );
+            unknown5.Write( writer );
+
+
             var stringPositions = new List<(long, string)>();
             var shaderPositions = new List<(long, ShpkShader)>();
 
@@ -233,7 +247,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             Nodes.ForEach( x => x.Write( writer ) );
             Aliases.ForEach( x => x.Write( writer ) );
 
-            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsetsSHPK( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {

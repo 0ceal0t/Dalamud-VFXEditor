@@ -57,7 +57,7 @@ namespace VfxEditor.UldFormat.Timeline {
 
         public UldKeyGroup() {
             Type = new( Keyframes, "Type", size: 2 );
-            KeyframeView = new( "Keyframe", Keyframes, ( UldKeyframe item, int _ ) => item.GetText(), () => new( Type.Value ) );
+            KeyframeView = new( "Keyframe", Keyframes, ( item, _ ) => item.GetText(), () => new( Type.Value ) );
         }
 
         public UldKeyGroup( BinaryReader reader ) : this() {

@@ -1,5 +1,5 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Numerics;
 
 namespace VfxEditor.Formats.MtrlFormat.Stm {
@@ -11,13 +11,13 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public float Power = 0;
 
         public void Draw() {
-            ImGui.ColorEdit3( "##Diffuse", ref Diffuse, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+            ImGui.ColorEdit3( "##Diffuse", ref Diffuse, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
-            ImGui.ColorEdit3( "##Specular", ref Specular, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+            ImGui.ColorEdit3( "##Specular", ref Specular, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
-            ImGui.ColorEdit3( "##Emissive", ref Emissive, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRGB | ImGuiColorEditFlags.InputRGB | ImGuiColorEditFlags.NoTooltip );
+            ImGui.ColorEdit3( "##Emissive", ref Emissive, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             using var disabled = ImRaii.Disabled();
             ImGui.SameLine();

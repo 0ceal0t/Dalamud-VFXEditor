@@ -6,6 +6,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;
 
+        private static readonly int[] ValidSizes = [312, 300, 288, 276];
+
         public readonly List<AvfxEmitterItem> Items = [];
 
         public AvfxEmitterItemContainer( string name, bool isParticle, AvfxEmitter emitter ) : base( name ) {
@@ -14,7 +16,13 @@ namespace VfxEditor.AvfxFormat {
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
-            for( var i = 0; i < size / 312; i++ ) Items.Add( new AvfxEmitterItem( IsParticle, Emitter, false, reader ) );
+            foreach( var itemSize in ValidSizes ) {
+                if( ( float )size / itemSize == size / itemSize ) {
+                    for( var i = 0; i < size / itemSize; i++ ) Items.Add( new AvfxEmitterItem( IsParticle, Emitter, false, itemSize, reader ) );
+                    return;
+                }
+            }
+            Dalamud.Log( $"Size {size} cannot be parsed" );
         }
 
         protected override IEnumerable<AvfxBase> GetChildren() {

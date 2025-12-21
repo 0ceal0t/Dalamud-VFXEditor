@@ -1,5 +1,5 @@
 using Dalamud.Interface;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.AvfxFormat.Assign;
@@ -16,7 +16,7 @@ namespace VfxEditor.AvfxFormat {
                 Parsed.Icons.Add( new() {
                     Icon = () => FontAwesomeIcon.Trash,
                     Remove = true,
-                    Action = ( string value ) => CommandManager.Add( new AvfxAssignCommand( this, false ) )
+                    Action = value => CommandManager.Add( new AvfxAssignCommand( this, false ) )
                 } );
             }
             Pad = pad;

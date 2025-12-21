@@ -1,7 +1,7 @@
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
 using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;

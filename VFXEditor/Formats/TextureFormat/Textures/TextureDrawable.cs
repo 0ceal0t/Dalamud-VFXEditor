@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using TeximpNet;
 using VfxEditor.FileBrowser;
@@ -65,32 +65,32 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( ImGui.BeginPopup( "Edit" ) ) {
                 if( ResizeInput == null && GetPreview() != null ) ResizeInput = [GetPreview().Width, GetPreview().Height];
                 ImGui.SetNextItemWidth( 100f );
-                ImGui.InputInt2( "##Resize", ref ResizeInput[0] );
+                ImGui.InputInt( "##Resize", ResizeInput );
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                     ImGui.SameLine();
                     if( ImGui.Button( "Resize" ) ) {
-                        ApplyEdit( ( Surface surface ) => surface.Resize( ResizeInput[0], ResizeInput[1], ImageFilter.Box ) );
+                        ApplyEdit( surface => surface.Resize( ResizeInput[0], ResizeInput[1], ImageFilter.Box ) );
                     }
                 }
 
                 if( ImGui.Selectable( "Grayscale" ) ) {
-                    ApplyEdit( ( Surface surface ) => surface.ConvertTo( ImageConversion.ToGreyscale ) );
+                    ApplyEdit( surface => surface.ConvertTo( ImageConversion.ToGreyscale ) );
                 }
 
                 if( ImGui.Selectable( "Flip Horizontally" ) ) {
-                    ApplyEdit( ( Surface surface ) => surface.FlipHorizontally() );
+                    ApplyEdit( surface => surface.FlipHorizontally() );
                 }
 
                 if( ImGui.Selectable( "Flip Vertically" ) ) {
-                    ApplyEdit( ( Surface surface ) => surface.FlipVertically() );
+                    ApplyEdit( surface => surface.FlipVertically() );
                 }
 
                 if( ImGui.Selectable( "Rotate Left" ) ) {
-                    ApplyEdit( ( Surface surface ) => surface.Rotate( 90 ) );
+                    ApplyEdit( surface => surface.Rotate( 90 ) );
                 }
 
                 if( ImGui.Selectable( "Rotate Right" ) ) {
-                    ApplyEdit( ( Surface surface ) => surface.Rotate( -90 ) );
+                    ApplyEdit( surface => surface.Rotate( -90 ) );
                 }
 
                 ImGui.EndPopup();
@@ -135,7 +135,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.tex,.dds},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "Image files{.png,.atex,.tex,.dds},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     OnReplace( res );

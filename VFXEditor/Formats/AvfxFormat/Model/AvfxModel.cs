@@ -1,5 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,12 +21,14 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxEmitVertexes EmitVertexes = new();
         public readonly AvfxEmitVertexNumbers EmitVertexNumbers = new();
 
-        public readonly List<UiEmitVertex> CombinedEmitVertexes = [];
+        public readonly List<UiEmitVertex> AllEmitVertexes = [];
+        public readonly List<UiVertexNumber> AllVertexNumbers = [];
 
         private readonly List<AvfxBase> Parsed;
 
         private readonly UiNodeGraphView NodeView;
         private readonly CommandTable<UiEmitVertex> VertexTable;
+        private readonly CommandTable<UiVertexNumber> VertexNumberTable;
 
         private int Mode = ( int )RenderMode.Color;
         private bool Refresh = false;
@@ -43,31 +45,41 @@ namespace VfxEditor.AvfxFormat {
             NodeView = new( this );
             UvView = new UiModelUvView();
 
-            VertexTable = new( "Emit", true, true, CombinedEmitVertexes, [
-                ( "Order", ImGuiTableColumnFlags.None, -1 ),
+            VertexNumberTable = new( "Number", true, true, AllVertexNumbers, [
+                ( "Number", ImGuiTableColumnFlags.None, -1 )
+            ],
+            () => new( new() ), ( UiVertexNumber item, bool add ) => RefreshModelPreview() );
+
+            VertexTable = new( "Emit", true, true, AllEmitVertexes, [
                 ( "Position", ImGuiTableColumnFlags.None, -1 ),
                 ( "Normal", ImGuiTableColumnFlags.None, -1 ),
                 ( "Color", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new(), new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
+            () => new( this, new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
             ReadNested( reader, Parsed, size );
-            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count ) {
+            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count )
+            {
                 Dalamud.Error( $"Mismatched emit vertex counts {EmitVertexes.EmitVertexes.Count} {EmitVertexNumbers.VertexNumbers.Count}" );
             }
-            for( var i = 0; i < Math.Min( EmitVertexes.EmitVertexes.Count, EmitVertexNumbers.VertexNumbers.Count ); i++ ) {
-                CombinedEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i], EmitVertexNumbers.VertexNumbers[i] ) );
+            for( var i = 0; i < EmitVertexes.EmitVertexes.Count; i++ )
+            {
+                AllEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i] ) );
+            }
+            for( var i = 0; i < EmitVertexNumbers.VertexNumbers.Count; i++ )
+            {
+                AllVertexNumbers.Add( new UiVertexNumber( EmitVertexNumbers.VertexNumbers[i] ) );
             }
         }
 
         public override void WriteContents( BinaryWriter writer ) {
-            EmitVertexes.EmitVertexes.Clear();
-            EmitVertexes.EmitVertexes.AddRange( CombinedEmitVertexes.Select( x => x.Vertex ) );
-
             EmitVertexNumbers.VertexNumbers.Clear();
-            EmitVertexNumbers.VertexNumbers.AddRange( CombinedEmitVertexes.Select( x => x.Number ) );
+            EmitVertexNumbers.VertexNumbers.AddRange( AllVertexNumbers.Select( x => x.Number ) );
+
+            EmitVertexes.EmitVertexes.Clear();
+            EmitVertexes.EmitVertexes.AddRange( AllEmitVertexes.Select( x => x.Vertex ) );
 
             if( EmitVertexNumbers.VertexNumbers.Count > 0 ) {
                 EmitVertexNumbers.SetAssigned( true );
@@ -131,6 +143,10 @@ namespace VfxEditor.AvfxFormat {
                 if( tab ) UvView.Draw();
             }
 
+            using( var tab = ImRaii.TabItem( "Vertex Order" ) ) {
+                if( tab ) DrawVertexnumbers();
+            }
+
             using( var tab = ImRaii.TabItem( "Emitter Vertices" ) ) {
                 if( tab ) DrawEmitterVertices();
             }
@@ -149,6 +165,10 @@ namespace VfxEditor.AvfxFormat {
                 CheckRefresh();
                 Plugin.DirectXManager.ModelPreview.DrawInline();
             }
+        }
+
+        private void DrawVertexnumbers() {
+            VertexNumberTable.Draw();
         }
 
         public void OnSelect() {
@@ -207,7 +227,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ImportDialog() {
-            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( bool ok, string res ) => {
+            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
                 try {
                     if( GltfModel.ImportModel( res, out var newVertexes, out var newIndexes ) ) {
@@ -221,7 +241,7 @@ namespace VfxEditor.AvfxFormat {
         }
 
         private void ExportDialog() {
-            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( bool ok, string res ) => {
+            FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "model", "gltf", ( ok, res ) => {
                 if( !ok ) return;
                 GltfModel.ExportModel( this, res );
             } );

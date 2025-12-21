@@ -1,11 +1,12 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop;
+using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.Utils.ShaderUtils;
@@ -30,6 +31,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
         private readonly List<ShpkParameterInfo> Samplers = [];
         private readonly List<ShpkParameterInfo> Resources = [];
         private readonly List<ShpkParameterInfo> Textures = [];
+
+        private readonly ParsedUInt unknown1 = new( "Unknown1" );
 
         private readonly CommandSplitView<ShpkParameterInfo> ConstantView;
         private readonly CommandSplitView<ShpkParameterInfo> SamplerView;
@@ -60,11 +63,11 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             Type = type;
             IsV7 = isV7;
 
-            ConstantView = new( "Constant", Constants, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-            SamplerView = new( "Sampler", Samplers, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+            ConstantView = new( "Constant", Constants, false, ( item, idx ) => item.GetText(), () => new( type ) );
+            SamplerView = new( "Sampler", Samplers, false, ( item, idx ) => item.GetText(), () => new( type ) );
             if( HasResources ) {
-                ResourceView = new( "Resource", Resources, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
-                TextureView = new( "Texture", Textures, false, ( ShpkParameterInfo item, int idx ) => item.GetText(), () => new( type ) );
+                ResourceView = new( "Resource", Resources, false, ( item, idx ) => item.GetText(), () => new( type ) );
+                TextureView = new( "Texture", Textures, false, ( item, idx ) => item.GetText(), () => new( type ) );
             }
         }
 
@@ -80,6 +83,8 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 numRw = reader.ReadInt16();
                 numTextures = reader.ReadInt16();
             }
+            unknown1.Read( reader );
+            if( unknown1.Value != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unknown1.Value:X4}" );
 
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, Type ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, Type ) );
@@ -111,6 +116,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
                 writer.Write( ( short )Resources.Count );
                 writer.Write( ( short )Textures.Count );
             }
+            unknown1.Write( writer );
 
             Constants.ForEach( x => x.Write( writer, stringPositions ) );
             Samplers.ForEach( x => x.Write( writer, stringPositions ) );
@@ -166,7 +172,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
             if( ImGui.Button( "Export" ) ) {
-                FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( bool ok, string res ) => {
+                FileBrowserManager.SaveFileDialog( "Select a Save Location", $".{Extension}", "shader_" + Prefix, Extension, ( ok, res ) => {
                     if( !ok ) return;
                     File.WriteAllBytes( res, Data );
                 } );
@@ -174,7 +180,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
             ImGui.SameLine();
             if( ImGui.Button( "Replace" ) ) {
-                FileBrowserManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( bool ok, string res ) => {
+                FileBrowserManager.OpenFileDialog( "Select a File", DxVersion == DX.DX11 ? "Shader{.hlsl,." + Extension + "},.*" : $".{Extension},.*", ( ok, res ) => {
                     if( !ok ) return;
 
                     if( Path.GetExtension( res ) == ".hlsl" ) {

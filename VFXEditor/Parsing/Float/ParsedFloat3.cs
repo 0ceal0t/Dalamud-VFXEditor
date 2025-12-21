@@ -1,11 +1,11 @@
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFloat3 : ParsedSimpleBase<Vector3> {
-        public bool HighPrecision = false;
+        public bool HighPrecision = true;
 
         public ParsedFloat3( string name, Vector3 value ) : base( name, value ) { }
 
@@ -28,7 +28,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputFloat3( Name, ref value, HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) Update( value );
+            if( ImGui.InputFloat3( Name, ref value, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) Update( value );
         }
     }
 }
