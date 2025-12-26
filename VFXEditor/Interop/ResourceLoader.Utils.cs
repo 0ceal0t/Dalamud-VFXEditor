@@ -59,13 +59,13 @@ namespace VfxEditor.Interop {
 
             switch( CurrentRedrawState ) {
                 case RedrawState.Start:
-                    gameObject->RenderFlags |= INVIS_FLAG;
+                    gameObject->RenderFlags |= (VisibilityFlags) INVIS_FLAG;
                     CurrentRedrawState = RedrawState.Invisible;
                     WaitFrames = 15;
                     break;
                 case RedrawState.Invisible:
                     if( WaitFrames == 0 ) {
-                        gameObject->RenderFlags &= ~INVIS_FLAG;
+                        gameObject->RenderFlags &= ~( VisibilityFlags )INVIS_FLAG;
                         CurrentRedrawState = RedrawState.Visible;
                     }
                     else WaitFrames--;

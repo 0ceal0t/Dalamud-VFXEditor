@@ -1,3 +1,5 @@
+using Cyotek.Drawing.BitmapFont;
+using Google.FlatBuffers;
 using Lumina.Excel;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,8 +7,10 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Data.Excel {
     [Sheet( "HairMakeType" )]
-    public struct HairMakeType( uint row ) : IExcelRow<HairMakeType> {
+    public struct HairMakeType( ExcelPage page, uint offset, uint row ) : IExcelRow<HairMakeType> {
         public readonly uint RowId => row;
+        public ExcelPage ExcelPage => page;
+        public uint RowOffset => offset;
 
         // Properties
 
@@ -20,6 +24,10 @@ namespace VfxEditor.Data.Excel {
         public List<RowRef<CharaMakeCustomize>> Facepaints { get; set; }
 
         // Build sheet
+
+        static HairMakeType IExcelRow<HairMakeType>.Create( ExcelPage page, uint offset, uint row ) => new( page, offset, row );
+
+        /*
 
         static HairMakeType IExcelRow<HairMakeType>.Create( ExcelPage page, uint offset, uint row ) {
             var hairStartIndex = page.ReadColumn<uint>( 66, offset );
@@ -36,5 +44,7 @@ namespace VfxEditor.Data.Excel {
             for( var i = start; i < start + length; i++ )
                 yield return new RowRef<CharaMakeCustomize>( page.Module, i, page.Language );
         }
+
+        */
     }
 }
