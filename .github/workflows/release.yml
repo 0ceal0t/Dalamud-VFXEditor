@@ -16,8 +16,8 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
-              '10.x.x'
-              '9.x.x'
+              10.x.x
+              9.x.x
       - name: Restore dependencies
         run: dotnet restore
       - name: Download Dalamud
