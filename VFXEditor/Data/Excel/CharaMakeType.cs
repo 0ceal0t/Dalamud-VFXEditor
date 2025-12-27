@@ -9,7 +9,7 @@ using System.Linq;
 namespace VfxEditor.Data.Excel;
 
 [Sheet( "CharaMakeType", 0x50CDBEEF )]
-public unsafe struct BrioCharaMakeType( ExcelPage page, uint offset, uint row ) : IExcelRow<BrioCharaMakeType> {
+public unsafe struct CharaMakeType( ExcelPage page, uint offset, uint row ) : IExcelRow<CharaMakeType> {
     public const int MenuCount = 28;
     public const int SubMenuParamCount = 100;
     public const int SubMenuGraphicCount = 10;
@@ -79,16 +79,16 @@ public unsafe struct BrioCharaMakeType( ExcelPage page, uint offset, uint row ) 
         public readonly ulong SubWeapon => page.ReadUInt64( offset + 48 );
     }
 
-    static BrioCharaMakeType IExcelRow<BrioCharaMakeType>.Create( ExcelPage page, uint offset, uint row ) =>
+    static CharaMakeType IExcelRow<CharaMakeType>.Create( ExcelPage page, uint offset, uint row ) =>
         new( page, offset, row );
 
     public static MenuCollection BuildMenus( uint row ) {
         var menus = new List<Menu>();
 
-        var CharaMakeTypes = Dalamud.DataManager.GetExcelSheet<BrioCharaMakeType>( name: "CharaMakeType" ).GetRow( row );
+        var charaMakeTypes = Dalamud.DataManager.GetExcelSheet<CharaMakeType>( name: "CharaMakeType" ).GetRow( row );
 
-        for( uint i = 0; i < CharaMakeTypes.CharaMakeStruct.Count; ++i ) {
-            var firstChar = CharaMakeTypes.CharaMakeStruct[( int )i];
+        for( uint i = 0; i < charaMakeTypes.CharaMakeStruct.Count; ++i ) {
+            var firstChar = charaMakeTypes.CharaMakeStruct[( int )i];
 
             var title = firstChar.Menu.ValueNullable?.Text.ExtractText() ?? "Unknown";
             var menuType = ( MenuType )firstChar.SubMenuType;
@@ -103,7 +103,7 @@ public unsafe struct BrioCharaMakeType( ExcelPage page, uint offset, uint row ) 
             var FacialFeatures = new int[FaceCount, FaceFeatureCount];
 
             for( var y = 0; y < FaceCount; ++y ) {
-                var faceOption = CharaMakeTypes.FacialFeatureOption[y];
+                var faceOption = charaMakeTypes.FacialFeatureOption[y];
                 for( var x = 0; x < faceOption.Options.Length; ++x ) {
                     FacialFeatures[y, x] = faceOption.Options[x];
                 }
@@ -118,11 +118,11 @@ public unsafe struct BrioCharaMakeType( ExcelPage page, uint offset, uint row ) 
                 subParams[x] = ( int )firstChar.SubMenuParam[x];
             }
 
-            menus.Add( new Menu( i, CharaMakeTypes.RowId, title,
-                CharaMakeTypes.Race.IsValid ? CharaMakeTypes.Race.Value.RowId : 0,
-                CharaMakeTypes.Tribe.IsValid ? CharaMakeTypes.Tribe.Value.RowId : 0,
-                CharaMakeTypes.Gender, menuType, subMenuMask, customizeIndex,
-                initialValue, subParams, subGraphics, [.. CharaMakeTypes.VoiceStruct], FacialFeatures ) );
+            menus.Add( new Menu( i, charaMakeTypes.RowId, title,
+                charaMakeTypes.Race.IsValid ? charaMakeTypes.Race.Value.RowId : 0,
+                charaMakeTypes.Tribe.IsValid ? charaMakeTypes.Tribe.Value.RowId : 0,
+                charaMakeTypes.Gender, menuType, subMenuMask, customizeIndex,
+                initialValue, subParams, subGraphics, [.. charaMakeTypes.VoiceStruct], FacialFeatures ) );
 
 
         }

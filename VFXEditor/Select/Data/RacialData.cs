@@ -22,7 +22,8 @@ namespace VfxEditor.Select.Data {
             Name = name;
             Id = id;
 
-            var data = BrioCharaMakeType.BuildMenus( row );
+            var data = CharaMakeType.BuildMenus( row );
+            var charaRow = Dalamud.DataManager.GetExcelSheet<CharaMakeType>( name: "CharaMakeType" ).GetRow( row );
 
             var faceTypes = data.GetMenuForCustomize( CustomizeIndex.FaceType );
             if(faceTypes != null ) {
@@ -34,10 +35,10 @@ namespace VfxEditor.Select.Data {
                 foreach( var (param, idx) in featureTypes.SubParams.WithIndex() ) FeatureToIcon[idx + 1] = ( uint )param;
             }
 
-
-
-            /*foreach( var hair in data.FeatureMake.Value.HairStyles ) HairToIcon[hair.Value.FeatureId] = hair.Value.Icon;
-*/
+            var hairStyles = HairMakeType.GetHairStyles( ( uint )charaRow.Gender , charaRow.Race.RowId, charaRow.Tribe.RowId );
+            if( hairStyles != null ) {
+                foreach( var hair in  hairStyles ) HairToIcon[hair.FeatureID] = hair.Icon;
+            }
 
             foreach( var line in File.ReadAllLines( SelectDataUtils.CommonRacialPath ) ) {
                 var split = line.Split( "/" );
