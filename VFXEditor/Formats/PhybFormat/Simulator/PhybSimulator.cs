@@ -147,6 +147,16 @@ namespace VfxEditor.PhybFormat.Simulator {
         public void Draw() {
             using var _ = ImRaii.PushId( "Simulator" );
 
+            if (ImGui.Button("Copy Simulator Data")) PhybSimulatorClipboard.CopySimulator(this);
+            ImGui.SameLine();
+            if (ImGui.Button("Paste Simulator Data") && PhybSimulatorClipboard.HasCopiedData()) PhybSimulatorClipboard.PasteSimulator(this);
+            ImGui.SameLine();
+            if (!PhybSimulatorClipboard.HasCopiedData()) {
+                ImGui.TextColored(new System.Numerics.Vector4(0.5f, 0.5f, 0.5f, 1.0f), "(Copy simulator data first)");
+            } else {
+                if (ImGui.Button("Clear Clipboard")) PhybSimulatorClipboard.Clear();
+            }
+
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;
 
