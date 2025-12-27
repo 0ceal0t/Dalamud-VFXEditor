@@ -37,7 +37,7 @@ namespace VfxEditor.Select.Tabs.BgmQuest {
         }
 
         public static BgmSituationStruct GetBgmSituation( uint bgmId ) {
-            if( bgmId < 1000 ) {
+            if( bgmId < 1000 || bgmId > 20000 ) {
                 return new BgmSituationStruct {
                     Path = Dalamud.DataManager.GetExcelSheet<BGM>().GetRow( bgmId ).File.ToString(),
                     IsSituation = false
