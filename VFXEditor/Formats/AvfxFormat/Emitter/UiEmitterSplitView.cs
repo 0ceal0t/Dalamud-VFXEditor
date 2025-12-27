@@ -1,4 +1,7 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace VfxEditor.AvfxFormat {
     public class UiEmitterSplitView : AvfxItemSplitView<AvfxEmitterItem> {
@@ -18,6 +21,24 @@ namespace VfxEditor.AvfxFormat {
         public override void Enable( AvfxEmitterItem item ) {
             if( IsParticle ) item.ParticleSelect.Enable();
             else item.EmitterSelect.Enable();
+        }
+
+        protected override bool DrawLeftItem( AvfxEmitterItem item, int idx ) {
+            using var _ = ImRaii.PushId( idx );
+
+            using( var style = ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new Vector2(0f, 0f))) {
+                var enabled = item.Enabled.Value == true;
+                if( ImGui.Checkbox( "##Enable", ref enabled ) ) {
+                    item.Enabled.Value = enabled;
+                }
+                ImGui.SameLine();
+            }
+
+            if( ImGui.Selectable( item.GetText(), Selected == item ) ) {
+                OnSelect( item );
+                Selected = item;
+            }
+            return false;
         }
 
         public override AvfxEmitterItem CreateNewAvfx() => new( IsParticle, Emitter, true );
