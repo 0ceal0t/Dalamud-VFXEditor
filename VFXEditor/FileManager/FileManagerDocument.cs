@@ -173,7 +173,7 @@ namespace VfxEditor.FileManager {
             ReplaceTextInput = "";
 
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
-            if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
+            File?.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }
 

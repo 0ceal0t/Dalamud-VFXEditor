@@ -25,8 +25,8 @@ namespace VfxEditor.FileBrowser.FolderFiles {
         private static Dictionary<string, (FontAwesomeIcon, FilePickerFileColor)> ICON_MAP;
 
         public FilePickerFileType Type;
-        public string FilePath;
-        public string FileName;
+        public string? FilePath;
+        public string? FileName;
         public string Ext = "";
         public long FileSize = 0;
         public string FormattedFileSize = "";

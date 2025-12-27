@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using VfxEditor.Structs.Animation;
+using VfxEditor.Interop.Structs.Animation;
 
 namespace VfxEditor.Spawn {
     public static unsafe class TmbSpawn {

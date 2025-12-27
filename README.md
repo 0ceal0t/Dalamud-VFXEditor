@@ -75,8 +75,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ```
 
 ## TODO
-- [ ] Display multiple axes at the same time in curve editor
-- [ ] Use job codes in search bar
+- [ ] Fix 7.4 `.mdl` face stuff
+- [ ] Fix DT material stuff
 - [ ] Add particle/emitter toggles
 
 - [ ] Add gizmo to `.sklb` bones
