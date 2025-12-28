@@ -78,6 +78,7 @@ ui/uld/CabinetStore.uld
 ui/uld/CabinetWithdraw.uld
 ui/uld/CardTripleTriad.uld
 ui/uld/CastBar.uld
+ui/uld/castbarenemy.uld
 ui/uld/Casting.uld
 ui/uld/Character.uld
 ui/uld/CharacterBestEquipment.uld
@@ -194,6 +195,7 @@ ui/uld/configcharacterchatlogdetail_ps4.uld
 ui/uld/ConfigCharacterChatLogGeneral.uld
 ui/uld/configcharacterchatloggeneral_ps3.uld
 ui/uld/configcharacterchatloggeneral_ps4.uld
+ui/uld/configcharacterchatlogminitalk.uld
 ui/uld/ConfigCharacterChatLogNameSetting.uld
 ui/uld/ConfigCharacterChatLogRingTone.uld
 ui/uld/configcharacterchatlogringtone_ps3.uld
@@ -283,6 +285,7 @@ ui/uld/ContentsReplayReadyCheckAlliance.uld
 ui/uld/ContentsReplaySetting.uld
 ui/uld/ContextIconMenu.uld
 ui/uld/ContextMenu.uld
+ui/uld/contextmenucheck.uld
 ui/uld/ContextMenuTitle.uld
 ui/uld/convertimage.uld
 ui/uld/convertimage_gcarmy_face.uld
@@ -308,6 +311,7 @@ ui/uld/CutSceneDetail.uld
 ui/uld/DawnParty.uld
 ui/uld/DawnPartyHelp.uld
 ui/uld/debug_launcher.uld
+ui/uld/deepdungeonharditem.uld
 ui/uld/DeepDungeonInformation.uld
 ui/uld/DeepDungeonInspect.uld
 ui/uld/DeepDungeonNaviMap.uld
@@ -342,6 +346,7 @@ ui/uld/EurekaLogosShardSynthesis.uld
 ui/uld/EurekaWeaponUpgrade.uld
 ui/uld/EurekaWeaponUpgradeDialogue.uld
 ui/uld/EventSkip.uld
+ui/uld/eventtutorial.uld
 ui/uld/ex_hotbar_editor.uld
 ui/uld/ExcellentTrade.uld
 ui/uld/Exp.uld
@@ -467,6 +472,7 @@ ui/uld/GroupPoseStampImage.uld
 ui/uld/GsScreenText.uld
 ui/uld/GuildLeve.uld
 ui/uld/GuildLeveDifficulty.uld
+ui/uld/halloweennpcselect.uld
 ui/uld/Hammer.uld
 ui/uld/HeavensturnDescription.uld
 ui/uld/HelpWindow.uld
@@ -684,6 +690,7 @@ ui/uld/MiniDungeonResult.uld
 ui/uld/MinionNoteBook.uld
 ui/uld/MinionNotebookYKW.uld
 ui/uld/MiniTalk.uld
+ui/uld/minitalkplayer.uld
 ui/uld/MiragePrism.uld
 ui/uld/mirageprismarchiveitem.uld
 ui/uld/MiragePrismBox.uld
@@ -736,6 +743,7 @@ ui/uld/mkdcontentsinfo.uld
 ui/uld/mkdinfo.uld
 ui/uld/mkdlorebook.uld
 ui/uld/mkdlorebookdiscovery.uld
+ui/uld/mkdrelicgrowth.uld
 ui/uld/mkdsupportjob.uld
 ui/uld/mkdsupportjoblist.uld
 ui/uld/mkdtowerentry.uld
@@ -858,6 +866,8 @@ ui/uld/PVPRankEmblem3.uld
 ui/uld/PVPRankEmblem4.uld
 ui/uld/PVPRankEmblem5.uld
 ui/uld/PvPRankEmblem6.uld
+ui/uld/pvprankemblem7.uld
+ui/uld/pvprankemblem8.uld
 ui/uld/PVPScreenInformationHotBar.uld
 ui/uld/PvpSimulation.uld
 ui/uld/PVPSimulationAlliance.uld
@@ -883,6 +893,8 @@ ui/uld/QTEScreenInfo.uld
 ui/uld/QteStreak.uld
 ui/uld/QuestRedoUI.uld
 ui/uld/QuestRedoUIHUD.uld
+ui/uld/quickpanel.uld
+ui/uld/quickpanelsetting.uld
 ui/uld/RaceChocoboConfirm.uld
 ui/uld/RaceChocoboItemBox.uld
 ui/uld/RaceChocoboParameter.uld
@@ -896,6 +908,7 @@ ui/uld/RecipeMaterialList.uld
 ui/uld/RecipeNoteBook.uld
 ui/uld/RecipeNoteBookFilterSetting.uld
 ui/uld/RecipeNotebookInspectionList.uld
+ui/uld/recipenotebookpracticesetting.uld
 ui/uld/RecipeProductList.uld
 ui/uld/RecipeTree.uld
 ui/uld/RecommendList.uld
@@ -912,6 +925,7 @@ ui/uld/RelicNoteBook.uld
 ui/uld/RelicSphereScroll.uld
 ui/uld/RelicSphereUpgrade.uld
 ui/uld/Repair.uld
+ui/uld/repairauto.uld
 ui/uld/RepairRequest.uld
 ui/uld/Request.uld
 ui/uld/ResidentDragTarget.uld
@@ -1062,6 +1076,17 @@ ui/uld/ToDoContents.uld
 ui/uld/ToDoCruising.uld
 ui/uld/ToDoList.uld
 ui/uld/ToDoQuest.uld
+ui/uld/tofuboardedit.uld
+ui/uld/tofuboardeditobjectedit.uld
+ui/uld/tofuboardeditobjectlayer.uld
+ui/uld/tofuboardlist.uld
+ui/uld/tofuboardpreview.uld
+ui/uld/tofuboardsaveconfirm.uld
+ui/uld/tofucodeexport.uld
+ui/uld/tofucodeimport.uld
+ui/uld/tofuobjectlist.uld
+ui/uld/tofupresetlist.uld
+ui/uld/tofustylesetting.uld
 ui/uld/ToolTipS.uld
 ui/uld/TourismMenu.uld
 ui/uld/Trade.uld
@@ -1109,13 +1134,16 @@ ui/uld/Wedding.uld
 ui/uld/WeddingNotification.uld
 ui/uld/WeeklyBingo.uld
 ui/uld/WeeklyBingoBonusInfo.uld
+ui/uld/weeklybingocontentslist.uld
 ui/uld/WeeklyBingoResult.uld
 ui/uld/WeeklyPuzzle.uld
 ui/uld/WeeklyPuzzleResult.uld
 ui/uld/wksachievement.uld
+ui/uld/wkschaintext.uld
 ui/uld/wkscontributordetail.uld
 ui/uld/wkscontributorlist.uld
 ui/uld/wkscontributorposeselect.uld
+ui/uld/wksenterinfo.uld
 ui/uld/wkshistoryboard.uld
 ui/uld/wkshud.uld
 ui/uld/wksinformationhud.uld
@@ -1124,11 +1152,13 @@ ui/uld/wksmechaentryaccept.uld
 ui/uld/wksmechaentryscreen.uld
 ui/uld/wksmission.uld
 ui/uld/wksmissionaccept.uld
+ui/uld/wksplanetselect.uld
 ui/uld/wkspouch.uld
 ui/uld/wksrecipenotebook.uld
 ui/uld/wksreward.uld
 ui/uld/wksroulette.uld
 ui/uld/wksscorelist.uld
+ui/uld/wkssetting.uld
 ui/uld/wkstoolcustomize.uld
 ui/uld/WorkshopSupply.uld
 ui/uld/WorkshopSupply2.uld

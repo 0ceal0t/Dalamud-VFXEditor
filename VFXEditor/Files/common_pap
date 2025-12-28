@@ -103,11 +103,17 @@ chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_chrhdb84120.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_chrhdb85110.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_jobrpm07020.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kinact06140.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_kinact06290.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_qstarc01040.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_qstarc03060_2.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_qstarc03060_3.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_cut_pc_qstarc03060_4.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_d1001_dance.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_dark_greeting.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_dash2_loop.pap
@@ -123,6 +129,7 @@ chara/human/c0101/animation/a0001/bt_common/event/event_diggy_down_knee.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_dinner_party_eat.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_disappear.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_disappoint.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_diving_pool.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_down_front.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_drink_diggy.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_drink_noitem.pap
@@ -202,6 +209,7 @@ chara/human/c0101/animation/a0001/bt_common/event/event_light_attack_ax.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_light_pierces.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_light_put_up.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -312,6 +320,7 @@ chara/human/c0101/animation/a0001/bt_common/event/event_salute_emp.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_sigh2.pap
@@ -343,6 +352,7 @@ chara/human/c0101/animation/a0001/bt_common/event/event_surprised.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_swalk_loop.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_swalk_loop_weak.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_swalk_loop_weak2.pap
+chara/human/c0101/animation/a0001/bt_common/event/event_swim_rise.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_take.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_take_bothhand.pap
 chara/human/c0101/animation/a0001/bt_common/event/event_take_care.pap
@@ -494,6 +504,7 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_listen.p
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_read.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_read_eat.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_read_letter.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_reclining2.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_rest.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_sake_drunk.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_sauna.pap
@@ -511,6 +522,7 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_table_th
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_talk.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_think1.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_think2.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chair_tropical_juice.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chakram_dance.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chaser.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_chef.pap
@@ -522,11 +534,14 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_coach.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_colosseum_come_on.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_colosseum_laught.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_cooking_spoon.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_cooling_machine1.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_cooling_machine1_st.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_counter_listen_l.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_counter_talk_r.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_dagger_touch.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_deep_breath.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_desk_memo.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_drill_machine_check.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_drink.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_drink_tea.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_driving_rover.pap
@@ -540,6 +555,7 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_eat_show_off.p
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_eat_sushi.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_eat_tacos.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_ending_action.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_ether_vacuum_check.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fast_squat.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fighter_spot.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fish_call.pap
@@ -573,6 +589,7 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fly_mount_m077
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0783_run.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0907_id0.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0930_id0.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0949_run.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_frightened.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_frightened2.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_frightened2_high.pap
@@ -683,6 +700,8 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0547_id
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0686_id0.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0686_run.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0873_id0.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0949_jump.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mount_m0949_run.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_muse.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_muse2.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_mysterious_talk.pap
@@ -861,6 +880,7 @@ chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wed_id0.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_b.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_f.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_welding.pap
+chara/human/c0101/animation/a0001/bt_common/event_base/event_base_welding_low.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wield_hand_axe.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wipe_desk.pap
 chara/human/c0101/animation/a0001/bt_common/event_base/event_base_wipe_glass.pap
@@ -1007,6 +1027,7 @@ chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp192.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp193.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp194.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp195.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp196.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp197.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp199.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp200.pap
@@ -1020,6 +1041,7 @@ chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp208.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp209.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp210.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp211.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp212.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp213.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp214.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp215.pap
@@ -1033,6 +1055,25 @@ chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp223.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp224.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp227.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp228.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp230_end.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp230_loop.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp230_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp231_end.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp231_loop.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp231_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp237.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp238.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp239.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp240.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp241.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp252_loop.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp252_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp253_loop.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp253_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp254_loop.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp254_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp255_start.pap
+chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp256.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp_acting01_loop.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp_acting02_loop.pap
 chara/human/c0101/animation/a0001/bt_common/human_sp/c0101/human_sp_acting03_loop.pap
@@ -1052,7 +1093,10 @@ chara/human/c0101/animation/a0001/bt_common/human_sp/human_sp_zns_event.pap
 chara/human/c0101/animation/a0001/bt_common/idle_sp/battle_dead_1.pap
 chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_1.pap
 chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_2.pap
+chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_3.pap
 chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_4.pap
+chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_5.pap
+chara/human/c0101/animation/a0001/bt_common/idle_sp/idle_sp_6.pap
 chara/human/c0101/animation/a0001/bt_common/music/harp01/a02.pap
 chara/human/c0101/animation/a0001/bt_common/music/harp01/a03.pap
 chara/human/c0101/animation/a0001/bt_common/music/harp01/a04.pap
@@ -1153,6 +1197,13 @@ chara/human/c0101/animation/a0001/bt_common/normal/decifer_start.pap
 chara/human/c0101/animation/a0001/bt_common/normal/event_action_end.pap
 chara/human/c0101/animation/a0001/bt_common/normal/event_action_loop.pap
 chara/human/c0101/animation/a0001/bt_common/normal/event_action_start.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks11_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks19_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks1_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks2_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks3_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks5_end.pap
+chara/human/c0101/animation/a0001/bt_common/normal/event_action_wks6_end.pap
 chara/human/c0101/animation/a0001/bt_common/normal/farm_care.pap
 chara/human/c0101/animation/a0001/bt_common/normal/farm_harvest.pap
 chara/human/c0101/animation/a0001/bt_common/normal/farm_manure.pap
@@ -1188,6 +1239,7 @@ chara/human/c0101/animation/a0001/bt_common/normal/item_sp02_mji.pap
 chara/human/c0101/animation/a0001/bt_common/normal/item_sp02_mji02.pap
 chara/human/c0101/animation/a0001/bt_common/normal/item_sp02_mji03.pap
 chara/human/c0101/animation/a0001/bt_common/normal/item_sp02_mji04.pap
+chara/human/c0101/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0101/animation/a0001/bt_common/normal/item_start.pap
 chara/human/c0101/animation/a0001/bt_common/normal/katagami_action.pap
 chara/human/c0101/animation/a0001/bt_common/normal/lookaction_end.pap
@@ -1454,6 +1506,18 @@ chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt055.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt056.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt057.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt058.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt059.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt060.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt061.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt062.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt063.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt064.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt065.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt069_end.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt069_loop.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt069_start.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt070.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_cnt075.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_eat_halloween.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_end.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_loop.pap
@@ -1489,6 +1553,7 @@ chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/shining.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/skydiving_blow.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/skydiving_blow_loop.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/skydiving_ded_loop.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/skydiving_hover_loop.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/skydiving_loop.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/sld_def.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/sld_def_lp.pap
@@ -1508,18 +1573,24 @@ chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wing_fly_end.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wing_fly_loop.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wing_fly_start.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks002.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks003.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks004.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks005.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks007.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks008.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks011.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks012.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks013.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks014.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks015.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks016.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks017.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks018.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks019.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks020.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks021.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks022.pap
+chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wks023.pap
 chara/human/c0101/animation/a0001/bt_common/pc_contentsaction/wslider_loop.pap
 chara/human/c0101/animation/a0007/bt_common/human_sp/c0101/human_sp025.pap
 chara/human/c0101/animation/a0007/bt_common/human_sp/c0101/human_sp026.pap
@@ -1696,6 +1767,7 @@ chara/human/c0104/animation/a0001/bt_common/event/event_link.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_look_back_r.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_look_l.pap
+chara/human/c0104/animation/a0001/bt_common/event/event_look_r.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_move_run.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_move_run_end.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_move_run_end_l.pap
@@ -1736,6 +1808,7 @@ chara/human/c0104/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_shocked_spit.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_sigh2.pap
+chara/human/c0104/animation/a0001/bt_common/event/event_sigh_little.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_sleep_bed.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_smile.pap
 chara/human/c0104/animation/a0001/bt_common/event/event_spirit.pap
@@ -1812,6 +1885,7 @@ chara/human/c0104/animation/a0001/bt_common/event_base/event_base_eat_riceball.p
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_farmer_check.pap
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_feeding.pap
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_feeding_punuty.pap
+chara/human/c0104/animation/a0001/bt_common/event_base/event_base_fighter.pap
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_get_on_handrail.pap
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_gird_up.pap
 chara/human/c0104/animation/a0001/bt_common/event_base/event_base_ground_cry.pap
@@ -1909,6 +1983,9 @@ chara/human/c0201/animation/a0001/bt_common/event/event_come_little.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_cry.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_benchm00720_2.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_dark_greeting.pap
@@ -1956,6 +2033,7 @@ chara/human/c0201/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -2001,6 +2079,7 @@ chara/human/c0201/animation/a0001/bt_common/event/event_pick_up.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_point_finger.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_pose_id2.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_pose_id2_talk1.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_pose_id2_talk2.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_pose_id3.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_pray_stand.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_raising_hand.pap
@@ -2012,6 +2091,7 @@ chara/human/c0201/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_sigh2.pap
@@ -2027,6 +2107,7 @@ chara/human/c0201/animation/a0001/bt_common/event/event_spirit3.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_srun_loop.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_stand_damage.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_step_forward_end.pap
+chara/human/c0201/animation/a0001/bt_common/event/event_step_forward_end_talk01.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_suffering.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_surprised.pap
 chara/human/c0201/animation/a0001/bt_common/event/event_swalk_loop.pap
@@ -2086,6 +2167,7 @@ chara/human/c0201/animation/a0001/bt_common/event_base/event_base_carry_up_cloth
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_carry_up_one_hand.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_drink_tea.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_drink_tumbler.pap
+chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_eat_bread_yucky.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_end.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
@@ -2121,6 +2203,7 @@ chara/human/c0201/animation/a0001/bt_common/event_base/event_base_ground_rest2.p
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_ground_start.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_hair_shop.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_hand_cold.pap
+chara/human/c0201/animation/a0001/bt_common/event_base/event_base_hotdrink.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_idle1.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_idle2.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_idle3.pap
@@ -2157,6 +2240,7 @@ chara/human/c0201/animation/a0001/bt_common/event_base/event_base_sit_couple2.pa
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_sleep.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_basket.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_drink_tumbler.pap
+chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_eat_bread_yucky.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_memo.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_memo_lookup.pap
 chara/human/c0201/animation/a0001/bt_common/event_base/event_base_stand_memo_up_brush.pap
@@ -2207,6 +2291,7 @@ chara/human/c0201/animation/a0001/bt_common/human_sp/c0201/human_sp044.pap
 chara/human/c0201/animation/a0001/bt_common/human_sp/c0201/human_sp045.pap
 chara/human/c0201/animation/a0001/bt_common/human_sp/c0201/human_sp051.pap
 chara/human/c0201/animation/a0001/bt_common/human_sp/c0201/human_sp052.pap
+chara/human/c0201/animation/a0001/bt_common/human_sp/c0201/human_sp053.pap
 chara/human/c0201/animation/a0001/bt_common/human_sp/human_sp_zns_event.pap
 chara/human/c0201/animation/a0001/bt_common/idle_sp/idle_sp_1.pap
 chara/human/c0201/animation/a0001/bt_common/idle_sp/idle_sp_2.pap
@@ -2222,6 +2307,7 @@ chara/human/c0201/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c0201/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c0201/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c0201/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c0201/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0201/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c0201/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c0201/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -2415,6 +2501,7 @@ chara/human/c0201/animation/a0146/bt_common/event/event_greeting.pap
 chara/human/c0201/animation/a0146/bt_common/event/event_look_around.pap
 chara/human/c0201/animation/a0146/bt_common/event/event_talk_bothhand.pap
 chara/human/c0201/animation/a0146/bt_common/event/event_talk_onehand.pap
+chara/human/c0201/animation/a0146/bt_common/event_base/event_base_lie1.pap
 chara/human/c0201/animation/a0146/bt_common/event_base/event_base_waiter.pap
 chara/human/c0201/animation/a0146/bt_common/human_sp/c0201/human_sp046.pap
 chara/human/c0201/animation/a0146/bt_common/human_sp/c0201/human_sp048.pap
@@ -2422,6 +2509,7 @@ chara/human/c0201/animation/a0146/bt_common/human_sp/c0201/human_sp049.pap
 chara/human/c0201/animation/a0146/bt_common/human_sp/human_sp_a_loop.pap
 chara/human/c0201/animation/a0146/bt_common/human_sp/human_sp_a_start.pap
 chara/human/c0201/animation/a0154/bt_common/event/event_talk1.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_arms.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_chair_hand_chest.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_chair_talk.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_chair_talk_onehand.pap
@@ -2429,22 +2517,33 @@ chara/human/c0201/animation/a0155/bt_common/event/event_gird_up.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_give.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_hand_chest.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_holdfist2.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_item.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_look_back_r_turn.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_mwalk_end.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_mwalk_start.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_run_end.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_run_end_l.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_run_end_r.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_run_start.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_run_start_bl.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_run_start_l.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_srun_end.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_srun_start.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_swalk_end.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_swalk_start.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_end.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_end_r.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_start.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_start_bl.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_start_br.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_start_l.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_move_walk_start_r.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_perceive.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_smile.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_suffering.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_surprised.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_take_look.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_talk1.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_talk2.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_talk3.pap
@@ -2455,15 +2554,19 @@ chara/human/c0201/animation/a0155/bt_common/event/event_talk_forefinger.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_talk_onehand.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_think.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_think_pc.pap
+chara/human/c0201/animation/a0155/bt_common/event/event_turn_bl.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_turn_br.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_turn_l.pap
 chara/human/c0201/animation/a0155/bt_common/event/event_turn_r.pap
 chara/human/c0201/animation/a0155/bt_common/event_base/event_base_ground_rest.pap
 chara/human/c0201/animation/a0155/bt_common/event_base/event_base_id5.pap
 chara/human/c0201/animation/a0155/bt_common/event_base/event_base_idle2.pap
+chara/human/c0201/animation/a0155/bt_common/event_base/event_base_kneel_up.pap
+chara/human/c0201/animation/a0155/bt_common/event_base/event_base_look_around_little.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_arms.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_arms_talk.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_hand_chest.pap
+chara/human/c0301/animation/a0001/bt_common/event/event_chair_id1_talk1.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_id2_talk1.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_id3_talk1.pap
 chara/human/c0301/animation/a0001/bt_common/event/event_chair_id3_talk2.pap
@@ -2495,6 +2598,7 @@ chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_cardgame
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_drink_mug.pap
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_eat_delicious.pap
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_end.pap
+chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_joy_listen.pap
 chara/human/c0301/animation/a0001/bt_common/event_base/event_base_chair_sit_op.pap
@@ -2632,6 +2736,7 @@ chara/human/c0401/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0401/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -2686,6 +2791,7 @@ chara/human/c0401/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0401/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0401/animation/a0001/bt_common/event/event_sigh2.pap
@@ -2792,6 +2898,7 @@ chara/human/c0401/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c0401/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c0401/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c0401/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c0401/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0401/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c0401/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c0401/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -2835,6 +2942,9 @@ chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_aktkmg11520.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_aktkml10610.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_benchm00720_2.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_dash2_loop.pap
@@ -2881,6 +2991,7 @@ chara/human/c0501/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -2937,6 +3048,7 @@ chara/human/c0501/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_sigh2.pap
@@ -2953,6 +3065,7 @@ chara/human/c0501/animation/a0001/bt_common/event/event_spirit3.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_srun_loop.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_stand_damage.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_step_forward_end.pap
+chara/human/c0501/animation/a0001/bt_common/event/event_step_forward_end_talk01.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_suffering.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_surprised.pap
 chara/human/c0501/animation/a0001/bt_common/event/event_swalk_loop.pap
@@ -3012,6 +3125,7 @@ chara/human/c0501/animation/a0001/bt_common/event_base/event_base_carry_up_ready
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_aristocrat.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_drink_tea.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_drink_tumbler.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_eat_bread_yucky.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_end.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
@@ -3034,11 +3148,16 @@ chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chef.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_chocobo_brush.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_colosseum_call.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_cooking_spoon.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_cooling_machine1.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_cooling_machine1_st.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_desk_memo.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_draw_picture.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_draw_picture2.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_drill_machine_check.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_drink.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_driving_rover.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_eat.pap
+chara/human/c0501/animation/a0001/bt_common/event_base/event_base_ether_vacuum_check.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_fishing.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_fly_mount_m0228_id0.pap
 chara/human/c0501/animation/a0001/bt_common/event_base/event_base_fly_mount_m0228_run.pap
@@ -3126,6 +3245,11 @@ chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp014.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp015.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp021.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp023.pap
+chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp024.pap
+chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp025.pap
+chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp026.pap
+chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp027.pap
+chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp028.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp115.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp116.pap
 chara/human/c0501/animation/a0001/bt_common/human_sp/c0501/human_sp117.pap
@@ -3191,14 +3315,18 @@ chara/human/c0501/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c0501/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c0501/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c0501/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c0501/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0501/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c0501/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c0501/animation/a0001/bt_common/normal/u_item_drink_housing.pap
 chara/human/c0501/animation/a0001/bt_common/normal/u_item_eat_housing.pap
 chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/ladder_up_lp.pap
+chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/pc_cnt065.pap
 chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/u_pc_niku_drink.pap
 chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/wks012.pap
 chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/wks016.pap
+chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/wks021.pap
+chara/human/c0501/animation/a0001/bt_common/pc_contentsaction/wks023.pap
 chara/human/c0501/animation/a0002/bt_common/human_sp/c0501/human_sp023.pap
 chara/human/c0501/animation/a0002/bt_common/human_sp/c0501/human_sp139.pap
 chara/human/c0501/animation/a0002/bt_common/human_sp/c0501/human_sp140.pap
@@ -3317,6 +3445,7 @@ chara/human/c0501/animation/a0154/bt_common/event/event_talk1.pap
 chara/human/c0501/animation/a0154/bt_common/event_base/event_base_idle4.pap
 chara/human/c0504/animation/a0001/bt_common/event_base/event_base_chair_drink_tea.pap
 chara/human/c0504/animation/a0001/bt_common/event_base/event_base_draw_picture.pap
+chara/human/c0504/animation/a0001/bt_common/event_base/event_base_hotdrink.pap
 chara/human/c0504/animation/a0001/bt_common/human_sp/c0504/human_sp001.pap
 chara/human/c0504/animation/a0052/bt_common/human_sp/c0504/human_sp002.pap
 chara/human/c0504/animation/a0052/bt_common/human_sp/c0504/human_sp003.pap
@@ -3360,6 +3489,9 @@ chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_aktkmg11540.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_benchm00720_2.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_chrhdb84120.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_dash2_loop.pap
@@ -3405,6 +3537,7 @@ chara/human/c0601/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -3447,6 +3580,7 @@ chara/human/c0601/animation/a0001/bt_common/event/event_move_walk_start_r.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_mwalk_loop.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_omikuji.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_orz_pc.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_panel_operation.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_pc_touchaction_mid.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_perceive.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_pick_up.pap
@@ -3465,6 +3599,7 @@ chara/human/c0601/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0601/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0601/animation/a0001/bt_common/event/event_sigh2.pap
@@ -3531,6 +3666,7 @@ chara/human/c0601/animation/a0001/bt_common/event_base/event_base_baby_hold.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_bad_chair.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_bad_chair2.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_chair_drink_tea.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_chair_eat_bread_yucky.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_chair_end.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
@@ -3560,11 +3696,13 @@ chara/human/c0601/animation/a0001/bt_common/event_base/event_base_fly_mount_m077
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_fly_mount_m0907_id0.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_fly_mount_m0930_id0.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_frightened.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_gird_up.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ground_end.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ground_start.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ground_tired.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ground_tired_sleep.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_harp.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_hotdrink.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_hug_pose2.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_id5.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_idle1.pap
@@ -3587,18 +3725,22 @@ chara/human/c0601/animation/a0001/bt_common/event_base/event_base_mount_d0002.pa
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_mount_m0228_id0.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_mount_m0228_run.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_muse.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_panel_operation2.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_paper_bag_listen.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_push_up_sit_stop.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ship_stand_mini.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_sit_bath_stretch.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_sit_tobacco.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_sleep.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_stand_eat_bread_yucky.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_stand_memo.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_stand_talk_tumbler.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_table_elbow.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_talk_memo.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_think.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_tomestone_direction.pap
 chara/human/c0601/animation/a0001/bt_common/event_base/event_base_ufo_catcher.pap
+chara/human/c0601/animation/a0001/bt_common/event_base/event_base_wall.pap
 chara/human/c0601/animation/a0001/bt_common/gs/mahjong/emj_damaged.pap
 chara/human/c0601/animation/a0001/bt_common/gs/mahjong/emj_ron.pap
 chara/human/c0601/animation/a0001/bt_common/gs/mahjong/emj_tumo.pap
@@ -3679,6 +3821,7 @@ chara/human/c0601/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c0601/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c0601/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c0601/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c0601/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0601/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c0601/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c0601/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -3759,6 +3902,7 @@ chara/human/c0604/animation/a0021/bt_common/human_sp/human_sp_b_loop.pap
 chara/human/c0604/animation/a0021/bt_common/human_sp/human_sp_b_start.pap
 chara/human/c0604/animation/a0021/bt_common/idle_sp/idle_sp_1.pap
 chara/human/c0604/animation/a0152/bt_common/event/event_act_talk.pap
+chara/human/c0604/animation/a0152/bt_common/event/event_move_walk_end.pap
 chara/human/c0604/animation/a0152/bt_common/event/event_think.pap
 chara/human/c0604/animation/a0152/bt_common/event/event_waist_bothhand.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_angry.pap
@@ -3831,6 +3975,7 @@ chara/human/c0701/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0701/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -3888,6 +4033,7 @@ chara/human/c0701/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c0701/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_shocked_mid.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_sigh.pap
@@ -3896,6 +4042,7 @@ chara/human/c0701/animation/a0001/bt_common/event/event_sigh_little.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_sit_eat_sequence.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_sleep_bed.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_smile.pap
+chara/human/c0701/animation/a0001/bt_common/event/event_smile_little.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_spirit.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_spirit2.pap
 chara/human/c0701/animation/a0001/bt_common/event/event_spirit3.pap
@@ -3955,6 +4102,7 @@ chara/human/c0701/animation/a0001/bt_common/event_base/event_base_chair_sit_rela
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_chair_sit_table.pap
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_chair_snooze.pap
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_chair_start.pap
+chara/human/c0701/animation/a0001/bt_common/event_base/event_base_chaser.pap
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_desk_memo.pap
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_fly_mount_m0229_id0.pap
 chara/human/c0701/animation/a0001/bt_common/event_base/event_base_fly_mount_m0229_run.pap
@@ -4003,6 +4151,7 @@ chara/human/c0701/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c0701/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c0701/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c0701/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c0701/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0701/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c0701/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c0701/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -4015,6 +4164,7 @@ chara/human/c0801/animation/a0001/bt_common/event/event_aoz_pose.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_appeal.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_arms.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_arms_talk.pap
+chara/human/c0801/animation/a0001/bt_common/event/event_arms_talk2.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_be_quiet.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_bench_swd2.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_bench_swd3.pap
@@ -4066,6 +4216,9 @@ chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_chrhdb84120.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_chrhdb85110.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_jobrpm07020.pap
+chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_cut_pc_qstarc01040.pap
@@ -4123,6 +4276,7 @@ chara/human/c0801/animation/a0001/bt_common/event/event_lie_body_up_walk.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_lie_get_up2.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_light_put_up.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0801/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0801/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -4291,6 +4445,7 @@ chara/human/c0801/animation/a0001/bt_common/event_base/event_base_desk_memo.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_drink.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_eat.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_eat_riceball.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_eat_tacos.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_flower_basket.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_d1036_id0.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_d1036_run.pap
@@ -4312,6 +4467,7 @@ chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_m077
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_m0783_run.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_m0907_id0.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_m0930_id0.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_fly_mount_m0949_run.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_frightened.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_frightened3.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_front_hand_r.pap
@@ -4342,9 +4498,12 @@ chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_d1036_id
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_m0228_id0.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_m0228_run.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_m0873_id0.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_m0949_jump.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_mount_m0949_run.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_muse.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_nap2.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_observe_object3.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_play_light.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_please_l.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_please_r.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_pole_dance.pap
@@ -4381,6 +4540,9 @@ chara/human/c0801/animation/a0001/bt_common/event_base/event_base_talk_memo.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_think.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_to_pray.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_tobacco.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_tomestone.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_tomestone_movie.pap
+chara/human/c0801/animation/a0001/bt_common/event_base/event_base_tomestone_photo.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_uneasy_stand_worry.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_vender_call.pap
 chara/human/c0801/animation/a0001/bt_common/event_base/event_base_verminion.pap
@@ -4458,6 +4620,7 @@ chara/human/c0801/animation/a0001/bt_common/normal/item_sp02_mji.pap
 chara/human/c0801/animation/a0001/bt_common/normal/item_sp02_mji02.pap
 chara/human/c0801/animation/a0001/bt_common/normal/item_sp02_mji03.pap
 chara/human/c0801/animation/a0001/bt_common/normal/item_sp02_mji04.pap
+chara/human/c0801/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0801/animation/a0001/bt_common/normal/swim_on_decifer_exec.pap
 chara/human/c0801/animation/a0001/bt_common/normal/swim_on_decifer_loop.pap
 chara/human/c0801/animation/a0001/bt_common/normal/swim_on_decifer_start.pap
@@ -4484,6 +4647,7 @@ chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/pc_eat_halloween.p
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/pc_light_release.pap
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/pc_pathjump_end.pap
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/pc_pathjump_loop.pap
+chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/skydiving_hover_loop.pap
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/wks002.pap
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/wks008.pap
 chara/human/c0801/animation/a0001/bt_common/pc_contentsaction/wslider_loop.pap
@@ -4537,6 +4701,8 @@ chara/human/c0901/animation/a0001/bt_common/event/event_clap.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cliff_jump_0.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_come.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_come_little.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_cooling_machine.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_cooling_machine_st.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_aktkma12320.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_aktkme11910_2.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_aktkmg11210.pap
@@ -4555,6 +4721,9 @@ chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_chrhdb81110.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_chrhdb84120.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_chrhdb85110.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_cut_pc_qstarc01040.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_d1001_dance.pap
@@ -4615,6 +4784,7 @@ chara/human/c0901/animation/a0001/bt_common/event/event_lie_body_up_walk.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_lie_get_up1.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_lie_get_up2.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_link.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -4688,6 +4858,7 @@ chara/human/c0901/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_scoop_bothhand.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_sigh2.pap
@@ -4752,6 +4923,7 @@ chara/human/c0901/animation/a0001/bt_common/event/event_wed_cheers_l.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_wed_cheers_r.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_wed_kiss.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_wed_swalk_loop.pap
+chara/human/c0901/animation/a0001/bt_common/event/event_welding_low.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_wepon_cockpit_id0.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_wepon_cockpit_start.pap
 chara/human/c0901/animation/a0001/bt_common/event/event_zodiacget.pap
@@ -4782,10 +4954,13 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_carry_up_one_h
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_carry_up_ready.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_casket_pose.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_aristocrat.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_eat_bread_yucky.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_end.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_listen.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_read_letter.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_reclining2.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_rest.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_sit_op.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_chair_sit_pc.pap
@@ -4826,6 +5001,7 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_fly_mount_m077
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_fly_mount_m0773_run.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_fly_mount_m0907_id0.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_fly_mount_m0930_id0.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_fly_mount_m0949_run.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_frightened.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_gather_salt.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_grass_pick.pap
@@ -4868,6 +5044,8 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0547_id
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0686_id0.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0686_run.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0873_id0.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0949_jump.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_mount_m0949_run.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_muse.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_pc_knockout.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_play_light.pap
@@ -4890,6 +5068,7 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_ship_stand.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_ship_stand_mini.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_shipbuilder_work.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_sit_bath_stretch.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_sit_swim_ring.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_sit_tobacco.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_sit_up.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_skirmish3.pap
@@ -4921,6 +5100,9 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_think.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_think_pc.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_to_pray.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_tobacco.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_tomestone.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_tomestone_movie.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_tomestone_photo.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_up_direction.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_waiter.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_wall.pap
@@ -4928,6 +5110,7 @@ chara/human/c0901/animation/a0001/bt_common/event_base/event_base_warming_up.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_wed_id0.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_b.pap
 chara/human/c0901/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_f.pap
+chara/human/c0901/animation/a0001/bt_common/event_base/event_base_welding.pap
 chara/human/c0901/animation/a0001/bt_common/gs/basket/action1.pap
 chara/human/c0901/animation/a0001/bt_common/gs/basket/idle.pap
 chara/human/c0901/animation/a0001/bt_common/gs/felling/action1.pap
@@ -5034,10 +5217,13 @@ chara/human/c0901/animation/a0001/bt_common/normal/item_sp02_mji.pap
 chara/human/c0901/animation/a0001/bt_common/normal/item_sp02_mji02.pap
 chara/human/c0901/animation/a0001/bt_common/normal/item_sp02_mji03.pap
 chara/human/c0901/animation/a0001/bt_common/normal/item_sp02_mji04.pap
+chara/human/c0901/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c0901/animation/a0001/bt_common/normal/lookaction_end.pap
 chara/human/c0901/animation/a0001/bt_common/normal/lookaction_loop.pap
 chara/human/c0901/animation/a0001/bt_common/normal/lookaction_start.pap
+chara/human/c0901/animation/a0001/bt_common/normal/swim_on_decifer_exec.pap
 chara/human/c0901/animation/a0001/bt_common/normal/swim_on_decifer_loop.pap
+chara/human/c0901/animation/a0001/bt_common/normal/swim_on_decifer_start.pap
 chara/human/c0901/animation/a0001/bt_common/normal/swim_on_item_action.pap
 chara/human/c0901/animation/a0001/bt_common/normal/swim_on_item_action_exec.pap
 chara/human/c0901/animation/a0001/bt_common/normal/swim_on_item_action_loop.pap
@@ -5095,6 +5281,10 @@ chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt019_start.pa
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt044.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt047.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt049.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt055.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt062.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt064.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_cnt065.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_eat_halloween.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_end.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_loop.pap
@@ -5102,7 +5292,9 @@ chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_start
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/point.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/u_pc_niku_drink.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks002.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks003.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks004.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks005.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks007.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks011.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks012.pap
@@ -5113,6 +5305,9 @@ chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks017.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks018.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks019.pap
 chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks020.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks021.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks022.pap
+chara/human/c0901/animation/a0001/bt_common/pc_contentsaction/wks023.pap
 chara/human/c0901/animation/a0006/bt_common/human_sp/c0901/human_sp054.pap
 chara/human/c0901/animation/a0006/bt_common/human_sp/c0901/human_sp055.pap
 chara/human/c0901/animation/a0006/bt_common/human_sp/c0901/human_sp056.pap
@@ -5240,6 +5435,7 @@ chara/human/c1001/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1001/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1001/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -5413,6 +5609,8 @@ chara/human/c1001/animation/a0001/bt_common/event_base/event_base_stand_shy.pap
 chara/human/c1001/animation/a0001/bt_common/event_base/event_base_stand_table_bothhand.pap
 chara/human/c1001/animation/a0001/bt_common/event_base/event_base_table_elbow.pap
 chara/human/c1001/animation/a0001/bt_common/event_base/event_base_think.pap
+chara/human/c1001/animation/a0001/bt_common/event_base/event_base_tomestone.pap
+chara/human/c1001/animation/a0001/bt_common/event_base/event_base_wall.pap
 chara/human/c1001/animation/a0001/bt_common/gs/mahjong/emj_damaged.pap
 chara/human/c1001/animation/a0001/bt_common/gs/mahjong/emj_ron.pap
 chara/human/c1001/animation/a0001/bt_common/gs/mahjong/emj_tumo.pap
@@ -5428,6 +5626,7 @@ chara/human/c1001/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1001/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c1001/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c1001/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c1001/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1001/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1001/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1001/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -5484,6 +5683,8 @@ chara/human/c1101/animation/a0001/bt_common/event/event_chocobo_whistle_no_se.pa
 chara/human/c1101/animation/a0001/bt_common/event/event_clap.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_come.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_come_little.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cooling_machine.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cooling_machine_st.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_crystal_raise.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_aktkma12320.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_aktkme11910_2.pap
@@ -5505,10 +5706,14 @@ chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_chrhdb81110.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_chrhdb84120.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_chrhdb85110.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_ground_sit.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_2.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kgrclb00100_3.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kinact04200.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kinact06250.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_kinact06290.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_qstarc01040.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_cut_pc_qstarc03060_2.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_d1001_dance.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_dash2_loop.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_dash_jump_roll_l.pap
@@ -5572,6 +5777,7 @@ chara/human/c1101/animation/a0001/bt_common/event/event_lie_get_up2.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_light_attack_ax.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_light_put_up.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -5589,6 +5795,7 @@ chara/human/c1101/animation/a0001/bt_common/event/event_move_dash2_start.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_mwalk.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_mwalk_end.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_mwalk_start.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_move_mwalk_start_r.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_run.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_run_end.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_move_run_end_l.pap
@@ -5645,6 +5852,7 @@ chara/human/c1101/animation/a0001/bt_common/event/event_salute_emp.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_sigh2.pap
@@ -5654,6 +5862,7 @@ chara/human/c1101/animation/a0001/bt_common/event/event_sit_eat_sequence.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_skillget.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_sleep_bed.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_smile.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_smile_little.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_soldier_pose1.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_soldier_pose2.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_soldier_pose3.pap
@@ -5714,6 +5923,7 @@ chara/human/c1101/animation/a0001/bt_common/event/event_wed_give_ring.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_wed_kiss.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_wed_swalk_loop.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_wed_take_ring.pap
+chara/human/c1101/animation/a0001/bt_common/event/event_welding_low.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_wepon_cockpit_id0.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_wepon_cockpit_start.pap
 chara/human/c1101/animation/a0001/bt_common/event/event_zodiacget.pap
@@ -5732,6 +5942,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_bind_stand.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_both_knees.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_bothhand_chest.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_bow_repair.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_brawl_provoke.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_broom.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_carpenter.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_carry_butler.pap
@@ -5739,6 +5950,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_carry_up.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_aristocrat.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_drink_mug.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_eat_bothhand.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_eat_bread_yucky.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_end.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_id1.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_id3.pap
@@ -5746,6 +5958,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_listen.p
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_read.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_read_letter.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_reclining.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_reclining2.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_rest.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_sit_dowa.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_chair_sit_op.pap
@@ -5787,6 +6000,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_fly_mount_m077
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0773_run.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0907_id0.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0930_id0.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_fly_mount_m0949_run.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_frightened.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_frightened2.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_frightened2_high.pap
@@ -5800,6 +6014,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_guard_look_awa
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_guard_stand.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_hand_fan.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_handbills_look.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_hang_down.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_hide_branch.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_hurt_knee.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_id5.pap
@@ -5827,6 +6042,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_look_down_scop
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_look_front.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_maining_over.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_manure_sprinkle.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_medicinal_tea.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mineral_select.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_d0002.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_d1036_id0.pap
@@ -5836,6 +6052,8 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0547_id
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0686_id0.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0686_run.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0873_id0.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0949_jump.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mount_m0949_run.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_muse.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_mysterious.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_orz.pap
@@ -5848,8 +6066,10 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_read_letter.pa
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_rock_sit.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_rookie.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_sad_over.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_scoop_dig.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_scoop_rest.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_shaker.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_shipbuilder_work.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_sit_ground_ladies.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_sit_ground_ladies2.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_sit_tobacco.pap
@@ -5868,6 +6088,7 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stand_memo.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stand_read.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stand_suffering.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stand_talk_mug.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stand_tropical_juice.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_strategy_meeting.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_stroke_sit.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_table_elbow.pap
@@ -5879,10 +6100,14 @@ chara/human/c1101/animation/a0001/bt_common/event_base/event_base_teach.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_think.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_think_pc.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_to_pray.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_tomestone.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_tomestone_movie.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_tomestone_photo.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_touch_ele_shock.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_waiter.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_b.pap
 chara/human/c1101/animation/a0001/bt_common/event_base/event_base_wed_mount_d0001_f.pap
+chara/human/c1101/animation/a0001/bt_common/event_base/event_base_welding.pap
 chara/human/c1101/animation/a0001/bt_common/gs/basket/action1.pap
 chara/human/c1101/animation/a0001/bt_common/gs/basket/idle.pap
 chara/human/c1101/animation/a0001/bt_common/gs/felling/action1.pap
@@ -5908,6 +6133,8 @@ chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp003.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp004.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp005.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp006.pap
+chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp011.pap
+chara/human/c1101/animation/a0001/bt_common/human_sp/c1101/human_sp012.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/human_sp_a_loop.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/human_sp_a_start.pap
 chara/human/c1101/animation/a0001/bt_common/human_sp/human_sp_zns_event.pap
@@ -5985,6 +6212,7 @@ chara/human/c1101/animation/a0001/bt_common/normal/item_sp02_mji.pap
 chara/human/c1101/animation/a0001/bt_common/normal/item_sp02_mji02.pap
 chara/human/c1101/animation/a0001/bt_common/normal/item_sp02_mji03.pap
 chara/human/c1101/animation/a0001/bt_common/normal/item_sp02_mji04.pap
+chara/human/c1101/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1101/animation/a0001/bt_common/normal/lookaction_end.pap
 chara/human/c1101/animation/a0001/bt_common/normal/lookaction_loop.pap
 chara/human/c1101/animation/a0001/bt_common/normal/lookaction_start.pap
@@ -6044,14 +6272,22 @@ chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt045.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt046.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt047.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt049.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt055.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt062.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_cnt065.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_end.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_loop.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_koma_spin_start.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/pc_scary_loop.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/skydiving_hover_loop.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/u_pc_niku_drink.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks002.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks003.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks004.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks005.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks007.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks008.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks009.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks011.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks012.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks013.pap
@@ -6061,6 +6297,9 @@ chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks017.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks018.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks019.pap
 chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks020.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks021.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks022.pap
+chara/human/c1101/animation/a0001/bt_common/pc_contentsaction/wks023.pap
 chara/human/c1201/animation/a0001/bt_common/event/event_2sw_pose1.pap
 chara/human/c1201/animation/a0001/bt_common/event/event_2sw_pose1_loop.pap
 chara/human/c1201/animation/a0001/bt_common/event/event_appeal.pap
@@ -6085,6 +6324,7 @@ chara/human/c1201/animation/a0001/bt_common/event_base/event_base_knee_healing.p
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_paper_bag_listen.pap
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_precocious_pose1.pap
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_seiza_stop.pap
+chara/human/c1201/animation/a0001/bt_common/event_base/event_base_sit_swim_ring.pap
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_stand_chief.pap
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_stand_suffering.pap
 chara/human/c1201/animation/a0001/bt_common/event_base/event_base_table_elbow.pap
@@ -6109,6 +6349,7 @@ chara/human/c1201/animation/a0001/bt_common/music/instrument03_play02_start.pap
 chara/human/c1201/animation/a0001/bt_common/music/instrument03_start.pap
 chara/human/c1201/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1201/animation/a0001/bt_common/normal/treasure_search.pap
+chara/human/c1201/animation/a0001/bt_common/pc_contentsaction/skydiving_hover_loop.pap
 chara/human/c1201/animation/a0129/bt_common/event/event_sledgehammer_break.pap
 chara/human/c1201/animation/a0129/bt_common/event/event_talk1.pap
 chara/human/c1201/animation/a0129/bt_common/event/event_talk2.pap
@@ -6185,6 +6426,7 @@ chara/human/c1301/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1301/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -6222,6 +6464,7 @@ chara/human/c1301/animation/a0001/bt_common/event/event_move_walk_start_br.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_move_walk_start_l.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_move_walk_start_r.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_mwalk_loop.pap
+chara/human/c1301/animation/a0001/bt_common/event/event_orz_pc.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_pc_touchaction_mid.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_perceive.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_pick_up.pap
@@ -6235,6 +6478,7 @@ chara/human/c1301/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c1301/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1301/animation/a0001/bt_common/event/event_sigh2.pap
@@ -6334,6 +6578,7 @@ chara/human/c1301/animation/a0001/bt_common/gs/mahjong/emj_damaged.pap
 chara/human/c1301/animation/a0001/bt_common/gs/mahjong/emj_ron.pap
 chara/human/c1301/animation/a0001/bt_common/gs/mahjong/emj_tumo.pap
 chara/human/c1301/animation/a0001/bt_common/gs/mahjong/u_emj_riichi.pap
+chara/human/c1301/animation/a0001/bt_common/human_sp/c1301/human_sp001.pap
 chara/human/c1301/animation/a0001/bt_common/human_sp/human_sp_zns_event.pap
 chara/human/c1301/animation/a0001/bt_common/music/instrument04_end.pap
 chara/human/c1301/animation/a0001/bt_common/music/instrument04_idle.pap
@@ -6345,6 +6590,7 @@ chara/human/c1301/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1301/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c1301/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c1301/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c1301/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1301/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1301/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1301/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -6420,6 +6666,7 @@ chara/human/c1401/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1401/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -6474,6 +6721,7 @@ chara/human/c1401/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_scar_touch.pap
+chara/human/c1401/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1401/animation/a0001/bt_common/event/event_sigh2.pap
@@ -6578,6 +6826,7 @@ chara/human/c1401/animation/a0001/bt_common/human_sp/c1401/human_sp016.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/c1401/human_sp017.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/c1401/human_sp018.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/c1401/human_sp019.pap
+chara/human/c1401/animation/a0001/bt_common/human_sp/c1401/human_sp020.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/human_sp_a_start.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/human_sp_b_loop.pap
 chara/human/c1401/animation/a0001/bt_common/human_sp/human_sp_b_start.pap
@@ -6596,6 +6845,7 @@ chara/human/c1401/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1401/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c1401/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c1401/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c1401/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1401/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1401/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1401/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -6603,6 +6853,7 @@ chara/human/c1401/animation/a0001/bt_common/normal/u_item_eat_housing.pap
 chara/human/c1401/animation/a0001/bt_common/pc_contentsaction/mikoto_barrier_loop.pap
 chara/human/c1401/animation/a0001/bt_common/pc_contentsaction/mikoto_barrier_start.pap
 chara/human/c1401/animation/a0001/bt_common/pc_contentsaction/mikoto_blink.pap
+chara/human/c1401/animation/a0157/bt_common/event/event_run_loop.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_angry.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_appeal.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_arms.pap
@@ -6680,6 +6931,7 @@ chara/human/c1501/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1501/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -6733,6 +6985,7 @@ chara/human/c1501/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_scoop_bothhand.pap
+chara/human/c1501/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1501/animation/a0001/bt_common/event/event_sigh2.pap
@@ -6851,11 +7104,14 @@ chara/human/c1501/animation/a0001/bt_common/music/instrument05_start.pap
 chara/human/c1501/animation/a0001/bt_common/normal/aettouch_end.pap
 chara/human/c1501/animation/a0001/bt_common/normal/aettouch_loop.pap
 chara/human/c1501/animation/a0001/bt_common/normal/aettouch_start.pap
+chara/human/c1501/animation/a0001/bt_common/normal/event_action_wks2_end.pap
+chara/human/c1501/animation/a0001/bt_common/normal/event_action_wks5_end.pap
 chara/human/c1501/animation/a0001/bt_common/normal/idle_bow_loop.pap
 chara/human/c1501/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1501/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c1501/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c1501/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c1501/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1501/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1501/animation/a0001/bt_common/normal/touchaction_end.pap
 chara/human/c1501/animation/a0001/bt_common/normal/touchaction_loop.pap
@@ -6921,6 +7177,7 @@ chara/human/c1601/animation/a0001/bt_common/event/event_hold_out.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_hold_out2.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_holdfist.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_holdfist2.pap
+chara/human/c1601/animation/a0001/bt_common/event/event_inspiration.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_item.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_jp_bow.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_knee.pap
@@ -6932,6 +7189,7 @@ chara/human/c1601/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1601/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -6985,6 +7243,7 @@ chara/human/c1601/animation/a0001/bt_common/event/event_reaction_hroth_w.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_restrain_l.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_run_loop.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_salute_clm.pap
+chara/human/c1601/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1601/animation/a0001/bt_common/event/event_sigh2.pap
@@ -7056,6 +7315,7 @@ chara/human/c1601/animation/a0001/bt_common/event_base/event_base_idle2.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_idle3.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_idle4.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_kneel_up.pap
+chara/human/c1601/animation/a0001/bt_common/event_base/event_base_link.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_link_nolip.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_motion_sickness.pap
 chara/human/c1601/animation/a0001/bt_common/event_base/event_base_sit_bath_stretch.pap
@@ -7094,10 +7354,13 @@ chara/human/c1601/animation/a0001/bt_common/normal/fueaction_start.pap
 chara/human/c1601/animation/a0001/bt_common/normal/idle_bow_loop.pap
 chara/human/c1601/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1601/animation/a0001/bt_common/normal/item_eat.pap
+chara/human/c1601/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1601/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1601/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1601/animation/a0001/bt_common/normal/u_item_drink_housing.pap
 chara/human/c1601/animation/a0001/bt_common/normal/u_item_eat_housing.pap
+chara/human/c1601/animation/a0001/bt_common/pc_contentsaction/pc_cnt065.pap
+chara/human/c1601/animation/a0001/bt_common/pc_contentsaction/u_pc_niku_drink.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_angry.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_appeal.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_arms.pap
@@ -7163,6 +7426,7 @@ chara/human/c1701/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1701/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -7175,6 +7439,7 @@ chara/human/c1701/animation/a0001/bt_common/event/event_move_dash2_start.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_mwalk.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_mwalk_end.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_mwalk_start.pap
+chara/human/c1701/animation/a0001/bt_common/event/event_move_mwalk_start_r.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_run.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_run_end.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_move_run_end_l.pap
@@ -7217,6 +7482,7 @@ chara/human/c1701/animation/a0001/bt_common/event/event_salute_clm.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_salute_higher_gca.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_salute_higher_gcb.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_salute_higher_gcc.pap
+chara/human/c1701/animation/a0001/bt_common/event/event_scratch_cheek.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_shocked.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_sigh.pap
 chara/human/c1701/animation/a0001/bt_common/event/event_sigh2.pap
@@ -7296,6 +7562,7 @@ chara/human/c1701/animation/a0001/bt_common/music/instrument04_start.pap
 chara/human/c1701/animation/a0001/bt_common/normal/idle_bow_loop.pap
 chara/human/c1701/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1701/animation/a0001/bt_common/normal/item_eat.pap
+chara/human/c1701/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1701/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1701/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1701/animation/a0001/bt_common/normal/u_item_drink_housing.pap
@@ -7370,6 +7637,7 @@ chara/human/c1801/animation/a0001/bt_common/event/event_kneel_hand_pc.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_kneel_up.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_kneel_up_pc.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_link.pap
+chara/human/c1801/animation/a0001/bt_common/event/event_link_surprised.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_look_back_l.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_look_back_l_pc.pap
 chara/human/c1801/animation/a0001/bt_common/event/event_look_back_l_turn.pap
@@ -7511,7 +7779,9 @@ chara/human/c1801/animation/a0001/bt_common/gs/mahjong/u_emj_riichi.pap
 chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp001.pap
 chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp002.pap
 chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp003.pap
+chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp004.pap
 chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp005.pap
+chara/human/c1801/animation/a0001/bt_common/human_sp/c1801/human_sp006.pap
 chara/human/c1801/animation/a0001/bt_common/human_sp/human_sp_zns_event.pap
 chara/human/c1801/animation/a0001/bt_common/music/instrument04_end.pap
 chara/human/c1801/animation/a0001/bt_common/music/instrument04_idle.pap
@@ -7523,6 +7793,7 @@ chara/human/c1801/animation/a0001/bt_common/normal/item_drink.pap
 chara/human/c1801/animation/a0001/bt_common/normal/item_drink_housing.pap
 chara/human/c1801/animation/a0001/bt_common/normal/item_eat.pap
 chara/human/c1801/animation/a0001/bt_common/normal/item_eat_housing.pap
+chara/human/c1801/animation/a0001/bt_common/normal/item_sp03.pap
 chara/human/c1801/animation/a0001/bt_common/normal/swim_under_treasure_search.pap
 chara/human/c1801/animation/a0001/bt_common/normal/treasure_search.pap
 chara/human/c1801/animation/a0001/bt_common/normal/u_item_drink_housing.pap
