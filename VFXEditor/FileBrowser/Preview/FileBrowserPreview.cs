@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
-using VFXEditor.Formats.TextureFormat;
 
 namespace VfxEditor.FileBrowser.Preview {
     public class FileBrowserPreview {
