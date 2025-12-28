@@ -14,8 +14,11 @@ namespace VfxEditor.Library.Components {
             Color = color;
         }
 
+        public string NameOrNone => string.IsNullOrEmpty( Name ) ? "[NONE]" : Name;
+
         public override bool Matches( string input ) {
             if( string.IsNullOrEmpty( input ) ) return true;
+            if( string.IsNullOrEmpty( Name ) ) return false;
             if( Name.Contains( input, System.StringComparison.CurrentCultureIgnoreCase ) ) return true;
             return false;
         }
@@ -26,7 +29,7 @@ namespace VfxEditor.Library.Components {
             ImGui.PushStyleColor( ImGuiCol.Header, Color );
             ImGui.PushStyleColor( ImGuiCol.HeaderHovered, Color * 0.75f );
             ImGui.PushStyleColor( ImGuiCol.HeaderActive, Color * 0.75f );
-            ImGui.TreeNodeEx( Name, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.NoTreePushOnOpen );
+            ImGui.TreeNodeEx( NameOrNone, ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.NoTreePushOnOpen );
             ImGui.PopStyleColor( 3 );
         }
 
