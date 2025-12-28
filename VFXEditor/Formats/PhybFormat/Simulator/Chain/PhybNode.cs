@@ -43,20 +43,5 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 
         }
-
-        public PhybNode Clone(PhybFile newFile, PhybSimulator newSimulator) {
-            var clone = new PhybNode(newFile, newSimulator);
-            clone.BoneName.Value = BoneName.Value;
-            clone.Radius.Value = Radius.Value;
-            clone.AttractByAnimation.Value = AttractByAnimation.Value;
-            clone.WindScale.Value = WindScale.Value;
-            clone.GravityScale.Value = GravityScale.Value;
-            clone.ConeMaxAngle.Value = ConeMaxAngle.Value;
-            clone.ConeAxisOffset.Value = ConeAxisOffset.Value;
-            clone.ConstraintPlaneNormal.Value = ConstraintPlaneNormal.Value;
-            clone.CollisionFlag.Value = CollisionFlag.Value;
-            clone.ContinuousCollisionFlag.Value = ContinuousCollisionFlag.Value;
-            return clone;
-        }
     }
 }

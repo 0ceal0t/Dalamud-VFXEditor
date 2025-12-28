@@ -39,9 +39,9 @@ namespace VfxEditor.Formats.MtrlFormat {
             ReplaceSelect = new MtrlSelectDialog( "Mtrl Select [REPLACED]", this, false );
 
             try {
-                TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
-                TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
-                SphereFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "sphere_d_array.tex" ) );
+                //TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
+                //TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
+                //SphereFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "sphere_d_array.tex" ) );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error loading files" );
@@ -50,13 +50,13 @@ namespace VfxEditor.Formats.MtrlFormat {
             if( TileDiffuseFile == null || TileNormalFile == null || SphereFile == null ) Dalamud.Error( "Could not load tile files" );
             else {
                 foreach( var layer in TileDiffuseFile.Layers ) {
-                    TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );
+                    //TileDiffuse.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileDiffuseFile.Header.Width, TileDiffuseFile.Header.Height ), layer ) );
                 }
                 foreach( var layer in TileNormalFile.Layers ) {
-                    TileNormal.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileNormalFile.Header.Width, TileNormalFile.Header.Height ), layer ) );
+                    //TileNormal.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( TileNormalFile.Header.Width, TileNormalFile.Header.Height ), layer ) );
                 }
                 foreach( var layer in SphereFile.Layers ) {
-                    Sphere.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( SphereFile.Header.Width, SphereFile.Header.Height ), layer ) );
+                    //Sphere.Add( Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( SphereFile.Header.Width, SphereFile.Header.Height ), layer ) );
                 }
             }
 

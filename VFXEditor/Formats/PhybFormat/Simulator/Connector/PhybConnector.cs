@@ -42,20 +42,5 @@ namespace VfxEditor.PhybFormat.Simulator.Connector {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, CollisionRadius.Value, meshes.Simulation, boneMatrixes );
         }
-
-        public PhybConnector Clone(PhybFile newFile, PhybSimulator newSimulator) {
-            var clone = new PhybConnector(newFile, newSimulator);
-            // Copy values from matching parsed items by index
-            var targetParsed = clone.GetParsed();
-            for (var i = 0; i < Parsed.Count; i++) {
-                if (Parsed[i] is ParsedFloat pFloat && targetParsed[i] is ParsedFloat tFloat) 
-                    tFloat.Value = pFloat.Value;
-                if (Parsed[i] is ParsedShort pShort && targetParsed[i] is ParsedShort tShort) 
-                    tShort.Value = pShort.Value;
-                if (Parsed[i] is ParsedUInt pUInt && targetParsed[i] is ParsedUInt tUInt) 
-                    tUInt.Value = pUInt.Value;
-            }
-            return clone;
-        }
     }
 }

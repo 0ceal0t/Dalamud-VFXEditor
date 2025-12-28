@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
-using Dalamud.Bindings.ImGui;
 using SharpDX;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,7 @@ using VfxEditor.PhybFormat.Simulator.Pin;
 using VfxEditor.PhybFormat.Simulator.PostAlignment;
 using VfxEditor.PhybFormat.Simulator.Spring;
 using VfxEditor.PhybFormat.Utils;
+using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
@@ -144,18 +145,20 @@ namespace VfxEditor.PhybFormat.Simulator {
             return placeholderPos;
         }
 
+        public byte[] ToBytes() {
+            using var ms = new MemoryStream();
+            using var writer = new BinaryWriter( ms );
+
+            var simWriter = new SimulationWriter();
+            simWriter.Write( new List<PhybSimulator>( [this] ) );
+            simWriter.WriteTo( writer );
+            simWriter.Dispose();
+
+            return ms.ToArray();
+        }
+
         public void Draw() {
             using var _ = ImRaii.PushId( "Simulator" );
-
-            if (ImGui.Button("Copy Simulator Data")) PhybSimulatorClipboard.CopySimulator(this);
-            ImGui.SameLine();
-            if (ImGui.Button("Paste Simulator Data") && PhybSimulatorClipboard.HasCopiedData()) PhybSimulatorClipboard.PasteSimulator(this);
-            ImGui.SameLine();
-            if (!PhybSimulatorClipboard.HasCopiedData()) {
-                ImGui.TextColored(new System.Numerics.Vector4(0.5f, 0.5f, 0.5f, 1.0f), "(Copy simulator data first)");
-            } else {
-                if (ImGui.Button("Clear Clipboard")) PhybSimulatorClipboard.Clear();
-            }
 
             using var tabBar = ImRaii.TabBar( "Tabs", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
             if( !tabBar ) return;

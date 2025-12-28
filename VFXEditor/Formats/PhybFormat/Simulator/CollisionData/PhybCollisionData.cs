@@ -33,12 +33,5 @@ namespace VfxEditor.PhybFormat.Simulator.CollisionData {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
 
         }
-
-        public PhybCollisionData Clone(PhybFile newFile, PhybSimulator newSimulator) {
-            var clone = new PhybCollisionData(newFile, newSimulator);
-            clone.CollisionName.Value = CollisionName.Value;
-            clone.Type.Value = Type.Value;
-            return clone;
-        }
     }
 }

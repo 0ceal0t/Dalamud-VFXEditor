@@ -86,18 +86,24 @@ namespace VfxEditor.Ui.Components {
         // ===========
 
         protected void DrawNewDeleteControls( Action onNew, Action<T> onDelete ) {
+            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            DrawNewControl( onNew );
+            DrawDeleteControl( onDelete );
+        }
+
+        protected void DrawNewControl( Action onNew) {
             if( onNew != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Plus.ToIconString() ) ) onNew();
             }
+        }
 
+        protected void DrawDeleteControl( Action<T> onDelete ) {
             using var disabled = ImRaii.Disabled( Selected == null );
-
             if( onDelete != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();
-                ImGui.SetCursorPosX( ImGui.GetCursorPosX() - 4 );
                 if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) && Items.Contains( Selected ) ) {
                     onDelete( Selected );
                     Selected = null;

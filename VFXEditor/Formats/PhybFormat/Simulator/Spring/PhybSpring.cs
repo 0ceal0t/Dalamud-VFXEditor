@@ -34,16 +34,5 @@ namespace VfxEditor.PhybFormat.Simulator.Spring {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Simulator.ConnectNodes( ChainId1.Value, ChainId2.Value, NodeId1.Value, NodeId2.Value, 0.02f, meshes.Spring, boneMatrixes );
         }
-
-        public PhybSpring Clone(PhybFile newFile, PhybSimulator newSimulator) {
-            var clone = new PhybSpring(newFile, newSimulator);
-            clone.ChainId1.Value = ChainId1.Value;
-            clone.ChainId2.Value = ChainId2.Value;
-            clone.NodeId1.Value = NodeId1.Value;
-            clone.NodeId2.Value = NodeId2.Value;
-            clone.StretchStiffness.Value = StretchStiffness.Value;
-            clone.CompressStiffness.Value = CompressStiffness.Value;
-            return clone;
-        }
     }
 }
