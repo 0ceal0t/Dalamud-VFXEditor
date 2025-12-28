@@ -11,8 +11,8 @@
       "Sound"
     ],
     "InternalName": "VFXEditor-Beta",
-    "AssemblyVersion": "1.9.3.2",
-    "TestingAssemblyVersion": "1.9.3.2",
+    "AssemblyVersion": "1.9.3.3",
+    "TestingAssemblyVersion": "1.9.3.3",
     "RepoUrl": "https://github.com/0ceal0t/Dalamud-VFXEditor",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
@@ -20,9 +20,9 @@
     "IsTestingExclusive": "False",
     "DownloadCount": 1,
     "LastUpdate": 1618608322,
-    "DownloadLinkInstall": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.2/VFXEditor-Beta.zip",
-    "DownloadLinkUpdate": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.2/VFXEditor-Beta.zip",
-    "DownloadLinkTesting": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.2/VFXEditor-Beta.zip",
+    "DownloadLinkInstall": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.3/VFXEditor-Beta.zip",
+    "DownloadLinkUpdate": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.3/VFXEditor-Beta.zip",
+    "DownloadLinkTesting": "https://github.com/0ceal0t/Dalamud-VFXEditor/releases/download/1.9.3.3/VFXEditor-Beta.zip",
     "IconUrl": "https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/icon.png"
   }
 ]
