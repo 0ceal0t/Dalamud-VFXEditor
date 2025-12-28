@@ -34,6 +34,12 @@ namespace VfxEditor {
             Type = NotificationType.Success,
         } );
 
+        public static void InfoNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
+            Content = content,
+            Title = title,
+            Type = NotificationType.Info,
+        } );
+
         public static void ErrorNotification( string content, string? title = "VFXEditor" ) => Notification.AddNotification( new() {
             Content = content,
             Title = title,
