@@ -8,7 +8,6 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
-using static VFXEditor.Formats.TextureFormat.TexFileParser;
 
 namespace VfxEditor.Formats.TextureFormat {
     public enum Attribute : uint {
@@ -137,7 +136,7 @@ namespace VfxEditor.Formats.TextureFormat {
             DdsData = reader.ReadBytes( AllData.Length - HeaderLength );
 
             using var ms = new MemoryStream( GetAllData() );
-            ScratchImage = Parse( ms );
+            ScratchImage = TexFileParser.Parse( ms );
 
             var layerCount = Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth;
             ScratchImage.GetRGBA( out var rgba );

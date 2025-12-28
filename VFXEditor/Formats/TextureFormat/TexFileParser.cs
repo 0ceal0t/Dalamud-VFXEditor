@@ -4,28 +4,42 @@ using OtterTex;
 using System;
 using System.IO;
 
-namespace VFXEditor.Formats.TextureFormat {
+namespace VfxEditor.Formats.TextureFormat {
     public static class TexFileParser {
         public static ScratchImage Parse( Stream data ) {
-            using var r = new BinaryReader( data );
-            var header = r.ReadStructure<TexFile.TexHeader>();
+            using var reader = new BinaryReader( data );
+            var header = reader.ReadStructure<TexFile.TexHeader>();
+            var isArray = header.Type == TexFile.Attribute.TextureType2DArray;
 
             var meta = header.ToTexMeta();
             if( meta.Format == DXGIFormat.Unknown )
                 throw new Exception( $"Could not convert format {header.Format} to DXGI Format." );
 
-            if( meta.Dimension == TexDimension.Unknown )
-                throw new Exception( $"Could not obtain dimensionality from {header.Type}." );
+            if( meta.Dimension == TexDimension.Unknown && !isArray )
+                throw new Exception( $"Could not obtain dimensionality from {header.Type} / {header.Format}." );
 
             meta.MipLevels = CountMipLevels( data, in meta, in header );
             if( meta.MipLevels == 0 )
                 throw new Exception( "Could not load file. Image is corrupted and does not contain enough data for its size." );
 
-            var scratch = ScratchImage.Initialize( meta );
+            if( isArray ) {
+                // https://github.com/nadlabka/DX11Renderer/blob/abe3e89ad3b8f0ac8ba8fa42ef1bc6c69d4033aa/Engine/DXRenderer/Managers/TexturesManager.cpp#L119
+                var scratch = ScratchImage.Initialize2D( meta.Format, header.Width, header.Height, header.ArraySize, header.MipCount );
+                // TODO: fix this
+                for( var i = 0; i < header.ArraySize; i++) {
+                    for( var j = 0; j < header.MipCount; j++ ) {
+                        var image = scratch.GetImage( j, i, 0 );
+                        CopyData( image.Span, reader );
+                    }
+                }
+                return scratch;
 
-            CopyData( scratch, r );
-
-            return scratch;
+            }
+            else {
+                var scratch = ScratchImage.Initialize( meta );
+                CopyData( scratch.Pixels, reader );
+                return scratch;
+            }
         }
 
         private static unsafe int CountMipLevels( Stream data, in TexMeta meta, in TexFile.TexHeader header ) {
@@ -102,7 +116,7 @@ namespace VFXEditor.Formats.TextureFormat {
                 FixLodOffsets( ref header, 13 );
             }
 
-            void FixLodOffsets( ref TexFile.TexHeader header, int index ) {
+            static void FixLodOffsets( ref TexFile.TexHeader header, int index ) {
                 header.MipCount = index;
                 if( header.LodOffset[2] >= header.MipCount )
                     header.LodOffset[2] = ( byte )( header.MipCount - 1 );
@@ -113,12 +127,12 @@ namespace VFXEditor.Formats.TextureFormat {
             }
         }
 
-        private static unsafe void CopyData( ScratchImage image, BinaryReader r ) {
-            fixed( byte* ptr = image.Pixels ) {
-                var span = new Span<byte>( ptr, image.Pixels.Length );
+        private static unsafe void CopyData( ReadOnlySpan<byte> bytes, BinaryReader r ) {
+            fixed( byte* ptr = bytes ) {
+                var span = new Span<byte>( ptr, bytes.Length );
                 var readBytes = r.Read( span );
-                if( readBytes < image.Pixels.Length )
-                    throw new Exception( $"Invalid data length {readBytes} < {image.Pixels.Length}." );
+                if( readBytes < bytes.Length )
+                    throw new Exception( $"Invalid data length {readBytes} < {bytes.Length}." );
             }
         }
 

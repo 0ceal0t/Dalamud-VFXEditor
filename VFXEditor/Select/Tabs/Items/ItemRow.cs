@@ -78,7 +78,7 @@ namespace VfxEditor.Select.Tabs.Items {
             Ids = ids;
             SecondaryIds = secondaryIds;
 
-            if( category == null || ids.Id1 > 0 ) Type = ItemType.Glasses; // TODO: find a better way to do this
+            if( category == null && ids.Id1.ToString()[0] == '5' ) Type = ItemType.Glasses;
             else if( category?.MainHand == 1 ) Type = ItemType.MainHand;
             else if( category?.OffHand == 1 ) Type = ItemType.OffHand;
             else if( category?.Head == 1 ) Type = ItemType.Head;

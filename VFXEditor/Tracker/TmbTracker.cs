@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,31 +33,17 @@ namespace VfxEditor.Tracker {
 
             try {
                 if( timeline == IntPtr.Zero ) return;
-
-                var getGameObjectIdx = ( ( delegate* unmanaged< IntPtr, int >** )timeline )[0][Constants.GetGameObjectIdxVfunc];
-                var idx = getGameObjectIdx( timeline );
+                var scheduleTimeline = ( SchedulerTimeline* )timeline;
+                var idx = scheduleTimeline->GetOwningGameObjectIndex();
                 if( idx < 0 || idx >= Dalamud.Objects.Length ) return;
 
                 var obj = ( GameObject* )Dalamud.Objects.GetObjectAddress( idx );
                 if( obj == null ) return;
 
-                var action = Marshal.ReadIntPtr( timeline + Constants.TimelineToActionOffset );
-                if( action == IntPtr.Zero ) return;
-
-                // Something like battle/idle
-                // var actionString = Marshal.PtrToStringAnsi( action + 74 );
-
-                var objectId = obj->EntityId;
-
-                var resource = ( ResourceHandle* )Marshal.ReadIntPtr( action + 24 );
-                if( resource == null ) return;
-
-                var tmbPath = resource->FileName().ToString();
-
-                Actions.TryAdd( action, new ActionData() {
-                    ActorId = ( int )objectId,
+                Actions.TryAdd( timeline, new ActionData() {
+                    ActorId = ( int )obj->EntityId,
                     Address = new IntPtr( obj ),
-                    Path = tmbPath,
+                    Path = scheduleTimeline->ActionTimelineKey.ToString(),
                     StartTime = DateTime.Now
                 } );
 

@@ -16,7 +16,7 @@ namespace VfxEditor.Interop {
 
         public const string GetMatrixSig = "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??";
         public const string GetFileManagerSig = "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 04 C6 40 6C 01";
-        public const string GetFileManager2Sig = "E8 ?? ?? ?? ?? 48 8B 1D ?? ?? ?? ?? 48 8B CB 48 89 5C 24 ??";
+        public const string GetFileManager2Sig = "48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 85 C0 0F 85 ?? ?? ?? ?? 48 89 5C 24 ?? 45 33 C0 33 D2 48 89 7C 24 ?? B9 ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 DB";
 
         public const string DecRefSig = "E8 ?? ?? ?? ?? 48 C7 03 ?? ?? ?? ?? C6 83";
         public const string RequestFileSig = "E8 ?? ?? ?? ?? F0 FF 4E 5C";
@@ -37,7 +37,9 @@ namespace VfxEditor.Interop {
         public const string LoadScdLocalSig = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 8B 79 ?? 48 8B DA 8B D7";
         public const string SoundOnLoadSig = "40 56 57 41 54 48 81 EC 90 00 00 00 80 3A 0B 45 0F B6 E0 48 8B F2";
 
-        public const string PlayActionSig = "E8 ?? ?? ?? ?? 84 C0 75 04 32 DB EB 14";
+        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Signatures.cs#L52
+
+        public const string PlayActionSig = "E8 ?? ?? ?? ?? 83 7F ?? ?? 75 ?? 0F B6 87 ?? ?? ?? ?? A8";
 
         // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs
 
@@ -54,10 +56,6 @@ namespace VfxEditor.Interop {
         public const byte PrepPapValue = 0xEC;
 
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
-
-        public const int GetGameObjectIdxVfunc = 28;
-
-        public const int TimelineToActionOffset = 152;
 
         public const string LuaManagerSig = "48 8B 0D ?? ?? ?? ?? BA 0F 00 00 10";
 

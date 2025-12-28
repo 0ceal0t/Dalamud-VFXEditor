@@ -1,104 +1,166 @@
+// From https://github.com/Etheirys/Brio/blob/main/Brio/Resources/Sheets/BrioCharaMakeType.cs
+
 using Dalamud.Game.ClientState.Objects.Enums;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
-using VfxEditor.Utils;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace VfxEditor.Data.Excel {
-    // https://github.com/ktisis-tools/Ktisis/blob/748922b02395ef9a700e3fe446f2fa2d6db0a63f/Ktisis/Data/Excel/CharaMakeType.cs
+namespace VfxEditor.Data.Excel;
+
+[Sheet( "CharaMakeType", 0x50CDBEEF )]
+public unsafe struct CharaMakeType( ExcelPage page, uint offset, uint row ) : IExcelRow<CharaMakeType> {
+    public const int MenuCount = 28;
+    public const int SubMenuParamCount = 100;
+    public const int SubMenuGraphicCount = 10;
+    public const int VoiceCount = 12;
+    public const int FaceCount = 8;
+    public const int FaceFeatureCount = 7;
+
+    public readonly ExcelPage ExcelPage => page;
+    public readonly uint RowOffset => offset;
+    public readonly uint RowId => row;
+
+    public readonly Collection<CharaMakeStructStruct> CharaMakeStruct => new( page, offset, offset, &CharaMakeStructCtor, 28 );
+    public readonly Collection<byte> VoiceStruct => new( page, offset, offset, &VoiceStructCtor, 12 );
+    public readonly Collection<FacialFeatureOptionStruct> FacialFeatureOption => new( page, offset, offset, &FacialFeatureOptionCtor, 8 );
+    public readonly Collection<EquipmentStruct> Equipment => new( page, offset, offset, &EquipmentCtor, 3 );
+    public readonly RowRef<Race> Race => new( page.Module, ( uint )page.ReadInt32( offset + 13064 ), page.Language );
+    public readonly RowRef<Tribe> Tribe => new( page.Module, ( uint )page.ReadInt32( offset + 13068 ), page.Language );
+    public readonly sbyte Gender => page.ReadInt8( offset + 13072 );
+
+
+    private static CharaMakeStructStruct CharaMakeStructCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => new( page, parentOffset, offset + i * 452 );
+    private static byte VoiceStructCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt8( offset + 12656 + i );
+    private static FacialFeatureOptionStruct FacialFeatureOptionCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => new( page, parentOffset, offset + 12668 + i * 28 );
+    private static EquipmentStruct EquipmentCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => new( page, parentOffset, offset + 12896 + i * 56 );
+
+    public readonly struct CharaMakeStructStruct( ExcelPage page, uint parentOffset, uint offset ) {
+        public readonly RowRef<Lobby> Menu => new( page.Module, page.ReadUInt32( offset ), page.Language );
+        public readonly uint SubMenuMask => page.ReadUInt32( offset + 4 );
+        public readonly uint Customize => page.ReadUInt32( offset + 8 );
+
+        public readonly Collection<uint> SubMenuParam => new( page, parentOffset, offset, &SubMenuParamCtor, 100 );
+        public readonly Collection<uint> Unknown0 => new( page, parentOffset, offset, &Unknown0Ctor, 6 );
+
+        public readonly byte InitVal => page.ReadUInt8( offset + 436 );
+        public readonly byte SubMenuType => page.ReadUInt8( offset + 437 );
+        public readonly byte SubMenuNum => page.ReadUInt8( offset + 438 );
+        public readonly byte LookAt => page.ReadUInt8( offset + 439 );
+
+        public readonly Collection<byte> SubMenuGraphic => new( page, parentOffset, offset, &SubMenuGraphicCtor, 10 );
+
+        private static uint SubMenuParamCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt32( offset + 12 + i * 4 );
+        private static uint Unknown0Ctor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt32( offset + 412 + i * 4 );
+        private static byte SubMenuGraphicCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt8( offset + 416 + i );
+    }
+
+    public readonly struct FacialFeatureOptionStruct {
+        public FacialFeatureOptionStruct( ExcelPage page, uint parentOffset, uint offset ) {
+            Options = new int[FaceFeatureCount];
+            for( var i = 0; i < FaceFeatureCount; ++i ) {
+                Options[i] = page.ReadInt32( ( nuint )( offset + i * 4 ) );
+            }
+
+        }
+        public readonly int[] Options;
+    }
+
+#pragma warning disable CS9113 // Parameter is unread.
+    public readonly struct EquipmentStruct( ExcelPage page, uint parentOffset, uint offset )
+#pragma warning restore CS9113 // Parameter is unread.
+    {
+        public readonly ulong Helmet => page.ReadUInt64( offset );
+        public readonly ulong Top => page.ReadUInt64( offset + 8 );
+        public readonly ulong Gloves => page.ReadUInt64( offset + 16 );
+        public readonly ulong Legs => page.ReadUInt64( offset + 24 );
+        public readonly ulong Shoes => page.ReadUInt64( offset + 32 );
+        public readonly ulong Weapon => page.ReadUInt64( offset + 40 );
+        public readonly ulong SubWeapon => page.ReadUInt64( offset + 48 );
+    }
+
+    static CharaMakeType IExcelRow<CharaMakeType>.Create( ExcelPage page, uint offset, uint row ) =>
+        new( page, offset, row );
+
+    public static MenuCollection BuildMenus( uint row ) {
+        var menus = new List<Menu>();
+
+        var charaMakeTypes = Dalamud.DataManager.GetExcelSheet<CharaMakeType>( name: "CharaMakeType" ).GetRow( row );
+
+        for( uint i = 0; i < charaMakeTypes.CharaMakeStruct.Count; ++i ) {
+            var firstChar = charaMakeTypes.CharaMakeStruct[( int )i];
+
+            var title = firstChar.Menu.ValueNullable?.Text.ExtractText() ?? "Unknown";
+            var menuType = ( MenuType )firstChar.SubMenuType;
+            var subMenuNum = firstChar.SubMenuNum;
+            var subMenuMask = firstChar.SubMenuMask;
+            var customizeIndex = ( CustomizeIndex )firstChar.Customize;
+            var initialValue = firstChar.InitVal;
+
+            var subParams = new int[subMenuNum];
+            var subGraphics = new byte[SubMenuGraphicCount];
+
+            var FacialFeatures = new int[FaceCount, FaceFeatureCount];
+
+            for( var y = 0; y < FaceCount; ++y ) {
+                var faceOption = charaMakeTypes.FacialFeatureOption[y];
+                for( var x = 0; x < faceOption.Options.Length; ++x ) {
+                    FacialFeatures[y, x] = faceOption.Options[x];
+                }
+            }
+
+            for( var x = 0; x < subMenuNum; ++x ) {
+                if( x >= SubMenuParamCount ) {
+                    subParams[x] = 0;
+                    continue;
+                }
+
+                subParams[x] = ( int )firstChar.SubMenuParam[x];
+            }
+
+            menus.Add( new Menu( i, charaMakeTypes.RowId, title,
+                charaMakeTypes.Race.IsValid ? charaMakeTypes.Race.Value.RowId : 0,
+                charaMakeTypes.Tribe.IsValid ? charaMakeTypes.Tribe.Value.RowId : 0,
+                charaMakeTypes.Gender, menuType, subMenuMask, customizeIndex,
+                initialValue, subParams, subGraphics, [.. charaMakeTypes.VoiceStruct], FacialFeatures ) );
+
+
+        }
+
+        return new MenuCollection( [.. menus] );
+    }
+
+    public class MenuCollection( Menu[] menus ) {
+        public Menu[] Menus { get; } = menus;
+
+        public Menu? GetMenuForCustomize( CustomizeIndex index ) {
+            return Menus.FirstOrDefault( x => x.CustomizeIndex == index );
+        }
+
+        public Menu[] GetMenusForCustomize( CustomizeIndex index ) {
+            return Menus.Where( x => x.CustomizeIndex == index ).ToArray();
+        }
+
+        public MenuType GetMenuTypeForCustomize( CustomizeIndex index ) {
+            return GetMenuForCustomize( index )?.Type ?? MenuType.Unknown;
+        }
+    }
+
+    public record class Menu( uint MenuId,
+        uint CharaMakeRow, string Title,
+        uint Race, uint Tribe, sbyte
+        Gender, MenuType Type, uint MenuMask,
+        CustomizeIndex CustomizeIndex, byte InitialValue,
+        int[] SubParams, byte[] SubGraphics, byte[] Voices,
+        int[,] FacialFeatures );
 
     public enum MenuType : byte {
         List = 0,
-        Select = 1,
+        ItemSelect = 1,
         Color = 2,
-        Unknown1 = 3,
-        SelectMulti = 4,
-        Slider = 5
-    }
-
-    public struct Menu {
-        public string Name;
-        public byte Default;
-        public MenuType Type;
-        public byte Count;
-        // LookAt
-        // SubMenuMask
-        public CustomizeIndex Index;
-        public uint[] Params;
-        public byte[] Graphics;
-
-        public RowRef<CharaMakeCustomize>[] Features;
-
-        public readonly bool HasIcon => Type == MenuType.Select;
-        public readonly bool IsFeature => HasIcon && Graphics[0] == 0;
-    }
-
-    [Sheet( "CharaMakeType" )]
-    public struct CharaMakeType( uint row ) : IExcelRow<CharaMakeType> {
-        // Consts
-
-        public const int MenuCt = 28;
-        public const int VoiceCt = 12;
-        public const int GraphicCt = 10;
-        public const int FacialFeaturesCt = 7 * 8;
-
-        // Properties
-
-        public readonly uint RowId => row;
-
-        public RowRef<Race> Race { get; set; }
-        public RowRef<Tribe> Tribe { get; set; }
-        public sbyte Gender { get; set; }
-
-        public Menu[] Menus { get; set; }
-        public byte[] Voices { get; set; }
-        public int[] FacialFeatures { get; set; }
-
-        public RowRef<HairMakeType> FeatureMake { get; set; }
-
-        public static CharaMakeType Create( ExcelPage page, uint offset, uint row ) {
-            var features = new int[FacialFeaturesCt];
-            for( var i = 0; i < FacialFeaturesCt; i++ )
-                features[i] = page.ReadColumn<int>( 3291 + i, offset );
-
-            var menus = new Menu[MenuCt];
-            for( var i = 0; i < MenuCt; i++ ) {
-                var ct = page.ReadColumn<byte>( 3 + 3 * MenuCt + i, offset );
-                var lobby = page.ReadRowRef<Lobby>( 3 + i, offset );
-                var menu = new Menu() {
-                    Name = lobby.IsValid ? lobby.Value.Text.ExtractText() : string.Empty,
-                    Default = page.ReadColumn<byte>( 3 + 1 * MenuCt + i, offset ),
-                    Type = ( MenuType )page.ReadColumn<byte>( 3 + 2 * MenuCt + i, offset ),
-                    Count = ct,
-                    Index = ( CustomizeIndex )page.ReadColumn<uint>( 3 + 6 * MenuCt + i, offset ),
-                    Params = new uint[ct],
-                    Graphics = new byte[GraphicCt]
-                };
-
-                if( menu.HasIcon || menu.Type == MenuType.List ) {
-                    for( var p = 0; p < ct; p++ )
-                        menu.Params[p] = page.ReadColumn<uint>( 3 + ( 7 + p ) * MenuCt + i, offset );
-                    for( var g = 0; g < GraphicCt; g++ )
-                        menu.Graphics[g] = page.ReadColumn<byte>( 3 + ( 107 + g ) * MenuCt + i, offset );
-                }
-
-                if( menu.IsFeature ) {
-                    var feats = new RowRef<CharaMakeCustomize>[ct];
-                    for( var x = 0; x < ct; x++ )
-                        feats[x] = new RowRef<CharaMakeCustomize>( page.Module, menu.Params[x], page.Language );
-                    menu.Features = feats;
-                }
-
-                menus[i] = menu;
-            }
-
-            return new CharaMakeType( row ) {
-                Race = page.ReadRowRef<Race>( 0, offset ),
-                Tribe = page.ReadRowRef<Tribe>( 1, offset ),
-                Gender = page.ReadColumn<sbyte>( 2, offset ),
-                FeatureMake = new RowRef<HairMakeType>( page.Module, row, page.Language ),
-                FacialFeatures = features,
-                Menus = menus
-            };
-        }
+        Unknown3 = 3,
+        MultiItemSelect = 4,
+        Numerical = 5,
+        Unknown,
     }
 }

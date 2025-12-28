@@ -75,9 +75,8 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ```
 
 ## TODO
-- [ ] Display multiple axes at the same time in curve editor
-- [ ] Use job codes in search bar
-- [ ] Add particle/emitter toggles
+- [ ] Fix 7.4 `.mdl` face stuff
+- [ ] Fix DT material stuff
 
 - [ ] Add gizmo to `.sklb` bones
 - [ ] Copy/paste `.atch` entry
@@ -98,7 +97,6 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Sound icon on timeline
 - [ ] Investigate VFX flags, better structs
 - [ ] Weapons / footsteps / etc. in live view
-- [ ] Add pre and post behavior to curve editor
 - [ ] Update "try on" preview
 
 ```

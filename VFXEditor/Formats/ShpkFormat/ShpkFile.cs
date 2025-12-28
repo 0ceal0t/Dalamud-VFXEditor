@@ -48,6 +48,10 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly List<ShpkNode> Nodes = [];
         private readonly List<ShpkAlias> Aliases = [];
 
+        private readonly ParsedUInt unknown3 = new( "Unknown3" );
+        private readonly ParsedUInt unknown4 = new( "Unknown4" );
+        private readonly ParsedUInt unknown5 = new( "Unknown5" );
+
         private readonly CommandDropdown<ShpkShader> VertexView;
         private readonly CommandDropdown<ShpkShader> PixelView;
         private readonly CommandSplitView<ShpkMaterialParmeter> MaterialParameterView;
@@ -101,6 +105,12 @@ namespace VfxEditor.Formats.ShpkFormat {
             var numNode = reader.ReadUInt32();
             var numAlias = reader.ReadUInt32();
 
+            unknown3.Read( reader );
+            unknown4.Read( reader );
+            unknown5.Read( reader );
+
+            if( unknown3.Value != 0 || unknown4.Value != 0 || unknown5.Value != 0 ) Dalamud.Error( $"Unknown parameters: 0x{unknown3.Value:X4} 0x{unknown4.Value:X4} 0x{unknown5.Value:X4}" );
+
             for( var i = 0; i < numVertex; i++ ) VertexShaders.Add( new( reader, ShaderStage.Vertex, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
             for( var i = 0; i < numPixel; i++ ) PixelShaders.Add( new( reader, ShaderStage.Pixel, DxVersion, true, ShaderFileType.Shpk, IsV7 ) );
 
@@ -114,7 +124,6 @@ namespace VfxEditor.Formats.ShpkFormat {
                 }
                 reader.BaseStream.Position = defaultStart + materialParamsSize;
             }
-
             for( var i = 0; i < numConstants; i++ ) Constants.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numSamplers; i++ ) Samplers.Add( new( reader, ShaderFileType.Shpk ) );
             for( var i = 0; i < numTextures; i++ ) Textures.Add( new( reader, ShaderFileType.Shpk ) );
@@ -201,6 +210,11 @@ namespace VfxEditor.Formats.ShpkFormat {
             writer.Write( Nodes.Count );
             writer.Write( Aliases.Count );
 
+            unknown3.Write( writer );
+            unknown4.Write( writer );
+            unknown5.Write( writer );
+
+
             var stringPositions = new List<(long, string)>();
             var shaderPositions = new List<(long, ShpkShader)>();
 
@@ -233,7 +247,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             Nodes.ForEach( x => x.Write( writer ) );
             Aliases.ForEach( x => x.Write( writer ) );
 
-            WriteOffsets( writer, placeholderPos, stringPositions, shaderPositions );
+            WriteOffsetsSHPK( writer, placeholderPos, stringPositions, shaderPositions );
         }
 
         public override void Draw() {

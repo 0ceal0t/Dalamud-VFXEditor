@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace VfxEditor.Structs.Animation {
+namespace VfxEditor.Interop.Structs.Animation {
     public enum CharacterModes : byte {
         None = 0,
         Normal = 1,
@@ -29,7 +29,7 @@ namespace VfxEditor.Structs.Animation {
 
     [StructLayout( LayoutKind.Explicit )]
     public unsafe struct ActorMemoryStruct {
-        [FieldOffset( 0x0A20 )] public AnimationMemory Animation;
+        [FieldOffset( 0x0A30 )] public AnimationMemory Animation;
         [FieldOffset( 0x2354 )] public byte CharacterMode;
         [FieldOffset( 0x2355 )] public byte CharacterModeInput;
 

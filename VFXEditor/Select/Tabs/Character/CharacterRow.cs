@@ -49,6 +49,10 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public string GetStartPap( int id, string prefix ) => $"{PapPrefix}/emote/{prefix}pose{id:D2}_start.pap";
 
+        public string GetOrnamentLoopPap( int id, string prefix ) => $"{PapPrefix}/ornament_sp/m6001/{prefix}pose{id:D2}_loop.pap";
+
+        public string GetOrnamentStartPap( int id, string prefix ) => $"{PapPrefix}/ornament_sp/m6001/{prefix}pose{id:D2}_start.pap";
+
         public string GetPap( string path ) => $"{PapPrefix}/{path}.pap";
 
         public string GetMtrl( CharacterPart part, int id, string suffix ) {

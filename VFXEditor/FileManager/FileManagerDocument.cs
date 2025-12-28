@@ -71,7 +71,7 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
+                Dalamud.Error( e, $"Error reading file: {path}" );
                 Dalamud.ErrorNotification( "Error reading file" );
             }
         }
@@ -95,8 +95,8 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, "Error Reading File" );
-                Dalamud.ErrorNotification( "Error reading file" );
+                Dalamud.Error( e, $"Error Reading File at {path}");
+                Dalamud.ErrorNotification( $"Error Reading File at {path}");
             }
         }
 
@@ -173,7 +173,7 @@ namespace VfxEditor.FileManager {
             ReplaceTextInput = "";
 
             LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
-            if( File != null ) File.Verified = VerifiedStatus.WORKSPACE;
+            File?.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }
 

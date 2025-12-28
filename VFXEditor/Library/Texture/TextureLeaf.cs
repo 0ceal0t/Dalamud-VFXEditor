@@ -49,7 +49,7 @@ namespace VfxEditor.Library.Texture {
         }
 
         public bool DrawSelectable() {
-            var ret = ImGui.Selectable( $"{Name}##{Id}" );
+            var ret = ImGui.Selectable( $"{NameOrNone}##{Id}" );
 
             if( ImGui.IsItemHovered() ) {
                 ImGui.BeginTooltip();

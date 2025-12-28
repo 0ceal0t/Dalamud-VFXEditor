@@ -15,16 +15,19 @@ namespace VfxEditor.Select.Tabs.Zone {
         // ===== LOADING =====
 
         public override void LoadSelection( ZoneRow item, out SelectedScd loaded ) {
-            loaded = new() {
-                Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
-            };
-            if( item.BgmId <= 50000 ) return;
-
-            //foreach( var bgmSwitch in Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
-            //    var questName = bgmSwitch.Quest.ValueNullable?.Name.ToString();
-            //    var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM.RowId );
-            //    loaded.Quests[string.IsNullOrEmpty( questName ) ? item.Name : questName] = situation;
-            //}
+            if( item.BgmId <= 50000 ) {
+                loaded = new() {
+                    Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
+                };
+            }
+            else {
+                loaded = new(); // TODO
+                //foreach( var bgmSwitch in Dalamud.DataManager.GetExcelSheet<BGMSwitch>().Where( x => x.RowId == item.BgmId ) ) {
+                //    var questName = bgmSwitch.Quest.ValueNullable?.Name.ToString();
+                //    var situation = BgmQuestTab.GetBgmSituation( bgmSwitch.BGM.RowId );
+                //    loaded.Quests[string.IsNullOrEmpty( questName ) ? item.Name : questName] = situation;
+                //}
+            }
         }
 
         // ===== DRAWING ======
