@@ -10,7 +10,7 @@ using VfxEditor.UldFormat.Component.Node;
 
 namespace VfxEditor.UldFormat.Widget {
     public enum AlignmentType : int {
-        Unknown = 0xFF,
+        Unknown1 = 0xFF,
         TopLeft = 0x0,
         Top = 0x1,
         TopRight = 0x2,
@@ -20,6 +20,10 @@ namespace VfxEditor.UldFormat.Widget {
         BottomLeft = 0x6,
         Bottom = 0x7,
         BottomRight = 0x8,
+        Unknown2 = 256, //Journal, StorySupport
+        Unknown3 = 258, //ActionMenu, Social
+        Unknown4 = 260, //AdventureNoteBook, Alarm, BuddySkill, etc.
+        Unknown5 = 264, //ActionDetail, LFG
     }
 
     public class UldWidget : UldWorkspaceItem {
