@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
     public class ScdAudioMarker {
         private ScdAudioEntry Entry;
 
-        public readonly ParsedPaddedString Id = new( "Id", 4, 0x00 );
+        public readonly ParsedPaddedString Id = new( "Id", 5, 0x00 );
         public readonly ParsedFloat LoopStart = new( "Loop Start" );
         public readonly ParsedFloat LoopEnd = new( "Loop End" );
 
@@ -53,8 +53,8 @@ namespace VfxEditor.Formats.ScdFormat.Music.Marker {
         public void Write( BinaryWriter writer ) {
             FileUtils.WriteString( writer, Id.Value );
             writer.Write( GetSize() );
-            writer.Write( ( int )( LoopStart.Value * Entry.SampleRate ) );
-            writer.Write( ( int )( LoopEnd.Value * Entry.SampleRate ) );
+            writer.Write( ( int )Math.Round( LoopStart.Value * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
+            writer.Write( ( int )Math.Round( LoopEnd.Value * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
             writer.Write( Markers.Count );
             foreach( var marker in Markers ) writer.Write( ( int )Math.Round( marker.Value * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
 
