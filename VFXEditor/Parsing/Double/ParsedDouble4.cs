@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
     public struct Double4 {
@@ -27,6 +28,7 @@ namespace VfxEditor.Parsing {
     }
 
     public class ParsedDouble4 : ParsedSimpleBase<Double4> {
+        public bool HighPrecision = true;
         public ParsedDouble4( string name, Double4 value ) : base( name, value ) { }
 
         public ParsedDouble4( string name ) : base( name ) { }
@@ -49,7 +51,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value.Vec4;
-            if( ImGui.InputFloat4( Name, ref value ) ) Update( new( value ) );
+            if( ImGui.InputFloat4( Name, ref value, 0.0f, 0.0f, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) Update( new( value ) );
         }
     }
 }

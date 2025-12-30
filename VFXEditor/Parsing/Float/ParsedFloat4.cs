@@ -4,8 +4,7 @@ using System.Numerics;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing {
-    public class ParsedFloat4 : ParsedSimpleBase<Vector4>
-    {
+    public class ParsedFloat4 : ParsedSimpleBase<Vector4> {
         public bool HighPrecision = true;
         public ParsedFloat4( string name, Vector4 value ) : base( name, value ) { }
 
