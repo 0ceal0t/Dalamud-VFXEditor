@@ -22,7 +22,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
         private readonly ParsedEnum<GridPartsType> GridParts = new( "Grid Parts Type", size: 1 );
         private readonly ParsedEnum<GridRenderType> GridRender = new( "Grid Render Type", size: 1 );
         private readonly ParsedShort TopOffset = new( "Top Offset" );
-        private readonly ParsedShort BottonOffset = new( "Bottom Offset" );
+        private readonly ParsedShort BottomOffset = new( "Bottom Offset" );
         private readonly ParsedShort LeftOffset = new( "Left Offset" );
         private readonly ParsedShort RightOffset = new( "Right Offset" );
         private readonly ParsedEnum<UldDrawMode> DrawMode = new( "Draw Mode", size: 1 );
@@ -39,7 +39,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             GridParts.Read( reader );
             GridRender.Read( reader );
             TopOffset.Read( reader );
-            BottonOffset.Read( reader );
+            BottomOffset.Read( reader );
             LeftOffset.Read( reader );
             RightOffset.Read( reader );
             DrawMode.Read( reader );
@@ -52,7 +52,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             GridParts.Write( writer );
             GridRender.Write( writer );
             TopOffset.Write( writer );
-            BottonOffset.Write( writer );
+            BottomOffset.Write( writer );
             LeftOffset.Write( writer );
             RightOffset.Write( writer );
             DrawMode.Write( writer );
@@ -81,7 +81,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
                 drawList.AddLine( pos + new Vector2( width - RightOffset.Value, 0 ) * mult, pos + new Vector2( width - RightOffset.Value, height ) * mult, color, 1f );
 
                 drawList.AddLine( pos + new Vector2( 0, TopOffset.Value ) * mult, pos + new Vector2( width, TopOffset.Value ) * mult, color, 1f );
-                drawList.AddLine( pos + new Vector2( 0, height - BottonOffset.Value ) * mult, pos + new Vector2( width, height - BottonOffset.Value ) * mult, color, 1f );
+                drawList.AddLine( pos + new Vector2( 0, height - BottomOffset.Value ) * mult, pos + new Vector2( width, height - BottomOffset.Value ) * mult, color, 1f );
 
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
             }
@@ -89,7 +89,7 @@ namespace VfxEditor.UldFormat.Component.Node.Data {
             GridParts.Draw();
             GridRender.Draw();
             TopOffset.Draw();
-            BottonOffset.Draw();
+            BottomOffset.Draw();
             LeftOffset.Draw();
             RightOffset.Draw();
             DrawMode.Draw();
