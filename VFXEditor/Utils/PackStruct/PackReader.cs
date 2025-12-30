@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace VFXEditor.Utils.PackStruct {
+namespace VfxEditor.Utils.PackStruct {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/0e973ed6eace6afd31cd298f8c58f76fa8d5ef60/Files/PackStructs/PackReader.cs
 
     public unsafe ref struct PackReader {
@@ -21,11 +21,10 @@ namespace VFXEditor.Utils.PackStruct {
             }
 
             reader.BaseStream.Position = reader.BaseStream.Length - (long)_packFooter.TotalSize;
+            FileUtils.PadTo( reader, 16 );
             StartPos = reader.BaseStream.Position;
 
-            _baseData = reader.ReadBytes((int)_packFooter.TotalSize - sizeof( PackFooter ));
-            if( _packFooter.Header.PriorOffset + _baseData.Length >= _baseData.Length )
-                HasData = false;
+            _baseData = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position) - sizeof( PackFooter ));
             if( _packFooter.Header.PackCount < 1 )
                 HasData = false;
         }
@@ -36,8 +35,7 @@ namespace VFXEditor.Utils.PackStruct {
                 return false;
             }
 
-            var start = ( int )( _baseData.Length + _packFooter.Header.PriorOffset );
-            var reader = new SpanBinaryReader( _baseData[start..] );
+            var reader = new SpanBinaryReader( _baseData );
             var newFooter = reader.Read<PackHeader>();
             if( newFooter.Type != type ) {
                 prior = default;
@@ -45,13 +43,8 @@ namespace VFXEditor.Utils.PackStruct {
             }
 
             prior.Header = newFooter;
-            prior.Data = _baseData[( start + sizeof( PackHeader ) )..];
-            _packFooter.Header = newFooter;
-            _baseData = _baseData[..start];
-            if( _packFooter.Header.PriorOffset + _baseData.Length >= _baseData.Length )
-                HasData = false;
-            if( _packFooter.Header.PackCount < 1 )
-                HasData = false;
+            prior.Data = _baseData[sizeof( PackHeader )..];
+
             return true;
         }
     }

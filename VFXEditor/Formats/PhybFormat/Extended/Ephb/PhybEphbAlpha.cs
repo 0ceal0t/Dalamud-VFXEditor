@@ -6,7 +6,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Ui.Assignable;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Flatbuffer.Ephb;
+using VfxEditor.Flatbuffer;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbAlpha : IUiItem {
@@ -28,7 +28,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             EpsilonView = new( "Epsilon", Epsilon, false, null, () => new() );
         }
 
-        public PhybEphbAlpha( EphbAlphaT alpha ) : this() {
+        public PhybEphbAlpha( EphbAlpha alpha ) : this() {
             Unknown1.Value = alpha.Unknown1;
             Zeta.SetValue( alpha.Zeta == null ? null : new( alpha.Zeta ) );
             Beta.AddRange( alpha.Beta.Select( x => new PhybEphbBeta( x ) ) );
@@ -58,12 +58,12 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             }
         }
 
-        public EphbAlphaT Export() => new() {
+        public EphbAlpha Export() => new() {
             Unknown1 = Unknown1.Value,
             Zeta = Zeta.GetValue()?.Export(),
-            Beta = Beta.Select( x => x.Export() ).ToList(),
-            Eta = Eta.Select( x => x.Export() ).ToList(),
-            Epsilon = Epsilon.Select( x => x.Export() ).ToList()
+            Beta = [.. Beta.Select( x => x.Export() )],
+            Eta = [.. Eta.Select( x => x.Export() )],
+            Epsilon = [.. Epsilon.Select( x => x.Export() )]
         };
     }
 }

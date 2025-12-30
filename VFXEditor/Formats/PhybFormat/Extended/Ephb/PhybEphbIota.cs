@@ -1,17 +1,17 @@
+using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbIota : IUiItem {
-        private readonly EphbUnknownTT Unknown1;
-        private readonly EphbUnknownTT Unknown2;
-        private readonly EphbUnknownTT Unknown3;
+        private readonly EphbUnknownT Unknown1;
+        private readonly EphbUnknownT Unknown2;
+        private readonly EphbUnknownT Unknown3;
         private readonly ParsedFloat Unknown4 = new( "Unknown 4" );
 
         public PhybEphbIota() { }
 
-        public PhybEphbIota( EphbIotaT iota ) : this() {
+        public PhybEphbIota( EphbIota iota ) : this() {
             Unknown1 = iota.Unknown1;
             Unknown2 = iota.Unknown2;
             Unknown3 = iota.Unknown3;
@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             Unknown4.Draw();
         }
 
-        public EphbIotaT Export() => new() {
+        public EphbIota Export() => new() {
             Unknown1 = Unknown1,
             Unknown2 = Unknown2,
             Unknown3 = Unknown3,

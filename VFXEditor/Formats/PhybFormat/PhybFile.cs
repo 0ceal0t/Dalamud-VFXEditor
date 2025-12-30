@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
 using HelixToolkit.SharpDX.Core.Animations;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -15,6 +15,7 @@ using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
+using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {
@@ -34,6 +35,7 @@ namespace VfxEditor.PhybFormat {
         public bool PhysicsUpdated = true;
         private bool SkeletonTabOpen = false;
 
+        public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'H' << 16 ) | ( ( uint )'B' << 24 );
         public readonly PhybExtended Extended;
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
@@ -52,11 +54,12 @@ namespace VfxEditor.PhybFormat {
             var diff = 0;
             var ephbPos = reader.BaseStream.Length;
 
-            reader.BaseStream.Position = reader.BaseStream.Length <= 0x18 ? 0 : reader.BaseStream.Length - 0x18;
-            if( reader.ReadUInt32() == PhybExtended.MAGIC_PACK ) {
-                Extended = new( reader, out ephbPos, out var ephbSize );
-                ignoreRange = [(( int )ephbPos, ( int )reader.BaseStream.Length)];
-                diff = ephbSize - Extended.Table.Export().SerializeToBinary().Length;
+            var packReader = new PackReader( reader );
+            if( packReader.TryGetPrior( ExtendedType, out var extendedData ) ) {
+                Extended = new( extendedData );
+                ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
+                diff = extendedData.Data.Length - Extended.GetEphbData().Length;
+                ephbPos = packReader.StartPos;
             }
 
             reader.BaseStream.Position = simOffset;
@@ -99,8 +102,11 @@ namespace VfxEditor.PhybFormat {
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
 
-            writer.BaseStream.Position = writer.BaseStream.Length;
-            Extended?.Write( writer );
+            if( Extended != null ) {
+                writer.BaseStream.Position = writer.BaseStream.Length;
+                FileUtils.PadTo( writer, 16 );
+                Extended.Write( writer );
+            }
         }
 
         public override void Draw() {

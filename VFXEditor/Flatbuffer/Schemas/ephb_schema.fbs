@@ -65,11 +65,11 @@ table EphbAlpha {
     zeta:EphbZeta;
 }
 
-table EphbTable (fs_serializer) {
+table EphbData (fs_serializer) {
     unknown1:EphbUnknownT;
     unknown2:EphbUnknownT;
     alpha:[EphbAlpha];
 }
 
 file_identifier "EPHB";
-root_type EphbTable;
+root_type EphbData;

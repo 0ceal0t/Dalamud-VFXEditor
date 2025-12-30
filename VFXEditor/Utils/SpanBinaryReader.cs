@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace VFXEditor.Utils {
+namespace VfxEditor.Utils {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/0e973ed6eace6afd31cd298f8c58f76fa8d5ef60/Files/Utility/SpanBinaryReader.cs#L17
 
     public unsafe ref struct SpanBinaryReader {

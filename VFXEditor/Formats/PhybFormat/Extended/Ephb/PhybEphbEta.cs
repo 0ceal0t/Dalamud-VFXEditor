@@ -1,6 +1,6 @@
+using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbEta : IUiItem {
@@ -11,7 +11,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
 
         public PhybEphbEta() { }
 
-        public PhybEphbEta( EphbEtaT eta ) : this() {
+        public PhybEphbEta( EphbEta eta ) : this() {
             Unknown1.Value = eta.Unknown1;
             Unknown2.Value = eta.Unknown2;
             Unknown3.Value = eta.Unknown3;
@@ -25,7 +25,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             Unknown4.Draw();
         }
 
-        public EphbEtaT Export() => new() {
+        public EphbEta Export() => new() {
             Unknown1 = ( ushort )Unknown1.Value,
             Unknown2 = ( ushort )Unknown2.Value,
             Unknown3 = ( ushort )Unknown3.Value,

@@ -1,15 +1,15 @@
+using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbZeta : IUiItem {
-        public readonly EphbUnknownTT Unknown1;
+        public readonly EphbUnknownT Unknown1;
         public readonly ParsedFloat Unknown2 = new( "Unknown 2" );
 
         public PhybEphbZeta() { }
 
-        public PhybEphbZeta( EphbZetaT zeta ) : this() {
+        public PhybEphbZeta( EphbZeta zeta ) : this() {
             Unknown1 = zeta.Unknown1;
             Unknown2.Value = zeta.Unknown2;
         }
@@ -18,7 +18,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             Unknown2.Draw();
         }
 
-        public EphbZetaT Export() => new() {
+        public EphbZeta Export() => new() {
             Unknown1 = Unknown1,
             Unknown2 = Unknown2.Value
         };

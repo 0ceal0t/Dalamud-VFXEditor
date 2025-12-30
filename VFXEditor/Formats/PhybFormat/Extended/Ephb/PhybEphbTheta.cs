@@ -1,6 +1,6 @@
+using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Flatbuffer.Ephb;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbTheta : IUiItem {
@@ -9,7 +9,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
 
         public PhybEphbTheta() { }
 
-        public PhybEphbTheta( EphbThetaT theta ) : this() {
+        public PhybEphbTheta( EphbTheta theta ) : this() {
             Unknown1.Value = theta.Unknown1;
             Unknown2.Value = theta.Unknown2;
         }
@@ -19,7 +19,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
             Unknown2.Draw();
         }
 
-        public EphbThetaT Export() => new() {
+        public EphbTheta Export() => new() {
             Unknown1 = Unknown1.Value,
             Unknown2 = Unknown2.Value,
         };

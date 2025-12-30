@@ -1,59 +1,33 @@
+using FlatSharp;
+using System;
 using System.IO;
+using VfxEditor.Flatbuffer;
 using VfxEditor.Formats.PhybFormat.Extended.Ephb;
-using VFXEditor.Flatbuffer.Ephb;
+using VfxEditor.PhybFormat;
+using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PhybFormat.Extended {
     public class PhybExtended {
-        public const uint MAGIC_PACK = 0x4B434150;
-        public const uint MAGIC_EPHB = 0x42485045;
-
-        private readonly bool Padded = true;
-
         public readonly PhybEphbTable Table;
-
-        /*
-         *       ..\flatc.exe --csharp --gen-object-api --gen-onefile .\Ephb.fbs
-         */
 
         public PhybExtended() { }
 
-        public PhybExtended( BinaryReader reader, out long startPos, out int size ) : this() {
-            // already read PACK
-            reader.BaseStream.Position += 0xC; // skip to [offset]
-            var offset = reader.ReadInt64();
-            reader.BaseStream.Position -= offset;
-            if( reader.ReadUInt32() != 0 ) { // sometimes there's a zero
-                reader.BaseStream.Position -= 4; // TODO: double-check this
-                Padded = false;
-            }
-            startPos = reader.BaseStream.Position;
+        public PhybExtended( Pack extendedData ) : this() {
+            Table = new( EphbData.Serializer.Parse( extendedData.Data.ToArray(), FlatBufferDeserializationOption.GreedyMutable ) );
+        }
 
-            reader.ReadUInt32(); // Magic
-            reader.ReadUInt32(); // 1
-            size = reader.ReadInt32();
-            reader.ReadUInt32(); // 0
-            Table = new( EphbTable.GetRootAsEphbTable( new( reader.ReadBytes( size ) ) ).UnPack() );
+        public Span<byte> GetEphbData() {
+            var table = Table.Export();
 
-            // back to PACK
+            var size = EphbData.Serializer.GetMaxSize( table );
+            var data = new byte[size];
+            EphbData.Serializer.WithSettings( s => s.DisableSharedStrings() );
+            var bytes = EphbData.Serializer.Write( data, table );
+            return data.AsSpan( 0, bytes );
         }
 
         public void Write( BinaryWriter writer ) {
-            var data = Table.Export().SerializeToBinary();
-
-            if( Padded ) writer.Write( 0 );
-
-            var startPos = writer.BaseStream.Position;
-            writer.Write( MAGIC_EPHB );
-            writer.Write( ( ushort )1 ); // version
-            writer.Write( ( ushort )0 ); // count
-            writer.Write( ( long )data.Length ); // offset_next
-            writer.Write( data );
-
-            writer.Write( MAGIC_PACK );
-            writer.Write( ( ushort )1 ); // version
-            writer.Write( ( ushort )1 ); // count
-            writer.Write( startPos - writer.BaseStream.Position + 0x8 ); // offset to first
-            writer.Write( writer.BaseStream.Position - startPos + 0x8 ); // total size
+            Pack.Write( writer, PhybFile.ExtendedType, 1, GetEphbData() );
         }
 
         public void Draw() => Table.Draw();

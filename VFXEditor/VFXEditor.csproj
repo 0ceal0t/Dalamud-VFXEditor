@@ -174,7 +174,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Flatbuffer\Ephb\" />
       <Folder Include="Flatbuffer\Schemas\" />
       <Folder Include="lib\" />
     </ItemGroup>

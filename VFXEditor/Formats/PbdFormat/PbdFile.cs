@@ -11,8 +11,7 @@ using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileManager;
 using VfxEditor.Flatbuffer;
 using VfxEditor.Utils;
-using VFXEditor.Utils.PackStruct;
-using static CommunityToolkit.Mvvm.ComponentModel.__Internals.__TaskExtensions.TaskAwaitableWithoutEndValidation;
+using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PbdFormat {
     public class PbdFile : FileManagerFile {
@@ -74,10 +73,11 @@ namespace VfxEditor.Formats.PbdFormat {
                 writer.Write( ( int )dataPositions[deformer] );
             }
 
-            writer.BaseStream.Position = writer.BaseStream.Length;
-            FileUtils.PadTo( writer, 16 );
-
-            if( EpbdData != null ) Pack.Write( writer, ExtendedType, 1, GetEpbdData() );
+            if( EpbdData != null ) {
+                writer.BaseStream.Position = writer.BaseStream.Length;
+                FileUtils.PadTo( writer, 16 );
+                Pack.Write( writer, ExtendedType, 1, GetEpbdData() );
+            }
         }
 
         private Span<byte> GetEpbdData() {
