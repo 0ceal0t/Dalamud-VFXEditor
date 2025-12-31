@@ -19,6 +19,7 @@ using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
+using VFXEditor.Formats.KdbFormat.UnknownE;
 
 namespace VfxEditor.Formats.KdbFormat {
     public enum ArrayType : ushort {
@@ -54,6 +55,9 @@ namespace VfxEditor.Formats.KdbFormat {
         public readonly List<UnknownBItem> ItemsB = [];
         private readonly CommandSplitView<UnknownBItem> SplitViewB;
 
+        public readonly List<UnknownEItem> ItemsE = [];
+        private readonly CommandSplitView<UnknownEItem> SplitViewE;
+
         public readonly List<UnknownFItem> ItemsF = [];
         private readonly CommandTable<UnknownFItem> TableViewF;
 
@@ -71,10 +75,12 @@ namespace VfxEditor.Formats.KdbFormat {
             ], () => new() );
 
             SplitViewB = new( "Item", ItemsB, false, null, () => new( Nodes ) );
+            SplitViewE = new( "Item", ItemsE, false, null, () => new() );
 
             // ==========================
 
             VerifyIgnore = [];
+            var connectionMissing = false;
 
             MajorVersion = reader.ReadUInt32();
             MinorVersion = reader.ReadUInt32();
@@ -116,7 +122,8 @@ namespace VfxEditor.Formats.KdbFormat {
                         reader.ReadUInt32(); // index
                         var nodeType = ( KdbNodeType )reader.ReadByte();
 
-                        KdbNode newNode = nodeType switch {
+
+                        KdbNode? newNode = nodeType switch {
                             KdbNodeType.EffectorExpr => new KdbNodeEffectorExpr( reader ),
                             KdbNodeType.EffectorEZParamLink => new KdbNodeEffectorEZParamLink( reader ),
                             KdbNodeType.EffectorEZParamLinkLinear => new KdbNodeEffectorEZParamLinkLinear( reader ),
@@ -152,13 +159,16 @@ namespace VfxEditor.Formats.KdbFormat {
                         var targetSlot = targetNode.FindInput( connection.TargetType );
                         if( sourceSlot == null ) {
                             Dalamud.Error( $"Could not find output {connection.SourceType} for {sourceNode.Type}" );
+                            connectionMissing = true;
                             continue;
                         }
                         if( targetSlot == null ) {
                             Dalamud.Error( $"Could not find input {connection.TargetType} for {targetNode.Type}" );
+                            connectionMissing = true;
                             continue;
                         }
                         if( !targetSlot.AcceptMultiple && targetSlot.GetConnections().Count > 0 ) {
+                            connectionMissing = true;
                             Dalamud.Error( $"{connection.TargetType} for {targetNode.Type} should accept multiple inputs" );
                         }
                         targetSlot.Connect( sourceSlot, node.NameHash, connection.Coeff, connection.Unknown );
@@ -172,16 +182,23 @@ namespace VfxEditor.Formats.KdbFormat {
                     reader.BaseStream.Position = bArrayPosition;
                     for( var i = 0; i < bCount; i++ ) ItemsB.Add( new( reader, Nodes ) );
                 }
+                else if( type == ArrayType.E ) {
+                    reader.BaseStream.Position = arrayPosition;
+                    for( var i = 0; i < count; i++ ) ItemsE.Add( new( reader ) );
+                }
                 else if( type == ArrayType.F ) {
                     reader.BaseStream.Position = arrayPosition;
                     for( var i = 0; i < count; i++ ) ItemsF.Add( new( reader ) );
                 }
                 else if( count > 0 ) {
-                    Dalamud.Error( $"{type} >>> {count} {reader.BaseStream.Position:X8}" );
+                    Dalamud.Error( $"{type} >>> {count} / {reader.BaseStream.Position:X8} / {arrayPosition:X8}" );
                 }
             }
 
-            if( verify ) Verified = FileUtils.Verify( reader, ToBytes(), VerifyIgnore );
+            if( verify ) {
+                Verified = FileUtils.Verify( reader, ToBytes(), VerifyIgnore );
+                if( connectionMissing ) Verified = VerifiedStatus.ERROR;
+            }
         }
 
         public unsafe void UpdateSkeleton( SimpleSklb sklbFile ) {
@@ -228,7 +245,7 @@ namespace VfxEditor.Formats.KdbFormat {
             writer.Write( 0 );
 
             var cPlaceholder = WriterDataArrayHeader( 0, writer );
-            var ePlaceholder = WriterDataArrayHeader( 0, writer );
+            var ePlaceholder = WriterDataArrayHeader( ItemsE.Count, writer );
             var fPlaceholder = WriterDataArrayHeader( ItemsF.Count, writer );
 
             UpdatePlaceholder( operationsDataPlaceholder, operationsPlaceholder.Item1, writer );
@@ -280,6 +297,13 @@ namespace VfxEditor.Formats.KdbFormat {
             if( ItemsB.Count > 0 ) {
                 UpdatePlaceholder( bPlaceholder2, writer.BaseStream.Position, writer );
                 foreach( var item in ItemsB ) item.Write( writer );
+            }
+
+            // ==== E =======
+
+            if( ItemsE.Count > 0 ) {
+                UpdatePlaceholder( ePlaceholder.Item2, writer.BaseStream.Position, writer );
+                foreach( var item in ItemsE ) item.Write( writer );
             }
 
             // ==== F =======
@@ -338,6 +362,10 @@ namespace VfxEditor.Formats.KdbFormat {
                 if( tab ) { DrawB(); }
             }
 
+            using( var tab = ImRaii.TabItem( "Unknown E" ) ) {
+                if( tab ) { DrawE(); }
+            }
+
             using( var tab = ImRaii.TabItem( "Unknown F" ) ) {
                 if( tab ) { DrawF(); }
             }
@@ -374,6 +402,11 @@ namespace VfxEditor.Formats.KdbFormat {
         private void DrawB() {
             using var _ = ImRaii.PushId( "B" );
             SplitViewB.Draw();
+        }
+
+        private void DrawE() {
+            using var _ = ImRaii.PushId( "E" );
+            SplitViewE.Draw();
         }
 
         private void DrawF() {

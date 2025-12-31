@@ -47,6 +47,7 @@ namespace VfxEditor.Formats.PbdFormat {
                 EpbdData = ExtendedPbd.Serializer.Parse( extendedData.Data.ToArray(), FlatBufferDeserializationOption.GreedyMutable );
                 ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
                 diff = extendedData.Data.Length - GetEpbdData().Length;
+                Dalamud.Log( $"Flatbuffer diff is: {diff}" );
             }
 
             if( verify ) {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
@@ -35,6 +36,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
     public abstract class KdbNode : Node<KdbSlot> { // TODO: body stuff
         public abstract KdbNodeType Type { get; }
         public readonly ParsedFnvHash NameHash = new( "Name" );
+        public readonly ParsedUIntHex Unknown1 = new( "Unknown 1" );
+        public readonly ParsedUIntHex Unknown2 = new( "Unknown 2" );
 
         public KdbNode() : base() { // TODO
             Name = $"{Type}";
@@ -50,14 +53,13 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
             NameHash.Read( reader );
 
-            reader.ReadUInt32(); // 0
-            reader.ReadUInt32(); // 0
+            Unknown1.Read( reader );
+            Unknown2.Read( reader );
 
             var bodyPosition = reader.BaseStream.Position + reader.ReadUInt32();
             var savePosition = reader.BaseStream.Position;
             reader.BaseStream.Position = bodyPosition;
             ReadBody( reader );
-            // Dalamud.Log( $">>> {Type} / {a:X4} [{bodyPosition:X4} -> {reader.BaseStream.Position:X4}]" );
             reader.BaseStream.Position = savePosition;
         }
 
@@ -68,8 +70,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
             NameHash.Write( writer );
 
-            writer.Write( 0 );
-            writer.Write( 0 );
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
 
             positions[this] = writer.BaseStream.Position;
             writer.Write( 0 ); // placeholder
@@ -81,6 +83,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes {
 
         public void Draw( List<string> bones ) {
             NameHash.Draw();
+            Unknown1.Draw();
+            Unknown2.Draw();
             DrawBody( bones );
         }
 

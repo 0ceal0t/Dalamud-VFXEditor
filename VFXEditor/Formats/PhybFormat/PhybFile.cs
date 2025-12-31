@@ -59,6 +59,7 @@ namespace VfxEditor.PhybFormat {
                 Extended = new( extendedData );
                 ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
                 diff = extendedData.Data.Length - Extended.GetEphbData().Length;
+                Dalamud.Log( $"Flatbuffer diff is: {diff}" );
                 ephbPos = packReader.StartPos;
             }
 

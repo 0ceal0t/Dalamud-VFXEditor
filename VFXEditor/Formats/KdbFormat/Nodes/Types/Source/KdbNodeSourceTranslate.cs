@@ -69,6 +69,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             new( ConnectionType.TranslateX ),
             new( ConnectionType.TranslateY ),
             new( ConnectionType.TranslateZ ),
+            new( ConnectionType.Translate ),
         ];
     }
 }
