@@ -19,9 +19,10 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
             if( Bones?.BoneList.Count == 0 ) return;
 
             var mesh = new MeshBuilder( true, false );
+            var selected = new MeshBuilder( true, false );
 
-            File.AddBindPoints( mesh, Bones.BoneMatrixes );
-            Preview.LoadWireframe( mesh.ToMesh(), new MeshBuilder( true, false ).ToMesh(), new MeshBuilder( true, false ).ToMesh() );
+            File.AddBindPoints( mesh, selected, Bones.BoneMatrixes );
+            Preview.LoadWireframe( mesh.ToMesh(), new MeshBuilder( true, false ).ToMesh(), selected.ToMesh() );
         }
     }
 }

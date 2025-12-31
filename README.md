@@ -100,6 +100,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 - [ ] Update "try on" preview
 
 ```
+
+https://github.com/sleepybnuuy/eslb-scripting
+https://docs.google.com/document/d/1UnqSD0fBkQ8jT-172ZVMAcG1WT153mr_/edit?ref=xivmods.guide#heading=h.jsn3uri8qaly
+
 chara/xls/charadb/equipmentdeformerparameter/c0101.eqdp
 
 .kdlb
