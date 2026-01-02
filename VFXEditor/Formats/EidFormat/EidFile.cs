@@ -1,6 +1,5 @@
 using Dalamud.Interface.Utility.Raii;
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
+using HelixToolkit.SharpDX.Animations;
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
@@ -9,6 +8,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.EidFormat.Skeleton;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
+using HelixToolkit.Geometry;
 
 namespace VfxEditor.EidFormat {
     public class EidFile : FileManagerFile {

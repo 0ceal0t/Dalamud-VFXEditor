@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -16,6 +16,7 @@ using VfxEditor.PhybFormat.Skeleton;
 using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 using VfxEditor.Utils.PackStruct;
+using HelixToolkit.Geometry;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {

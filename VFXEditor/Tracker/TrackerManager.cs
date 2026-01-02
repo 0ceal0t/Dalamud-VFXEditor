@@ -3,12 +3,10 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using Dalamud.Bindings.ImGui;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Vec2 = System.Numerics.Vector2;
-using Vec3 = System.Numerics.Vector3;
+using System.Numerics;
 
 namespace VfxEditor.Tracker {
     public struct TrackerItem {
@@ -58,7 +56,7 @@ namespace VfxEditor.Tracker {
                 var paths = new HashSet<TrackerItem>();
                 foreach( var tracker in EnabledTrackers ) tracker.PopulateAll( paths );
 
-                var pos = windowPosition + new Vec2( 15, 15 );
+                var pos = windowPosition + new Vector2( 15, 15 );
                 DrawOverlayItems( pos, paths, 0 );
                 return;
             }
@@ -88,7 +86,7 @@ namespace VfxEditor.Tracker {
 
                 if( Distance( playerPosition.Value, group.Key ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
 
-                DrawOverlayItems( new Vec2( screenPos.X, screenPos.Y ), paths, idx );
+                DrawOverlayItems( new Vector2( screenPos.X, screenPos.Y ), paths, idx );
 
                 idx++;
             }
@@ -125,13 +123,13 @@ namespace VfxEditor.Tracker {
 
                 if( Distance( playerPosition.Value, pos ) > 100f && Plugin.Configuration.OverlayLimit ) continue;
 
-                DrawOverlayItems( new Vec2( screenPos.X, screenPos.Y ), paths, idx );
+                DrawOverlayItems( new Vector2( screenPos.X, screenPos.Y ), paths, idx );
 
                 idx++;
             }
         }
 
-        private static void DrawOverlayItems( Vec2 pos, HashSet<TrackerItem> items, int idx ) {
+        private static void DrawOverlayItems( Vector2 pos, HashSet<TrackerItem> items, int idx ) {
             var longestString = "";
             foreach( var item in items ) {
                 if( item.Path.Length > longestString.Length ) longestString = item.Path;
@@ -183,28 +181,6 @@ namespace VfxEditor.Tracker {
             public int GetHashCode( Vector3 obj ) => 0;
         }
 
-        private static float Distance( Vec3 p1, Vector3 p2 ) => ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
-
-        private static Matrix GetMatrix( out float width, out float height ) {
-            // Setup the matrix
-            var matrixSingleton = Plugin.ResourceLoader.GetMatrixSingleton();
-            var viewProjectionMatrix = new Matrix();
-            unsafe {
-                var rawMatrix = ( float* )( matrixSingleton + 0x1b4 + ( 0x13c * 0 ) ).ToPointer(); // 0 = projection idx
-                for( var i = 0; i < 16; i++, rawMatrix++ )
-                    viewProjectionMatrix[i] = *rawMatrix;
-                width = *rawMatrix;
-                height = *( rawMatrix + 1 );
-            }
-            return viewProjectionMatrix;
-        }
-
-        private static bool WorldToScreen( float height, float width, ref Matrix viewProjectionMatrix, Vec2 windowPos, Vector3 worldPos, out Vector2 screenPos ) {
-            Vector3.Transform( ref worldPos, ref viewProjectionMatrix, out SharpDX.Vector3 pCoords );
-            screenPos = new Vector2( pCoords.X / pCoords.Z, pCoords.Y / pCoords.Z );
-            screenPos.X = 0.5f * width * ( screenPos.X + 1f ) + windowPos.X;
-            screenPos.Y = 0.5f * height * ( 1f - screenPos.Y ) + windowPos.Y;
-            return pCoords.Z > 0 && screenPos.X > windowPos.X && screenPos.X < windowPos.X + width && screenPos.Y > windowPos.Y && screenPos.Y < windowPos.Y + height;
-        }
+        private static float Distance( Vector3 p1, Vector3 p2 ) => ( float )Math.Sqrt( Math.Pow( p1.X - p2.X, 2 ) + Math.Pow( p1.Y - p2.Y, 2 ) + Math.Pow( p1.Z - p2.Z, 2 ) );
     }
 }

@@ -1,10 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
+using HelixToolkit.Maths;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
-using Int4 = SharpDX.Int4;
 
 namespace VfxEditor.AvfxFormat {
     public enum ClipType {

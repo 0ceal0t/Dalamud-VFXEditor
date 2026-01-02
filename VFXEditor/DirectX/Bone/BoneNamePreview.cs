@@ -1,8 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
+using HelixToolkit.SharpDX;
+using HelixToolkit.SharpDX.Animations;
 using Dalamud.Bindings.ImGui;
-using SharpDX;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,8 @@ using VfxEditor.SklbFormat.Bones;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using Vec2 = System.Numerics.Vector2;
+using System.Numerics;
+using HelixToolkit.Maths;
 
 namespace VfxEditor.DirectX {
     public class BoneNamePreview : BonePreview {
@@ -76,7 +77,7 @@ namespace VfxEditor.DirectX {
             Model.SetConstantBuffers( Ctx, VertexShaderBuffer, PixelShaderBuffer );
 
             if( Model.Count > 0 ) {
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Model.Data, Utilities.SizeOf<Vector4>() * Model.Span, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Model.Data, SharpDX.Utilities.SizeOf<Vector4>() * Model.Span, 0 ) );
                 Ctx.Draw( Model.Count, 0 );
                 Ctx.Flush();
             }
@@ -100,7 +101,7 @@ namespace VfxEditor.DirectX {
 
                 Ctx.Rasterizer.State = wireframe;
 
-                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( WireframeVertices, Utilities.SizeOf<Vector4>() * 3, 0 ) );
+                Ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( WireframeVertices, SharpDX.Utilities.SizeOf<Vector4>() * 3, 0 ) );
                 Ctx.Draw( NumWireframe, 0 );
                 Ctx.Flush();
 
@@ -119,7 +120,7 @@ namespace VfxEditor.DirectX {
         protected virtual void DrawInlineExtra() { }
 
         public override void DrawInline() {
-            var viewProj = Matrix.Multiply( ViewMatrix, ProjMatrix );
+            var viewProj = Matrix4x4.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
 
             using var child = ImRaii.Child( "3DChild" );
@@ -137,7 +138,7 @@ namespace VfxEditor.DirectX {
             foreach( var bone in BoneList ) {
                 var matrix = bone.BindPose * worldViewProj;
 
-                var pos = Vector3.Transform( new Vector3( 0 ), matrix ).ToVector3();
+                var pos = Vector3Helper.TransformCoordinate( new( 0 ), matrix );
                 var screenPos = LastMid + ( ( LastSize / 2f ) * new Vec2( pos.X, -1f * pos.Y ) );
                 var depth = pos.Z;
 

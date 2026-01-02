@@ -1,9 +1,10 @@
-using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.DirectX.Drawable;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -155,8 +156,8 @@ namespace VfxEditor.DirectX.Renderers {
 
             Ctx.OutputMerger.SetTargets( DepthView, RenderView );
             Ctx.ClearDepthStencilView( DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
-            Ctx.ClearRenderTargetView( RenderView, new Color4( 0.3f, 0.3f, 0.3f, 1.0f ) );
-            Ctx.Rasterizer.SetViewport( new Viewport( 0, 0, Width, Height, 0.0f, 1.0f ) );
+            Ctx.ClearRenderTargetView( RenderView, new RawColor4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+            Ctx.Rasterizer.SetViewport( 0, 0, Width, Height, 0.0f, 1.0f );
             Ctx.Rasterizer.State = State;
 
             Gradient.SetupPass( Ctx, PassType.Final );

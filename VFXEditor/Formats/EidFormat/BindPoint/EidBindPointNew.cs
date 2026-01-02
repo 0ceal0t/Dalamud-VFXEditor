@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
-using SharpDX;
+using HelixToolkit.Maths;
 using System.IO;
+using System.Numerics;
 using VfxEditor.EidFormat.BindPoint;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
@@ -45,7 +46,7 @@ namespace VfxEditor.EidFormat {
 
         protected override Vector3 GetOffset() => new( Position.Value.X, Position.Value.Y, Position.Value.Z );
 
-        protected override Quaternion GetRotation() => Quaternion.RotationYawPitchRoll( Rotation.Value.Y, Rotation.Value.X, Rotation.Value.Z );
+        protected override Quaternion GetRotation() => QuaternionHelper.RotationYawPitchRoll( Rotation.Value.Y, Rotation.Value.X, Rotation.Value.Z );
 
         protected override string GetBoneName() => Name.Value;
     }

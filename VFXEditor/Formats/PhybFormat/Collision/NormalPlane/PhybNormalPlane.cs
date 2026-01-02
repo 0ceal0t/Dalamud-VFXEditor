@@ -1,8 +1,9 @@
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
@@ -29,15 +30,15 @@ namespace VfxEditor.PhybFormat.Collision.NormalPlane {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;
             var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
-            var pos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
+            var pos = Vector3Helper.TransformCoordinate( offset, bone.BindPose );
 
-            var normal = new Vector3( Normal.Value.X, Normal.Value.Y, Normal.Value.Z ).Normalized();
+            var normal = Vector3.Normalize(new Vector3( Normal.Value.X, Normal.Value.Y, Normal.Value.Z ));
             var tangent = Vector3.Cross( normal, Vector3.UnitY );
             if( tangent.Length() == 0 ) {
                 tangent = Vector3.Cross( normal, Vector3.UnitX );
             }
 
-            meshes.Collision.AddBox( pos, normal, tangent.Normalized(), 0.5f, 0.5f, Thickness.Value );
+            meshes.Collision.AddBox( pos, normal, Vector3.Normalize(tangent), 0.5f, 0.5f, Thickness.Value );
         }
     }
 }

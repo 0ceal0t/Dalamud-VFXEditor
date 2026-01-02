@@ -1,3 +1,5 @@
+using HelixToolkit.Geometry;
+using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Core;
 using VfxEditor.EidFormat;
 using VfxEditor.Interop.Havok.Ui;
@@ -22,7 +24,7 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
             var selected = new MeshBuilder( true, false );
 
             File.AddBindPoints( mesh, selected, Bones.BoneMatrixes );
-            Preview.LoadWireframe( mesh.ToMesh(), new MeshBuilder( true, false ).ToMesh(), selected.ToMesh() );
+            Preview.LoadWireframe( mesh.ToMeshGeometry3D(), new MeshBuilder( true, false ).ToMeshGeometry3D(), selected.ToMeshGeometry3D() );
         }
     }
 }

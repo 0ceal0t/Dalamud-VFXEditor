@@ -1,8 +1,8 @@
-using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -68,7 +68,7 @@ namespace VfxEditor.DirectX.Drawable {
             Instances?.Dispose();
         }
 
-        public void SetInstances( Device device, Matrix[] data, int count ) {
+        public void SetInstances( Device device, Matrix4x4[] data, int count ) {
             InstanceCount = count;
             Instances?.Dispose();
             Instances = Buffer.Create( device, BindFlags.VertexBuffer, data );
@@ -109,10 +109,10 @@ namespace VfxEditor.DirectX.Drawable {
         public void DrawVertexes( DeviceContext ctx ) {
             if( !DoDraw ) return;
 
-            ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Data, Utilities.SizeOf<Vector4>() * Span, 0 ) );
+            ctx.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( Data, SharpDX.Utilities.SizeOf<Vector4>() * Span, 0 ) );
 
             if( UseInstances ) {
-                ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( Instances, Utilities.SizeOf<Matrix>(), 0 ) );
+                ctx.InputAssembler.SetVertexBuffers( 1, new VertexBufferBinding( Instances, SharpDX.Utilities.SizeOf<Matrix4x4>(), 0 ) );
                 ctx.DrawInstanced( Count, InstanceCount, 0, 0 );
             }
             else {

@@ -1,8 +1,9 @@
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit.Geometry;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.EidFormat.BindPoint {
@@ -36,11 +37,11 @@ namespace VfxEditor.EidFormat.BindPoint {
             var offset = GetOffset();
             var rotation = GetRotation();
 
-            var transform = Matrix.AffineTransformation( 1, rotation, offset );
-            var matrix = Matrix.Multiply( transform, bone.BindPose );
+            var transform = MatrixHelper.AffineTransformation( 1, rotation, offset );
+            var matrix = Matrix4x4.Multiply( transform, bone.BindPose );
 
-            var startPos = Vector3.TransformCoordinate( new Vector3( 0 ), matrix );
-            var endPos = Vector3.TransformCoordinate( new Vector3( 0, 0, 0.1f ), matrix );
+            var startPos = Vector3Helper.TransformCoordinate( new Vector3( 0 ), matrix );
+            var endPos = Vector3Helper.TransformCoordinate( new Vector3( 0, 0, 0.1f ), matrix );
 
             mesh.AddCone( startPos, endPos, 0.06f, true, 10 );
         }

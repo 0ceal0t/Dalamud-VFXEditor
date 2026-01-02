@@ -19,8 +19,8 @@ namespace VfxEditor.DirectX.Lights {
         }
 
         public LightData GetData() => new() {
-            Position = DirectXManager.ToVec3( Position ),
-            Color = DirectXManager.ToVec3( Color ),
+            Position = Position,
+            Color = Color,
             Radius = Radius,
             Falloff = Falloff
         };

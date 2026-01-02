@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
-using SharpDX;
+using HelixToolkit.Maths;
 using System.IO;
+using System.Numerics;
 using VfxEditor.EidFormat.BindPoint;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
@@ -50,7 +51,7 @@ namespace VfxEditor.EidFormat {
 
         protected override Quaternion GetRotation() {
             var rotation = UiUtils.ToRadians( Rotation.Value );
-            return Quaternion.RotationYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
+            return QuaternionHelper.RotationYawPitchRoll( rotation.X, rotation.Y, rotation.Z );
         }
 
         protected override string GetBoneName() => Name.Value;

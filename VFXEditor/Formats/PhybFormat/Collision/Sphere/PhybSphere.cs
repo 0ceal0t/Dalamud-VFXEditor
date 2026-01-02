@@ -1,8 +1,9 @@
-using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
@@ -27,7 +28,7 @@ namespace VfxEditor.PhybFormat.Collision.Sphere {
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             if( !boneMatrixes.TryGetValue( Bone.Value, out var bone ) ) return;
             var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
-            var pos = Vector3.Transform( offset, bone.BindPose ).ToVector3();
+            var pos = Vector3Helper.TransformCoordinate( offset, bone.BindPose );
             meshes.Collision.AddSphere( pos, Thickness.Value / 2f, 10, 10 );
         }
     }

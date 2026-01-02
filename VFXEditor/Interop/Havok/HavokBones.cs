@@ -1,8 +1,9 @@
 using FFXIVClientStructs.Havok.Animation.Rig;
 using FFXIVClientStructs.Havok.Common.Base.Object;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
+using System.Numerics;
 using VfxEditor.SklbFormat.Bones;
 
 namespace VfxEditor.Interop.Havok {
@@ -40,15 +41,15 @@ namespace VfxEditor.Interop.Havok {
             if( Resource == null || Skeleton == null ) return;
 
             var parents = new List<int>();
-            var refPoses = new List<Matrix>();
-            var bindPoses = new List<Matrix>();
+            var refPoses = new List<Matrix4x4>();
+            var bindPoses = new List<Matrix4x4>();
 
             foreach( var bone in Bones ) {
                 var pos = bone.Pos;
                 var rot = bone.Rot;
                 var scl = bone.Scl;
 
-                var matrix = Matrix.AffineTransformation(
+                var matrix = MatrixHelper.AffineTransformation(
                     scl.X,
                     new Quaternion( ( float )rot.X, ( float )rot.Y, ( float )rot.Z, ( float )rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
@@ -56,13 +57,13 @@ namespace VfxEditor.Interop.Havok {
 
                 parents.Add( ParentIdx( bone ) );
                 refPoses.Add( matrix );
-                bindPoses.Add( Matrix.Identity );
+                bindPoses.Add( MatrixHelper.Identity );
             }
 
             for( var target = 0; target < Bones.Count; target++ ) {
                 var current = target;
                 while( current >= 0 ) {
-                    bindPoses[target] = Matrix.Multiply( bindPoses[target], refPoses[current] );
+                    bindPoses[target] = Matrix4x4.Multiply( bindPoses[target], refPoses[current] );
                     current = parents[current];
                 }
             }

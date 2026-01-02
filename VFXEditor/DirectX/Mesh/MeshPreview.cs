@@ -1,8 +1,9 @@
-using SharpDX;
+using HelixToolkit.Maths;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
@@ -20,8 +21,8 @@ namespace VfxEditor.DirectX.Mesh {
         protected VSMaterialBuffer VSBufferData;
 
         public MeshPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialPixelShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialVertexShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             PSBufferData = new() { };
             VSBufferData = new() { };
@@ -53,12 +54,12 @@ namespace VfxEditor.DirectX.Mesh {
 
         protected override void OnDrawUpdate() {
             var psBuffer = PSBufferData with {
-                AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
+                AmbientColor = Plugin.Configuration.MaterialAmbientColor,
                 EyePosition = CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
-                InvViewMatrix = Matrix.Invert( ViewMatrix ),
-                InvProjectionMatrix = Matrix.Invert( ProjMatrix ),
+                InvViewMatrix = ViewMatrix.Inverted(),
+                InvProjectionMatrix = ProjMatrix.Inverted(),
 
                 DiffuseColor = new( 1f, 1f, 1f ),
                 EmissiveColor = new( 0f, 0f, 0f ),

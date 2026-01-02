@@ -1,10 +1,11 @@
-using HelixToolkit.SharpDX.Core;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
 using Device = SharpDX.Direct3D11.Device;
@@ -43,8 +44,7 @@ namespace VfxEditor.DirectX {
         }
 
         protected static void PaintColor( MeshGeometry3D mesh, Vector4 color ) {
-            var _color = new Color4( color );
-            mesh.Colors = new Color4Collection( Enumerable.Repeat( _color, mesh.Positions.Count ).ToArray() );
+            mesh.Colors = [.. Enumerable.Repeat( new Color4( color ), mesh.Positions.Count ).ToArray()];
         }
 
         protected static Vector4[] GetData( MeshGeometry3D mesh ) {

@@ -1,11 +1,12 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
-using HelixToolkit.SharpDX.Core.Animations;
-using Dalamud.Bindings.ImGui;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX;
 using VfxEditor.DirectX.Pap;
@@ -107,8 +108,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             Data = [];
 
             var parents = new List<int>();
-            var refPoses = new List<Matrix>();
-            var bindPoses = new List<Matrix>();
+            var refPoses = new List<Matrix4x4>();
+            var bindPoses = new List<Matrix4x4>();
 
             for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
                 var transform = transforms[i];
@@ -116,7 +117,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 var rot = transform.Rotation;
                 var scl = transform.Scale;
 
-                var matrix = HavokUtils.CleanMatrix( Matrix.AffineTransformation(
+                var matrix = HavokUtils.CleanMatrix( MatrixHelper.AffineTransformation(
                     scl.X,
                     new Quaternion( rot.X, rot.Y, rot.Z, rot.W ),
                     new Vector3( pos.X, pos.Y, pos.Z )
@@ -124,13 +125,13 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
                 parents.Add( Motion.Skeleton->ParentIndices[i] );
                 refPoses.Add( matrix );
-                bindPoses.Add( Matrix.Identity );
+                bindPoses.Add( Matrix4x4.Identity );
             }
 
             for( var target = 0; target < Motion.Skeleton->Bones.Length; target++ ) {
                 var current = target;
                 while( current >= 0 ) {
-                    bindPoses[target] = Matrix.Multiply( bindPoses[target], refPoses[current] );
+                    bindPoses[target] = Matrix4x4.Multiply( bindPoses[target], refPoses[current] );
                     current = parents[current];
                 }
             }

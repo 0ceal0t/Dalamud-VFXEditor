@@ -1,8 +1,10 @@
+using HelixToolkit.Geometry;
+using HelixToolkit.Maths;
 using HelixToolkit.SharpDX.Core;
-using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
@@ -47,8 +49,8 @@ namespace VfxEditor.DirectX {
         public LightData Light1;
         public LightData Light2;
 
-        public Matrix InvViewMatrix;
-        public Matrix InvProjectionMatrix;
+        public Matrix4x4 InvViewMatrix;
+        public Matrix4x4 InvProjectionMatrix;
     }
 
     public class MaterialPreviewLegacy : ModelDeferredRenderer {
@@ -67,8 +69,8 @@ namespace VfxEditor.DirectX {
         private bool SkipDraw => DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed;
 
         public MaterialPreviewLegacy( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
-            MaterialPixelShaderBuffer = new Buffer( Device, Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
-            MaterialVertexShaderBuffer = new Buffer( Device, Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialPixelShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialVertexShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             PSBufferData = new() { };
             VSBufferData = new() { };
@@ -106,9 +108,9 @@ namespace VfxEditor.DirectX {
             var dyeRow = row.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value ),
-                EmissiveColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value ),
-                SpecularColor = DirectXManager.ToVec3( applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? row.StainTemplate.Specular : row.Specular.Value ),
+                DiffuseColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value,
+                EmissiveColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value,
+                SpecularColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? row.StainTemplate.Specular : row.Specular.Value,
                 SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular_Strength ) ? row.StainTemplate.Power : row.SpecularStrength.Value,
                 SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Gloss ) ? row.StainTemplate.Gloss : row.GlossStrength.Value,
             };
@@ -133,12 +135,12 @@ namespace VfxEditor.DirectX {
             if( SkipDraw ) return;
 
             var psBuffer = PSBufferData with {
-                AmbientColor = DirectXManager.ToVec3( Plugin.Configuration.MaterialAmbientColor ),
+                AmbientColor = Plugin.Configuration.MaterialAmbientColor,
                 EyePosition = CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
-                InvViewMatrix = Matrix.Invert( ViewMatrix ),
-                InvProjectionMatrix = Matrix.Invert( ProjMatrix )
+                InvViewMatrix = ViewMatrix.Inverted(),
+                InvProjectionMatrix = ProjMatrix.Inverted()
             };
 
             var vsBuffer = VSBufferData;

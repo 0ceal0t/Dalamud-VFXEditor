@@ -1,7 +1,8 @@
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public class DisconnectedSkeletonMeshBuilder : SkeletonMeshBuilder {
@@ -20,8 +21,8 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
                 return;
             }
 
-            var startPos = Vector3.TransformCoordinate( new Vector3( 0 ), Bones[idx].BindPose );
-            var endPos = Vector3.TransformCoordinate( new Vector3( 0 ), Bones[parent].BindPose );
+            var startPos = Vector3Helper.TransformCoordinate( new Vector3( 0 ), Bones[idx].BindPose );
+            var endPos = Vector3Helper.TransformCoordinate( new Vector3( 0 ), Bones[parent].BindPose );
 
             var length = ( endPos - startPos ).Length();
             if( Bones[parent].ParentIndex == -1 ) length /= 5;
@@ -32,21 +33,21 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
             // ===== BONE ======
 
             var matrix = Bones[idx].BindPose;
-            var rotMatrix = Matrix.RotationZ( ( float )( Math.PI / 2 ) );
-            var startMartix = Perpendicular ? Matrix.Multiply( rotMatrix, matrix ) : matrix;
+            var rotMatrix = MatrixHelper.RotationZ( ( float )( Math.PI / 2 ) );
+            var startMartix = Perpendicular ? Matrix4x4.Multiply( rotMatrix, matrix ) : matrix;
 
-            var posMatrix = Matrix.Translation( new( 0.70f * BoneScales[idx], 0, 0 ) );
-            var endMatrix = Matrix.Multiply( posMatrix, startMartix );
+            var posMatrix = MatrixHelper.Translation( new( 0.70f * BoneScales[idx], 0, 0 ) );
+            var endMatrix = Matrix4x4.Multiply( posMatrix, startMartix );
 
             AddPyramid( 0.15f * BoneScales[idx], startMartix, endMatrix );
 
             // ====== CAP ========
 
-            var capRotMatrix = Matrix.RotationZ( -( float )( Math.PI ) );
-            var capStartMartix = Matrix.Multiply( capRotMatrix, startMartix );
+            var capRotMatrix = MatrixHelper.RotationZ( -( float )( Math.PI ) );
+            var capStartMartix = Matrix4x4.Multiply( capRotMatrix, startMartix );
 
-            var capPosMatrix = Matrix.Translation( new( 0.15f * BoneScales[idx], 0, 0 ) );
-            var capEndMatrix = Matrix.Multiply( capPosMatrix, capStartMartix );
+            var capPosMatrix = MatrixHelper.Translation( new( 0.15f * BoneScales[idx], 0, 0 ) );
+            var capEndMatrix = Matrix4x4.Multiply( capPosMatrix, capStartMartix );
 
             AddPyramid( 0.15f * BoneScales[idx], capStartMartix, capEndMatrix );
         }

@@ -1,10 +1,11 @@
-using HelixToolkit.SharpDX.Core;
-using SharpDX;
+using HelixToolkit.Geometry;
+using HelixToolkit.Maths;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Renderers;
@@ -81,7 +82,7 @@ namespace VfxEditor.DirectX {
                             RenderMode.Uv2 => new Vector4( vertex.Uv2.X + 0.5f, 0, vertex.Uv2.Y + 0.5f, 1.0f ),
                             RenderMode.Uv3 => new Vector4( vertex.Uv3.X + 0.5f, 0, vertex.Uv3.Y + 0.5f, 1.0f ),
                             RenderMode.Uv4 => new Vector4( vertex.Uv4.X + 0.5f, 0, vertex.Uv4.Y + 0.5f, 1.0f ),
-                            RenderMode.Normal => new Vector4( normal.Normalized(), 1.0f ),
+                            RenderMode.Normal => new Vector4( Vector3.Normalize( normal ), 1.0f ),
                             _ => throw new NotImplementedException()
                         } );
                         data.Add( new Vector4( normal, 0 ) );
@@ -97,12 +98,12 @@ namespace VfxEditor.DirectX {
                 Emitters.ClearInstances();
             }
             else {
-                var data = new List<Matrix>();
+                var data = new List<Matrix4x4>();
                 for( var idx = 0; idx < modelEmitters.Count; idx++ ) {
                     var emitter = modelEmitters[idx];
                     var pos = new Vector3( emitter.Position.X, emitter.Position.Y, emitter.Position.Z );
                     var rot = GetEmitterRotationQuat( new Vector3( emitter.Normal.X, emitter.Normal.Y, emitter.Normal.Z ) );
-                    data.Add( Matrix.AffineTransformation( 1f, rot, pos ) );
+                    data.Add( MatrixHelper.AffineTransformation( 1f, rot, pos ) );
                 }
                 Emitters.SetInstances( Device, [.. data], modelEmitters.Count );
             }
@@ -116,12 +117,12 @@ namespace VfxEditor.DirectX {
 
             var rotationAxis = Vector3.Cross( normal, originalNormal );
             if( rotationAxis.Length() == 0f ) { // N = -N'
-                return Quaternion.RotationAxis( Vector3.UnitX, ( float )Math.PI );
+                return QuaternionHelper.RotationAxis( Vector3.UnitX, ( float )Math.PI );
             }
 
             var rotationAngle = Math.Acos( Vector3.Dot( normal, originalNormal ) / ( normal.Length() * originalNormal.Length() ) );
 
-            return Quaternion.RotationAxis( rotationAxis, ( float )rotationAngle );
+            return QuaternionHelper.RotationAxis( rotationAxis, ( float )rotationAngle );
         }
 
         protected override void DrawPasses() {

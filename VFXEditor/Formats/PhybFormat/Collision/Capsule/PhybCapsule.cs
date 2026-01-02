@@ -1,8 +1,9 @@
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using HelixToolkit.SharpDX.Core;
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.String;
 
@@ -35,8 +36,8 @@ namespace VfxEditor.PhybFormat.Collision.Capsule {
             var startOffset = new Vector3( StartOffset.Value.X, StartOffset.Value.Y, StartOffset.Value.Z );
             var endOffset = new Vector3( EndOffset.Value.X, EndOffset.Value.Y, EndOffset.Value.Z );
 
-            var startPos = Vector3.Transform( startOffset, startBone.BindPose ).ToVector3();
-            var endPos = Vector3.Transform( endOffset, endBone.BindPose ).ToVector3();
+            var startPos = Vector3Helper.TransformCoordinate( startOffset, startBone.BindPose );
+            var endPos = Vector3Helper.TransformCoordinate( endOffset, endBone.BindPose );
 
             meshes.Collision.AddCylinder( startPos, endPos, Radius.Value * 2f, 10 );
             meshes.Collision.AddSphere( startPos, Radius.Value, 10, 10 );

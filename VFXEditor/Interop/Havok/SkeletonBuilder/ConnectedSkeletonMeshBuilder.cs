@@ -1,7 +1,8 @@
-using HelixToolkit.SharpDX.Core.Animations;
-using SharpDX;
+using HelixToolkit.Maths;
+using HelixToolkit.SharpDX.Animations;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace VfxEditor.Interop.Havok.SkeletonBuilder {
     public class ConnectedSkeletonMeshBuilder : SkeletonMeshBuilder {
@@ -20,8 +21,8 @@ namespace VfxEditor.Interop.Havok.SkeletonBuilder {
                 return;
             }
 
-            var startPos = Vector3.TransformCoordinate( new Vector3( 0 ), Bones[idx].BindPose );
-            var endPos = Vector3.TransformCoordinate( new Vector3( 0 ), Bones[parent].BindPose );
+            var startPos = Vector3Helper.TransformCoordinate( new Vector3( 0 ), Bones[idx].BindPose );
+            var endPos = Vector3Helper.TransformCoordinate( new Vector3( 0 ), Bones[parent].BindPose );
 
             var length = ( endPos - startPos ).Length();
             var scale = ( float )( Math.Sqrt( length ) / 15f );
