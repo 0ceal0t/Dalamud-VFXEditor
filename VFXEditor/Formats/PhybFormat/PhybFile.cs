@@ -88,6 +88,12 @@ namespace VfxEditor.PhybFormat {
             Version.Write( writer );
             DataType.Write( writer );
 
+            if( DataType.Value == 0 ) {
+                writer.Write( 0x10u );
+                writer.Write( 0x10u );
+                return;
+            }
+
             var offsetPos = writer.BaseStream.Position; // coming back here later
             writer.Write( 0 ); // placeholders
             writer.Write( 0 );
@@ -96,7 +102,8 @@ namespace VfxEditor.PhybFormat {
             Collision.Write( writer );
 
             var simOffset = writer.BaseStream.Position;
-            var simWriter = new SimulationWriter();
+            var simWriter = new SimulationWriter( simOffset );
+
             Simulation.Write( simWriter );
             simWriter.WriteTo( writer );
 

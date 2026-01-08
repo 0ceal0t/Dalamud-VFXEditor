@@ -26,8 +26,8 @@ namespace VfxEditor.PhybFormat.Simulator {
 
         public readonly PhybSimulatorParams Params;
 
-        public readonly List<PhybCollisionData> Collisions = [];
-        public readonly List<PhybCollisionData> CollisionConnectors = [];
+        public readonly List<PhybCollisionData> CollisionObjects = [];
+        public readonly List<PhybCollisionData> CollisionConnections = [];
         public readonly List<PhybChain> Chains = [];
         public readonly List<PhybConnector> Connectors = [];
         public readonly List<PhybAttract> Attracts = [];
@@ -48,10 +48,10 @@ namespace VfxEditor.PhybFormat.Simulator {
             File = file;
             Params = new( file );
 
-            CollisionSplitView = new( "Collision Object", Collisions, false,
+            CollisionSplitView = new( "Collision Object", CollisionObjects, false,
                 ( item, idx ) => item.CollisionName.Value, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
-            CollisionConnectorSplitView = new( "Collision Connector", CollisionConnectors, false,
+            CollisionConnectorSplitView = new( "Collision Connector", CollisionConnections, false,
                 ( item, idx ) => item.CollisionName.Value, () => new( File, this ), ( _, _ ) => File.OnChange() );
 
             ChainDropdown = new( "Chain", Chains,
@@ -87,7 +87,7 @@ namespace VfxEditor.PhybFormat.Simulator {
 
             Params = new( file, reader );
 
-            var collisionDataOffset = reader.ReadUInt32();
+            var collisionObjectOffset = reader.ReadUInt32();
             var collisionConnectorOffset = reader.ReadUInt32();
             var chainOffset = reader.ReadUInt32();
             var connectorOffset = reader.ReadUInt32();
@@ -99,11 +99,11 @@ namespace VfxEditor.PhybFormat.Simulator {
 
             var resetPos = reader.BaseStream.Position;
 
-            reader.BaseStream.Position = simulatorStartPos + collisionDataOffset + 4;
-            for( var i = 0; i < numCollisionData; i++ ) Collisions.Add( new PhybCollisionData( file, this, reader ) );
+            reader.BaseStream.Position = simulatorStartPos + collisionObjectOffset + 4;
+            for( var i = 0; i < numCollisionData; i++ ) CollisionObjects.Add( new PhybCollisionData( file, this, reader ) );
 
             reader.BaseStream.Position = simulatorStartPos + collisionConnectorOffset + 4;
-            for( var i = 0; i < numCollisionConnector; i++ ) CollisionConnectors.Add( new PhybCollisionData( file, this, reader ) );
+            for( var i = 0; i < numCollisionConnector; i++ ) CollisionConnections.Add( new PhybCollisionData( file, this, reader ) );
 
             reader.BaseStream.Position = simulatorStartPos + chainOffset + 4;
             for( var i = 0; i < numChain; i++ ) Chains.Add( new PhybChain( file, this, reader, simulatorStartPos ) );
@@ -128,8 +128,8 @@ namespace VfxEditor.PhybFormat.Simulator {
         }
 
         public long WriteHeader( SimulationWriter writer ) {
-            writer.Write( ( byte )Collisions.Count );
-            writer.Write( ( byte )CollisionConnectors.Count );
+            writer.Write( ( byte )CollisionObjects.Count );
+            writer.Write( ( byte )CollisionConnections.Count );
             writer.Write( ( byte )Chains.Count );
             writer.Write( ( byte )Connectors.Count );
             writer.Write( ( byte )Attracts.Count );
@@ -150,7 +150,7 @@ namespace VfxEditor.PhybFormat.Simulator {
             using var ms = new MemoryStream();
             using var writer = new BinaryWriter( ms );
 
-            var simWriter = new SimulationWriter();
+            var simWriter = new SimulationWriter( 0 );
             simWriter.Write( new List<PhybSimulator>( [this] ) );
             simWriter.WriteTo( writer );
             simWriter.Dispose();
@@ -202,8 +202,8 @@ namespace VfxEditor.PhybFormat.Simulator {
         }
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
-            foreach( var item in Collisions ) item.AddPhysicsObjects( meshes, boneMatrixes );
-            foreach( var item in CollisionConnectors ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in CollisionObjects ) item.AddPhysicsObjects( meshes, boneMatrixes );
+            foreach( var item in CollisionConnections ) item.AddPhysicsObjects( meshes, boneMatrixes );
             foreach( var item in Chains ) item.AddPhysicsObjects( meshes, boneMatrixes );
             foreach( var item in Connectors ) item.AddPhysicsObjects( meshes, boneMatrixes );
             foreach( var item in Attracts ) item.AddPhysicsObjects( meshes, boneMatrixes );

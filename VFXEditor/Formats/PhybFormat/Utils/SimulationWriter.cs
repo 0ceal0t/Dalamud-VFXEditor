@@ -16,27 +16,38 @@ namespace VfxEditor.PhybFormat.Utils {
         public readonly BinaryWriter ExtraWriter;
         public readonly MemoryStream ExtraMs;
 
+        public readonly long SimulatorOffset;
+        public readonly Queue<long> ChainCollisionData = new();
+
         private readonly List<OffsetStruct> Offsets = [];
 
-        public SimulationWriter() : base() {
+        public SimulationWriter( long simulatorOffset ) : base() {
             ExtraMs = new();
             ExtraWriter = new( ExtraMs );
+            SimulatorOffset = simulatorOffset;
         }
 
         public void Write(List<PhybSimulator> simulators ) {
             Write( simulators.Count );
 
             var placeholders = simulators.Select( x => x.WriteHeader( this ) ).ToList();
+
             var offsets = new List<List<int>> {
-                simulators.Select( x => WriteList( x.Collisions ) ).ToList(),
-                simulators.Select( x => WriteList( x.CollisionConnectors ) ).ToList(),
-                simulators.Select( x => WriteList( x.Chains ) ).ToList(),
-                simulators.Select( x => WriteList( x.Connectors ) ).ToList(),
-                simulators.Select( x => WriteList( x.Attracts ) ).ToList(),
-                simulators.Select( x => WriteList( x.Pins ) ).ToList(),
-                simulators.Select( x => WriteList( x.Springs ) ).ToList(),
-                simulators.Select( x => WriteList( x.PostAlignments ) ).ToList(),
+                simulators.Select( x => WriteList( x.CollisionObjects ) ).ToList()
             };
+
+            // write the remaining collision connections
+            simulators.ForEach( x => x.Chains.ForEach( y => y.WriteCollisionData( this ) ) );
+
+            offsets.AddRange( [
+                [.. simulators.Select( x => WriteList( x.CollisionConnections ) )],
+                [.. simulators.Select( x => WriteList( x.Chains ) )],
+                [.. simulators.Select( x => WriteList( x.Connectors ) )],
+                [.. simulators.Select( x => WriteList( x.Attracts ) )],
+                [.. simulators.Select( x => WriteList( x.Pins ) )],
+                [.. simulators.Select( x => WriteList( x.Springs ) )],
+                [.. simulators.Select( x => WriteList( x.PostAlignments ) )],
+            ] );
 
             var resetPos = Position;
 
@@ -57,7 +68,7 @@ namespace VfxEditor.PhybFormat.Utils {
             return items.Count == 0 ? ( int )defaultOffset : ( int )offset - 4;
         }
 
-        public void WritePlaceholder( long offset ) {
+        public void WriteExtraPlaceholder( long offset ) {
             Offsets.Add( new OffsetStruct {
                 PlaceholderPos = Writer.BaseStream.Position,
                 ExtraPos = offset

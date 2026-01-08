@@ -104,17 +104,22 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
 
             if( Collisions.Count == 0 ) writer.Write( 0 );
             else {
-                writer.WritePlaceholder( writer.ExtraWriter.BaseStream.Position - 4 );
+                writer.Write( (int)writer.ChainCollisionData.Dequeue() - 4 );
             }
-
-            foreach( var item in Collisions ) item.Write( writer.ExtraWriter );
 
             if( Nodes.Count == 0 ) writer.Write( 0 );
             else {
-                writer.WritePlaceholder( writer.ExtraWriter.BaseStream.Position - 4 );
+                writer.WriteExtraPlaceholder( writer.ExtraWriter.BaseStream.Position - 4 );
             }
 
             foreach( var item in Nodes ) item.Write( writer.ExtraWriter );
+        }
+
+        public void WriteCollisionData( SimulationWriter writer ) {
+            if( Collisions.Count == 0 ) return;
+
+            writer.ChainCollisionData.Enqueue( writer.Writer.BaseStream.Position );
+            foreach( var item in Collisions ) item.Write( writer.Writer );
         }
 
         public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
