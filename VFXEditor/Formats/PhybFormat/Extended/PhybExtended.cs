@@ -8,7 +8,7 @@ using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PhybFormat.Extended {
     public class PhybExtended {
-        public readonly PhybEphbTable Table;
+        public readonly PhybEphbData Table;
 
         public PhybExtended() { }
 

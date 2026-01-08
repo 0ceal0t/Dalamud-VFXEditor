@@ -3,19 +3,19 @@ attribute "fs_serializer";
 namespace VfxEditor.Flatbuffer;
 
 table EpbdEntry {
-    ChildRaceCode: uint16;
-    ParentRaceCode: uint16;
+    ChildRaceCode: uint32;
+    ParentRaceCode: uint32;
     Unknown: [uint32];
     Pbd: [byte];
 }
 
 table ExtendedPbd (fs_serializer) {
-    Epbd1: Unknown;
-    Epbd2: Unknown;
+    Epbd1: EpbdUnknown;
+    Epbd2: EpbdUnknown;
     Pbdist: [EpbdEntry];
 }
 
-table Unknown {}
+table EpbdUnknown {}
 
 file_identifier "EPBD";
 root_type ExtendedPbd;

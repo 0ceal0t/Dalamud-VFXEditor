@@ -7,41 +7,38 @@ using VfxEditor.Ui.Interfaces;
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbGamma : IUiItem {
         public readonly ParsedFnvHash Bone = new( "Bone" );
-        public readonly AssignableData<PhybEphbIota> Iota = new( "Iota" );
-        private readonly EphbUnknownT Unknown1;
-        private readonly EphbUnknownT Unknown2;
-        public readonly ParsedFloat Unknown3 = new( "Unknown 3" );
-        public readonly AssignableData<PhybEphbTheta> Theta = new( "Theta" );
+        public readonly EphbUnknown Unknown1 = default;
+        public readonly EphbUnknown Unknown2 = default;
+        public readonly ParsedUInt Unknown3 = new( "Unknown 3" );
+        public readonly ParsedUInt Unknown4 = new( "Unknown 4" );
+        public readonly EphbUnknown Unknown5 = default;
         public readonly AssignableData<PhybEphbDelta> Delta = new( "Delta" );
 
         public PhybEphbGamma() { }
 
         public PhybEphbGamma( EphbGamma gamma ) : this() {
             Bone.Value = ("", gamma.Bone);
-            Iota.SetValue( gamma.Iota == null ? null : new( gamma.Iota ) );
-            Unknown1 = gamma.Unknown1;
-            Unknown2 = gamma.Unknown2;
-            Unknown3.Value = gamma.Unknown3;
-            Theta.SetValue( gamma.Theta == null ? null : new( gamma.Theta ) );
-            Delta.SetValue( gamma.Delta == null ? null : new( gamma.Delta ) );
+            Unknown1 = gamma.A;
+            Unknown2 = gamma.B;
+            Unknown3.Value = gamma.C;
+            Unknown4.Value = gamma.D;
+            Unknown5 = gamma.E;
+            Delta.SetValue( gamma.F == null ? null : new( gamma.F ) );
         }
 
         public void Draw() {
             Bone.Draw();
-            Unknown3.Draw();
-            Iota.Draw();
-            Theta.Draw();
             Delta.Draw();
         }
 
         public EphbGamma Export() => new() {
             Bone = Bone.Hash,
-            Iota = Iota.GetValue()?.Export(),
-            Unknown1 = Unknown1,
-            Unknown2 = Unknown2,
-            Unknown3 = Unknown3.Value,
-            Theta = Theta.GetValue()?.Export(),
-            Delta = Delta.GetValue()?.Export()
+            A = Unknown1,
+            B = Unknown2,
+            C = Unknown3.Value,
+            D = Unknown4.Value,
+            E = Unknown5,
+            F = Delta.GetValue()?.Export()
         };
     }
 }

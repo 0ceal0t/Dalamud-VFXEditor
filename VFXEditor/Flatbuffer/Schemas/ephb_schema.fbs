@@ -2,73 +2,55 @@ attribute "fs_serializer";
 
 namespace VfxEditor.Flatbuffer;
 
+table EphbUnknown {
+
+}
+
+struct Vec3 {
+  x: float;
+  y: float;
+  z: float;
+}
+
 table EphbDelta {
-    unknown1: EphbUnknownT;
-    unknown2: EphbUnknownT;
-    unknown3: float;
-}
-
-table EphbTheta {
-    unknown1: bool;
+    unknown1: uint;
     unknown2: float;
-}
-
-table EphbEpsilon {
-    unknown1: ushort;
-    unknown2: EphbUnknownT;
-    unknown3: ushort;
-    unknown4: float;
-    unknown5: float;
-}
-
-table EphbZeta {
-    unknown1: EphbUnknownT;
-    unknown2: float;
-}
-
-table EphbEta {
-    unknown1: ushort;
-    unknown2: ushort;
-    unknown3: ushort;
-    unknown4: ushort;
-}
-
-table EphbIota {
-    unknown1: EphbUnknownT;
-    unknown2: EphbUnknownT;
-    unknown3: EphbUnknownT;
-    unknown4: float;
+    unknown3: Vec3;
 }
 
 table EphbGamma {
-    bone: uint; // fnv1a32(bone_name)
-    iota: EphbIota;
-    unknown1: EphbUnknownT;
-    unknown2: EphbUnknownT;
-    unknown3: float;
-    theta: EphbTheta;
-    delta: EphbDelta;
+    bone: uint;
+    a: EphbUnknown;
+    b: EphbUnknown;
+    c: uint; // default
+    d: uint; // default
+    e: EphbUnknown;
+    f: EphbDelta;
 }
 
 table EphbBeta {
-    gamma:[EphbGamma];
+    gamma: [EphbGamma];
 }
 
-table EphbUnknownT {
+table EphbZeta {
+    unknown1: uint; // default
+    unknown2: float;
+    unknown3: float;
 }
 
 table EphbAlpha {
     beta:[EphbBeta];
-    eta:[EphbEta];
-    epsilon:[EphbEpsilon];
-    unknown1:bool;
-    zeta:EphbZeta;
+    a: string;
+    b: string;
+    c: uint; // default
+    d: EphbUnknown;
+    e: EphbZeta;
 }
 
 table EphbData (fs_serializer) {
-    unknown1:EphbUnknownT;
-    unknown2:EphbUnknownT;
-    alpha:[EphbAlpha];
+    unknown1: uint;
+    unknown2: uint;
+    alpha: [EphbAlpha];
 }
 
 file_identifier "EPHB";
