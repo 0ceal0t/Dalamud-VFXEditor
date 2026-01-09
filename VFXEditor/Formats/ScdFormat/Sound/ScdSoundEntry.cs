@@ -56,7 +56,7 @@ namespace VfxEditor.ScdFormat {
         public readonly ParsedFloat Volume = new( "Volume" );
         public readonly ParsedShort LocalNumber = new( "Local Number" ); // TODO: ushort
         public readonly ParsedByte UserId = new( "User Id" );
-        public readonly ParsedByte PlayHistory = new( "Play History" ); // TODO: sbyte
+        public readonly ParsedSByte PlayHistory = new( "Play History" );
 
         public readonly SoundRoutingInfo RoutingInfo = new(); // include sendInfos, soundEffectParam
         public SoundBusDucking BusDucking = new();

@@ -6,35 +6,53 @@ namespace VfxEditor.ScdFormat.Sound.Data {
     public class SoundBusDucking {
         private byte Size = 0x10;
         public readonly ParsedByte Number = new( "Number" );
-        private readonly ParsedReserve Reserve1 = new( 2 );
+        private readonly ParsedByte Unknown1 = new( "Unknown 1" );
+        private readonly ParsedByte Unknown2 = new( "Unknown 2" );
         public readonly ParsedInt FadeTime = new( "Fade Time" );
         public readonly ParsedFloat Volume = new( "Volume" );
-        private uint Reserve2;
+        private readonly ParsedSByte Unknown3 = new( "Unknown 3" );
+        private readonly ParsedSByte Unknown4 = new( "Unknown 4" );
+        private readonly ParsedSByte Unknown5 = new( "Unknown 5" );
+        private readonly ParsedSByte Unknown6 = new( "Unknown 6" );
 
         public void Read( BinaryReader reader ) {
             Size = reader.ReadByte();
             Number.Read( reader );
-            Reserve1.Read( reader );
+            Unknown1.Read( reader );
+            Unknown2.Read( reader );
             FadeTime.Read( reader );
             Volume.Read( reader );
-            Reserve2 = reader.ReadUInt32();
+            Unknown3.Read( reader );
+            Unknown4.Read( reader );
+            Unknown5.Read( reader );
+            Unknown6.Read( reader );
         }
 
         public void Write( BinaryWriter writer ) {
             writer.Write( Size );
             Number.Write( writer );
-            Reserve1.Write( writer );
+            Unknown1.Write( writer );
+            Unknown2.Write( writer );
             FadeTime.Write( writer );
             Volume.Write( writer );
-            writer.Write( Reserve2 );
+            Unknown3.Write( writer );
+            Unknown4.Write( writer );
+            Unknown5.Write( writer );
+            Unknown6.Write( writer );
         }
 
         public void Draw() {
             using var _ = ImRaii.PushId( "BusDucking" );
 
             Number.Draw();
+            Unknown1.Draw();
+            Unknown2.Draw();
             FadeTime.Draw();
             Volume.Draw();
+            Unknown3.Draw();
+            Unknown4.Draw();
+            Unknown5.Draw();
+            Unknown6.Draw();
         }
     }
 }
