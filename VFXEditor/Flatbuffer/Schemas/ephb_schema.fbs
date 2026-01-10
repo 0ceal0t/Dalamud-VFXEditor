@@ -18,13 +18,18 @@ table EphbDelta {
     unknown3: Vec3;
 }
 
+table EphbEta {
+    unknown1: uint;
+    unknown2: Vec3;
+}
+
 table EphbGamma {
     bone: uint;
-    a: EphbUnknown;
+    a: EphbEta;
     b: EphbUnknown;
     c: uint; // default
     d: uint; // default
-    e: EphbUnknown;
+    e: EphbEta;
     f: EphbDelta;
 }
 
