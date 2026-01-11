@@ -24,13 +24,11 @@ namespace VfxEditor.Formats.TextureFormat {
 
             if( isArray ) {
                 // https://github.com/nadlabka/DX11Renderer/blob/abe3e89ad3b8f0ac8ba8fa42ef1bc6c69d4033aa/Engine/DXRenderer/Managers/TexturesManager.cpp#L119
-                var scratch = ScratchImage.Initialize2D( meta.Format, header.Width, header.Height, header.ArraySize, header.MipCount );
+                var scratch = ScratchImage.Initialize2D( meta.Format, header.Width, header.Height, header.ArraySize, 1 );
                 // TODO: fix this
                 for( var i = 0; i < header.ArraySize; i++) {
-                    for( var j = 0; j < header.MipCount; j++ ) {
-                        var image = scratch.GetImage( j, i, 0 );
-                        CopyData( image.Span, reader );
-                    }
+                    var image = scratch.GetImage( 0, i, 0 );
+                    CopyData( image.Span, reader );
                 }
                 return scratch;
 

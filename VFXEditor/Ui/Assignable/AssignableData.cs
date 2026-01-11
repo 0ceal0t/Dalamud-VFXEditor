@@ -38,7 +38,7 @@ namespace VfxEditor.Ui.Assignable {
             }
         }
 
-        public void SetValue( T value ) {
+        public void SetValue( T? value ) {
             if( value == null ) {
                 Assigned = false;
             }

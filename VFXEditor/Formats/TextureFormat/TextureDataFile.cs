@@ -141,8 +141,8 @@ namespace VfxEditor.Formats.TextureFormat {
             var layerCount = Header.ArraySize > 1 && Header.MipLevelsCount > 1 && Header.Type == Attribute.TextureType2DArray ? Header.ArraySize : Header.Depth;
             ScratchImage.GetRGBA( out var rgba );
 
-            Layers = rgba.Images.ToArray().Select(
-                image => image.Span[..( image.Width * image.Height * 4 )].ToArray() ).ToList();
+            Layers = [.. rgba.Images.ToArray().Select(
+                image => image.Span[..( image.Width * image.Height * 4 )].ToArray() )];
 
             ValidFormat = ImageData.Length > 0;
         }
