@@ -21,10 +21,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
         public readonly ParsedEnum<ParamLinkTangent> MiddleTangent = new( "Middle Tangent" );
         public readonly ParsedEnum<ParamLinkTangent> EndTangent = new( "End Tangent" );
 
-        public readonly ParsedByteBool Unknown1 = new( "Unknown 1" );
-        public readonly ParsedByteBool Unknown2 = new( "Unknown 2" );
         public readonly ParsedByteBool Unknown3 = new( "Unknown 3" );
         public readonly ParsedByteBool Unknown4 = new( "Unknown 4" );
+        public readonly ParsedByteBool Unknown5 = new( "Unknown 5" );
+        public readonly ParsedByteBool Unknown6 = new( "Unknown 6" );
 
         public KdbNodeEffectorEZParamLink() : base() { }
 
@@ -39,10 +39,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
             MiddleTangent.Read( reader );
             EndTangent.Read( reader );
 
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
             Unknown3.Read( reader );
             Unknown4.Read( reader );
+            Unknown5.Read( reader );
+            Unknown6.Read( reader );
         }
 
         public override void WriteBody( BinaryWriter writer ) {
@@ -54,10 +54,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
             MiddleTangent.Write( writer );
             EndTangent.Write( writer );
 
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
             Unknown3.Write( writer );
             Unknown4.Write( writer );
+            Unknown5.Write( writer );
+            Unknown6.Write( writer );
         }
 
         protected override void DrawBody( List<string> bones ) {
@@ -69,10 +69,10 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
             MiddleTangent.Draw();
             EndTangent.Draw();
 
-            Unknown1.Draw();
-            Unknown2.Draw();
             Unknown3.Draw();
             Unknown4.Draw();
+            Unknown5.Draw();
+            Unknown6.Draw();
         }
 
         protected override List<KdbSlot> GetInputSlots() => [

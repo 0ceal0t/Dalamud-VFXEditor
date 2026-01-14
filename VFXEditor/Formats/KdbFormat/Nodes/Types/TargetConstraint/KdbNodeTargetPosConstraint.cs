@@ -9,25 +9,25 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
     public class KdbNodeTargetPosConstraint : KdbNodeTargetConstraint {
         public override KdbNodeType Type => KdbNodeType.TargetPosContraint;
 
-        public readonly ParsedDouble3 Unknown1 = new( "Unknown 1" );
-        public readonly ParsedByteBool Unknown2 = new( "Unknown 2" );
-        public readonly ParsedByteBool Unknown3 = new( "Unknown 3" );
+        public readonly ParsedDouble3 Unknown3 = new( "Unknown 3" );
+        public readonly ParsedByteBool Unknown4 = new( "Unknown 4" );
+        public readonly ParsedByteBool Unknown5 = new( "Unknown 5" );
 
         public KdbNodeTargetPosConstraint() : base() { }
 
         public KdbNodeTargetPosConstraint( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         protected override void ReadTargetConstraintBody( BinaryReader reader ) {
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
             Unknown3.Read( reader );
+            Unknown4.Read( reader );
+            Unknown5.Read( reader );
             reader.ReadBytes( 6 ); // padding
         }
 
         protected override void WriteTargetConstraintBody( BinaryWriter writer ) {
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
             Unknown3.Write( writer );
+            Unknown4.Write( writer );
+            Unknown5.Write( writer );
             FileUtils.Pad( writer, 6 ); // padding
         }
 
@@ -45,9 +45,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
                     using var child = ImRaii.Child( "Child" );
 
                     Bone.Draw();
-                    Unknown1.Draw();
-                    Unknown2.Draw();
                     Unknown3.Draw();
+                    Unknown4.Draw();
+                    Unknown5.Draw();
                 }
             }
         }

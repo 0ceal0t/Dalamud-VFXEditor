@@ -4,7 +4,6 @@ using System.Linq;
 using VfxEditor.Parsing.Utils;
 using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.PhybFormat.Simulator.PostAlignment;
-using static CommunityToolkit.Mvvm.ComponentModel.__Internals.__TaskExtensions.TaskAwaitableWithoutEndValidation;
 
 namespace VfxEditor.PhybFormat.Utils {
     public class SimulationWriter : ParsingWriter {

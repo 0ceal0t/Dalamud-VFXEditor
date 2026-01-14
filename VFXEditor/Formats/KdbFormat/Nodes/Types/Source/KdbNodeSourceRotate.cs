@@ -14,11 +14,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
         public readonly ParsedDouble3 Aim = new( "Aim Vector" );
         public readonly ParsedDouble3 Up = new( "Up Vector" );
 
-        public readonly ParsedDouble4 Unknown1 = new( "Unknown 1" );
+        public readonly ParsedDouble4 Unknown3 = new( "Unknown 3" );
         public readonly ParsedEnum<LinkType> Link = new( "Link Type" );
         public readonly ParsedFnvHash LinkHash = new( "Link" );
-        public readonly ParsedBool Unknown2 = new( "Unknown 2", size: 2 );
-        public readonly ParsedBool Unknown3 = new( "Unknown 3", size: 2 );
+        public readonly ParsedBool Unknown4 = new( "Unknown 4", size: 2 );
+        public readonly ParsedBool Unknown5 = new( "Unknown 5", size: 2 );
 
         public KdbNodeSourceRotate() : base() { }
 
@@ -30,11 +30,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             Aim.Read( reader );
             Up.Read( reader );
 
-            Unknown1.Read( reader );
+            Unknown3.Read( reader );
             Link.Read( reader );
             LinkHash.Read( reader );
-            Unknown2.Read( reader );
-            Unknown3.Read( reader );
+            Unknown4.Read( reader );
+            Unknown5.Read( reader );
         }
 
         protected override void WriteSourceBody( BinaryWriter writer ) {
@@ -43,11 +43,11 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
             Aim.Write( writer );
             Up.Write( writer );
 
-            Unknown1.Write( writer );
+            Unknown3.Write( writer );
             Link.Write( writer );
             LinkHash.Write( writer );
-            Unknown2.Write( writer );
-            Unknown3.Write( writer );
+            Unknown4.Write( writer );
+            Unknown5.Write( writer );
         }
 
         public override void UpdateBones( List<string> boneList ) {
@@ -73,13 +73,13 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
                     Aim.Draw();
                     Up.Draw();
 
-                    Unknown1.Draw();
+                    Unknown3.Draw();
                     Link.Draw();
                     using( var disabled = ImRaii.Disabled( Link.Value == LinkType.None ) ) {
                         LinkHash.Draw();
                     }
-                    Unknown2.Draw();
-                    Unknown3.Draw();
+                    Unknown4.Draw();
+                    Unknown5.Draw();
                 }
             }
         }

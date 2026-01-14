@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
+using VFXEditor.DirectX.Instance;
 
 namespace VfxEditor.PapFormat {
     public enum SkeletonType {
@@ -19,6 +20,8 @@ namespace VfxEditor.PapFormat {
     }
 
     public class PapFile : FileManagerFile {
+        public readonly GradientInstance Gradient = new();
+
         public readonly string HkxTempLocation;
         public readonly string SourcePath;
         public bool IsMaterial => SourcePath?.Contains( "material.pap" ) == true || Animations.Any( x => x.GetPapType() == 22 );
@@ -175,9 +178,9 @@ namespace VfxEditor.PapFormat {
             AnimationsDropdown.Draw();
         }
 
-        public override List<string> GetPapIds() => Animations.Select( x => x.GetName() ).ToList();
+        public override List<string> GetPapIds() => [.. Animations.Select( x => x.GetName() )];
 
-        public override List<short> GetPapTypes() => Animations.Select( x => x.GetPapType() ).ToList();
+        public override List<short> GetPapTypes() => [.. Animations.Select( x => x.GetPapType() )];
 
         public void RefreshHavokIndexes() {
             for( var i = 0; i < Animations.Count; i++ ) {
@@ -199,6 +202,7 @@ namespace VfxEditor.PapFormat {
             MotionData?.Dispose();
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );
             Handles.Clear();
+            Gradient.Dispose();
         }
     }
 }

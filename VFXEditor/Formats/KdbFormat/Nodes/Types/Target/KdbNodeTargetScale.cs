@@ -10,9 +10,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
 
         public readonly ParsedFnvHash Bone = new( "Bone" );
         public readonly ParsedDouble3 Scale = new( "Scale" );
-        public readonly ParsedByteBool Unknown1 = new( "Unknown 1" );
-        public readonly ParsedByteBool Unknown2 = new( "Unknown 2" );
         public readonly ParsedByteBool Unknown3 = new( "Unknown 3" );
+        public readonly ParsedByteBool Unknown4 = new( "Unknown 4" );
+        public readonly ParsedByteBool Unknown5 = new( "Unknown 5" );
 
         public KdbNodeTargetScale() : base() { }
 
@@ -22,9 +22,9 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
             Bone.Read( reader );
             Scale.Read( reader );
             reader.ReadBytes( 12 ); // padding
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
             Unknown3.Read( reader );
+            Unknown4.Read( reader );
+            Unknown5.Read( reader );
             reader.ReadBytes( 1 ); // padding
         }
 
@@ -32,18 +32,18 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
             Bone.Write( writer );
             Scale.Write( writer );
             FileUtils.Pad( writer, 12 ); // padding
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
             Unknown3.Write( writer );
+            Unknown4.Write( writer );
+            Unknown5.Write( writer );
             FileUtils.Pad( writer, 1 ); // padding
         }
 
         protected override void DrawBody( List<string> bones ) {
             Bone.Draw();
             Scale.Draw();
-            Unknown1.Draw();
-            Unknown2.Draw();
             Unknown3.Draw();
+            Unknown4.Draw();
+            Unknown5.Draw();
         }
 
         public override void UpdateBones( List<string> boneList ) => Bone.Guess( boneList );

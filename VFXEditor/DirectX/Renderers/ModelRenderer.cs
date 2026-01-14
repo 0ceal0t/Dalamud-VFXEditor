@@ -229,7 +229,7 @@ namespace VfxEditor.DirectX.Renderers {
 
         protected abstract void DrawPasses();
 
-        public override void Draw() {
+        public void Draw() {
             BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
             var viewProj = Matrix4x4.Multiply( ViewMatrix, ProjMatrix );

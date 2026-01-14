@@ -23,7 +23,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly LineEditor LineEditor;
 
-        public AvfxCurveColor( string name, string avfxName = "Col", bool locked = false ) : base( name, avfxName, locked ) {
+        public AvfxCurveColor( AvfxFile file, string name, string avfxName = "Col", bool locked = false ) : base( name, avfxName, locked ) {
             Parsed = [
                 RGB,
                 A,
@@ -40,10 +40,10 @@ namespace VfxEditor.AvfxFormat {
             ];
 
             LineEditor = new( name, [
-                new( RGB ),
-                new( "Brightness", [A, Bri], null ),
-                new( "Scale", [SclR, SclG, SclB, SclA], null),
-                new( "Random", [RanR, RanG, RanB, RanA, RBri], null)
+                new( RGB, file ),
+                new( "Brightness", [A, Bri], null, file ),
+                new( "Scale", [SclR, SclG, SclB, SclA], null, file ),
+                new( "Random", [RanR, RanG, RanB, RanA, RBri], null, file )
             ] );
         }
 

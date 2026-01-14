@@ -9,8 +9,8 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxMain : AvfxDrawable {
-        public static AvfxMain FromStream( BinaryReader reader ) {
-            var main = new AvfxMain();
+        public static AvfxMain FromStream( AvfxFile file, BinaryReader reader ) {
+            var main = new AvfxMain( file );
             reader.ReadInt32();
             var size = reader.ReadInt32();
             main.Read( reader, size );
@@ -18,6 +18,8 @@ namespace VfxEditor.AvfxFormat {
         }
 
         // ============
+
+        public readonly AvfxFile File;
 
         public readonly AvfxInt Version = new( "Version", "Ver", value: 0x20110913 );
         public readonly AvfxBool IsDelayFastParticle = new( "Delay Fast Particle", "bDFP" );
@@ -101,7 +103,9 @@ namespace VfxEditor.AvfxFormat {
         private readonly int[] UiVersion = new int[4];
         private float ScaleCombined = 1.0f;
 
-        public AvfxMain() : base( "AVFX" ) {
+        public AvfxMain( AvfxFile file ) : base( "AVFX" ) {
+            File = file;
+
             Parsed = [
                 Version,
                 IsDelayFastParticle,
@@ -234,17 +238,17 @@ namespace VfxEditor.AvfxFormat {
                         Timelines.Add( Timeline );
                         break;
                     case AvfxEmitter.NAME:
-                        var Emitter = new AvfxEmitter( NodeGroupSet );
+                        var Emitter = new AvfxEmitter( File, NodeGroupSet );
                         Emitter.Read( _reader, _size );
                         Emitters.Add( Emitter );
                         break;
                     case AvfxParticle.NAME:
-                        var Particle = new AvfxParticle( NodeGroupSet );
+                        var Particle = new AvfxParticle( File, NodeGroupSet );
                         Particle.Read( _reader, _size );
                         Particles.Add( Particle );
                         break;
                     case AvfxEffector.NAME:
-                        var Effector = new AvfxEffector();
+                        var Effector = new AvfxEffector( File );
                         Effector.Read( _reader, _size );
                         Effectors.Add( Effector );
                         break;

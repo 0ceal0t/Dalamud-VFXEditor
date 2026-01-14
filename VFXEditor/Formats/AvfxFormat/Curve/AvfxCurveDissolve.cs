@@ -6,9 +6,9 @@ using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxCurveDissolve : AvfxCurveBase {
-        public readonly AvfxCurveColor StartColor = new( "Start Color", "StrC" );
-        public readonly AvfxCurveColor MidColor = new( "Mid Color", "MidC" );
-        public readonly AvfxCurveColor EndColor = new( "End Color", "EndC" );
+        public readonly AvfxCurveColor StartColor;
+        public readonly AvfxCurveColor MidColor;
+        public readonly AvfxCurveColor EndColor;
         public readonly AvfxCurveData SclR = new( "Scale R", "SclR" );
         public readonly AvfxCurveData SclG = new( "Scale G", "SclG" );
         public readonly AvfxCurveData SclB = new( "Scale B", "SclB" );
@@ -18,7 +18,11 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxItem> Display;
 
-        public AvfxCurveDissolve( string name, string avfxName, bool locked = false ) : base( name, avfxName, locked ) {
+        public AvfxCurveDissolve( AvfxFile file, string name, string avfxName, bool locked = false ) : base( name, avfxName, locked ) {
+            StartColor = new( file, "Start Color", "StrC" );
+            MidColor = new( file, "Mid Color", "MidC" );
+            EndColor = new( file, "End Color", "EndC" );
+
             Parsed = [
                 StartColor,
                 MidColor,

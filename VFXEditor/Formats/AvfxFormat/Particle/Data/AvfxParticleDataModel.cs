@@ -17,12 +17,15 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis FresnelCurve = new( "Fresnel Curve", "FrC" );
         public readonly AvfxCurve1Axis FresnelCurveRandom = new( "Fresnel Curve Random", "FrCR" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
-        public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
-        public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
+        public readonly AvfxCurveColor ColorBegin;
+        public readonly AvfxCurveColor ColorEnd;
 
         public readonly AvfxNodeSelectList<AvfxModel> ModelSelect;
 
-        public AvfxParticleDataModel( AvfxParticle particle ) : base() {
+        public AvfxParticleDataModel( AvfxFile file, AvfxParticle particle ) : base() {
+            ColorBegin = new( file, name: "Color Begin", "ColB" );
+            ColorEnd = new( file, name: "Color End", "ColE" );
+
             Parsed = [
                 ModelNumberRandomValue,
                 ModelNumberRandomType,

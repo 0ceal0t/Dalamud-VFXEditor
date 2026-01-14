@@ -3,7 +3,7 @@ using static VfxEditor.AvfxFormat.Enums;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
-        public readonly AvfxCurveColor Color = new( "Color" );
+        public readonly AvfxCurveColor Color;
         public readonly AvfxCurve1Axis DistanceScale = new( "Distance Scale", "DstS" );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle );
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
@@ -15,7 +15,9 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat ShadowCreateDistanceNear = new( "Create Distance Near", "SCDN" );
         public readonly AvfxFloat ShadowCreateDistanceFar = new( "Create Distance Far", "SCDF" );
 
-        public AvfxEffectorDataPointLight() : base() {
+        public AvfxEffectorDataPointLight( AvfxFile file ) : base() {
+            Color = new( file, "Color" );
+
             Parsed = [
                 Color,
                 DistanceScale,

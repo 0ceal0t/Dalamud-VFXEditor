@@ -9,12 +9,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
         public override KdbNodeType Type => KdbNodeType.TargetRotate;
 
         public readonly ParsedFnvHash Bone = new( "Bone" );
-        public readonly ParsedDouble2 Unknown1 = new( "Unknown 1" );
-        public readonly ParsedDouble3 Unknown2 = new( "Unknown 2" );
-        public readonly ParsedInt Unknown3 = new( "Unknown 3" );
-        public readonly ParsedQuatDouble Unknown4 = new( "Unknown 4" );
-        public readonly ParsedQuatDouble Unknown5 = new( "Unknown 5" );
-        public readonly ParsedByteBool Unknown6 = new( "Unknown 6" );
+        public readonly ParsedDouble2 Unknown3 = new( "Unknown 3" );
+        public readonly ParsedDouble3 Unknown4 = new( "Unknown 4" );
+        public readonly ParsedInt Unknown5 = new( "Unknown 5" );
+        public readonly ParsedQuatDouble Unknown6 = new( "Unknown 6" );
+        public readonly ParsedQuatDouble Unknown7 = new( "Unknown 7" );
+        public readonly ParsedByteBool Unknown8 = new( "Unknown 8" );
 
         public KdbNodeTargetRotate() : base() { }
 
@@ -22,40 +22,40 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
 
         public override void ReadBody( BinaryReader reader ) {
             Bone.Read( reader );
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
-            reader.ReadBytes( 12 ); // padding
             Unknown3.Read( reader );
-            reader.ReadBytes( 8 ); // padding
             Unknown4.Read( reader );
+            reader.ReadBytes( 12 ); // padding
             Unknown5.Read( reader );
-            reader.ReadBytes( 1 ); // padding
+            reader.ReadBytes( 8 ); // padding
             Unknown6.Read( reader );
+            Unknown7.Read( reader );
+            reader.ReadBytes( 1 ); // padding
+            Unknown8.Read( reader );
             reader.ReadBytes( 6 ); // padding
         }
 
         public override void WriteBody( BinaryWriter writer ) {
             Bone.Write( writer );
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
-            FileUtils.Pad( writer, 12 ); // padding
             Unknown3.Write( writer );
-            FileUtils.Pad( writer, 8 ); // padding
             Unknown4.Write( writer );
+            FileUtils.Pad( writer, 12 ); // padding
             Unknown5.Write( writer );
-            FileUtils.Pad( writer, 1 ); // padding
+            FileUtils.Pad( writer, 8 ); // padding
             Unknown6.Write( writer );
+            Unknown7.Write( writer );
+            FileUtils.Pad( writer, 1 ); // padding
+            Unknown8.Write( writer );
             FileUtils.Pad( writer, 6 ); // padding
         }
 
         protected override void DrawBody( List<string> bones ) {
             Bone.Draw();
-            Unknown1.Draw();
-            Unknown2.Draw();
             Unknown3.Draw();
             Unknown4.Draw();
             Unknown5.Draw();
             Unknown6.Draw();
+            Unknown7.Draw();
+            Unknown8.Draw();
         }
 
         public override void UpdateBones( List<string> boneList ) => Bone.Guess( boneList );

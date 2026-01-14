@@ -8,6 +8,7 @@ namespace VfxEditor.DirectX {
         protected readonly Device Device;
         protected readonly DeviceContext Ctx;
 
+        // TODO: REMOVE THIS!
         private static int _Id = 0;
         public static int NewId => _Id++;
         public int CurrentRenderId { get; protected set; } = -1;
@@ -28,8 +29,6 @@ namespace VfxEditor.DirectX {
             Ctx.OutputMerger.SetRenderTargets( oldDepthStencilView, oldRenderViews );
             Ctx.OutputMerger.SetDepthStencilState( oldDepthStencilState );
         }
-
-        public abstract void Draw();
 
         public abstract void Dispose();
 

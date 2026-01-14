@@ -10,6 +10,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxParticle : AvfxNodeWithData<ParticleType> {
         public const string NAME = "Ptcl";
 
+        public readonly AvfxFile File;
+
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
         public readonly AvfxInt LoopEnd = new( "Loop End", "LpEd" );
         public readonly AvfxEnum<RotationDirectionBase> RotationDirectionBaseType = new( "Rotation Direction Base", "RBDT" );
@@ -65,7 +67,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis RotVelYRandom = new( "Rotation Velocity Y Random", "VRYR" );
         public readonly AvfxCurve1Axis RotVelZ = new( "Rotation Velocity Z", "VRZ" );
         public readonly AvfxCurve1Axis RotVelZRandom = new( "Rotation Velocity Z Random", "VRZR" );
-        public readonly AvfxCurveColor Color = new( "Color", locked: true );
+        public readonly AvfxCurveColor Color;
 
         // initialize these later
         public readonly AvfxParticleTextureColor1 TC1;
@@ -89,7 +91,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxDisplaySplitView<AvfxItem> TextureDisplaySplit;
         private readonly UiDisplayList Parameters;
 
-        public AvfxParticle( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
+        public AvfxParticle( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.ParticleColor, "PrVT" ) {
+            File = file;
             NodeGroups = groupSet;
 
             // Initialize the remaining ones
@@ -103,6 +106,7 @@ namespace VfxEditor.AvfxFormat {
             TD = new AvfxParticleTextureDistortion( this );
             TP = new AvfxParticleTexturePalette( this );
             Simple = new AvfxParticleSimple( this );
+            Color = new( File, "Color", locked: true );
 
             // Parsing
 
@@ -290,18 +294,18 @@ namespace VfxEditor.AvfxFormat {
                 ParticleType.Parameter => null,
                 ParticleType.Powder => new AvfxParticleDataPowder(),
                 ParticleType.Windmill => new AvfxParticleDataWindmill(),
-                ParticleType.Line => new AvfxParticleDataLine(),
-                ParticleType.Model => new AvfxParticleDataModel( this ),
-                ParticleType.Polyline => new AvfxParticleDataPolyline(),
+                ParticleType.Line => new AvfxParticleDataLine( File ),
+                ParticleType.Model => new AvfxParticleDataModel( File, this ),
+                ParticleType.Polyline => new AvfxParticleDataPolyline( File ),
                 ParticleType.Quad => new AvfxParticleDataQuad(),
                 ParticleType.Polygon => new AvfxParticleDataPolygon(),
                 ParticleType.Decal => new AvfxParticleDataDecal(),
                 ParticleType.DecalRing => new AvfxParticleDataDecalRing(),
-                ParticleType.Disc => new AvfxParticleDataDisc(),
+                ParticleType.Disc => new AvfxParticleDataDisc( File ),
                 ParticleType.LightModel => new AvfxParticleDataLightModel( this ),
                 ParticleType.Laser => new AvfxParticleDataLaser(),
-                ParticleType.ModelSkin => new AvfxParticleDataModelSkin(),
-                ParticleType.Dissolve => new AvfxParticleDataDissolve(),
+                ParticleType.ModelSkin => new AvfxParticleDataModelSkin( File ),
+                ParticleType.Dissolve => new AvfxParticleDataDissolve( File ),
                 _ => null,
             };
 

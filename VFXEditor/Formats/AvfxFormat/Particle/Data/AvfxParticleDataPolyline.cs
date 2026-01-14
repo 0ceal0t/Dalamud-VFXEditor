@@ -33,14 +33,21 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis Softness = new( "Softness", "Sft" );
         public readonly AvfxCurve1Axis SoftRandom = new( "Softness Random", "SftR" );
         public readonly AvfxCurve1Axis PnDs = new( "Point Distortion", "PnDs" );
-        public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
-        public readonly AvfxCurveColor ColorCenter = new( name: "Color Center", "ColC" );
-        public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
-        public readonly AvfxCurveColor ColorEdgeBegin = new( name: "Color Edge Begin", "CoEB" );
-        public readonly AvfxCurveColor ColorEdgeCenter = new( name: "Color Edge Center", "CoEC" );
-        public readonly AvfxCurveColor ColorEdgeEnd = new( name: "Color Edge End", "CoEE" );
+        public readonly AvfxCurveColor ColorBegin;
+        public readonly AvfxCurveColor ColorCenter;
+        public readonly AvfxCurveColor ColorEnd;
+        public readonly AvfxCurveColor ColorEdgeBegin;
+        public readonly AvfxCurveColor ColorEdgeCenter;
+        public readonly AvfxCurveColor ColorEdgeEnd;
 
-        public AvfxParticleDataPolyline() : base() {
+        public AvfxParticleDataPolyline( AvfxFile file ) : base() {
+            ColorBegin = new( file, name: "Color Begin", "ColB" );
+            ColorCenter = new( file, name: "Color Center", "ColC" );
+            ColorEnd = new( file, name: "Color End", "ColE" );
+            ColorEdgeBegin = new( file, name: "Color Edge Begin", "CoEB" );
+            ColorEdgeCenter = new( file, name: "Color Edge Center", "CoEC" );
+            ColorEdgeEnd = new( file, name: "Color Edge End", "CoEE" );
+
             Parsed = [
                 CreateLineType,
                 NotBillBoardBaseAxisType,

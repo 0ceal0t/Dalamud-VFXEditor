@@ -24,11 +24,14 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis RadiusBeginRandom = new( "Radius Begin Random", "RBR" );
         public readonly AvfxCurve1Axis RadiusEnd = new( "Radius End", "RE" );
         public readonly AvfxCurve1Axis RadiusEndRandom = new( "Radius End Random", "RER" );
-        public readonly AvfxCurveColor ColorEdgeInner = new( name: "Color Edge Inner", "CEI" );
-        public readonly AvfxCurveColor ColorEdgeOuter = new( name: "Color Edge Outer", "CEO" );
+        public readonly AvfxCurveColor ColorEdgeInner;
+        public readonly AvfxCurveColor ColorEdgeOuter;
         public readonly AvfxInt SS = new( "Scaling Scale", "SS" );
 
-        public AvfxParticleDataDisc() : base() {
+        public AvfxParticleDataDisc( AvfxFile file ) : base() {
+            ColorEdgeInner = new( file, name: "Color Edge Inner", "CEI" );
+            ColorEdgeOuter = new( file, name: "Color Edge Outer", "CEO" );
+
             Parsed = [
                 PartsCount,
                 PartsCountU,

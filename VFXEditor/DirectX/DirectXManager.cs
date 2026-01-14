@@ -9,13 +9,13 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
     public class DirectXManager {
-        private Device Device;
-        private DeviceContext Ctx;
+        public readonly Device Device;
+        public readonly DeviceContext Ctx;
+
+        public readonly GradientRenderer GradientRenderer;
 
         public readonly ModelPreview ModelPreview;
-        public readonly GradientRenderer GradientView;
         public readonly PapBonePreview PapPreview;
-        public readonly GradientRenderer PapMaterialPreview;
         public readonly BoneNamePreview PhybPreview;
         public readonly BoneNamePreview SklbPreview;
         public readonly BoneNamePreview EidPreview;
@@ -32,10 +32,10 @@ namespace VfxEditor.DirectX {
             Device = new Device( Dalamud.PluginInterface.UiBuilder.DeviceHandle );
             Ctx = Device.ImmediateContext;
 
+            GradientRenderer = new( Device, Ctx, shaderPath );
+
             ModelPreview = new( Device, Ctx, shaderPath );
-            GradientView = new( Device, Ctx, shaderPath );
             PapPreview = new( Device, Ctx, shaderPath );
-            PapMaterialPreview = new( Device, Ctx, shaderPath );
             PhybPreview = new( Device, Ctx, shaderPath );
             SklbPreview = new( Device, Ctx, shaderPath );
             EidPreview = new( Device, Ctx, shaderPath );
@@ -54,20 +54,20 @@ namespace VfxEditor.DirectX {
         }
 
         public void RedrawMaterials() {
+            // TODO
             MaterialPreviewLegacy.Redraw();
         }
 
-        public void Redraw() => Renderers.ForEach( x => x.Redraw() );
+        public void Redraw() {
+            // TODO
+            Renderers.ForEach( x => x.Redraw() );
+        }
 
         public void Dispose() {
             Renderers.ForEach( x => x.Dispose() );
             Renderers.Clear();
 
-            GradientView.Dispose();
-            PapMaterialPreview.Dispose();
-
-            Device = null;
-            Ctx = null;
+            GradientRenderer.Dispose();
         }
     }
 }

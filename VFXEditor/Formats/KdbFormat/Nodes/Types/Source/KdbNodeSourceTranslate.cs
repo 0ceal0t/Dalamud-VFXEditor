@@ -10,8 +10,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
     public class KdbNodeSourceTranslate : KdbNodeSource {
         public override KdbNodeType Type => KdbNodeType.SourceTranslate;
 
-        public readonly ParsedDouble3 Unknown1 = new( "Unknown 1" );
-        public readonly ParsedDouble3 Unknown2 = new( "Unknown 2" );
+        public readonly ParsedDouble3 Unknown3 = new( "Unknown 3" );
+        public readonly ParsedDouble3 Unknown4 = new( "Unknown 4" );
         public readonly ParsedEnum<LinkType> Link = new( "Link Type" );
         public readonly ParsedFnvHash LinkHash = new( "Link" );
 
@@ -20,16 +20,16 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
         public KdbNodeSourceTranslate( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         protected override void ReadSourceBody( BinaryReader reader ) {
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
+            Unknown3.Read( reader );
+            Unknown4.Read( reader );
             Link.Read( reader );
             LinkHash.Read( reader );
             reader.ReadBytes( 4 ); // padding
         }
 
         protected override void WriteSourceBody( BinaryWriter writer ) {
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
+            Unknown3.Write( writer );
+            Unknown4.Write( writer );
             Link.Write( writer );
             LinkHash.Write( writer );
             FileUtils.Pad( writer, 4 ); // padding
@@ -53,8 +53,8 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
                     using var _ = ImRaii.PushId( "Parameters" );
                     using var child = ImRaii.Child( "Child" );
 
-                    Unknown1.Draw();
-                    Unknown2.Draw();
+                    Unknown3.Draw();
+                    Unknown4.Draw();
 
                     Link.Draw();
                     using var disabled = ImRaii.Disabled( Link.Value == LinkType.None );

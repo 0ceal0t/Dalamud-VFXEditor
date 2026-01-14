@@ -8,10 +8,12 @@ using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
+using VFXEditor.DirectX.Instance;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile : FileManagerFile {
         public readonly AvfxMain Main;
+        public readonly GradientInstance Gradient = new();
 
         public readonly UiEffectorView EffectorView;
         public readonly UiEmitterView EmitterView;
@@ -27,7 +29,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxExport ExportUi;
 
         public AvfxFile( BinaryReader reader, bool verify ) : base() {
-            Main = AvfxMain.FromStream( reader );
+            Main = AvfxMain.FromStream( this, reader );
 
             if( verify ) Verified = FileUtils.Verify( reader, ToBytes() );
 
@@ -148,6 +150,7 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Dispose() {
             NodeGroupSet?.Dispose();
+            Gradient.Dispose();
         }
 
         // ========== WORKSPACE ==========

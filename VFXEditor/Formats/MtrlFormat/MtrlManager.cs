@@ -61,8 +61,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             }
 
             // Dye Templates
-            StmFileLegacy = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" );
-            StmFile = Dalamud.DataManager.GetFile<StmDataFileDawntrail>( "chara/base_material/stainingtemplate_gud.stm" );
+            StmFileLegacy = Dalamud.DataManager.GetFile<StmDataFile>( "chara/base_material/stainingtemplate.stm" )!;
+            StmFile = Dalamud.DataManager.GetFile<StmDataFileDawntrail>( "chara/base_material/stainingtemplate_gud.stm" )!;
             // https://github.com/TexTools/xivModdingFramework/blob/35d0ca49b5db25332756d2762e16c95b46a7f299/xivModdingFramework/Materials/FileTypes/STM.cs#L28
             // ======== TODO: DT stain changes =======
 

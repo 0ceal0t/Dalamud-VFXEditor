@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public override void OnSelect( AvfxParticle item ) { }
 
         public override AvfxParticle Read( BinaryReader reader, int size ) {
-            var item = new AvfxParticle( File.NodeGroupSet );
+            var item = new AvfxParticle( File, File.NodeGroupSet );
             item.Read( reader, size );
             return item;
         }

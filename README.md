@@ -8,12 +8,6 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 
 > Just want to hide certain VFXs? Use [EasyEyes](https://github.com/0ceal0t/EasyEyes) instead
 
-## 7.2 TODO
-- Double-check offsets
-- Double-check sigs
-- Fix STM files
-- Better curve colors
-
 ### Supported File Types
 
 | Extension | Description |
@@ -75,10 +69,10 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ```
 
 ## TODO
+- [ ] Refactor renders to support multiple windows
 - [ ] `.pdb` extended editing
 - [ ] Fix 7.4 `.mdl` face stuff
 - [ ] Fix DT material stuff
-
 - [ ] Add gizmo to `.sklb` bones
 - [ ] Copy/paste `.atch` entry
 - [ ] `.uld` node type 10

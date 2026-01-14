@@ -15,12 +15,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
         public readonly ParsedDouble3 PivotOffset = new( "Pivot Offset" );
         public readonly ParsedDouble3 Aim = new( "Aim" );
         public readonly ParsedDouble3 Up = new( "Up" );
-        public readonly ParsedDouble Unknown1 = new( "Unknown 1" );
-        public readonly ParsedQuatDouble Unknown2 = new( "Unknown 2" );
-        public readonly ParsedQuatDouble Unknown3 = new( "Unknown 3" );
-        public readonly ParsedDouble Unknown4 = new( "Unknown 4" );
-        public readonly ParsedUInt Unknown5 = new( "Unknown 5" );
-        public readonly ParsedByteBool Unknown6 = new( "Unknown 6" );
+        public readonly ParsedDouble Unknown3 = new( "Unknown 3" );
+        public readonly ParsedQuatDouble Unknown4 = new( "Unknown 4" );
+        public readonly ParsedQuatDouble Unknown5 = new( "Unknown 5" );
+        public readonly ParsedDouble Unknown6 = new( "Unknown 6" );
+        public readonly ParsedUInt Unknown7 = new( "Unknown 7" );
+        public readonly ParsedByteBool Unknown8 = new( "Unknown 8" );
 
         public KdbNodeTargetBendSTRoll() : base() { }
 
@@ -34,12 +34,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
             PivotOffset.Read( reader );
             Aim.Read( reader );
             Up.Read( reader );
-            Unknown1.Read( reader );
-            Unknown2.Read( reader );
             Unknown3.Read( reader );
             Unknown4.Read( reader );
             Unknown5.Read( reader );
             Unknown6.Read( reader );
+            Unknown7.Read( reader );
+            Unknown8.Read( reader );
             reader.ReadBytes( 3 ); // padding
         }
 
@@ -51,12 +51,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
             PivotOffset.Write( writer );
             Aim.Write( writer );
             Up.Write( writer );
-            Unknown1.Write( writer );
-            Unknown2.Write( writer );
             Unknown3.Write( writer );
             Unknown4.Write( writer );
             Unknown5.Write( writer );
             Unknown6.Write( writer );
+            Unknown7.Write( writer );
+            Unknown8.Write( writer );
             FileUtils.Pad( writer, 3 ); // padding
         }
 
@@ -68,12 +68,12 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {
             PivotOffset.Draw();
             Aim.Draw();
             Up.Draw();
-            Unknown1.Draw();
-            Unknown2.Draw();
             Unknown3.Draw();
             Unknown4.Draw();
             Unknown5.Draw();
             Unknown6.Draw();
+            Unknown7.Draw();
+            Unknown8.Draw();
         }
 
         public override void UpdateBones( List<string> boneList ) => Bone.Guess( boneList );

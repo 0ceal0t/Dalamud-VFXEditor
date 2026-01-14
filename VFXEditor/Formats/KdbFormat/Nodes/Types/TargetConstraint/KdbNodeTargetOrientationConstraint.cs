@@ -8,18 +8,18 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
     public class KdbNodeTargetOrientationConstraint : KdbNodeTargetConstraint {
         public override KdbNodeType Type => KdbNodeType.TargetOrientationConstraint;
 
-        public readonly ParsedDouble3 Unknown1 = new( "Unknown 1" );
+        public readonly ParsedDouble3 Unknown3 = new( "Unknown 3" );
 
         public KdbNodeTargetOrientationConstraint() : base() { }
 
         public KdbNodeTargetOrientationConstraint( BinaryReader reader ) : this() { ReaderHeader( reader ); }
 
         protected override void ReadTargetConstraintBody( BinaryReader reader ) {
-            Unknown1.Read( reader );
+            Unknown3.Read( reader );
         }
 
         protected override void WriteTargetConstraintBody( BinaryWriter writer ) {
-            Unknown1.Write( writer );
+            Unknown3.Write( writer );
         }
 
         protected override void DrawBody( List<string> bones ) {
@@ -36,7 +36,7 @@ namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {
                     using var child = ImRaii.Child( "Child" );
 
                     Bone.Draw();
-                    Unknown1.Draw();
+                    Unknown3.Draw();
                 }
             }
         }

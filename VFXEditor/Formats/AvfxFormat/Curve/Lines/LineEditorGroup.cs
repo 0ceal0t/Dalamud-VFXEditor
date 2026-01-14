@@ -12,6 +12,7 @@ using VfxEditor.DirectX;
 using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
+using VFXEditor.DirectX.Instance;
 using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -23,12 +24,14 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
     }
 
     public class LineEditorGroup {
+        public readonly AvfxFile File; // only used for color
+
         public readonly string Name;
         public readonly List<AvfxCurveData> Curves;
         public IEnumerable<AvfxCurveData> AssignedCurves => Curves.Where( x => x.IsAssigned() );
         public readonly AvfxDrawable? ConnectType;
 
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
 
         private static readonly CurveBehavior[] CurveBehaviorOptions = Enum.GetValues<CurveBehavior>();
         private static readonly RandomType[] RandomTypeOptions = Enum.GetValues<RandomType>();
@@ -66,16 +69,17 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         private static readonly Dictionary<string, List<(KeyType, Vector4)>> CopiedKeys = [];
 
-        public LineEditorGroup( AvfxCurveData curve ) {
+        public LineEditorGroup( AvfxCurveData curve, AvfxFile file = null ) {
+            File = file;
             Name = curve.Name;
             Curves = [curve];
         }
 
-        public LineEditorGroup( string name, List<AvfxCurveData> curves, AvfxDrawable? connectType ) {
+        public LineEditorGroup( string name, List<AvfxCurveData> curves, AvfxDrawable? connectType, AvfxFile file = null ) {
+            File = file;
             Name = name;
             Curves = curves;
             ConnectType = connectType;
-
         }
 
         public void Draw() {
@@ -234,7 +238,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             var height = ImGui.GetContentRegionAvail().Y - ( 4 * ImGui.GetFrameHeightWithSpacing() + 5 );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+            if( ImPlot.BeginPlot( $"##CurveEditor{RenderId}", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 if( fit ) ImPlot.SetNextAxesToFit();
                 if( IsColor ) {
                     ImPlot.SetupAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
@@ -395,16 +399,16 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         public void DrawGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
-            if( Plugin.DirectXManager.GradientView.CurrentRenderId != RenderId ) UpdateGradient();
+            if( File.Gradient.CurrentRenderId != RenderId ) UpdateGradient();
 
             var topLeft = new ImPlotPoint { X = ColorCurve.Keys[0].DisplayX, Y = 1 };
             var bottomRight = new ImPlotPoint { X = ColorCurve.Keys[^1].DisplayX, Y = -1 };
-            ImPlot.PlotImage( "##Gradient", new ImTextureID( Plugin.DirectXManager.GradientView.Output ), topLeft, bottomRight );
+            ImPlot.PlotImage( "##Gradient", new ImTextureID( File.Gradient.Output ), topLeft, bottomRight );
         }
 
         private void UpdateGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
-            Plugin.DirectXManager.GradientView.SetGradient( RenderId, [
+            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.Gradient, [
                 [.. ColorCurve.Keys.Select( x => (x.Time.Value, x.Color))]
             ] );
         }

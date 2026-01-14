@@ -52,7 +52,7 @@ namespace VfxEditor.PapFormat.Motion {
             OriginalSkeletonName.Value = Binding->OriginalSkeletonName.String;
             BlendHint.Value = ( BlendHintTypes )Binding->BlendHint.Value;
 
-            Preview = file.IsMaterial ? new PapMotionMaterial( this ) : new PapMotionSkeleton( this );
+            Preview = file.IsMaterial ? new PapMotionMaterial( file, this ) : new PapMotionSkeleton( this );
         }
 
         public void DrawPreview( int idx ) => Preview.Draw( idx );

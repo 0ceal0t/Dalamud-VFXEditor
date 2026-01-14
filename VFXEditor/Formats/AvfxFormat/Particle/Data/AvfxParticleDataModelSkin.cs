@@ -10,15 +10,18 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis FresnelCurve = new( "Fresnel Curve", "FrC" );
         public readonly AvfxCurve1Axis FresnelCurveRandom = new( "Fresnel Curve Random", "FrCR" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
-        public readonly AvfxCurveColor ColorBegin = new( name: "Color Begin", "ColB" );
-        public readonly AvfxCurveColor ColorEnd = new( name: "Color End", "ColE" );
+        public readonly AvfxCurveColor ColorBegin;
+        public readonly AvfxCurveColor ColorEnd;
         public readonly AvfxCurve1Axis SEM = new( "SEM", "SEM" );
         public readonly AvfxCurve1Axis SEMRandom = new( "SEM Random", "SEMR" );
         public readonly AvfxCurve1Axis EEM = new( "EEM", "EEM" );
         public readonly AvfxCurve1Axis EEMRandom = new( "EEM Random", "EEMR" );
         public readonly AvfxCurve3Axis UVPD = new( "UV Point Density", "UVPD" );
 
-        public AvfxParticleDataModelSkin() : base() {
+        public AvfxParticleDataModelSkin( AvfxFile file ) : base() {
+            ColorBegin = new( file, name: "Color Begin", "ColB" );
+            ColorEnd = new( file, name: "Color End", "ColE" );
+
             Parsed = [
                 FresnelType,
                 AuraTarget,

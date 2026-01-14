@@ -7,7 +7,7 @@ namespace VfxEditor.AvfxFormat {
         public override void OnSelect( AvfxEmitter item ) { }
 
         public override AvfxEmitter Read( BinaryReader reader, int size ) {
-            var item = new AvfxEmitter( File.NodeGroupSet );
+            var item = new AvfxEmitter( File, File.NodeGroupSet );
             item.Read( reader, size );
             return item;
         }

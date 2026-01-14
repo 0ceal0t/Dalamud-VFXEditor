@@ -13,6 +13,8 @@ namespace VfxEditor.AvfxFormat {
     public class AvfxEmitter : AvfxNodeWithData<EmitterType> {
         public const string NAME = "Emit";
 
+        public readonly AvfxFile File;
+
         public readonly AvfxString Sound = new( "Sound", "SdNm", true, false, null, true );
         public readonly AvfxInt SoundNumber = new( "Sound Index", "SdNo" );
         public readonly AvfxInt LoopStart = new( "Loop Start", "LpSt" );
@@ -34,7 +36,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis GravityRandom = new( "Gravity Random", "GraR" );
         public readonly AvfxCurve1Axis AirResistance = new( "Air Resistance", "ARs", locked: true );
         public readonly AvfxCurve1Axis AirResistanceRandom = new( "Air Resistance Random", "ARsR" );
-        public readonly AvfxCurveColor Color = new( "Color", locked: true );
+        public readonly AvfxCurveColor Color;
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos", locked: true );
         public readonly AvfxCurve3Axis Rotation = new( "Rotation", "Rot", CurveType.Angle, locked: true );
         public readonly AvfxCurve3Axis Scale = new( "Scale", "Scl", locked: true );
@@ -68,8 +70,11 @@ namespace VfxEditor.AvfxFormat {
         public readonly UiEmitterSplitView ParticleSplit;
         private readonly List<IUiItem> Parameters;
 
-        public AvfxEmitter( AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
+        public AvfxEmitter( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( NAME, AvfxNodeGroupSet.EmitterColor, "EVT" ) {
             NodeGroups = groupSet;
+            File = file;
+
+            Color = new( File, "Color", locked: true );
 
             Parsed = [
                 Sound,
