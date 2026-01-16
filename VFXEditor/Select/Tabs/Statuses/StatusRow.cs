@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Statuses {
         public StatusRow( Status status ) {
             Name = status.Name.ToString();
             RowId = ( int )status.RowId;
-            Icon = status.Icon;
+            Icon = status.Icon == 215049 ? 211054 : status.Icon; //use blank icon
 
             HitPath = GetVfxPath( status.HitEffect.ValueNullable?.Location.ValueNullable?.Location.ExtractText() );
 
