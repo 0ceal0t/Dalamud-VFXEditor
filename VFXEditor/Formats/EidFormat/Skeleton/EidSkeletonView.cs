@@ -8,7 +8,7 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
     public class EidSkeletonView : SkeletonView {
         private readonly EidFile File;
 
-        public EidSkeletonView( EidFile file, string sourcePath ) : base( file, Plugin.DirectXManager.EidPreview, sourcePath, "eid" ) {
+        public EidSkeletonView( EidFile file, string sourcePath ) : base( file, file.BoneNameInstance, sourcePath, "eid" ) {
             File = file;
         }
 
@@ -24,7 +24,7 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
             var selected = new MeshBuilder( true, false );
 
             File.AddBindPoints( mesh, selected, Bones.BoneMatrixes );
-            Preview.LoadWireframe( mesh.ToMeshGeometry3D(), new MeshBuilder( true, false ).ToMeshGeometry3D(), selected.ToMeshGeometry3D() );
+            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame( RenderId, Instance, mesh.ToMeshGeometry3D(), new MeshBuilder( true, false ).ToMeshGeometry3D(), selected.ToMeshGeometry3D() );
         }
     }
 }

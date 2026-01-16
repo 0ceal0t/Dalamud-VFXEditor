@@ -8,18 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.DirectX;
-using VfxEditor.DirectX.Pap;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
+using VfxEditor.PapFormat;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
+using VfxEditor.DirectX;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public unsafe class PapMotionSkeleton : PapMotionPreview {
-        private static PapBonePreview Preview => Plugin.DirectXManager.PapPreview;
-
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
+        public readonly PapFile File;
 
         private List<Bone> Data;
         private int Frame = 0;
@@ -27,16 +26,17 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
 
-        public PapMotionSkeleton( PapMotion motion ) : base( motion ) { }
+        public PapMotionSkeleton( PapFile file, PapMotion motion ) : base( motion ) {
+            File = file;
+        }
 
         public override void Draw( int idx ) {
-            if( Data == null ) {
-                UpdateFrameData();
+            if( Data == null ) { // Init
+                UpdateRender();
             }
-            else if( Preview.CurrentRenderId != RenderId ) {
+            else if( File.BoneInstance.CurrentRenderId != RenderId ) { // Just switched
                 Frame = 0;
                 Playing = false;
-                UpdateFrameData();
             }
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
@@ -83,7 +83,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 }
             }
 
-            if( Frame != lastFrame ) UpdateFrameData();
+            if( Frame != lastFrame ) UpdateRender();
 
             ImGui.SameLine();
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
@@ -93,12 +93,12 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            Preview.DrawInline();
+            Plugin.DirectXManager.BoneRenderer.DrawTexture( RenderId, File.BoneInstance, UpdateRender );
         }
 
         // ======== UPDATING ===========
 
-        private void UpdateFrameData() {
+        private void UpdateRender() {
             Motion.AnimationControl->LocalTime = Frame * ( 1 / 30f );
 
             var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
@@ -149,15 +149,11 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             Marshal.FreeHGlobal( ( nint )transforms );
             Marshal.FreeHGlobal( ( nint )floats );
 
-            UpdatePreview();
-        }
-
-        private void UpdatePreview() {
             if( Data == null || Data.Count == 0 || Motion.TotalFrames == 0 ) {
-                Preview.LoadEmpty( this );
+                Plugin.DirectXManager.BoneRenderer.SetEmpty( RenderId, File.BoneInstance );
             }
             else {
-                Preview.LoadSkeleton( this, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
+                Plugin.DirectXManager.BoneRenderer.SetSkeleton( RenderId, File.BoneInstance, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
             }
         }
     }

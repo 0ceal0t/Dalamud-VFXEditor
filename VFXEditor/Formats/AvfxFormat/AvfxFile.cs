@@ -8,12 +8,14 @@ using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
-using VFXEditor.DirectX.Instance;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.AvfxFormat {
     public partial class AvfxFile : FileManagerFile {
         public readonly AvfxMain Main;
-        public readonly GradientInstance Gradient = new();
+        public readonly GradientInstance GradientInstance = new();
+        public readonly ModelInstance ModelInstance = new();
 
         public readonly UiEffectorView EffectorView;
         public readonly UiEmitterView EmitterView;
@@ -150,7 +152,8 @@ namespace VfxEditor.AvfxFormat {
 
         public override void Dispose() {
             NodeGroupSet?.Dispose();
-            Gradient.Dispose();
+            GradientInstance.Dispose();
+            ModelInstance.Dispose();
         }
 
         // ========== WORKSPACE ==========

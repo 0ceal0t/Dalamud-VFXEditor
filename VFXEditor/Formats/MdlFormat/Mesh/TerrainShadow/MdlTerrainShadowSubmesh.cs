@@ -8,9 +8,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
         private readonly ParsedShort Unknown1 = new( "Unknown 1" );
         private readonly ParsedShort Unknown2 = new( "Unknown 2" );
 
-        public MdlTerrainShadowSubmesh( MdlTerrainShadowMesh parent ) : base( parent ) { }
+        public MdlTerrainShadowSubmesh( MdlFile file, MdlTerrainShadowMesh parent ) : base( file, parent ) { }
 
-        public MdlTerrainShadowSubmesh( BinaryReader reader ) : base( null ) {
+        public MdlTerrainShadowSubmesh( MdlFile file, BinaryReader reader ) : base( file, null ) {
             _IndexOffset = 2 * reader.ReadUInt32();
             IndexCount = reader.ReadUInt32();
             Unknown1.Read( reader );

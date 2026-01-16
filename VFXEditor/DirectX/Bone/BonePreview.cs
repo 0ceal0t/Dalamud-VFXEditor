@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public class BonePreview : ModelRenderer {
+    public  class BonePreview<T> : ModelRenderer<T> where T : ModelInstance {
         protected D3dDrawable Model;
 
         public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
@@ -24,15 +24,25 @@ namespace VfxEditor.DirectX {
             Model.AddPass( device, PassType.Final, Path.Combine( shaderPath, "Model.fx" ), ShaderPassFlags.Pixel | ShaderPassFlags.Geometry );
         }
 
-        public void LoadSkeleton( BoneSkinnedMeshGeometry3D mesh ) {
-            if( mesh.Positions.Count == 0 ) {
+        public void SetSkeleton( int renderId, T instance, BoneSkinnedMeshGeometry3D mesh ) {
+            instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
+
+            if( mesh?.Positions == null || mesh.Positions.Count == 0 ) {
                 Model.ClearVertexes();
-                UpdateDraw();
                 return;
             }
 
             Model.SetVertexes( Device, GetData( mesh ), mesh.Indices.Count );
-            UpdateDraw();
+        }
+
+        public void SetEmpty( int renderId, T instance ) {
+            instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
+
+            Model.ClearVertexes();
         }
 
         protected static Vector4[] GetData( List<MeshGeometry3D> meshes ) {
@@ -69,13 +79,9 @@ namespace VfxEditor.DirectX {
             return [.. data];
         }
 
-        protected override bool Wireframe() => false;
-
         protected override bool ShowEdges() => false;
 
-        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXSkeleton();
-
-        protected override void DrawPasses() {
+        protected override void RenderPasses( T instance ) {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
         }
 

@@ -1,39 +1,33 @@
-using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX;
-using HelixToolkit.SharpDX.Animations;
-using Dalamud.Bindings.ImGui;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.FileManager;
 using VfxEditor.SklbFormat;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.DirectX.Bone;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
-using Vec2 = System.Numerics.Vector2;
-using System.Numerics;
-using HelixToolkit.Maths;
+using BoneStruct = HelixToolkit.SharpDX.Animations.Bone;
 
 namespace VfxEditor.DirectX {
-    public class BoneNamePreview : BonePreview {
-        private bool IsSklb = false;
-        private List<Bone> BoneList;
+    public class BoneNamePreview : BonePreview<BoneNameInstance> {
         private int NumWireframe = 0;
         private Buffer WireframeVertices;
 
-        private static readonly ClosenessComparator Comparator = new();
-
         public BoneNamePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) { }
 
-        public void LoadSkeleton( int renderId, FileManagerFile file, List<Bone> boneList, BoneSkinnedMeshGeometry3D mesh ) {
-            CurrentRenderId = renderId;
-            IsSklb = file is SklbFile;
-            BoneList = boneList;
-            LoadSkeleton( mesh );
+        public void SetSkeleton( int renderId, BoneNameInstance instance, FileManagerFile file, List<BoneStruct> boneList, BoneSkinnedMeshGeometry3D mesh ) {
+            instance.SetSkeleton( file is SklbFile, boneList );
+            SetSkeleton( renderId, instance, mesh );
         }
 
-        public void LoadWireframe( MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
+        public void SetWireFrame( int renderId, BoneNameInstance instance, MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
+            instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
+
             PaintColor( collision, new( 0, 1, 0, 1 ) );
             PaintColor( simulation, new( 0, 0, 1, 1 ) );
             PaintColor( spring, new( 1, 0, 0, 1 ) );
@@ -47,7 +41,6 @@ namespace VfxEditor.DirectX {
             if( meshes.Select( x => x.Positions.Count ).Sum() == 0 ) {
                 NumWireframe = 0;
                 WireframeVertices?.Dispose();
-                UpdateDraw();
                 return;
             }
 
@@ -56,20 +49,17 @@ namespace VfxEditor.DirectX {
             WireframeVertices?.Dispose();
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
-            UpdateDraw();
         }
 
-        public void LoadEmpty( int renderId, FileManagerFile file ) {
-            CurrentRenderId = renderId;
-            IsSklb = file is SklbFile;
+        public void SetEmpty( int renderId, BoneNameInstance instance, FileManagerFile file ) {
+            SetEmpty( renderId, instance );
+            instance.SetSkeleton( file is SklbFile, [] );
+
             NumWireframe = 0;
-            BoneList = [];
             WireframeVertices?.Dispose();
-            Model.ClearVertexes();
-            UpdateDraw();
         }
 
-        protected override void DrawPasses() {
+        protected override void RenderPasses( BoneNameInstance instance ) {
             if( Model.ShaderError ) return;
             if( Model.Count == 0 && NumWireframe == 0 ) return;
 
@@ -115,75 +105,6 @@ namespace VfxEditor.DirectX {
         public override void Dispose() {
             base.Dispose();
             WireframeVertices?.Dispose();
-        }
-
-        protected virtual void DrawInlineExtra() { }
-
-        public override void DrawInline() {
-            var viewProj = Matrix4x4.Multiply( ViewMatrix, ProjMatrix );
-            var worldViewProj = LocalMatrix * viewProj;
-
-            using var child = ImRaii.Child( "3DChild" );
-
-            var drawList = ImGui.GetWindowDrawList();
-
-            DrawImage();
-
-            var boneScreenMap = new Dictionary<string, Vec2>();
-            var boneDepthMap = new Dictionary<string, float>();
-
-            var boneScreenList = new List<Vec2>();
-            var boneDepthList = new List<float>();
-
-            foreach( var bone in BoneList ) {
-                var matrix = bone.BindPose * worldViewProj;
-
-                var pos = Vector3Helper.TransformCoordinate( new( 0 ), matrix );
-                var screenPos = LastMid + ( ( LastSize / 2f ) * new Vec2( pos.X, -1f * pos.Y ) );
-                var depth = pos.Z;
-
-                boneScreenMap[bone.Name] = screenPos;
-                boneDepthMap[bone.Name] = depth;
-
-                boneScreenList.Add( screenPos );
-                boneDepthList.Add( depth );
-            }
-
-            // ===== CONNECTION LINES =======
-
-            if( CurrentRenderId != -1 && IsSklb && Plugin.Configuration.SklbBoneDisplay != BoneDisplay.Connected ) {
-                foreach( var bone in BoneList ) {
-                    if( bone.ParentIndex == -1 ) continue;
-                    if( !ValidDepth( boneDepthMap[bone.Name] ) || !ValidDepth( boneDepthList[bone.ParentIndex] ) ) continue;
-
-                    var startPos = boneScreenMap[bone.Name];
-                    var endPos = boneScreenList[bone.ParentIndex];
-
-                    drawList.AddLine( startPos, endPos, ImGui.ColorConvertFloat4ToU32( Plugin.Configuration.SkeletonBoneLineColor ), 2f );
-                }
-            }
-
-            // ===== NAMES =======
-
-            if( Plugin.Configuration.ShowBoneNames ) {
-                var groups = boneScreenMap.GroupBy( entry => entry.Value, entry => entry.Key, Comparator );
-                foreach( var group in groups ) {
-                    var idx = 0;
-                    foreach( var item in group ) {
-                        drawList.AddText( group.Key + new Vec2( 0, 12f * idx ), ImGui.ColorConvertFloat4ToU32( Plugin.Configuration.SkeletonBoneNameColor ), item );
-                        idx++;
-                    }
-                }
-            }
-
-            DrawInlineExtra();
-        }
-
-        private static bool ValidDepth( float depth ) => depth > 0.5f && depth < 1f;
-
-        private class ClosenessComparator : IEqualityComparer<Vec2> {
-            public bool Equals( Vec2 x, Vec2 y ) => ( x - y ).Length() < 10f;
-            public int GetHashCode( Vec2 obj ) => 0;
         }
     }
 }

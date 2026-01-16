@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.DirectX;
-using VfxEditor.DirectX.Renderers;
 using VfxEditor.PapFormat;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
+using VfxEditor.DirectX;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public class PapMotionMaterialData {
@@ -43,7 +42,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public unsafe class PapMotionMaterial : PapMotionPreview {
         public readonly PapFile File;
 
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
 
         private static int MATERIAL_ID = 0;
         private readonly int Id = MATERIAL_ID++;
@@ -60,7 +59,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
         public override void Draw( int idx ) {
             if( Data == null ) Update();
-            if( File.Gradient.CurrentRenderId != RenderId ) UpdateGradient();
+            if( File.GradientInstance.CurrentRenderId != RenderId ) UpdateGradient();
 
             // ======== CONTROLS ==========
 
@@ -116,7 +115,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                     var topLeft = new ImPlotPoint { X = 0, Y = 1 };
                     var bottomRight = new ImPlotPoint { X = Motion.TotalFrames, Y = -1 };
 
-                    ImPlot.PlotImage( "##Gradient", new ImTextureID( File.Gradient.Output ), topLeft, bottomRight );
+                    ImPlot.PlotImage( "##Gradient", new ImTextureID( File.GradientInstance.Output ), topLeft, bottomRight );
 
                     for( var i = 0; i < Data.Count - 1; i++ ) {
                         var yPos = -1f + 2f * ( i + 1f ) / ( Data.Count );
@@ -180,7 +179,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         }
 
         private void UpdateGradient() {
-            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.Gradient,
+            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance,
                 [.. Data.Select( x => x.Value.Color.Select( y => (y.Item1, y.Item2 + Plugin.Configuration.PapMaterialBaseColor) ).ToList() )]
             );
         }

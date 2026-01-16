@@ -31,7 +31,7 @@ namespace VfxEditor.AvfxFormat {
             ImGui.TableNextColumn();
             Vertex.Color.Draw();
 
-            if( edited.IsEdited ) Model.RefreshModelPreview();
+            if( edited.IsEdited ) Model.Updated();
         }
     }
 }

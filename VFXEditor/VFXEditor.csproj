@@ -14,6 +14,7 @@
         <OutputType>Library</OutputType>
         <OutputPath>bin\$(Configuration)\</OutputPath>
         <Configurations>Debug;Release;Beta</Configurations>
+        <RootNamespace>VfxEditor</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">

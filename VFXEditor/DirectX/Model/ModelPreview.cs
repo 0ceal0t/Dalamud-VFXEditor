@@ -8,11 +8,11 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.AvfxFormat;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public class ModelPreview : ModelRenderer {
+    public class ModelPreview : ModelRenderer<ModelInstance> {
         public enum RenderMode {
             Color,
             Uv1,
@@ -60,9 +60,14 @@ namespace VfxEditor.DirectX {
             Emitters.SetVertexes( Device, data, emitterCount );
         }
 
-        public void LoadModel( AvfxModel model, RenderMode mode ) => LoadModel( model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
+        public void SetModel( int renderId, ModelInstance instance, AvfxModel model, RenderMode mode ) => 
+            SetModel( renderId, instance, model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
 
-        public void LoadModel( List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
+        public void SetModel( int renderId, ModelInstance instance, List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
+            instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
+
             if( modelIndexes.Count == 0 ) {
                 Model.ClearVertexes();
             }
@@ -107,8 +112,6 @@ namespace VfxEditor.DirectX {
                 }
                 Emitters.SetInstances( Device, [.. data], modelEmitters.Count );
             }
-
-            UpdateDraw();
         }
 
         private static Quaternion GetEmitterRotationQuat( Vector3 normal ) {
@@ -125,14 +128,12 @@ namespace VfxEditor.DirectX {
             return QuaternionHelper.RotationAxis( rotationAxis, ( float )rotationAngle );
         }
 
-        protected override void DrawPasses() {
+        protected override void RenderPasses( ModelInstance instance ) {
             Model.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
             if( Plugin.Configuration.ModelShowEmitters ) {
                 Emitters.Draw( Ctx, PassType.Final, VertexShaderBuffer, PixelShaderBuffer );
             }
         }
-
-        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXVfx();
 
         public override void Dispose() {
             base.Dispose();

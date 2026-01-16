@@ -1,6 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
-using HelixToolkit.SharpDX.Animations;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
+using HelixToolkit.Geometry;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.EidFormat.BindPoint;
@@ -8,7 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Formats.EidFormat.Skeleton;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
-using HelixToolkit.Geometry;
+using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.EidFormat {
     public class EidFile : FileManagerFile {
@@ -22,6 +23,7 @@ namespace VfxEditor.EidFormat {
         private bool NewData => Version1 == 0x3132;
         private EidBindPoint OldSelected;
 
+        public readonly BoneNameInstance BoneNameInstance = new();
         public readonly EidSkeletonView Skeleton;
         public bool BindPointsUpdated = true;
 
@@ -90,6 +92,11 @@ namespace VfxEditor.EidFormat {
 
         public override void OnChange() {
             BindPointsUpdated = true;
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            BoneNameInstance.Dispose();
         }
     }
 }

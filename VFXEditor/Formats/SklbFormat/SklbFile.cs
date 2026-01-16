@@ -8,6 +8,7 @@ using VfxEditor.SklbFormat.Bones;
 using VfxEditor.SklbFormat.Data;
 using VfxEditor.SklbFormat.Layers;
 using VfxEditor.Utils;
+using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.SklbFormat {
     public class SklbFile : FileManagerFile {
@@ -20,6 +21,7 @@ namespace VfxEditor.SklbFormat {
         private readonly int Padding;
 
         public readonly SklbBones Bones;
+        public readonly BoneNameInstance BoneNameInstance = new();
 
         public readonly HashSet<nint> Handles = [];
 
@@ -153,6 +155,8 @@ namespace VfxEditor.SklbFormat {
             base.Dispose();
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );
             Handles.Clear();
+
+            BoneNameInstance?.Dispose();
         }
     }
 }

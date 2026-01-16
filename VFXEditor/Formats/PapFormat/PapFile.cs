@@ -9,7 +9,8 @@ using VfxEditor.FileManager;
 using VfxEditor.PapFormat.Motion;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
-using VFXEditor.DirectX.Instance;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.PapFormat {
     public enum SkeletonType {
@@ -20,7 +21,8 @@ namespace VfxEditor.PapFormat {
     }
 
     public class PapFile : FileManagerFile {
-        public readonly GradientInstance Gradient = new();
+        public readonly GradientInstance GradientInstance = new();
+        public readonly ModelInstance BoneInstance = new();
 
         public readonly string HkxTempLocation;
         public readonly string SourcePath;
@@ -202,7 +204,9 @@ namespace VfxEditor.PapFormat {
             MotionData?.Dispose();
             foreach( var item in Handles ) Marshal.FreeHGlobal( item );
             Handles.Clear();
-            Gradient.Dispose();
+
+            GradientInstance.Dispose();
+            BoneInstance.Dispose();
         }
     }
 }

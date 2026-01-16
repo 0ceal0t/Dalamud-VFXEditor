@@ -10,6 +10,8 @@ using VfxEditor.Parsing.HalfFloat;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class MtrlColorRowLegacy : MtrlColorRowBase {
+        public readonly MtrlFile File;
+
         public readonly ParsedHalf3Color Diffuse = new( "Diffuse", Vector3.One );
         public readonly ParsedHalf SpecularStrength = new( "Specular Strength", 1f );
         public readonly ParsedHalf3Color Specular = new( "Specular", Vector3.One );
@@ -25,7 +27,9 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         public MtrlStain Stain { get; private set; }
         public StmDyeData StainTemplate { get; private set; }
 
-        public MtrlColorRowLegacy( MtrlTableBase table ) : base( table ) { }
+        public MtrlColorRowLegacy( MtrlFile file, MtrlTableBase table ) : base( table ) {
+            File = file;
+        }
 
         public override void Read( BinaryReader reader ) {
             Diffuse.Read( reader );
@@ -97,16 +101,17 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 else StainTemplate.Draw();
             }
 
-            if( Plugin.DirectXManager.MaterialPreviewLegacy.CurrentRenderId != RenderId || edited ) {
-                StainTemplate = GetStainTemplate();
-                RefreshPreview();
-            }
-            Plugin.DirectXManager.MaterialPreviewLegacy.DrawInline();
+            if( edited ) UpdateRender();
+
+            Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender );
         }
 
         public StmDyeData GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFile.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
 
-        public void RefreshPreview() => Plugin.DirectXManager.MaterialPreviewLegacy.LoadColorRow( this );
+        public void UpdateRender() {
+            StainTemplate = GetStainTemplate();
+            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, this );
+        }
 
         public void SetPreviewStain( MtrlStain stain ) {
             Stain = stain;

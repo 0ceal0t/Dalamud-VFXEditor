@@ -12,7 +12,6 @@ using VfxEditor.DirectX;
 using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
-using VFXEditor.DirectX.Instance;
 using VFXEditor.Formats.AvfxFormat.Curve;
 using static VfxEditor.AvfxFormat.Enums;
 
@@ -399,16 +398,16 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         public void DrawGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
-            if( File.Gradient.CurrentRenderId != RenderId ) UpdateGradient();
+            if( File.GradientInstance.CurrentRenderId != RenderId ) UpdateGradient();
 
             var topLeft = new ImPlotPoint { X = ColorCurve.Keys[0].DisplayX, Y = 1 };
             var bottomRight = new ImPlotPoint { X = ColorCurve.Keys[^1].DisplayX, Y = -1 };
-            ImPlot.PlotImage( "##Gradient", new ImTextureID( File.Gradient.Output ), topLeft, bottomRight );
+            ImPlot.PlotImage( "##Gradient", new ImTextureID( File.GradientInstance.Output ), topLeft, bottomRight );
         }
 
         private void UpdateGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
-            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.Gradient, [
+            Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance, [
                 [.. ColorCurve.Keys.Select( x => (x.Time.Value, x.Color))]
             ] );
         }

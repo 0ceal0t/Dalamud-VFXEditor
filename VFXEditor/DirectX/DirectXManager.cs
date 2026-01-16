@@ -3,8 +3,8 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.DirectX.Mesh;
-using VfxEditor.DirectX.Pap;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -13,16 +13,13 @@ namespace VfxEditor.DirectX {
         public readonly DeviceContext Ctx;
 
         public readonly GradientRenderer GradientRenderer;
+        public readonly ModelPreview ModelRenderer;
+        public readonly BonePreview<ModelInstance> BoneRenderer;
+        public readonly BoneNamePreview BoneNameRenderer;
+        public readonly MaterialPreviewLegacy MaterialRenderer;
+        public readonly MeshPreview MeshRenderer;
 
-        public readonly ModelPreview ModelPreview;
-        public readonly PapBonePreview PapPreview;
-        public readonly BoneNamePreview PhybPreview;
-        public readonly BoneNamePreview SklbPreview;
-        public readonly BoneNamePreview EidPreview;
-        public readonly MaterialPreviewLegacy MaterialPreviewLegacy;
-        public readonly MeshPreview MeshPreview;
-
-        private readonly List<ModelRenderer> Renderers = [];
+        public readonly List<ModelInstance> Instances = [];
 
         public static Include IncludeHandler { get; private set; }
 
@@ -33,41 +30,32 @@ namespace VfxEditor.DirectX {
             Ctx = Device.ImmediateContext;
 
             GradientRenderer = new( Device, Ctx, shaderPath );
-
-            ModelPreview = new( Device, Ctx, shaderPath );
-            PapPreview = new( Device, Ctx, shaderPath );
-            PhybPreview = new( Device, Ctx, shaderPath );
-            SklbPreview = new( Device, Ctx, shaderPath );
-            EidPreview = new( Device, Ctx, shaderPath );
-            MaterialPreviewLegacy = new( Device, Ctx, shaderPath );
-            MeshPreview = new( Device, Ctx, shaderPath );
-
-            Renderers = [
-                ModelPreview,
-                PapPreview,
-                PhybPreview,
-                SklbPreview,
-                EidPreview,
-                MaterialPreviewLegacy,
-                MeshPreview,
-            ];
+            ModelRenderer = new( Device, Ctx, shaderPath );
+            BoneRenderer = new( Device, Ctx, shaderPath );
+            BoneNameRenderer = new( Device, Ctx, shaderPath );
+            MaterialRenderer = new( Device, Ctx, shaderPath );
+            MeshRenderer = new( Device, Ctx, shaderPath );
         }
 
         public void RedrawMaterials() {
             // TODO
-            MaterialPreviewLegacy.Redraw();
         }
 
         public void Redraw() {
             // TODO
-            Renderers.ForEach( x => x.Redraw() );
         }
 
         public void Dispose() {
-            Renderers.ForEach( x => x.Dispose() );
-            Renderers.Clear();
+            Instances.Clear();
 
             GradientRenderer.Dispose();
+            ModelRenderer.Dispose();
+            BoneRenderer.Dispose();
+            BoneNameRenderer.Dispose();
+            MaterialRenderer.Dispose();
+            MeshRenderer.Dispose();
+            
+            MeshRenderer.Dispose();
         }
     }
 }

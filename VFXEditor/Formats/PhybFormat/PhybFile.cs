@@ -17,6 +17,7 @@ using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 using VfxEditor.Utils.PackStruct;
 using HelixToolkit.Geometry;
+using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.PhybFormat {
     public class MeshBuilders {
@@ -26,6 +27,8 @@ namespace VfxEditor.PhybFormat {
     }
 
     public class PhybFile : FileManagerFile, IPhysicsObject {
+        public readonly BoneNameInstance Instance = new();
+
         public readonly ParsedIntByte4 Version = new( "Version" );
         public readonly ParsedUInt DataType = new( "Data Type" );
 
@@ -168,6 +171,11 @@ namespace VfxEditor.PhybFormat {
         public override void OnChange() {
             PhysicsUpdated = true;
             base.OnChange();
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            Instance.Dispose();
         }
     }
 }

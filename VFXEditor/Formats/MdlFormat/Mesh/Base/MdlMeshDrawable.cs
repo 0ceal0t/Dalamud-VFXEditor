@@ -5,7 +5,8 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
     public abstract class MdlMeshDrawable {
-        public readonly int RenderId = Renderer.NewId;
+        public readonly MdlFile File;
+        public readonly int RenderId = RenderInstance.NewId;
 
         protected Buffer Data; // starts as null
 
@@ -19,6 +20,10 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
 
         public int RawIndexDataSize => RawIndexData.Length;
 
+        public MdlMeshDrawable( MdlFile file ) {
+            File = file; 
+        }
+
         public uint GetIndexCount() => IndexCount;
 
         public abstract void RefreshBuffer( Device device );
@@ -27,6 +32,14 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
             if( GetIndexCount() == 0 ) return null;
             if( Data == null ) RefreshBuffer( device );
             return Data;
+        }
+
+        protected virtual void DrawPreview() {
+            Plugin.DirectXManager.MeshRenderer.DrawTexture( RenderId, File.MeshInstance, UpdateRender );
+        }
+
+        protected void UpdateRender() {
+            Plugin.DirectXManager.MeshRenderer.SetMesh( RenderId, File.MeshInstance, this );
         }
     }
 }

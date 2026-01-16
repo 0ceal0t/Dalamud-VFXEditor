@@ -6,7 +6,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
     public abstract class MdlSubmeshData<T> : MdlMeshDrawable, IUiItem where T : MdlMeshData {
         private T Parent;
 
-        public MdlSubmeshData( T parent ) {
+        public MdlSubmeshData( MdlFile file, T parent ) : base( file ) {
             Parent = parent;
         }
 
@@ -24,13 +24,9 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
             Data = Buffer.Create( device, BindFlags.VertexBuffer, data );
         }
 
-        protected void DrawPreview() {
+        protected override void DrawPreview() {
             if( Parent == null ) return;
-
-            if( Plugin.DirectXManager.MeshPreview.CurrentRenderId != RenderId ) {
-                Plugin.DirectXManager.MeshPreview.LoadMesh( this );
-            }
-            Plugin.DirectXManager.MeshPreview.DrawInline();
+            base.DrawPreview();
         }
 
         public abstract void Draw();

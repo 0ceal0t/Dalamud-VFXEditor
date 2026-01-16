@@ -16,6 +16,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.Formats.MtrlFormat {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/04ddadb44600a382e26661e1db08fd16c3b671d8/Files/MtrlFile.cs#L7
@@ -41,6 +42,8 @@ namespace VfxEditor.Formats.MtrlFormat {
     }
 
     public class MtrlFile : FileManagerFile {
+        public readonly ModelDeferredInstance Instance = new();
+
         public readonly uint Version;
         private readonly byte[] ExtraData;
 
@@ -353,5 +356,10 @@ namespace VfxEditor.Formats.MtrlFormat {
         }
 
         private static uint Masked( uint flags ) => flags & ( ~0x11u );
+
+        public override void Dispose() {
+            base.Dispose();
+            Instance.Dispose();
+        }
     }
 }

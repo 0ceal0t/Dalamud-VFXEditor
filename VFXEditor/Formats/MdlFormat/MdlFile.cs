@@ -16,6 +16,7 @@ using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.Formats.MdlFormat {
     // https://github.com/Caraxi/SimpleHeels/blob/d345d7406958e70fb3c6823cee21872ffa65621b/Files/MdlFile.cs#L291
@@ -46,6 +47,8 @@ namespace VfxEditor.Formats.MdlFormat {
     }
 
     public class MdlFile : FileManagerFile {
+        public readonly ModelDeferredInstance MeshInstance = new();
+
         public const uint VERSION_6 = 0x01000006; // Updated dawntrail model
 
         private readonly uint Version;
@@ -197,8 +200,8 @@ namespace VfxEditor.Formats.MdlFormat {
             for( var i = 0; i < meshCount; i++ ) data.Meshes.Add( new( this, vertexFormats[i], reader ) );
             for( var i = 0; i < attributeCount; i++ ) data.StringTable.AttributeStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < terrainShadowMeshCount; i++ ) data.TerrainShadowMeshes.Add( new( this, reader ) );
-            for( var i = 0; i < submeshCount; i++ ) data.SubMeshes.Add( new( reader ) );
-            for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( reader ) );
+            for( var i = 0; i < submeshCount; i++ ) data.SubMeshes.Add( new( this, reader ) );
+            for( var i = 0; i < terrainShadowSubmeshCount; i++ ) data.TerrainShadowSubmeshes.Add( new( this, reader ) );
             for( var i = 0; i < materialCount; i++ ) data.StringTable.MaterialStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
             for( var i = 0; i < boneCount; i++ ) data.StringTable.BoneStrings.Add( data.OffsetToString[reader.ReadUInt32()] );
 

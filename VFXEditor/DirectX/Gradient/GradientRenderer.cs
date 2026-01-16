@@ -1,15 +1,15 @@
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.DirectX.Drawable;
-using VFXEditor.DirectX.Instance;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX.Renderers {
+namespace VfxEditor.DirectX.Gradient {
     public class GradientRenderer : Renderer {
         private RasterizerState State;
         private readonly D3dDrawable Gradient;
@@ -26,10 +26,12 @@ namespace VfxEditor.DirectX.Renderers {
 
         public void SetGradient( int renderId, GradientInstance instance, List<List<(int, Vector3)>> rows ) {
             instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
 
             if( rows.Count == 0 || rows.Min( x => x.Count ) < 2 ) {
                 Gradient.ClearVertexes();
-                Draw( instance );
+                Render( instance );
                 return;
             }
 
@@ -84,7 +86,18 @@ namespace VfxEditor.DirectX.Renderers {
             }
 
             Gradient.SetVertexes( Device, [.. data], count * 6 );
-            Draw( instance );
+            Render( instance );
+        }
+
+        public void UpdateTexture( int renderId, GradientInstance instance, Action update ) {
+            var needsUpdate = ( renderId != instance.CurrentRenderId || instance != LoadedInstance );
+            if( needsUpdate ) {
+                update();
+            }
+
+            if( instance.NeedsRedraw || needsUpdate ) {
+                Render( instance );
+            }
         }
 
         private void RefreshRasterizeState() {
@@ -103,9 +116,10 @@ namespace VfxEditor.DirectX.Renderers {
             } );
         }
 
-        public void Draw( GradientInstance instance ) {
-            instance.IsUpdated();
-            BeforeDraw( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
+        public void Render( GradientInstance instance ) {
+            instance.SetNeedsRedraw( false );
+
+            BeforeRender( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
             Ctx.OutputMerger.SetTargets( instance.DepthView, instance.RenderView );
             Ctx.ClearDepthStencilView( instance.DepthView, DepthStencilClearFlags.Depth, 1.0f, 0 );
@@ -118,7 +132,7 @@ namespace VfxEditor.DirectX.Renderers {
 
             Ctx.Flush();
 
-            AfterDraw( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
+            AfterRender( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
         }
 
         public override void Dispose() {

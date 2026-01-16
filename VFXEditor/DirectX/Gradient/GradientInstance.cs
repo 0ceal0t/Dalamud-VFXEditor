@@ -1,7 +1,7 @@
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 
-namespace VFXEditor.DirectX.Instance {
+namespace VfxEditor.DirectX.Gradient {
     public class GradientInstance : RenderInstance {
         public nint Output => ShaderView.NativePointer;
 

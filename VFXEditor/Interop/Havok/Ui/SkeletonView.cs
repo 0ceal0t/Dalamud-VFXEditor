@@ -7,31 +7,28 @@ using VfxEditor.DirectX;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Utils;
+using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.Interop.Havok.Ui {
     public abstract class SkeletonView {
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
+        protected readonly BoneNameInstance Instance;
+
         private readonly FileManagerFile File;
         private readonly string Extension;
 
-        protected readonly BoneNamePreview Preview;
         protected HavokBones Bones;
         protected readonly SkeletonSelector Selector;
 
-        public SkeletonView( FileManagerFile file, BoneNamePreview preview, string sklbPath, string extension ) {
+        public SkeletonView( FileManagerFile file, BoneNameInstance instance, string sklbPath, string extension ) {
             File = file;
-            Preview = preview;
+            Instance = instance;
             Extension = extension;
             if( !string.IsNullOrEmpty( sklbPath ) ) sklbPath = sklbPath.Replace( $".{extension}", ".sklb" ).Replace( $"{extension[0..3]}_", "skl_" );
             Selector = new( sklbPath, UpdateSkeleton );
         }
 
         public void Draw() {
-            if( Bones != null && Preview.CurrentRenderId != RenderId ) {
-                UpdatePreview();
-                UpdateData();
-            }
-
             Selector.Draw();
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
@@ -41,10 +38,15 @@ namespace VfxEditor.Interop.Havok.Ui {
 
             if( Bones == null ) return;
             DrawData();
-            Preview.DrawInline();
+            Plugin.DirectXManager.BoneNameRenderer.DrawTexture( RenderId, Instance, UpdateRender );
         }
 
         protected abstract void DrawData();
+
+        public void UpdateRender() {
+            UpdatePreview();
+            UpdateData();
+        }
 
         public void UpdateSkeleton( SimpleSklb sklbFile ) {
             UpdateBones( sklbFile );
@@ -83,8 +85,8 @@ namespace VfxEditor.Interop.Havok.Ui {
         protected abstract void UpdateData();
 
         private void UpdatePreview() {
-            if( Bones?.BoneList.Count == 0 ) Preview.LoadEmpty( RenderId, File );
-            else Preview.LoadSkeleton( RenderId, File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList ).Build() );
+            if( Bones?.BoneList.Count == 0 ) Plugin.DirectXManager.BoneNameRenderer.SetEmpty( RenderId, Instance, File );
+            else Plugin.DirectXManager.BoneNameRenderer.SetSkeleton( RenderId, Instance, File, Bones.BoneList, new ConnectedSkeletonMeshBuilder( Bones.BoneList ).Build() );
         }
     }
 }

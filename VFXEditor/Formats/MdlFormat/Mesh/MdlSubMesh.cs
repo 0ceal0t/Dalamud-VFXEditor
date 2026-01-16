@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh {
         public readonly List<ParsedString> Attributes = [];
         public readonly CommandListView<ParsedString> AttributeView;
 
-        public MdlSubMesh( BinaryReader reader ) : base( null ) {
+        public MdlSubMesh( MdlFile file, BinaryReader reader ) : base( file, null ) {
             _IndexOffset = 2 * reader.ReadUInt32();
             IndexCount = reader.ReadUInt32();
             _AttributeIndexMask = reader.ReadUInt32();

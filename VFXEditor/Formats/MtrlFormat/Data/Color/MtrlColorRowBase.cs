@@ -8,7 +8,7 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public abstract class MtrlColorRowBase : IUiItem {
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
         public readonly MtrlTableBase Table;
 
         public MtrlColorRowBase( MtrlTableBase table ) {

@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
-using VfxEditor.DirectX.Renderers;
+using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.DirectX.Lights {
     [Serializable]

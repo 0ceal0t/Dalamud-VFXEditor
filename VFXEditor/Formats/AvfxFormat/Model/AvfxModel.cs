@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +10,14 @@ using VfxEditor.FileBrowser;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
+using VfxEditor.DirectX;
 using static VfxEditor.DirectX.ModelPreview;
 
 namespace VfxEditor.AvfxFormat {
     public class AvfxModel : AvfxNode {
         public const string NAME = "Modl";
+
+        public readonly AvfxFile File;
 
         public readonly AvfxVertexes Vertexes = new();
         public readonly AvfxIndexes Indexes = new();
@@ -30,11 +33,15 @@ namespace VfxEditor.AvfxFormat {
         private readonly CommandTable<UiEmitVertex> VertexTable;
         private readonly CommandTable<UiVertexNumber> VertexNumberTable;
 
+        public readonly int RenderId = RenderInstance.NewId;
+        private bool NeedsReRender = false;
+
         private int Mode = ( int )RenderMode.Color;
-        private bool Refresh = false;
         private readonly UiModelUvView UvView;
 
-        public AvfxModel() : base( NAME, AvfxNodeGroupSet.ModelColor ) {
+        public AvfxModel( AvfxFile file ) : base( NAME, AvfxNodeGroupSet.ModelColor ) {
+            File = file;
+
             Parsed = [
                 EmitVertexNumbers,
                 EmitVertexes,
@@ -48,14 +55,14 @@ namespace VfxEditor.AvfxFormat {
             VertexNumberTable = new( "Number", true, true, AllVertexNumbers, [
                 ( "Number", ImGuiTableColumnFlags.None, -1 )
             ],
-            () => new( new() ), ( UiVertexNumber item, bool add ) => RefreshModelPreview() );
+            () => new( new() ), ( UiVertexNumber item, bool add ) => Updated() );
 
             VertexTable = new( "Emit", true, true, AllEmitVertexes, [
                 ( "Position", ImGuiTableColumnFlags.None, -1 ),
                 ( "Normal", ImGuiTableColumnFlags.None, -1 ),
                 ( "Color", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new() ), ( UiEmitVertex item, bool add ) => RefreshModelPreview() );
+            () => new( this, new() ), ( UiEmitVertex item, bool add ) => Updated() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -144,7 +151,7 @@ namespace VfxEditor.AvfxFormat {
             }
 
             using( var tab = ImRaii.TabItem( "Vertex Order" ) ) {
-                if( tab ) DrawVertexnumbers();
+                if( tab ) DrawVertexNumbers();
             }
 
             using( var tab = ImRaii.TabItem( "Emitter Vertices" ) ) {
@@ -162,68 +169,50 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.EmitterVertexSplitOpen ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.EmitterVertexSplitOpen ) {
-                CheckRefresh();
-                Plugin.DirectXManager.ModelPreview.DrawInline();
+                if( NeedsReRender ) UpdateRender();
+                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
             }
         }
 
-        private void DrawVertexnumbers() {
+        private void DrawVertexNumbers() {
             VertexNumberTable.Draw();
         }
 
-        public void OnSelect() {
-            Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
-            UvView.LoadModel( this );
-        }
+        public void OnSelect() { }
 
         private void DrawModel3D() {
             using var _ = ImRaii.PushId( "3DModel" );
 
-            if( ImGui.Checkbox( "Wireframe", ref Plugin.Configuration.ModelWireframe ) ) {
-                Plugin.DirectXManager.ModelPreview.RefreshRasterizeState();
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
+            if( ImGui.Checkbox( "Show Edges", ref Plugin.Configuration.ModelShowEdges ) ) Plugin.DirectXManager.Redraw();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Edges", ref Plugin.Configuration.ModelShowEdges ) ) {
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
+            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.Configuration.ModelShowEmitters ) ) Plugin.DirectXManager.Redraw();
+
+            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.Checkbox( "Show Emitter Vertices", ref Plugin.Configuration.ModelShowEmitters ) ) {
-                Plugin.DirectXManager.ModelPreview.Draw();
-                Plugin.Configuration.Save();
-            }
-
-            if( ImGui.RadioButton( "Color", ref Mode, ( int )RenderMode.Color ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Color );
+            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 1", ref Mode, ( int )RenderMode.Uv1 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv1 );
+            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 2", ref Mode, ( int )RenderMode.Uv2 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv2 );
+            if( ImGui.RadioButton( "UV 3", ref Mode, ( int )RenderMode.Uv3 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 3", ref Mode, ( int )RenderMode.Uv3 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv3 );
+            if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) UpdateRender();
 
             ImGui.SameLine();
-            if( ImGui.RadioButton( "UV 4", ref Mode, ( int )RenderMode.Uv4 ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Uv4 );
+            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
-            ImGui.SameLine();
-            if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) Plugin.DirectXManager.ModelPreview.LoadModel( this, RenderMode.Normal );
-
-            CheckRefresh();
-            Plugin.DirectXManager.ModelPreview.DrawInline();
+            if( NeedsReRender ) UpdateRender();
+            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
         }
 
-        private void CheckRefresh() {
-            if( !Refresh ) return;
-
-            Plugin.DirectXManager.ModelPreview.LoadModel( this, ( RenderMode )Mode );
+        public void UpdateRender() {
+            Plugin.DirectXManager.ModelRenderer.SetModel( RenderId, File.ModelInstance, this, ( RenderMode )Mode );
             UvView.LoadModel( this );
-            Refresh = false;
+            NeedsReRender = false;
         }
 
         private void ImportDialog() {
@@ -247,7 +236,7 @@ namespace VfxEditor.AvfxFormat {
             } );
         }
 
-        public void RefreshModelPreview() { Refresh = true; }
+        public void Updated() { NeedsReRender = true; }
 
         public override string GetDefaultText() => $"Model {GetIdx()}";
 

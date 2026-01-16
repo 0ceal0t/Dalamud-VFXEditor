@@ -1,15 +1,14 @@
 using HelixToolkit.Geometry;
 using HelixToolkit.Maths;
-using HelixToolkit.SharpDX.Core;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.DirectX.Renderers;
 using VfxEditor.Formats.MtrlFormat.Data.Color;
 using VfxEditor.Formats.MtrlFormat.Data.Dye;
+using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -53,7 +52,7 @@ namespace VfxEditor.DirectX {
         public Matrix4x4 InvProjectionMatrix;
     }
 
-    public class MaterialPreviewLegacy : ModelDeferredRenderer {
+    public class MaterialPreviewLegacy : ModelDeferredRenderer<ModelDeferredInstance> {
         private readonly D3dDrawable Model;
 
         protected Buffer MaterialPixelShaderBuffer;
@@ -95,8 +94,11 @@ namespace VfxEditor.DirectX {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void LoadColorRow( MtrlColorRowLegacy row ) {
-            CurrentRenderId = row.RenderId;
+        public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlColorRowLegacy row ) {
+            instance.SetCurrentRenderId( renderId );
+            instance.SetNeedsRedraw( true );
+            LoadedInstance = instance;
+
             if( row == null ) return;
 
             VSBufferData = VSBufferData with {
@@ -127,20 +129,18 @@ namespace VfxEditor.DirectX {
 
             DiffuseView = GetTexture( diffuse.Layers[tileIdx], diffuse.Header.Height, diffuse.Header.Width, out DiffuseTexture );
             NormalView = GetTexture( normal.Layers[tileIdx], normal.Header.Height, normal.Header.Width, out NormalTexture );
-
-            UpdateDraw();
         }
 
-        protected override void OnDrawUpdate() {
+        protected override void OnRenderUpdate( ModelDeferredInstance instance ) {
             if( SkipDraw ) return;
 
             var psBuffer = PSBufferData with {
                 AmbientColor = Plugin.Configuration.MaterialAmbientColor,
-                EyePosition = CameraPosition,
+                EyePosition = instance.CameraPosition,
                 Light1 = Plugin.Configuration.Light1.GetData(),
                 Light2 = Plugin.Configuration.Light2.GetData(),
-                InvViewMatrix = ViewMatrix.Inverted(),
-                InvProjectionMatrix = ProjMatrix.Inverted()
+                InvViewMatrix = instance.ViewMatrix.Inverted(),
+                InvProjectionMatrix = instance.ProjMatrix.Inverted()
             };
 
             var vsBuffer = VSBufferData;
@@ -149,7 +149,7 @@ namespace VfxEditor.DirectX {
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
         }
 
-        protected override void GBufferPass() {
+        protected override void GBufferPass( ModelDeferredInstance instance ) {
             Ctx.PixelShader.SetShaderResource( 0, DiffuseView );
             Ctx.PixelShader.SetShaderResource( 1, NormalView );
 
@@ -159,14 +159,12 @@ namespace VfxEditor.DirectX {
                 [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
 
-        protected override void QuadPass() {
+        protected override void QuadPass( ModelDeferredInstance instance ) {
             Quad.Draw(
                 Ctx, PassType.Final,
                     [VertexShaderBuffer, MaterialVertexShaderBuffer],
                     [PixelShaderBuffer, MaterialPixelShaderBuffer] );
         }
-
-        protected override void DrawPopup() => Plugin.Configuration.DrawDirectXMaterials();
 
         public override void Dispose() {
             base.Dispose();

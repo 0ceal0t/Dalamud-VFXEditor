@@ -3,7 +3,7 @@ using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX.Renderers {
+namespace VfxEditor.DirectX.Model {
     public class DeferredTexture {
         public readonly Format Format;
 

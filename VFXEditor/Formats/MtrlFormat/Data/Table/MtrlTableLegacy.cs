@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
         private MtrlStain Stain;
 
         public MtrlTableLegacy( MtrlFile file ) : base( file ) {
-            for( var i = 0; i < 16; i++ ) Rows.Add( new( this ) );
+            for( var i = 0; i < 16; i++ ) Rows.Add( new( file, this ) );
             RowView = new( Rows );
         }
 
@@ -63,7 +63,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
             if( ImGui.Selectable( stain == null ? "[NONE]" : stain.Name, Stain == stain ) ) {
                 Stain = stain;
                 foreach( var item in Rows ) item.SetPreviewStain( stain );
-                RowView.GetSelected()?.RefreshPreview();
+                RowView.GetSelected()?.UpdateRender();
             }
 
             if( Stain == stain ) ImGui.SetItemDefaultFocus();

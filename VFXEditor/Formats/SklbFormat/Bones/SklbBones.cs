@@ -31,9 +31,11 @@ namespace VfxEditor.SklbFormat.Bones {
     public unsafe class SklbBones : HavokBones {
         private static readonly BoneDisplay[] BoneDisplayOptions = Enum.GetValues<BoneDisplay>();
 
-        public readonly int RenderId = Renderer.NewId;
+        public readonly int RenderId = RenderInstance.NewId;
+        private bool NeedsReRender = false;
+
         private readonly SklbFile File;
-        private static BoneNamePreview SklbPreview => Plugin.DirectXManager.SklbPreview;
+        private static BoneNamePreview SklbPreview => Plugin.DirectXManager.BoneNameRenderer;
 
         private bool DrawOnce = false;
         private SklbBone Selected;
@@ -133,8 +135,6 @@ namespace VfxEditor.SklbFormat.Bones {
         // ========== DRAWING ============
 
         public void Draw() {
-            if( SklbPreview.CurrentRenderId != RenderId ) UpdatePreview();
-
             var expandAll = false;
             var searchSet = GetSearchSet();
 
@@ -163,7 +163,7 @@ namespace VfxEditor.SklbFormat.Bones {
             if( UiUtils.EnumComboBox( "##BoneDisplay", BoneDisplayOptions, Plugin.Configuration.SklbBoneDisplay, out var newBoneDisplay ) ) {
                 Plugin.Configuration.SklbBoneDisplay = newBoneDisplay;
                 Plugin.Configuration.Save();
-                UpdatePreview();
+                Plugin.DirectXManager.Redraw();
             }
 
             ImGui.Separator();
@@ -228,7 +228,7 @@ namespace VfxEditor.SklbFormat.Bones {
                     using var font = ImRaii.PushFont( UiBuilder.IconFont );
                     if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), new( 0.7f, 0.7f, 0.7f, 1 ) ) ) {
                         ClearSelected();
-                        UpdatePreview();
+                        UpdateRender();
                     }
                 }
 
@@ -240,7 +240,8 @@ namespace VfxEditor.SklbFormat.Bones {
                     if( UiUtils.IconButton( FontAwesomeIcon.Trash, "Delete" ) ) DeleteBone( Selected );
                 }
 
-                SklbPreview.DrawInline();
+                if( NeedsReRender ) UpdateRender();
+                SklbPreview.DrawTexture( RenderId, File.BoneNameInstance, UpdateRender );
             }
 
             ImGui.Columns( 1 );
@@ -313,7 +314,7 @@ namespace VfxEditor.SklbFormat.Bones {
 
             if( ImGui.IsItemClicked( ImGuiMouseButton.Left ) && !ImGui.IsItemToggledOpen() ) {
                 Selected = bone;
-                UpdatePreview();
+                UpdateRender();
             }
 
             if( !isLeaf && nodeOpen ) {
@@ -416,9 +417,9 @@ namespace VfxEditor.SklbFormat.Bones {
 
         // ======= UPDATING ==========
 
-        private void UpdatePreview() {
+        private void UpdateRender() {
             if( BoneList?.Count == 0 ) {
-                SklbPreview.LoadEmpty( RenderId, File );
+                SklbPreview.SetEmpty( RenderId, File.BoneNameInstance, File );
             }
             else {
                 var selectedIdx = Selected == null ? -1 : Bones.IndexOf( Selected );
@@ -429,13 +430,14 @@ namespace VfxEditor.SklbFormat.Bones {
                     _ => null
                 };
 
-                SklbPreview.LoadSkeleton( RenderId, File, BoneList, builder.Build() );
+                SklbPreview.SetSkeleton( RenderId, File.BoneNameInstance, File, BoneList, builder.Build() );
             }
+            NeedsReRender = false;
         }
 
         public void Updated() {
             UpdateBones();
-            if( SklbPreview.CurrentRenderId == RenderId ) UpdatePreview();
+            NeedsReRender = true;
         }
 
         private void DeleteBone( SklbBone bone ) {

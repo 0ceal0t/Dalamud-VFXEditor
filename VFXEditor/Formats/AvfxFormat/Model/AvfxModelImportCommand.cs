@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat.Model {
             Model.Vertexes.Vertexes.Clear();
             Model.Indexes.Indexes.AddRange( state.Item1 );
             Model.Vertexes.Vertexes.AddRange( state.Item2 );
-            Model.RefreshModelPreview();
+            Model.Updated();
         }
     }
 }

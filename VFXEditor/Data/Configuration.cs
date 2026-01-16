@@ -470,8 +470,8 @@ namespace VfxEditor {
         public void DrawDirectXVfx() {
             if( ImGui.InputFloat2( "Preview Pyramid Size", ref ModelEmittersSize ) ) {
                 Save();
-                Plugin.DirectXManager.ModelPreview.UpdatePyramidMesh();
-                Plugin.DirectXManager.ModelPreview.Draw();
+                Plugin.DirectXManager.ModelRenderer.UpdatePyramidMesh();
+                Plugin.DirectXManager.Redraw();
             }
         }
 

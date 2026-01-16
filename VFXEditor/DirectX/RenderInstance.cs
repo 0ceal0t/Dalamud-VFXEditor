@@ -1,11 +1,10 @@
 using SharpDX.Direct3D11;
 using System;
-using VfxEditor;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VFXEditor.DirectX.Instance {
+namespace VfxEditor.DirectX {
     public abstract class RenderInstance : IDisposable {
-        protected bool NeedsRedraw = false;
+        public bool NeedsRedraw { get; protected set; } = false;
 
         protected readonly Device Device;
         protected readonly DeviceContext Ctx;
@@ -23,12 +22,8 @@ namespace VFXEditor.DirectX.Instance {
             CurrentRenderId = renderId;
         }
 
-        public void IsUpdated() {
-            NeedsRedraw = true;
-        }
-
-        public void Updated() {
-            NeedsRedraw = false; 
+        public void SetNeedsRedraw( bool needsRedraw ) {
+            NeedsRedraw = needsRedraw;
         }
 
         protected abstract void ResizeResources();

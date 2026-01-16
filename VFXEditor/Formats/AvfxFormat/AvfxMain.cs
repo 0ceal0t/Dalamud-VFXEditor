@@ -263,7 +263,7 @@ namespace VfxEditor.AvfxFormat {
                         Textures.Add( Texture );
                         break;
                     case AvfxModel.NAME:
-                        var Model = new AvfxModel();
+                        var Model = new AvfxModel( File );
                         Model.Read( _reader, _size );
                         Models.Add( Model );
                         break;
