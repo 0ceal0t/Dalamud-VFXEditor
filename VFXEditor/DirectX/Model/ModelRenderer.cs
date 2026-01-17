@@ -121,7 +121,7 @@ namespace VfxEditor.DirectX.Model {
         protected abstract void RenderPasses( T instance );
 
         public void Render( T instance ) {
-            instance.SetNeedsRedraw( false ); // Doesn't need an update
+            instance.NeedsRender = false; // Doesn't need an update
 
             BeforeRender( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
@@ -185,18 +185,23 @@ namespace VfxEditor.DirectX.Model {
 
         public void DrawTexture( int renderId, T instance, Action update ) {
             using var child = ImRaii.Child( "3DChild" );
-            var needsUpdate = ( renderId != instance.CurrentRenderId || instance != LoadedInstance );
+
+            var needsRender = instance.Resize( ImGui.GetContentRegionAvail() ) || instance.NeedsRender || NeedsUpdate || renderId != instance.CurrentRenderId;
+            var needsUpdate = needsRender && ( NeedsUpdate || renderId != instance.CurrentRenderId || instance != LoadedInstance );
+
             if( needsUpdate ) {
                 update();
             }
-
-            if( instance.NeedsRedraw || instance.Resize( ImGui.GetContentRegionAvail() ) || needsUpdate ) {
-                Render( instance ); // Needs a refresh
+            if( needsRender ) {
+                Render( instance );
             }
+
             instance.DrawInstanceTexture();
         }
 
         public override void Dispose() {
+            base.Dispose();
+
             RasterizeState?.Dispose();
             StencilState?.Dispose();
             Sampler?.Dispose();

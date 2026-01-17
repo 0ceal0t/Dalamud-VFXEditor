@@ -23,10 +23,21 @@ namespace VfxEditor.DirectX {
             SetSkeleton( renderId, instance, mesh );
         }
 
+        public void SetEmpty( int renderId, BoneNameInstance instance, FileManagerFile file ) {
+            SetEmpty( renderId, instance );
+            instance.SetSkeleton( file is SklbFile, [] );
+
+            NumWireframe = 0;
+            WireframeVertices?.Dispose();
+        }
+
+        public void SetEmptyWireFrame() {
+            NumWireframe = 0;
+            WireframeVertices?.Dispose();
+        }
+
         public void SetWireFrame( int renderId, BoneNameInstance instance, MeshGeometry3D collision, MeshGeometry3D simulation, MeshGeometry3D spring ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             PaintColor( collision, new( 0, 1, 0, 1 ) );
             PaintColor( simulation, new( 0, 0, 1, 1 ) );
@@ -49,14 +60,6 @@ namespace VfxEditor.DirectX {
             WireframeVertices?.Dispose();
             WireframeVertices = Buffer.Create( Device, BindFlags.VertexBuffer, data );
             NumWireframe = meshes.Select( x => x.Indices.Count ).Sum();
-        }
-
-        public void SetEmpty( int renderId, BoneNameInstance instance, FileManagerFile file ) {
-            SetEmpty( renderId, instance );
-            instance.SetSkeleton( file is SklbFile, [] );
-
-            NumWireframe = 0;
-            WireframeVertices?.Dispose();
         }
 
         protected override void RenderPasses( BoneNameInstance instance ) {

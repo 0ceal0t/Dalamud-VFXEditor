@@ -25,9 +25,7 @@ namespace VfxEditor.DirectX {
         }
 
         public void SetSkeleton( int renderId, T instance, BoneSkinnedMeshGeometry3D mesh ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             if( mesh?.Positions == null || mesh.Positions.Count == 0 ) {
                 Model.ClearVertexes();
@@ -38,10 +36,7 @@ namespace VfxEditor.DirectX {
         }
 
         public void SetEmpty( int renderId, T instance ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
-
+            OnUpdate( renderId, instance );
             Model.ClearVertexes();
         }
 

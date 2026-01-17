@@ -64,9 +64,7 @@ namespace VfxEditor.DirectX {
             SetModel( renderId, instance, model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
 
         public void SetModel( int renderId, ModelInstance instance, List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             if( modelIndexes.Count == 0 ) {
                 Model.ClearVertexes();

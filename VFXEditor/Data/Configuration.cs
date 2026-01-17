@@ -462,7 +462,7 @@ namespace VfxEditor {
             }
 
             if( updated ) {
-                Plugin.DirectXManager.RedrawMaterials();
+                Plugin.DirectXManager.Redraw();
                 Save();
             }
         }

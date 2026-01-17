@@ -34,7 +34,7 @@ namespace VfxEditor.AvfxFormat {
         private readonly CommandTable<UiVertexNumber> VertexNumberTable;
 
         public readonly int RenderId = RenderInstance.NewId;
-        private bool NeedsReRender = false;
+        private bool NeedsRender = false;
 
         private int Mode = ( int )RenderMode.Color;
         private readonly UiModelUvView UvView;
@@ -55,14 +55,14 @@ namespace VfxEditor.AvfxFormat {
             VertexNumberTable = new( "Number", true, true, AllVertexNumbers, [
                 ( "Number", ImGuiTableColumnFlags.None, -1 )
             ],
-            () => new( new() ), ( UiVertexNumber item, bool add ) => Updated() );
+            () => new( new() ), ( item, add ) => Updated() );
 
             VertexTable = new( "Emit", true, true, AllEmitVertexes, [
                 ( "Position", ImGuiTableColumnFlags.None, -1 ),
                 ( "Normal", ImGuiTableColumnFlags.None, -1 ),
                 ( "Color", ImGuiTableColumnFlags.None, - 1),
             ],
-            () => new( this, new() ), ( UiEmitVertex item, bool add ) => Updated() );
+            () => new( this, new() ), ( item, add ) => Updated() );
         }
 
         public override void ReadContents( BinaryReader reader, int size ) {
@@ -169,7 +169,7 @@ namespace VfxEditor.AvfxFormat {
             if( UiUtils.DrawAngleUpDown( ref Plugin.Configuration.EmitterVertexSplitOpen ) ) Plugin.Configuration.Save();
 
             if( Plugin.Configuration.EmitterVertexSplitOpen ) {
-                if( NeedsReRender ) UpdateRender();
+                if( NeedsRender ) UpdateRender();
                 Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
             }
         }
@@ -177,8 +177,6 @@ namespace VfxEditor.AvfxFormat {
         private void DrawVertexNumbers() {
             VertexNumberTable.Draw();
         }
-
-        public void OnSelect() { }
 
         private void DrawModel3D() {
             using var _ = ImRaii.PushId( "3DModel" );
@@ -205,14 +203,14 @@ namespace VfxEditor.AvfxFormat {
             ImGui.SameLine();
             if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
-            if( NeedsReRender ) UpdateRender();
+            if( NeedsRender ) UpdateRender();
             Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
         }
 
         public void UpdateRender() {
             Plugin.DirectXManager.ModelRenderer.SetModel( RenderId, File.ModelInstance, this, ( RenderMode )Mode );
             UvView.LoadModel( this );
-            NeedsReRender = false;
+            NeedsRender = false;
         }
 
         private void ImportDialog() {
@@ -236,7 +234,7 @@ namespace VfxEditor.AvfxFormat {
             } );
         }
 
-        public void Updated() { NeedsReRender = true; }
+        public void Updated() { NeedsRender = true; }
 
         public override string GetDefaultText() => $"Model {GetIdx()}";
 

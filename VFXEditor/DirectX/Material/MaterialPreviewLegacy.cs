@@ -95,9 +95,7 @@ namespace VfxEditor.DirectX {
         }
 
         public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlColorRowLegacy row ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             if( row == null ) return;
 

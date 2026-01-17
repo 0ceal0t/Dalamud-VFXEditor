@@ -207,7 +207,7 @@ namespace VfxEditor.DirectX.Model {
             ViewMatrix = MatrixHelper.LookAtLH( CameraPosition, EyePosition, Vector3.UnitY );
             CubeMatrix = MatrixHelper.LookAtLH( new Vector3( 0 ) - 1 * lookDirection, new Vector3( 0 ), Vector3.UnitY );
 
-            SetNeedsRedraw( true );
+            NeedsRender = true;
         }
 
         public override void Dispose() {

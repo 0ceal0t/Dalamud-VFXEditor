@@ -27,7 +27,13 @@ namespace VfxEditor.PhybFormat.Skeleton {
             };
 
             File.AddPhysicsObjects( meshes, Bones.BoneMatrixes );
-            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame( RenderId, Instance, meshes.Collision.ToMeshGeometry3D(), meshes.Simulation.ToMeshGeometry3D(), meshes.Spring.ToMeshGeometry3D() );
+            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame(
+                RenderId,
+                Instance,
+                meshes.Collision.ToMeshGeometry3D(),
+                meshes.Simulation.ToMeshGeometry3D(),
+                meshes.Spring.ToMeshGeometry3D()
+            );
 
             var boneList = Bones.BoneList.Select( x => x.Name ).ToList();
             if( File.Extended != null ) {

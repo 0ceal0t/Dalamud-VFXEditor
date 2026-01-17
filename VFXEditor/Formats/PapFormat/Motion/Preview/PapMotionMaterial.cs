@@ -59,7 +59,6 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
         public override void Draw( int idx ) {
             if( Data == null ) Update();
-            if( File.GradientInstance.CurrentRenderId != RenderId ) UpdateGradient();
 
             // ======== CONTROLS ==========
 
@@ -81,7 +80,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( IsColor ) {
                 if( ImGui.ColorEdit3( "Base Preview Color", ref Plugin.Configuration.PapMaterialBaseColor, ImGuiColorEditFlags.NoInputs ) ) {
                     Plugin.Configuration.Save();
-                    UpdateGradient();
+                    UpdateRender();
                 }
             }
             else {
@@ -115,6 +114,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                     var topLeft = new ImPlotPoint { X = 0, Y = 1 };
                     var bottomRight = new ImPlotPoint { X = Motion.TotalFrames, Y = -1 };
 
+                    Plugin.DirectXManager.GradientRenderer.UpdateTexture( RenderId, File.GradientInstance, UpdateRender );
                     ImPlot.PlotImage( "##Gradient", new ImTextureID( File.GradientInstance.Output ), topLeft, bottomRight );
 
                     for( var i = 0; i < Data.Count - 1; i++ ) {
@@ -175,10 +175,10 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             }
 
             AllFrames = [.. allFrames];
-            UpdateGradient();
+            UpdateRender();
         }
 
-        private void UpdateGradient() {
+        private void UpdateRender() {
             Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance,
                 [.. Data.Select( x => x.Value.Color.Select( y => (y.Item1, y.Item2 + Plugin.Configuration.PapMaterialBaseColor) ).ToList() )]
             );

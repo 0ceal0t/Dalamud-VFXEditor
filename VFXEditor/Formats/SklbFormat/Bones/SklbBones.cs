@@ -431,6 +431,7 @@ namespace VfxEditor.SklbFormat.Bones {
                 };
 
                 SklbPreview.SetSkeleton( RenderId, File.BoneNameInstance, File, BoneList, builder.Build() );
+                SklbPreview.SetEmptyWireFrame();
             }
             NeedsReRender = false;
         }

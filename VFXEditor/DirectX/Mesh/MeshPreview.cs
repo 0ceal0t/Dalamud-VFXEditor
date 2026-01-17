@@ -42,9 +42,7 @@ namespace VfxEditor.DirectX.Mesh {
         }
 
         public void SetMesh( int renderId, ModelDeferredInstance instance, MdlMeshDrawable mesh ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             if( mesh == null ) return;
             var buffer = mesh.GetBuffer( Device );

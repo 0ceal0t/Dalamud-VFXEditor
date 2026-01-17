@@ -215,7 +215,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                         if( UiUtils.RemoveButton( "Sort" ) ) {
                             var commands = new List<ICommand>();
                             foreach( var x in AssignedCurves ) x.Sort( commands );
-                            CommandManager.Add( new CompoundCommand( commands, UpdateGradient ) );
+                            CommandManager.Add( new CompoundCommand( commands, UpdateRender ) );
                         }
                         return;
                     }
@@ -393,19 +393,20 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
         public void OnUpdate() {
             foreach( var curve in Curves.Where( x => x.IsAssigned() ) ) curve.Cleanup();
-            UpdateGradient();
+            UpdateRender();
         }
 
         public void DrawGradient() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
-            if( File.GradientInstance.CurrentRenderId != RenderId ) UpdateGradient();
+
+            Plugin.DirectXManager.GradientRenderer.UpdateTexture( RenderId, File.GradientInstance, UpdateRender );
 
             var topLeft = new ImPlotPoint { X = ColorCurve.Keys[0].DisplayX, Y = 1 };
             var bottomRight = new ImPlotPoint { X = ColorCurve.Keys[^1].DisplayX, Y = -1 };
             ImPlot.PlotImage( "##Gradient", new ImTextureID( File.GradientInstance.Output ), topLeft, bottomRight );
         }
 
-        private void UpdateGradient() {
+        private void UpdateRender() {
             if( !IsColor || ColorCurve!.Keys.Count < 2 ) return;
             Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance, [
                 [.. ColorCurve.Keys.Select( x => (x.Time.Value, x.Color))]

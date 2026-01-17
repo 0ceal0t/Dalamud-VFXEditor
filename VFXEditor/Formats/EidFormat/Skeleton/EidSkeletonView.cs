@@ -24,7 +24,13 @@ namespace VfxEditor.Formats.EidFormat.Skeleton {
             var selected = new MeshBuilder( true, false );
 
             File.AddBindPoints( mesh, selected, Bones.BoneMatrixes );
-            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame( RenderId, Instance, mesh.ToMeshGeometry3D(), new MeshBuilder( true, false ).ToMeshGeometry3D(), selected.ToMeshGeometry3D() );
+            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame(
+                RenderId,
+                Instance,
+                mesh.ToMeshGeometry3D(),
+                new MeshBuilder( true, false ).ToMeshGeometry3D(),
+                selected.ToMeshGeometry3D()
+            );
         }
     }
 }

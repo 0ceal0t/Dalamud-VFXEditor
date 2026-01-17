@@ -1,3 +1,4 @@
+using Dalamud.Bindings.ImGui;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -25,13 +26,10 @@ namespace VfxEditor.DirectX.Gradient {
         }
 
         public void SetGradient( int renderId, GradientInstance instance, List<List<(int, Vector3)>> rows ) {
-            instance.SetCurrentRenderId( renderId );
-            instance.SetNeedsRedraw( true );
-            LoadedInstance = instance;
+            OnUpdate( renderId, instance );
 
             if( rows.Count == 0 || rows.Min( x => x.Count ) < 2 ) {
                 Gradient.ClearVertexes();
-                Render( instance );
                 return;
             }
 
@@ -86,16 +84,16 @@ namespace VfxEditor.DirectX.Gradient {
             }
 
             Gradient.SetVertexes( Device, [.. data], count * 6 );
-            Render( instance );
         }
 
         public void UpdateTexture( int renderId, GradientInstance instance, Action update ) {
-            var needsUpdate = ( renderId != instance.CurrentRenderId || instance != LoadedInstance );
+            var needsRender = instance.NeedsRender || NeedsUpdate || renderId != instance.CurrentRenderId;
+            var needsUpdate = needsRender && ( NeedsUpdate || renderId != instance.CurrentRenderId || instance != LoadedInstance );
+
             if( needsUpdate ) {
                 update();
             }
-
-            if( instance.NeedsRedraw || needsUpdate ) {
+            if( needsRender ) {
                 Render( instance );
             }
         }
@@ -117,7 +115,7 @@ namespace VfxEditor.DirectX.Gradient {
         }
 
         public void Render( GradientInstance instance ) {
-            instance.SetNeedsRedraw( false );
+            instance.NeedsRender = false;
 
             BeforeRender( out var oldState, out var oldRenderViews, out var oldDepthStencilView, out var oldDepthStencilState );
 
@@ -136,6 +134,8 @@ namespace VfxEditor.DirectX.Gradient {
         }
 
         public override void Dispose() {
+            base.Dispose();
+
             State?.Dispose();
             Gradient?.Dispose();
         }

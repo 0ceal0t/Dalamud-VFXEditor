@@ -19,7 +19,7 @@ namespace VfxEditor.DirectX {
         public readonly MaterialPreviewLegacy MaterialRenderer;
         public readonly MeshPreview MeshRenderer;
 
-        public readonly List<ModelInstance> Instances = [];
+        private readonly List<Renderer> Renderers;
 
         public static Include IncludeHandler { get; private set; }
 
@@ -35,27 +35,30 @@ namespace VfxEditor.DirectX {
             BoneNameRenderer = new( Device, Ctx, shaderPath );
             MaterialRenderer = new( Device, Ctx, shaderPath );
             MeshRenderer = new( Device, Ctx, shaderPath );
-        }
 
-        public void RedrawMaterials() {
-            // TODO
+            Renderers = [
+                GradientRenderer,
+                ModelRenderer,
+                BoneRenderer,
+                BoneNameRenderer,
+                MaterialRenderer,
+                MeshRenderer
+            ];
         }
 
         public void Redraw() {
-            // TODO
+            foreach( var renderer in Renderers ) renderer.NeedsUpdate = true;
         }
 
         public void Dispose() {
-            Instances.Clear();
-
             GradientRenderer.Dispose();
             ModelRenderer.Dispose();
             BoneRenderer.Dispose();
             BoneNameRenderer.Dispose();
             MaterialRenderer.Dispose();
             MeshRenderer.Dispose();
-            
-            MeshRenderer.Dispose();
+
+            Renderers.Clear();
         }
     }
 }
