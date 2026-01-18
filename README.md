@@ -69,7 +69,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ```
 
 ## TODO
-- [ ] Fix `.mtrl` parsing
+- [ ] Fix `.shpk` parsing
 - [ ] `.pdb` extended editing
 - [ ] Fix 7.4 `.mdl` face stuff
 - [ ] Fix DT material stuff

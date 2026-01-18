@@ -105,13 +105,13 @@ namespace VfxEditor.Formats.MtrlFormat {
             ColorSets.ForEach( x => x.ReadString( reader, stringsStart ) );
 
             reader.BaseStream.Position = stringsStart + shaderOffset;
-            Shader = new( "Shader", new List<ParsedStringIcon>() {
+            Shader = new( "Shader", [
                 new() {
                     Icon = () => FontAwesomeIcon.Sync,
                     Remove = false,
                     Action = _ => UpdateShaderFile()
                 }
-            } ) {
+            ] ) {
                 Value = FileUtils.ReadString( reader )
             };
 
