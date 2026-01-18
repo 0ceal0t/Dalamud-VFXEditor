@@ -103,11 +103,11 @@ namespace VfxEditor.DirectX.Model {
             } );
         }
 
-        public virtual void DrawInstanceTexture() {
-            DrawImage();
+        public virtual void DrawInstanceTexture( Action? drawPopup ) {
+            DrawImage( drawPopup );
         }
 
-        public void DrawImage() {
+        public void DrawImage( Action? drawPopup ) {
             var cursor = ImGui.GetCursorScreenPos();
             var size = ImGui.GetContentRegionAvail();
 
@@ -141,7 +141,7 @@ namespace VfxEditor.DirectX.Model {
             using( var popup = ImRaii.Popup( "Popup" ) ) {
                 if( popup ) {
                     Plugin.Configuration.DrawDirectXCommon();
-                    DrawPopup();
+                    drawPopup?.Invoke();
                 }
             }
 
@@ -159,8 +159,6 @@ namespace VfxEditor.DirectX.Model {
 
             if( ImGui.IsItemHovered() ) Zoom( ImGui.GetIO().MouseWheel );
         }
-
-        protected virtual void DrawPopup() => Plugin.Configuration.DrawDirectXVfx();
 
         private void Zoom( float mouseWheel ) {
             if( mouseWheel != 0 ) {
@@ -211,6 +209,8 @@ namespace VfxEditor.DirectX.Model {
         }
 
         public override void Dispose() {
+            base.Dispose();
+
             RenderTexture?.Dispose();
             RenderResource?.Dispose();
             RenderTarget?.Dispose();

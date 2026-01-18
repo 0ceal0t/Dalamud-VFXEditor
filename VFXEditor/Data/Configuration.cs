@@ -424,7 +424,7 @@ namespace VfxEditor {
 
             if( ImGui.CollapsingHeader( "Material" ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
-                DrawDirectXMaterials();
+                DrawDirectXMaterial();
             }
 
             if( ImGui.CollapsingHeader( "Vfx" ) ) {
@@ -445,7 +445,7 @@ namespace VfxEditor {
             if( ImGui.ColorEdit4( "Connecting Line Color", ref SkeletonBoneLineColor ) ) Save();
         }
 
-        public void DrawDirectXMaterials() {
+        public void DrawDirectXMaterial() {
             var updated = false;
             updated |= ImGui.ColorEdit3( "Ambient Color", ref MaterialAmbientColor );
 

@@ -8,6 +8,7 @@ using VfxEditor.SklbFormat.Bones;
 using VfxEditor.DirectX.Model;
 using BoneStruct = HelixToolkit.SharpDX.Animations.Bone;
 using Vec2 = System.Numerics.Vector2;
+using System;
 
 namespace VfxEditor.DirectX.Bone {
     public class BoneNameInstance : ModelInstance {
@@ -28,12 +29,12 @@ namespace VfxEditor.DirectX.Bone {
             BoneList = [];
         }
 
-        public override void DrawInstanceTexture() {
+        public override void DrawInstanceTexture( Action? drawPopup ) {
             var viewProj = Matrix4x4.Multiply( ViewMatrix, ProjMatrix );
             var worldViewProj = LocalMatrix * viewProj;
             var drawList = ImGui.GetWindowDrawList();
 
-            DrawImage();
+            DrawImage( drawPopup );
 
             var boneScreenMap = new Dictionary<string, Vec2>();
             var boneDepthMap = new Dictionary<string, float>();

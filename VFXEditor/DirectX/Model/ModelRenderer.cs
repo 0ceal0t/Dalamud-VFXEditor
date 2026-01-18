@@ -183,7 +183,7 @@ namespace VfxEditor.DirectX.Model {
             AfterRender( oldState, oldRenderViews, oldDepthStencilView, oldDepthStencilState );
         }
 
-        public void DrawTexture( int renderId, T instance, Action update ) {
+        public void DrawTexture( int renderId, T instance, Action update, Action? drawPopup ) {
             using var child = ImRaii.Child( "3DChild" );
 
             var needsRender = instance.Resize( ImGui.GetContentRegionAvail() ) || instance.NeedsRender || NeedsUpdate || renderId != instance.CurrentRenderId;
@@ -196,7 +196,7 @@ namespace VfxEditor.DirectX.Model {
                 Render( instance );
             }
 
-            instance.DrawInstanceTexture();
+            instance.DrawInstanceTexture( drawPopup );
         }
 
         public override void Dispose() {

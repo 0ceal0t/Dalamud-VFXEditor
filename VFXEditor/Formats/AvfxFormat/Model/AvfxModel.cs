@@ -170,7 +170,7 @@ namespace VfxEditor.AvfxFormat {
 
             if( Plugin.Configuration.EmitterVertexSplitOpen ) {
                 if( NeedsRender ) UpdateRender();
-                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
+                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
             }
         }
 
@@ -204,7 +204,7 @@ namespace VfxEditor.AvfxFormat {
             if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
             if( NeedsRender ) UpdateRender();
-            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender );
+            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
         }
 
         public void UpdateRender() {

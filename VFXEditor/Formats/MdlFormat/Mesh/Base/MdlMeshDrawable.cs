@@ -16,7 +16,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
 
         protected uint IndexCount;
 
-        protected byte[] RawIndexData = Array.Empty<byte>();
+        protected byte[] RawIndexData = [];
 
         public int RawIndexDataSize => RawIndexData.Length;
 
@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
         }
 
         protected virtual void DrawPreview() {
-            Plugin.DirectXManager.MeshRenderer.DrawTexture( RenderId, File.MeshInstance, UpdateRender );
+            Plugin.DirectXManager.MeshRenderer.DrawTexture( RenderId, File.MeshInstance, UpdateRender, null );
         }
 
         protected void UpdateRender() {

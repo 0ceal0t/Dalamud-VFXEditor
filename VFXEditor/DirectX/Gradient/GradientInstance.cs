@@ -55,6 +55,8 @@ namespace VfxEditor.DirectX.Gradient {
         }
 
         public override void Dispose() {
+            base.Dispose();
+
             DepthTexture?.Dispose();
             DepthView?.Dispose();
             RenderTexture?.Dispose();

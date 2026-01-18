@@ -16,10 +16,13 @@ namespace VfxEditor.DirectX {
         public RenderInstance() {
             Device = Plugin.DirectXManager.Device;
             Ctx = Plugin.DirectXManager.Ctx;
+            Plugin.DirectXManager.Instances.Add( this );
         }
 
         protected abstract void ResizeResources();
 
-        public abstract void Dispose();
+        public virtual void Dispose() {
+            Plugin.DirectXManager.Instances.Remove(this);
+        }
     }
 }
