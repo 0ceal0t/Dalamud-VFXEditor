@@ -6,8 +6,6 @@ using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Base {
     public abstract class MdlMeshData : MdlMeshDrawable, IUiItem {
-        public readonly MdlFile File;
-
         public MdlMeshData( MdlFile file ) : base ( file ) { }
 
         public abstract Vector4[] GetData( int indexCount, byte[] rawIndexData );

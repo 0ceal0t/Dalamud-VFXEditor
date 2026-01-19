@@ -9,7 +9,7 @@ namespace VfxEditor.SklbFormat.Bones {
         public SklbBonesImportCommand( SklbBones bones, List<SklbBone> state ) {
             Bones = bones;
             State = state;
-            PrevState = new( Bones.Bones );
+            PrevState = [.. Bones.Bones];
 
             SetState( State );
         }

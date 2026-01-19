@@ -95,7 +95,7 @@ namespace VfxEditor.Select {
         // ========= SINGLE ===============
 
         public void DrawPaths( string path, string resultName, SelectResultType resultType )
-            => DrawPaths( new List<(string, uint, string)> { (null, 0, path) }, resultName, resultType );
+            => DrawPaths( [(null, 0, path)], resultName, resultType );
 
         // ========= TABLE ================
 

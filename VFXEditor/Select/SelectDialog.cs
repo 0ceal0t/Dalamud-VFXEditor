@@ -75,7 +75,7 @@ namespace VfxEditor.Select {
 
         public SelectDialog( string name, string extensions, IFileManagerSelect manager, bool showLocal, Action<SelectResult> action ) : base( name, false, new( 800, 500 ), manager.GetWindowSystem() ) {
             Manager = manager;
-            Extensions = new( extensions.Split( '|' ) );
+            Extensions = [.. extensions.Split( '|' )];
             Favorites = manager.GetConfig().Favorites;
             ShowLocal = showLocal;
             Action = action;

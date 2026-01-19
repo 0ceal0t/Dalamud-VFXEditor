@@ -35,7 +35,7 @@ namespace VfxEditor.AvfxFormat.Dialogs {
             Selected.Add( item );
         }
 
-        public override HashSet<AvfxNode> GetSelectedNodes() => new( Selected );
+        public override HashSet<AvfxNode> GetSelectedNodes() => [.. Selected];
 
         public override void Draw() {
             using var _ = ImRaii.PushId( HeaderText );

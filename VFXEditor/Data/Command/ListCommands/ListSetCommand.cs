@@ -11,8 +11,8 @@ namespace VfxEditor.Data.Command.ListCommands {
         public ListSetCommand( List<T> items, IEnumerable<T> state, Action onChangeAction = null ) {
             OnChangeAction = onChangeAction;
             Items = items;
-            State = new List<T>( state );
-            PrevState = new List<T>( Items );
+            State = [.. state];
+            PrevState = [.. Items];
 
             Items.Clear();
             Items.AddRange( State );

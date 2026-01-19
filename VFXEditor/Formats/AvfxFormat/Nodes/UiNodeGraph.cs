@@ -48,7 +48,7 @@ namespace VfxEditor.AvfxFormat {
                 };
                 foreach( var n in node.Parents ) {
                     item.Next.Add( n.Node );
-                    ParseGraph( level + 1, n.Node, new HashSet<AvfxNode>( visited ) );
+                    ParseGraph( level + 1, n.Node, [.. visited] );
                 }
                 Graph[node] = item;
             }

@@ -29,7 +29,7 @@ namespace VfxEditor.FileBrowser.Filter {
                 if( match.Contains( '{' ) ) {
                     Filters.Add( new FileBrowserFilter {
                         Filter = match.Split( '{' )[0],
-                        CollectionFilters = new HashSet<string>( m.Groups[2].Value.Split( ',' ) )
+                        CollectionFilters = [.. m.Groups[2].Value.Split( ',' )]
                     } );
                 }
                 else {
