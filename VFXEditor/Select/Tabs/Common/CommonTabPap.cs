@@ -11,7 +11,7 @@ namespace VfxEditor.Select.Tabs.Common {
             var idx = 0;
             foreach( var line in File.ReadLines( SelectDataUtils.CommonPapPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
                 if( !( line.Contains( "bt_common/event/" ) || line.Contains( "bt_common/event_base/" ) ) ) {
-                    Items.Add( new CommonRow( idx++, line, line.Replace( "chara/human/", "" ).Replace( "/animation/", ", " ).Replace( "/bt_common/", " -  " ).Replace( ".pap", "" ), 0 ) );
+                    Items.Add( new CommonRow( idx++, line, line.Replace( "chara/human/", "" ).Replace( "/animation/", ", " ).Replace( "/bt_common/", " -  " ).Replace( "/bt_", " -  bt_" ).Replace( ".pap", "" ), 0 ) );
                 }
             }
         }
