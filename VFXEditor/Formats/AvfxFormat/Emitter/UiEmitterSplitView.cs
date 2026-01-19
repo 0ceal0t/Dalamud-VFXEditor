@@ -27,9 +27,9 @@ namespace VfxEditor.AvfxFormat {
             using var _ = ImRaii.PushId( idx );
 
             using( var style = ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new Vector2(0f, 0f))) {
-                var enabled = item.Enabled.Value == true;
+                var enabled = item.CreateProbability.Value > 0;
                 if( ImGui.Checkbox( "##Enable", ref enabled ) ) {
-                    item.Enabled.Value = enabled;
+                    item.CreateProbability.Value = enabled ? 100 : 0;
                 }
                 ImGui.SameLine();
             }

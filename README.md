@@ -69,6 +69,7 @@ If a VFX is behaving unexpectedly, or you are getting log messages indicating th
 ```
 
 ## TODO
+- [ ] Refactor to allow for multiple windows
 - [ ] Fix `.shpk` parsing
 - [ ] `.pdb` extended editing
 - [ ] Fix 7.4 `.mdl` face stuff
