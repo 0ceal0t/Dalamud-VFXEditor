@@ -5,8 +5,9 @@ racial_pattern = re.compile("^chara/human/c(.*).(mdl|mtrl)")
 uld_pattern = re.compile("^ui/uld/(.*).uld$")
 shpk_pattern = re.compile("^shader/sm5/shpk/(.*).shpk$") # only sm5 exists in current builds. originally excluded
 shcd_pattern = re.compile("^shader/sm5/(posteffect|shcd)/(.*).shcd$")
-vfx_pattern = re.compile("^(vfx/channeling|vfx/lockon|vfx/omen|bgcommon|vfx/live)(.*).avfx$")
+vfx_pattern = re.compile("^(vfx/channeling|vfx/lockon|vfx/monster/c0|vfx/monster/c1|vfx/omen|bgcommon|vfx/live)(.*).avfx$")
 pap_pattern = re.compile("^chara/human/c(.*)/animation/a(.*)/bt_common/(event|event_base|gs|human_sp|idle_sp|music|normal|pc_contentsaction)/(.*).pap$")
+pap_pattern_craftgather = re.compile("^chara/human/c(.*)/animation/a(.*)/bt_(alc|arm|blk|wod|cok|gld|lth|sew|fel|fsh|min)_emp/(craft|diving_gather|event|fishing|fishing_chair|gather|harpoon|resident)/(.*).pap$")
 
 tmb_pattern = re.compile("chara/action/(.*).tmb")
 tmb_exceptionpattern = re.compile("chara/action/(ability|emote|emote_ajust|emote_sp|eureka|facial|human_sp|magic|mon_sp|mount_sp|rol_common|weapon|ws)/(.*).tmb") # checking against paths existing in other tabs. still has a few repeats
@@ -55,7 +56,7 @@ with open("CurrentPathList") as f:
             vfx.sort()
             continue
 
-        if pap_pattern.match(path):
+        if pap_pattern.match(path) or pap_pattern_craftgather.match(path):
             pap.append(path)
             pap.sort()
             continue
