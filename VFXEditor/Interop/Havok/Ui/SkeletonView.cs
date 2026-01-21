@@ -50,8 +50,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
         public void UpdateSkeleton( SimpleSklb sklbFile ) {
             UpdateBones( sklbFile );
-            UpdatePreview();
-            UpdateData();
+            Plugin.DirectXManager.BoneNameRenderer.NeedsUpdate = true;
         }
 
         private unsafe void UpdateBones( SimpleSklb sklbFile ) {

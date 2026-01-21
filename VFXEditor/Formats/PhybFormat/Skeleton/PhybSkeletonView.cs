@@ -13,7 +13,7 @@ namespace VfxEditor.PhybFormat.Skeleton {
         }
 
         protected override void DrawData() {
-            if( File.PhysicsUpdated ) UpdateData();
+            if( File.PhysicsUpdated ) Plugin.DirectXManager.BoneNameRenderer.NeedsUpdate = true;
         }
 
         protected override void UpdateData() {
