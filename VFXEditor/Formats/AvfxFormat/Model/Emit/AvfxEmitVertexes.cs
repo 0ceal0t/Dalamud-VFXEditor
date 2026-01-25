@@ -22,9 +22,9 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public class AvfxEmitVertex {
-        public readonly ParsedFloat3 Position = new( "##Position" );
-        public readonly ParsedFloat3 Normal = new( "##Normal" );
-        public readonly ParsedIntColor Color = new( "##Color" );
+        public ParsedFloat3 Position = new( "##Position" );
+        public ParsedFloat3 Normal = new( "##Normal" );
+        public ParsedIntColor Color = new( "##Color" );
 
         public AvfxEmitVertex() { }
 

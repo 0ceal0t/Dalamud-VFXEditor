@@ -134,6 +134,9 @@ namespace VfxEditor.AvfxFormat {
                 if( ImGui.Button( "Replace" ) ) ImportDialog();
 
                 ImGui.SameLine();
+                if( ImGui.Button( "Replace Emitters" ) ) ImportEmitDialog();
+
+                ImGui.SameLine();
                 UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Replacing-textures-and-models#models" );
             }
 
@@ -211,6 +214,34 @@ namespace VfxEditor.AvfxFormat {
             Plugin.DirectXManager.ModelRenderer.SetModel( RenderId, File.ModelInstance, this, ( RenderMode )Mode );
             UvView.LoadModel( this );
             NeedsRender = false;
+        }
+
+        private void ImportEmitDialog()
+        {
+            FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
+                if( !ok ) return;
+                try
+                {
+                    if( GltfModel.ImportEmitterModel( res, out var newEmitVertexes, out var newEmitNumbers ) )
+                    {
+                        List<UiEmitVertex> uiEmits = [];
+                        List<UiVertexNumber> uiNums = [];
+                        foreach( var vert in newEmitVertexes )
+                        {
+                            uiEmits.Add( new UiEmitVertex( this, vert ) );
+                        }
+                        foreach( var vert in newEmitNumbers )
+                        {
+                            uiNums.Add( new UiVertexNumber( vert ) );
+                        }
+                        CommandManager.Add( new AvfxEmitImportCommand( this, uiEmits, uiNums ) );
+                    }
+                }
+                catch( Exception e )
+                {
+                    Dalamud.Error( e, "Could not import data" );
+                }
+            } );
         }
 
         private void ImportDialog() {
