@@ -16,7 +16,7 @@ namespace VfxEditor.Formats.PbdFormat.Extended {
             Unknown2 = table.Epbd2;
             Entries.AddRange( table.Pbdist.Select( x => new PbdEpbdEntry( x ) ) );
 
-            EntryView = new( "Entries", Entries, null, () => new() );
+            EntryView = new( "Entry", Entries, null, () => new() );
         }
 
         public void Draw() => EntryView.Draw();

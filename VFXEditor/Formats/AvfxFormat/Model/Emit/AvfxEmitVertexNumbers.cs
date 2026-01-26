@@ -22,7 +22,7 @@ namespace VfxEditor.AvfxFormat {
     }
 
     public class AvfxVertexNumber {
-        public ParsedShort Order = new( "##Order" );
+        public readonly ParsedShort Order = new( "##Order" );
 
         public AvfxVertexNumber() { }
 

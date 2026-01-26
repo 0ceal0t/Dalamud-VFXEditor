@@ -216,29 +216,23 @@ namespace VfxEditor.AvfxFormat {
             NeedsRender = false;
         }
 
-        private void ImportEmitDialog()
-        {
+        private void ImportEmitDialog() {
             FileBrowserManager.OpenFileDialog( "Select a File", "GLTF{.gltf,.glb},.*", ( ok, res ) => {
                 if( !ok ) return;
-                try
-                {
-                    if( GltfModel.ImportEmitterModel( res, out var newEmitVertexes, out var newEmitNumbers ) )
-                    {
+                try {
+                    if( GltfModel.ImportEmitterModel( res, out var newEmitVertexes, out var newEmitNumbers ) ) {
                         List<UiEmitVertex> uiEmits = [];
                         List<UiVertexNumber> uiNums = [];
-                        foreach( var vert in newEmitVertexes )
-                        {
+                        foreach( var vert in newEmitVertexes ) {
                             uiEmits.Add( new UiEmitVertex( this, vert ) );
                         }
-                        foreach( var vert in newEmitNumbers )
-                        {
+                        foreach( var vert in newEmitNumbers ) {
                             uiNums.Add( new UiVertexNumber( vert ) );
                         }
                         CommandManager.Add( new AvfxEmitImportCommand( this, uiEmits, uiNums ) );
                     }
                 }
-                catch( Exception e )
-                {
+                catch( Exception e ) {
                     Dalamud.Error( e, "Could not import data" );
                 }
             } );

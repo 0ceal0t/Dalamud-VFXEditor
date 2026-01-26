@@ -64,27 +64,23 @@ namespace VfxEditor.Utils.Gltf {
             return ret;
         }
 
-        private static AvfxVertexNumber GetAvfxNumber( int i )
-        {
+        private static AvfxVertexNumber GetAvfxNumber( int i ) {
             var ret = new AvfxVertexNumber();
-            ret.Order = new( "##Order", i );
+            ret.Order.Value = i;
             return ret;
         }
 
-        private static AvfxEmitVertex GetAvfxEmitVertex( Vector3 pos, Vector3 normal, Vector4 color )
-        {
-            var ret = new AvfxEmitVertex();
-            ret.Position = new( "##Position", pos );
-
+        private static AvfxEmitVertex GetAvfxEmitVertex( Vector3 pos, Vector3 normal, Vector4 color ) {
             var normalAdjusted = Vector3.Normalize( new Vector3( normal.X, normal.Y, normal.Z ) );
+            var ret = new AvfxEmitVertex();
+            ret.Position.Value = pos;
+            ret.Normal.Value = normalAdjusted;
+            ret.Color.Value = color;
 
-            ret.Normal = new( "##Normal", normalAdjusted );
-            ret.Color = new( "##Color", color );
             return ret;
         }
 
-        public static bool ImportEmitterModel( string localPath, out List<AvfxEmitVertex> vertexesOut , out List<AvfxVertexNumber> numbersOut )
-        {
+        public static bool ImportEmitterModel( string localPath, out List<AvfxEmitVertex> vertexesOut , out List<AvfxVertexNumber> numbersOut ) {
             numbersOut = [];
             vertexesOut = [];
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );
@@ -92,18 +88,15 @@ namespace VfxEditor.Utils.Gltf {
 
             var count = 0;
 
-            foreach( var mesh in model.LogicalMeshes )
-            {
-                foreach( var primitive in mesh.Primitives )
-                {
+            foreach( var mesh in model.LogicalMeshes ) {
+                foreach( var primitive in mesh.Primitives ) {
                     var properties = primitive.VertexAccessors;
                     var hasNormal = properties.ContainsKey( "NORMAL" ); // loose verts don't have normals
                     var hasColor = properties.ContainsKey( "COLOR_0" );
                     var positions = primitive.VertexAccessors["POSITION"].AsVector3Array();
                     var normals = hasNormal ? primitive.VertexAccessors["NORMAL"].AsVector3Array() : new Vector3Array();
                     var colors = hasColor ? primitive.VertexAccessors["COLOR_0"].AsVector4Array() : new Vector4Array();
-                    for( var i = 0; i < positions.Count; i++ )
-                    {
+                    for( var i = 0; i < positions.Count; i++ ) {
                         var normal = hasNormal ? normals[i] : new Vector3( 0, 1, 0 ); // default up
                         var color = hasColor ? colors[i] : new Vector4( 1f, 1f, 1f, 1f ); // default white
                         vertexesOut.Add( GetAvfxEmitVertex( positions[i], normal, color ) );
