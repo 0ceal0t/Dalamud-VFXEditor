@@ -444,6 +444,7 @@ chara/action/event/event_give.tmb
 chara/action/event/event_give_pc2.tmb
 chara/action/event/event_glass_set.tmb
 chara/action/event/event_glass_set_up.tmb
+chara/action/event/event_gravity_beam.tmb
 chara/action/event/event_greeting.tmb
 chara/action/event/event_greeting_respect.tmb
 chara/action/event/event_ground_greeting.tmb
@@ -540,6 +541,7 @@ chara/action/event/event_pray_stand.tmb
 chara/action/event/event_question.tmb
 chara/action/event/event_raise_weapon.tmb
 chara/action/event/event_raising_hand.tmb
+chara/action/event/event_rammer_machine.tmb
 chara/action/event/event_reaction_ele_m.tmb
 chara/action/event/event_reaction_ele_w.tmb
 chara/action/event/event_reaction_high_m.tmb
@@ -854,6 +856,8 @@ chara/action/event_base/event_base_diggy.tmb
 chara/action/event_base/event_base_divination.tmb
 chara/action/event_base/event_base_draw_picture.tmb
 chara/action/event_base/event_base_draw_picture2.tmb
+chara/action/event_base/event_base_drill_double.tmb
+chara/action/event_base/event_base_drill_low_double.tmb
 chara/action/event_base/event_base_drill_machine1.tmb
 chara/action/event_base/event_base_drill_machine2.tmb
 chara/action/event_base/event_base_drill_machine_check.tmb
@@ -881,6 +885,7 @@ chara/action/event_base/event_base_escape.tmb
 chara/action/event_base/event_base_ether_vacuum1.tmb
 chara/action/event_base/event_base_ether_vacuum2.tmb
 chara/action/event_base/event_base_ether_vacuum_check.tmb
+chara/action/event_base/event_base_ether_vacuum_double.tmb
 chara/action/event_base/event_base_farmer_check.tmb
 chara/action/event_base/event_base_fast_squat.tmb
 chara/action/event_base/event_base_fast_squat_carry_big.tmb
@@ -1059,6 +1064,7 @@ chara/action/event_base/event_base_magic_stand_read2.tmb
 chara/action/event_base/event_base_magic_take_book.tmb
 chara/action/event_base/event_base_maining.tmb
 chara/action/event_base/event_base_maining2.tmb
+chara/action/event_base/event_base_maining3.tmb
 chara/action/event_base/event_base_maining_over.tmb
 chara/action/event_base/event_base_make_paper.tmb
 chara/action/event_base/event_base_make_sushi.tmb
@@ -1320,6 +1326,7 @@ chara/action/event_base/event_base_tomestone_photo.tmb
 chara/action/event_base/event_base_tomestone_talk.tmb
 chara/action/event_base/event_base_tomestone_wave_search.tmb
 chara/action/event_base/event_base_touch_ele_shock.tmb
+chara/action/event_base/event_base_tractor_beam1.tmb
 chara/action/event_base/event_base_trouble_loop.tmb
 chara/action/event_base/event_base_try_to_katana.tmb
 chara/action/event_base/event_base_ufo_catcher.tmb
@@ -1338,6 +1345,8 @@ chara/action/event_base/event_base_wall_talk.tmb
 chara/action/event_base/event_base_warm_oneself.tmb
 chara/action/event_base/event_base_warming_up.tmb
 chara/action/event_base/event_base_wash_with_basket.tmb
+chara/action/event_base/event_base_washing_m_double.tmb
+chara/action/event_base/event_base_washing_machine1.tmb
 chara/action/event_base/event_base_water_sprinkle.tmb
 chara/action/event_base/event_base_weak_idle.tmb
 chara/action/event_base/event_base_weapon_check_axe.tmb
@@ -1433,6 +1442,7 @@ chara/action/fishing_chair/normal_landing_hq.tmb
 chara/action/fishing_chair/normal_landing_nq.tmb
 chara/action/fishing_chair/precision_hooking.tmb
 chara/action/fishing_chair/precision_hooking_big.tmb
+chara/action/fishing_chair/precision_hooking_big_novfx.tmb
 chara/action/fishing_chair/precision_hooking_novfx.tmb
 chara/action/fishing_chair/reeling_fast.tmb
 chara/action/fishing_chair/reeling_idle.tmb
@@ -2319,10 +2329,17 @@ chara/action/pc_contentsaction/pc_cnt062.tmb
 chara/action/pc_contentsaction/pc_cnt063.tmb
 chara/action/pc_contentsaction/pc_cnt064.tmb
 chara/action/pc_contentsaction/pc_cnt065.tmb
+chara/action/pc_contentsaction/pc_cnt066.tmb
+chara/action/pc_contentsaction/pc_cnt067.tmb
+chara/action/pc_contentsaction/pc_cnt068.tmb
 chara/action/pc_contentsaction/pc_cnt069_end.tmb
 chara/action/pc_contentsaction/pc_cnt069_loop.tmb
 chara/action/pc_contentsaction/pc_cnt069_start.tmb
 chara/action/pc_contentsaction/pc_cnt070.tmb
+chara/action/pc_contentsaction/pc_cnt071.tmb
+chara/action/pc_contentsaction/pc_cnt072.tmb
+chara/action/pc_contentsaction/pc_cnt073.tmb
+chara/action/pc_contentsaction/pc_cnt074.tmb
 chara/action/pc_contentsaction/pc_cnt075.tmb
 chara/action/pc_contentsaction/pc_disappear.tmb
 chara/action/pc_contentsaction/pc_disappear2.tmb
