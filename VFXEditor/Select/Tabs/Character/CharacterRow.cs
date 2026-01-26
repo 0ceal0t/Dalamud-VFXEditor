@@ -30,6 +30,7 @@ namespace VfxEditor.Select.Tabs.Character {
         public string SkeletonId => Data.Id;
         public string AtchPath => $"chara/xls/attachoffset/{SkeletonId}.atch";
         public string PapPrefix => $"chara/human/{SkeletonId}/animation/a0001/bt_common";
+        public string OrnamentResidentPrefix => $"chara/human/{SkeletonId}/animation/a0001";
 
         private static readonly Dictionary<CharacterPart, CharacterPartParams> PartParams = new() {
             { CharacterPart.Body, new( "body", "top", true ) },
@@ -54,6 +55,7 @@ namespace VfxEditor.Select.Tabs.Character {
         public string GetOrnamentStartPap( int id, string prefix ) => $"{PapPrefix}/ornament_sp/m6001/{prefix}pose{id:D2}_start.pap";
 
         public string GetPap( string path ) => $"{PapPrefix}/{path}.pap";
+        public string GetOrnamentResidentPap( string path ) => $"{OrnamentResidentPrefix}/{path}.pap";
 
         public string GetMtrl( CharacterPart part, int id, string suffix ) {
             var p = PartParams[part];
