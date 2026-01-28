@@ -127,5 +127,17 @@ namespace VfxEditor.FileManager {
 
             if( type == ResetType.ToDefault ) AddDocument(); // Default document
         }
+
+        public bool AcceptsExt( string path )
+        {
+            return path.EndsWith( Extension );
+        }
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile )
+        {
+            SetSource( selectedFile );
+            SetReplace( replacedFile );
+            AddDocument();
+        }
     }
 }
