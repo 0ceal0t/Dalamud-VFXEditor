@@ -1,6 +1,4 @@
 using Dalamud.Bindings.ImGui;
-using Dalamud.Bindings.ImGuizmo;
-using Dalamud.Bindings.ImPlot;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -105,10 +103,6 @@ namespace VfxEditor {
             RootLocation = Dalamud.PluginInterface.AssemblyLocation.DirectoryName;
             OtterTex.NativeDll.Initialize( pluginInterface.AssemblyLocation.DirectoryName );
 
-            ImPlot.SetImGuiContext( ImGui.GetCurrentContext() );
-            ImPlot.SetCurrentContext( ImPlot.CreateContext() );
-            ImGuizmo.SetImGuiContext( ImGui.GetCurrentContext() );
-
             WindowSystem = new();
 
             Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -177,8 +171,6 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.Draw -= Draw;
             Dalamud.PluginInterface.UiBuilder.OpenConfigUi -= OpenConfigUi;
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
-
-            ImPlot.DestroyContext();
 
             Dalamud.CommandManager.RemoveHandler( CommandName );
             PenumbraIpc?.Dispose();

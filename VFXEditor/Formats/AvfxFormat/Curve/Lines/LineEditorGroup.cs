@@ -237,108 +237,108 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
 
             var height = ImGui.GetContentRegionAvail().Y - ( 4 * ImGui.GetFrameHeightWithSpacing() + 5 );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( $"##CurveEditor{RenderId}", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
-                if( fit ) ImPlot.SetNextAxesToFit();
-                if( IsColor ) {
-                    ImPlot.SetupAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
-                    ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
-                }
+            using( var plot = ImRaii.Plot( $"##CurveEditor{RenderId}", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+                if( plot ) {
+                    if( fit ) ImPlot.SetNextAxesToFit();
+                    if( IsColor ) {
+                        ImPlot.SetupAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
+                        ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
+                    }
 
-                ImPlot.SetupLegend( ImPlotLocation.NorthWest, ImPlotLegendFlags.NoButtons );
-                ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
+                    ImPlot.SetupLegend( ImPlotLocation.NorthWest, ImPlotLegendFlags.NoButtons );
+                    ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None, IsColor ? ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel : ImPlotAxisFlags.NoLabel );
 
-                var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
+                    var clickState = IsHovering() && ImGui.IsMouseDown( ImGuiMouseButton.Left );
 
-                var draggingAnyPoint = false;
-                var dragPointId = 0;
-                foreach( var (curve, curveIdx) in Curves.WithIndex() ) {
-                    if( !curve.IsAssigned() || curve.Keys.Count == 0 ) continue;
+                    var draggingAnyPoint = false;
+                    var dragPointId = 0;
+                    foreach( var (curve, curveIdx) in Curves.WithIndex() ) {
+                        if( !curve.IsAssigned() || curve.Keys.Count == 0 ) continue;
 
-                    ImPlot.HideNextItem( false, ImPlotCond.Once );
-                    curve.GetDrawLine( out var _xs, out var _ys );
-                    var xs = _xs.ToArray();
-                    var ys = _ys.ToArray();
+                        ImPlot.HideNextItem( false, ImPlotCond.Once );
+                        curve.GetDrawLine( out var _xs, out var _ys );
+                        var xs = _xs.ToArray();
+                        var ys = _ys.ToArray();
 
-                    var lineColor = curve.GetAvfxName() switch {
-                        "X" or "RX" => new( 1, 0, 0, 1 ),
-                        "Y" or "RY" => new( 0, 1, 0, 1 ),
-                        "Z" or "RZ" => new( 0, 0, 1, 1 ),
-                        _ => LineColors[curveIdx % LineColors.Length],
-                    };
+                        var lineColor = curve.GetAvfxName() switch {
+                            "X" or "RX" => new( 1, 0, 0, 1 ),
+                            "Y" or "RY" => new( 0, 1, 0, 1 ),
+                            "Z" or "RZ" => new( 0, 0, 1, 1 ),
+                            _ => LineColors[curveIdx % LineColors.Length],
+                        };
 
-                    ImPlot.SetNextLineStyle( lineColor, Plugin.Configuration.CurveEditorLineWidth );
+                        ImPlot.SetNextLineStyle( lineColor, Plugin.Configuration.CurveEditorLineWidth );
 
-                    ImPlot.PlotLine( curve.Name, ref xs[0], ref ys[0], xs.Length );
+                        ImPlot.PlotLine( curve.Name, ref xs[0], ref ys[0], xs.Length );
 
-                    DrawGradient();
+                        DrawGradient();
 
-                    foreach( var (key, keyIdx) in curve.Keys.WithIndex() ) {
-                        dragPointId++;
+                        foreach( var (key, keyIdx) in curve.Keys.WithIndex() ) {
+                            dragPointId++;
 
-                        var isSelected = Selected.Any( x => x.Item2 == key );
-                        var isPrimarySelected = PrimaryKey == key;
+                            var isSelected = Selected.Any( x => x.Item2 == key );
+                            var isPrimarySelected = PrimaryKey == key;
 
-                        var pointSize = isPrimarySelected ? Plugin.Configuration.CurveEditorPrimarySelectedSize : ( isSelected ? Plugin.Configuration.CurveEditorSelectedSize : Plugin.Configuration.CurveEditorPointSize );
-                        if( IsColor ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( key.Point ), pointSize + Plugin.Configuration.CurveEditorColorRingSize, Invert( key.Color ) );
+                            var pointSize = isPrimarySelected ? Plugin.Configuration.CurveEditorPrimarySelectedSize : ( isSelected ? Plugin.Configuration.CurveEditorSelectedSize : Plugin.Configuration.CurveEditorPointSize );
+                            if( IsColor ) ImPlot.GetPlotDrawList().AddCircleFilled( ImPlot.PlotToPixels( key.Point ), pointSize + Plugin.Configuration.CurveEditorColorRingSize, Invert( key.Color ) );
 
-                        var x = key.DisplayX;
-                        var y = key.DisplayY;
+                            var x = key.DisplayX;
+                            var y = key.DisplayY;
 
-                        // Dragging point
-                        if( ImPlot.DragPoint( dragPointId, ref x, ref y, IsColor ? new Vector4( key.Color, 1 ) : lineColor, pointSize, ImPlotDragToolFlags.Delayed ) ) {
-                            if( !isSelected ) {
-                                Selected.Clear();
-                                Selected.Add( (curve, key) );
+                            // Dragging point
+                            if( ImPlot.DragPoint( dragPointId, ref x, ref y, IsColor ? new Vector4( key.Color, 1 ) : lineColor, pointSize, ImPlotDragToolFlags.Delayed ) ) {
+                                if( !isSelected ) {
+                                    Selected.Clear();
+                                    Selected.Add( (curve, key) );
+                                }
+
+                                if( !Editing ) {
+                                    Editing = true;
+                                    Selected.ForEach( x => x.Item2.StartDragging() );
+                                }
+                                LastEditTime = DateTime.Now;
+
+                                var diffX = x - key.DisplayX;
+                                var diffY = y - key.DisplayY;
+                                foreach( var selected in Selected ) {
+                                    selected.Item2.DisplayX += diffX;
+                                    selected.Item2.DisplayY += diffY;
+                                }
+
+                                draggingAnyPoint = true;
                             }
+                        }
 
-                            if( !Editing ) {
-                                Editing = true;
-                                Selected.ForEach( x => x.Item2.StartDragging() );
+                        // ======================
+
+                        if( Editing && !draggingAnyPoint && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
+                            Editing = false;
+                            var commands = new List<ICommand>();
+                            Selected.ForEach( x => x.Item2.StopDragging( commands ) );
+                            CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
+                        }
+
+                        // Selecting point [Left Click]
+                        // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
+                        var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
+                        if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) SingleSelect();
+
+                        // TODO: box select and right click
+                    }
+
+                    // Inserting point [Ctrl + Left Click]
+                    if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) NewPoint();
+                    using( var popup = ImRaii.Popup( "NewPointPopup" ) ) {
+                        if( popup ) {
+                            foreach( var curve in AssignedCurves ) {
+                                if( ImGui.Selectable( curve.GetText() ) ) NewPoint( curve, SavedPoint );
                             }
-                            LastEditTime = DateTime.Now;
-
-                            var diffX = x - key.DisplayX;
-                            var diffY = y - key.DisplayY;
-                            foreach( var selected in Selected ) {
-                                selected.Item2.DisplayX += diffX;
-                                selected.Item2.DisplayY += diffY;
-                            }
-
-                            draggingAnyPoint = true;
                         }
                     }
 
-                    // ======================
-
-                    if( Editing && !draggingAnyPoint && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
-                        Editing = false;
-                        var commands = new List<ICommand>();
-                        Selected.ForEach( x => x.Item2.StopDragging( commands ) );
-                        CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
-                    }
-
-                    // Selecting point [Left Click]
-                    // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
-                    var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
-                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) SingleSelect();
-
-                    // TODO: box select and right click
+                    if( clickState && !PrevClickState ) PrevClickTime = DateTime.Now;
+                    PrevClickState = clickState;
                 }
-
-                // Inserting point [Ctrl + Left Click]
-                if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) NewPoint();
-                using( var popup = ImRaii.Popup( "NewPointPopup" ) ) {
-                    if( popup ) {
-                        foreach( var curve in AssignedCurves ) {
-                            if( ImGui.Selectable( curve.GetText() ) ) NewPoint( curve, SavedPoint );
-                        }
-                    }
-                }
-
-                if( clickState && !PrevClickState ) PrevClickTime = DateTime.Now;
-                PrevClickState = clickState;
-
-                ImPlot.EndPlot();
             }
 
             ImPlot.PopStyleVar( 1 );

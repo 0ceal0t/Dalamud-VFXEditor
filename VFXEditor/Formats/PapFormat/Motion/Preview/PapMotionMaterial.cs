@@ -103,7 +103,9 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( IsColor ) ImPlot.SetNextAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
             ImPlot.SetNextAxisLimits( ImAxis.X1, 0, Motion.TotalFrames, ImPlotCond.Once );
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
-            if( ImPlot.BeginPlot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ( IsColor ? ImPlotFlags.NoLegend : ImPlotFlags.None ) ) ) {
+
+            using var plot = ImRaii.Plot( "##CurveEditor", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle | ( IsColor ? ImPlotFlags.NoLegend : ImPlotFlags.None ) );
+            if( plot ) {
                 if( IsColor ) ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );
                 ImPlot.SetupAxes( "Frame", "", ImPlotAxisFlags.None,
                     IsColor ? ( ImPlotAxisFlags.Lock | ImPlotAxisFlags.NoGridLines | ImPlotAxisFlags.NoDecorations | ImPlotAxisFlags.NoLabel ) : ImPlotAxisFlags.NoLabel );
@@ -135,9 +137,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                     ImPlot.SetNextLineStyle( new( 0, 0, 1, 1 ), 3 );
                     ImPlot.PlotLine( "B", ref AllFrames[0], ref element.B[0], AllFrames.Length );
                 }
-
-                ImPlot.EndPlot();
             }
+
             ImPlot.PopStyleVar( 1 );
         }
 

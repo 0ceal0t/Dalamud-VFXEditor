@@ -14,10 +14,10 @@ namespace VfxEditor.AvfxFormat {
         private bool DrawOnce = false;
         private int UvMode = 1;
 
-        private (float[], float[]) Uv1 = (Array.Empty<float>(), Array.Empty<float>());
-        private (float[], float[]) Uv2 = (Array.Empty<float>(), Array.Empty<float>());
-        private (float[], float[]) Uv3 = (Array.Empty<float>(), Array.Empty<float>());
-        private (float[], float[]) Uv4 = (Array.Empty<float>(), Array.Empty<float>());
+        private (float[], float[]) Uv1 = ([], []);
+        private (float[], float[]) Uv2 = ([], []);
+        private (float[], float[]) Uv3 = ([], []);
+        private (float[], float[]) Uv4 = ([], []);
 
         private int NumPoints = 0;
 
@@ -45,10 +45,10 @@ namespace VfxEditor.AvfxFormat {
 
             NumPoints = orderedVertexes.Count;
 
-            Uv1 = (orderedVertexes.Select( x => x.Uv1.X ).ToArray(), orderedVertexes.Select( x => x.Uv1.Y ).ToArray());
-            Uv2 = (orderedVertexes.Select( x => x.Uv2.X ).ToArray(), orderedVertexes.Select( x => x.Uv2.Y ).ToArray());
-            Uv3 = (orderedVertexes.Select( x => x.Uv3.X ).ToArray(), orderedVertexes.Select( x => x.Uv3.Y ).ToArray());
-            Uv4 = (orderedVertexes.Select( x => x.Uv4.X ).ToArray(), orderedVertexes.Select( x => x.Uv4.Y ).ToArray());
+            Uv1 = ([.. orderedVertexes.Select( x => x.Uv1.X )], [.. orderedVertexes.Select( x => x.Uv1.Y )]);
+            Uv2 = ([.. orderedVertexes.Select( x => x.Uv2.X )], [.. orderedVertexes.Select( x => x.Uv2.Y )]);
+            Uv3 = ([.. orderedVertexes.Select( x => x.Uv3.X )], [.. orderedVertexes.Select( x => x.Uv3.Y )]);
+            Uv4 = ([.. orderedVertexes.Select( x => x.Uv4.X )], [.. orderedVertexes.Select( x => x.Uv4.Y )]);
         }
 
         public void Draw() {
@@ -72,7 +72,8 @@ namespace VfxEditor.AvfxFormat {
                 DrawOnce = true;
             }
 
-            if( ImPlot.BeginPlot( "##Plot", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
+            using var plot = ImRaii.Plot( "##Plot", new Vector2( -1, -1 ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle );
+            if( plot ) {
                 ImPlot.SetupAxes( "U", "V", ImPlotAxisFlags.None, ImPlotAxisFlags.None );
 
                 ImPlot.PushStyleColor( ImPlotCol.Line, LINE_COLOR );
@@ -92,8 +93,6 @@ namespace VfxEditor.AvfxFormat {
 
                 ImPlot.PopStyleColor();
                 ImPlot.PopStyleVar();
-
-                ImPlot.EndPlot();
             }
         }
     }
