@@ -86,7 +86,7 @@ namespace VfxEditor.Utils.Gltf {
             // Add the remaining ones that couldn't be placed
             finalBones.AddRange( unusedBones );
 
-            return finalBones.Where( x => x != null ).ToList();
+            return [.. finalBones.Where( x => x != null )];
         }
 
         public static void ExportSkeleton( List<SklbBone> skeletonBones, string path ) {

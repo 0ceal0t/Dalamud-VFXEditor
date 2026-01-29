@@ -33,7 +33,7 @@ namespace VfxEditor.Select.Tabs.Items {
 
                 loaded = new() {
                     ImcPath = file.FilePath,
-                    Paths = ids.Select( item.GetVfxPath ).ToList()
+                    Paths = [.. ids.Select( item.GetVfxPath )]
                 };
             }
             catch( Exception e ) {

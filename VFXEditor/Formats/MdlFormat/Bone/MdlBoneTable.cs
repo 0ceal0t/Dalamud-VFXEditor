@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.MdlFormat.Bone {
         public readonly List<ParsedString> Bones = [];
         public readonly CommandListView<ParsedString> BoneView;
 
-        public HashSet<string> BoneStrings => Bones.Select( x => x.Value ).ToHashSet();
+        public HashSet<string> BoneStrings => [.. Bones.Select( x => x.Value )];
 
         public MdlBoneTable() {
             BoneView = new( Bones, () => new( "##Name" ), true );

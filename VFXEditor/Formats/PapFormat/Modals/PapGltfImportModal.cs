@@ -152,7 +152,7 @@ namespace VfxEditor.PapFormat {
                     AnimationIndex,
                     Compress,
                     SkipOriginal,
-                    ( !Exclude || SelectedExcludeList == null ) ? [] : SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) ).ToList(),
+                    ( !Exclude || SelectedExcludeList == null ) ? [] : [.. SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) )],
                     ImportPath );
             } ) );
             Dalamud.OkNotification( "Havok data imported" );

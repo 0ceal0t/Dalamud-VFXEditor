@@ -131,7 +131,7 @@ namespace VfxEditor.Ui.NodeGraphViewer {
         protected abstract List<S> GetOutputSlots();
         public bool ChildOf( Node node ) => Inputs.Any( x => x.IsConnectedTo( node ) );
 
-        public override List<Node> GetParents() => Inputs.SelectMany( x => x.GetConnections().Select( x => x.Node ) ).ToList();
+        public override List<Node> GetParents() => [.. Inputs.SelectMany( x => x.GetConnections().Select( x => x.Node ) )];
         public override int GetOutputCount() => Outputs.Count;
 
         protected virtual void Refresh() {

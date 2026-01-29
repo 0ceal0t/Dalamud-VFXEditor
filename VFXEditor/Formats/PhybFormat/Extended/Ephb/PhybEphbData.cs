@@ -25,7 +25,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
         public EphbData Export() => new() {
             Unknown1 = Unknown1.Value,
             Unknown2 = Unknown2.Value,
-            Alpha = Alpha.Select( x => x.Export() ).ToList()
+            Alpha = [.. Alpha.Select( x => x.Export() )]
         };
     }
 }

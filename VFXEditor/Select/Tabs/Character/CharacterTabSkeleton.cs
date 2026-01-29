@@ -61,11 +61,10 @@ namespace VfxEditor.Select.Tabs.Character {
         }
 
         private List<(string, uint, string)> GetPaths( CharacterRow item, IEnumerable<int> ids, string part, string name, Dictionary<int, uint> iconMap ) {
-            return ids
+            return [.. ids
                 .Select( id => (id, $"chara/human/{item.SkeletonId}/skeleton/{part}/{part[0]}{id:D4}/{Prefix}_{item.SkeletonId}{part[0]}{id:D4}.{Extension}") )
                 .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-                .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
-                .ToList();
+                .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )];
         }
     }
 }

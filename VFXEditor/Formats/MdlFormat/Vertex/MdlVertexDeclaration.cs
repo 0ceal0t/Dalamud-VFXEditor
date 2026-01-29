@@ -45,7 +45,7 @@ namespace VfxEditor.Formats.MdlFormat.Vertex {
             foreach( var element in Elements ) element.Write( writer );
         }
 
-        private List<MdlVertexElement> GetElements( int stream ) => Elements.Where( x => !x.NoData && x.Stream == stream ).ToList();
+        private List<MdlVertexElement> GetElements( int stream ) => [.. Elements.Where( x => !x.NoData && x.Stream == stream )];
 
         public Vector4[] GetData( byte[] rawIndex, List<byte[]> vertexStreams, int indexCount, int vertexCount, byte[] strides ) {
             var data = new List<Vector4>();

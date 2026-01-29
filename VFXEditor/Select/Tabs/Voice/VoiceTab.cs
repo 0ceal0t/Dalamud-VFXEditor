@@ -47,7 +47,7 @@ namespace VfxEditor.Select.Tabs.Voice {
                 }
             }
 
-            loaded = possiblePaths.Where( Dalamud.DataManager.FileExists ).ToList();
+            loaded = [.. possiblePaths.Where( Dalamud.DataManager.FileExists )];
         }
 
         // ===== DRAWING ======

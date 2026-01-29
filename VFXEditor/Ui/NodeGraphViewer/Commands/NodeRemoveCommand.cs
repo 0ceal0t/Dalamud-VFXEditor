@@ -14,7 +14,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Commands {
         public NodeRemoveCommand( NodeCanvas<T, S> canvas, T node ) : base( canvas.Nodes, node ) {
             Canvas = canvas;
             Position = Canvas.Map.GetNodeRelaPos( Item ).Value;
-            Slots = Canvas.Nodes.SelectMany( node => node.Inputs.Where( slot => slot.IsConnectedTo( Item ) ).Select( slot => (slot, slot.GetConnections()) ) ).ToList();
+            Slots = [.. Canvas.Nodes.SelectMany( node => node.Inputs.Where( slot => slot.IsConnectedTo( Item ) ).Select( slot => (slot, slot.GetConnections()) ) )];
             // ==================
             Canvas.Map.RemoveNode( Item );
             Canvas.SelectedNodes.Remove( Item );

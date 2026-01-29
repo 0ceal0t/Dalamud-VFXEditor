@@ -8,13 +8,13 @@ namespace VfxEditor.Select.Tabs.Npc {
         protected override void GetLoadedFiles( NpcFilesStruct files, out List<string> loaded ) {
             loaded = Selected.IsMonster ?
                 [Selected.GetMdlPath( "" )] :
-                new List<string>() {
+                [.. new List<string>() {
                     Selected.GetMdlPath( "met" ),
                     Selected.GetMdlPath( "glv" ),
                     Selected.GetMdlPath( "dwn" ),
                     Selected.GetMdlPath( "sho" ),
                     Selected.GetMdlPath( "top" )
-                }.Where( Dalamud.DataManager.FileExists ).ToList();
+                }.Where( Dalamud.DataManager.FileExists )];
         }
     }
 }

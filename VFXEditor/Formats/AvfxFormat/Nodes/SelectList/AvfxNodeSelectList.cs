@@ -32,7 +32,7 @@ namespace VfxEditor.AvfxFormat {
 
         // an item was removed from the group, for example
         // 255 = -1 = nothing selected
-        public override void UpdateLiteral() => Literal.SetItems( Selected.Select( x => x == null ? 255 : x.GetIdx() ).ToList() );
+        public override void UpdateLiteral() => Literal.SetItems( [.. Selected.Select( x => x == null ? 255 : x.GetIdx() )] );
 
         public override void Initialize() {
             for( var idx = 0; idx < Literal.GetItems().Count; idx++ ) {

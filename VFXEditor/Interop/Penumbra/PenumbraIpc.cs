@@ -52,7 +52,7 @@ namespace VfxEditor.Interop.Penumbra {
         public List<string> GetMods() {
             if( !PenumbraEnabled ) return [];
             try {
-                return GetModsSubscriber.Invoke().Select( x => x.Key ).ToList();
+                return [.. GetModsSubscriber.Invoke().Select( x => x.Key )];
             }
             catch( Exception ) { return []; }
         }

@@ -27,22 +27,22 @@ namespace VfxEditor.Parsing {
             // Copy/Paste
             CopyManager.TrySetValue( this, Name, Value );
             if( CopyManager.TryGetValue<Vector4>( this, Name, out var val ) ) {
-                CommandManager.Paste( new CompoundCommand( new[] {
+                CommandManager.Paste( new CompoundCommand( [
                      new ParsedSimpleCommand<float>( P1, val.X ),
                      new ParsedSimpleCommand<float>( P2, val.Y ),
                      new ParsedSimpleCommand<float>( P3, val.Z ),
                      new ParsedSimpleCommand<float>( P4, val.W )
-                } ) );
+                ] ) );
             }
 
             var value = Value;
             if( ImGui.InputFloat4( Name, ref value, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) {
-                CommandManager.Add( new CompoundCommand( new[] {
+                CommandManager.Add( new CompoundCommand( [
                      new ParsedSimpleCommand<float>( P1, value.X ),
                      new ParsedSimpleCommand<float>( P2, value.Y ),
                      new ParsedSimpleCommand<float>( P3, value.Z ),
                      new ParsedSimpleCommand<float>( P4, value.W )
-                } ) );
+                ] ) );
             }
         }
     }

@@ -278,7 +278,7 @@ namespace VfxEditor.Utils.Gltf {
 
             binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( handles, currentBinding.ptr->FloatTrackToFloatSlotIndices, [] );
             binding->TransformTrackToBoneIndices = HavokData.CreateArray(
-                handles, currentBinding.ptr->TransformTrackToBoneIndices, tracks.Select( x => ( short )boneNameToIdx[x] ).ToList() );
+                handles, currentBinding.ptr->TransformTrackToBoneIndices, [.. tracks.Select( x => ( short )boneNameToIdx[x] )] );
 
             // Set up animation
             anim->Animation.Type = hkaAnimation.AnimationType.InterleavedAnimation;

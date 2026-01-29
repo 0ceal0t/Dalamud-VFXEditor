@@ -26,7 +26,7 @@ namespace VfxEditor.Library.Components {
 
         public LibraryFolder( LibraryFolder parent, LibraryProps props ) : this( parent, props.Name, props.Id, props.Children ) { }
 
-        public List<LibraryProps> ChildrenToProps() => Children.Select( x => x.ToProps() ).ToList();
+        public List<LibraryProps> ChildrenToProps() => [.. Children.Select( x => x.ToProps() )];
 
         public void Add( LibraryGeneric item ) {
             item.Parent = this;

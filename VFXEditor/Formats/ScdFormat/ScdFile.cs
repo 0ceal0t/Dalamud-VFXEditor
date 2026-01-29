@@ -18,7 +18,7 @@ namespace VfxEditor.ScdFormat {
 
         public readonly List<ScdAudioEntry> Audio = [];
         public readonly List<ScdSoundEntry> Sounds = [];
-        private List<ScdLayoutEntry> Layouts => Sounds.Select( x => x.Layout ).ToList();
+        private List<ScdLayoutEntry> Layouts => [.. Sounds.Select( x => x.Layout )];
         public readonly List<ScdTrackEntry> Tracks = [];
         public readonly List<ScdAttributeEntry> Attributes = [];
 

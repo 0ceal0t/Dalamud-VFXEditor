@@ -52,11 +52,11 @@ namespace VfxEditor.AvfxFormat {
 
             // Store which of the selectors in the item will be disconnected from their children
             foreach( var node in Item.ChildNodes ) {
-                ChildToRemovedSelectors[node] = node.Parents.Where( nodeSelect => nodeSelect.Node == Item ).ToList();
+                ChildToRemovedSelectors[node] = [.. node.Parents.Where( nodeSelect => nodeSelect.Node == Item )];
             }
 
             foreach( var nodeSelect in Item.Parents ) {
-                RemovedFromParents[nodeSelect] = nodeSelect.Node.ChildNodes.Where( node => node == Item ).ToList();
+                RemovedFromParents[nodeSelect] = [.. nodeSelect.Node.ChildNodes.Where( node => node == Item )];
                 ParentsSelectIdx[nodeSelect] = nodeSelect.GetSelectedIdx( Item );
             }
 

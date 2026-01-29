@@ -133,9 +133,9 @@ namespace VfxEditor.AvfxFormat {
             else {
                 var data = Converted;
                 if( ImGui.InputFloat3( "Value", ref data ) ) {
-                    CommandManager.Add( new CompoundCommand( new[] {
+                    CommandManager.Add( new CompoundCommand( [
                         new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
-                    }, onChangeAction: editor.OnUpdate ) );
+                    ], onChangeAction: editor.OnUpdate ) );
                 }
             }
         }
@@ -178,9 +178,9 @@ namespace VfxEditor.AvfxFormat {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) { // Only actually commit the changes if 200ms have passed since the last one
                 Editing = false;
-                CommandManager.Add( new CompoundCommand( new[] {
+                CommandManager.Add( new CompoundCommand( [
                     new ParsedSimpleCommand<Vector3>( Data, ColorBeforeEdit, color )
-                }, onChangeAction: editor.OnUpdate ) );
+                ], onChangeAction: editor.OnUpdate ) );
             }
         }
 

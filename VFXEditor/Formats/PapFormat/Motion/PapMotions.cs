@@ -86,7 +86,7 @@ namespace VfxEditor.PapFormat.Motion {
                     if( !ok ) return;
                     GltfAnimation.ExportAnimation(
                         Skeleton,
-                        File.Animations.Select( x => x.GetName() ).ToList(),
+                        [.. File.Animations.Select( x => x.GetName() )],
                         Motions,
                         true,
                         res

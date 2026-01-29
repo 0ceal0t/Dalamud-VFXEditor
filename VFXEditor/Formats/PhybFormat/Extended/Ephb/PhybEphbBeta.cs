@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
         public void Draw() => GammaView.Draw();
 
         public EphbBeta Export() => new() {
-            Gamma = Gamma.Select( x => x.Export() ).ToList(),
+            Gamma = [.. Gamma.Select( x => x.Export() )],
         };
     }
 }

@@ -58,16 +58,15 @@ namespace VfxEditor.Select.Tabs.Character {
         }
 
         private static List<(string, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids ) =>
-            ids
+            [.. ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .Select( x => ($"{name} {x.id}", x.Item2) ).ToList();
+            .Select( x => ($"{name} {x.id}", x.Item2) )];
 
         private static List<(string, uint, string)> GetPart( string name, CharacterPart part, CharacterRow item, IEnumerable<int> ids, Dictionary<int, uint> iconMap ) =>
-            ids
+            [.. ids
             .Select( id => (id, item.GetMdl( part, id )) )
             .Where( x => Dalamud.DataManager.FileExists( x.Item2 ) )
-            .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )
-            .ToList();
+            .Select( x => ($"{name} {x.id}", iconMap.TryGetValue( x.id, out var icon ) ? icon : 0, x.Item2) )];
     }
 }

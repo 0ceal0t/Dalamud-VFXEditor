@@ -183,7 +183,7 @@ namespace VfxEditor.Ui.Export {
                 DefaultMod = new() {
                     Files = DefaultMod.WorkspaceExport()
                 },
-                Groups = Groups.Select( x => x.WorkspaceExport() ).ToList()
+                Groups = [.. Groups.Select( x => x.WorkspaceExport() )]
             };
             meta["penumbra"] = JsonConvert.SerializeObject( data );
         }

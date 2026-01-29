@@ -62,7 +62,7 @@ namespace VfxEditor.TmbFormat {
 
             binaryReader.BaseStream.Position = startPos + size;
 
-            UnusedTracks = AllTracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() ).ToList();
+            UnusedTracks = [.. AllTracks.Where( x => !Actors.Where( a => a.Tracks.Contains( x ) ).Any() )];
             UnusedTrackView = new( "Track", UnusedTracks, false );
         }
 

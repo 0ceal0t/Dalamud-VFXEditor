@@ -138,7 +138,7 @@ public unsafe struct CharaMakeType( ExcelPage page, uint offset, uint row ) : IE
         }
 
         public Menu[] GetMenusForCustomize( CustomizeIndex index ) {
-            return Menus.Where( x => x.CustomizeIndex == index ).ToArray();
+            return [.. Menus.Where( x => x.CustomizeIndex == index )];
         }
 
         public MenuType GetMenuTypeForCustomize( CustomizeIndex index ) {

@@ -57,7 +57,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Priority = Priority,
             Type = Type,
             DefaultSettings = GetDefault(),
-            Options = Options.Select( x => x.Export( modFolder, Name ) ).ToList()
+            Options = [.. Options.Select( x => x.Export( modFolder, Name ) )]
         };
 
         public PenumbraGroupStruct WorkspaceExport() => new() {
@@ -65,7 +65,7 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Priority = Priority,
             Type = Type,
             DefaultSettings = GetDefault(),
-            Options = Options.Select( x => x.WorkspaceExport() ).ToList()
+            Options = [.. Options.Select( x => x.WorkspaceExport() )]
         };
 
         private uint GetDefault() {
