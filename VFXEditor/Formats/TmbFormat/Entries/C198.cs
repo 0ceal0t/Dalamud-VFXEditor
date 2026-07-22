@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -16,7 +17,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt Unk4 = new( "Unknown 4" );
+        private readonly ParsedIntByte4 BindPoint = new( "Bind Point" );
         private readonly ParsedShort ModelId = new( "Model Id" );
         private readonly ParsedShort BodyId = new( "Body Id" );
         private readonly ParsedInt Variant = new( "Variant" );
@@ -30,7 +31,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Unk1,
             Unk2,
             Unk3,
-            Unk4,
+            BindPoint,
             ModelId,
             BodyId,
             Variant
