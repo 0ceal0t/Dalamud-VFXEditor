@@ -9,6 +9,7 @@ using VfxEditor.Select.Tabs.Items;
 using VfxEditor.Select.Tabs.Job;
 using VfxEditor.Select.Tabs.Mounts;
 using VfxEditor.Select.Tabs.Npc;
+using VfxEditor.Select.Tabs.NpcID;
 
 namespace VfxEditor.Select.Formats {
     public class PapSelectDialog : SelectDialog {
@@ -19,6 +20,7 @@ namespace VfxEditor.Select.Formats {
                 new ActionTabPapNonPlayer( this, "Non-Player Action" ),
                 new EmoteTabPap( this, "Emote" ),
                 new NpcTabPap( this, "Npc" ),
+                new NpcIDTabPap( this, "NpcID" ),
                 new MountTabPap( this, "Mount" ),
                 new CharacterTabPap( this, "Character" ),
                 new JobTab( this, "Job" ),

@@ -1,9 +1,12 @@
 using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
 
 namespace VfxEditor.Select.Tabs.Npc {
     public struct NpcFilesStruct {
@@ -33,17 +36,31 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         public override void LoadData() {
             var nameToString = NameToString;
+            List<string> loadedmodels = new List<string>();
 
             // https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
             var baseToName = JsonConvert.DeserializeObject<Dictionary<string, uint>>( File.ReadAllText( SelectDataUtils.BnpcPath ) );
             var battleNpcSheet = Dalamud.DataManager.GetExcelSheet<BNpcBase>();
+            var ModelCharaSheet = Dalamud.DataManager.GetExcelSheet<ModelChara>();
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
                 if( !battleNpcSheet.TryGetRow( uint.Parse( entry.Key ), out var bnpcRow ) ) continue;
                 if( !BnpcValid( bnpcRow ) ) continue;
-
+                string prefix = "m";
+                ModelCharaSheet.TryGetRow( bnpcRow.ModelChara.RowId, out var modelcharaRow );
+                if (modelcharaRow.Type == 2 ) { prefix = "d"; }
+                string currentmodel = prefix + modelcharaRow.Model.ToString().PadLeft( 4, '0' );
+                if( !loadedmodels.Contains( currentmodel )) { loadedmodels.Add( currentmodel );}
                 Items.Add( new NpcRow( bnpcRow.ModelChara.Value, name ) );
+            }
+            foreach (var modelcharaRow in ModelCharaSheet) {
+                string prefix = "m";
+                if( modelcharaRow.Type == 2 ) { prefix = "d"; }
+                string currentmodel = prefix + modelcharaRow.Model.ToString().PadLeft( 4, '0' );
+                if( loadedmodels.Contains( currentmodel ) || currentmodel.Length>5) continue;
+                loadedmodels.Add( currentmodel );
+                Items.Add( new NpcRow( modelcharaRow, currentmodel ) );
             }
 
             NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectDataUtils.NpcFilesPath ) );
@@ -79,7 +96,7 @@ namespace VfxEditor.Select.Tabs.Npc {
 
         public static bool BnpcValid( BNpcBase? bnpcRow ) {
             if( bnpcRow?.ModelChara.ValueNullable == null || bnpcRow?.ModelChara.Value.Model == 0 ) return false;
-            if( bnpcRow?.ModelChara.Value.Type != 2 && bnpcRow?.ModelChara.Value.Type != 3 ) return false;
+            if( bnpcRow?.ModelChara.Value.Type != 2 && bnpcRow?.ModelChara.Value.Type != 3) return false;
             return true;
         }
     }

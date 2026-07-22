@@ -56,14 +56,14 @@ folderdict = {}
 filedict = {}
 _fullPaths = []
 
-cursor.execute("select hash, path from folders;")
+cursor.execute("select id, text from folders;")
 folders = cursor.fetchall()
 for folders in folders:
     folder_hash = folders[0]
     folder_path = folders[1]
     folderdict[folder_hash] = folder_path
 
-cursor.execute("select hash, name from filenames;")
+cursor.execute("select id, text from filenames;")
 filenames = cursor.fetchall()
 for filename in filenames:
     file_hash = filename[0]
@@ -72,7 +72,7 @@ for filename in filenames:
         continue
     filedict[file_hash] = file_path
 
-cursor.execute("select folderhash, filehash from fullpaths;")
+cursor.execute("select folder, file from fullpaths;")
 fullpaths = cursor.fetchall()
 for fullpath in fullpaths:
     _f1 = fullpath[0]

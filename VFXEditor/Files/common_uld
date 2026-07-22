@@ -258,6 +258,11 @@ ui/uld/ConfigLog.uld
 ui/uld/ConfigLogColor.uld
 ui/uld/ConfigLogFilter.uld
 ui/uld/ConfigLogFilterInputString.uld
+ui/uld/configngameshare.uld
+ui/uld/configngamesharedownload.uld
+ui/uld/configngamesharepasskeycheck.uld
+ui/uld/configngameshareupload.uld
+ui/uld/configngameshareview.uld
 ui/uld/ConfigPadCalibration.uld
 ui/uld/ConfigPadCustomize.uld
 ui/uld/configpadcustomize_ps3.uld
@@ -326,6 +331,7 @@ ui/uld/DescriptionYTC.uld
 ui/uld/Dialogue.uld
 ui/uld/DpsChallenge.uld
 ui/uld/DTR.uld
+ui/uld/egghuntharvestresult.uld
 ui/uld/Emj.uld
 ui/uld/EmjConfig.uld
 ui/uld/EmjIntroduction.uld
@@ -532,6 +538,7 @@ ui/uld/imagearcadioncwm2.uld
 ui/uld/ImageBossName.uld
 ui/uld/ImageCutsceneHildibrandAttack.uld
 ui/uld/ImageEndingMessage210.uld
+ui/uld/imageendingmessageeov.uld
 ui/uld/ImageGenericTitle.uld
 ui/uld/ImageLocationTitle.uld
 ui/uld/ImageLocationTitleShort.uld
@@ -696,6 +703,7 @@ ui/uld/mirageprismarchiveitem.uld
 ui/uld/MiragePrismBox.uld
 ui/uld/MiragePrismBoxFilterSetting.uld
 ui/uld/MiragePrismBoxItemDetail.uld
+ui/uld/mirageprismboxrestoreitem.uld
 ui/uld/MiragePrismCrystalize.uld
 ui/uld/MiragePrismExecute.uld
 ui/uld/MiragePrismPlate.uld
@@ -744,6 +752,7 @@ ui/uld/mkdinfo.uld
 ui/uld/mkdlorebook.uld
 ui/uld/mkdlorebookdiscovery.uld
 ui/uld/mkdrelicgrowth.uld
+ui/uld/mkdrelicgrowth2.uld
 ui/uld/mkdsupportjob.uld
 ui/uld/mkdsupportjoblist.uld
 ui/uld/mkdtowerentry.uld
@@ -903,6 +912,7 @@ ui/uld/RaceChocoboReady.uld
 ui/uld/RaceChocoboResult.uld
 ui/uld/RaceChocoboStatus.uld
 ui/uld/RaidFinder.uld
+ui/uld/ratingviewer.uld
 ui/uld/ReadyCheck.uld
 ui/uld/RecipeMaterialList.uld
 ui/uld/RecipeNoteBook.uld
@@ -1125,6 +1135,7 @@ ui/uld/VoteTreasure.uld
 ui/uld/VVDActionSelect.uld
 ui/uld/VVDFinder.uld
 ui/uld/VVDNoteBook.uld
+ui/uld/vvdrouteselect.uld
 ui/uld/Warning.uld
 ui/uld/WeatherReport.uld
 ui/uld/WebGuidance.uld
@@ -1167,3 +1178,5 @@ ui/uld/WorkshopSupplyResult.uld
 ui/uld/WorldTranslate.uld
 ui/uld/WorldTranslateConfirm.uld
 ui/uld/WorldTranslateStatus.uld
+ui/uld/xbmitemdetail.uld
+ui/uld/xbmmonsterinfo.uld

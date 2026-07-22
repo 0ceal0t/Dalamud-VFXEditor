@@ -35,7 +35,6 @@ shader/sm5/shpk/furblur.shpk
 shader/sm5/shpk/grass.shpk
 shader/sm5/shpk/grassdynamicwave.shpk
 shader/sm5/shpk/hair.shpk
-shader/sm5/shpk/hairmask.shpk
 shader/sm5/shpk/iris.shpk
 shader/sm5/shpk/lightshaft.shpk
 shader/sm5/shpk/linelighting.shpk

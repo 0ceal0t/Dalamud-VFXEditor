@@ -6,6 +6,7 @@ using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Emotes;
 using VfxEditor.Select.Tabs.Npc;
+using VfxEditor.Select.Tabs.NpcID;
 using VfxEditor.Spawn;
 using VfxEditor.TmbFormat;
 
@@ -17,6 +18,7 @@ namespace VfxEditor.Select.Formats {
                 new ActionTabTmbNonPlayer( this, "Non-Player Action" ),
                 new EmoteTabTmb( this, "Emote" ),
                 new NpcTabTmb( this, "Npc" ),
+                new NpcIDTabTmb( this, "NpcID" ),
                 new CommonTabTmb( this, "Common" )
             ] );
         }

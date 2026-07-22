@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Loop = new( "Loop/Duration", value: 1 );
         private readonly ParsedInt Interrupt = new( "Interrupt" );
-        private readonly TmbOffsetString Path = new( "Path", null, true );
+        private readonly TmbOffsetString Path = new( "Path", null, true, "sound/replace_me.scd" );
         private readonly ParsedInt SoundIndex = new( "Sound Index" );
         private readonly ParsedByte SoundPosition = new( "Sound Position", value: 1 );
         private readonly ParsedByte BindId = new( "Bind Id" );

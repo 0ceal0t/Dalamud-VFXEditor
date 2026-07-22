@@ -12,6 +12,7 @@ using VfxEditor.Select.Tabs.Items;
 using VfxEditor.Select.Tabs.JournalCutscene;
 using VfxEditor.Select.Tabs.Mounts;
 using VfxEditor.Select.Tabs.Npc;
+using VfxEditor.Select.Tabs.NpcID;
 using VfxEditor.Select.Tabs.Statuses;
 using VfxEditor.Select.Tabs.Zone;
 using VfxEditor.Spawn;
@@ -30,6 +31,7 @@ namespace VfxEditor.Select.Formats {
                 new GimmickTab( this, "Gimmick" ),
                 new HousingTab( this, "Housing" ),
                 new NpcTabVfx( this, "Npc" ),
+                new NpcIDTabVfx( this, "NpcID" ),
                 new MountTabVfx( this, "Mount" ),
                 new CutsceneTab( this, "Cutscene" ),
                 new JournalCutsceneTab( this, "Journal Cutscene" ),

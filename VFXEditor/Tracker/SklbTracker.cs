@@ -41,12 +41,12 @@ namespace VfxEditor.Tracker {
 
             var drawObject = gameObject->DrawObject;
             if( drawObject == null ) return;
-            if( drawObject->Object.GetObjectType() != ObjectType.CharacterBase ) return;
+            if( drawObject->Object.GetObjectType() != FFXIVClientStructs.FFXIV.Client.Graphics.Scene.ObjectType.CharacterBase ) return;
 
             PopulateSklbs( ( CharacterBase* )drawObject, paths );
 
             var child = drawObject->Object.ChildObject;
-            if( child != null && child->GetObjectType() == ObjectType.CharacterBase ) {
+            if( child != null && child->GetObjectType() == FFXIVClientStructs.FFXIV.Client.Graphics.Scene.ObjectType.CharacterBase ) {
                 PopulateSklbs( ( CharacterBase* )child, paths );
             }
         }

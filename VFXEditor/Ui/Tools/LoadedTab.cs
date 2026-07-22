@@ -25,7 +25,7 @@ namespace VfxEditor.Ui.Tools {
 
                 var drawObject = gameObject->DrawObject;
                 if( drawObject == null ) continue;
-                if( drawObject->Object.GetObjectType() != ObjectType.CharacterBase ) return;
+                if( drawObject->Object.GetObjectType() != FFXIVClientStructs.FFXIV.Client.Graphics.Scene.ObjectType.CharacterBase ) return;
 
                 using var _ = ImRaii.PushId( $"{item.Address:X8}" );
                 if( !ImGui.CollapsingHeader( $"{item.Name}" ) ) continue;
@@ -39,7 +39,7 @@ namespace VfxEditor.Ui.Tools {
                 DrawCharacterBase( ( CharacterBase* )drawObject );
 
                 var childObject = drawObject->Object.ChildObject;
-                if( childObject != null && childObject->GetObjectType() == ObjectType.CharacterBase ) {
+                if( childObject != null && childObject->GetObjectType() == FFXIVClientStructs.FFXIV.Client.Graphics.Scene.ObjectType.CharacterBase ) {
                     using var __ = ImRaii.PushId( "Child Object" );
 
                     using var tree = ImRaii.TreeNode( "Child Object" );
