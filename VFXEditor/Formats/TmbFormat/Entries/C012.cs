@@ -16,7 +16,8 @@ namespace VfxEditor.TmbFormat.Entries {
         Character = 0,
         Weapon = 1,
         Offhand = 2,
-        Summon_or_Lemure = 3,
+        Summon_or_Lemure_0 = 3,
+        Summon_or_Lemure_1 = 4,
     }
     public enum VfxVisibility {
         Default_no_Triggers = 0,
