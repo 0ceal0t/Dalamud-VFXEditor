@@ -12,7 +12,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x1C;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Enabled = new( "Enabled" );
+        private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedBool Blink = new( "Blink" );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );

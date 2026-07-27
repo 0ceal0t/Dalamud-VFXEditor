@@ -1,7 +1,6 @@
 using Dalamud.Interface;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Spawn;
 using VfxEditor.TmbFormat.Utils;
 
@@ -27,8 +26,9 @@ namespace VfxEditor.TmbFormat.Entries {
                 }
             }
         ], false, "vfx/replace_me.avfx" );
-        private readonly ParsedShortByte2 BindPoint1 = new( "Bind Point 1", value: 1 );
-        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: -1 );
+        private readonly ParsedEnum<BindUser> BindOrigin1 = new( "Bind Point 1 Origin", size: 1 );
+        private readonly ParsedEnum<BindType> BindType1 = new( "Bind Point 1 Type", size: 1 );
+        private readonly ParsedShort BindId1 = new( "Bind Point 1", value: -1 );
         private readonly ParsedInt Visibility = new( "Visibility" ); //doesn't seem to use the same enum
         private readonly ParsedInt Limit = new( "Limit" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
@@ -48,8 +48,9 @@ namespace VfxEditor.TmbFormat.Entries {
             Loop,
             Unk2,
             Path,
-            BindPoint1,
-            BindPoint2,
+            BindOrigin1,
+            BindType1,
+            BindId1,
             Visibility,
             Limit,
             Unk5,

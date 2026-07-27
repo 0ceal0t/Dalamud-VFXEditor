@@ -5,6 +5,20 @@ using VfxEditor.Spawn;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
+    public enum BindUser {
+        Disabled = -1,
+        Default = 0,
+        Caster = 1,
+        Target = 2,
+    }
+    public enum BindType {
+        Disabled = -1,
+        Character = 0,
+        Weapon = 1,
+        Offhand = 2,
+        Summon_or_Lemure_0 = 3,
+        Summon_or_Lemure_1 = 4,
+    }
     public enum VfxVisibility {
         Default_no_Triggers = 0,
         Default_with_Triggers = 1,
@@ -33,10 +47,12 @@ namespace VfxEditor.TmbFormat.Entries {
                 }
             }
         ], false, "vfx/replace_me.avfx" );
-        private readonly ParsedShortByte2 BindPoint1 = new( "Bind Point 1", value: 1 );
-        private readonly ParsedShort BindPoint2 = new( "Bind Point 2", value: -1 );
-        private readonly ParsedShort BindPoint3 = new( "Bind Point 3", value: 2 );
-        private readonly ParsedShort BindPoint4 = new( "Bind Point 4", value: -1 );
+        private readonly ParsedEnum<BindUser> BindOrigin1 = new( "Bind Point 1 Origin", size: 1 );
+        private readonly ParsedEnum<BindType> BindType1 = new( "Bind Point 1 Type", size: 1 );
+        private readonly ParsedShort BindId1 = new( "Bind Point 1", value: -1 );
+        private readonly ParsedEnum<BindUser> BindOrigin2 = new( "Bind Point 2 Origin", size: 1 );
+        private readonly ParsedEnum<BindType> BindType2 = new( "Bind Point 2 Type", size: 1 );
+        private readonly ParsedShort BindId2 = new( "Bind Point 2", value: -1 );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
         private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
@@ -52,10 +68,12 @@ namespace VfxEditor.TmbFormat.Entries {
             Duration,
             Unk1,
             Path,
-            BindPoint1,
-            BindPoint2,
-            BindPoint3,
-            BindPoint4,
+            BindOrigin1,
+            BindType1,
+            BindId1,
+            BindOrigin2,
+            BindType2,
+            BindId2,
             Scale,
             Rotation,
             Position,
