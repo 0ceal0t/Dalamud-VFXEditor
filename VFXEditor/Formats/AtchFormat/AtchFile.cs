@@ -59,7 +59,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "clg", "Fist Weapon, Unique (PGL/MNK)" },
             { "cls", "Fist Weapon, Alternate (PGL/MNK)" },
             { "clw", "Fist Weapon (PGL/MNK)" },
-            // { "cmp", "" }, //1970
+            { "cmp", "Compass" }, //1970, /navigate
             { "col", "Control Switch (Left)" },
             { "cor", "Control Switch (Right)" },
             { "cos", "Control Seat" },
@@ -111,7 +111,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "let", "Letter" },
             { "lfd", "Loporitt Paintbrush" },
             { "lpr", "Ear Wiggle (Emote)" },
-            // { "map", "" }, //1969
+            { "map", "Map" }, //1969, /navigate
             { "mlt", "Mallet (GSM)" },
             { "mmc", "Quad-Cannons (MCH)" },
             // { "mot", "" }, //9992
@@ -123,7 +123,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "nf2", "Wasshoi Fan" },
             { "nik", "Metal Cup" }, //9055
             // { "njd", "" }, //1935
-            { "nmf", "Namazu Fan" },
+            { "nmf", "Wasshoi Fans / Cheer Orbs" },
             { "nph", "Sledgehammer (MIN)" },
             { "orb", "Focus (RDM)" },
             // { "oum", "" }, //9801
@@ -255,7 +255,7 @@ namespace VfxEditor.Formats.AtchFormat {
             // https://github.com/aers/FFXIVClientStructs/blob/2c388216cb52d4b6c4dbdedb735e1b343d56a846/FFXIVClientStructs/FFXIV/Client/Game/Character/Character.cs#L78C20-L78C23
             var dataStart = ( nint )Unsafe.AsPointer( ref ( ( Character* )Plugin.PlayerObject.Address )->DrawData ) + 0x20;
 
-            for( var i = 0; i < 3; i++ ) {
+            for( var i = 0; i < 4; i++ ) {
                 var data = dataStart + ( DrawObjectData.Size * i );
                 if( Marshal.ReadInt64( data + 8 ) == 0 || Marshal.ReadInt64( data + 16 ) == 0 || Marshal.ReadInt32( data + 32 ) == 0 ) continue;
 
