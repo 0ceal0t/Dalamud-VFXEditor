@@ -77,8 +77,9 @@ namespace VfxEditor.Utils.Gltf {
                 }
 
                 var animation = model.UseAnimation( animationName );
-                for( var time = 0f; time <= motion.Duration; time += 1 / 30f ) {
-                    ExportKeys( nameToKeys, names, motion, time );
+                var totalFrames = Math.Max( 1, ( int )MathF.Round( motion.Duration * 30f ) + 1 );
+                for( var frame = 0; frame < totalFrames; frame++ ) {
+                    ExportKeys( nameToKeys, names, motion, frame * ( 1 / 30f ) );
                 }
 
                 var unanimated = skipUnanimated ? motion.GetUnanimatedBones() : null;
@@ -203,7 +204,7 @@ namespace VfxEditor.Utils.Gltf {
                 if( scl != null ) sclSamplers[name] = scl;
             }
 
-            var numberOfFrames = ( int )Math.Ceiling( animation.Duration * 30f ) + 1;
+            var numberOfFrames = ( int )MathF.Round( animation.Duration * 30f ) + 1;
             for( var frame = 0; frame < numberOfFrames; frame++ ) {
                 var time = frame * ( 1 / 30f );
 
