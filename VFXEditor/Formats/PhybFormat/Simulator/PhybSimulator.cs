@@ -221,6 +221,8 @@ namespace VfxEditor.PhybFormat.Simulator {
             MatrixHelper.DecomposeUniformScale( bone1.BindPose, out var _, out var _, out var pos1 );
             MatrixHelper.DecomposeUniformScale( bone2.BindPose, out var _, out var _, out var pos2 );
 
+            if( ( pos1 - pos2 ).Length() < 0.0001f ) return; // degenerate, cannot draw
+
             builder.AddCylinder( pos1, pos2, radius * 2f, 10 );
         }
 
@@ -238,7 +240,10 @@ namespace VfxEditor.PhybFormat.Simulator {
 
             var axisOffset = new Vector3( node.ConeAxisOffset.Value.Y, node.ConeAxisOffset.Value.X, -node.ConeAxisOffset.Value.Z );
             var axisPos = Vector4Helper.Transform( axisOffset.AsVector4(), ref nodeBone.BindPose ).ToVector3();
-            var norm = Vector3.Normalize( axisPos - nodeStart );
+            var axisDiff = axisPos - nodeStart;
+            if( axisDiff.Length() < 0.0001f ) return; // degenerate cone axis, cannot draw
+
+            var norm = Vector3.Normalize( axisDiff );
 
             // var boneDiff = bonePos - nodeStart;
             // var closest = norm * Vector3.Dot( boneDiff, norm );
@@ -250,6 +255,7 @@ namespace VfxEditor.PhybFormat.Simulator {
             var angle = node.ConeMaxAngle.Value;
             // tan(angle) = radius / distance
             var radius = Math.Tan( angle ) * distance;
+            if( !float.IsFinite( ( float )radius ) ) return; // NaN/infinity radius, cannot draw
 
             builder.AddCone( coneStart, coneEnd, ( float )radius , false, 10 );
         }
