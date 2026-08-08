@@ -59,8 +59,7 @@ namespace VfxEditor.Ui.Export {
 
     // V4
     [Serializable]
-    public class PenumbraTestingMeta
-    {
+    public class PenumbraTestingMeta {
         public int FileVersion = 4;
         public string Identifier = "";
         public string LastWrite = "";
@@ -73,16 +72,14 @@ namespace VfxEditor.Ui.Export {
         public List<PenumbraTestingGroupStruct> Groups = [];
     }
     [Serializable]
-    public class PenumbraTestingDefaultDataStruct : PenumbraItemStruct
-    {
+    public class PenumbraTestingDefaultDataStruct : PenumbraItemStruct {
         public Dictionary<string, string> Files = [];
         public Dictionary<string, string> FileSwaps = [];
         public List<object> Manipulations = [];
     }
 
     [Serializable]
-    public class PenumbraTestingGroupStruct : PenumbraItemStruct
-    {
+    public class PenumbraTestingGroupStruct : PenumbraItemStruct {
         public string Type = "Single"; // Single / Multi
         public string Id = "";
         public string Name = "";
@@ -92,8 +89,7 @@ namespace VfxEditor.Ui.Export {
         public List<PenumbraTestingOptionsStruct> Options = [];
     }
     [Serializable]
-    public class PenumbraTestingOptionsStruct : PenumbraItemStruct
-    {
+    public class PenumbraTestingOptionsStruct : PenumbraItemStruct {
         public string Id = "";
         public string Name = "";
         public Dictionary<string, string> Files = [];
