@@ -41,22 +41,61 @@ namespace VfxEditor.Utils {
 
             try {
                 var modPath = Path.Join( baseModPath, itemName );
-                loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
+                char MetaFileVersion = File.ReadAllText( Path.Join( modPath, "meta.json" )).Split( "FileVersion")[1][3];
 
-                var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
-                foreach( var modFile in modFiles ) {
-                    try {
-                        var modFileName = Path.GetFileName( modFile ).Replace( ".json", "" );
-                        if( modFileName == "default_mod" ) {
-                            var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( modFile ) );
-                            if( mod.Files != null ) {
-                                var defaultFiles = new List<(string, string)>();
-                                AddToFiles( mod?.Files, defaultFiles, modPath, extensions );
-                                files["default_mod"] = defaultFiles;
+                if( MetaFileVersion == '3' ) {
+                    //V3
+                    loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
+                    var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
+                    foreach( var modFile in modFiles ) {
+                        try {
+                            var modFileName = Path.GetFileName( modFile ).Replace( ".json", "" );
+                            if( modFileName == "default_mod" ) {
+                                var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( modFile ) );
+                                if( mod.Files != null ) {
+                                    var defaultFiles = new List<(string, string)>();
+                                    AddToFiles( mod?.Files, defaultFiles, modPath, extensions );
+                                    files["default_mod"] = defaultFiles;
+                                }
+                            }
+                            else {
+                                var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( modFile ) );
+                                if( group.Options != null ) {
+                                    foreach( var option in group.Options.Where( x => x.Files != null ) ) {
+                                        var optionFiles = new List<(string, string)>();
+                                        AddToFiles( option?.Files, optionFiles, modPath, extensions );
+                                        files[$"{group.Name} / {option.Name}"] = optionFiles;
+                                    }
+                                }
                             }
                         }
-                        else {
-                            var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( modFile ) );
+                        catch( Exception e ) {
+                            Dalamud.Error( e, modFile );
+                        }
+                    }
+                }
+                else if ( MetaFileVersion == '4'  ) {
+                    //V4
+                    PenumbraTestingMeta tempMeta;
+                    tempMeta = JsonConvert.DeserializeObject<PenumbraTestingMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
+                    loaded.Meta = new PenumbraMeta();
+                    loaded.Meta.FileVersion = 3;
+                    loaded.Meta.Name = tempMeta.Name;
+                    loaded.Meta.Author = tempMeta.Author;
+                    loaded.Meta.Description = tempMeta.Description;
+                    loaded.Meta.Version= tempMeta.Version;
+                    // Need to parse Defaultdata.
+                    // add way to parse manipulations to add paths?
+
+                    if( tempMeta.DefaultData != null ) {
+                        if (tempMeta.DefaultData.Files.Count != 0) {
+                            var defaultFiles = new List<(string, string)>();
+                            AddToFiles( tempMeta.DefaultData?.Files, defaultFiles, modPath, extensions );
+                            files["default_mod"] = defaultFiles;
+                        }
+                    }
+                    if( tempMeta.Groups != null ) {
+                        foreach( var group in tempMeta.Groups ) {
                             if( group.Options != null ) {
                                 foreach( var option in group.Options.Where( x => x.Files != null ) ) {
                                     var optionFiles = new List<(string, string)>();
@@ -66,10 +105,8 @@ namespace VfxEditor.Utils {
                             }
                         }
                     }
-                    catch( Exception e ) {
-                        Dalamud.Error( e, modFile );
-                    }
                 }
+                else { Dalamud.Error( "Unable to read version " + loaded.Meta.FileVersion + " of penumbramodformat" ); }
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error reading Penumbra mods" );
