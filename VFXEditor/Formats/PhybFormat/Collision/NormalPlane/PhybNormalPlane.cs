@@ -32,13 +32,16 @@ namespace VfxEditor.PhybFormat.Collision.NormalPlane {
             var offset = new Vector3( BoneOffset.Value.X, BoneOffset.Value.Y, BoneOffset.Value.Z );
             var pos = Vector3Helper.TransformCoordinate( offset, bone.BindPose );
 
-            var normal = Vector3.Normalize(new Vector3( Normal.Value.X, Normal.Value.Y, Normal.Value.Z ));
+            var normalVec = new Vector3( Normal.Value.X, Normal.Value.Y, Normal.Value.Z );
+            if( normalVec.Length() < 0.0001f ) return; // degenerate normal, cannot draw
+            var normal = Vector3.Normalize( normalVec );
             var tangent = Vector3.Cross( normal, Vector3.UnitY );
-            if( tangent.Length() == 0 ) {
+            if( tangent.Length() < 0.0001f ) {
                 tangent = Vector3.Cross( normal, Vector3.UnitX );
+                if( tangent.Length() < 0.0001f ) return;
             }
 
-            meshes.Collision.AddBox( pos, normal, Vector3.Normalize(tangent), 0.5f, 0.5f, Thickness.Value );
+            meshes.Collision.AddBox( pos, normal, Vector3.Normalize( tangent ), 0.5f, 0.5f, Thickness.Value );
         }
     }
 }

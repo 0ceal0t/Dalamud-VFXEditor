@@ -1,6 +1,7 @@
 using HelixToolkit.Geometry;
 using HelixToolkit.SharpDX;
 using HelixToolkit.SharpDX.Core;
+using System;
 using System.Linq;
 using VfxEditor.Interop.Havok.Ui;
 
@@ -20,20 +21,26 @@ namespace VfxEditor.PhybFormat.Skeleton {
             File.PhysicsUpdated = false;
             if( Bones?.BoneList.Count == 0 ) return;
 
-            MeshBuilders meshes = new() {
-                Collision = new MeshBuilder( true, false ),
-                Simulation = new MeshBuilder( true, false ),
-                Spring = new MeshBuilder( true, false )
-            };
+            try {
+                MeshBuilders meshes = new() {
+                    Collision = new MeshBuilder( true, false ),
+                    Simulation = new MeshBuilder( true, false ),
+                    Spring = new MeshBuilder( true, false )
+                };
 
-            File.AddPhysicsObjects( meshes, Bones.BoneMatrixes );
-            Plugin.DirectXManager.BoneNameRenderer.SetWireFrame(
-                RenderId,
-                Instance,
-                meshes.Collision.ToMeshGeometry3D(),
-                meshes.Simulation.ToMeshGeometry3D(),
-                meshes.Spring.ToMeshGeometry3D()
-            );
+                File.AddPhysicsObjects( meshes, Bones.BoneMatrixes );
+                Plugin.DirectXManager.BoneNameRenderer.SetWireFrame(
+                    RenderId,
+                    Instance,
+                    meshes.Collision.ToMeshGeometry3D(),
+                    meshes.Simulation.ToMeshGeometry3D(),
+                    meshes.Spring.ToMeshGeometry3D()
+                );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Could not update physics render data" );
+                return;
+            }
 
             var boneList = Bones.BoneList.Select( x => x.Name ).ToList();
             if( File.Extended != null ) {
