@@ -21,7 +21,7 @@ namespace VfxEditor.Select.Tabs.Character {
 
         public override void LoadSelection( CharacterRow item, out SelectedMtrl loaded ) {
             loaded = new() {
-                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "etc_a", "iri_a"], item.Data.FaceToIcon ),
+                Faces = GetPart( "Face", CharacterPart.Face, item, item.Data.FaceOptions, ["fac_a", "fac_b", "fac_c", "etc_a", "etc_b", "etc_c", "iri_a"], item.Data.FaceToIcon ),
                 Bodies = GetPart( "Body", CharacterPart.Body, item, item.Data.BodyOptions, ["a"] ),
                 Hairs = GetPart( "Hair", CharacterPart.Hair, item, item.Data.HairOptions, ["hir_a", "acc_b"], item.Data.HairToIcon ),
                 Ears = GetPart( "Ear", CharacterPart.Ear, item, item.Data.EarOptions, ["fac_a", "a"], item.Data.FeatureToIcon ),
