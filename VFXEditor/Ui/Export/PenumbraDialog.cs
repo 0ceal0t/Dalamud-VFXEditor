@@ -16,7 +16,7 @@ using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Export {
     // ==== FOR READING PENUMBRA JSONS =====
-
+    // V3
     [Serializable]
     public class PenumbraItemStruct {
         public string Name = "";
@@ -55,6 +55,51 @@ namespace VfxEditor.Ui.Export {
         public string Website = "";
         public List<string> ModTags = [];
     }
+
+
+    // V4
+    [Serializable]
+    public class PenumbraTestingMeta {
+        public int FileVersion = 4;
+        public string Identifier = "";
+        public string LastWrite = "";
+        public string Name = "";
+        public string Author = "";
+        public string Description = "";
+        public string Version = "";
+        public string Website = "";
+        public PenumbraTestingDefaultDataStruct DefaultData = new PenumbraTestingDefaultDataStruct();
+        public List<PenumbraTestingGroupStruct> Groups = [];
+    }
+    [Serializable]
+    public class PenumbraTestingDefaultDataStruct : PenumbraItemStruct {
+        public Dictionary<string, string> Files = [];
+        public Dictionary<string, string> FileSwaps = [];
+        public List<object> Manipulations = [];
+    }
+
+    [Serializable]
+    public class PenumbraTestingGroupStruct : PenumbraItemStruct {
+        public string Type = "Single"; // Single / Multi
+        public string Id = "";
+        public string Name = "";
+        public string Description = "";
+        public int Priority = 0;
+        public uint DefaultSettings = 0; // Bitmask of 32 defaults
+        public List<PenumbraTestingOptionsStruct> Options = [];
+    }
+    [Serializable]
+    public class PenumbraTestingOptionsStruct : PenumbraItemStruct {
+        public string Id = "";
+        public string Name = "";
+        public Dictionary<string, string> Files = [];
+        public Dictionary<string, string> FileSwaps = [];
+        public List<object> Manipulations = [];
+    }
+
+
+
+
 
     // ======= FOR WORKSPACE =======
 
