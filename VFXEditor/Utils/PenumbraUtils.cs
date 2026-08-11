@@ -41,7 +41,7 @@ namespace VfxEditor.Utils {
 
             try {
                 var modPath = Path.Join( baseModPath, itemName );
-                int MetaFileVersion = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) ).FileVersion; ;
+                int MetaFileVersion = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) ).FileVersion;
 
                 if( MetaFileVersion == 3 ) {
                     //V3
