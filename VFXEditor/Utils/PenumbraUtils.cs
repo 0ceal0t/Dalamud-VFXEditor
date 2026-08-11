@@ -41,9 +41,9 @@ namespace VfxEditor.Utils {
 
             try {
                 var modPath = Path.Join( baseModPath, itemName );
-                char MetaFileVersion = File.ReadAllText( Path.Join( modPath, "meta.json" )).Split( "FileVersion")[1][3];
+                int MetaFileVersion = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) ).FileVersion; ;
 
-                if( MetaFileVersion == '3' ) {
+                if( MetaFileVersion == 3 ) {
                     //V3
                     loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
                     var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
@@ -74,7 +74,7 @@ namespace VfxEditor.Utils {
                         }
                     }
                 }
-                else if ( MetaFileVersion == '4'  ) {
+                else if ( MetaFileVersion == 4  ) {
                     //V4
                     PenumbraTestingMeta tempMeta;
                     tempMeta = JsonConvert.DeserializeObject<PenumbraTestingMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
@@ -106,7 +106,7 @@ namespace VfxEditor.Utils {
                         }
                     }
                 }
-                else { Dalamud.Error( "Unable to read version " + loaded.Meta.FileVersion + " of penumbramodformat" ); }
+                else { Dalamud.Error( "Unable to read version " + MetaFileVersion + " of penumbramodformat" ); }
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error reading Penumbra mods" );
