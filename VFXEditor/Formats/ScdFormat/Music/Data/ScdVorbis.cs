@@ -1,4 +1,4 @@
-using NAudio.Vorbis;
+using NAudio.SoundFile;
 using NAudio.Wave;
 using NVorbis;
 using System;
@@ -141,7 +141,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         public override WaveStream GetStream() {
             var ms = new MemoryStream( Data, 0, Data.Length, false );
-            return new VorbisWaveReader( ms );
+            return new SoundFileReader( ms );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -173,9 +173,15 @@ namespace VfxEditor.ScdFormat.Music.Data {
         // =======================
 
         public static ScdAudioEntry ImportOgg( string path, ScdAudioEntry oldEntry ) {
-            using var oggReader = new VorbisReader( path );
-            var loopStartTag = oggReader.Tags.GetTagSingle( "LoopStart" );
-            var loopEndTag = oggReader.Tags.GetTagSingle( "LoopEnd" );
+            using var oggReader = new SoundFileReader( path );
+
+            string? loopStartTag = null;
+            string? loopEndTag = null;
+            using( var vorbisDetector = new VorbisReader( path ) ) {
+                // NVorbis stores all arbitrary tags safely inside the Comments property
+                loopStartTag = vorbisDetector.Tags.GetTagSingle( "LoopStart" );
+                loopEndTag = vorbisDetector.Tags.GetTagSingle( "LoopEnd" );
+            }
 
             var oggData = File.ReadAllBytes( path );
 
@@ -183,8 +189,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
             var entry = new ScdAudioEntry(
                 oldEntry,
                 0, // data length is a placeholder
-                oggReader.Channels,
-                oggReader.SampleRate,
+                oggReader.WaveFormat.Channels,
+                oggReader.WaveFormat.SampleRate,
                 SscfWaveFormat.Vorbis
             );
 

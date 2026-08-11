@@ -19,7 +19,7 @@ namespace VfxEditor.ScdFormat {
         private WaveStream RightStream;
         private IWaveProvider Volume;
         private MultiplexingWaveProvider LeftRightCombined;
-        private WasapiOut CurrentOutput;
+        private IWavePlayer CurrentOutput;
 
         private double TotalTime => LeftStream?.TotalTime == null ? 0 : LeftStream.TotalTime.TotalSeconds - 0.01f;
         private double CurrentTime => LeftStream?.CurrentTime == null ? 0 : LeftStream.CurrentTime.TotalSeconds;
@@ -223,7 +223,12 @@ namespace VfxEditor.ScdFormat {
                     Volume = pcmVolume;
                 }
 
-                CurrentOutput = new WasapiOut();
+                // Build and configure the player
+                CurrentOutput = new WasapiPlayerBuilder()
+                    .WithSharedMode()
+                    .Build();
+
+                // Connect your audio source and start playback
                 CurrentOutput.Init( Volume );
                 CurrentOutput.Play();
             }

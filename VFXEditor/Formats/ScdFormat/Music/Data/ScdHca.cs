@@ -6,7 +6,6 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Formats.ScdFormat.Utils;
-using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat.Music.Data {
     public class ScdHca : ScdAudioData {
