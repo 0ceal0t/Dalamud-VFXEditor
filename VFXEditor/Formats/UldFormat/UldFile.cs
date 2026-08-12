@@ -4,6 +4,7 @@ using Lumina.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
@@ -16,7 +17,7 @@ using VfxEditor.UldFormat.Widget;
 using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat {
-    public class UldFile : FileManagerFile {
+    public class UldFile : FileManagerFile, IRenamableFile {
         private readonly UldMainHeader Header;
         private readonly UldAtkHeader OffsetsHeader;
         private readonly UldAtkHeader2 OffsetsHeader2;

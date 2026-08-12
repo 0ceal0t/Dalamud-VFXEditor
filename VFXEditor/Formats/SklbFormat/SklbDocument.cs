@@ -5,33 +5,15 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.SklbFormat {
-    public partial class SklbDocument : FileManagerDocument<SklbFile, WorkspaceMetaBasic> {
+    public partial class SklbDocument : FileManagerHavokDocument<SklbFile> {
         public override string Id => "Sklb";
         public override string Extension => "sklb";
 
-        private string HkxTemp => WriteLocation.Replace( ".sklb", "_temp.hkx" );
-
         public SklbDocument( SklbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public SklbDocument( SklbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-        }
+        public SklbDocument( SklbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override SklbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
-
-        public override void Dispose() {
-            base.Dispose();
-            System.IO.File.Delete( HkxTemp );
-        }
 
         protected override void DrawExtraColumn() {
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 126 - 28 - ImGui.GetStyle().FramePadding.X );

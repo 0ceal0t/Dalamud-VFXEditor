@@ -11,7 +11,7 @@ using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.AvfxFormat {
-    public class AvfxDocument : FileManagerDocument<AvfxFile, WorkspaceMetaRenamed> {
+    public class AvfxDocument : FileManagerRenamedDocument<AvfxFile> {
         public override string Id => "Vfx";
         public override string Extension => "avfx";
 
@@ -20,10 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         public AvfxDocument( AvfxManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-            File?.ReadRenamingMap( data.Renaming );
-        }
+        public AvfxDocument( AvfxManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : base( manager, writeLocation, localPath, data ) { }
 
         public override void CheckKeybinds() {
             base.CheckKeybinds();
@@ -53,16 +50,6 @@ namespace VfxEditor.AvfxFormat {
 
         public void OpenTemplate( string path ) =>
             SetSource( new SelectResult( SelectResultType.Local, "", "[TEMPLATE]", Path.Combine( Plugin.RootLocation, "Files", path ) ) );
-
-        public override WorkspaceMetaRenamed GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Renaming = File.GetRenamingMap(),
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
 
         // ========= DRAWING =============
 

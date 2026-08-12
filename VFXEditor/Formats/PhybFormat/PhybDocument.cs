@@ -3,25 +3,14 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PhybFormat {
-    public class PhybDocument : FileManagerDocument<PhybFile, WorkspaceMetaBasic> {
+    public class PhybDocument : FileManagerBasicDocument<PhybFile> {
         public override string Id => "Phyb";
         public override string Extension => "phyb";
 
         public PhybDocument( PhybManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public PhybDocument( PhybManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-        }
+        public PhybDocument( PhybManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override PhybFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
     }
 }

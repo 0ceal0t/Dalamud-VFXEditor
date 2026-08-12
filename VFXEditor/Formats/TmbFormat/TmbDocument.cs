@@ -7,7 +7,7 @@ using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
 namespace VfxEditor.TmbFormat {
-    public class TmbDocument : FileManagerDocument<TmbFile, WorkspaceMetaBasic> {
+    public class TmbDocument : FileManagerBasicDocument<TmbFile> {
         public override string Id => "Tmb";
         public override string Extension => "tmb";
 
@@ -16,21 +16,11 @@ namespace VfxEditor.TmbFormat {
 
         public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
+        public TmbDocument( TmbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) {
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
         protected override TmbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
 
         protected override void DrawExtraColumn() {
             using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
