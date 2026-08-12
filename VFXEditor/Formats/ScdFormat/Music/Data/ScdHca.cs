@@ -29,7 +29,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         private readonly DecodeParams DecodeParams = DecodeParams.Default;
         private readonly HcaInfo HcaInfo;
-        private uint SamplesPerBlock => HcaInfo.ChannelCount * 0x80 * 8;
+        private uint SamplesPerBlock => 0x80 * 8; // fixed 1024 samples/block, independent of channel count
 
         private readonly byte[] Unk1 = [ 0x20, 0x18 ];
         private readonly byte[] Unk2 = [ 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 ];
@@ -90,24 +90,20 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( RawData );
         }
 
-        public override int BytesToSamples( int bytes ) {
-            var blockCount = bytes / HcaInfo.BlockSize;
-            return ( int )( blockCount * SamplesPerBlock );
-        }
+        // NOTE: for HCA, the SCD entry's LoopStart/LoopEnd are HCA block indices, not byte offsets
+        // (matches the block indices found in the HCA file's own native "loop" chunk)
+        public override int RawToSamples( int blocks ) => ( int )( blocks * SamplesPerBlock );
 
-        public override int SamplesToBytes( int samples ) {
-            var targetBlock = ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
-            return ( int )( targetBlock * HcaInfo.BlockSize );
-        }
+        public override int SamplesToRaw( int samples ) => ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
 
-        public override int TimeToBytes( float time ) {
+        public override int TimeToRaw( float time ) {
             var samples = ( int )Math.Round( time * HcaInfo.SamplingRate, MidpointRounding.AwayFromZero );
-            return SamplesToBytes( samples );
+            return SamplesToRaw( samples );
         }
 
-        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / HcaInfo.SamplingRate;
+        public override float RawToTime( int raw ) => ( float )RawToSamples( raw ) / HcaInfo.SamplingRate;
 
-        public override Vector2 GetLoopTime() => new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
+        public override Vector2 GetLoopTime() => new( RawToTime( Entry.LoopStart ), RawToTime( Entry.LoopEnd ) );
 
         public override int GetSubInfoSize() => HeaderSize + 0x18;
 
@@ -156,8 +152,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
             // HCA files can carry their own native loop chunk (block indices), mirroring how OGG loop tags work
             if( decoder.HcaInfo.LoopFlag ) {
-                entry.LoopStart = ( int )( decoder.HcaInfo.LoopStart * decoder.HcaInfo.BlockSize );
-                entry.LoopEnd = ( int )( decoder.HcaInfo.LoopEnd * decoder.HcaInfo.BlockSize );
+                entry.LoopStart = ( int )decoder.HcaInfo.LoopStart;
+                entry.LoopEnd = ( int )decoder.HcaInfo.LoopEnd;
             }
 
             return entry;

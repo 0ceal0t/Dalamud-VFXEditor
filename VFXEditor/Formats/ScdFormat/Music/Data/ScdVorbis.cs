@@ -94,6 +94,11 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 Data = ms.ToArray();
             }
             if( EncodeMode == 0x2003 ) ScdUtils.XorDecodeFromTableVorbis( Data, DecodedData.Length );
+
+            // SeekTable (byte offsets) was just loaded verbatim from the file; derive the parallel
+            // sample-count array by re-scanning the OGG page granule positions, matching them up
+            // by offset instead of rebuilding SeekTable itself (which would duplicate it)
+            PopulateSeekTableSamples();
         }
 
         private void PopulateSeekTable() {
@@ -123,7 +128,28 @@ namespace VfxEditor.ScdFormat.Music.Data {
             }
         }
 
-        public override int SamplesToBytes( int samples ) {
+        private void PopulateSeekTableSamples() {
+            var candidates = Locate( Data, PagePattern, 0, false );
+            if( candidates == null ) return;
+
+            using var ms = new MemoryStream( Data );
+            using var dataReader = new BinaryReader( ms );
+
+            var samplesByPos = new Dictionary<int, int>();
+            foreach( var offset in candidates ) {
+                var pos = offset - VorbisHeaderSize;
+                if( pos < 0 ) continue;
+                dataReader.BaseStream.Position = offset + 6;
+                samplesByPos[pos] = dataReader.ReadInt32();
+            }
+
+            foreach( var pos in SeekTable ) {
+                samplesByPos.TryGetValue( pos, out var samples );
+                SeekTableSamples.Add( samples );
+            }
+        }
+
+        public override int SamplesToRaw( int samples ) {
             if( SeekTable.Count == 0 ) return 0;
             for( var i = 0; i < SeekTable.Count; i++ ) {
                 if( SeekTableSamples[i] > samples ) return i == 0 ? 0 : SeekTable[i - 1];
@@ -131,21 +157,21 @@ namespace VfxEditor.ScdFormat.Music.Data {
             return Data.Length - VorbisHeaderSize;
         }
 
-        public override int BytesToSamples( int bytes ) {
+        public override int RawToSamples( int raw ) {
             if( SeekTable.Count == 0 ) return 0;
             for( var i = 0; i < SeekTable.Count; i++ ) {
-                if( SeekTable[i] > bytes ) return i == 0 ? 0 : SeekTableSamples[i - 1];
+                if( SeekTable[i] > raw ) return i == 0 ? 0 : SeekTableSamples[i - 1];
             }
             return SeekTableSamples[^1];
         }
 
-        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
+        public override int TimeToRaw( float time ) => SamplesToRaw( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
 
-        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / Entry.SampleRate;
+        public override float RawToTime( int raw ) => ( float )RawToSamples( raw ) / Entry.SampleRate;
 
         public override Vector2 GetLoopTime() {
             if( Entry.LoopStart == 0 && Entry.LoopEnd == 0 ) return new( 0, 0 );
-            return new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
+            return new( RawToTime( Entry.LoopStart ), RawToTime( Entry.LoopEnd ) );
         }
 
         public override WaveStream GetStream() {
@@ -206,10 +232,10 @@ namespace VfxEditor.ScdFormat.Music.Data {
             // Create new data
             var vorbis = new ScdVorbis( oggData, entry );
             if( !string.IsNullOrEmpty( loopStartTag ) && int.TryParse( loopStartTag, out var loopStartSamples ) ) {
-                entry.LoopStart = vorbis.SamplesToBytes( loopStartSamples );
+                entry.LoopStart = vorbis.SamplesToRaw( loopStartSamples );
             }
             if( !string.IsNullOrEmpty( loopEndTag ) && int.TryParse( loopEndTag, out var loopEndSamples ) ) {
-                entry.LoopEnd = vorbis.SamplesToBytes( loopEndSamples );
+                entry.LoopEnd = vorbis.SamplesToRaw( loopEndSamples );
             }
 
             entry.Data = vorbis;

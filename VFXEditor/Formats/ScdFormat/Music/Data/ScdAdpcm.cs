@@ -39,22 +39,23 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( Data );
         }
 
-        // MS-ADPCM blocks carry predictor state, so loop points must snap to a block boundary to decode correctly
-        public override int BytesToSamples( int bytes ) {
-            var block = bytes / Format.BlockAlign;
+        // NOTE: for MS-ADPCM, the SCD entry's LoopStart/LoopEnd are raw PCM sample indices, not byte
+        // offsets into the compressed stream (confirmed against real game data: stored LoopEnd values
+        // exceed the entry's DataLength, and LoopStart values are exact multiples of SamplesPerBlock)
+        public override int RawToSamples( int samples ) => samples;
+
+        // MS-ADPCM blocks carry predictor state, so newly-set loop points must snap to a block
+        // boundary to decode correctly
+        public override int SamplesToRaw( int samples ) {
+            var block = ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
             return block * SamplesPerBlock;
         }
 
-        public override int SamplesToBytes( int samples ) {
-            var block = ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
-            return block * Format.BlockAlign;
-        }
+        public override int TimeToRaw( float time ) => SamplesToRaw( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
 
-        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
+        public override float RawToTime( int raw ) => ( float )RawToSamples( raw ) / Entry.SampleRate;
 
-        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / Entry.SampleRate;
-
-        public override Vector2 GetLoopTime() => new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
+        public override Vector2 GetLoopTime() => new( RawToTime( Entry.LoopStart ), RawToTime( Entry.LoopEnd ) );
 
         public override int GetSubInfoSize() => WaveHeader.Length;
 
