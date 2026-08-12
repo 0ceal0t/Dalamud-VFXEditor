@@ -37,7 +37,7 @@ namespace VfxEditor.Ui.Export.Categories {
                 var items = Group.GetDocuments();
                 if( !items.Any() ) return;
 
-                using var table = ImRaii.Table( "##Table", 3, ImGuiTableFlags.RowBg );
+                using var table = ImRaii.Table( "##Table", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.NoSavedSettings );
                 if( !table ) return;
 
                 ImGui.TableSetupColumn( "##Check", ImGuiTableColumnFlags.WidthFixed, 20 );

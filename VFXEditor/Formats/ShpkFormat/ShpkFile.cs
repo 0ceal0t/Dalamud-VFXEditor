@@ -385,7 +385,7 @@ namespace VfxEditor.Formats.ShpkFormat {
             using var _ = ImRaii.PushId( "MaterialParameters" );
 
             ImGui.Dummy( Vector2.One );
-            using var table = ImRaii.Table( "Table", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY, new( ImGui.GetContentRegionAvail().X, 200 ) );
+            using var table = ImRaii.Table( "Table", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY | ImGuiTableFlags.NoSavedSettings, new( ImGui.GetContentRegionAvail().X, 200 ) );
             if( !table ) return;
 
             using( var font = ImRaii.PushFont( UiBuilder.MonoFont ) ) {
