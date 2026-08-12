@@ -191,7 +191,7 @@ namespace VfxEditor.Interop {
                     null,
                     0
                 );
-            if( decRef && resource->RefCount > 0 ) resource->DecRef();
+            if( resource != null && decRef && resource->RefCount > 0 ) resource->DecRef();
 
             return resource;
         }

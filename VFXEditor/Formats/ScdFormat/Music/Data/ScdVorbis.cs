@@ -103,6 +103,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         private void PopulateSeekTable() {
             var candidates = Locate( Data, PagePattern, 0, false );
+            if( candidates == null ) return;
+
             using var ms = new MemoryStream( Data );
             using var dataReader = new BinaryReader( ms );
             foreach( var offset in candidates ) {

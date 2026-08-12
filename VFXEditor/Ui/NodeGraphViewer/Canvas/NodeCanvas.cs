@@ -445,7 +445,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     ImGui.GetWindowDrawList().AddText(
                         nodePosition.Value + new Vector2( 0, -30 ) * GetScaling(),
                         ImGui.ColorConvertFloat4ToU32( NodeUtils.Colors.NodeText ),
-                        $"({tNodeRelaPos.Value.X / 10:F1}, {tNodeRelaPos.Value.Y / 2:F1})" );
+                        $"({tNodeRelaPos.Value.X / 10:F1}, {tNodeRelaPos.Value.Y / 10:F1})" );
 
                 // Draw conn tether to cursor
                 if( PendingConnection?.Node == node ) {
