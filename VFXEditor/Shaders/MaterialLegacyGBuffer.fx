@@ -36,12 +36,12 @@ PS_IN VS(VS_IN input)
 {
     PS_IN output = (PS_IN)0;
     
-    float4 worldPosition = mul(ModelMatrix, float4(input.pos.xyz, 1.0f));
-    float4 viewModelPosition = mul(ViewMatrix, worldPosition);
-    output.Position = mul(ProjectionMatrix, viewModelPosition);
+    float4 worldPosition = mul(float4(input.pos.xyz, 1.0f), ModelMatrix);
+    float4 viewModelPosition = mul(worldPosition, ViewMatrix);
+    output.Position = mul(viewModelPosition, ProjectionMatrix);
     output.WorldPos = worldPosition.xyz;
-    
-    float3x3 normalMatrix = (float3x3) NormalMatrix;
+
+    float3x3 normalMatrix = transpose((float3x3) NormalMatrix);
     output.Normal = mul(normalMatrix, normalize(input.norm.xyz));
     output.Tangent = mul(normalMatrix, normalize(input.tangent.xyz));
     output.Bitangent = mul(normalMatrix, normalize(input.bitangent.xyz));
@@ -77,6 +77,7 @@ GBUFFER PS(PS_IN input)
     
     GBUFFER result = (GBUFFER) 0;
     result.Position.xy = input.Position.xy;
+    result.Position.z = input.Position.z / input.Position.w;
     result.Normal = ( float4(N, 1) + 1.0f ) / 2.0f;
     result.Color = finalColor;
     result.UV = float4(input.TexCoords, 0, 0);

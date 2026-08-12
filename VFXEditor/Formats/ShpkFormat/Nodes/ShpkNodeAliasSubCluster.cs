@@ -37,8 +37,10 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
             writer.Write( (ushort) Aliases.Count );
 
             Aliases.ForEach( x => x.Write( writer ) );
-            for( var i = 0; i < ExtraData.Count; i++ ) {
-                writer.Write( ExtraData[i] );
+
+            var padding = DATA_CAPACITY - ( Aliases.Count * 2 );
+            for( var i = 0; i < padding; i++ ) {
+                writer.Write( i < ExtraData.Count ? ExtraData[i] : 0u );
             }
         }
 

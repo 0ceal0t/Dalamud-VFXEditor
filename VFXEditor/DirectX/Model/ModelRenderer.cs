@@ -138,8 +138,8 @@ namespace VfxEditor.DirectX.Model {
                 ModelMatrix = world,
                 ViewProjectionMatrix = viewProj,
                 CubeMatrix = cubeProj,
-                ProjectionMatrix = instance.ProjMatrix,
-                ViewMatrix = instance.ViewMatrix,
+                ProjectionMatrix = Matrix4x4.Transpose( instance.ProjMatrix ),
+                ViewMatrix = Matrix4x4.Transpose( instance.ViewMatrix ),
                 NormalMatrix = Matrix4x4.Transpose( instance.LocalMatrix.Inverted() )
             };
 
