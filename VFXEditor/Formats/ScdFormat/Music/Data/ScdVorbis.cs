@@ -22,6 +22,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         private float SeekStep = 0.1f;
         private readonly List<int> SeekTable = []; // how many bytes to get to each `SeekStep`
+        private readonly List<int> SeekTableSamples = []; // in-memory only; actual sample count at each SeekTable entry, parallel to SeekTable
 
         private readonly int VorbisHeaderSize = 0;
         private readonly byte[] EncodedData;
@@ -112,31 +113,39 @@ namespace VfxEditor.ScdFormat.Music.Data {
                     Dalamud.Log( $"SeekStep is now: {SeekStep} seconds" );
                 }
 
-                if( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) SeekTable.Add( pos );
+                // Keep filling every intervening bucket (not just one) so that a single page
+                // spanning more than one SeekStep interval doesn't leave the bucket index
+                // drifting out of sync with the real elapsed time from that point on
+                while( ( ( SeekStep * SeekTable.Count ) - maxTime ) < 0.02f ) {
+                    SeekTable.Add( pos );
+                    SeekTableSamples.Add( maxSamples );
+                }
             }
         }
 
-        public override int TimeToBytes( float time ) {
+        public override int SamplesToBytes( int samples ) {
             if( SeekTable.Count == 0 ) return 0;
             for( var i = 0; i < SeekTable.Count; i++ ) {
-                if( i * SeekStep > time ) return SeekTable[i - 1];
+                if( SeekTableSamples[i] > samples ) return i == 0 ? 0 : SeekTable[i - 1];
             }
             return Data.Length - VorbisHeaderSize;
         }
 
-        public override int SamplesToBytes( int samples ) => TimeToBytes( samples / Entry.SampleRate );
-
-        public double BytesToTime( int bytes ) {
+        public override int BytesToSamples( int bytes ) {
             if( SeekTable.Count == 0 ) return 0;
             for( var i = 0; i < SeekTable.Count; i++ ) {
-                if( SeekTable[i] > bytes ) return SeekStep * ( i - 1 );
+                if( SeekTable[i] > bytes ) return i == 0 ? 0 : SeekTableSamples[i - 1];
             }
-            return SeekTable.Count * SeekStep;
+            return SeekTableSamples[^1];
         }
+
+        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
+
+        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / Entry.SampleRate;
 
         public override Vector2 GetLoopTime() {
             if( Entry.LoopStart == 0 && Entry.LoopEnd == 0 ) return new( 0, 0 );
-            return new( ( float )BytesToTime( Entry.LoopStart ), ( float )BytesToTime( Entry.LoopEnd ) );
+            return new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
         }
 
         public override WaveStream GetStream() {

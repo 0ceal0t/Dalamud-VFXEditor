@@ -12,7 +12,6 @@ namespace VfxEditor.ScdFormat.Music.Data {
         // Decoding based on Wintermute's implementation
 
 
-        // TODO: how is looping handled?
         // TODO: CRC right before the end of the header + data
         /*
             if you crc the whole header
@@ -91,21 +90,22 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( RawData );
         }
 
+        public override int BytesToSamples( int bytes ) {
+            var blockCount = bytes / HcaInfo.BlockSize;
+            return ( int )( blockCount * SamplesPerBlock );
+        }
+
         public override int SamplesToBytes( int samples ) {
-            var targetBlock = (int) Math.Round( (float) samples / SamplesPerBlock );
+            var targetBlock = ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
             return ( int )( targetBlock * HcaInfo.BlockSize );
         }
 
         public override int TimeToBytes( float time ) {
-            var samples = time * HcaInfo.SamplingRate;
-            return SamplesToBytes( ( int )samples  );
+            var samples = ( int )Math.Round( time * HcaInfo.SamplingRate, MidpointRounding.AwayFromZero );
+            return SamplesToBytes( samples );
         }
 
-        public float BytesToTime( int bytes ) {
-            var blockCount = (float) bytes / HcaInfo.BlockSize;
-            var samples = blockCount * SamplesPerBlock;
-            return samples / HcaInfo.SamplingRate;
-        }
+        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / HcaInfo.SamplingRate;
 
         public override Vector2 GetLoopTime() => new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
 
@@ -153,6 +153,13 @@ namespace VfxEditor.ScdFormat.Music.Data {
             );
 
             entry.Data = new ScdHca( data, decoder.HcaInfo, entry );
+
+            // HCA files can carry their own native loop chunk (block indices), mirroring how OGG loop tags work
+            if( decoder.HcaInfo.LoopFlag ) {
+                entry.LoopStart = ( int )( decoder.HcaInfo.LoopStart * decoder.HcaInfo.BlockSize );
+                entry.LoopEnd = ( int )( decoder.HcaInfo.LoopEnd * decoder.HcaInfo.BlockSize );
+            }
+
             return entry;
         }
     }

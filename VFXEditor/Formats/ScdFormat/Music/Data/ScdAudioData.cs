@@ -14,9 +14,15 @@ namespace VfxEditor.ScdFormat.Music.Data {
 
         public abstract WaveStream GetStream();
 
+        // Bytes are the SCD entry's own loop-point unit; samples are the unit used by
+        // OGG loop tags. Both are exact/precise; time (seconds) is a derived display unit.
         public abstract int SamplesToBytes( int samples );
 
+        public abstract int BytesToSamples( int bytes );
+
         public abstract int TimeToBytes( float time );
+
+        public abstract float BytesToTime( int bytes );
 
         public abstract Vector2 GetLoopTime();
 

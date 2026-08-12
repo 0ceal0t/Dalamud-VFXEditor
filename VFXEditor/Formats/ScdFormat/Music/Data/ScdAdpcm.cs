@@ -1,4 +1,5 @@
 using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -11,10 +12,14 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public readonly byte[] WaveHeader;
         public readonly byte[] Data;
 
+        // Standard MS-ADPCM block-align/samples-per-block relationship (4 bits/sample, 7-byte header per channel)
+        private readonly int SamplesPerBlock;
+
         public ScdAdpcm( WaveFormat format, byte[] waveHeader, byte[] data, ScdAudioEntry entry ) : base( entry ) {
             Format = format;
             WaveHeader = waveHeader;
             Data = data;
+            SamplesPerBlock = ( ( Format.BlockAlign - ( 7 * Format.Channels ) ) * 2 / Format.Channels ) + 2;
         }
 
         public ScdAdpcm( BinaryReader reader, int headerSize, ScdAudioEntry entry ) : base( entry ) {
@@ -24,6 +29,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             using var ms = new MemoryStream( WaveHeader );
             using var br = new BinaryReader( ms );
             Format = WaveFormat.FromFormatChunk( br, WaveHeader.Length );
+            SamplesPerBlock = ( ( Format.BlockAlign - ( 7 * Format.Channels ) ) * 2 / Format.Channels ) + 2;
         }
 
         public override WaveStream GetStream() => new RawSourceWaveStream( new MemoryStream( Data, 0, Data.Length, false ), Format );
@@ -33,11 +39,20 @@ namespace VfxEditor.ScdFormat.Music.Data {
             writer.Write( Data );
         }
 
-        public override int SamplesToBytes( int samples ) => TimeToBytes( samples / Entry.SampleRate );
+        // MS-ADPCM blocks carry predictor state, so loop points must snap to a block boundary to decode correctly
+        public override int BytesToSamples( int bytes ) {
+            var block = bytes / Format.BlockAlign;
+            return block * SamplesPerBlock;
+        }
 
-        public override int TimeToBytes( float time ) => ( int )( Format.AverageBytesPerSecond * time );
+        public override int SamplesToBytes( int samples ) {
+            var block = ( int )Math.Round( ( float )samples / SamplesPerBlock, MidpointRounding.AwayFromZero );
+            return block * Format.BlockAlign;
+        }
 
-        public float BytesToTime( int bytes ) => ( float )bytes / Format.AverageBytesPerSecond;
+        public override int TimeToBytes( float time ) => SamplesToBytes( ( int )Math.Round( time * Entry.SampleRate, MidpointRounding.AwayFromZero ) );
+
+        public override float BytesToTime( int bytes ) => ( float )BytesToSamples( bytes ) / Entry.SampleRate;
 
         public override Vector2 GetLoopTime() => new( BytesToTime( Entry.LoopStart ), BytesToTime( Entry.LoopEnd ) );
 
