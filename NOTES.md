@@ -1,9 +1,6 @@
 # Notes
 
 ## TODO
-- [ ] Fix loop generation for scd files
-
-
 - [ ] Fix 7.4 `.mdl` face stuff
 - [ ] Fix DT material stuff
 - [ ] Add gizmo to `.sklb` bones
