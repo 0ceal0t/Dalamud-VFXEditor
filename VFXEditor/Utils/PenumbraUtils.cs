@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,31 +42,24 @@ namespace VfxEditor.Utils {
 
             try {
                 var modPath = Path.Join( baseModPath, itemName );
-                char MetaFileVersion = File.ReadAllText( Path.Join( modPath, "meta.json" )).Split( "FileVersion")[1][3];
+                var metaText = File.ReadAllText( Path.Join( modPath, "meta.json" ) );
+                var fileVersion = JObject.Parse( metaText )["FileVersion"]?.Value<int>() ?? 3;
 
-                if( MetaFileVersion == '3' ) {
-                    //V3
-                    loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
+                if( fileVersion <= 3 ) {
+                    // Legacy format: meta.json + separate default_mod.json/group_*.json files
+                    loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( metaText );
                     var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
                     foreach( var modFile in modFiles ) {
                         try {
                             var modFileName = Path.GetFileName( modFile ).Replace( ".json", "" );
                             if( modFileName == "default_mod" ) {
                                 var mod = JsonConvert.DeserializeObject<PenumbraModStruct>( File.ReadAllText( modFile ) );
-                                if( mod.Files != null ) {
-                                    var defaultFiles = new List<(string, string)>();
-                                    AddToFiles( mod?.Files, defaultFiles, modPath, extensions );
-                                    files["default_mod"] = defaultFiles;
-                                }
+                                AddSourceFiles( files, "default_mod", mod?.Files, modPath, extensions );
                             }
                             else {
                                 var group = JsonConvert.DeserializeObject<PenumbraGroupStruct>( File.ReadAllText( modFile ) );
-                                if( group.Options != null ) {
-                                    foreach( var option in group.Options.Where( x => x.Files != null ) ) {
-                                        var optionFiles = new List<(string, string)>();
-                                        AddToFiles( option?.Files, optionFiles, modPath, extensions );
-                                        files[$"{group.Name} / {option.Name}"] = optionFiles;
-                                    }
+                                foreach( var option in group?.Options ?? [] ) {
+                                    AddSourceFiles( files, $"{group.Name} / {option.Name}", option.Files, modPath, extensions );
                                 }
                             }
                         }
@@ -74,39 +68,40 @@ namespace VfxEditor.Utils {
                         }
                     }
                 }
-                else if ( MetaFileVersion == '4'  ) {
-                    //V4
-                    PenumbraTestingMeta tempMeta;
-                    tempMeta = JsonConvert.DeserializeObject<PenumbraTestingMeta>( File.ReadAllText( Path.Join( modPath, "meta.json" ) ) );
-                    loaded.Meta = new PenumbraMeta();
-                    loaded.Meta.FileVersion = 3;
-                    loaded.Meta.Name = tempMeta.Name;
-                    loaded.Meta.Author = tempMeta.Author;
-                    loaded.Meta.Description = tempMeta.Description;
-                    loaded.Meta.Version= tempMeta.Version;
-                    // Need to parse Defaultdata.
-                    // add way to parse manipulations to add paths?
+                else {
+                    // Current format (FileVersion 4+): everything embedded in a single meta.json
+                    var meta = JsonConvert.DeserializeObject<PenumbraMetaV4>( metaText );
+                    loaded.Meta = new PenumbraMeta {
+                        FileVersion = 3,
+                        Name = meta.Name,
+                        Author = meta.Author,
+                        Description = meta.Description,
+                        Version = meta.Version
+                    };
 
-                    if( tempMeta.DefaultData != null ) {
-                        if (tempMeta.DefaultData.Files.Count != 0) {
-                            var defaultFiles = new List<(string, string)>();
-                            AddToFiles( tempMeta.DefaultData?.Files, defaultFiles, modPath, extensions );
-                            files["default_mod"] = defaultFiles;
-                        }
-                    }
-                    if( tempMeta.Groups != null ) {
-                        foreach( var group in tempMeta.Groups ) {
-                            if( group.Options != null ) {
-                                foreach( var option in group.Options.Where( x => x.Files != null ) ) {
-                                    var optionFiles = new List<(string, string)>();
-                                    AddToFiles( option?.Files, optionFiles, modPath, extensions );
-                                    files[$"{group.Name} / {option.Name}"] = optionFiles;
+                    AddSourceFiles( files, "default_mod", meta.DefaultData?.Files, modPath, extensions );
+
+                    foreach( var group in meta.Groups ?? [] ) {
+                        switch( group.Type ) {
+                            // Combining groups don't attach files to their options directly: each combination
+                            // of options instead maps to one of these containers
+                            case "Combining":
+                                foreach( var (container, idx) in ( group.Containers ?? [] ).WithIndex() ) {
+                                    var label = string.IsNullOrEmpty( container.Name ) ? $"Container {idx + 1}" : container.Name;
+                                    AddSourceFiles( files, $"{group.Name} / {label}", container.Files, modPath, extensions );
                                 }
-                            }
+                                break;
+                            // Imc groups only ever carry meta manipulations, never file redirects
+                            case "Imc":
+                                break;
+                            default: // Single / Multi
+                                foreach( var option in group.Options ?? [] ) {
+                                    AddSourceFiles( files, $"{group.Name} / {option.Name}", option.Files, modPath, extensions );
+                                }
+                                break;
                         }
                     }
                 }
-                else { Dalamud.Error( "Unable to read version " + loaded.Meta.FileVersion + " of penumbramodformat" ); }
             }
             catch( Exception e ) {
                 Dalamud.Error( e, "Error reading Penumbra mods" );
@@ -121,6 +116,13 @@ namespace VfxEditor.Utils {
                 x => x.Key,
                 x => x.Value.Select( y => y.Item1 ).ToList()
             );
+        }
+
+        private static void AddSourceFiles( Dictionary<string, List<(string, string)>> files, string label, Dictionary<string, string> filesToAdd, string modPath, List<string> extensions ) {
+            if( filesToAdd == null || filesToAdd.Count == 0 ) return;
+            var matched = new List<(string, string)>();
+            AddToFiles( filesToAdd, matched, modPath, extensions );
+            if( matched.Count > 0 ) files[label] = matched;
         }
 
         public static void AddToFiles( Dictionary<string, string> filesToAdd, List<(string, string)> files, string modPath, List<string> extensions ) {
