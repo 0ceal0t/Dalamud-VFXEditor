@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedInt BindPointID = new( "Bind Point ID" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedEnum<SummonWeaponObjectControl> ObjectControl = new( "Object Control" );
+        private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
 
         public C199( TmbFile file ) : base( file ) { }
 

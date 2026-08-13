@@ -25,6 +25,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         private bool Looping = true;
         private bool Playing = false;
         private DateTime LastTime = DateTime.Now;
+        private bool MismatchWarning = false;
+        private List<string> UnanimatedBoneNames = null;
 
         public PapMotionSkeleton( PapFile file, PapMotion motion ) : base( motion ) {
             File = file;
@@ -64,6 +66,13 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
             if( Data == null ) return;
 
+            if( MismatchWarning ) {
+                ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+                ImGui.TextWrapped( "This animation references more bones than the loaded skeleton has. Sampling it would corrupt memory and crash the game. Load the matching skeleton (.sklb) via the selector above." );
+                ImGui.PopStyleColor();
+                return;
+            }
+
             if( Playing ) {
                 var time = DateTime.Now;
                 var diff = ( time - LastTime ).TotalMilliseconds;
@@ -93,16 +102,26 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             ImGui.SameLine();
             UiUtils.WikiButton( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
+            DrawUnanimatedBonesIndicator();
+
             Plugin.DirectXManager.BoneRenderer.DrawTexture( RenderId, File.BoneInstance, UpdateRender, Plugin.Configuration.DrawDirectXSkeleton );
         }
 
         // ======== UPDATING ===========
 
         private void UpdateRender() {
+            if( Motion.HasMismatchedSkeleton() ) {
+                MismatchWarning = true;
+                Data = [];
+                Plugin.DirectXManager.BoneRenderer.SetEmpty( RenderId, File.BoneInstance );
+                return;
+            }
+            MismatchWarning = false;
+
             Motion.AnimationControl->LocalTime = Frame * ( 1 / 30f );
 
-            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
-            var floats = ( float* )Marshal.AllocHGlobal( Motion.Skeleton->FloatSlots.Length * sizeof( float ) );
+            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.GetRequiredTransforms() * sizeof( hkQsTransformf ) );
+            var floats = ( float* )Marshal.AllocHGlobal( Motion.GetRequiredFloats() * sizeof( float ) );
             Motion.AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
             Data = [];
@@ -154,6 +173,38 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             }
             else {
                 Plugin.DirectXManager.BoneRenderer.SetSkeleton( RenderId, File.BoneInstance, new ConnectedSkeletonMeshBuilder( Data, -1, Motion.GetUnanimatedBones() ).Build() );
+            }
+
+            // Cache unanimated bone names for the UI tooltip (doesn't change per frame)
+            if( UnanimatedBoneNames == null ) {
+                UnanimatedBoneNames = [];
+                var unanimated = Motion.GetUnanimatedBones();
+                for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
+                    if( unanimated.Contains( i ) ) {
+                        UnanimatedBoneNames.Add( Motion.Skeleton->Bones[i].Name.String ?? $"bone_{i}" );
+                    }
+                }
+            }
+        }
+
+        private void DrawUnanimatedBonesIndicator() {
+            if( UnanimatedBoneNames == null || UnanimatedBoneNames.Count == 0 ) return;
+
+            ImGui.SameLine();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 5 );
+            using var color = ImRaii.PushColor( ImGuiCol.Text, new Vector4( 0.85f, 0.5f, 0.5f, 1f ) );
+            ImGui.Text( $"{UnanimatedBoneNames.Count} unanimated" );
+
+            if( ImGui.IsItemHovered() ) {
+                ImGui.BeginTooltip();
+                ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
+                ImGui.TextUnformatted( "Bones in the skeleton not driven by this animation (shown in red):" );
+                ImGui.Spacing();
+                foreach( var name in UnanimatedBoneNames ) {
+                    ImGui.TextUnformatted( name );
+                }
+                ImGui.PopTextWrapPos();
+                ImGui.EndTooltip();
             }
         }
     }
