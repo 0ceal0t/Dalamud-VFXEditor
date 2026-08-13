@@ -112,8 +112,13 @@ namespace VfxEditor.Utils.Gltf {
 
             var skeleton = motion.AnimatedSkeleton;
 
-            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( skeleton->Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
-            var floats = ( float* )Marshal.AllocHGlobal( skeleton->Skeleton->FloatSlots.Length * sizeof( float ) );
+            if( motion.HasMismatchedSkeleton() ) {
+                motion.AnimationControl->LocalTime = resetTime;
+                return;
+            }
+
+            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( motion.GetRequiredTransforms() * sizeof( hkQsTransformf ) );
+            var floats = ( float* )Marshal.AllocHGlobal( motion.GetRequiredFloats() * sizeof( float ) );
             skeleton->sampleAndCombineAnimations( transforms, floats );
 
             for( var i = 0; i < names.Count; i++ ) {

@@ -143,6 +143,13 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
         }
 
         private void Update() {
+            if( Motion.HasMismatchedSkeleton() ) {
+                Data = [];
+                AllFrames = [];
+                Plugin.DirectXManager.GradientRenderer.SetGradient( RenderId, File.GradientInstance, [] );
+                return;
+            }
+
             var allFrames = new List<double>();
             Data = [];
 
@@ -158,8 +165,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 allFrames.Add( frame );
 
                 Motion.AnimationControl->LocalTime = frame * ( 1 / 30f );
-                var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
-                var floats = ( float* )Marshal.AllocHGlobal( Motion.Skeleton->FloatSlots.Length * sizeof( float ) );
+                var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.GetRequiredTransforms() * sizeof( hkQsTransformf ) );
+                var floats = ( float* )Marshal.AllocHGlobal( Motion.GetRequiredFloats() * sizeof( float ) );
                 Motion.AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
                 for( var i = 0; i < Motion.Skeleton->Bones.Length; i++ ) {
