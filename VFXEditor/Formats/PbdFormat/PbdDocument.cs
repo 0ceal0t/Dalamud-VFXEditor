@@ -3,25 +3,14 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PbdFormat {
-    public class PbdDocument : FileManagerDocument<PbdFile, WorkspaceMetaBasic> {
+    public class PbdDocument : FileManagerBasicDocument<PbdFile> {
         public override string Id => "Pbd";
         public override string Extension => "pbd";
 
         public PbdDocument( PbdManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public PbdDocument( PbdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-        }
+        public PbdDocument( PbdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override PbdFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
     }
 }

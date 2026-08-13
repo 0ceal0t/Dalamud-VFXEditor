@@ -11,7 +11,7 @@ namespace VfxEditor.Parsing.Sheets {
             SheetData.InitWeaponTimelines();
         }
 
-        public override void Read( BinaryReader reader, int size ) => Read( reader, 0 );
+        public override void Read( BinaryReader reader, int size ) => Read( reader );
 
         public override void Read( BinaryReader reader ) {
             Value = reader.ReadUInt16();

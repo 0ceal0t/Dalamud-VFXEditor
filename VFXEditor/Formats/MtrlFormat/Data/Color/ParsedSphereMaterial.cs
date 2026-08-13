@@ -4,7 +4,7 @@ using System.Numerics;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
-    public class ParsedSphereMaterial : ParsedShort {
+    public class ParsedSphereMaterial : ParsedHalfShort {
         public ParsedSphereMaterial( string name ) : base( name ) { }
 
         public ParsedSphereMaterial( string name, int value ) : base( name, value ) { }

@@ -88,12 +88,13 @@ namespace VfxEditor.FileBrowser {
                     }
 
                     ImGui.SameLine();
-                    using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
-                        WaitingForConfirmation = false;
-                        IsOk = false;
-                        confirmed = false;
-                        ImGui.CloseCurrentPopup();
+                    using( ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR ) ) {
+                        if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                            WaitingForConfirmation = false;
+                            IsOk = false;
+                            confirmed = false;
+                            ImGui.CloseCurrentPopup();
+                        }
                     }
 
                     ImGui.EndPopup();

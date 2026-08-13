@@ -12,7 +12,7 @@ namespace VfxEditor.Parsing.Color {
             SheetData.InitUiColors();
         }
 
-        public override void Read( BinaryReader reader, int size ) => Read( reader, 0 );
+        public override void Read( BinaryReader reader, int size ) => Read( reader );
 
         public override void Read( BinaryReader reader ) {
             Value = reader.ReadUInt32();

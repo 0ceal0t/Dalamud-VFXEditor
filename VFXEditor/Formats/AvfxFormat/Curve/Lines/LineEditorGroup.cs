@@ -98,7 +98,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new( -1, height ), false );
             using var table = ImRaii.Table( "Table", 5,
-                ImGuiTableFlags.RowBg | ImGuiTableFlags.NoHostExtendX | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.PadOuterX );
+                ImGuiTableFlags.RowBg | ImGuiTableFlags.NoHostExtendX | ImGuiTableFlags.ScrollY | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.PadOuterX | ImGuiTableFlags.NoSavedSettings );
             if( !table ) return;
 
             padding.Dispose();
@@ -188,21 +188,21 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                 ImGui.BeginTooltip();
 
                 var color = UiUtils.PARSED_GREEN;
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) );
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetStyle().ItemSpacing.Y ) ) ) {
+                    ImGui.TextColored( color, "Ctrl+Left Click" );
+                    ImGui.SameLine();
+                    ImGui.Text( "to add a new point" );
 
-                ImGui.TextColored( color, "Ctrl+Left Click" );
-                ImGui.SameLine();
-                ImGui.Text( "to add a new point" );
+                    ImGui.TextColored( color, "Left Click" );
+                    ImGui.SameLine();
+                    ImGui.Text( "to selected a point" );
 
-                ImGui.TextColored( color, "Left Click" );
-                ImGui.SameLine();
-                ImGui.Text( "to selected a point" );
-
-                ImGui.Text( "Hold" );
-                ImGui.SameLine();
-                ImGui.TextColored( color, "Shift" );
-                ImGui.SameLine();
-                ImGui.Text( "to select multiple points" );
+                    ImGui.Text( "Hold" );
+                    ImGui.SameLine();
+                    ImGui.TextColored( color, "Shift" );
+                    ImGui.SameLine();
+                    ImGui.Text( "to select multiple points" );
+                }
 
                 ImGui.EndTooltip();
             }
@@ -236,10 +236,10 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             }
 
             var height = ImGui.GetContentRegionAvail().Y - ( 4 * ImGui.GetFrameHeightWithSpacing() + 5 );
+            if( fit ) ImPlot.SetNextAxesToFit();
             ImPlot.PushStyleVar( ImPlotStyleVar.FitPadding, new Vector2( 0.5f, 0.5f ) );
             using( var plot = ImRaii.Plot( $"##CurveEditor{RenderId}", new Vector2( -1, height ), ImPlotFlags.NoMenus | ImPlotFlags.NoTitle ) ) {
                 if( plot ) {
-                    if( fit ) ImPlot.SetNextAxesToFit();
                     if( IsColor ) {
                         ImPlot.SetupAxisLimits( ImAxis.Y1, -1, 1, ImPlotCond.Always );
                         ImPlot.SetupAxisLimitsConstraints( ImAxis.X1, 0, double.MaxValue - 1 );

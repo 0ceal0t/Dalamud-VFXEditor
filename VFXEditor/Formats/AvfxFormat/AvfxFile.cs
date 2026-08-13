@@ -7,12 +7,13 @@ using System.Linq;
 using VfxEditor.AvfxFormat.Dialogs;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Utils;
 using VfxEditor.DirectX.Gradient;
 using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.AvfxFormat {
-    public partial class AvfxFile : FileManagerFile {
+    public partial class AvfxFile : FileManagerFile, IRenamableFile {
         public readonly AvfxMain Main;
         public readonly GradientInstance GradientInstance = new();
         public readonly ModelInstance ModelInstance = new();

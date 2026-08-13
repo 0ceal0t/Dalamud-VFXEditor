@@ -55,7 +55,7 @@ namespace VfxEditor.Ui.Import {
             }
             if( ImGui.CollapsingHeader( "Mods", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-                using var table = ImRaii.Table( "ModsTable", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY, new( -1, ImGui.GetContentRegionAvail().Y ) );
+                using var table = ImRaii.Table( "ModsTable", 2, ImGuiTableFlags.Resizable | ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.NoHostExtendY | ImGuiTableFlags.NoSavedSettings, new( -1, ImGui.GetContentRegionAvail().Y ) );
                 if( !table ) return;
                 style.Dispose();
 
@@ -226,7 +226,7 @@ namespace VfxEditor.Ui.Import {
             using var style = ImRaii.PushStyle( ImGuiStyleVar.CellPadding, new Vector2( 0, 3 ) );
             using var padding = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 8, 3 ) );
             using var child = ImRaii.Child( "ModsListRow", new Vector2( -1, -1 ), true );
-            using var table = ImRaii.Table( "ModsList", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit );
+            using var table = ImRaii.Table( "ModsList", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.NoSavedSettings );
             if( !table ) return;
             padding.Dispose();
 

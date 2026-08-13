@@ -4,33 +4,15 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.PapFormat {
-    public partial class PapDocument : FileManagerDocument<PapFile, WorkspaceMetaBasic> {
+    public partial class PapDocument : FileManagerHavokDocument<PapFile> {
         public override string Id => "Pap";
         public override string Extension => "pap";
 
-        private string HkxTemp => WriteLocation.Replace( ".pap", "_temp.hkx" );
-
         public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-        }
+        public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override PapFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
-
-        public override void Dispose() {
-            base.Dispose();
-            System.IO.File.Delete( HkxTemp );
-        }
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

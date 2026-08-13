@@ -69,12 +69,9 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // Clean up textures used for materials
             if( pluginClosing ) {
-                try {
-                    foreach( var wrap in TileDiffuse ) wrap?.Dispose();
-                    foreach( var wrap in TileNormal ) wrap?.Dispose();
-                    foreach( var wrap in Sphere ) wrap?.Dispose();
-                }
-                catch( Exception ) { }
+                foreach( var wrap in TileDiffuse ) { try { wrap?.Dispose(); } catch( Exception ) { } }
+                foreach( var wrap in TileNormal ) { try { wrap?.Dispose(); } catch( Exception ) { } }
+                foreach( var wrap in Sphere ) { try { wrap?.Dispose(); } catch( Exception ) { } }
                 TileDiffuse.Clear();
                 TileNormal.Clear();
                 Sphere.Clear();

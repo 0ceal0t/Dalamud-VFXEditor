@@ -20,24 +20,25 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawEditMenuItems() {
             if( ImGui.BeginMenu( "Templates" ) ) {
-                using var disabledTemplates = ImRaii.Disabled( ActiveDocument == null );
-                if( ImGui.MenuItem( "Blank" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
-                if( ImGui.MenuItem( "Weapon" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
+                using( ImRaii.Disabled( ActiveDocument == null ) ) {
+                    if( ImGui.MenuItem( "Blank" ) ) ActiveDocument?.OpenTemplate( "default_vfx.avfx" );
+                    if( ImGui.MenuItem( "Weapon" ) ) ActiveDocument?.OpenTemplate( "default_weapon.avfx" );
+                }
                 ImGui.EndMenu();
             }
 
             if( ImGui.BeginMenu( "Convert Textures" ) ) {
-                using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                    ImGui.SetNextItemWidth( 150 );
+                    if( ImGui.InputText( "##Prefix", ref Plugin.Configuration.CustomPathPrefix, 255 ) ) Plugin.Configuration.Save();
 
-                ImGui.SetNextItemWidth( 150 );
-                if( ImGui.InputText( "##Prefix", ref Plugin.Configuration.CustomPathPrefix, 255 ) ) Plugin.Configuration.Save();
-
-                ImGui.SameLine();
-                if( ImGui.Button( "Apply" ) ) {
-                    foreach( var file in Documents.Where( x => x.File != null ).Select( x => x.File ) ) {
-                        var commands = new List<ICommand>();
-                        file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( commands ) );
-                        file.Command.AddAndExecute( new CompoundCommand( commands ) );
+                    ImGui.SameLine();
+                    if( ImGui.Button( "Apply" ) ) {
+                        foreach( var file in Documents.Where( x => x.File != null ).Select( x => x.File ) ) {
+                            var commands = new List<ICommand>();
+                            file.TextureView.Group.Items.ForEach( x => x.ConvertToCustom( commands ) );
+                            file.Command.AddAndExecute( new CompoundCommand( commands ) );
+                        }
                     }
                 }
                 ImGui.EndMenu();

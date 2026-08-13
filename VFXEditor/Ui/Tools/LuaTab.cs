@@ -89,7 +89,7 @@ namespace VfxEditor.Ui.Tools {
 
             using var child = ImRaii.Child( "Child", new Vector2( -1 ), false );
 
-            using var table = ImRaii.Table( "Table", 4, ImGuiTableFlags.RowBg );
+            using var table = ImRaii.Table( "Table", 4, ImGuiTableFlags.RowBg | ImGuiTableFlags.NoSavedSettings );
             if( !table ) return;
 
             ImGui.TableSetupColumn( "Index", ImGuiTableColumnFlags.WidthFixed, 60 );

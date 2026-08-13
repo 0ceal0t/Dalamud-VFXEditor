@@ -52,7 +52,7 @@ namespace VfxEditor.Ui.NodeGraphViewer.Canvas {
                     if( chosen == null )
                         chosen = s;
                     else
-                        garbo.Add( chosen );
+                        garbo.Add( s );
                 }
             }
             if( chosen == null ) return false;

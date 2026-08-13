@@ -53,7 +53,9 @@ namespace VfxEditor.Formats.MtrlFormat.Shader {
             Flags.Value = Masked( flags );
             AddressModeU.Value = ( TextureAddressMode )( flags & 0x3u );
             AddressModeV.Value = ( TextureAddressMode )( ( flags >> 2 ) & 0x3u );
-            LoDBias.Value = ( ( flags >> 10 ) & 0x3FF ) / 64f;
+            var lodRaw = ( int )( ( flags >> 10 ) & 0x3FF );
+            if( lodRaw >= 512 ) lodRaw -= 1024; // top bit of the 10-bit field is the sign
+            LoDBias.Value = lodRaw / 64f;
             MinLoD.Value = ( ( flags >> 20 ) & 0xF );
         }
 

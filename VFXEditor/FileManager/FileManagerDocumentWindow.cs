@@ -25,7 +25,7 @@ namespace VfxEditor.FileManager {
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
             using var child = ImRaii.Child( "Child", new Vector2( -1 ), true );
-            using var table = ImRaii.Table( "##Table", ShowSourceColumn ? 3 : 2, ImGuiTableFlags.RowBg );
+            using var table = ImRaii.Table( "##Table", ShowSourceColumn ? 3 : 2, ImGuiTableFlags.RowBg | ImGuiTableFlags.NoSavedSettings );
             style.Pop();
 
             ImGui.TableSetupColumn( "##Column1", ImGuiTableColumnFlags.WidthStretch );

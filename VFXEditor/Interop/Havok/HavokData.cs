@@ -24,9 +24,8 @@ namespace VfxEditor.Interop.Havok {
         }
 
         public virtual void Init() {
+            var path = Marshal.StringToHGlobalAnsi( Path );
             try {
-                var path = Marshal.StringToHGlobalAnsi( Path );
-
                 var loadOptions = stackalloc hkSerializeUtil.LoadOptions[1];
                 loadOptions->TypeInfoRegistry = hkBuiltinTypeRegistry.Instance()->GetTypeInfoRegistry();
                 loadOptions->ClassNameRegistry = hkBuiltinTypeRegistry.Instance()->GetClassNameRegistry();
@@ -50,11 +49,12 @@ namespace VfxEditor.Interop.Havok {
                         OnHavokLoad();
                     }
                 }
-
-                Marshal.FreeHGlobal( path );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Could not read file: {Path}" );
+            }
+            finally {
+                Marshal.FreeHGlobal( path );
             }
         }
 

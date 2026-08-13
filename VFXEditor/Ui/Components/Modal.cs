@@ -26,23 +26,24 @@ namespace VfxEditor.Ui.Components {
 
             var open = true;
             if( ImGui.BeginPopupModal( Title, ref open, ImGuiWindowFlags.AlwaysAutoResize ) ) {
-                using var _ = ImRaii.PushId( "Modal" );
-                DrawBody();
-                ImGui.Separator();
+                using( ImRaii.PushId( "Modal" ) ) {
+                    DrawBody();
+                    ImGui.Separator();
 
-                if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
-                    ImGui.CloseCurrentPopup();
-                    Remove();
-                    OnOk();
-                }
-
-                if( ShowCancel ) {
-                    ImGui.SameLine();
-                    using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
-                    if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                    if( ImGui.Button( "OK", new Vector2( 120, 0 ) ) ) {
                         ImGui.CloseCurrentPopup();
                         Remove();
-                        OnCancel();
+                        OnOk();
+                    }
+
+                    if( ShowCancel ) {
+                        ImGui.SameLine();
+                        using var style = ImRaii.PushColor( ImGuiCol.Button, UiUtils.RED_COLOR );
+                        if( ImGui.Button( "Cancel", new Vector2( 120, 0 ) ) ) {
+                            ImGui.CloseCurrentPopup();
+                            Remove();
+                            OnCancel();
+                        }
                     }
                 }
 

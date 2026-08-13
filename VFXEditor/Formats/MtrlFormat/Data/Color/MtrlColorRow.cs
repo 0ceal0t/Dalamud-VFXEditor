@@ -36,7 +36,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         public readonly ParsedHalf Unknown7 = new( "Unknown 7" );
         public readonly ParsedHalf Unknown8 = new( "Unknown 8" );
 
-        public readonly ParsedShort Shader = new( "Shader" );
+        public readonly ParsedHalfShort Shader = new( "Shader" );
         public readonly ParsedTileMaterial TileMaterial = new( "Tile Material" );
         public readonly ParsedHalf TileAlpha = new( "Tile Alpha" );
         public readonly ParsedSphereMaterial Sphere = new( "Sphere" );

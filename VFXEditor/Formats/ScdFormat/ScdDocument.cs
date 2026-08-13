@@ -3,25 +3,14 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
 namespace VfxEditor.ScdFormat {
-    public class ScdDocument : FileManagerDocument<ScdFile, WorkspaceMetaBasic> {
+    public class ScdDocument : FileManagerBasicDocument<ScdFile> {
         public override string Id => "Scd";
         public override string Extension => "scd";
 
         public ScdDocument( ScdManager manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public ScdDocument( ScdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : this( manager, writeLocation ) {
-            LoadWorkspace( localPath, data.RelativeLocation, data.Name, data.Source, data.Replace, data.Disabled );
-        }
+        public ScdDocument( ScdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override ScdFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
-
-        public override WorkspaceMetaBasic GetWorkspaceMeta( string newPath, int windowIdx ) => new() {
-            Name = Name,
-            RelativeLocation = newPath,
-            Replace = Replace,
-            Source = Source,
-            Disabled = Disabled,
-            WindowIndex = windowIdx
-        };
     }
 }
