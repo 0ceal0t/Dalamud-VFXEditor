@@ -67,9 +67,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( Data == null ) return;
 
             if( MismatchWarning ) {
-                ImGui.PushStyleColor( ImGuiCol.Text, UiUtils.RED_COLOR );
+                using var _ = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR);
                 ImGui.TextWrapped( "This animation references more bones than the loaded skeleton has. Sampling it would corrupt memory and crash the game. Load the matching skeleton (.sklb) via the selector above." );
-                ImGui.PopStyleColor();
                 return;
             }
 
@@ -120,8 +119,8 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
 
             Motion.AnimationControl->LocalTime = Frame * ( 1 / 30f );
 
-            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.GetRequiredTransforms() * sizeof( hkQsTransformf ) );
-            var floats = ( float* )Marshal.AllocHGlobal( Motion.GetRequiredFloats() * sizeof( float ) );
+            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( Motion.Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
+            var floats = ( float* )Marshal.AllocHGlobal( Motion.Skeleton->FloatSlots.Length * sizeof( float ) );
             Motion.AnimatedSkeleton->sampleAndCombineAnimations( transforms, floats );
 
             Data = [];

@@ -10,7 +10,7 @@ namespace VfxEditor.Interop.Havok.Ui {
         public string Path => SklbPreviewPath;
 
         private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
-        private bool SklbReplaced = false;
+        private SklbSource Source = SklbSource.Game;
         private readonly Action<SimpleSklb> OnUpdate;
 
         private bool Initialized = false;
@@ -22,8 +22,8 @@ namespace VfxEditor.Interop.Havok.Ui {
 
         public void Init() {
             if( Initialized ) return;
-            Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced );
-            SklbReplaced = replaced;
+            Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var source );
+            Source = source;
             OnUpdate.Invoke( simple );
             Initialized = true;
         }
@@ -39,12 +39,12 @@ namespace VfxEditor.Interop.Havok.Ui {
             ImGui.InputText( "##SklbPath", ref SklbPreviewPath, 255 );
 
             var imguiStyle = ImGui.GetStyle();
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
+            using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
-                    if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var replaced ) ) {
-                        SklbReplaced = replaced;
+                    if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var source ) ) {
+                        Source = source;
                         OnUpdate.Invoke( simple );
                     }
                 }
@@ -53,15 +53,26 @@ namespace VfxEditor.Interop.Havok.Ui {
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
                     FileBrowserManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
-                        SklbReplaced = false;
+                        Source = SklbSource.Local;
                         OnUpdate.Invoke( SimpleSklb.LoadFromLocal( res ) );
                     } );
                 }
             }
 
-            if( SklbReplaced ) {
-                ImGui.SameLine();
-                ImGui.TextColored( UiUtils.GREEN_COLOR, "Replaced" );
+            ImGui.SameLine();
+            switch( Source ) {
+                case SklbSource.Penumbra:
+                    ImGui.TextColored( UiUtils.GREEN_COLOR, "[Penumbra]" );
+                    break;
+                case SklbSource.Document:
+                    ImGui.TextColored( UiUtils.GREEN_COLOR, "[Replaced]" );
+                    break;
+                case SklbSource.Local:
+                    ImGui.TextDisabled( "[Local]" );
+                    break;
+                default:
+                    ImGui.TextDisabled( "[Game]" );
+                    break;
             }
         }
     }

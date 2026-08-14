@@ -117,8 +117,8 @@ namespace VfxEditor.Utils.Gltf {
                 return;
             }
 
-            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( motion.GetRequiredTransforms() * sizeof( hkQsTransformf ) );
-            var floats = ( float* )Marshal.AllocHGlobal( motion.GetRequiredFloats() * sizeof( float ) );
+            var transforms = ( hkQsTransformf* )Marshal.AllocHGlobal( skeleton->Skeleton->Bones.Length * sizeof( hkQsTransformf ) );
+            var floats = ( float* )Marshal.AllocHGlobal( skeleton->Skeleton->FloatSlots.Length * sizeof( float ) );
             skeleton->sampleAndCombineAnimations( transforms, floats );
 
             for( var i = 0; i < names.Count; i++ ) {
