@@ -66,11 +66,11 @@ namespace VfxEditor.Ui {
 
         public virtual void SetMeta( WorkspaceWindow? meta ) {
             if( meta?.Size != null ) {
-                SizeCondition = ImGuiCond.Appearing;
+                SizeCondition = ImGuiCond.Once;
                 Size = meta?.Size;
             }
             if( meta?.Position != null ) {
-                PositionCondition = ImGuiCond.Appearing;
+                PositionCondition = ImGuiCond.Once;
                 Position = meta?.Position;
             }
         }
