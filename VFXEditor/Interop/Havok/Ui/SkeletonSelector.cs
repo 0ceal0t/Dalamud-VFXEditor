@@ -9,23 +9,34 @@ namespace VfxEditor.Interop.Havok.Ui {
     public class SkeletonSelector {
         public string Path => SklbPreviewPath;
 
-        private string SklbPreviewPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
-        private SklbSource Source = SklbSource.Game;
+        private const string FallbackSklbPath = "chara/human/c0101/skeleton/base/b0001/skl_c0101b0001.sklb";
+
+        // The default game path for this file, picked once at construction: either the caller's
+        // best guess (if it exists) or the hardcoded fallback. Restored by the reset button.
+        private readonly string DefaultSklbPath;
         private readonly Action<SimpleSklb> OnUpdate;
 
+        private string SklbPreviewPath;
+        private SklbSource Source = SklbSource.Game;
         private bool Initialized = false;
 
         public SkeletonSelector( string sklbPath, Action<SimpleSklb> onUpdate ) {
             OnUpdate = onUpdate;
-            if( !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ) SklbPreviewPath = sklbPath;
+            DefaultSklbPath = !string.IsNullOrEmpty( sklbPath ) && Dalamud.DataManager.FileExists( sklbPath ) ? sklbPath : FallbackSklbPath;
+            SklbPreviewPath = DefaultSklbPath;
         }
 
         public void Init() {
             if( Initialized ) return;
-            Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var source );
-            Source = source;
-            OnUpdate.Invoke( simple );
+            Resolve();
             Initialized = true;
+        }
+
+        private void Resolve() {
+            if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var source ) ) {
+                Source = source;
+                OnUpdate.Invoke( simple );
+            }
         }
 
         public void Draw() {
@@ -42,21 +53,25 @@ namespace VfxEditor.Interop.Havok.Ui {
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) {
-                    if( Plugin.SklbManager.GetSimpleSklb( SklbPreviewPath, out var simple, out var source ) ) {
-                        Source = source;
-                        OnUpdate.Invoke( simple );
-                    }
-                }
+                if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) Resolve();
+                UiUtils.Tooltip( "Refresh" );
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.FileUpload.ToIconString() ) ) {
                     FileBrowserManager.OpenFileDialog( "Select a File", ".sklb,.*", ( ok, res ) => {
                         if( !ok ) return;
-                        Source = SklbSource.Local;
-                        OnUpdate.Invoke( SimpleSklb.LoadFromLocal( res ) );
+                        SklbPreviewPath = res;
+                        Resolve();
                     } );
                 }
+                UiUtils.Tooltip( "Load a local file" );
+
+                ImGui.SameLine();
+                if( ImGui.Button( FontAwesomeIcon.Undo.ToIconString() ) ) {
+                    SklbPreviewPath = DefaultSklbPath;
+                    Resolve();
+                }
+                UiUtils.Tooltip( "Reset to the default game skeleton" );
             }
 
             ImGui.SameLine();

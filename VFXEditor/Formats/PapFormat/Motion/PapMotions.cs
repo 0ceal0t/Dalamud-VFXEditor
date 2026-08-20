@@ -14,7 +14,10 @@ namespace VfxEditor.PapFormat.Motion {
         private readonly List<PapMotion> Motions = [];
 
         public HavokData Bones;
-        public hkaSkeleton* Skeleton => Bones.AnimationContainer->Skeletons[0].ptr;
+        public hkaSkeleton* Skeleton =>
+            Bones?.AnimationContainer != null && Bones.AnimationContainer->Skeletons.Length > 0
+                ? Bones.AnimationContainer->Skeletons[0].ptr
+                : null;
 
         private readonly SkeletonSelector Selector;
 
@@ -26,7 +29,19 @@ namespace VfxEditor.PapFormat.Motion {
             Selector = new( GetSklbPath(), UpdateSkeleton );
         }
 
+        // Workspace loads defer this file's own Havok data to load asynchronously (see PapDocument.FileFromReader),
+        // so AnimationContainer may not be ready yet the first time a skeleton resolves and calls this. Re-run once
+        // it is, so the Motion tab self-heals instead of staying permanently out of sync with the Animations list.
+        //
+        // Note: when init is synchronous (not a workspace load), this override can fire from inside the base
+        // HavokData constructor, before this class's own field initializers (including Motions) have run. Bones
+        // is only ever assigned later via UpdateSkeleton(), so it is guaranteed null at that point - the guard
+        // below returns before Motions is touched, so that ordering hazard never bites.
+        protected override void OnHavokLoad() => UpdateMotions();
+
         public void UpdateMotions() {
+            if( AnimationContainer == null || Bones?.AnimationContainer == null ) return;
+
             Motions.ForEach( x => x.Dispose() );
             Motions.Clear();
 
@@ -76,11 +91,15 @@ namespace VfxEditor.PapFormat.Motion {
             else {
                 Selector.Draw();
             }
-            Motions[havokIndex].DrawPreview( havokIndex );
+            if( havokIndex < Motions.Count ) Motions[havokIndex].DrawPreview( havokIndex );
         }
 
         public void DrawExportAll() {
             Selector.Init();
+            if( Skeleton == null ) {
+                ImGui.TextDisabled( "Skeleton not loaded, cannot export" );
+                return;
+            }
             if( ImGui.Button( "Export All Motions" ) ) {
                 FileBrowserManager.SaveFileDialog( "Select a Save Location", ".gltf", "motion", "gltf", ( ok, res ) => {
                     if( !ok ) return;
@@ -97,7 +116,7 @@ namespace VfxEditor.PapFormat.Motion {
 
         public void DrawHavok( int havokIndex ) {
             Selector.Init();
-            Motions[havokIndex].DrawHavok();
+            if( havokIndex < Motions.Count ) Motions[havokIndex].DrawHavok();
         }
 
         public void Write( HashSet<nint> handles ) {
