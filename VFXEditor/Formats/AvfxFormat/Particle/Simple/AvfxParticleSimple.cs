@@ -56,6 +56,8 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxFloat LineLengthMin = new( "Line Length Min", "LLin" );
         public readonly AvfxFloat LineLengthMax = new( "Line Length Max", "LLax" );
         public readonly AvfxInt CreateIntervalVal = new( "Create Interval", "CrI" );
+        public readonly AvfxFloat CIM = new( "Create Interval On Movement", "CIM" );
+        public readonly AvfxFloat CIMR = new( "Create Interval On Movement Random", "CIMR" );
         public readonly AvfxInt CreateIntervalRandom = new( "Create Interval Random", "CrIR" );
         public readonly AvfxInt CreateIntervalCount = new( "Create Interval Count", "CrIC" );
         public readonly AvfxInt CreateIntervalLife = new( "Create Interval Life", "CrIL" );
@@ -133,6 +135,8 @@ namespace VfxEditor.AvfxFormat {
                 LineLengthMin,
                 LineLengthMax,
                 CreateIntervalVal,
+                CIM,
+                CIMR,
                 CreateIntervalRandom,
                 CreateIntervalCount,
                 CreateIntervalLife,
@@ -160,6 +164,8 @@ namespace VfxEditor.AvfxFormat {
             Display.Add( LineLengthMin );
             Display.Add( LineLengthMax );
             Display.Add( CreateIntervalVal );
+            Display.Add( CIM );
+            Display.Add( CIMR );
             Display.Add( CreateIntervalRandom );
             Display.Add( CreateIntervalCount );
             Display.Add( CreateIntervalLife );
