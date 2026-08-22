@@ -2,6 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using System;
 using System.IO;
+using VfxEditor.Parsing.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedFlag<T> : ParsedSimpleBase<T> where T : Enum {
@@ -22,20 +23,13 @@ namespace VfxEditor.Parsing {
         public override void Read( BinaryReader reader ) => Read( reader, 0 );
 
         public override void Read( BinaryReader reader, int size ) {
-            var intValue = Size switch {
-                4 => reader.ReadInt32(),
-                2 => reader.ReadInt16(),
-                1 => reader.ReadByte(),
-                _ => reader.ReadByte()
-            };
+            var intValue = ( int )SizedNumberUtils.ReadSigned( reader, Size );
             Value = ( T )( object )intValue;
         }
 
         public override void Write( BinaryWriter writer ) {
             var intValue = Value == null ? -1 : IntValue;
-            if( Size == 4 ) writer.Write( intValue );
-            else if( Size == 2 ) writer.Write( ( short )intValue );
-            else writer.Write( ( byte )intValue );
+            SizedNumberUtils.WriteSigned( writer, intValue, Size );
         }
 
         protected override void DrawBody() {

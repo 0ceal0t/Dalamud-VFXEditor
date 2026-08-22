@@ -46,6 +46,8 @@ namespace VfxEditor.Utils {
 
         public static readonly string HIGH_PRECISION_FORMAT = "%.7f";
 
+        public static string FloatFormat( bool highPrecision ) => highPrecision ? HIGH_PRECISION_FORMAT : "%.3f";
+
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
 
         public static bool EnumComboBox<T>( string label, T[] options, T currentValue, out T newValue ) =>

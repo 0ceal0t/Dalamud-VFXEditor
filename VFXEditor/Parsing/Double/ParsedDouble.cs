@@ -19,7 +19,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputDouble( Name, ref value, 0.0f, 0.0f, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) {
+            if( ImGui.InputDouble( Name, ref value, 0.0f, 0.0f, format: UiUtils.FloatFormat( HighPrecision ) ) ) {
                 Update( value );
             }
         }

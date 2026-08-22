@@ -1,5 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
+using VfxEditor.Parsing.Utils;
 
 namespace VfxEditor.Parsing {
     public class ParsedUInt : ParsedSimpleBase<uint> {
@@ -17,19 +18,10 @@ namespace VfxEditor.Parsing {
 
         public override void Read( BinaryReader reader, int size ) {
             Size = size;
-            Value = Size switch {
-                4 => reader.ReadUInt32(),
-                2 => reader.ReadUInt16(),
-                1 => reader.ReadByte(),
-                _ => reader.ReadByte()
-            };
+            Value = ( uint )SizedNumberUtils.ReadUnsigned( reader, Size );
         }
 
-        public override void Write( BinaryWriter writer ) {
-            if( Size == 4 ) writer.Write( Value );
-            else if( Size == 2 ) writer.Write( ( short )Value );
-            else writer.Write( ( byte )Value );
-        }
+        public override void Write( BinaryWriter writer ) => SizedNumberUtils.WriteUnsigned( writer, Value, Size );
 
         protected override void DrawBody() {
             var value = ( int )Value;

@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,53 +36,10 @@ namespace VfxEditor.Select.Tabs.Character {
             if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
             if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
 
-            var poses = new Dictionary<string, Dictionary<string, string>>();
-            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
-                var start = item.GetStartPap( i, "" );
-                var loop = item.GetLoopPap( i, "" );
-                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    poses.Add( $"Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
-                    } );
-                }
-            }
-
-            var groundSitPoses = new Dictionary<string, Dictionary<string, string>>();
-            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
-                var start = item.GetStartPap( i, "j_" );
-                var loop = item.GetLoopPap( i, "j_" );
-                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    groundSitPoses.Add( $"Ground Sit Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
-                    } );
-                }
-            }
-
-            var chairSitPoses = new Dictionary<string, Dictionary<string, string>>();
-            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
-                var start = item.GetStartPap( i, "s_" );
-                var loop = item.GetLoopPap( i, "s_" );
-                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    chairSitPoses.Add( $"Chair Sit Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
-                    } );
-                }
-            }
-
-            var ornamentPoses = new Dictionary<string, Dictionary<string, string>>();
-            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
-                var start = item.GetOrnamentStartPap( i, "onm_" );
-                var loop = item.GetOrnamentLoopPap( i, "onm_" );
-                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
-                    ornamentPoses.Add( $"Umbrella Pose {i}", new Dictionary<string, string>() {
-                        { "Start", start },
-                        { "Loop", loop }
-                    } );
-                }
-            }
+            var poses = BuildPoses( item.GetStartPap, item.GetLoopPap, "", "Pose" );
+            var groundSitPoses = BuildPoses( item.GetStartPap, item.GetLoopPap, "j_", "Ground Sit Pose" );
+            var chairSitPoses = BuildPoses( item.GetStartPap, item.GetLoopPap, "s_", "Chair Sit Pose" );
+            var ornamentPoses = BuildPoses( item.GetOrnamentStartPap, item.GetOrnamentLoopPap, "onm_", "Umbrella Pose" );
 
             var jmn = item.GetPap( "emote/jmn" );
             var groundStart = item.GetPap( "event_base/event_base_ground_start" );
@@ -120,6 +78,21 @@ namespace VfxEditor.Select.Tabs.Character {
                 GatlingIdle = Dalamud.DataManager.FileExists( gatlingIdle ) ? gatlingIdle : null,
                 Shovel = Dalamud.DataManager.FileExists( shovel ) ? shovel : null,
             };
+        }
+
+        private static Dictionary<string, Dictionary<string, string>> BuildPoses( Func<int, string, string> getStart, Func<int, string, string> getLoop, string pathPrefix, string label ) {
+            var poses = new Dictionary<string, Dictionary<string, string>>();
+            for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
+                var start = getStart( i, pathPrefix );
+                var loop = getLoop( i, pathPrefix );
+                if( Dalamud.DataManager.FileExists( start ) && Dalamud.DataManager.FileExists( loop ) ) {
+                    poses.Add( $"{label} {i}", new Dictionary<string, string>() {
+                        { "Start", start },
+                        { "Loop", loop }
+                    } );
+                }
+            }
+            return poses;
         }
 
         // ===== DRAWING ======

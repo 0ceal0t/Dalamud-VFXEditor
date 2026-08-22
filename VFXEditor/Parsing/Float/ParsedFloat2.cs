@@ -24,7 +24,7 @@ namespace VfxEditor.Parsing {
 
         protected override void DrawBody() {
             var value = Value;
-            if( ImGui.InputFloat2( Name, ref value, format: HighPrecision ? UiUtils.HIGH_PRECISION_FORMAT : "%.3f" ) ) Update( value );
+            if( ImGui.InputFloat2( Name, ref value, format: UiUtils.FloatFormat( HighPrecision ) ) ) Update( value );
         }
     }
 }
