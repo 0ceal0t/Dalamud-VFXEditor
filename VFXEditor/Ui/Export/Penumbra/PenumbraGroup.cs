@@ -70,6 +70,17 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Options = [.. Options.Select( x => x.Export( modFolder, Name ) )]
         };
 
+        // ==== V3 (legacy) export, remove once Penumbra V4 becomes the standard format ====
+        public PenumbraGroupStruct ExportV3( string modFolder ) => new() {
+            Name = Name,
+            Priority = Priority,
+            Type = Type,
+            Layout = GetLayout(),
+            DefaultSettings = GetDefault(),
+            Options = [.. Options.Select( x => x.ExportV3( modFolder, Name ) )]
+        };
+        // ==== END V3 export ====
+
         public PenumbraGroupStruct WorkspaceExport() => new() {
             Name = Name,
             Priority = Priority,

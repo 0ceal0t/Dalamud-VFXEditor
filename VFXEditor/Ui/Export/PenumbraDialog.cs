@@ -34,8 +34,8 @@ namespace VfxEditor.Ui.Export {
     }
 
     // FileVersion 3 (legacy): meta.json + separate default_mod.json/group_*.json files.
-    // Still written here for backwards-compatible workspace saves; Penumbra itself
-    // migrates any mod on disk in this format up to V4 as soon as it loads it.
+    // Also used for the workspace save format. Penumbra itself migrates any mod on
+    // disk in this format up to V4 as soon as it loads it.
     [Serializable]
     public class PenumbraModStruct : PenumbraItemStruct {
         public Dictionary<string, string> Files = [];
@@ -140,6 +140,11 @@ namespace VfxEditor.Ui.Export {
         private string Website = "";
         private string ModTags = ""; // comma-separated
 
+        // ==== V3 (legacy) export toggle, remove once Penumbra V4 becomes the standard format ====
+        // Defaults to true since most players' Penumbra installs still expect V3 mods
+        private bool ExportLegacyV3 = true;
+        // ==== END V3 export toggle ====
+
         public PenumbraDialog() : base( "Penumbra" ) { }
 
         protected override void OnExport() {
@@ -161,6 +166,11 @@ namespace VfxEditor.Ui.Export {
 
                 ImGui.InputTextMultiline( "##Description", ref Description, 1024, new( -1, ImGui.GetFrameHeightWithSpacing() * 2 ) );
             }
+
+            // ==== V3 (legacy) export toggle, remove once Penumbra V4 becomes the standard format ====
+            ImGui.Checkbox( "Legacy Format (V3)", ref ExportLegacyV3 );
+            if( ImGui.IsItemHovered() ) ImGui.SetTooltip( "Exports using Penumbra's older V3 mod format (a separate group_*.json per group) for maximum compatibility.\nUntick to export using Penumbra's current V4 format (a single meta.json) instead." );
+            // ==== END V3 export toggle ====
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
@@ -216,6 +226,7 @@ namespace VfxEditor.Ui.Export {
             Description = "Exported from VFXEditor";
             Website = "";
             ModTags = "";
+            ExportLegacyV3 = true; // remove once Penumbra V4 becomes the standard format
             Groups.ForEach( x => x.Reset() );
             Groups.Clear();
             Selected = null;
@@ -233,28 +244,14 @@ namespace VfxEditor.Ui.Export {
             ModTags = [.. ModTags.Split( ',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries )]
         };
 
-        // Penumbra's current format (FileVersion 4) embeds everything into a single meta.json
         private void Export( string saveFile ) {
             try {
                 var saveDir = Path.GetDirectoryName( saveFile );
                 var tempDir = Path.Combine( saveDir, "VFXEDITOR_PENUMBRA_TEMP" );
                 Directory.CreateDirectory( tempDir );
 
-                var meta = GetMeta();
-                var modMeta = new PenumbraMetaV4 {
-                    Identifier = Guid.NewGuid().ToString(),
-                    LastWrite = DateTime.UtcNow.ToString( "o" ),
-                    Name = meta.Name,
-                    Author = meta.Author,
-                    Description = meta.Description,
-                    Version = meta.Version,
-                    Website = meta.Website,
-                    ModTags = meta.ModTags,
-                    DefaultData = new() { Files = DefaultMod.Export( tempDir, "" ) },
-                    Groups = [.. Groups.Select( x => x.Export( tempDir ) )]
-                };
-
-                File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( modMeta ) );
+                if( ExportLegacyV3 ) ExportV3( tempDir ); // remove once Penumbra V4 becomes the standard format
+                else ExportV4( tempDir );
 
                 if( File.Exists( saveFile ) ) File.Delete( saveFile );
                 ZipFile.CreateFromDirectory( tempDir, saveFile );
@@ -265,6 +262,41 @@ namespace VfxEditor.Ui.Export {
                 Dalamud.Error( e, "Could not export to Penumbra" );
             }
         }
+
+        // Penumbra's current format (FileVersion 4) embeds everything into a single meta.json
+        private void ExportV4( string tempDir ) {
+            var meta = GetMeta();
+            var modMeta = new PenumbraMetaV4 {
+                Identifier = Guid.NewGuid().ToString(),
+                LastWrite = DateTime.UtcNow.ToString( "o" ),
+                Name = meta.Name,
+                Author = meta.Author,
+                Description = meta.Description,
+                Version = meta.Version,
+                Website = meta.Website,
+                ModTags = meta.ModTags,
+                DefaultData = new() { Files = DefaultMod.Export( tempDir, "" ) },
+                Groups = [.. Groups.Select( x => x.Export( tempDir ) )]
+            };
+
+            File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( modMeta ) );
+        }
+
+        // ==== V3 (legacy) export: meta.json + default_mod.json + one group_*.json per group.
+        // Remove this method (and PenumbraGroup.ExportV3 / PenumbraOption.ExportV3 / ExportLegacyV3)
+        // once Penumbra V4 becomes the standard format and V3 support is no longer needed. ====
+        private void ExportV3( string tempDir ) {
+            File.WriteAllText( Path.Combine( tempDir, "meta.json" ), JsonConvert.SerializeObject( GetMeta() ) );
+
+            var mod = new PenumbraModStruct { Files = DefaultMod.Export( tempDir, "" ) };
+            File.WriteAllText( Path.Combine( tempDir, "default_mod.json" ), JsonConvert.SerializeObject( mod ) );
+
+            foreach( var (group, idx) in Groups.WithIndex() ) {
+                var groupData = group.ExportV3( tempDir );
+                File.WriteAllText( Path.Combine( tempDir, $"group_{idx + 1:D3}_{group.GetName().ToLower()}.json" ), JsonConvert.SerializeObject( groupData ) );
+            }
+        }
+        // ==== END V3 export ====
 
         // =====================
 
