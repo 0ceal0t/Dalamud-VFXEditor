@@ -52,10 +52,10 @@ namespace VfxEditor.TmbFormat.Base {
         Weapon = 0x02,
         OffHand = 0x04,
         Summon = 0x08,
-        Unknown_1 = 0x10,
-        Unknown_2 = 0x20,
-        Unknown_3 = 0x40,
-        Unknown_4 = 0x80,
+        Unknown_2 = 0x10,
+        Unknown_3 = 0x20,
+        Unknown_4 = 0x40,
+        Unknown_5 = 0x80,
     }
 
     public enum BindUser {
@@ -161,9 +161,9 @@ namespace VfxEditor.TmbFormat.Base {
     }
 
     public enum ObjectRotation {
-        Align_with_No_Rotation,
-        Opposite_with_Rotation,
-        Caster_Facing
+        Use_Bind_Id_Rotation,
+        Use_Origin_Rotation,
+        Caster_Align
     }
 
     public enum SubtitleType {

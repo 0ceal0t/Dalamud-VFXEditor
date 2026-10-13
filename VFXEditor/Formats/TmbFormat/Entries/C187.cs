@@ -16,7 +16,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedShort Part = new( "Part" );
-        private readonly ParsedBool Reverse = new( "Reverse", size: 2 );
+        private readonly ParsedBool Inverse = new( "Inverse", size: 2 );
         private readonly ParsedEnum<C187ObjectControl> ObjectControl = new( "Object Control", size: 2 );
         private readonly ParsedByteBool Unk2 = new( "Unknown 2" );
         private readonly ParsedByteBool NoDelay = new( "No Delay" );
@@ -30,7 +30,7 @@ namespace VfxEditor.TmbFormat.Entries {
             Duration,
             Unk1,
             Part,
-            Reverse,
+            Inverse,
             ObjectControl,
             Unk2,
             NoDelay,

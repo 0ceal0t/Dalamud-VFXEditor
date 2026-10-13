@@ -15,7 +15,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedBool Visiblity = new( "Visibility", size: 2 );
+        private readonly ParsedBool Visiblity = new( "Is Visible", size: 2 );
         private readonly ParsedEnum<ObjectControl> Type = new( "Target Type", size: 2 );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );

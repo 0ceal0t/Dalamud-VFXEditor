@@ -37,7 +37,7 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );
         private readonly TmbOffsetFloat4 RGBA = new( "RGBA", defaultValue: new( 1 ) );
-        private readonly ParsedEnum<VfxC012Visibility> Visibility = new( "Visibility" );
+        private readonly ParsedFlag<VfxC012Visibility> Visibility = new( "Visibility" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C012( TmbFile file ) : base( file ) { }
