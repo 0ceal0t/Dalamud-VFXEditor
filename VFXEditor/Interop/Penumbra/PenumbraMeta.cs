@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-using System.Text.RegularExpressions;
 using VfxEditor.Formats.AtchFormat;
 
 namespace VfxEditor.Interop.Penumbra {
     // Builds Penumbra's binary (version 2) meta manipulation string, as accepted by AddTemporaryModAll.
     // Penumbra rejects the entire string if any identifier fails validation or is duplicated, so entries are filtered here.
     // https://github.com/xivdev/Penumbra/blob/master/Penumbra/Api/Api/MetaApi.cs (ConvertManipsV2 / CompressMetaManipulationsV2)
-    public static partial class PenumbraMeta {
+    public static class PenumbraMeta {
         private const byte Version = 2;
         private static readonly byte[] Magic = Encoding.ASCII.GetBytes( "META0002" );
         private const uint AtchKey = ( 'A' << 24 ) | ( 'T' << 16 ) | ( 'C' << 8 ) | 'H';
-        private const int AtchMaxBoneNameLength = 34; // + null terminator in a 35 byte buffer
-
-        [GeneratedRegex( @"c(\d{4})\.atch$", RegexOptions.IgnoreCase )]
-        private static partial Regex AtchRaceRegex();
+        private const int AtchMaxBoneNameLength = AtchPenumbraSupport.MaxBoneNameLength; // + null terminator in a 35 byte buffer
 
         public static string FromAtch( List<(string GamePath, AtchFile File)> files ) {
             using var entries = new MemoryStream();
@@ -26,9 +22,8 @@ namespace VfxEditor.Interop.Penumbra {
             var seen = new HashSet<(uint, ushort, ushort)>();
 
             foreach( var (gamePath, file) in files ) {
-                var match = AtchRaceRegex().Match( gamePath );
-                if( !match.Success || !ushort.TryParse( match.Groups[1].Value, out var genderRace ) || !ValidGenderRace( genderRace ) ) {
-                    Dalamud.Log( $"[PenumbraMeta] Skipping {gamePath}, Penumbra only supports .atch edits for playable races" );
+                if( !AtchPenumbraSupport.TryGetGenderRace( gamePath, out var genderRace ) ) {
+                    if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[PenumbraMeta] Skipping {gamePath}, Penumbra only supports .atch edits for playable races" );
                     continue;
                 }
 
@@ -42,7 +37,7 @@ namespace VfxEditor.Interop.Penumbra {
                         var state = entry.States[index];
                         var bone = Encoding.ASCII.GetBytes( state.Bone.Value ?? "" );
                         if( bone.Length > AtchMaxBoneNameLength ) {
-                            Dalamud.Log( $"[PenumbraMeta] Skipping {entry.Name.Value} state {index}, bone name is too long" );
+                            if( Plugin.Configuration?.LogDebug == true ) Dalamud.Log( $"[PenumbraMeta] Skipping {entry.Name.Value} state {index}, bone name is too long" );
                             continue;
                         }
 
@@ -80,12 +75,6 @@ namespace VfxEditor.Interop.Penumbra {
                 writer.Write( entries.ToArray() );
             }
             return Convert.ToBase64String( output.ToArray() );
-        }
-
-        // Matches AtchIdentifier.Validate: race 0-18, and the code must end in 01
-        private static bool ValidGenderRace( ushort genderRace ) {
-            var race = genderRace / 100;
-            return genderRace % 100 == 1 && race >= 0 && race <= 18;
         }
 
         // "2ax" -> '2' << 16 | 'a' << 8 | 'x', matching Penumbra's AtchType values

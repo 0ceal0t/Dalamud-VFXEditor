@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
@@ -12,5 +13,11 @@ namespace VfxEditor.Formats.AtchFormat {
         public AtchDocument( AtchManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override AtchFile FileFromReader( BinaryReader reader, bool verify ) => new( reader );
+
+        protected override List<string> GetPreviewWarnings() {
+            var ret = base.GetPreviewWarnings();
+            ret.AddRange( AtchPenumbraSupport.GetUnsupported( ReplacePath, File ) );
+            return ret;
+        }
     }
 }

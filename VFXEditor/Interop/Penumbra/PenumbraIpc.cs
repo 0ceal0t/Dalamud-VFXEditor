@@ -24,6 +24,10 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
         private readonly RedrawObject RedrawObjectSubscriber;
         private readonly GetEnabledState GetEnabledStateSubscriber;
+        private readonly GetCollection GetCollectionSubscriber;
+
+        private bool InterfaceCollectionCache = true;
+        private DateTime InterfaceCollectionChecked = DateTime.MinValue;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -39,6 +43,7 @@ namespace VfxEditor.Interop.Penumbra {
             RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RedrawObjectSubscriber = new( Dalamud.PluginInterface );
             GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
+            GetCollectionSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -125,6 +130,23 @@ namespace VfxEditor.Interop.Penumbra {
                 Dalamud.Error( e, "Error setting Penumbra temporary mod" );
                 return false;
             }
+        }
+
+        // UI files (ui/...) are only resolved through Penumbra's Interface collection, so they cannot be previewed when it is "None".
+        // Penumbra reports "None" as Guid.Empty. Cached, since this is checked while drawing
+        public bool InterfaceCollectionAssigned() {
+            if( !PenumbraEnabled ) return false;
+            if( ( DateTime.Now - InterfaceCollectionChecked ).TotalSeconds < 2 ) return InterfaceCollectionCache;
+
+            InterfaceCollectionChecked = DateTime.Now;
+            try {
+                var collection = GetCollectionSubscriber.Invoke( ApiCollectionType.Interface );
+                InterfaceCollectionCache = collection.HasValue && collection.Value.Id != Guid.Empty;
+            }
+            catch( Exception ) {
+                InterfaceCollectionCache = true; // can't tell, don't warn
+            }
+            return InterfaceCollectionCache;
         }
 
         public bool Redraw( int objectIndex ) {

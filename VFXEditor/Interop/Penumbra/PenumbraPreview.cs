@@ -26,6 +26,14 @@ namespace VfxEditor.Interop.Penumbra {
 
         public static bool Available => Plugin.PenumbraIpc?.PenumbraEnabled == true;
 
+        // Penumbra resolves UI files only through its Interface collection
+        public const string UiCollectionWarning = "Penumbra's Interface collection is set to \"None\", so UI files will not show up in-game. Assign a collection to \"Interface\" in Penumbra's Collections tab (Simple or Individual Assignments)";
+
+        public static bool IsUiPath( string gamePath ) => !string.IsNullOrEmpty( gamePath ) && gamePath.StartsWith( "ui/", StringComparison.OrdinalIgnoreCase );
+
+        // Only warn when Penumbra is loaded; when it is not, PenumbraRequiredWindow already covers it
+        public static bool UiPreviewAvailable => !Available || Plugin.PenumbraIpc.InterfaceCollectionAssigned();
+
         private static void GetCurrent( out Dictionary<string, string> files, out string meta ) {
             files = [];
             meta = string.Empty;

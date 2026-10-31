@@ -453,6 +453,21 @@ namespace VfxEditor.FileManager {
 
         protected virtual string GetWarningText() => "";
 
+        // Reasons a change will not show up in-game through Penumbra. Shown under the file controls
+        protected virtual List<string> GetPreviewWarnings() {
+            var ret = new List<string>();
+            if( PenumbraPreview.IsUiPath( ReplacePath ) && !PenumbraPreview.UiPreviewAvailable ) ret.Add( PenumbraPreview.UiCollectionWarning );
+            return ret;
+        }
+
+        private void DrawPreviewWarnings() {
+            var warnings = GetPreviewWarnings();
+            if( warnings.Count == 0 ) return;
+
+            using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW );
+            foreach( var warning in warnings ) ImGui.TextWrapped( warning );
+        }
+
         protected virtual void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
             ImGui.Separator();
@@ -464,6 +479,7 @@ namespace VfxEditor.FileManager {
             }
 
             DisplayFileControls();
+            DrawPreviewWarnings();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var _ = ImRaii.PushId( "Body" );
