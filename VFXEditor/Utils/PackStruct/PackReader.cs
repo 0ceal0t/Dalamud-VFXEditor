@@ -1,12 +1,10 @@
 using System;
 using System.IO;
 
-namespace VfxEditor.Utils.PackStruct
-{
+namespace VfxEditor.Utils.PackStruct {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/0e973ed6eace6afd31cd298f8c58f76fa8d5ef60/Files/PackStructs/PackReader.cs
 
-    public unsafe ref struct PackReader
-    {
+    public unsafe ref struct PackReader {
         private ReadOnlySpan<byte> _baseData;
         private PackFooter _packFooter;
 
@@ -15,11 +13,9 @@ namespace VfxEditor.Utils.PackStruct
         public bool HasData { get; private set; }
         public long StartPos { get; private set; }
 
-        public PackReader( BinaryReader reader )
-        {
+        public PackReader( BinaryReader reader ) {
             HasData = PackFooter.TryRead( reader, out _packFooter );
-            if( !HasData )
-            {
+            if( !HasData ) {
                 _packFooter.TotalSize = 0;
                 return;
             }
@@ -32,10 +28,8 @@ namespace VfxEditor.Utils.PackStruct
                 HasData = false;
         }
 
-        public bool TryGetPrior( uint type, out Pack prior )
-        {
-            if( !HasData )
-            {
+        public bool TryGetPrior( uint type, out Pack prior ) {
+            if( !HasData ) {
                 prior = default;
                 return false;
             }
@@ -45,8 +39,7 @@ namespace VfxEditor.Utils.PackStruct
             if( TryReadHeader( _baseData, type, out prior ) ) return true;
 
             var pad = ( int )FileUtils.NumberToPad( StartPos, 16 );
-            if( pad > 0 && pad < _baseData.Length && TryReadHeader( _baseData[pad..], type, out prior ) )
-            {
+            if( pad > 0 && pad < _baseData.Length && TryReadHeader( _baseData[pad..], type, out prior ) ) {
                 StartPos += pad;
                 return true;
             }
@@ -55,12 +48,10 @@ namespace VfxEditor.Utils.PackStruct
             return false;
         }
 
-        private static bool TryReadHeader( ReadOnlySpan<byte> data, uint type, out Pack prior )
-        {
+        private static bool TryReadHeader( ReadOnlySpan<byte> data, uint type, out Pack prior ) {
             var reader = new SpanBinaryReader( data );
             var header = reader.Read<PackHeader>();
-            if( header.Type != type )
-            {
+            if( header.Type != type ) {
                 prior = default;
                 return false;
             }

@@ -19,17 +19,14 @@ using VfxEditor.Utils.PackStruct;
 using HelixToolkit.Geometry;
 using VfxEditor.DirectX.Bone;
 
-namespace VfxEditor.PhybFormat
-{
-    public class MeshBuilders
-    {
+namespace VfxEditor.PhybFormat {
+    public class MeshBuilders {
         public MeshBuilder Collision;
         public MeshBuilder Simulation;
         public MeshBuilder Spring;
     }
 
-    public class PhybFile : FileManagerFile, IPhysicsObject
-    {
+    public class PhybFile : FileManagerFile, IPhysicsObject {
         public readonly BoneNameInstance Instance = new();
 
         public readonly ParsedIntByte4 Version = new( "Version" );
@@ -46,8 +43,7 @@ namespace VfxEditor.PhybFormat
         public readonly PhybExtended Extended;
         private readonly long EphbPos; // absolute offset of the extended pack in the source file, used to reproduce any alignment gap before it on write
 
-        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base()
-        {
+        public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
 
             if( Version.Value > 0 ) DataType.Read( reader );
@@ -64,8 +60,7 @@ namespace VfxEditor.PhybFormat
             var ephbPos = reader.BaseStream.Length;
 
             var packReader = new PackReader( reader );
-            if( packReader.TryGetPrior( ExtendedType, out var extendedData ) )
-            {
+            if( packReader.TryGetPrior( ExtendedType, out var extendedData ) ) {
                 Extended = new( extendedData );
                 ignoreRange = [(( int )packReader.StartPos, ( int )reader.BaseStream.Length)];
                 diff = extendedData.Data.Length - Extended.GetEphbData().Length;
@@ -77,8 +72,7 @@ namespace VfxEditor.PhybFormat
             reader.BaseStream.Position = simOffset;
             Simulation = new( this, reader, simOffset == ephbPos );
 
-            if( verify )
-            {
+            if( verify ) {
                 Verified = FileUtils.Verify( reader, ToBytes(), ignoreRange, diff );
                 if( Verified == VerifiedStatus.VERIFIED && Extended != null ) Verified = VerifiedStatus.PARTIAL;
             }
@@ -86,12 +80,10 @@ namespace VfxEditor.PhybFormat
             Skeleton = new( this, Path.IsPathRooted( sourcePath ) ? null : sourcePath );
         }
 
-        public override void Write( BinaryWriter writer )
-        {
+        public override void Write( BinaryWriter writer ) {
             writer.BaseStream.Position = 0;
 
-            if( Version.Value == 0 )
-            {
+            if( Version.Value == 0 ) {
                 writer.Write( 0 );
                 writer.Write( 0x0C );
                 writer.Write( 0x0C );
@@ -101,8 +93,7 @@ namespace VfxEditor.PhybFormat
             Version.Write( writer );
             DataType.Write( writer );
 
-            if( DataType.Value == 0 )
-            {
+            if( DataType.Value == 0 ) {
                 writer.Write( 0x10u );
                 writer.Write( 0x10u );
                 return;
@@ -125,8 +116,7 @@ namespace VfxEditor.PhybFormat
             writer.Write( ( int )collisionOffset );
             writer.Write( ( int )simOffset );
 
-            if( Extended != null )
-            {
+            if( Extended != null ) {
                 writer.BaseStream.Position = writer.BaseStream.Length;
                 var pad = EphbPos - writer.BaseStream.Position;
                 if( pad > 0 ) FileUtils.Pad( writer, pad );
@@ -134,16 +124,14 @@ namespace VfxEditor.PhybFormat
             }
         }
 
-        public override void Draw()
-        {
+        public override void Draw() {
             ImGui.Separator();
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             var size = SkeletonView.CalculateSize( SkeletonTabOpen, Plugin.Configuration.PhybSkeletonSplit );
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0, 0 ) );
-            using( var child = ImRaii.Child( "Child", size, false ) )
-            {
+            using( var child = ImRaii.Child( "Child", size, false ) ) {
                 Version.Draw();
                 DataType.Draw();
 
@@ -154,27 +142,22 @@ namespace VfxEditor.PhybFormat
 
                 SkeletonTabOpen = false;
 
-                using( var tab = ImRaii.TabItem( "Collision" ) )
-                {
+                using( var tab = ImRaii.TabItem( "Collision" ) ) {
                     if( tab ) Collision.Draw();
                 }
 
-                using( var tab = ImRaii.TabItem( "Simulation" ) )
-                {
+                using( var tab = ImRaii.TabItem( "Simulation" ) ) {
                     if( tab ) Simulation.Draw();
                 }
 
-                using( var tab = ImRaii.TabItem( "3D View" ) )
-                {
-                    if( tab )
-                    {
+                using( var tab = ImRaii.TabItem( "3D View" ) ) {
+                    if( tab ) {
                         Skeleton.Draw();
                         SkeletonTabOpen = true;
                     }
                 }
 
-                if( Extended != null )
-                {
+                if( Extended != null ) {
                     using var tab = ImRaii.TabItem( "Extended" );
                     if( tab ) Extended.Draw();
                 }
@@ -183,20 +166,17 @@ namespace VfxEditor.PhybFormat
             if( !SkeletonTabOpen ) Skeleton.DrawSplit( ref Plugin.Configuration.PhybSkeletonSplit );
         }
 
-        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes )
-        {
+        public void AddPhysicsObjects( MeshBuilders meshes, Dictionary<string, Bone> boneMatrixes ) {
             Collision.AddPhysicsObjects( meshes, boneMatrixes );
             Simulation.AddPhysicsObjects( meshes, boneMatrixes );
         }
 
-        public override void OnChange()
-        {
+        public override void OnChange() {
             PhysicsUpdated = true;
             base.OnChange();
         }
 
-        public override void Dispose()
-        {
+        public override void Dispose() {
             base.Dispose();
             Instance.Dispose();
         }

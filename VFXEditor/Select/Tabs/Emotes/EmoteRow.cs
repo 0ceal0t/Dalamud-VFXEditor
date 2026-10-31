@@ -4,17 +4,14 @@ using System.Linq;
 using VfxEditor.Select.Base;
 using VfxEditor.Select.Tabs.Actions;
 
-namespace VfxEditor.Select.Tabs.Emotes
-{
-    public enum EmoteRowType
-    {
+namespace VfxEditor.Select.Tabs.Emotes {
+    public enum EmoteRowType {
         PerJob = 1,
         Facial = 0,
         Normal = 2
     }
 
-    public class EmoteRow : ISelectItemWithIcon
-    {
+    public class EmoteRow : ISelectItemWithIcon {
         public readonly int RowId;
         public readonly uint Icon;
         public readonly string Name;
@@ -28,8 +25,7 @@ namespace VfxEditor.Select.Tabs.Emotes
 
         public List<(string, EmoteRowType)> Items => [.. Keys.Select( ToPap ).Where( x => !string.IsNullOrEmpty( x.Item1 ) ).GroupBy( x => x.Item1 ).Select( x => x.First() )];
 
-        public EmoteRow( Emote emote )
-        {
+        public EmoteRow( Emote emote ) {
             RowId = ( int )emote.RowId;
             Icon = emote.Icon == 246325 ? 405 : emote.Icon;
             Name = emote.Name.ToString();
@@ -38,16 +34,14 @@ namespace VfxEditor.Select.Tabs.Emotes
             Command = emote.TextCommand.ValueNullable?.Command.ToString() ?? "";
         }
 
-        private static (string, EmoteRowType) ToPap( (string, byte, byte) item )
-        {
+        private static (string, EmoteRowType) ToPap( (string, byte, byte) item ) {
             var key = item.Item1;
             if( string.IsNullOrEmpty( key ) ) return (null, 0);
 
             var type = ( EmoteRowType )item.Item2;
             var actionTimelineIdMode = item.Item3;
 
-            return type switch
-            {
+            return type switch {
                 EmoteRowType.Normal => (key, actionTimelineIdMode == 2 ? EmoteRowType.PerJob : EmoteRowType.Normal),
                 EmoteRowType.PerJob => (key, type),
                 EmoteRowType.Facial => key.StartsWith( "facial/pose/" ) ?
