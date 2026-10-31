@@ -222,6 +222,8 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             return !string.IsNullOrEmpty( replacePath );
         }
 
+        public void PenumbraExportManipulations( List<object> manipulationsOut ) { }
+
         public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
             PenumbraUtils.CopyFile( WriteLocation, modFolder, groupOption, GamePath, filesOut );

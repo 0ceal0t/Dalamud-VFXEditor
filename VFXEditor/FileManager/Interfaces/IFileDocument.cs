@@ -14,6 +14,9 @@ namespace VfxEditor.FileManager.Interfaces {
 
         public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut );
 
+        // Meta manipulations for the option this document is exported into (used by .atch, which Penumbra does not load as a file)
+        public void PenumbraExportManipulations( List<object> manipulationsOut );
+
         public bool GetReplacePath( string path, out string replacePath );
 
         // The game path this document currently replaces, and the local file it is written to. Used to build the Penumbra temporary mod

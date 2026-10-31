@@ -187,7 +187,9 @@ namespace VfxEditor.FileManager {
 
         public bool CanExport() => File != null && !string.IsNullOrEmpty( ReplacePath );
 
-        public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) {
+        public virtual void PenumbraExportManipulations( List<object> manipulationsOut ) { }
+
+        public virtual void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) {
             var path = ReplacePath;
             if( string.IsNullOrEmpty( path ) || File == null ) return;
             var data = File.ToBytes();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace VfxEditor.Formats.AtchFormat {
@@ -11,6 +12,9 @@ namespace VfxEditor.Formats.AtchFormat {
     // https://github.com/xivdev/Penumbra/blob/master/Penumbra/Meta/AtchManager.cs (only playable gender/races)
     public static partial class AtchPenumbraSupport {
         public const int MaxBoneNameLength = 34;
+
+        // One (point, state) that Penumbra can apply. TypeName is the point abbreviation, such as "2ax"
+        public readonly record struct AtchChange( string TypeName, ushort GenderRace, ushort Index, string Bone, float Scale, Vector3 Offset, Vector3 Rotation );
 
         [GeneratedRegex( @"c(\d{4})\.atch$", RegexOptions.IgnoreCase )]
         private static partial Regex RaceRegex();
@@ -44,6 +48,43 @@ namespace VfxEditor.Formats.AtchFormat {
             }
 
             VanillaCache[key] = ret;
+            return ret;
+        }
+
+        // Every (point, state) that differs from vanilla and that Penumbra can apply. Unchanged entries are left out, so
+        // exported mods do not override other mods' .atch edits for points they did not touch.
+        // If the vanilla file can't be read, every entry is returned
+        public static List<AtchChange> GetChanges( string gamePath, AtchFile file ) {
+            var ret = new List<AtchChange>();
+            if( file == null || !TryGetGenderRace( gamePath, out var genderRace ) ) return ret;
+
+            var vanilla = GetVanilla( gamePath );
+            var seenNames = new HashSet<string>();
+
+            foreach( var entry in file.Entries ) {
+                var name = entry.Name.Value;
+                if( string.IsNullOrEmpty( name ) || name.Length > 4 ) continue;
+                if( !seenNames.Add( name ) ) continue; // only the first of duplicate points, Penumbra rejects duplicate identifiers
+
+                var vanillaEntry = vanilla?.Entries.FirstOrDefault( x => x.Name.Value == name );
+                if( vanilla != null && vanillaEntry == null ) continue; // new point, Penumbra cannot add these
+
+                for( var index = 0; index < entry.States.Count; index++ ) {
+                    var state = entry.States[index];
+                    var bone = state.Bone.Value ?? "";
+                    if( bone.Length == 0 || bone.Length > MaxBoneNameLength ) continue;
+
+                    if( vanillaEntry != null ) {
+                        if( index >= vanillaEntry.States.Count ) continue;
+                        var original = vanillaEntry.States[index];
+                        if( original.Bone.Value == bone && original.Scale.Value == state.Scale.Value &&
+                            original.Offset.Value == state.Offset.Value && original.Rotation.Value == state.Rotation.Value ) continue;
+                    }
+
+                    ret.Add( new( name, genderRace, ( ushort )index, bone, state.Scale.Value, state.Offset.Value, state.Rotation.Value ) );
+                }
+            }
+
             return ret;
         }
 

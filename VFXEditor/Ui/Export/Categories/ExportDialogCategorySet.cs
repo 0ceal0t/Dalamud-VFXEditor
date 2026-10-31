@@ -24,6 +24,14 @@ namespace VfxEditor.Ui.Export.Categories {
             return ret;
         }
 
+        public List<object> ExportManipulations() {
+            var ret = new List<object>();
+            foreach( var category in Categories ) {
+                foreach( var item in category.GetItemsToExport() ) item.PenumbraExportManipulations( ret );
+            }
+            return ret;
+        }
+
         public Dictionary<string, string> WorkspaceExport() {
             var ret = new Dictionary<string, string>();
             foreach( var category in Categories ) category.WorkspaceExport( ret );
