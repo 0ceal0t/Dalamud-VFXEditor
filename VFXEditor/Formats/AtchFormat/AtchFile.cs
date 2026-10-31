@@ -101,8 +101,8 @@ namespace VfxEditor.Formats.AtchFormat {
             { "gsl", "Wrench" },
             { "gsr", "Opera Glasses" }, //also 1909, no model
             { "gun", "Gun" },
-            { "hab", "Hardboiled Motorycle" }, //1973
-            { "hbg", "Hardboiled Gun" }, //9209
+            { "hab", "Hardiboiled Motorycle" }, //1973
+            { "hbg", "Hardiboiled Gun" }, //9209
             // { "hel", "" },
             { "hmm", "Hammer (BSM/ARM)" },
             { "hrp", "Harp (BRD)" },
