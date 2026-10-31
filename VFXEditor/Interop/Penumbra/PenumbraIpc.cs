@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Penumbra.Api.Enums;
 using Penumbra.Api.Helpers;
 using Penumbra.Api.IpcSubscribers;
 using System;
@@ -17,6 +18,9 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly GetModList GetModsSubscriber;
         private readonly ResolveDefaultPath ResolveDefaultPathSubscriber;
         private readonly GetPlayerMetaManipulations GetPlayerMetaManipulationsSubscriber;
+        private readonly AddTemporaryModAll AddTemporaryModAllSubscriber;
+        private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
+        private readonly RedrawObject RedrawObjectSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -27,6 +31,9 @@ namespace VfxEditor.Interop.Penumbra {
             GetModsSubscriber = new( Dalamud.PluginInterface );
             GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
             ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
+            AddTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
+            RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
+            RedrawObjectSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -85,6 +92,37 @@ namespace VfxEditor.Interop.Penumbra {
             if( path.Equals( localPath ) ) return false;
             if( !string.IsNullOrEmpty( localPath ) ) return true;
             return false;
+        }
+
+        // Temporary mods apply to every collection and are resolved by Penumbra's .pap path rewriting,
+        // which runs for motion pack loads that never go through GetResourceAsync
+        public bool SetTemporaryMod( string tag, Dictionary<string, string> paths, int priority ) {
+            if( !PenumbraEnabled ) return false;
+            try {
+                if( paths.Count == 0 ) {
+                    var removeResult = RemoveTemporaryModAllSubscriber.Invoke( tag, priority );
+                    return removeResult == PenumbraApiEc.Success || removeResult == PenumbraApiEc.NothingChanged;
+                }
+                var result = AddTemporaryModAllSubscriber.Invoke( tag, paths, string.Empty, priority );
+                if( result != PenumbraApiEc.Success ) Dalamud.Error( $"Penumbra AddTemporaryModAll failed: {result}" );
+                return result == PenumbraApiEc.Success;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error setting Penumbra temporary mod" );
+                return false;
+            }
+        }
+
+        public bool Redraw( int objectIndex ) {
+            if( !PenumbraEnabled ) return false;
+            try {
+                RedrawObjectSubscriber.Invoke( objectIndex, RedrawType.Redraw );
+                return true;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error redrawing with Penumbra" );
+                return false;
+            }
         }
 
         private void EnablePenumbra() {

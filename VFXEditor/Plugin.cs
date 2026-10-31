@@ -157,6 +157,7 @@ namespace VfxEditor {
 
         private void FrameworkOnUpdate( IFramework framework ) {
             VfxSpawn.Tick();
+            PapRedirect.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
@@ -180,6 +181,7 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
 
             Dalamud.CommandManager.RemoveHandler( CommandName );
+            PapRedirect.Dispose();
             PenumbraIpc?.Dispose();
 
             ResourceLoader?.Dispose();

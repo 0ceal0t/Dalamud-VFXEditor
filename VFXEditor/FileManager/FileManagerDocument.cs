@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
@@ -153,6 +154,9 @@ namespace VfxEditor.FileManager {
             WriteFile( newWriteLocation );
             WriteLocation = newWriteLocation;
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
+
+            // .pap files: let Penumbra resolve the new temp file and redraw, which avoids reusing a cached handle
+            if( File != null && ReplacePath.EndsWith( ".pap" ) && PapRedirect.Available && PapRedirect.UpdateAndRedraw() ) return;
 
             if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
                 Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );
