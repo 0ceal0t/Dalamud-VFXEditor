@@ -64,36 +64,31 @@ namespace VfxEditor.Utils.Gltf {
 
             var root = newBones.Find( bone => bone.Name.Value == "n_root" );
             var rootNode = boneToNode[root];
-            if( rootNode.VisualChildren.Count() != 0 )
-            {
+            if( rootNode.VisualChildren.Any() ) {
                 Dictionary<int, List<SklbBone>> index = [];
                 PopulateIndex( index, rootNode, nodeToBone, 0 );
-                foreach( var i in index )
-                {
-                    foreach( var bone in i.Value )
-                    {
+                foreach( var i in index ) {
+                    foreach( var bone in i.Value ) {
                         finalBones.Add( bone );
                     }
                 }
-            } else
-            {
+            }
+            else {
                 finalBones.Add( root );
             }
 
             return [.. finalBones.Where( x => x != null )];
         }
 
-        private static void PopulateIndex( Dictionary<int, List<SklbBone>> index, Node node, Dictionary<Node, SklbBone> nodeToBone, int depth )
-        {
-            if( !index.ContainsKey( depth ) ) { index.Add( depth, [] ); }
-            index[depth].Add( nodeToBone[node] );
-            if( node.VisualChildren.Count() > 0 )
-            {
-                foreach( var child in node.VisualChildren )
-                {
+        private static void PopulateIndex( Dictionary<int, List<SklbBone>> index, Node node, Dictionary<Node, SklbBone> nodeToBone, int depth ) {
+            if( !index.TryGetValue( depth, out var value ) ) { value =  [] ; index.Add( depth, value ); }
+
+            value.Add( nodeToBone[node] );
+            if( node.VisualChildren.Any() ) {
+                foreach( var child in node.VisualChildren ) {
                     PopulateIndex( index, child, nodeToBone, depth + 1 );
                 }
-                
+
             }
         }
 

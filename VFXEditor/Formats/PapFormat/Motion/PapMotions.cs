@@ -15,7 +15,7 @@ namespace VfxEditor.PapFormat.Motion {
 
         public HavokData Bones;
         public hkaSkeleton* Skeleton =>
-            Bones?.AnimationContainer != null && Bones.AnimationContainer->Skeletons.Length > 0
+            Bones != null && Bones.AnimationContainer != null && Bones.AnimationContainer->Skeletons.Length > 0
                 ? Bones.AnimationContainer->Skeletons[0].ptr
                 : null;
 
@@ -40,7 +40,7 @@ namespace VfxEditor.PapFormat.Motion {
         protected override void OnHavokLoad() => UpdateMotions();
 
         public void UpdateMotions() {
-            if( AnimationContainer == null || Bones?.AnimationContainer == null ) return;
+            if( AnimationContainer == null || Bones == null || Bones.AnimationContainer == null ) return;
 
             Motions.ForEach( x => x.Dispose() );
             Motions.Clear();
