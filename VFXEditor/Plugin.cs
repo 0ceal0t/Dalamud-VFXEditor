@@ -41,6 +41,7 @@ namespace VfxEditor {
         public static Configuration Configuration { get; private set; }
         public static TrackerManager TrackerManager { get; private set; }
         public static ToolsDialog ToolsDialog { get; private set; }
+        public static PenumbraRequiredWindow PenumbraRequiredWindow { get; private set; }
         public static TexToolsDialog TexToolsExportDialog { get; private set; }
         public static LibraryManager LibraryManager { get; private set; }
 
@@ -136,6 +137,7 @@ namespace VfxEditor {
 
             ToolsDialog = new();
             PenumbraIpc = new();
+            PenumbraRequiredWindow = new( WindowSystem );
             PenumbraExportDialog = new();
             TexToolsExportDialog = new();
             ResourceLoader = new();
@@ -157,7 +159,7 @@ namespace VfxEditor {
 
         private void FrameworkOnUpdate( IFramework framework ) {
             VfxSpawn.Tick();
-            PapRedirect.Tick();
+            PenumbraPreview.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
@@ -181,7 +183,7 @@ namespace VfxEditor {
             Dalamud.PluginInterface.UiBuilder.OpenMainUi -= OpenConfigUi;
 
             Dalamud.CommandManager.RemoveHandler( CommandName );
-            PapRedirect.Dispose();
+            PenumbraPreview.Dispose();
             PenumbraIpc?.Dispose();
 
             ResourceLoader?.Dispose();

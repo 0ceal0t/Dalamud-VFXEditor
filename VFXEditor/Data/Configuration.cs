@@ -15,7 +15,6 @@ using VfxEditor.Library;
 using VfxEditor.Select;
 using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui;
-using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor {
@@ -58,7 +57,6 @@ namespace VfxEditor {
         public float OverlayRemoveDelay = 1;
 
         public bool BlockGameInputsWhenFocused = false;
-        public bool UsePenumbraPapRedirect = true;
         public string WriteLocation = Path.Combine( [
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "XIVLauncher",
@@ -338,8 +336,6 @@ namespace VfxEditor {
                 if( ImGui.Checkbox( "Limit Overlay by Distance", ref OverlayLimit ) ) Save();
                 if( ImGui.Checkbox( "Show Icons in Select Dialog", ref SelectDialogIconsOnLeft ) ) Save();
                 if( ImGui.InputText( "Default Mod Author", ref DefaultAuthor, 255 ) ) Save();
-                if( ImGui.Checkbox( "Refresh .pap Files Using Penumbra", ref UsePenumbraPapRedirect ) ) Save();
-                UiUtils.Tooltip( "When Penumbra is installed, .pap edits are applied through a temporary Penumbra mod and the player is redrawn, instead of reloading the file in-place" );
             }
         }
 

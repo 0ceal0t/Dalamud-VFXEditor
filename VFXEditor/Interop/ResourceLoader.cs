@@ -32,10 +32,6 @@ namespace VfxEditor.Interop {
             var mappedVtblOffset = Marshal.ReadInt32( mappedVtbl );
             HavokMapperVtbl = mappedVtbl + 4 + mappedVtblOffset;
 
-            HumanSetupScalingHook = Dalamud.Hooks.HookFromAddress<CharacterBaseSetupScalingDelegate>( HumanVTable[58], SetupScaling );
-            HumanCreateDeformerHook = Dalamud.Hooks.HookFromAddress<CharacterBaseCreateDeformerDelegate>( HumanVTable[101], CreateDeformer );
-
-            ReadSqpackHook.Enable();
             GetResourceSyncHook.Enable();
             GetResourceAsyncHook.Enable();
 
@@ -44,25 +40,12 @@ namespace VfxEditor.Interop {
             ActorVfxCreateHook.Enable();
             ActorVfxRemoveHook.Enable();
 
-            CheckFileStateHook.Enable();
-            LoadMdlFileExternHook.Enable();
-            TextureOnLoadHook.Enable();
-            SoundOnLoadHook.Enable();
-
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
-
-            HumanSetupScalingHook.Enable();
-            HumanCreateDeformerHook.Enable();
-
-            PathResolved += AddCrc;
         }
 
         public void Dispose() {
-            PathResolved -= AddCrc;
-
-            ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
 
@@ -71,17 +54,9 @@ namespace VfxEditor.Interop {
             ActorVfxCreateHook.Dispose();
             ActorVfxRemoveHook.Dispose();
 
-            CheckFileStateHook.Dispose();
-            LoadMdlFileExternHook.Dispose();
-            TextureOnLoadHook.Dispose();
-            SoundOnLoadHook.Dispose();
-
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();
-
-            HumanSetupScalingHook.Dispose();
-            HumanCreateDeformerHook.Dispose();
         }
     }
 }

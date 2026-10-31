@@ -30,8 +30,9 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 
 ## Installation
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
-2. Install the plugin from the `/xlplugins` menu
-3. Once installed, open with `/vfxedit`
+2. In-game previews require [Penumbra](https://github.com/xivdev/Penumbra) to be installed and enabled. Editing and exporting work without it, but changes will not show up in-game
+3. Install the plugin from the `/xlplugins` menu
+4. Once installed, open with `/vfxedit`
 
 ### Beta Builds
 Add the following custom repository in `/xlsettings > Experimental`:

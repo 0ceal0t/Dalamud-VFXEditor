@@ -10,8 +10,10 @@ using System.Linq;
 using System.Text;
 
 namespace VfxEditor.Interop.Penumbra {
+    // Penumbra is required: all in-game previews go through it (see PenumbraPreview)
     public class PenumbraIpc {
         public bool PenumbraEnabled { get; private set; }
+        public bool ModsEnabled { get; private set; } = true; // Penumbra's global "Enable Mods" toggle
 
         private readonly ApiVersion ApiVersionsSubscriber;
         private readonly GetModDirectory GetModDirectorySubscriber;
@@ -21,9 +23,11 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly AddTemporaryModAll AddTemporaryModAllSubscriber;
         private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
         private readonly RedrawObject RedrawObjectSubscriber;
+        private readonly GetEnabledState GetEnabledStateSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
+        private readonly EventSubscriber<bool> EnabledChangeSubscriber;
 
         public PenumbraIpc() {
             ApiVersionsSubscriber = new( Dalamud.PluginInterface );
@@ -34,18 +38,29 @@ namespace VfxEditor.Interop.Penumbra {
             AddTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RedrawObjectSubscriber = new( Dalamud.PluginInterface );
+            GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
+            EnabledChangeSubscriber = EnabledChange.Subscriber( Dalamud.PluginInterface, OnEnabledChange );
 
-
-            if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
+            if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) && x.IsLoaded ).Any() ) return;
             try {
                 ApiVersionsSubscriber.Invoke();
             }
             catch( Exception ) { return; }
 
             PenumbraEnabled = true;
+            RefreshEnabledState();
+        }
+
+        private void RefreshEnabledState() {
+            try {
+                ModsEnabled = GetEnabledStateSubscriber.Invoke();
+            }
+            catch( Exception ) {
+                ModsEnabled = true; // older Penumbra, assume enabled
+            }
         }
 
         public string ResolveDefaultPath( string path ) {
@@ -94,16 +109,15 @@ namespace VfxEditor.Interop.Penumbra {
             return false;
         }
 
-        // Temporary mods apply to every collection and are resolved by Penumbra's .pap path rewriting,
-        // which runs for motion pack loads that never go through GetResourceAsync
-        public bool SetTemporaryMod( string tag, Dictionary<string, string> paths, int priority ) {
+        // Temporary mods apply to every collection. Removing is done by registering nothing
+        public bool SetTemporaryMod( string tag, Dictionary<string, string> paths, string meta, int priority ) {
             if( !PenumbraEnabled ) return false;
             try {
-                if( paths.Count == 0 ) {
+                if( paths.Count == 0 && string.IsNullOrEmpty( meta ) ) {
                     var removeResult = RemoveTemporaryModAllSubscriber.Invoke( tag, priority );
                     return removeResult == PenumbraApiEc.Success || removeResult == PenumbraApiEc.NothingChanged;
                 }
-                var result = AddTemporaryModAllSubscriber.Invoke( tag, paths, string.Empty, priority );
+                var result = AddTemporaryModAllSubscriber.Invoke( tag, paths, meta ?? string.Empty, priority );
                 if( result != PenumbraApiEc.Success ) Dalamud.Error( $"Penumbra AddTemporaryModAll failed: {result}" );
                 return result == PenumbraApiEc.Success;
             }
@@ -125,17 +139,26 @@ namespace VfxEditor.Interop.Penumbra {
             }
         }
 
+        // These can be raised from Penumbra's thread, so only set state here; PenumbraRequiredWindow reacts on the next draw
         private void EnablePenumbra() {
             PenumbraEnabled = true;
+            RefreshEnabledState();
+            PenumbraPreview.Invalidate(); // temporary mods do not survive a Penumbra reload, re-register on next sync
         }
 
         private void DisablePenumbra() {
             PenumbraEnabled = false;
+            PenumbraPreview.Invalidate();
+        }
+
+        private void OnEnabledChange( bool enabled ) {
+            ModsEnabled = enabled;
         }
 
         public void Dispose() {
             InitializedSubscriber?.Dispose();
             DisposedSubscriber?.Dispose();
+            EnabledChangeSubscriber?.Dispose();
         }
 
         // https://github.com/Ottermandias/OtterGui/blob/4673e93f5165108a7f5b91236406d527f16384a5/Functions.cs#L154

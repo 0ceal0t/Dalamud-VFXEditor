@@ -15,5 +15,8 @@ namespace VfxEditor.FileManager.Interfaces {
         public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut );
 
         public bool GetReplacePath( string path, out string replacePath );
+
+        // The game path this document currently replaces, and the local file it is written to. Used to build the Penumbra temporary mod
+        public bool GetActiveReplacement( out string gamePath, out string localPath );
     }
 }

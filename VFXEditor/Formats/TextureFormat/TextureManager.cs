@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
@@ -54,6 +55,7 @@ namespace VfxEditor.Formats.TextureFormat {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
             replace.ImportFile( importPath );
             Textures.Add( replace );
+            PenumbraPreview.UpdateAndRedraw();
         }
 
         public void RemoveReplace( TextureReplace replace ) {

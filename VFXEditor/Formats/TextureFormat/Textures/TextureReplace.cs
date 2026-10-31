@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
 using VfxEditor.Ui.Export;
@@ -205,6 +206,12 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             return fallback;
         }
 
+        public bool GetActiveReplacement( out string gamePath, out string localPath ) {
+            gamePath = GamePath;
+            localPath = WriteLocation;
+            return !string.IsNullOrEmpty( gamePath ) && !string.IsNullOrEmpty( localPath );
+        }
+
         public bool GetReplacePath( string path, out string replacePath ) {
             replacePath = GamePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
@@ -262,6 +269,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
             ImportFile( importPath );
+            PenumbraPreview.UpdateAndRedraw();
         }
 
         // ===========================

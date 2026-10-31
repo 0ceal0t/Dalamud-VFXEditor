@@ -2,8 +2,6 @@ using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace VfxEditor.Interop {
     public static class Constants {
-        public const string ReadFileSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 63 42";
-        public const string ReadSqpackSig = "40 56 41 56 48 83 EC ?? 0F BE 02";
         public const string GetResourceSyncSig = "E8 ?? ?? ?? ?? 48 8B C8 8B C3 F0 0F C0 81";
         public const string GetResourceAsyncSig = "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00";
 
@@ -16,44 +14,12 @@ namespace VfxEditor.Interop {
         public const string CallTriggerSig = "E8 ?? ?? ?? ?? 0F B7 43 56";
 
         public const string GetMatrixSig = "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??";
-        public const string GetFileManagerSig = "48 83 EC ?? 48 8B 05 ?? ?? ?? ?? 48 85 C0 0F 85 ?? ?? ?? ?? 48 89 5C 24 ?? 45 33 C0 33 D2 48 89 7C 24 ?? B9 ?? ?? ?? ?? E8 ?? ?? ?? ?? 33 DB";
-
-        public const string DecRefSig = "E8 ?? ?? ?? ?? 48 C7 03 ?? ?? ?? ?? C6 83";
-        public const string RequestFileSig = "E8 ?? ?? ?? ?? F0 FF 4E 5C";
 
         public const string ResourceManagerSig = "48 8B 0D ?? ?? ?? ?? 0F 5B F6";
-
-        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Signatures.cs
-
-        public const string CheckFileStateSig = "E8 ?? ?? ?? ?? 48 85 C0 74 ?? 4C 8B C8 ";
-
-        public const string LoadTexFileLocalSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 49 8B E8 44 88 4C 24";
-        public const string LodConfigSig = "48 8B 05 ?? ?? ?? ?? B3";
-        public const string TexResourceHandleOnLoadSig = "40 53 55 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B D9";
-
-        public const string LoadMdlFileLocalSig = "48 89 5C 24 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 48 8B 72 ?? 4C 8B EA";
-        public const string LoadMdlFileExternSig = "E8 ?? ?? ?? ?? EB 02 B0 F1";
-
-        public const string LoadScdLocalSig = "48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC 30 8B 79 ?? 48 8B DA 8B D7";
-        public const string SoundOnLoadSig = "40 56 57 41 54 48 81 EC 90 00 00 00 80 3A 0B 45 0F B6 E0 48 8B F2";
 
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Signatures.cs#L52
 
         public const string PlayActionSig = "E8 ?? ?? ?? ?? 83 7F ?? ?? 75 ?? 0F B6 87 ?? ?? ?? ?? A8";
-
-        // https://github.com/aers/FFXIVClientStructs/blob/main/FFXIVClientStructs/FFXIV/Client/Game/Object/GameObject.cs
-
-        // TODO
-
-        public const int GameResourceOffset = 0x38;
-
-        public const int PapIdsOffset = 0xF0;
-
-        // https://github.com/imchillin/Anamnesis/blob/master/Anamnesis/Memory/ActorMemory.cs
-
-        public const int PrepPapOffset = 105;
-
-        public const byte PrepPapValue = 0xEC;
 
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
 
@@ -78,12 +44,5 @@ namespace VfxEditor.Interop {
         public const string PlaySoundSig = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? FE C2";
 
         public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 5D 77";
-
-        // https://github.com/xivdev/Penumbra/blob/246f4f65f5bf60a9c1ee8ecc7bc65075346c6229/Penumbra/Interop/Services/CharacterUtility.cs#L15
-        // https://github.com/xivdev/Penumbra/blob/246f4f65f5bf60a9c1ee8ecc7bc65075346c6229/Penumbra/Interop/Hooks/PostProcessing/PreBoneDeformerReplacer.cs#L70
-
-        public const string CharacterUtilitySig = "48 8B 05 ?? ?? ?? ?? 83 B9";
-
-        public const string HumanVTable = "48 8D 05 ?? ?? ?? ?? 48 89 03 33 C0 89 8B";
     }
 }

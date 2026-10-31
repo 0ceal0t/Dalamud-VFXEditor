@@ -53,6 +53,12 @@ namespace VfxEditor.FileManager {
             return !string.IsNullOrEmpty( replacePath );
         }
 
+        public bool GetActiveReplacement( out string gamePath, out string localPath ) {
+            gamePath = ReplacePath;
+            localPath = WriteLocation;
+            return File != null && !string.IsNullOrEmpty( gamePath ) && !string.IsNullOrEmpty( localPath );
+        }
+
         protected abstract R FileFromReader( BinaryReader reader, bool verify );
 
         protected void LoadLocal( string path, bool verify ) {
@@ -155,14 +161,8 @@ namespace VfxEditor.FileManager {
             WriteLocation = newWriteLocation;
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
-            // .pap files: let Penumbra resolve the new temp file and redraw, which avoids reusing a cached handle
-            if( File != null && ReplacePath.EndsWith( ".pap" ) && PapRedirect.Available && PapRedirect.UpdateAndRedraw() ) return;
-
-            if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
-                Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );
-            }
-
-            Plugin.ResourceLoader.ReRender();
+            // Penumbra resolves the game path to the new temp file (new path -> new resource handle), then redraws
+            PenumbraPreview.UpdateAndRedraw();
         }
 
         // =======================

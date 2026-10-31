@@ -25,6 +25,7 @@ namespace VfxEditor {
 
         public static void Draw() {
             IsImguiSafe = true;
+            PenumbraRequiredWindow?.Update();
             if( CheckLoadState() ) return;
 
             CheckWorkspaceKeybinds();
