@@ -1,0 +1,27 @@
+<Project>
+
+  <!-- Installs the Husky.Net git hooks (e.g. the dotnet-format pre-commit check)
+       automatically whenever a project is restored, so contributors don't need
+       to run `dotnet husky install` manually after cloning. -->
+  <PropertyGroup>
+    <HuskyRoot Condition="'$(HuskyRoot)' == ''">$(MSBuildThisFileDirectory)</HuskyRoot>
+  </PropertyGroup>
+
+  <Target Name="Husky" AfterTargets="Restore" Condition="'$(HUSKY)' != 0 and '$(IsCrossTargetingBuild)' != 'true'"
+          Inputs="$(HuskyRoot).config/dotnet-tools.json"
+          Outputs="$(HuskyRoot).husky/_/install.stamp">
+    <!-- ContinueOnError: this is a dev-convenience step, not part of the actual build.
+         A third-party build system (e.g. a plugin-repo CI bot) that doesn't set HUSKY=0
+         must never fail to compile just because git-hook installation didn't work there. -->
+    <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High"
+          ContinueOnError="WarnAndContinue" />
+    <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High"
+          WorkingDirectory="$(HuskyRoot)" ContinueOnError="WarnAndContinue" />
+    <Touch Files="$(HuskyRoot).husky/_/install.stamp" AlwaysCreate="true"
+           Condition="Exists('$(HuskyRoot).husky/_')" />
+    <ItemGroup>
+      <FileWrites Include="$(HuskyRoot).husky/_/install.stamp" />
+    </ItemGroup>
+  </Target>
+
+</Project>
