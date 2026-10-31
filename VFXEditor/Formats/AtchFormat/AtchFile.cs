@@ -19,6 +19,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "2bk", "Book (ACN/SMN/SCH)" },
             { "2bw", "Bow (ARC/BRD)" },
             // { "2bs", "" }, //1703
+            { "2cb", "Crossbow (ZPH)" }, //3301, 3332
             { "2ff", "Nouliths (SGE)" },
             { "2gb", "Gunblade (GNB)" },
             { "2gl", "Globe (AST)" },
