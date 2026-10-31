@@ -41,6 +41,7 @@ namespace VfxEditor.PhybFormat {
 
         public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'H' << 16 ) | ( ( uint )'B' << 24 );
         public readonly PhybExtended Extended;
+        private readonly long EphbPos; // absolute offset of the extended pack in the source file, used to reproduce any alignment gap before it on write
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
@@ -65,6 +66,7 @@ namespace VfxEditor.PhybFormat {
                 diff = extendedData.Data.Length - Extended.GetEphbData().Length;
                 Dalamud.Log( $"Flatbuffer diff is: {diff}" );
                 ephbPos = packReader.StartPos;
+                EphbPos = packReader.StartPos;
             }
 
             reader.BaseStream.Position = simOffset;
@@ -116,7 +118,8 @@ namespace VfxEditor.PhybFormat {
 
             if( Extended != null ) {
                 writer.BaseStream.Position = writer.BaseStream.Length;
-                FileUtils.PadTo( writer, 16 );
+                var pad = EphbPos - writer.BaseStream.Position;
+                if( pad > 0 ) FileUtils.Pad( writer, pad );
                 Extended.Write( writer );
             }
         }

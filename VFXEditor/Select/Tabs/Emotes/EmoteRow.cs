@@ -16,7 +16,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
         public readonly uint Icon;
         public readonly string Name;
 
-        public readonly List<(string, byte)> Keys;
+        public readonly List<(string, byte, byte)> Keys;
         public readonly string Command;
 
         public List<string> TmbFiles => [.. Keys.Select( x => ActionRow.ToTmbPath( x.Item1 ) ).Distinct()];
@@ -30,17 +30,20 @@ namespace VfxEditor.Select.Tabs.Emotes {
             Icon = emote.Icon == 246325 ? 405 : emote.Icon;
             Name = emote.Name.ToString();
 
-            Keys = [.. emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x.ValueNullable?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType) )];
+            Keys = [.. emote.ActionTimeline.Where( x => !string.IsNullOrEmpty( x.ValueNullable?.Key.ToString() ) ).Select( x => (x.Value.Key.ToString(), x.Value.LoadType, x.Value.ActionTimelineIDMode) )];
             Command = emote.TextCommand.ValueNullable?.Command.ToString() ?? "";
         }
 
-        private static (string, EmoteRowType) ToPap( (string, byte) item ) {
+        private static (string, EmoteRowType) ToPap( (string, byte, byte) item ) {
             var key = item.Item1;
             if( string.IsNullOrEmpty( key ) ) return (null, 0);
 
             var type = ( EmoteRowType )item.Item2;
+            var actionTimelineIdMode = item.Item3;
+
             return type switch {
-                EmoteRowType.Normal or EmoteRowType.PerJob => (key, type),
+                EmoteRowType.Normal => (key, actionTimelineIdMode == 2 ? EmoteRowType.PerJob : EmoteRowType.Normal),
+                EmoteRowType.PerJob => (key, type),
                 EmoteRowType.Facial => key.StartsWith( "facial/pose/" ) ?
                     (key.Replace( "facial/pose/", "" ), EmoteRowType.Facial) :
                     (key, EmoteRowType.Normal),

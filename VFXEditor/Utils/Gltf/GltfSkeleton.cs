@@ -16,7 +16,6 @@ namespace VfxEditor.Utils.Gltf {
             var newBones = new List<SklbBone>();
             var model = ModelRoot.Load( localPath );
             var nodes = model.LogicalNodes;
-
             var newNames = new Dictionary<string, SklbBone>();
             var currentNames = currentBones.WithIndex().ToDictionary( x => x.Value.Name.Value, x => x.Index );
 
@@ -54,39 +53,43 @@ namespace VfxEditor.Utils.Gltf {
 
             // Children
             foreach( var bone in newBones ) {
+
                 var node = boneToNode[bone];
                 foreach( var child in node.VisualChildren ) {
                     nodeToBone[child].Parent = bone;
                 }
             }
 
-            var unusedBones = new List<SklbBone>();
             var finalBones = new List<SklbBone>();
-            for( var i = 0; i < currentBones.Count; i++ ) finalBones.Add( null );
 
-            // Fill slots with bones with the same name
-            foreach( var bone in newBones ) {
-                if( !currentNames.TryGetValue( bone.Name.Value, out var idx ) ) {
-                    // Could not find index to replace
-                    unusedBones.Add( bone );
-                    continue;
+            var root = newBones.Find( bone => bone.Name.Value == "n_root" );
+            var rootNode = boneToNode[root];
+            if( rootNode.VisualChildren.Any() ) {
+                Dictionary<int, List<SklbBone>> index = [];
+                PopulateIndex( index, rootNode, nodeToBone, 0 );
+                foreach( var i in index ) {
+                    foreach( var bone in i.Value ) {
+                        finalBones.Add( bone );
+                    }
                 }
-                finalBones[idx] = bone;
             }
-
-            // Fill missing slots as best as possible
-            for( var i = 0; i < finalBones.Count; i++ ) {
-                if( finalBones[i] != null ) continue;
-                if( unusedBones.Count == 0 ) break;
-
-                finalBones[i] = unusedBones[0];
-                unusedBones.RemoveAt( 0 );
+            else {
+                finalBones.Add( root );
             }
-
-            // Add the remaining ones that couldn't be placed
-            finalBones.AddRange( unusedBones );
 
             return [.. finalBones.Where( x => x != null )];
+        }
+
+        private static void PopulateIndex( Dictionary<int, List<SklbBone>> index, Node node, Dictionary<Node, SklbBone> nodeToBone, int depth ) {
+            if( !index.TryGetValue( depth, out var value ) ) { value =  [] ; index.Add( depth, value ); }
+
+            value.Add( nodeToBone[node] );
+            if( node.VisualChildren.Any() ) {
+                foreach( var child in node.VisualChildren ) {
+                    PopulateIndex( index, child, nodeToBone, depth + 1 );
+                }
+
+            }
         }
 
         public static void ExportSkeleton( List<SklbBone> skeletonBones, string path ) {

@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      HUSKY: 0
     steps:
       - uses: actions/checkout@v5
         with:
