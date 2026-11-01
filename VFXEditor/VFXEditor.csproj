@@ -1,6 +1,8 @@
 <Project Sdk="Dalamud.NET.Sdk/15.0.0">
     <PropertyGroup>
         <AssemblyTitle>VFXEditor</AssemblyTitle>
+        <!-- Must match InternalName in VFXEditorV2.json: Dalamud loads <InternalName>.dll and the packager reads <AssemblyName>.json -->
+        <AssemblyName>VFXEditorV2</AssemblyName>
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
@@ -189,7 +191,7 @@
         <Content Include="Shaders\Model.fx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="VFXEditor.json">
+        <Content Include="VFXEditorV2.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
         <Content Include="Files\VGAudioCli.exe">

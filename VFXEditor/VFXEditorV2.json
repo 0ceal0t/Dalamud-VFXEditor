@@ -3,7 +3,7 @@
     "Name": "VFXEditor",
     "Punchline": "VFX editor and viewer",
     "Description": "VFX, animation, and sound editing plugin. Icon by PAPACHIN",
-    "InternalName": "VFXEditor",
+    "InternalName": "VFXEditorV2",
     "AssemblyVersion": "1.9.4.5",
     "RepoUrl": "https://github.com/0ceal0t/Dalamud-VFXEditor",
     "ApplicableVersion": "any",
