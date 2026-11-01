@@ -2,6 +2,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
+using VfxEditor.Data;
 using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.Formats.MtrlFormat.Data.Table;
@@ -80,7 +81,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             if( edited ) UpdateRender();
 
             // TODO
-            //Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, Plugin.Configuration.DrawDirectXMaterial );
+            //Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, ConfigurationWindow.DrawDirectXMaterial );
         }
 
         public void SetPreviewStain( MtrlStain stain ) {

@@ -67,16 +67,13 @@ namespace VfxEditor.Formats.AvfxFormat.Model {
 
         public override void ReadContents( BinaryReader reader, int size ) {
             ReadNested( reader, Parsed, size );
-            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count )
-            {
+            if( EmitVertexes.EmitVertexes.Count != EmitVertexNumbers.VertexNumbers.Count ) {
                 Dalamud.Error( $"Mismatched emit vertex counts {EmitVertexes.EmitVertexes.Count} {EmitVertexNumbers.VertexNumbers.Count}" );
             }
-            for( var i = 0; i < EmitVertexes.EmitVertexes.Count; i++ )
-            {
+            for( var i = 0; i < EmitVertexes.EmitVertexes.Count; i++ ) {
                 AllEmitVertexes.Add( new UiEmitVertex( this, EmitVertexes.EmitVertexes[i] ) );
             }
-            for( var i = 0; i < EmitVertexNumbers.VertexNumbers.Count; i++ )
-            {
+            for( var i = 0; i < EmitVertexNumbers.VertexNumbers.Count; i++ ) {
                 AllVertexNumbers.Add( new UiVertexNumber( EmitVertexNumbers.VertexNumbers[i] ) );
             }
         }
@@ -173,7 +170,7 @@ namespace VfxEditor.Formats.AvfxFormat.Model {
 
             if( Plugin.Configuration.EmitterVertexSplitOpen ) {
                 if( NeedsRender ) UpdateRender();
-                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
+                Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, ConfigurationWindow.DrawDirectXVfx );
             }
         }
 
@@ -207,7 +204,7 @@ namespace VfxEditor.Formats.AvfxFormat.Model {
             if( ImGui.RadioButton( "Normal", ref Mode, ( int )RenderMode.Normal ) ) UpdateRender();
 
             if( NeedsRender ) UpdateRender();
-            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, Plugin.Configuration.DrawDirectXVfx );
+            Plugin.DirectXManager.ModelRenderer.DrawTexture( RenderId, File.ModelInstance, UpdateRender, ConfigurationWindow.DrawDirectXVfx );
         }
 
         public void UpdateRender() {

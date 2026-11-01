@@ -140,7 +140,7 @@ namespace VfxEditor.DirectX.Model {
 
             using( var popup = ImRaii.Popup( "Popup" ) ) {
                 if( popup ) {
-                    Plugin.Configuration.DrawDirectXCommon();
+                    ConfigurationWindow.DrawDirectXCommon();
                     drawPopup?.Invoke();
                 }
             }

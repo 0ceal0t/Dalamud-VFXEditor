@@ -39,7 +39,7 @@ namespace VfxEditor.Interop.Havok.Ui {
 
             if( Bones == null ) return;
             DrawData();
-            Plugin.DirectXManager.BoneNameRenderer.DrawTexture( RenderId, Instance, UpdateRender, Plugin.Configuration.DrawDirectXSkeleton );
+            Plugin.DirectXManager.BoneNameRenderer.DrawTexture( RenderId, Instance, UpdateRender, ConfigurationWindow.DrawDirectXSkeleton );
         }
 
         protected abstract void DrawData();

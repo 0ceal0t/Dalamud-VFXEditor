@@ -72,7 +72,7 @@ namespace VfxEditor {
 
             // Loads this plugin's settings, or on first run imports them from VFXEditor / VFXEditor-Beta. Never fails
             Configuration = ConfigurationMigration.Load();
-            ConfigWindow = new( Configuration );
+            ConfigWindow = new();
 
             TextureManager.LoadLibrary();
             Groups = [

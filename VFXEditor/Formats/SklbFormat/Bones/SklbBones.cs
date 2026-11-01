@@ -243,7 +243,7 @@ namespace VfxEditor.Formats.SklbFormat.Bones {
                 }
 
                 if( NeedsReRender ) UpdateRender();
-                SklbPreview.DrawTexture( RenderId, File.BoneNameInstance, UpdateRender, Plugin.Configuration.DrawDirectXSkeleton );
+                SklbPreview.DrawTexture( RenderId, File.BoneNameInstance, UpdateRender, ConfigurationWindow.DrawDirectXSkeleton );
             }
 
             ImGui.Columns( 1 );
