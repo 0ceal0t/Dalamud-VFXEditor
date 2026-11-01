@@ -133,10 +133,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.SetNextItemWidth( width );
             ImGui.InputText( "Path", ref GamePath, 255 );
 
-            if( PenumbraPreview.IsUiPath( GamePath ) && !PenumbraPreview.UiPreviewAvailable ) {
-                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW );
-                ImGui.TextWrapped( PenumbraPreview.UiCollectionWarning );
-            }
+            if( PenumbraPreview.IsUiPath( GamePath ) && !PenumbraPreview.UiPreviewAvailable ) PenumbraPreview.DrawUiCollectionWarning();
 
             DrawImage();
             DrawControls();

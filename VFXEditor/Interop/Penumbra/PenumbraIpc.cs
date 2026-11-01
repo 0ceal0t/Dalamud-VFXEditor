@@ -25,6 +25,7 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly RedrawObject RedrawObjectSubscriber;
         private readonly GetEnabledState GetEnabledStateSubscriber;
         private readonly GetCollection GetCollectionSubscriber;
+        private readonly OpenMainWindow OpenMainWindowSubscriber;
 
         private bool InterfaceCollectionCache = true;
         private DateTime InterfaceCollectionChecked = DateTime.MinValue;
@@ -44,6 +45,7 @@ namespace VfxEditor.Interop.Penumbra {
             RedrawObjectSubscriber = new( Dalamud.PluginInterface );
             GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
             GetCollectionSubscriber = new( Dalamud.PluginInterface );
+            OpenMainWindowSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -147,6 +149,16 @@ namespace VfxEditor.Interop.Penumbra {
                 InterfaceCollectionCache = true; // can't tell, don't warn
             }
             return InterfaceCollectionCache;
+        }
+
+        public void OpenCollectionsTab() {
+            if( !PenumbraEnabled ) return;
+            try {
+                OpenMainWindowSubscriber.Invoke( TabType.Collections );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error opening Penumbra" );
+            }
         }
 
         public bool Redraw( int objectIndex ) {

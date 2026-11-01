@@ -457,12 +457,12 @@ namespace VfxEditor.FileManager {
 
         // Reasons a change will not show up in-game through Penumbra. Shown under the file controls
         protected virtual List<string> GetPreviewWarnings() {
-            var ret = new List<string>();
-            if( PenumbraPreview.IsUiPath( ReplacePath ) && !PenumbraPreview.UiPreviewAvailable ) ret.Add( PenumbraPreview.UiCollectionWarning );
-            return ret;
+            return [];
         }
 
         private void DrawPreviewWarnings() {
+            if( PenumbraPreview.IsUiPath( ReplacePath ) && !PenumbraPreview.UiPreviewAvailable ) PenumbraPreview.DrawUiCollectionWarning();
+
             var warnings = GetPreviewWarnings();
             if( warnings.Count == 0 ) return;
 

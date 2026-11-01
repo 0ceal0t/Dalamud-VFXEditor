@@ -1,7 +1,10 @@
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Penumbra {
     // All in-game previews go through a single Penumbra temporary mod. VFXEditor does not replace files itself.
@@ -27,12 +30,23 @@ namespace VfxEditor.Interop.Penumbra {
         public static bool Available => Plugin.PenumbraIpc?.PenumbraEnabled == true;
 
         // Penumbra resolves UI files only through its Interface collection
-        public const string UiCollectionWarning = "Penumbra's Interface collection is set to \"None\", so UI files will not show up in-game. Assign a collection to \"Interface\" in Penumbra's Collections tab (Simple or Individual Assignments)";
 
         public static bool IsUiPath( string gamePath ) => !string.IsNullOrEmpty( gamePath ) && gamePath.StartsWith( "ui/", StringComparison.OrdinalIgnoreCase );
 
         // Only warn when Penumbra is loaded; when it is not, PenumbraRequiredWindow already covers it
         public static bool UiPreviewAvailable => !Available || Plugin.PenumbraIpc.InterfaceCollectionAssigned();
+
+        // Step-by-step instructions using Penumbra's own labels (Collections tab > Simple Assignments > Interface button > "Use <name>.")
+        public static void DrawUiCollectionWarning() {
+            using var _ = ImRaii.PushId( "UiCollectionWarning" );
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW ) ) {
+                ImGui.TextWrapped( "UI changes will not show up in-game: Penumbra's \"Interface\" collection is set to \"None\". To fix this in Penumbra:" );
+                ImGui.TextWrapped( "1. Open the \"Collections\" tab and select \"Simple Assignments\"" );
+                ImGui.TextWrapped( "2. Click the \"Interface\" button" );
+                ImGui.TextWrapped( "3. Choose \"Use <collection name>.\" (any collection works, such as the one you normally use)" );
+            }
+            if( ImGui.Button( "Open Penumbra Collections" ) ) Plugin.PenumbraIpc.OpenCollectionsTab();
+        }
 
         private static void GetCurrent( out Dictionary<string, string> files, out string meta ) {
             files = [];
