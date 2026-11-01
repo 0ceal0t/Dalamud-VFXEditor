@@ -107,8 +107,19 @@ namespace VfxEditor {
 
             WindowSystem = new();
 
-            Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            var importedConfiguration = false;
+            Configuration = Dalamud.PluginInterface.GetPluginConfig() as Configuration;
+            if( Configuration == null ) {
+                // First run under this internal name: carry settings over from VFXEditor / VFXEditor-Beta if they exist
+                Configuration = ConfigurationMigration.FromPreviousPlugin();
+                importedConfiguration = Configuration != null;
+                Configuration ??= new Configuration();
+            }
             Configuration.Setup();
+            if( importedConfiguration ) {
+                Configuration.Save(); // only import once
+                Dalamud.InfoNotification( "Imported your settings from the previous version of VFXEditor" );
+            }
             ConfigWindow = new( Configuration );
 
             TextureManager.LoadLibrary();

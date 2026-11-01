@@ -44,8 +44,8 @@ https://raw.githubusercontent.com/Ottermandias/SeaOfStars/main/repo.json
 Editing and exporting work without Penumbra, but changes will only show up in-game while Penumbra is installed and enabled.
 
 ### Coming from an older version
-- **VFXEditor from the main Dalamud repository**: this version is a separate plugin, so install it from Sea of Stars as above and disable or uninstall the old one. Settings are not carried over
-- **`[BETA] VFXEditor`**: the beta is no longer updated. Uninstall it, install VFXEditor from Sea of Stars, and remove `https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json` from your custom repositories, since Sea of Stars already includes VFXEditor
+- **VFXEditor from the main Dalamud repository**: this version is a separate plugin, so install it from Sea of Stars as above and disable or uninstall the old one. Your settings are imported automatically the first time it starts
+- **`[BETA] VFXEditor`**: the beta is no longer updated. Uninstall it, install VFXEditor from Sea of Stars (your settings are imported automatically), and remove `https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json` from your custom repositories, since Sea of Stars already includes VFXEditor
 
 ### Releases
 Pushing a version tag (for example `2.0.0.0`) builds the plugin, publishes `vfx-editor.zip` as a GitHub release, and updates `repo.json` in this repository (see `.github/workflows/release.yml`). Sea of Stars picks up new versions from that file automatically, within a few minutes.
