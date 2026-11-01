@@ -52,7 +52,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorEdgeCenter = new( file, name: "Color Edge Center", "CoEC" );
             ColorEdgeEnd = new( file, name: "Color Edge End", "CoEE" );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataPolyline ) );
 
             ParameterTab.Add( CreateLineType );
             ParameterTab.Add( NotBillBoardBaseAxisType );

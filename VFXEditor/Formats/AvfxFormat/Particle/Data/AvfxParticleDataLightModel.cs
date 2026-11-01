@@ -9,7 +9,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
 
         public AvfxParticleDataLightModel( AvfxParticle particle ) : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataLightModel ) );
 
             ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx ) );
         }

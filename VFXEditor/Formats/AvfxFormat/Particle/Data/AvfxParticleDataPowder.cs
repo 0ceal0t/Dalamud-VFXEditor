@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxFloat CenterOffset = new( "Center Offset", "CnOf" );
 
         public AvfxParticleDataPowder() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataPowder ) );
 
             ParameterTab.Add( MV );
             ParameterTab.Add( Loc );

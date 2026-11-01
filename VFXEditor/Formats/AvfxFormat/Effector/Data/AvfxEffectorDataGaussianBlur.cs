@@ -16,7 +16,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
         public readonly AvfxEnum<ClipBasePoint> FadeBasePointType = new( "Fade Base Point", "FaBP" );
 
         public AvfxEffectorDataGaussianBlur() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxEffectorDataGaussianBlur ) );
 
             ParameterTab.Add( FadeStartDistance );
             ParameterTab.Add( FadeEndDistance );

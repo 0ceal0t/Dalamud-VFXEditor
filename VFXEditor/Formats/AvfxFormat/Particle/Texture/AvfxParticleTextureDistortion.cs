@@ -29,7 +29,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleTextureDistortion ) );
 
             Display.Add( Enabled );
             Display.Add( TargetUv1 );

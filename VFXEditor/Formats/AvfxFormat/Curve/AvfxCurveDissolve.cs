@@ -23,7 +23,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve {
             MidColor = new( file, "Mid Color", "MidC" );
             EndColor = new( file, "End Color", "EndC" );
 
-            Parsed = GetFieldsInOrder<AvfxItem>();
+            Parsed = GetFieldsInOrder<AvfxItem>( typeof( AvfxCurveDissolve ) );
 
             Display = [
                 StartColor,

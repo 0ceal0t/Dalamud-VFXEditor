@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorEdgeInner = new( file, name: "Color Edge Inner", "CEI" );
             ColorEdgeOuter = new( file, name: "Color Edge Outer", "CEO" );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataDisc ) );
 
             ParameterTab.Add( PartsCount );
             ParameterTab.Add( PartsCountU );

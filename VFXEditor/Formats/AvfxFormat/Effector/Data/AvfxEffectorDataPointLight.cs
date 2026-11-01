@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
         public AvfxEffectorDataPointLight( AvfxFile file ) : base() {
             Color = new( file, "Color" );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxEffectorDataPointLight ) );
 
             ParameterTab.Add( PointLightAttenuationType );
             ParameterTab.Add( EnableShadow );

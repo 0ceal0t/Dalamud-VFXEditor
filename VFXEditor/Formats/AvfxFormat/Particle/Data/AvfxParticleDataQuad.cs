@@ -8,7 +8,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxBool bMP = new( "Is Movement Particle", "bMP" );
 
         public AvfxParticleDataQuad() : base( true ) {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataQuad ) );
 
             ParameterTab.Add( SS );
             ParameterTab.Add( bMP );

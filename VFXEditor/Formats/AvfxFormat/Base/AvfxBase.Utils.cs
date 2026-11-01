@@ -11,10 +11,11 @@ namespace VfxEditor.Formats.AvfxFormat.Base {
     public unsafe partial class AvfxBase {
         private static readonly ConcurrentDictionary<Type, FieldInfo[]> DeclaredFieldCache = new();
 
-        // Every AvfxBase field declared by this object's class (not its base classes), in declaration order.
-        // Items are read and written in this order, so only use it when the fields are declared in file order
-        protected List<T> GetFieldsInOrder<T>() where T : AvfxBase {
-            var fields = DeclaredFieldCache.GetOrAdd( GetType(), type => type
+        // Every AvfxBase field declared by declaringType (not its base or derived classes), in declaration order.
+        // Items are read and written in this order, so only use it when the fields are declared in file order.
+        // declaringType is passed explicitly since GetType() is the derived class when called from a base constructor
+        protected List<T> GetFieldsInOrder<T>( Type declaringType ) where T : AvfxBase {
+            var fields = DeclaredFieldCache.GetOrAdd( declaringType, type => type
                 .GetFields( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly )
                 .Where( x => typeof( AvfxBase ).IsAssignableFrom( x.FieldType ) )
                 .OrderBy( x => x.MetadataToken ) // Declaration order, since GetFields() doesn't guarantee one

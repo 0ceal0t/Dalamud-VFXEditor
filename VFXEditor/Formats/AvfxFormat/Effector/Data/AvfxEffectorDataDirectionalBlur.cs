@@ -18,7 +18,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
 
 
         public AvfxEffectorDataDirectionalBlur() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxEffectorDataDirectionalBlur ) );
 
             ParameterTab.Add( FadeStartDistance );
             ParameterTab.Add( FadeEndDistance );

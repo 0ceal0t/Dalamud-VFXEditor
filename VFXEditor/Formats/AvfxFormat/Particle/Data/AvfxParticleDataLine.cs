@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorBegin = new( file, name: "Color Begin", "ColB" );
             ColorEnd = new( file, name: "Color End", "ColE" );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataLine ) );
 
             ParameterTab.Add( LineCount );
 

@@ -30,7 +30,7 @@ namespace VfxEditor.Formats.AvfxFormat.Scheduler {
         public AvfxScheduler( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.SchedColor ) {
             NodeGroups = groupSet;
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxScheduler ) );
 
             ItemTable = new( "ItEm", true, true, Items, Columns, () => new( this, "Item", true ),
             ( item, add ) => {

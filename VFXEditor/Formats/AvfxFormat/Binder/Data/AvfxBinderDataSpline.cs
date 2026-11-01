@@ -7,7 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
         public readonly AvfxCurve1Axis CarryOverFactorRandom = new( "Carry Over Factor Random", "COFR" );
 
         public AvfxBinderDataSpline() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxBinderDataSpline ) );
 
             Tabs.Add( CarryOverFactor );
             Tabs.Add( CarryOverFactorRandom );

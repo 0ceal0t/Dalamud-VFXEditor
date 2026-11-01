@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve {
         private readonly List<IUiItem> Display;
 
         public AvfxLife() : base( "Life", locked: true ) {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxLife ) );
 
             Display = [
                 Value,

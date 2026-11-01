@@ -20,7 +20,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
 
 
         public AvfxEffectorDataChromaticAberration() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxEffectorDataChromaticAberration ) );
 
             ParameterTab.Add( FadeStartDistance );
             ParameterTab.Add( FadeEndDistance );

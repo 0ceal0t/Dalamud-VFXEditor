@@ -9,7 +9,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WdtR" );
 
         public AvfxParticleDataLaser() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataLaser ) );
 
             Tabs.Add( Length );
             Tabs.Add( LengthRandom );

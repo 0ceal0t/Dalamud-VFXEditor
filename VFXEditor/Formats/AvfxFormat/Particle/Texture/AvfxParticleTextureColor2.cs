@@ -32,7 +32,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleTextureColor2 ) );
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );

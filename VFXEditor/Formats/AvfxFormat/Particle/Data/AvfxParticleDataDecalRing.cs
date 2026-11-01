@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxInt DDTT = new( "DDTT", "DDTT" );
 
         public AvfxParticleDataDecalRing() : base() {
-            Parsed = GetFieldsInOrder<AvfxBase>();
+            Parsed = GetFieldsInOrder<AvfxBase>( typeof( AvfxParticleDataDecalRing ) );
 
             ParameterTab.Add( ScalingScale );
             ParameterTab.Add( RingFan );
