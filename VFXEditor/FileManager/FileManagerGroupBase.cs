@@ -24,6 +24,8 @@ namespace VfxEditor.FileManager {
 
         public string GetId() => FormatName;
 
+        public abstract FormatCategory Category { get; }
+
         public string GetName() => FormatName.ToLower();
 
         public abstract void SetLastFocusedManager( FileManagerBase manager );

@@ -1,13 +1,12 @@
 using System;
 using VfxEditor.FileManager;
+using VfxEditor.Formats;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SklbFormat {
-    public class SklbManagerGroup : FileManagerGroup<SklbManager, SklbDocument, SklbFile, WorkspaceMetaBasic> {
-        public SklbManagerGroup() : base( "Sklb Editor", "Sklb" ) { }
-
-        protected override SklbManager GetNewManager() => new( this );
+    public class SklbManagerGroup : FormatManagerGroup<SklbDocument, SklbFile, WorkspaceMetaBasic> {
+        public SklbManagerGroup() : base( FileFormats.Sklb ) { }
 
         public bool GetSimpleSklb( string path, out SimpleSklb skeleton, out SklbSource source ) {
             source = SklbSource.Game;

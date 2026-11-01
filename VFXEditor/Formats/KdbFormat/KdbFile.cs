@@ -34,7 +34,7 @@ namespace VfxEditor.Formats.KdbFormat {
      * HUGE THANKS TO WINTER FOR FIGURING OUT MOST OF THIS
      */
 
-    public unsafe class KdbFile : FileManagerFile {
+    public unsafe class KdbFile : FileManagerFile, IReadableFile<KdbFile> {
         public static List<(int, int)> VerifyIgnore { get; private set; } = null;
 
         public static string SklbTempPath => Path.Combine( Plugin.RootLocation, "Files", "kb_havok.hkx" );
@@ -64,6 +64,8 @@ namespace VfxEditor.Formats.KdbFormat {
 
         public readonly KdbNodeGraphViewer NodeGraph = new();
         public List<KdbNode> Nodes => NodeGraph.Canvas.Nodes;
+
+        public static KdbFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
 
         public KdbFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Selector = new( GetSklbPath( sourcePath ), UpdateSkeleton );

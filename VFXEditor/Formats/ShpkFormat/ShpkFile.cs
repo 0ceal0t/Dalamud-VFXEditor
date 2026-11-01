@@ -22,7 +22,7 @@ namespace VfxEditor.Formats.ShpkFormat {
     // Based on https://github.com/Ottermandias/Penumbra.GameData/blob/15ae65921468a2407ecdd068ca79947e596e24be/Files/ShpkFile.cs#L6
     // And other work by Ny
 
-    public class ShpkFile : FileManagerFile {
+    public class ShpkFile : FileManagerFile, IReadableFile<ShpkFile> {
         public const uint MaterialParamsConstantId = 0x64D12851u;
         public const uint TableSamplerId = 0x2005679Fu;
 
@@ -76,6 +76,8 @@ namespace VfxEditor.Formats.ShpkFormat {
         private readonly CommandDropdown<ShpkNode> NodeView;
         private readonly CommandSplitView<ShpkAlias> AliasView;
         private readonly CommandDropdown<ShpkNodeAliasCluster> ClusterView;
+
+        public static ShpkFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public ShpkFile( BinaryReader reader, bool verify ) : this( reader, null, verify ) { }
 

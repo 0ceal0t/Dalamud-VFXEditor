@@ -46,7 +46,7 @@ namespace VfxEditor.Formats.MdlFormat {
         Unknown_2 = 0x01
     }
 
-    public class MdlFile : FileManagerFile {
+    public class MdlFile : FileManagerFile, IReadableFile<MdlFile> {
         public readonly ModelDeferredInstance MeshInstance = new();
 
         public const uint VERSION_6 = 0x01000006; // Updated dawntrail model
@@ -99,6 +99,8 @@ namespace VfxEditor.Formats.MdlFormat {
 
         private readonly List<MdlBoundingBox> UnknownBoundingBoxes = [];
         private readonly CommandSplitView<MdlBoundingBox> UnknownBoxView;
+
+        public static MdlFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public MdlFile( BinaryReader reader, bool verify ) : base() {
             var data = new MdlFileData();

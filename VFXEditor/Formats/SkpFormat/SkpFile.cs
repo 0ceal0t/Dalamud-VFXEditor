@@ -21,7 +21,7 @@ namespace VfxEditor.Formats.SkpFormat {
         Slope = 0x10
     }
 
-    public class SkpFile : FileManagerFile {
+    public class SkpFile : FileManagerFile, IReadableFile<SkpFile> {
         public static List<(int, int)> VerifyIgnore { get; private set; } = null;
 
         private readonly int Version;
@@ -31,6 +31,8 @@ namespace VfxEditor.Formats.SkpFormat {
         private readonly SklbLayers Animation = new( null );
         private readonly SkpLookAt LookAt = new();
         private readonly SkpSlope Slope = new();
+
+        public static SkpFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public SkpFile( BinaryReader reader, bool verify ) : base() {
             reader.ReadInt32(); // Magic

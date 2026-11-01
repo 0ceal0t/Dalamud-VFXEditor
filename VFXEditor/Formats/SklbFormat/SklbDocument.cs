@@ -9,9 +9,9 @@ namespace VfxEditor.Formats.SklbFormat {
         public override string Id => "Sklb";
         public override string Extension => "sklb";
 
-        public SklbDocument( SklbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
+        public SklbDocument( FileManagerBase manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public SklbDocument( SklbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
+        public SklbDocument( FileManagerBase manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override SklbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 

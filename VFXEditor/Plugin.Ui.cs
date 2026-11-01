@@ -110,38 +110,7 @@ namespace VfxEditor {
         public static void DrawManagersMenu( IFileManager currentManager ) {
             using var _ = ImRaii.PushId( "Menu" );
 
-            // Manually specify the order since it's different than the load order
-            var categories = new List<IFileManagerGroup[]> {
-                new IFileManagerGroup[]{
-                    AvfxManager,
-                    TextureManager
-                },
-                new IFileManagerGroup[]{
-                    TmbManager,
-                    PapManager,
-                },
-                new IFileManagerGroup[]{
-                    ScdManager
-                },
-                new IFileManagerGroup[]{
-                    UldManager
-                },
-                new IFileManagerGroup[]{
-                    SklbManager,
-                    SkpManager,
-                    PhybManager,
-                    EidManager,
-                    AtchManager,
-                    KdbManager,
-                    PbdManager,
-                },
-                new IFileManagerGroup[]{
-                    MdlManager,
-                    MtrlManager,
-                    ShpkManager,
-                    ShcdManager
-                }
-            };
+            var categories = Groups.GroupBy( x => x.Category ).Select( x => x.ToArray() ).ToList();
 
             var dropdown = false;
             var managerCount = categories.Sum( x => x.Length );

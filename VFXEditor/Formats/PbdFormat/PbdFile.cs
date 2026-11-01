@@ -18,7 +18,7 @@ using VfxEditor.Utils;
 using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PbdFormat {
-    public class PbdFile : FileManagerFile {
+    public class PbdFile : FileManagerFile, IReadableFile<PbdFile> {
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Files/PbdFile.cs
         // https://github.com/Ottermandias/Penumbra.GameData/blob/f5a74c70ad3861c5c66e1df6ae9a29fc7a0d736a/Data/RacialDeformer.cs#L7
 
@@ -30,6 +30,8 @@ namespace VfxEditor.Formats.PbdFormat {
 
         public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'B' << 16 ) | ( ( uint )'D' << 24 );
         public PbdExtended Extended;
+
+        public static PbdFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public PbdFile( BinaryReader reader, bool verify ) : base() {
             var count = reader.ReadInt32();

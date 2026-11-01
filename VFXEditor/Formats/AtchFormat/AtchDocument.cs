@@ -9,9 +9,9 @@ namespace VfxEditor.Formats.AtchFormat {
         public override string Id => "Atch";
         public override string Extension => "atch";
 
-        public AtchDocument( AtchManager manager, string writeLocation ) : base( manager, writeLocation ) { }
+        public AtchDocument( FileManagerBase manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public AtchDocument( AtchManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
+        public AtchDocument( FileManagerBase manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override AtchFile FileFromReader( BinaryReader reader, bool verify ) => new( reader );
 

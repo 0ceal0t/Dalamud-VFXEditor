@@ -40,7 +40,7 @@ namespace VfxEditor.Formats.MtrlFormat {
         Missing
     }
 
-    public class MtrlFile : FileManagerFile {
+    public class MtrlFile : FileManagerFile, IReadableFile<MtrlFile> {
         public readonly ModelDeferredInstance Instance = new();
 
         public readonly uint Version;
@@ -77,6 +77,8 @@ namespace VfxEditor.Formats.MtrlFormat {
         public string ShaderFilePath { get; private set; } = "";
 
         private readonly int ModdedMod4 = 0;
+
+        public static MtrlFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public MtrlFile( BinaryReader reader, bool verify ) : base() {
             Version = reader.ReadUInt32();

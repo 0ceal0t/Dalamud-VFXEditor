@@ -3,6 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Select;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
@@ -14,10 +15,15 @@ namespace VfxEditor.Formats.TmbFormat {
         public uint AnimationId = 0;
         private bool AnimationDisabled => string.IsNullOrEmpty( ReplacePath ) || AnimationId == 0;
 
-        public TmbDocument( TmbManager manager, string writeLocation ) : base( manager, writeLocation ) { }
+        public TmbDocument( FileManagerBase manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public TmbDocument( TmbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) {
+        public TmbDocument( FileManagerBase manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) {
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
+        }
+
+        public override void SetReplace( SelectResult result ) {
+            base.SetReplace( result );
+            AnimationId = TmbSpawn.GetIdFromTmbPath( result.Path );
         }
 
         protected override TmbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );

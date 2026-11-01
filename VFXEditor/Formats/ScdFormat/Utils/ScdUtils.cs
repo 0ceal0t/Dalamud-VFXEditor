@@ -3,21 +3,25 @@ using VfxEditor.Interop;
 
 namespace VfxEditor.Formats.ScdFormat.Utils {
     public static class ScdUtils {
+        public static string ConvertWav => Path.Combine( Plugin.Configuration.WriteLocation, "temp_out.wav" ).Replace( '\\', '/' );
+        public static string ConvertOgg => Path.Combine( Plugin.Configuration.WriteLocation, "temp_out.ogg" ).Replace( '\\', '/' );
+        public static string ConvertHca => Path.Combine( Plugin.Configuration.WriteLocation, "temp_out.hca" ).Replace( '\\', '/' );
+
         public static string VorbisHeader => Path.Combine( Plugin.RootLocation, "Files", "vorbis_header.bin" );
 
         public static void ConvertWavToOgg( string wavPath ) {
-            File.Delete( ScdManagerGroup.ConvertOgg );
-            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdManagerGroup.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
+            File.Delete( ScdUtils.ConvertOgg );
+            InteropUtils.Run( "oggenc2.exe", $"-s 0  --resample 44100 -o \"{ScdUtils.ConvertOgg}\" \"{wavPath}\"", false, out var _ );
         }
 
         public static void ConvertToAdpcm( string wavPath ) {
-            File.Delete( ScdManagerGroup.ConvertWav );
-            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdManagerGroup.ConvertWav}\"", false, out var _ );
+            File.Delete( ScdUtils.ConvertWav );
+            InteropUtils.Run( "adpcmencode3.exe", $"-b 256 \"{wavPath}\" \"{ScdUtils.ConvertWav}\"", false, out var _ );
         }
 
         public static void ConvertToHca( string wavPath ) {
-            File.Delete( ScdManagerGroup.ConvertHca );
-            InteropUtils.Run( "VGAudioCli.exe", $"\"{wavPath}\" \"{ScdManagerGroup.ConvertHca}\"", false, out var _ );
+            File.Delete( ScdUtils.ConvertHca );
+            InteropUtils.Run( "VGAudioCli.exe", $"\"{wavPath}\" \"{ScdUtils.ConvertHca}\"", false, out var _ );
         }
 
         public static void XorDecode( byte[] vorbisHeader, byte encodeByte ) {

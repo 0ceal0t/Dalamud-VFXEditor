@@ -9,7 +9,7 @@ using VfxEditor.Utils;
 using static VfxEditor.Utils.ShaderUtils;
 
 namespace VfxEditor.Formats.ShcdFormat {
-    public class ShcdFile : FileManagerFile {
+    public class ShcdFile : FileManagerFile, IReadableFile<ShcdFile> {
         private readonly byte[] Version;
         private readonly uint DxMagic;
         public DX DxVersion => GetDxVersion( DxMagic );
@@ -17,6 +17,8 @@ namespace VfxEditor.Formats.ShcdFormat {
 
         public readonly ParsedEnum<ShaderStage> Stage = new( "Stage", 1 );
         public readonly ShpkShader Shader;
+
+        public static ShcdFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public ShcdFile( BinaryReader reader, bool verify ) : base() {
             reader.ReadInt32(); // Magic

@@ -245,7 +245,7 @@ namespace VfxEditor.Formats.ScdFormat.Music.Data {
 
         public static ScdAudioEntry ImportWav( string path, ScdAudioEntry oldEntry ) {
             ScdUtils.ConvertWavToOgg( path );
-            return ImportOgg( ScdManagerGroup.ConvertOgg, oldEntry );
+            return ImportOgg( ScdUtils.ConvertOgg, oldEntry );
         }
 
         // ================================

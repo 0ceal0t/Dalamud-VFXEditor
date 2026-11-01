@@ -20,7 +20,7 @@ using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ScdFormat {
-    public class ScdFile : FileManagerFile {
+    public class ScdFile : FileManagerFile, IReadableFile<ScdFile> {
         private readonly ScdHeader Header;
 
         public readonly List<ScdAudioEntry> Audio = [];
@@ -36,6 +36,8 @@ namespace VfxEditor.Formats.ScdFormat {
 
         private readonly short UnknownOffset;
         private readonly int EofPaddingSize;
+
+        public static ScdFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         public ScdFile( BinaryReader reader, bool verify ) : base() {
             Header = new( reader );
@@ -222,7 +224,7 @@ namespace VfxEditor.Formats.ScdFormat {
 
         public async void Import( string path, ScdAudioEntry entry ) {
             await Task.Run( () => {
-                if( !entry.Data.GetImportActions().TryGetValue( Path.GetExtension( path ).Replace(".", ""), out var importFunc ) ) return;
+                if( !entry.Data.GetImportActions().TryGetValue( Path.GetExtension( path ).Replace( ".", "" ), out var importFunc ) ) return;
                 var newEntry = importFunc( path, entry );
                 if( newEntry != null ) Replace( entry, newEntry );
             } );

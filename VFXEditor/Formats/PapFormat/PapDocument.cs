@@ -8,9 +8,9 @@ namespace VfxEditor.Formats.PapFormat {
         public override string Id => "Pap";
         public override string Extension => "pap";
 
-        public PapDocument( PapManager manager, string writeLocation ) : base( manager, writeLocation ) { }
+        public PapDocument( FileManagerBase manager, string writeLocation ) : base( manager, writeLocation ) { }
 
-        public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
+        public PapDocument( FileManagerBase manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
         protected override PapFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 

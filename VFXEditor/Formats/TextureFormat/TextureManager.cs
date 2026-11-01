@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using VfxEditor.Data;
 using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
@@ -47,6 +48,8 @@ namespace VfxEditor.Formats.TextureFormat {
         public string GetId() => "Textures";
 
         public string GetName() => "tex";
+
+        public FormatCategory Category => FormatCategory.Vfx;
 
         public int GetWindowId() => 1;
 

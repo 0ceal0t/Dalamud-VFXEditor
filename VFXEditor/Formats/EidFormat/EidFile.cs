@@ -12,7 +12,7 @@ using VfxEditor.Ui.Components.Dropdowns;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.EidFormat {
-    public class EidFile : FileManagerFile {
+    public class EidFile : FileManagerFile, IReadableFile<EidFile> {
         public readonly List<EidBindPoint> BindPoints = [];
         public readonly CommandDropdown<EidBindPoint> Dropdown;
 
@@ -27,10 +27,12 @@ namespace VfxEditor.Formats.EidFormat {
         public readonly EidSkeletonView Skeleton;
         public bool BindPointsUpdated = true;
 
+        public static EidFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
+
         public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
-            Version2 = reader.ReadInt16(); 
+            Version2 = reader.ReadInt16();
             var count = reader.ReadInt32();
             Unk1 = reader.ReadUInt32();
 

@@ -130,7 +130,7 @@ namespace VfxEditor.FileManager {
             SourceTextInput = "";
         }
 
-        public void SetReplace( SelectResult result ) {
+        public virtual void SetReplace( SelectResult result ) {
             Replace = result;
             ReplaceTextInput = "";
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );

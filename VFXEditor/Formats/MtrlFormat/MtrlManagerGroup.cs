@@ -5,13 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using VfxEditor.FileManager;
+using VfxEditor.Formats;
 using VfxEditor.Formats.MtrlFormat.Stm;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat {
-    public class MtrlManagerGroup : FileManagerGroup<MtrlManager, MtrlDocument, MtrlFile, WorkspaceMetaBasic> {
+    public class MtrlStain {
+        public string Name;
+        public uint Id;
+        public Vector3 Color;
+    }
+
+    public class MtrlManagerGroup : FormatManagerGroup<FormatDocument<MtrlFile>, MtrlFile, WorkspaceMetaBasic> {
         public readonly TextureDataFile TileDiffuseFile;
         public readonly TextureDataFile TileNormalFile;
         public readonly TextureDataFile SphereFile;
@@ -24,7 +32,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
         public readonly List<MtrlStain> Stains = [];
 
-        public MtrlManagerGroup() : base( "Mtrl Editor", "Mtrl" ) {
+        public MtrlManagerGroup() : base( FileFormats.Mtrl ) {
             try {
                 TileDiffuseFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_orb_array.tex" ) );
                 TileNormalFile = TextureDataFile.LoadFromLocal( Path.Combine( Plugin.RootLocation, "Files", "tile_norm_array.tex" ) );
@@ -61,8 +69,6 @@ namespace VfxEditor.Formats.MtrlFormat {
                 } );
             }
         }
-
-        protected override MtrlManager GetNewManager() => new( this );
 
         public override void Reset( bool pluginClosing ) {
             base.Reset( pluginClosing );

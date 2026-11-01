@@ -73,20 +73,20 @@ namespace VfxEditor.Formats.ScdFormat.Music.Data {
             var waveFileCheck = new WaveFileReader( path );
             if( waveFileCheck.WaveFormat.Encoding == WaveFormatEncoding.Adpcm ) {
                 Dalamud.Log( "Already Adpcm, skipping conversion" );
-                File.Copy( path, ScdManagerGroup.ConvertWav, true );
+                File.Copy( path, ScdUtils.ConvertWav, true );
             }
             else {
                 ScdUtils.ConvertToAdpcm( path );
             }
             waveFileCheck.Close();
 
-            if( !File.Exists( ScdManagerGroup.ConvertWav ) ) {
+            if( !File.Exists( ScdUtils.ConvertWav ) ) {
                 Dalamud.Error( "Could not convert to ADPCM" );
                 return null;
             }
 
-            using var waveFile = new WaveFileReader( ScdManagerGroup.ConvertWav );
-            var rawData = File.ReadAllBytes( ScdManagerGroup.ConvertWav );
+            using var waveFile = new WaveFileReader( ScdUtils.ConvertWav );
+            var rawData = File.ReadAllBytes( ScdUtils.ConvertWav );
             var format = waveFile.WaveFormat;
 
             using var ms = new MemoryStream( rawData );

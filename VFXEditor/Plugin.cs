@@ -9,23 +9,11 @@ using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats;
 using VfxEditor.Formats.AvfxFormat;
-using VfxEditor.Formats.EidFormat;
-using VfxEditor.Formats.KdbFormat;
-using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Formats.MtrlFormat;
-using VfxEditor.Formats.PapFormat;
-using VfxEditor.Formats.PbdFormat;
-using VfxEditor.Formats.PhybFormat;
-using VfxEditor.Formats.ScdFormat;
-using VfxEditor.Formats.ShcdFormat;
-using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Formats.SklbFormat;
-using VfxEditor.Formats.SkpFormat;
 using VfxEditor.Formats.TextureFormat;
-using VfxEditor.Formats.TmbFormat;
-using VfxEditor.Formats.UldFormat;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Library;
@@ -53,43 +41,16 @@ namespace VfxEditor {
 
         public static WindowSystem WindowSystem { get; private set; }
 
-        public static List<IFileManagerGroup> Groups => [
-            TextureManager,
-            AvfxManager,
-            TmbManager,
-            SklbManager,
-            ScdManager,
-            EidManager,
-            UldManager,
-            PhybManager,
-            PapManager,
-            AtchManager,
-            SkpManager,
-            ShpkManager,
-            ShcdManager,
-            MtrlManager,
-            MdlManager,
-            KdbManager,
-            PbdManager,
-        ];
+        // Every editor, in the order they are shown in the menu bar. Formats are defined in Formats/FileFormats.cs
+        public static List<IFileManagerGroup> Groups { get; private set; } = [];
 
+        // Editors which other code needs to access directly
         public static AvfxManagerGroup AvfxManager { get; private set; }
         public static TextureManager TextureManager { get; private set; }
-        public static TmbManagerGroup TmbManager { get; private set; }
-        public static PapManagerGroup PapManager { get; private set; }
-        public static ScdManagerGroup ScdManager { get; private set; }
-        public static EidManagerGroup EidManager { get; private set; }
-        public static UldManagerGroup UldManager { get; private set; }
-        public static PhybManagerGroup PhybManager { get; private set; }
+        public static IFileManagerGroup ScdManager { get; private set; }
         public static SklbManagerGroup SklbManager { get; private set; }
-        public static AtchManagerGroup AtchManager { get; private set; }
-        public static SkpManagerGroup SkpManager { get; private set; }
-        public static ShpkManagerGroup ShpkManager { get; private set; }
-        public static ShcdManagerGroup ShcdManager { get; private set; }
         public static MtrlManagerGroup MtrlManager { get; private set; }
-        public static MdlManagerGroup MdlManager { get; private set; }
-        public static KdbManagerGroup KdbManager { get; private set; }
-        public static PbdManagerGroup PbdManager { get; private set; }
+        public static IFileManagerGroup ShpkManager { get; private set; }
 
         public static string RootLocation { get; private set; }
         private const string CommandName = "/vfxedit";
@@ -114,23 +75,25 @@ namespace VfxEditor {
             ConfigWindow = new( Configuration );
 
             TextureManager.LoadLibrary();
-            TextureManager = new();
-            TmbManager = new();
-            AvfxManager = new();
-            PapManager = new();
-            ScdManager = new();
-            EidManager = new();
-            UldManager = new();
-            PhybManager = new();
-            SklbManager = new();
-            AtchManager = new();
-            SkpManager = new();
-            ShpkManager = new();
-            ShcdManager = new();
-            MtrlManager = new();
-            MdlManager = new();
-            KdbManager = new();
-            PbdManager = new();
+            Groups = [
+                AvfxManager = new(),
+                TextureManager = new(),
+                FileFormats.Tmb.CreateGroup(),
+                FileFormats.Pap.CreateGroup(),
+                ScdManager = FileFormats.Scd.CreateGroup(),
+                FileFormats.Uld.CreateGroup(),
+                SklbManager = new(),
+                FileFormats.Skp.CreateGroup(),
+                FileFormats.Phyb.CreateGroup(),
+                FileFormats.Eid.CreateGroup(),
+                FileFormats.Atch.CreateGroup(),
+                FileFormats.Kdb.CreateGroup(),
+                FileFormats.Pbd.CreateGroup(),
+                FileFormats.Mdl.CreateGroup(),
+                MtrlManager = new(),
+                ShpkManager = FileFormats.Shpk.CreateGroup(),
+                FileFormats.Shcd.CreateGroup(),
+            ];
             AddDefaultDocuments();
 
             ToolsDialog = new();

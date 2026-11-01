@@ -2,6 +2,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VfxEditor.FileManager;
 using VfxEditor.Select;
 using VfxEditor.Utils;
 
@@ -22,6 +23,8 @@ namespace VfxEditor.FileManager.Interfaces {
         public string GetName();
 
         public string GetId();
+
+        public FormatCategory Category { get; }
 
         public void Show();
 

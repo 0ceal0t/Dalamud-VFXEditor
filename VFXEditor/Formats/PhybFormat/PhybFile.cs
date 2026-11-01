@@ -26,7 +26,7 @@ namespace VfxEditor.Formats.PhybFormat {
         public MeshBuilder Spring;
     }
 
-    public class PhybFile : FileManagerFile, IPhysicsObject {
+    public class PhybFile : FileManagerFile, IPhysicsObject, IReadableFile<PhybFile> {
         public readonly BoneNameInstance Instance = new();
 
         public readonly ParsedIntByte4 Version = new( "Version" );
@@ -42,6 +42,8 @@ namespace VfxEditor.Formats.PhybFormat {
         public const uint ExtendedType = 'E' | ( ( uint )'P' << 8 ) | ( ( uint )'H' << 16 ) | ( ( uint )'B' << 24 );
         public readonly PhybExtended Extended;
         private readonly long EphbPos; // absolute offset of the extended pack in the source file, used to reproduce any alignment gap before it on write
+
+        public static PhybFile Read( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
 
         public PhybFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             Version.Read( reader );
