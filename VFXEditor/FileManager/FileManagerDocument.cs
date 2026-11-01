@@ -467,7 +467,7 @@ namespace VfxEditor.FileManager {
             if( File != null && !string.IsNullOrEmpty( ReplacePath ) ) {
                 var winner = PenumbraPreview.GetWinningDocument( ReplacePath );
                 if( winner != null && winner != this ) {
-                    using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW );
+                    using var winnerColor = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW );
                     ImGui.TextWrapped( "Another open document also replaces this file and is being used instead. Disable or close the other document to see these changes." );
                 }
             }
