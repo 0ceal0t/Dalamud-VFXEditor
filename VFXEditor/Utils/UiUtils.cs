@@ -30,6 +30,17 @@ namespace VfxEditor.Utils {
     };
 
     public static class UiUtils {
+        // ImGui identifies top-level windows (and popups) only by their name, or by whatever comes after "###",
+        // and all plugins share one ImGui context. So when the stable and beta builds are both loaded, their windows
+        // collide and ImGui merges them into one, drawing both plugins' contents stacked on top of each other.
+        // Give the beta build its own ids; the stable build's ids (and saved window layouts) stay the same.
+        public static string WindowId( string name ) =>
+#if BETA
+            name + ( name.Contains( "##" ) ? "-BETA" : "##BETA" );
+#else
+            name;
+#endif
+
         public static readonly Vector4 RED_COLOR = new( 0.89098039216f, 0.30549019608f, 0.28980392157f, 1.0f );
 
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );

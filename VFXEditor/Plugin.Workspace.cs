@@ -208,7 +208,7 @@ namespace VfxEditor {
         }
 
         private static void DrawLoadingDialog() {
-            if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( UiUtils.WindowId( "Loading Workspace..." ), ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
                 var count = WorkspaceFileCount == 0 ? 0 : Groups.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
                 ImGui.Text( $"{count} / {WorkspaceFileCount}" );
 

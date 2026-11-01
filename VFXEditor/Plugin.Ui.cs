@@ -39,7 +39,7 @@ namespace VfxEditor {
             CheckAutoSave();
 
             if( ModalsToOpen.Count > 0 ) {
-                foreach( var title in ModalsToOpen ) ImGui.OpenPopup( title );
+                foreach( var title in ModalsToOpen ) ImGui.OpenPopup( UiUtils.WindowId( title ) );
                 ModalsToOpen.Clear();
             }
             foreach( var modal in Modals ) modal.Value.Draw();

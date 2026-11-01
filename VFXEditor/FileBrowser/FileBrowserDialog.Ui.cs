@@ -15,7 +15,7 @@ namespace VfxEditor.FileBrowser {
             if( !Visible ) return false;
 
             var done = false;
-            var name = $"{Title}##{Id}";
+            var name = UiUtils.WindowId( $"{Title}##{Id}" );
 
             IsOk = false;
             WantsToQuit = false;
