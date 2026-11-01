@@ -1,15 +1,25 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Components.String;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Effector;
+using VfxEditor.Formats.AvfxFormat.Emitter.Data;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Views;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Emitter {
     public class AvfxEmitter : AvfxNodeWithData<EmitterType> {
         public const string NAME = "Emit";
 

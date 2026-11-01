@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Simple {
     public class AvfxSimpleColors : AvfxBase {
         public readonly ParsedIntColor Color1 = new( "Color 1" );
         public readonly ParsedIntColor Color2 = new( "Color 2" );

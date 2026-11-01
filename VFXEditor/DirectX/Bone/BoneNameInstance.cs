@@ -1,14 +1,14 @@
 using Dalamud.Bindings.ImGui;
 using HelixToolkit.Maths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VfxEditor;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Model;
+using VfxEditor.Formats.SklbFormat.Bones;
 using BoneStruct = HelixToolkit.SharpDX.Animations.Bone;
 using Vec2 = System.Numerics.Vector2;
-using System;
 
 namespace VfxEditor.DirectX.Bone {
     public class BoneNameInstance : ModelInstance {

@@ -1,11 +1,17 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Assign;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Components.UiComponents;
+using VfxEditor.Formats.AvfxFormat.Curve;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Binder {
     public class AvfxBinderProperties : AvfxOptional {
         public readonly string Name;
 

@@ -2,9 +2,8 @@ using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 
-namespace VfxEditor.PhybFormat.Simulator.Pin {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Pin {
     public class PhybPin : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 

@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing.Utils {
+namespace VfxEditor.Parsing {
     public class ParsingReader {
         public readonly BinaryReader Reader;
 

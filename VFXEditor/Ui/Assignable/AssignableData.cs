@@ -1,5 +1,6 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Ui.Assignable {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer {
     public class NodeMap {

@@ -10,7 +10,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.SklbFormat.Bones {
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public unsafe class SklbBone {
         public SklbBone Parent;
 

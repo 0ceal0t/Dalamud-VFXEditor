@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Select.Tabs.BgmQuest;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select {
     public partial class SelectDialog {

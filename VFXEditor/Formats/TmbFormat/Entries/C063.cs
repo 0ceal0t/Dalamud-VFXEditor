@@ -1,10 +1,11 @@
 using Dalamud.Interface;
 using System;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     [Flags]
     public enum SoundPositionFilter {
         Use_Min_Max_Range = 0x01,

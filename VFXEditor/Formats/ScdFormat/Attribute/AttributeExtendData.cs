@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Attribute {
     [Flags]
     public enum ConditionType1st {
         Attribute = 0x01,

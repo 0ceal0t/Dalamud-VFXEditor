@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedUIntHex : ParsedUInt {
         public ParsedUIntHex( string name ) : base( name ) { }
 

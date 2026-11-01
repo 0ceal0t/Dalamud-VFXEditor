@@ -2,7 +2,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System.Numerics;
 
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public abstract unsafe class BaseVfx {
         public VfxObject* Vfx;
         public string Path;

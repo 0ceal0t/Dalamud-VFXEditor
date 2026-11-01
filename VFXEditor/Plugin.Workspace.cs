@@ -9,6 +9,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;

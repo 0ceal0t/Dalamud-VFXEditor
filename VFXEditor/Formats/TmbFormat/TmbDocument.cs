@@ -6,7 +6,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat {
     public class TmbDocument : FileManagerBasicDocument<TmbFile> {
         public override string Id => "Tmb";
         public override string Extension => "tmb";

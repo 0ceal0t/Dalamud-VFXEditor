@@ -1,5 +1,4 @@
 using VfxEditor.FileManager;
-using VfxEditor.UldFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.UldFormat {

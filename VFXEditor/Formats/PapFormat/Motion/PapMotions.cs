@@ -7,7 +7,7 @@ using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor.PapFormat.Motion {
+namespace VfxEditor.Formats.PapFormat.Motion {
     public unsafe class PapMotions : HavokData {
         public readonly PapFile File;
         public readonly string SklbTempPath;

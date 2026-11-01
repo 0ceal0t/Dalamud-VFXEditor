@@ -1,16 +1,17 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.ScdFormat.Entries;
+using VfxEditor.Formats.ScdFormat.Music.Data;
 using VfxEditor.Formats.ScdFormat.Music.Marker;
 using VfxEditor.Parsing;
-using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Music {
     public enum SscfWaveFormat : int {
         Empty = -1,
         Pcm = 0x01,

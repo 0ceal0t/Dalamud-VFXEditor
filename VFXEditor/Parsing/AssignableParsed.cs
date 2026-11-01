@@ -1,10 +1,9 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
-using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VFXEditor.Parsing {
+namespace VfxEditor.Parsing {
     public class AssignableParsed<T> : IUiItem {
         private readonly ParsedSimpleBase<T> Parsed;
         public bool Assigned { get; private set; } = false;

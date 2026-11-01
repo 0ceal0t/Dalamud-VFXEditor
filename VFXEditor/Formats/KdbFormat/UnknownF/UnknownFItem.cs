@@ -1,7 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.HalfFloat;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.KdbFormat.UnknownF {

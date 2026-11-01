@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.Ui.NodeGraphViewer;
+using VfxEditor.Ui.NodeGraphViewer.Nodes;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {

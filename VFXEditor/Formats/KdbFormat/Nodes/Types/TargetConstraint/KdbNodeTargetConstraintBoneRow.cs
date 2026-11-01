@@ -1,6 +1,5 @@
 using Dalamud.Bindings.ImGui;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint {

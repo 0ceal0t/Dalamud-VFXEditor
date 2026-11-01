@@ -67,3 +67,12 @@ resharper_web_config_wrong_module_highlighting=warning
 indent_style=space
 indent_size=4
 tab_width=4
+
+# Namespaces follow the folder layout (VfxEditor.<folder>.<sub-folder>)
+[*.cs]
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = suggestion
+
+# Parsing/ sub-folders only group the Parsed* types; they all live in VfxEditor.Parsing
+[VFXEditor/Parsing/**.cs]
+dotnet_diagnostic.IDE0130.severity = none

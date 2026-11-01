@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Items;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurveDissolve : AvfxCurveBase {
         public readonly AvfxCurveColor StartColor;
         public readonly AvfxCurveColor MidColor;

@@ -6,7 +6,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.EidFormat.BindPoint {
+namespace VfxEditor.Formats.EidFormat.BindPoint {
     public abstract class EidBindPoint : IUiItem {
         public readonly EidFile File;
 

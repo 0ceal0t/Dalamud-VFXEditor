@@ -1,4 +1,7 @@
-namespace VfxEditor.AvfxFormat {
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Timeline.Items;
+
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Sequencer {
     public class UiTimelineItemAddCommand : ICommand {
         private readonly UiTimelineItemSequencer View;
         private readonly AvfxTimelineItem Item;

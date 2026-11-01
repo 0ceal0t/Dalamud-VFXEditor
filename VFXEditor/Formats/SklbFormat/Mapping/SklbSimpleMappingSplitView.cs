@@ -4,7 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.SklbFormat.Mapping {
+namespace VfxEditor.Formats.SklbFormat.Mapping {
     public unsafe class SklbSimpleMappingSplitView : CommandSplitView<SklbSimpleMapping> {
         private readonly SklbMapping Mapping;
 

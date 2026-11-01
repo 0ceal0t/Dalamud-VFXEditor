@@ -4,7 +4,6 @@ using System.IO;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShpkFormat.Nodes {
     public class ShpkNodeAliasSubCluster : IUiItem {

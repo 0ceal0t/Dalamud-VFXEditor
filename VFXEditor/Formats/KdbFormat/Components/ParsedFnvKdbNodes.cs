@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Formats.KdbFormat.Nodes;
-using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat.Components {
     public class ParsedFnvKdbNodes : ParsedFnvHash {

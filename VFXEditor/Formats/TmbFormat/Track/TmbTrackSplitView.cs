@@ -1,11 +1,10 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using VfxEditor.FileBrowser;
-using VfxEditor.TmbFormat;
-using VfxEditor.TmbFormat.Actor;
-using VfxEditor.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Actor;
+using VfxEditor.Formats.TmbFormat.Entries;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 

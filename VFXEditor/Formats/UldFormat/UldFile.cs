@@ -1,22 +1,22 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using Lumina.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.Ui.Components;
+using VfxEditor.Formats.UldFormat.Component;
+using VfxEditor.Formats.UldFormat.Headers;
+using VfxEditor.Formats.UldFormat.PartList;
+using VfxEditor.Formats.UldFormat.Texture;
+using VfxEditor.Formats.UldFormat.Timeline;
+using VfxEditor.Formats.UldFormat.Widget;
+using VfxEditor.Ui.Components.Dropdowns;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.UldFormat.Component;
-using VfxEditor.UldFormat.Headers;
-using VfxEditor.UldFormat.PartList;
-using VfxEditor.UldFormat.Texture;
-using VfxEditor.UldFormat.Timeline;
-using VfxEditor.UldFormat.Widget;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat {
+namespace VfxEditor.Formats.UldFormat {
     public class UldFile : FileManagerFile, IRenamableFile {
         private readonly UldMainHeader Header;
         private readonly UldAtkHeader OffsetsHeader;

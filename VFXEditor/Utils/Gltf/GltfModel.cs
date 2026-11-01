@@ -6,7 +6,8 @@ using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
 
 namespace VfxEditor.Utils.Gltf {
     public static class GltfModel {

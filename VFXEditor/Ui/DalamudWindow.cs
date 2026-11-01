@@ -1,6 +1,7 @@
-using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Windowing;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Ui {

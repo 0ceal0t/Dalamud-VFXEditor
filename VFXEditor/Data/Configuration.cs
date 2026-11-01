@@ -1,8 +1,8 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Configuration;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,14 +10,13 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.DirectX.Lights;
 using VfxEditor.FileBrowser.SideBar;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Library;
 using VfxEditor.Select;
-using VfxEditor.SklbFormat.Bones;
-using VfxEditor.Ui;
 using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor {
+namespace VfxEditor.Data {
     [Serializable]
     public unsafe class ManagerConfiguration {
         public List<SelectResult> RecentItems = [];

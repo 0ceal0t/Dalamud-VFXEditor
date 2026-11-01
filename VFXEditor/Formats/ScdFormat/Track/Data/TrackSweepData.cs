@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackSweepData : ScdTrackData {
         public readonly ParsedFloat Pitch = new( "Pitch" );
         public readonly ParsedInt Time = new( "Time" );

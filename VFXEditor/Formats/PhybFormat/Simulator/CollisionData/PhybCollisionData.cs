@@ -2,9 +2,8 @@ using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 
-namespace VfxEditor.PhybFormat.Simulator.CollisionData {
+namespace VfxEditor.Formats.PhybFormat.Simulator.CollisionData {
     public enum CollisionType : int {
         Both = 0,
         Outside = 1,

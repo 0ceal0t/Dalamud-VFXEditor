@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Nodes.SelectList;
+using VfxEditor.Formats.AvfxFormat.Texture;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat.Particle.Texture {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
     public class TextureNodeSelectDraw : IUiItem {
         private readonly List<AvfxNodeSelect> NodeSelects;
 

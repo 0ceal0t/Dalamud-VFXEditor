@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.SklbFormat.Layers {
+namespace VfxEditor.Formats.SklbFormat.Layers {
     public class SklbLayers {
         public bool IsSklb => File != null;
         public readonly SklbFile File;

@@ -4,9 +4,12 @@ using HelixToolkit.Maths;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Workspace;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Clips {
     public enum ClipType {
         Kill = 0x4B_49_4C_4C, // "KILL"
         Reset = 0x52_45_53_54, // "REST"

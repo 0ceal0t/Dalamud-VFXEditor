@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
-using VFXEditor.Formats.AvfxFormat.Curve;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurveColor : AvfxCurveBase {
         public readonly AvfxCurveData RGB = new( "RGB", "RGB", type: CurveType.Color );
         public readonly AvfxCurveData A = new( "A", "A" );

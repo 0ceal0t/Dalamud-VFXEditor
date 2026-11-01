@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 
-namespace VfxEditor.PhybFormat.Collision.Capsule {
+namespace VfxEditor.Formats.PhybFormat.Collision.Capsule {
     public class PhybCapsule : PhybData, IPhysicsObject {
         public readonly ParsedPaddedString Name = new( "Name", "replace_me", 32, 0xFE );
         public readonly ParsedPaddedString StartBone = new( "Start Bone", 32, 0xFE );

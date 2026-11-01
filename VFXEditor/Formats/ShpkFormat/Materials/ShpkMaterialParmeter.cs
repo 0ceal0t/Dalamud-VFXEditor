@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Materials {

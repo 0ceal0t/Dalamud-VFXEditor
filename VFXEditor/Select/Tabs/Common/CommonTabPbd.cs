@@ -1,3 +1,5 @@
+using VfxEditor.Select.Base;
+
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabPbd : SelectTab<CommonRow> {
         public CommonTabPbd( SelectDialog dialog, string name ) : base( dialog, name, "Common-Pbd" ) { }

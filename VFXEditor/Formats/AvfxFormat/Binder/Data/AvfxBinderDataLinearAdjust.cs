@@ -1,6 +1,7 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Curve;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
     public class AvfxBinderDataLinearAdjust : AvfxData {
         public readonly AvfxCurve1Axis CarryOverFactor = new( "Carry Over Factor", "COF" );
 

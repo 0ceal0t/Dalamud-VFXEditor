@@ -1,13 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.NodeGraphViewer.Commands;
-using VfxEditor.Ui.NodeGraphViewer.Nodes;
 using VfxEditor.Ui.NodeGraphViewer.Utils;
+using VfxEditor.Utils;
 
-namespace VfxEditor.Ui.NodeGraphViewer {
+namespace VfxEditor.Ui.NodeGraphViewer.Nodes {
     public abstract class Node {
         public static readonly Vector2 NodeInsidePadding = new( 10f, 3.5f );
         public static readonly Vector2 MinHandleSize = new( 50, 20 );

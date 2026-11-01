@@ -1,8 +1,9 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.Filter {
     public partial class FileBrowserFilters {

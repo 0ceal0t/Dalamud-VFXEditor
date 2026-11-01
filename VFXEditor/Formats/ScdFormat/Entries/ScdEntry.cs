@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Entries {
     public abstract class ScdEntry {
         public abstract void Read( BinaryReader reader );
 

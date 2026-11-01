@@ -1,4 +1,5 @@
 using System;
+using VfxEditor.Data;
 using VfxEditor.Data.Command;
 
 namespace VfxEditor.FileBrowser {

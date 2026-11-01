@@ -2,7 +2,6 @@ using System.Numerics;
 using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Parsing;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbEta : IUiItem {

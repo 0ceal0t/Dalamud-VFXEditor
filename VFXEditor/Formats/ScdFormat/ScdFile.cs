@@ -1,18 +1,25 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.ScdFormat.Attribute;
+using VfxEditor.Formats.ScdFormat.Entries;
+using VfxEditor.Formats.ScdFormat.Headers;
+using VfxEditor.Formats.ScdFormat.Layout;
+using VfxEditor.Formats.ScdFormat.Music;
+using VfxEditor.Formats.ScdFormat.Music.Data;
+using VfxEditor.Formats.ScdFormat.Sound;
+using VfxEditor.Formats.ScdFormat.Track;
 using VfxEditor.Formats.ScdFormat.Utils;
-using VfxEditor.ScdFormat.Music;
-using VfxEditor.ScdFormat.Music.Data;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat {
     public class ScdFile : FileManagerFile {
         private readonly ScdHeader Header;
 

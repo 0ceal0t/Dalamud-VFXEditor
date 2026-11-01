@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.PapFormat;
-using VfxEditor.PapFormat.Motion;
-using VfxEditor.Utils;
+using VfxEditor.Data;
 using VfxEditor.DirectX;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public class PapMotionMaterialData {

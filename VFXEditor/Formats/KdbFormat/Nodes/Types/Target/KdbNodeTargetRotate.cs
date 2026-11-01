@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Target {

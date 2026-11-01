@@ -1,6 +1,6 @@
 using System;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public class Enums {
         [Flags]
         public enum DrawLayer {

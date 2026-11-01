@@ -1,12 +1,11 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
-using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager;
 using VfxEditor.Utils.Stacks;
 
-namespace VfxEditor {
+namespace VfxEditor.Data.Command {
     public class CommandManager {
         public static CommandManager? Current => Stack.Count == 0 ? null : Stack.Peek();
         private static readonly Stack<CommandManager> Stack = new();

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.Parsing.Utils;
-using VfxEditor.PhybFormat.Simulator;
-using VfxEditor.PhybFormat.Simulator.PostAlignment;
+using VfxEditor.Formats.PhybFormat.Simulator;
+using VfxEditor.Formats.PhybFormat.Simulator.PostAlignment;
+using VfxEditor.Parsing;
 
-namespace VfxEditor.PhybFormat.Utils {
+namespace VfxEditor.Formats.PhybFormat.Utils {
     public class SimulationWriter : ParsingWriter {
         private struct OffsetStruct {
             public long PlaceholderPos; // in Writer

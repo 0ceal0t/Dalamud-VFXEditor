@@ -1,4 +1,4 @@
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Assign;
 
 namespace VfxEditor.Formats.AvfxFormat.Curve {
     public abstract class AvfxCurveBase : AvfxOptional {

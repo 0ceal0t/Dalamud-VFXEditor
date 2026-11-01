@@ -1,12 +1,13 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.Components.Base;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedIntSelect<T> : ParsedInt where T : class {
         private readonly Func<SelectView<T>> GetView;
         private readonly Func<T, int> ToValue;

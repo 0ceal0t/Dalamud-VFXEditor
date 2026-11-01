@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {

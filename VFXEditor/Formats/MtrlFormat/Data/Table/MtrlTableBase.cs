@@ -3,6 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MtrlFormat.Data.Color;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Table {
     public enum ColorTableSize : int {

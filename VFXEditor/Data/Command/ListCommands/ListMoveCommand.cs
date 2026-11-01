@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Data.Command.ListCommands {
     public class ListMoveCommand<T> : ICommand where T : class {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C143 : TmbEntry {
         public const string MAGIC = "C143";
         public const string DISPLAY_NAME = "Fishing Sound";

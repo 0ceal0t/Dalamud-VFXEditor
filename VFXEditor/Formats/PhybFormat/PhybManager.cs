@@ -1,9 +1,8 @@
 using VfxEditor.FileManager;
-using VfxEditor.Formats.PhybFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PhybFormat {
+namespace VfxEditor.Formats.PhybFormat {
     public class PhybManager : FileManager<PhybDocument, PhybFile, WorkspaceMetaBasic> {
         public PhybManager( PhybManagerGroup group ) : base( group ) {
             SourceSelect = new PhybSelectDialog( "Phyb Select [LOADED]", this, true );

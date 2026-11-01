@@ -1,11 +1,12 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Data.Command;
+using VfxEditor.DirectX.Model;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MtrlFormat.AttributeSet;
 using VfxEditor.Formats.MtrlFormat.Data.Table;
@@ -13,10 +14,8 @@ using VfxEditor.Formats.MtrlFormat.Shader;
 using VfxEditor.Formats.MtrlFormat.Texture;
 using VfxEditor.Formats.ShpkFormat;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
-using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.Formats.MtrlFormat {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/04ddadb44600a382e26661e1db08fd16c3b671d8/Files/MtrlFile.cs#L7

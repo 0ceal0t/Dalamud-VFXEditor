@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C139 : TmbEntry {
         public const string MAGIC = "C139";
         public const string DISPLAY_NAME = "Forced Movement Cancel";

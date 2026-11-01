@@ -1,9 +1,10 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
-using Lumina.Misc;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using Lumina.Misc;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
 

@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Timeline.Items;
+using VfxEditor.Formats.AvfxFormat.Views.Sequencer;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Sequencer {
     public class UiTimelineItemSequencer : ImGuiSequencer<AvfxTimelineItem> {
         public AvfxTimeline Timeline;
 

@@ -2,9 +2,8 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.SklbFormat.Data {
+namespace VfxEditor.Formats.SklbFormat.Data {
     public class SklbOldData : SklbData {
         private readonly List<ParsedBase> Parsed;
 

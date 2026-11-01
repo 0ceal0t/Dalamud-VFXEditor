@@ -1,10 +1,18 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Effector;
+using VfxEditor.Formats.AvfxFormat.Emitter;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Particle;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using VfxEditor.Formats.AvfxFormat.Timeline;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat.Dialogs {
+namespace VfxEditor.Formats.AvfxFormat.Dialogs {
     public class AvfxExport {
         public bool IsExporting { get; private set; } = false;
         private readonly List<AvfxExportCategory> Categories;

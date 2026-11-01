@@ -4,6 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop;
 using VfxEditor.Parsing;

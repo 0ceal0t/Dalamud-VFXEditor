@@ -1,10 +1,11 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
 using VfxEditor.Ui.Components;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AvfxFormat.Texture {
     public class ImportMissingTexturesModal : Modal {

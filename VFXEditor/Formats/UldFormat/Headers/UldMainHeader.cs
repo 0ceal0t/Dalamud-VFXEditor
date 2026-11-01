@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.UldFormat.Headers {
+namespace VfxEditor.Formats.UldFormat.Headers {
     public class UldMainHeader : UldGenericHeader {
         public readonly uint ComponentOffset;
         public readonly uint WidgetOffset;

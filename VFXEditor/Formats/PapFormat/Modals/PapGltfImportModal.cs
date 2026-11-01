@@ -1,16 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using SharpGLTF.Schema2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.PapFormat.Motion;
+using VfxEditor.Data;
+using VfxEditor.Formats.PapFormat.Commands;
+using VfxEditor.Formats.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Modals {
     public unsafe class PapGltfImportModal : Modal {
         private readonly PapMotion Motion;
         private readonly int HavokIndex;

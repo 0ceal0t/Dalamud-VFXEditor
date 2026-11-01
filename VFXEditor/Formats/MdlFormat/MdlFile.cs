@@ -1,22 +1,22 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.DirectX.Model;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.MdlFormat.Bone;
 using VfxEditor.Formats.MdlFormat.Bone.V6;
 using VfxEditor.Formats.MdlFormat.Box;
-using VfxEditor.Formats.MdlFormat.Element;
+using VfxEditor.Formats.MdlFormat.Eid;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
-using VfxEditor.DirectX.Model;
 
 namespace VfxEditor.Formats.MdlFormat {
     // https://github.com/Caraxi/SimpleHeels/blob/d345d7406958e70fb3c6823cee21872ffa65621b/Files/MdlFile.cs#L291

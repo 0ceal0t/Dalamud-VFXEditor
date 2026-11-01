@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace VfxEditor {
+namespace VfxEditor.Data {
     // Settings are stored by Dalamud as pluginConfigs/<InternalName>.json. The plugin used to be published as "VFXEditor"
     // (main repository) and "VFXEditor-Beta", so on first run as "vfx-editor" there is no config yet. In that case the most
     // recently used previous config is imported instead of starting from defaults.

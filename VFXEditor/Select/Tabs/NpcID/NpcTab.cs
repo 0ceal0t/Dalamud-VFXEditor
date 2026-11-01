@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.NpcID {
     public struct NpcFilesStruct {

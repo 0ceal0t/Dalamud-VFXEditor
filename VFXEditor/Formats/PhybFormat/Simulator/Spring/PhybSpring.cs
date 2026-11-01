@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.PhybFormat.Simulator.Spring {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Spring {
     public class PhybSpring : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 

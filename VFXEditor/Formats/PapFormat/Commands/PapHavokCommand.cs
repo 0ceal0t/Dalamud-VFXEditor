@@ -2,8 +2,9 @@ using FFXIVClientStructs.Havok.Animation.Animation;
 using FFXIVClientStructs.Havok.Common.Base.Container.Array;
 using FFXIVClientStructs.Havok.Common.Base.Types;
 using System;
+using VfxEditor.Data.Command;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Commands {
     public unsafe class PapHavokCommand : ICommand {
         private readonly PapFile File;
         private readonly Action ChangeAction;

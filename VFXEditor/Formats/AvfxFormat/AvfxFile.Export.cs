@@ -1,9 +1,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Effector;
+using VfxEditor.Formats.AvfxFormat.Emitter;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Particle;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using VfxEditor.Formats.AvfxFormat.Timeline;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat {
     public partial class AvfxFile {
         public static void AddToNodeLibrary( AvfxNode node ) {
             var newId = UiUtils.RandomString( 12 );

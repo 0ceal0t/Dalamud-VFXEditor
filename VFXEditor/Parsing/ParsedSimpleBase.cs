@@ -1,5 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using System;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 
 namespace VfxEditor.Parsing {

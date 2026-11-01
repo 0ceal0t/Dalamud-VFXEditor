@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 // https://github.com/Ottermandias/OtterGui/blob/4df65fb330f3746b7836c39cb96d1e36a53bcec0/ArrayExtensions.cs#L52
-namespace VfxEditor {
+namespace VfxEditor.Utils {
 #nullable enable
     public static class ArrayExtensions {
         /// <summary> Iterate over enumerables with additional index. </summary>

@@ -3,6 +3,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using System;
+using VfxEditor.Data.Command;
 
 namespace VfxEditor {
     public class Dalamud {

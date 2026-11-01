@@ -1,6 +1,10 @@
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
     public class AvfxParticleDataPowder : AvfxDataWithParameters {
         public readonly AvfxBool MV = new( "Use Character Movement", "bMV" );
         public readonly AvfxBool Loc = new( "Use Character Location", "bLoc" );

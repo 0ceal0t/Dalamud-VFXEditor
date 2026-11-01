@@ -1,13 +1,15 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.Formats.AvfxFormat.Assign;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public abstract partial class AvfxBase {
         protected readonly string AvfxName;
         protected bool Assigned = true;

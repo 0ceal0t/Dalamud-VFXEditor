@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Workspace {
     public abstract class AvfxWorkspaceItem : AvfxSelectableItem, IWorkspaceUiItem {
         public string Renamed = "";
 

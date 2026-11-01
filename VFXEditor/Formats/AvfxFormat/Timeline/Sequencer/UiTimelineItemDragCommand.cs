@@ -1,4 +1,7 @@
-namespace VfxEditor.AvfxFormat {
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Timeline.Items;
+
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Sequencer {
     public class UiTimelineItemDragCommand : ICommand {
         private readonly AvfxTimelineItem Item;
         private readonly (int, int) State;

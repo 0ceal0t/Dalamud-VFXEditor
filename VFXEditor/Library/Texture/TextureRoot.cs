@@ -1,14 +1,13 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Numerics;
 using VfxEditor.FileBrowser;
 using VfxEditor.Library.Components;
-using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Library.Node {
+namespace VfxEditor.Library.Texture {
     public class TextureRoot : LibraryRoot {
         private string AddPath = "";
 

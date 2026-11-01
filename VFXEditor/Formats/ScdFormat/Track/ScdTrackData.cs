@@ -1,7 +1,7 @@
 using System.IO;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track {
     public abstract class ScdTrackData : IData {
         public abstract void Read( BinaryReader reader );
 

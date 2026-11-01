@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedIntByte4 : ParsedSimpleBase<int> {
         public ParsedIntByte4( string name, int value ) : base( name, value ) { }
 

@@ -1,7 +1,7 @@
 using System.IO;
-using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing;
 
-namespace VfxEditor.SklbFormat.Data {
+namespace VfxEditor.Formats.SklbFormat.Data {
     public abstract class SklbData {
         public int HavokOffset { get; protected set; }
         public readonly ParsedShort2 Id = new( "Id" );

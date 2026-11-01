@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Parsing.String;
+using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 

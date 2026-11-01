@@ -1,14 +1,15 @@
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
+using VfxEditor.Formats.TmbFormat.Entries;
 using VfxEditor.Formats.TmbFormat.Track;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Actor {
+namespace VfxEditor.Formats.TmbFormat.Actor {
     public class Tmac : TmbItemWithTime {
         public override string Magic => "TMAC";
         public override int Size => 0x1C;

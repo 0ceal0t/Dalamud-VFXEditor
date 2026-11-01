@@ -1,14 +1,15 @@
+using Dalamud.Bindings.ImGui;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
 using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
-using Dalamud.Bindings.ImGui;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;
-using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.SklbFormat.Mapping {
+namespace VfxEditor.Formats.SklbFormat.Mapping {
     public unsafe class SklbSimpleMapping : IUiItem {
         public readonly SklbMapping Mapping;
 

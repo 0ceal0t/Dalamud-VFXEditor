@@ -9,19 +9,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.DirectX;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.FileBrowser;
-using VfxEditor.Formats.SklbFormat.Bones;
+using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Interop.Structs.Animation;
-using VfxEditor.SklbFormat.Mapping;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
 using static FFXIVClientStructs.Havok.Common.Serialize.Util.hkRootLevelContainer;
 
-namespace VfxEditor.SklbFormat.Bones {
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public enum BoneDisplay {
         Connected,
         Blender_Style_Inline,

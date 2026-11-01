@@ -1,6 +1,7 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Curve;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
     public class AvfxEffectorDataDirectionalLight : AvfxData {
         public readonly AvfxCurveColor Ambient;
         public readonly AvfxCurveColor Color;

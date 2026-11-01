@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C011 : TmbEntry {
         public const string MAGIC = "C011";
         public const string DISPLAY_NAME = "Fly Text";

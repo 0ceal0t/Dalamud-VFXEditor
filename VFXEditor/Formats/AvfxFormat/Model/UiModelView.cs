@@ -1,6 +1,8 @@
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class UiModelView : AvfxNodeSplitView<AvfxModel> {
         public UiModelView( AvfxFile file, NodeGroup<AvfxModel> group ) : base( file, group, "Model", true, true, "default_model.vfxedit2" ) { }
 

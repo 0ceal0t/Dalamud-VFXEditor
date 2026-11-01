@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.DirectX.Model;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
+namespace VfxEditor.DirectX.Model {
     public class ModelPreview : ModelRenderer<ModelInstance> {
         public enum RenderMode {
             Color,

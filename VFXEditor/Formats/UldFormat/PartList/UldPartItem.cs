@@ -1,10 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 using VfxEditor.Formats.TextureFormat.Textures;
-using VfxEditor.Parsing.Int;
-using VfxEditor.UldFormat.Texture;
+using VfxEditor.Formats.UldFormat.Texture;
+using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.PartList {
+namespace VfxEditor.Formats.UldFormat.PartList {
     public class UldPartItem {
         private readonly UldFile File;
         public readonly ParsedShort2 Offset = new( "Offset" );

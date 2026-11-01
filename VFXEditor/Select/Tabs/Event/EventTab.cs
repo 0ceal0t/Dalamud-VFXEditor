@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Event {
     public class EventTab : SelectTab<EventRow> {

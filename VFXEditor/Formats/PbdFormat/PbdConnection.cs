@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PbdFormat {
     public class PbdConnection {

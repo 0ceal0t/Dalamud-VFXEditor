@@ -1,6 +1,7 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Curve;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
     public class AvfxBinderDataCamera : AvfxData {
         public readonly AvfxCurve1Axis Distance = new( "Distance", "Dst" );
         public readonly AvfxCurve1Axis DistanceRandom = new( "Distance Random", "DstR" );

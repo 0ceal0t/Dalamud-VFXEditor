@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using VfxEditor.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Entries;
 
-namespace VfxEditor.TmbFormat.Utils {
+namespace VfxEditor.Formats.TmbFormat.Utils {
     public struct ItemTypeStruct {
         public string DisplayName;
         public Type Type;

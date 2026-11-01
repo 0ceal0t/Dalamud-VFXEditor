@@ -7,7 +7,7 @@ using System.Numerics;
 using VfxEditor.Ui.Components.Base;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui.Components {
+namespace VfxEditor.Ui.Components.Dropdowns {
     public abstract class Dropdown<T> : SelectView<T> where T : class {
         public Dropdown( string id, List<T> items ) : base( id, items ) { }
 

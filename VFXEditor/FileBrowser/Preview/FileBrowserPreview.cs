@@ -9,6 +9,7 @@ using System.IO;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;

@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.PapFormat.Commands;
+using VfxEditor.Formats.PapFormat.Modals;
 using VfxEditor.Interop.Havok;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
+using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
     public unsafe class PapAnimationDropdown : Dropdown<PapAnimation> {
         private readonly PapFile File;
 

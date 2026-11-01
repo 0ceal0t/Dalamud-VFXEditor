@@ -1,16 +1,15 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Formats.UldFormat.Component.Data;
+using VfxEditor.Formats.UldFormat.Component.Node;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.UldFormat.Component.Data;
-using VfxEditor.UldFormat.Component.Node;
 
-namespace VfxEditor.UldFormat.Component {
+namespace VfxEditor.Formats.UldFormat.Component {
     public enum ComponentType : int {
         Base = 0x0,
         Button = 0x1,

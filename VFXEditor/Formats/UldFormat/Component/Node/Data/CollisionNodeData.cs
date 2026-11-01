@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public enum CollisionType : int {
         Hit = 0x0,
         Focus = 0x1,

@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat.Dialogs {
+namespace VfxEditor.Formats.AvfxFormat.Dialogs {
     public abstract class AvfxExportCategory {
         public abstract HashSet<AvfxNode> GetSelectedNodes();
         public abstract void Reset();

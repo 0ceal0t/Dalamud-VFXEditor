@@ -1,4 +1,4 @@
-using VfxEditor.EidFormat;
+using VfxEditor.Formats.EidFormat;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Skeleton;
 

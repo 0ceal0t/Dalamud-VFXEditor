@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
 
 namespace VfxEditor.Formats.AvfxFormat.Assign {
     public class AvfxAssignCommand : ICommand {

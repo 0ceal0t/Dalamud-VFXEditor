@@ -4,7 +4,7 @@ using System.Numerics;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.SklbFormat {
+namespace VfxEditor.Formats.SklbFormat {
     public partial class SklbDocument : FileManagerHavokDocument<SklbFile> {
         public override string Id => "Sklb";
         public override string Extension => "sklb";

@@ -1,10 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedUIntPicker<T> : ParsedUIntHex where T : class {
         private readonly Func<List<T>> ListAction;
         private readonly Func<T, int, string> GetText;

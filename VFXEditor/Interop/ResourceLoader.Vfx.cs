@@ -3,6 +3,7 @@ using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using InteropGenerator.Runtime;
 using System;
+using VfxEditor.Data;
 using VfxEditor.Spawn;
 
 namespace VfxEditor.Interop {

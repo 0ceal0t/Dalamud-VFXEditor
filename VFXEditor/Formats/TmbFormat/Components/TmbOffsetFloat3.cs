@@ -1,9 +1,8 @@
 using System.Numerics;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Utils;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat.Components {
     public class TmbOffsetAngle3 : ParsedRadians3 {
         public TmbOffsetAngle3( string name, Vector3 defaultValue ) : base( name, defaultValue ) { }
 

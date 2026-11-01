@@ -1,19 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.UldFormat.Component.Node.Data;
+using VfxEditor.Formats.UldFormat.Component.Node.Data.Component;
+using VfxEditor.Formats.UldFormat.Timeline;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.Base;
-using VfxEditor.UldFormat.Component.Node.Data;
-using VfxEditor.UldFormat.Component.Node.Data.Component;
-using VfxEditor.UldFormat.Timeline;
 
-namespace VfxEditor.UldFormat.Component.Node {
+namespace VfxEditor.Formats.UldFormat.Component.Node {
     public enum NodeType : int {
         Container = 1,
         Image = 2,

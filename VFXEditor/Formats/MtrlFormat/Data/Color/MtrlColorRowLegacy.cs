@@ -1,12 +1,12 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.MtrlFormat.Data.Dye;
 using VfxEditor.Formats.MtrlFormat.Data.Table;
 using VfxEditor.Formats.MtrlFormat.Stm;
-using VfxEditor.Parsing.HalfFloat;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class MtrlColorRowLegacy : MtrlColorRowBase {

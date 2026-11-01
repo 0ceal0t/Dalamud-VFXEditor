@@ -2,10 +2,11 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.TmbFormat.Tmfcs {
+namespace VfxEditor.Formats.TmbFormat.Tmfcs {
     public class TmfcData : IUiItem {
         public readonly TmbFile File;
 

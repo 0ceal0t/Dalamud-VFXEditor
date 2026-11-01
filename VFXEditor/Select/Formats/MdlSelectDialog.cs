@@ -2,7 +2,6 @@ using VfxEditor.Formats.MdlFormat;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Items;
 using VfxEditor.Select.Tabs.Npc;
-using VfxEditor.Select.Tabs.NpcID;
 
 namespace VfxEditor.Select.Formats {
     public class MdlSelectDialog : SelectDialog {

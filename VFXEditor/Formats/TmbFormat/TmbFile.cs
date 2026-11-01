@@ -1,18 +1,21 @@
+// Rework based on https://github.com/AsgardXIV/XAT
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.FileManager;
-using VfxEditor.TmbFormat.Actor;
-using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Tmfcs;
-using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Formats.TmbFormat.Actor;
+using VfxEditor.Formats.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Root;
+using VfxEditor.Formats.TmbFormat.Tmfcs;
+using VfxEditor.Formats.TmbFormat.Track;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
-// Rework based on https://github.com/AsgardXIV/XAT
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat {
     public class TmbFile : FileManagerFile {
         public readonly Tmdh HeaderTmdh;
         public readonly Tmpp HeaderTmpp;

@@ -1,13 +1,16 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.String;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Formats.TextureFormat.Textures;
-using VfxEditor.Library.Texture;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Texture {
     public class AvfxTexture : AvfxNode {
         public const string NAME = "Tex";
 

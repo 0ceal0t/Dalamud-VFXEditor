@@ -1,3 +1,5 @@
+using VfxEditor.Data.Command;
+
 namespace VfxEditor.Formats.PbdFormat {
     public class PbdConnectionCommand : ICommand {
         public readonly PbdConnection Item;

@@ -1,5 +1,4 @@
 using System.IO;
-using VfxEditor.Parsing.Utils;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Parsing {

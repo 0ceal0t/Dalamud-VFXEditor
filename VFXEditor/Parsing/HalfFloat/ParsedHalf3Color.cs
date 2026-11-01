@@ -2,7 +2,7 @@ using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
 
-namespace VfxEditor.Parsing.HalfFloat {
+namespace VfxEditor.Parsing {
     public class ParsedHalf3Color : ParsedHalf3 {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
 
-namespace VfxEditor.AvfxFormat.Model {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class AvfxEmitImportCommand : ICommand {
         public readonly AvfxModel Model;
         public readonly (List<UiEmitVertex>, List<UiVertexNumber>) State;

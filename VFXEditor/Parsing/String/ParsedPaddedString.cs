@@ -2,7 +2,7 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 
-namespace VfxEditor.Parsing.String {
+namespace VfxEditor.Parsing {
     public class ParsedPaddedString : ParsedString {
         private readonly int Length;
         private readonly byte Padding;

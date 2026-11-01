@@ -1,7 +1,7 @@
 using System;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     [Flags]
     public enum NodeComponentFlags {
         RepeatUp = 0x80,

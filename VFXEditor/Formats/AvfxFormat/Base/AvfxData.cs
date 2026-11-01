@@ -1,11 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Formats.AvfxFormat.Assign;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Formats.AvfxFormat.Items;
+using VfxEditor.Formats.AvfxFormat.Views;
+using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public abstract class AvfxData : AvfxItem, IData {
         protected List<AvfxBase>? Parsed;
 

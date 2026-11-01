@@ -1,9 +1,8 @@
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
-namespace VFXEditor.Formats.KdbFormat.UnknownE {
+namespace VfxEditor.Formats.KdbFormat.UnknownE {
     public class UnknownEItem : IUiItem {
         public readonly ParsedUIntHex Unknown1 = new( "Unknown 1" );
         public readonly ParsedUIntHex Unknown2 = new( "Unknown 2" );

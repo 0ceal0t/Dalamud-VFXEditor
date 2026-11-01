@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.UldFormat.Timeline.Frames;
 
-namespace VfxEditor.UldFormat.Timeline {
+namespace VfxEditor.Formats.UldFormat.Timeline.Frames {
     public enum KeyUsage : int {
         Position = 0x0,
         Rotation = 0x1,

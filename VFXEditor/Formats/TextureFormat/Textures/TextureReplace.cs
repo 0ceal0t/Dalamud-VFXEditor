@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,9 +8,10 @@ using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
-using VfxEditor.Interop.Penumbra;
+using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 

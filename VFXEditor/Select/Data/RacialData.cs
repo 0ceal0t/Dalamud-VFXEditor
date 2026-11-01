@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Excel;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Data {
     public class RacialData {

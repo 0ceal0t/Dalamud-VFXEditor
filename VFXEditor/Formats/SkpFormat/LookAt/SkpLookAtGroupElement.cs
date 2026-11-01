@@ -1,6 +1,5 @@
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.SkpFormat.LookAt {

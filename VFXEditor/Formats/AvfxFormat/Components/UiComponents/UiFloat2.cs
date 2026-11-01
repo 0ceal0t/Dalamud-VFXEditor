@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.UiComponents {
     public class UiFloat2 : IUiItem {
         public readonly UiParsedFloat2 Parsed;
         private readonly AvfxFloat Literal;

@@ -1,9 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using System;
 using System.Collections.Generic;
-using VfxEditor.Structs.Vfx;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
+using VfxEditor.Data;
+using VfxEditor.Interop.Structs.Vfx;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Spawn {
     public enum SpawnType {

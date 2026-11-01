@@ -5,15 +5,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.AvfxFormat.Model;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
+using VfxEditor.DirectX;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Gltf;
-using VfxEditor.DirectX;
-using static VfxEditor.DirectX.ModelPreview;
+using static VfxEditor.DirectX.Model.ModelPreview;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class AvfxModel : AvfxNode {
         public const string NAME = "Modl";
 

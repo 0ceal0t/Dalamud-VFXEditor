@@ -2,8 +2,9 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Formats.AvfxFormat.Views.Items;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Emitter {
     public class UiEmitterSplitView : AvfxItemSplitView<AvfxEmitterItem> {
         public readonly AvfxEmitter Emitter;
         public readonly bool IsParticle;

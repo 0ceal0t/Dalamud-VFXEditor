@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 
-namespace VfxEditor.Parsing.Data {
+namespace VfxEditor.Parsing {
     public class ParsedDataListEnum<T, S> : ParsedEnum<T> where T : Enum where S : class {
         private readonly List<S> Items;
 

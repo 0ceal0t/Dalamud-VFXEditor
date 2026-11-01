@@ -1,15 +1,16 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Root;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat.Track {
     public enum LuaOperation {
         None = 0x0,
         Open_Parens = 0x1,

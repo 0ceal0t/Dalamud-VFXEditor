@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +7,7 @@ using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {
     public class MdlSubMesh : MdlSubmeshData<MdlMesh> {

@@ -1,7 +1,6 @@
-using VfxEditor.Formats.AvfxFormat.Components;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.Float {
     public class AvfxFloat : AvfxLiteral<ParsedFloat, float> {
         public AvfxFloat( string name, string avfxName, float value ) : base( avfxName, new( name, value ) ) { }
 

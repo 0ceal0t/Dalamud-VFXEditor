@@ -1,10 +1,9 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C168 : TmbEntry {
         public const string MAGIC = "C168";
         public const string DISPLAY_NAME = "Forced Camera Control";

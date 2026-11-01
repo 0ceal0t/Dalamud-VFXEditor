@@ -1,6 +1,8 @@
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Effector {
     public class UiEffectorView : AvfxNodeDropdownView<AvfxEffector> {
         public UiEffectorView( AvfxFile file, NodeGroup<AvfxEffector> group ) : base( file, group, "Effector", true, true, "default_effector.vfxedit" ) { }
 

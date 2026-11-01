@@ -1,9 +1,8 @@
 using VfxEditor.FileManager;
-using VfxEditor.Formats.PapFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
     public class PapManager : FileManager<PapDocument, PapFile, WorkspaceMetaBasic> {
         public PapManager( PapManagerGroup group ) : base( group ) {
             SourceSelect = new PapSelectDialog( "Pap Select [LOADED]", this, true );

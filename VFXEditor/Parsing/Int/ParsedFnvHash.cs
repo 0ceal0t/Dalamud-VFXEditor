@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedFnvHash : ParsedSimpleBase<(string, uint)> {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;

@@ -2,6 +2,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.Utils;

@@ -1,4 +1,6 @@
-namespace VfxEditor.SklbFormat.Bones {
+using VfxEditor.Data.Command;
+
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public class SklbBoneParentCommand : ICommand {
         private readonly SklbBone Item;
         private readonly SklbBone State;

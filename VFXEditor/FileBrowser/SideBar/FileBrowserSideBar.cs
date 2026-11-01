@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileBrowser.SideBar {
     public class FileBrowserSideBar {

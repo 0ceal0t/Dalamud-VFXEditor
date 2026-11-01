@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using VfxEditor.Interop.Havok.Ui;
 
-namespace VfxEditor.PhybFormat.Skeleton {
+namespace VfxEditor.Formats.PhybFormat.Skeleton {
     public class PhybSkeletonView : SkeletonView {
         private readonly PhybFile File;
 

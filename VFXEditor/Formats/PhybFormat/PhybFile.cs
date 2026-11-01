@@ -1,25 +1,25 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
-using HelixToolkit.SharpDX.Core;
+using HelixToolkit.Geometry;
 using HelixToolkit.SharpDX.Animations;
+using HelixToolkit.SharpDX.Core;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.PhybFormat.Collision;
 using VfxEditor.Formats.PhybFormat.Extended;
+using VfxEditor.Formats.PhybFormat.Simulator;
+using VfxEditor.Formats.PhybFormat.Skeleton;
+using VfxEditor.Formats.PhybFormat.Utils;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.PhybFormat.Collision;
-using VfxEditor.PhybFormat.Simulator;
-using VfxEditor.PhybFormat.Skeleton;
-using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Utils;
 using VfxEditor.Utils.PackStruct;
-using HelixToolkit.Geometry;
-using VfxEditor.DirectX.Bone;
 
-namespace VfxEditor.PhybFormat {
+namespace VfxEditor.Formats.PhybFormat {
     public class MeshBuilders {
         public MeshBuilder Collision;
         public MeshBuilder Simulation;

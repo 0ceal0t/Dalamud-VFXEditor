@@ -1,7 +1,6 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
-using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class ParsedSphereMaterial : ParsedHalfShort {

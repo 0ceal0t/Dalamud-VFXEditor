@@ -1,14 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.UldFormat.Component;
+using VfxEditor.Formats.UldFormat.Component.Node;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.UldFormat.Component;
-using VfxEditor.UldFormat.Component.Node;
 
-namespace VfxEditor.UldFormat.Widget {
+namespace VfxEditor.Formats.UldFormat.Widget {
     public enum AlignmentType : int {
         Unknown1 = 0xFF,
         TopLeft = 0x0,

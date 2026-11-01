@@ -1,7 +1,8 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser {

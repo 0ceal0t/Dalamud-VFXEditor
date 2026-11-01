@@ -1,11 +1,13 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.UiComponents {
     public class UiIntCombo : IUiItem {
         public readonly string Name;
         public readonly AvfxInt Literal;

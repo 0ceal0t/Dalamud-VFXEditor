@@ -1,10 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Nodes {
     public abstract class AvfxNodeSplitView<T> : ItemSplitView<T>, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;

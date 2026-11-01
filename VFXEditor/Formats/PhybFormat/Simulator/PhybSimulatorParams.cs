@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.PhybFormat.Simulator {
+namespace VfxEditor.Formats.PhybFormat.Simulator {
     [Flags]
     public enum SimulatorFlags {
         Simulating = 0x01,

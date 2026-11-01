@@ -4,7 +4,8 @@ using HelixToolkit.Maths;
 using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Formats.SklbFormat.Bones;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Havok {
     public unsafe class HavokBones : HavokData {

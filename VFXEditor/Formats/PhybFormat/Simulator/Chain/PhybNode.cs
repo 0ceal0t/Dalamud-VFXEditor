@@ -2,9 +2,8 @@ using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 
-namespace VfxEditor.PhybFormat.Simulator.Chain {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Chain {
     public class PhybNode : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 

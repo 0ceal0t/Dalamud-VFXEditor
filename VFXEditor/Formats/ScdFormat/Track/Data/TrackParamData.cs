@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackParamData : ScdTrackData {
         public readonly ParsedFloat Value = new( "Value" );
         public readonly ParsedInt Time = new( "Time" );

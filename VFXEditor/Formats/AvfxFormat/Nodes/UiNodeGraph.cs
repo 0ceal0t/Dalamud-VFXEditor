@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public class UiNodeGraphItem {
         public int Level;
         public int Level2;

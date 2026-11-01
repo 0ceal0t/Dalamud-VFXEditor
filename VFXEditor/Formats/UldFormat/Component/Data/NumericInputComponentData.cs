@@ -1,7 +1,6 @@
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Color;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class NumericInputComponentData : UldGenericData {
         public NumericInputComponentData() {
             Parsed.AddRange( [

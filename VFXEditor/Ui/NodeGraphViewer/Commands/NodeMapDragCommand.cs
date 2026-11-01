@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data.Command;
+using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {
     public class NodeMapDragCommand : ICommand {

@@ -1,6 +1,14 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Effector;
+using VfxEditor.Formats.AvfxFormat.Emitter;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Particle;
+using VfxEditor.Formats.AvfxFormat.Scheduler;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using VfxEditor.Formats.AvfxFormat.Timeline;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public class AvfxNodeGroupSet {
         public const uint BinderColor = 0xFF5C8A2B;
         public const uint EmitterColor = 0xFF335E9E;

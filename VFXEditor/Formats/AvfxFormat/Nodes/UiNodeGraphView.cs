@@ -4,7 +4,7 @@ using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public class UiNodeGraphView : IUiItem {
         public AvfxFile File;
         public AvfxNode Node;

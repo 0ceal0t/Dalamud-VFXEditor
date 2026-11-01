@@ -1,4 +1,4 @@
-using VfxEditor.PhybFormat;
+using VfxEditor.Formats.PhybFormat;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Skeleton;
 

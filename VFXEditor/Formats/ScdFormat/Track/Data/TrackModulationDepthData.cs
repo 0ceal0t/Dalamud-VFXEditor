@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackModulationDepthData : ScdTrackData {
         public readonly ParsedInt Carrier = new( "Carrier" );
         public readonly ParsedFloat Depth = new( "Depth" );

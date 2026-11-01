@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Data;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
-using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {

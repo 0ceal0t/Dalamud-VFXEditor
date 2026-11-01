@@ -1,9 +1,10 @@
 using Dalamud.Bindings.ImGui;
+using VfxEditor.Formats.PapFormat.Commands;
+using VfxEditor.Formats.PapFormat.Motion;
 using VfxEditor.Interop.Havok;
-using VfxEditor.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Modals {
     public unsafe class PapReplaceModal : Modal {
         private readonly PapMotion Motion;
         private readonly int HavokIndex;

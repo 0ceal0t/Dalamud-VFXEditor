@@ -1,6 +1,7 @@
 using System;
+using VfxEditor.Data.Command;
 
-namespace VfxEditor.Parsing.Data {
+namespace VfxEditor.Parsing {
     public class ParsedDataEnum<T, S> : ParsedEnum<T> where T : Enum where S : class, IData {
         private readonly IItemWithData<S> Item;
 

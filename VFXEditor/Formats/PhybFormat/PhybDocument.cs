@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PhybFormat {
+namespace VfxEditor.Formats.PhybFormat {
     public class PhybDocument : FileManagerBasicDocument<PhybFile> {
         public override string Id => "Phyb";
         public override string Extension => "phyb";

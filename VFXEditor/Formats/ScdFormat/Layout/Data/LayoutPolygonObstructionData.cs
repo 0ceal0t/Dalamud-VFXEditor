@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     public class LayoutPolygonObstructionData : ScdLayoutData {
         public readonly ParsedFloat ObstacleFac = new( "Obstacle FAC" );
         public readonly ParsedFloat HiCutFac = new( "Hi-Cut FAC" );

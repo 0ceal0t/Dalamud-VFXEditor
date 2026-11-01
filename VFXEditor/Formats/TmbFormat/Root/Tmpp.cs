@@ -1,10 +1,11 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat.Root {
     public class Tmpp : TmbItem {
         public override string Magic => "TMPP";
         public override int Size => 0x0C;

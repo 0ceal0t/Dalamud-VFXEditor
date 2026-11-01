@@ -6,14 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
 using VfxEditor.Parsing;
 using VfxEditor.Utils;
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurveKey {
         public static readonly KeyType[] KeyTypeOptions = Enum.GetValues<KeyType>();
         private readonly AvfxCurveData Curve;

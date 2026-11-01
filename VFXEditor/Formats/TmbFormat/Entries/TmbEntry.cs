@@ -1,15 +1,16 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.TmbFormat.Track;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public abstract class TmbEntry : TmbItemWithTime {
         public abstract string DisplayName { get; }
         public virtual DangerLevel Danger => DangerLevel.None;

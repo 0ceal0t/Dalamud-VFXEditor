@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 
-namespace VfxEditor.AvfxFormat.Model {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class AvfxModelImportCommand : ICommand {
         public readonly AvfxModel Model;
         public readonly (List<AvfxIndex>, List<AvfxVertex>) State;

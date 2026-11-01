@@ -1,5 +1,5 @@
 using VfxEditor.Parsing;
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data.Component {
     public class HoldButtonNodeData : UldGenericData {
         public HoldButtonNodeData() {
             Parsed.AddRange( [

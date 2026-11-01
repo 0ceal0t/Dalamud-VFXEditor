@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.UldFormat.Headers {
+namespace VfxEditor.Formats.UldFormat.Headers {
     public class UldAtkHeader2 : UldAtkHeader {
         public UldAtkHeader2( BinaryReader reader ) : base( reader ) { }
 

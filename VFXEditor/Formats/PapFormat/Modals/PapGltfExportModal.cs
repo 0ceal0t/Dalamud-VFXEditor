@@ -1,10 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
-using VfxEditor.PapFormat.Motion;
+using VfxEditor.Formats.PapFormat.Motion;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Modals {
     public unsafe class PapGltfExportModal : Modal {
         private readonly PapMotion Motion;
         private readonly string AnimationName;

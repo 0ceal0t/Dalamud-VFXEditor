@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Parsing.Utils;
-using VfxEditor.TmbFormat.Actor;
-using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Tmfcs;
+using VfxEditor.Formats.TmbFormat.Actor;
+using VfxEditor.Formats.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Tmfcs;
+using VfxEditor.Formats.TmbFormat.Track;
+using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Utils {
+namespace VfxEditor.Formats.TmbFormat.Utils {
     public class TmbReader : ParsingReader {
         public long StartPosition;
         private readonly Dictionary<int, TmbItemWithId> ItemsWithId = [];

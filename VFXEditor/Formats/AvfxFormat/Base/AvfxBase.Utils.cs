@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
 #pragma warning disable CS0675
     public unsafe partial class AvfxBase {
         public static int CalculatePadding( int size ) => size % 4 == 0 ? 0 : 4 - size % 4;

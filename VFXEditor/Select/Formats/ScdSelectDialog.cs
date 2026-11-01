@@ -1,4 +1,4 @@
-using VfxEditor.ScdFormat;
+using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Bgm;
 using VfxEditor.Select.Tabs.BgmQuest;

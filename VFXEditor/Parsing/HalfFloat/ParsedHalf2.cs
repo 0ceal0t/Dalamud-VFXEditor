@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Numerics;
 
-namespace VfxEditor.Parsing.HalfFloat {
+namespace VfxEditor.Parsing {
     public class ParsedHalf2 : ParsedFloat2 {
         public ParsedHalf2( string name, Vector2 value ) : base( name, value ) { }
 

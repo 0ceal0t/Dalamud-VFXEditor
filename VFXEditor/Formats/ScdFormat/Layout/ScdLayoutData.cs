@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout {
     public class ScdLayoutData : IData {
         public List<ParsedBase> Parsed;
 

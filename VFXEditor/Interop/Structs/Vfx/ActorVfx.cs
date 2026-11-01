@@ -1,7 +1,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System;
 
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public unsafe class ActorVfx : BaseVfx {
         public ActorVfx( IGameObject caster, IGameObject target, string path ) : this( caster.Address, target.Address, path ) { }
 

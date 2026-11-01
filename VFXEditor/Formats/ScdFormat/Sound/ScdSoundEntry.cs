@@ -1,13 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Entries;
+using VfxEditor.Formats.ScdFormat.Layout;
 using VfxEditor.Formats.ScdFormat.Sound.Data;
 using VfxEditor.Parsing;
-using VfxEditor.ScdFormat.Sound.Data;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Sound {
     public enum SoundType {
         Invalid = 0,
         Normal = 1,

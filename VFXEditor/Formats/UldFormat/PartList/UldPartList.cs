@@ -1,11 +1,12 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat.PartList {
+namespace VfxEditor.Formats.UldFormat.PartList {
     public class UldPartList : UldWorkspaceItem {
         private readonly UldFile File;
         public readonly List<UldPartItem> Parts = [];

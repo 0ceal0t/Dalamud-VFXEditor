@@ -2,7 +2,7 @@ using Dalamud.Bindings.ImGui;
 using HelixToolkit.Maths;
 using System.IO;
 
-namespace VfxEditor.Parsing.Int {
+namespace VfxEditor.Parsing {
     public class ParsedShort2 : ParsedInt4 {
         public ParsedShort2( string name, Int4 value ) : base( name, value ) { }
 

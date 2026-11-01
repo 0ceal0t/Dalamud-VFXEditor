@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using VfxEditor.Flatbuffer;
 using VfxEditor.Formats.PhybFormat.Extended.Ephb;
-using VfxEditor.PhybFormat;
 using VfxEditor.Utils.PackStruct;
 
 namespace VfxEditor.Formats.PhybFormat.Extended {

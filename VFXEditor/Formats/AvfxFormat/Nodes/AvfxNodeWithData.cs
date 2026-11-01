@@ -1,7 +1,7 @@
 using System;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Formats.AvfxFormat.Components.Enums;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public abstract class AvfxNodeWithData<T> : AvfxNode, IItemWithData<AvfxData> where T : Enum {

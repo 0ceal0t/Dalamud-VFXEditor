@@ -1,6 +1,7 @@
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Base;
 using VfxEditor.Select.Tabs.Items;
 
 namespace VfxEditor.Select.Tabs.Skeleton {

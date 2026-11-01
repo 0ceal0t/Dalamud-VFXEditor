@@ -2,11 +2,10 @@ using Dalamud.Bindings.ImGui;
 using HelixToolkit.Maths;
 using System.IO;
 using System.Numerics;
-using VfxEditor.EidFormat.BindPoint;
+using VfxEditor.Data;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
 
-namespace VfxEditor.EidFormat {
+namespace VfxEditor.Formats.EidFormat.BindPoint {
     public class EidBindPointNew : EidBindPoint {
         public readonly ParsedPaddedString Name = new( "Bone Name", "n_root", 32, 0x00 );
         public readonly ParsedInt Id = new( "Id" );

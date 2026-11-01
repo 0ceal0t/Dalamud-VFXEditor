@@ -1,17 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.PapFormat.Commands;
+using VfxEditor.Formats.TmbFormat;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.String;
-using VfxEditor.TmbFormat;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
     public class PapAnimation {
         private readonly List<string> Prefixes = [
             "cbfp",

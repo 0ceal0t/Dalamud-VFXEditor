@@ -1,15 +1,16 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using NAudio.Wave;
 using System;
 using System.IO;
+using System.Linq;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
-using System.Linq;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Music {
     public class AudioPlayer {
         private readonly ScdAudioEntry Entry;
         private PlaybackState State => CurrentOutput == null ? PlaybackState.Stopped : CurrentOutput.PlaybackState;

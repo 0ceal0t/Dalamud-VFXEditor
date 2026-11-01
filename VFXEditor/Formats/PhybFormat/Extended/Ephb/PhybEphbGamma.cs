@@ -1,6 +1,5 @@
 using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Assignable;
 using VfxEditor.Ui.Interfaces;
 

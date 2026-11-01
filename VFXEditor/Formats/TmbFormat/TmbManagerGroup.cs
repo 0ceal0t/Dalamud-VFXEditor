@@ -1,5 +1,4 @@
 using VfxEditor.FileManager;
-using VfxEditor.TmbFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TmbFormat {

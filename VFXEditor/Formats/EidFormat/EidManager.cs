@@ -1,9 +1,8 @@
 using VfxEditor.FileManager;
-using VfxEditor.Formats.EidFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.EidFormat {
+namespace VfxEditor.Formats.EidFormat {
     public class EidManager : FileManager<EidDocument, EidFile, WorkspaceMetaBasic> {
         public EidManager( EidManagerGroup group ) : base( group ) {
             SourceSelect = new EidSelectDialog( "Eid Select [LOADED]", this, true );

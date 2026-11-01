@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Utils;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.Shape {
     public class MdlShape {

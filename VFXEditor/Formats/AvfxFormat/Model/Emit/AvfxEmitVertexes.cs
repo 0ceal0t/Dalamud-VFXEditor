@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model.Emit {
     public class AvfxEmitVertexes : AvfxBase {
         public readonly List<AvfxEmitVertex> EmitVertexes = [];
 

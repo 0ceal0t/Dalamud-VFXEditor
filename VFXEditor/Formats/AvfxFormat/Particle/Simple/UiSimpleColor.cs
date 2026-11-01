@@ -1,7 +1,7 @@
 using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Simple {
     public class UiSimpleColor : IUiItem {
         public readonly ParsedInt Frame;
         public readonly ParsedIntColor Color;

@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     public class LayoutLineExtControllerData : ScdLayoutData {
         public readonly ParsedFloat4 StartPosition = new( "Start Position" );
         public readonly ParsedFloat4 EndPosition = new( "End Position" );

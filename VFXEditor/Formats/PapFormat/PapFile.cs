@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using VfxEditor.FileBrowser;
-using VfxEditor.FileManager;
-using VfxEditor.PapFormat.Motion;
-using VfxEditor.Parsing;
-using VfxEditor.Utils;
 using VfxEditor.DirectX.Gradient;
 using VfxEditor.DirectX.Model;
+using VfxEditor.FileBrowser;
+using VfxEditor.FileManager;
+using VfxEditor.Formats.PapFormat.Motion;
+using VfxEditor.Parsing;
+using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
     public enum SkeletonType {
         Human = 0,
         Monster = 1,

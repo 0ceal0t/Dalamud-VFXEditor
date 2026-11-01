@@ -4,10 +4,11 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Sequencer {
     public abstract class ImGuiSequencer<T> : IUiItem where T : class, IIndexUiItem {
         private enum MovingType : int {
             LeftHandle = 1,

@@ -1,18 +1,29 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VfxEditor.AvfxFormat.Dialogs;
+using VfxEditor.Data.Command;
+using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Model;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Dialogs;
+using VfxEditor.Formats.AvfxFormat.Effector;
+using VfxEditor.Formats.AvfxFormat.Emitter;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Particle;
+using VfxEditor.Formats.AvfxFormat.Scheduler;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using VfxEditor.Formats.AvfxFormat.Timeline;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 using VfxEditor.Utils;
-using VfxEditor.DirectX.Gradient;
-using VfxEditor.DirectX.Model;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat {
     public partial class AvfxFile : FileManagerFile, IRenamableFile {
         public readonly AvfxMain Main;
         public readonly GradientInstance GradientInstance = new();

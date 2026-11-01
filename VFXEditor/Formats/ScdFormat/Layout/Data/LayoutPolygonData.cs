@@ -1,7 +1,7 @@
 using System;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     [Flags]
     public enum PolygonFlags {
         Is_Reverb_Object = 0x80

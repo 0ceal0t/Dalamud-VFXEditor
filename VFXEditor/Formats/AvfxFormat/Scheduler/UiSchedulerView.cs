@@ -1,6 +1,8 @@
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Scheduler {
     public class UiScheduleView : AvfxNodeDropdownView<AvfxScheduler> {
         public UiScheduleView( AvfxFile file, NodeGroup<AvfxScheduler> group ) : base( file, group, "Scheduler", false, false, "" ) { }
 

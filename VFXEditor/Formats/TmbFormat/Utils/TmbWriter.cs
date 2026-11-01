@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.Parsing.Utils;
+using VfxEditor.Parsing;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Utils {
+namespace VfxEditor.Formats.TmbFormat.Utils {
     public class TmbWriter : ParsingWriter {
         public const int BaseSize = 0x10;
         public int BodySize;

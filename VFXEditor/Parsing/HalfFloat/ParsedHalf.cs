@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace VfxEditor.Parsing.HalfFloat {
+namespace VfxEditor.Parsing {
     public class ParsedHalf : ParsedFloat {
         public ParsedHalf( string name, float value ) : base( name, value ) { }
 

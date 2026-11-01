@@ -1,7 +1,6 @@
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C176 : TmbEntry {
         public const string MAGIC = "C176";
         public const string DISPLAY_NAME = "Forced Vertical Movement";

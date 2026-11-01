@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public abstract class AvfxNodeGroup {
         public abstract void Initialize();
         public abstract void PreImport( bool hasDependencies );

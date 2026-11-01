@@ -5,6 +5,7 @@ using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MdlFormat.Utils {
     public class MdlWriteData : MdlFileData {

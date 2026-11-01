@@ -1,10 +1,9 @@
 using System.IO;
 using VfxEditor.FileManager;
-using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat {
     public class ScdManager : FileManager<ScdDocument, ScdFile, WorkspaceMetaBasic> {
         public ScdManager( ScdManagerGroup group ) : base( group ) {
             SourceSelect = new ScdSelectDialog( "Scd Select [LOADED]", this, true );

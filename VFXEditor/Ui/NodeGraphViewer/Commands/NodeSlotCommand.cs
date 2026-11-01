@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 
 namespace VfxEditor.Ui.NodeGraphViewer.Commands {

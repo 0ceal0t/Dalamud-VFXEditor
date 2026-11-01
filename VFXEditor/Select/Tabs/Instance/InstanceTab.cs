@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 using VfxEditor.Select.Tabs.BgmQuest;
 
 namespace VfxEditor.Select.Tabs.Instance {

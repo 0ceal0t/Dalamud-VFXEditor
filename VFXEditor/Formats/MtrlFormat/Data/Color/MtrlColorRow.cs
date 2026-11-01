@@ -6,7 +6,6 @@ using VfxEditor.Formats.MtrlFormat.Data.Dye;
 using VfxEditor.Formats.MtrlFormat.Data.Table;
 using VfxEditor.Formats.MtrlFormat.Stm;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.HalfFloat;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class MtrlColorRow : MtrlColorRowBase {

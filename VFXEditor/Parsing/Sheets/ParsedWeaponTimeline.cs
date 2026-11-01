@@ -3,7 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Data;
 
-namespace VfxEditor.Parsing.Sheets {
+namespace VfxEditor.Parsing {
     public class ParsedWeaponTimeline : ParsedSimpleBase<ushort> {
         private string CurrentTimeline => SheetData.WeaponTimelines.TryGetValue( Value, out var timeline ) ? timeline : "";
 

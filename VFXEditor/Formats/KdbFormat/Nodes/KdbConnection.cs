@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes {
     public enum ConnectionType {

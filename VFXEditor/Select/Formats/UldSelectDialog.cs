@@ -1,5 +1,5 @@
+using VfxEditor.Formats.UldFormat;
 using VfxEditor.Select.Tabs.Common;
-using VfxEditor.UldFormat;
 
 namespace VfxEditor.Select.Formats {
     public class UldSelectDialog : SelectDialog {

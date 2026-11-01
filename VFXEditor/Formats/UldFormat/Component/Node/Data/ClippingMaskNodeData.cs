@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Formats.UldFormat.PartList;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public class ClippingMaskNodeData : UldGenericData {
         private readonly PartListSelect PartListId;
         private readonly PartItemSelect PartId;

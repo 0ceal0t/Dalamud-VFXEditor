@@ -2,7 +2,7 @@ using FFXIVClientStructs.FFXIV.Client.System.String;
 using System;
 using System.Numerics;
 
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public unsafe class StaticVfx : BaseVfx {
 
         public StaticVfx( string path, Vector3 position, float rotation ) : base( path ) {

@@ -1,5 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;

@@ -1,6 +1,7 @@
-using VfxEditor.TmbFormat;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.TmbFormat;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Commands {
     public class PapReplaceTmbCommand : ICommand {
         private readonly PapAnimation Item;
         private readonly TmbFile State;

@@ -2,7 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat.Sound.Data {
+namespace VfxEditor.Formats.ScdFormat.Sound.Data {
     public class SoundExtra {
         public readonly ParsedByte Version = new( "Version" );
         private readonly ParsedByte Unknown1 = new( "Unknown 1" ); //Reserve 1

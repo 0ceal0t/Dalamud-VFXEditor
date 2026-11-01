@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat.Sound.Data {
+namespace VfxEditor.Formats.ScdFormat.Sound.Data {
     public enum InsertEffectName {
         NoEffect,
         LowPassFilter,

@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data.Component {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data.Component {
     public class NumericInputNodeData : UldNodeComponentData {
         public NumericInputNodeData() : base() {
             Parsed.AddRange( [

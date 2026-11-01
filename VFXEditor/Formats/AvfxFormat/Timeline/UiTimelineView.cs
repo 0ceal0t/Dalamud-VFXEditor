@@ -1,6 +1,8 @@
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline {
     public class UiTimelineView : AvfxNodeDropdownView<AvfxTimeline> {
         public UiTimelineView( AvfxFile file, NodeGroup<AvfxTimeline> group ) : base( file, group, "Timeline", true, true, "default_timeline.vfxedit" ) { }
 

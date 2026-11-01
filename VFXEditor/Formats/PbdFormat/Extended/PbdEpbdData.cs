@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Flatbuffer;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 
 namespace VfxEditor.Formats.PbdFormat.Extended {
     public class PbdEpbdData {

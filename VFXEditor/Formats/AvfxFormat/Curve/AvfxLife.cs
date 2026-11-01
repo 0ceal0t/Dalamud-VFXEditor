@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Assign;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
 using VfxEditor.Ui.Interfaces;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxLife : AvfxOptional {
         public bool Enabled = true;
         // Life is kinda strange, can either be -1 (4 bytes = ffffffff) or Val + ValR + RanT

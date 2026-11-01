@@ -1,9 +1,8 @@
 using System.Numerics;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Utils;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat.Components {
     public class TmbOffsetFloat4 : ParsedFloat4 {
         public TmbOffsetFloat4( string name, Vector4 defaultValue ) : base( name, defaultValue ) { }
 

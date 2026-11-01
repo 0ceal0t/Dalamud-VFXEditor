@@ -1,9 +1,8 @@
 using System;
+using VfxEditor.Formats.UldFormat.Widget;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Color;
-using VfxEditor.UldFormat.Widget;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public enum FontType : int {
         Axis = 0x0,
         MiedingerMed = 0x1,

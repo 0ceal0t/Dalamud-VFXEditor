@@ -3,7 +3,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat {
+namespace VfxEditor.Formats.UldFormat {
     public class UldDocument : FileManagerRenamedDocument<UldFile> {
         public override string Id => "Uld";
         public override string Extension => "uld";

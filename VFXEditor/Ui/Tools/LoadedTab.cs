@@ -1,14 +1,13 @@
+using CommunityToolkit.Common;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
-using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using VfxEditor.Structs;
-using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
-using CommunityToolkit.Common;
-using Dalamud.Utility;
 
 namespace VfxEditor.Ui.Tools {
     public unsafe class LoadedTab {

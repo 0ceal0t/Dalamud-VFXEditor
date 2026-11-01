@@ -4,11 +4,10 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using VfxEditor.PhybFormat;
-using VfxEditor.PhybFormat.Simulator;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 
 namespace VfxEditor.Formats.PhybFormat.Simulator {
     public class PhybSimulatorDropdown : CommandDropdown<PhybSimulator> {

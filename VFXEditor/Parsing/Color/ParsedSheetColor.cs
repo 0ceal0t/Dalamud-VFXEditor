@@ -4,7 +4,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
 
-namespace VfxEditor.Parsing.Color {
+namespace VfxEditor.Parsing {
     public class ParsedSheetColor : ParsedSimpleBase<uint> {
         private Vector4 CurrentColor => SheetData.UiColors.TryGetValue( Value, out var color ) ? color : new Vector4( 1, 1, 1, 1 );
 

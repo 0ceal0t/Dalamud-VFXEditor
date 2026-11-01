@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public class CounterNodeData : UldGenericData {
         public CounterNodeData() {
             Parsed.AddRange( [

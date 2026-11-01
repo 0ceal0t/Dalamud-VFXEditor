@@ -1,9 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Utils;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat.Components {
     public class TmbOffsetString : ParsedString {
         public TmbOffsetString( string name, List<ParsedStringIcon> icons, bool forceLower, string value ) : base( name, icons, forceLower ) {
             Value = value;

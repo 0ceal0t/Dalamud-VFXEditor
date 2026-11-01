@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using VfxEditor.Formats.AvfxFormat.Components;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.Flag {
     public class AvfxFlag<T> : AvfxLiteral<ParsedFlag<T>, T> where T : Enum {
         public AvfxFlag( string name, string avfxName, T value, int size = 4 ) : base( avfxName, new( name, value, size ) ) { }
 

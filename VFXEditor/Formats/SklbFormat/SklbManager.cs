@@ -1,9 +1,8 @@
 using VfxEditor.FileManager;
-using VfxEditor.Formats.SklbFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.SklbFormat {
+namespace VfxEditor.Formats.SklbFormat {
     public class SklbManager : FileManager<SklbDocument, SklbFile, WorkspaceMetaBasic> {
         public SklbManager( SklbManagerGroup group ) : base( group ) {
             SourceSelect = new SklbSelectDialog( "Sklb Select [LOADED]", this, true );

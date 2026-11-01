@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Utils;
+
 namespace VfxEditor.Formats.MdlFormat.Bone.V6 {
     public class MdlBoneTableV6 : MdlBoneTable {
         public MdlBoneTableV6( BinaryReader reader, List<string> boneStrings, int count ) : base() {

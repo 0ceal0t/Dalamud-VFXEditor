@@ -1,7 +1,7 @@
 using System;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data.Component {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data.Component {
     [Flags]
     public enum TextInputFlags {
         Capitalize = 0x01,

@@ -1,6 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Lists {

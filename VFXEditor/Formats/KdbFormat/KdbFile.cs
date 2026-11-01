@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,15 +11,14 @@ using VfxEditor.Formats.KdbFormat.Nodes.Types.Source;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.Target;
 using VfxEditor.Formats.KdbFormat.Nodes.Types.TargetConstraint;
 using VfxEditor.Formats.KdbFormat.UnknownB;
+using VfxEditor.Formats.KdbFormat.UnknownE;
 using VfxEditor.Formats.KdbFormat.UnknownF;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Ui;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Utils;
-using VFXEditor.Formats.KdbFormat.UnknownE;
 
 namespace VfxEditor.Formats.KdbFormat {
     public enum ArrayType : ushort {

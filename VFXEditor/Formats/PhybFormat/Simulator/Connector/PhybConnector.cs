@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.PhybFormat.Simulator.Connector {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Connector {
     public class PhybConnector : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 

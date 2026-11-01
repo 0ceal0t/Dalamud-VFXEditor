@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
-using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbData {

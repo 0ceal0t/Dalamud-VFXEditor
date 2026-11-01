@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackModulationTypeData : ScdTrackData {
         public readonly ParsedEnum<OscillatorCarrier> Carrier = new( "Carrier" );
         public readonly ParsedEnum<OscillatorMode> Modulator = new( "Modulator" );

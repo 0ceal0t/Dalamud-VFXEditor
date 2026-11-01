@@ -1,9 +1,10 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileBrowser.FolderFiles {
     public enum FilePickerFileType {

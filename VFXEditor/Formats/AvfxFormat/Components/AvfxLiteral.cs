@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.AvfxFormat.Components {

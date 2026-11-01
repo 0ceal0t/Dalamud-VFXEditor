@@ -2,7 +2,7 @@ using Lumina.Data.Files;
 using Lumina.Models.Models;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Model;
 
 namespace VfxEditor.Utils {
     // WIP, Not currently being used

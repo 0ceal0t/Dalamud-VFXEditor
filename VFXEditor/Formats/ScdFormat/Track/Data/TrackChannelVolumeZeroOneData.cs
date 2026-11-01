@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackChannelVolumeZeroOneData : ScdTrackData {
         public readonly ParsedByte Version = new( "Version" );
         private byte Reserved1;

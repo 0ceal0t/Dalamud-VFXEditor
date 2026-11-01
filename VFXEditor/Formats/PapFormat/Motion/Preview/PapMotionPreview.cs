@@ -1,6 +1,5 @@
 using VfxEditor.FileBrowser;
-using VfxEditor.PapFormat;
-using VfxEditor.PapFormat.Motion;
+using VfxEditor.Formats.PapFormat.Modals;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public abstract class PapMotionPreview {

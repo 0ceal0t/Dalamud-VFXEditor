@@ -1,9 +1,10 @@
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Formats.ScdFormat.Track.Data;
+using VfxEditor.Parsing;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track {
     public enum TrackCmd {
         End,
         Volume,

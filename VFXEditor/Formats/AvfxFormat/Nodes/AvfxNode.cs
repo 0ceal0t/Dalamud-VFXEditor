@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Workspace;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes {
     public abstract class AvfxNode : AvfxWorkspaceItem {
         public readonly AvfxFile File;
         public uint GraphColor;

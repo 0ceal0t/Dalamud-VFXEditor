@@ -5,6 +5,7 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using System.Collections.Generic;
 using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
@@ -33,6 +34,7 @@ using VfxEditor.Tracker;
 using VfxEditor.Ui.Export;
 using VfxEditor.Ui.Import;
 using VfxEditor.Ui.Tools;
+using VfxEditor.Utils;
 
 namespace VfxEditor {
     public unsafe partial class Plugin : IDalamudPlugin {

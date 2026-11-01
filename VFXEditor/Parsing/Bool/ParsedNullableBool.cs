@@ -3,7 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
 
 namespace VfxEditor.Parsing {
     public class ParsedNullableBool : ParsedSimpleBase<bool?> {

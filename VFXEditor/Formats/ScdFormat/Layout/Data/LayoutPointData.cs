@@ -1,7 +1,7 @@
 using System;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     [Flags]
     public enum PointEnvironmentFlags {
         Use_Env_Filter_Depth = 0x40,

@@ -1,6 +1,4 @@
-using VfxEditor.Parsing.Int;
-using VfxEditor.UldFormat;
-using VfxEditor.UldFormat.PartList;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.UldFormat.PartList {
     public class PartListSelect : ParsedIntSelect<UldPartList> {

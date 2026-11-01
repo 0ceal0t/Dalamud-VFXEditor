@@ -1,4 +1,3 @@
-using VfxEditor.AvfxFormat;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 

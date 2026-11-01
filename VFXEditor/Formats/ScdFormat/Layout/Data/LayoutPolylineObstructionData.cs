@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     public class LayoutPolylineObstructionData : ScdLayoutData {
         public readonly ParsedFloat2 Height = new( "Height" );
         public readonly ParsedFloat ObstacleFac = new( "Obstacle FAC" );

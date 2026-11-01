@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Housing {
     public class HousingTab : SelectTab<HousingRow, ParsedPaths> {

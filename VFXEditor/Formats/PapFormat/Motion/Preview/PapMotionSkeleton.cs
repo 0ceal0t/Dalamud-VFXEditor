@@ -8,12 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Data;
+using VfxEditor.DirectX;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
-using VfxEditor.PapFormat;
-using VfxEditor.PapFormat.Motion;
 using VfxEditor.Utils;
-using VfxEditor.DirectX;
 
 namespace VfxEditor.Formats.PapFormat.Motion.Preview {
     public unsafe class PapMotionSkeleton : PapMotionPreview {

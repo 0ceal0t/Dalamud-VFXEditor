@@ -2,8 +2,10 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.DirectX.Mesh;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.DirectX.Gradient;
+using VfxEditor.DirectX.Material;
+using VfxEditor.DirectX.Mesh;
 using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 

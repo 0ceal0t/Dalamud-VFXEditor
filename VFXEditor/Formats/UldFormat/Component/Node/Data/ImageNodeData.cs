@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.Formats.UldFormat.PartList;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public enum UldDrawMode { //might be off a bit, but it's fine for now
         Unknown = 0,
         Blend = 1,

@@ -1,6 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Cutscenes {
     public class CutsceneTab : SelectTab<CutsceneRow, ParsedPaths> {

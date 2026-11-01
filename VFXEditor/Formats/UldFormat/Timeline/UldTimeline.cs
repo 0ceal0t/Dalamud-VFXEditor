@@ -1,11 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.UldFormat.Timeline.Frames;
 using VfxEditor.Ui.Components.SplitViews;
-using VfxEditor.UldFormat.Timeline.Frames;
 
-namespace VfxEditor.UldFormat.Timeline {
+namespace VfxEditor.Formats.UldFormat.Timeline {
     public class UldTimeline : UldWorkspaceItem {
         public readonly List<UldFrame> Frames1 = [];
         public readonly List<UldFrame> Frames2 = [];

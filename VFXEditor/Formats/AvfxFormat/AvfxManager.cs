@@ -1,13 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.FileManager;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
-using VfxEditor.Formats.AvfxFormat;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat {
     public class AvfxManager : FileManager<AvfxDocument, AvfxFile, WorkspaceMetaRenamed> {
         public AvfxManager( AvfxManagerGroup group ) : base( group ) {
             SourceSelect = new VfxSelectDialog( "File Select [LOADED]", this, true );

@@ -1,4 +1,4 @@
-using VfxEditor.PapFormat;
+using VfxEditor.Formats.PapFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Common;

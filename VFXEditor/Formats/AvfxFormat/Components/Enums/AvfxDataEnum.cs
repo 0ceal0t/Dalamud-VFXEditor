@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
 using VfxEditor.Formats.AvfxFormat.Nodes;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.AvfxFormat.Components.Enums {
     public class AvfxDataEnum<T> : AvfxLiteral<ParsedDataEnum<T, AvfxData>, T> where T : Enum {

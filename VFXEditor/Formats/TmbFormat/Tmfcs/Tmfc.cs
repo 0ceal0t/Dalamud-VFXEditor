@@ -1,14 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Formats.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Entries;
-using VfxEditor.TmbFormat.Utils;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.TmbFormat.Tmfcs {
+namespace VfxEditor.Formats.TmbFormat.Tmfcs {
     public class Tmfc : TmbEntry {
         public const string MAGIC = "TMFC";
         public const string DISPLAY_NAME = "TMFC";

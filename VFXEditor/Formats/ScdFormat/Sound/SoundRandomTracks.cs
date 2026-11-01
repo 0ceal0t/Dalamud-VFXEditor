@@ -1,13 +1,12 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Sound {
     public class SoundRandomTracks {
         public readonly List<RandomTrackInfo> Entries = [];
         private readonly CommandTable<RandomTrackInfo> EntryTable;

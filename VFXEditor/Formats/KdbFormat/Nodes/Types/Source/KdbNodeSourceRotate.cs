@@ -1,9 +1,8 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Source {
     public class KdbNodeSourceRotate : KdbNodeSource {

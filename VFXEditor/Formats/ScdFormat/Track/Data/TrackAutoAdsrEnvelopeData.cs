@@ -1,7 +1,7 @@
 using System.IO;
 using VfxEditor.Parsing;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackAutoAdsrEnvelopeData : ScdTrackData {
         public readonly ParsedInt AttackTime = new( "Attack Time" );
         public readonly ParsedInt DecayTime = new( "Decay Time" );

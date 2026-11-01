@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
 
 namespace VfxEditor.Data.Copy {
     public class CopyManager {

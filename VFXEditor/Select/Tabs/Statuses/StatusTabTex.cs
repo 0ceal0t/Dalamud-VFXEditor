@@ -1,6 +1,7 @@
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Statuses {
     public class StatusTabTex : SelectTab<StatusRow> {

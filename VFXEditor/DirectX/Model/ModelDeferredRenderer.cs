@@ -1,8 +1,9 @@
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Linq;
-using VfxEditor;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Drawable;
+using VfxEditor.Utils;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Model {

@@ -1,12 +1,13 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Items {
     public abstract class AvfxItemSplitView<T> : ItemSplitView<T> where T : class, IIndexUiItem {
         protected bool AllowNew = true;
         protected bool AllowDelete = true;

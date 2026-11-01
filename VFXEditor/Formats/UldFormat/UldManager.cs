@@ -1,9 +1,8 @@
 using VfxEditor.FileManager;
-using VfxEditor.Formats.UldFormat;
 using VfxEditor.Select.Formats;
 using VfxEditor.Utils;
 
-namespace VfxEditor.UldFormat {
+namespace VfxEditor.Formats.UldFormat {
     public unsafe class UldManager : FileManager<UldDocument, UldFile, WorkspaceMetaRenamed> {
         public UldManager( UldManagerGroup group ) : base( group ) {
             SourceSelect = new UldSelectDialog( "Uld Select [LOADED]", this, true );

@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Text;
-using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Formats.ScdFormat.Utils;
 
-namespace VfxEditor.ScdFormat.Music.Data {
+namespace VfxEditor.Formats.ScdFormat.Music.Data {
     public class ScdVorbis : ScdAudioData {
         public readonly bool LegacyImported = false; // old scds
 

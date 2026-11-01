@@ -1,6 +1,6 @@
 using VfxEditor.Parsing;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class PreviewComponentData : UldGenericData {
         public PreviewComponentData() {
             Parsed.AddRange( [
