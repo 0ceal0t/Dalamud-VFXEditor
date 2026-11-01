@@ -1,91 +1,151 @@
 name: Create Release
 
+# Stable releases only: pushing a version tag (e.g. 2.0.0.0) builds the plugin, publishes vfx-editor.zip as a
+# GitHub release, and updates the vfx-editor entry in repo.json. Modeled on Penumbra and Glamourer
+# (xivdev/Penumbra/.github/actions), written out here because VFXEditor's project folder (VFXEditor) differs
+# from its internal name (vfx-editor).
+#
+# The old VFXEditor-Beta entry in repo.json is kept but no longer updated.
+
 on:
   push:
     tags-ignore:
       - testing_*
 
+env:
+  PLUGIN: vfx-editor           # InternalName, assembly name, manifest and zip name
+  PROJECT_DIR: VFXEditor       # folder containing VFXEditor.csproj
+  REPO_BRANCH: evercold        # branch that holds repo.json
+  HUSKY: 0
+
 jobs:
   build:
     runs-on: windows-latest
-    env:
-      HUSKY: 0
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
           submodules: recursive
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
               10.x.x
               9.x.x
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Download Dalamud
         run: |
           Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
           Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
       - name: Build
         run: |
           $ver = '${{ github.ref_name }}'
-          invoke-expression 'dotnet build --no-restore --configuration Beta --nologo -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver'
-      - name: write version into jsons
+          dotnet build --no-restore --nologo --configuration Release -p:Version=$ver -p:FileVersion=$ver -p:AssemblyVersion=$ver
+
+      - name: Write version into the plugin manifest
         run: |
-          $ver = '${{ github.ref_name }}'
-          $path = './VFXEditor/bin/Beta/VFXEditor-Beta.json'
+          $path = "./$env:PROJECT_DIR/bin/Release/$env:PLUGIN.json"
           $json = Get-Content -Raw $path | ConvertFrom-Json
-          $json.AssemblyVersion = $ver
-          $content = $json | ConvertTo-Json
-          set-content -Path $path -Value $content
-      - name: Archive
-        run: Compress-Archive -Path VFXEditor/bin/Beta/* -DestinationPath VFXEditor-Beta.zip
-      - name: Upload a Build Artifact
+          $json.AssemblyVersion = '${{ github.ref_name }}'
+          $json | ConvertTo-Json -Depth 10 | Set-Content -Path $path
+          # Kept for the repo.json step, since checking out the repo branch below cleans the workspace
+          Copy-Item $path "$env:RUNNER_TEMP/$env:PLUGIN.json"
+
+      - name: Create archive
+        run: Compress-Archive -Path "$env:PROJECT_DIR/bin/Release/*" -DestinationPath "$env:PLUGIN.zip"
+
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          path: |
-            ./VFXEditor/bin/Beta/*
-      - name: Create Release
+          path: ./${{ env.PLUGIN }}.zip
+
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: VFXEditor Beta ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          release_name: VFXEditor ${{ github.ref_name }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
+
+      - name: Upload release asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./VFXEditor-Beta.zip
-          asset_name: VFXEditor-Beta.zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PLUGIN }}.zip
+          asset_name: ${{ env.PLUGIN }}.zip
           asset_content_type: application/zip
 
-      - name: Write out repo.json
+      # Commits on top of the branch (unlike the old workflow, which force-moved main to the tagged commit)
+      - name: Checkout repo.json branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ env.REPO_BRANCH }}
+
+      - name: Update repo.json
         run: |
           $ver = '${{ github.ref_name }}'
-          $path = './repo.json'
-          $json = Get-Content -Raw $path | ConvertFrom-Json
-          $json[0].AssemblyVersion = $ver
-          $json[0].TestingAssemblyVersion = $ver
-          $json[0].DownloadLinkInstall = $json.DownloadLinkInstall -replace '[^/]+/VFXEditor-Beta.zip',"$ver/VFXEditor-Beta.zip"
-          $json[0].DownloadLinkTesting = $json.DownloadLinkTesting -replace '[^/]+/VFXEditor-Beta.zip',"$ver/VFXEditor-Beta.zip"
-          $json[0].DownloadLinkUpdate = $json.DownloadLinkUpdate -replace '[^/]+/VFXEditor-Beta.zip',"$ver/VFXEditor-Beta.zip"
-          $content = $json | ConvertTo-Json -AsArray
-          set-content -Path $path -Value $content
+          $link = "https://github.com/${{ github.repository }}/releases/download/$ver/$env:PLUGIN.zip"
+          $manifest = Get-Content -Raw "$env:RUNNER_TEMP/$env:PLUGIN.json" | ConvertFrom-Json
+
+          $repo = @(Get-Content -Raw ./repo.json | ConvertFrom-Json)
+          $entry = $repo | Where-Object { $_.InternalName -eq $env:PLUGIN } | Select-Object -First 1
+          $isNew = $null -eq $entry
+          if ( $isNew ) { $entry = [ordered]@{} }
+
+          # Plugin metadata always comes from the manifest, so edits to vfx-editor.json show up in the repository
+          $values = [ordered]@{
+            Author                 = $manifest.Author
+            Name                   = $manifest.Name
+            Punchline              = $manifest.Punchline
+            Description            = $manifest.Description
+            Tags                   = $manifest.Tags
+            InternalName           = $manifest.InternalName
+            AssemblyVersion        = $ver
+            TestingAssemblyVersion = $ver
+            RepoUrl                = $manifest.RepoUrl
+            ApplicableVersion      = $manifest.ApplicableVersion
+            DalamudApiLevel        = $manifest.DalamudApiLevel
+            TestingDalamudApiLevel = $manifest.DalamudApiLevel
+            IsHide                 = 'False'
+            IsTestingExclusive     = 'False'
+            LoadPriority           = $manifest.LoadPriority
+            DownloadLinkInstall    = $link
+            DownloadLinkTesting    = $link
+            DownloadLinkUpdate     = $link
+            IconUrl                = $manifest.IconUrl
+          }
+
+          if ( $isNew ) {
+            $values.DownloadCount = 0
+            $values.LastUpdate = 0
+            $entry = [pscustomobject]$values
+            $repo = @($entry) + $repo # new plugin first, frozen VFXEditor-Beta entry after it
+          }
+          else {
+            foreach ( $key in $values.Keys ) {
+              $entry | Add-Member -NotePropertyName $key -NotePropertyValue $values[$key] -Force
+            }
+          }
+
+          ConvertTo-Json -InputObject $repo -Depth 10 | Set-Content -Path ./repo.json
 
       - name: Commit repo.json
         run: |
           git config --global user.name "Actions User"
           git config --global user.email "actions@github.com"
-          git fetch origin main
-          git branch -f main ${{ github.sha }}
-          git checkout main
           git add repo.json
-          git commit -m "[CI] Updating repo.json for ${{ github.ref_name }}" || true
-          git push origin main
+          git diff --cached --quiet
+          if ( $LASTEXITCODE -eq 0 ) { Write-Host "repo.json unchanged"; exit 0 }
+          git commit -m "[CI] Updating repo.json for ${{ github.ref_name }}"
+          git push origin $env:REPO_BRANCH

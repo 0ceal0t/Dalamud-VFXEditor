@@ -11,12 +11,6 @@
           "CommunityToolkit.HighPerformance": "8.4.0"
         }
       },
-      "DalamudPackager": {
-        "type": "Direct",
-        "requested": "[15.0.0, )",
-        "resolved": "15.0.0",
-        "contentHash": "411vwC8/X8Z/sQ2TI6v3SvOn66xFPeOjFn3Zn+h0d3Ox2t1kFm66AhDvmx/qcMwVrR+Hidxj0dadpQ2dgyXMBQ=="
-      },
       "DotNet.ReproducibleBuilds": {
         "type": "Direct",
         "requested": "[1.2.39, )",
@@ -81,12 +75,6 @@
           "SharpDX.Direct2D1": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0"
         }
-      },
-      "JsonPoke.MSBuild": {
-        "type": "Direct",
-        "requested": "[1.0.9, )",
-        "resolved": "1.0.9",
-        "contentHash": "0C2NW2nWDBCMuDGqKqBeLIu8ijcJp4/RkWZ50m6MdiU5yahtIaajyeMvUNmPrv+EdEZ780vvkLnvKEsGNhr/mg=="
       },
       "mgholam.fastCSV": {
         "type": "Direct",

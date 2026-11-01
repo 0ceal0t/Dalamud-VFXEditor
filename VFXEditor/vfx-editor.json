@@ -8,5 +8,7 @@
     "RepoUrl": "https://github.com/0ceal0t/Dalamud-VFXEditor",
     "ApplicableVersion": "any",
     "Tags": [ "VFX", "AVFX" ],
-    "LoadPriority": 69
+    "DalamudApiLevel": 15,
+    "LoadPriority": 69,
+    "IconUrl": "https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/assets/icon.png"
 }

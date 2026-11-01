@@ -90,11 +90,7 @@ namespace VfxEditor {
         public static PbdManagerGroup PbdManager { get; private set; }
 
         public static string RootLocation { get; private set; }
-#if BETA
-        private const string CommandName = "/vfxbeta";
-#else
         private const string CommandName = "/vfxedit";
-#endif
 
         private static bool ClearKeyState = false;
         public static bool IsImguiSafe { get; set; } = false;

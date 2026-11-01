@@ -34,13 +34,13 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 3. Install the plugin from the `/xlplugins` menu
 4. Once installed, open with `/vfxedit`
 
-### Beta Builds
-Add the following custom repository in `/xlsettings > Experimental`:
+### Custom Repository
+VFXEditor (`vfx-editor`) is also published to this repository's own plugin listing. Add the following custom repository in `/xlsettings > Experimental`:
 ```
 https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json
 ```
 
-The beta and main builds cannot both be enabled at the same time, so make sure to disable one before enabling the other. Open the beta version using `/vfxbeta`
+Releases are created by pushing a version tag (for example `2.0.0.0`), which builds the plugin and updates `repo.json` (see `.github/workflows/release.yml`). The old `[BETA] VFXEditor` entry is no longer updated; uninstall it and install VFXEditor instead.
 
 ## Usage
 1. Select a _"Loaded Vfx"_ (the new effect you want to use)
