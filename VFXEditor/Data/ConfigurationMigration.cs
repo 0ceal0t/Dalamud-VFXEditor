@@ -30,10 +30,9 @@ namespace VfxEditor {
                 return configuration;
             }
             catch( Exception e ) {
-                // Previously this stopped the plugin from loading. Keep a copy of the unreadable file, since the next save overwrites it
+                // Previously this stopped the plugin from loading. The unreadable file is overwritten by the next save
                 Dalamud.Error( e, $"Could not read {configFile.FullName}" );
-                var backup = Backup( configFile );
-                Dalamud.WarningNotification( $"Your settings could not be read and were reset to defaults.{( backup == null ? "" : $" The old file was saved as {backup}" )}" );
+                Dalamud.WarningNotification( "Your settings could not be read and were reset to defaults" );
                 return Defaults();
             }
         }
@@ -96,18 +95,6 @@ namespace VfxEditor {
             var configuration = new Configuration();
             configuration.Setup();
             return configuration;
-        }
-
-        private static string Backup( FileInfo file ) {
-            try {
-                var backup = Path.Combine( file.DirectoryName, $"{Path.GetFileNameWithoutExtension( file.Name )}.unreadable-{DateTime.Now:yyyyMMdd-HHmmss}.json" );
-                file.CopyTo( backup );
-                return backup;
-            }
-            catch( Exception e ) {
-                Dalamud.Error( e, $"Could not back up {file.FullName}" );
-                return null;
-            }
         }
     }
 }
