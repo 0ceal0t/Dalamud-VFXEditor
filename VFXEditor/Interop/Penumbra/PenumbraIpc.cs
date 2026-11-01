@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Penumbra.Api.Enums;
 using Penumbra.Api.Helpers;
 using Penumbra.Api.IpcSubscribers;
 using System;
@@ -19,6 +20,7 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly ResolveDefaultPath ResolveDefaultPathSubscriber;
         private readonly GetPlayerMetaManipulations GetPlayerMetaManipulationsSubscriber;
         private readonly GetEnabledState GetEnabledStateSubscriber;
+        private readonly OpenMainWindow OpenMainWindowSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -31,6 +33,7 @@ namespace VfxEditor.Interop.Penumbra {
             GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
             ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
             GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
+            OpenMainWindowSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -45,6 +48,11 @@ namespace VfxEditor.Interop.Penumbra {
 
             PenumbraEnabled = true;
             RefreshEnabledState();
+        }
+
+        public void OpenSettings() {
+            if( !PenumbraEnabled ) return;
+            OpenMainWindowSubscriber.Invoke( TabType.Settings );
         }
 
         private void RefreshEnabledState() {
