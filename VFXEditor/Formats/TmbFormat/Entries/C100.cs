@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
@@ -14,8 +15,8 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedShort Visiblity = new( "Visibility" );
-        private readonly ParsedShort Unk3 = new( "Unknown 3" );
+        private readonly ParsedBool Visiblity = new( "Is Visible", size: 2 );
+        private readonly ParsedEnum<ObjectControl> Type = new( "Target Type", size: 2 );
         private readonly ParsedInt Unk4 = new( "Unknown 4" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
 
@@ -27,7 +28,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
             Enabled,
             Unk2,
             Visiblity,
-            Unk3,
+            Type,
             Unk4,
             Unk5
         ];

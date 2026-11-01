@@ -1,5 +1,6 @@
 using Dalamud.Interface;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Components;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
@@ -30,7 +31,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedEnum<BindUser> BindOrigin1 = new( "Bind Point 1 Origin", size: 1 );
         private readonly ParsedEnum<BindType> BindType1 = new( "Bind Point 1 Type", size: 1 );
         private readonly ParsedShort BindId1 = new( "Bind Point 1", value: -1 );
-        private readonly ParsedInt Visibility = new( "Visibility" ); //doesn't seem to use the same enum
+        private readonly ParsedBool Visibility = new( "Override Battle FX Setting" );
         private readonly ParsedInt Limit = new( "Limit" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );

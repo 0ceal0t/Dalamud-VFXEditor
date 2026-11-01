@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Data;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
@@ -15,7 +16,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
-        private readonly ParsedInt BgmId = new( "BGM Id" );
+        private readonly ParsedSheetInt BgmId = new( "BGM", SheetData.BgmId, SheetData.InitBgmId );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );

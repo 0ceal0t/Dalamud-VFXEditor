@@ -11,6 +11,7 @@ using VfxEditor.Formats.MdlFormat.Box;
 using VfxEditor.Formats.MdlFormat.Eid;
 using VfxEditor.Formats.MdlFormat.Lod;
 using VfxEditor.Formats.MdlFormat.Mesh.Shape;
+using VfxEditor.Formats.MdlFormat.NeckMorph;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
@@ -62,13 +63,20 @@ namespace VfxEditor.Formats.MdlFormat {
         private readonly ParsedFlag<ModelFlags2> Flags2 = new( "Flags 2", size: 1 );
         private readonly ParsedFloat ModelClipOutDistance = new( "Model Clip Out Distance" );
         private readonly ParsedFloat ShadowClipOutDistance = new( "Shadow Clip Out Distance" );
-        private readonly ParsedByte Unknown5 = new( "Unknown 5" );
+        private readonly ParsedByte Flags3 = new( "Flags 3" );
         private readonly ParsedByte BgChangeMaterialIndex = new( "Background Change Material Index" );
         private readonly ParsedByte BgCrestChangeMaterialIndex = new( "Background Crest Change Material Index" );
-        private readonly ParsedByte Unknown6 = new( "Unknown 6" );
-        private readonly ParsedShort Unknown7 = new( "Unknown 7" );
+        // Number of ushorts (including padding) taken up by the bone table arrays. Recalculated on write for v6
+        private readonly ParsedShort BoneTableArrayCountTotal = new( "Bone Table Array Count Total" );
         private readonly ParsedShort Unknown8 = new( "Unknown 8" );
-        private readonly ParsedShort Unknown9 = new( "Unknown 9" );
+
+        // https://github.com/TexTools/xivModdingFramework/blob/master/xivModdingFramework/Models/FileTypes/Mdl.cs
+        public readonly List<MdlNeckMorph> NeckMorphs = [];
+        private readonly CommandSplitView<MdlNeckMorph> NeckMorphView;
+
+        // Added in 7.2, 16 bytes per entry, purpose unknown (shadow-related, appears on face models)
+        private const int PATCH_72_ENTRY_SIZE = 16;
+        private readonly byte[] Patch72Data;
 
         public readonly List<MdlEid> Eids = [];
         private readonly CommandSplitView<MdlEid> EidView;
@@ -167,13 +175,13 @@ namespace VfxEditor.Formats.MdlFormat {
             ShadowClipOutDistance.Read( reader );
             var unknownCount = reader.ReadUInt16();
             var terrainShadowSubmeshCount = reader.ReadUInt16();
-            Unknown5.Read( reader );
+            Flags3.Read( reader );
             BgChangeMaterialIndex.Read( reader );
             BgCrestChangeMaterialIndex.Read( reader );
-            Unknown6.Read( reader );
-            Unknown7.Read( reader );
+            var neckMorphCount = reader.ReadByte();
+            BoneTableArrayCountTotal.Read( reader );
             Unknown8.Read( reader );
-            Unknown9.Read( reader );
+            var patch72Count = reader.ReadUInt16();
             reader.ReadBytes( 6 ); // padding
 
             if( meshCount != vertexDeclarationCount || materialCount != _materialCount || _lodCount != lodCount ) {
@@ -221,6 +229,9 @@ namespace VfxEditor.Formats.MdlFormat {
 
             Shapes = data.Shapes; // TODO: ????
 
+            for( var i = 0; i < neckMorphCount; i++ ) NeckMorphs.Add( new( this, reader ) );
+            Patch72Data = reader.ReadBytes( patch72Count * PATCH_72_ENTRY_SIZE );
+
             Padding = reader.ReadBytes( reader.ReadByte() );
 
             // ======== BOXES ===============
@@ -246,6 +257,7 @@ namespace VfxEditor.Formats.MdlFormat {
             LodView = new( "Level of Detail", UsedLods );
             ExtraLodView = new( "Level of Detail", ExtraLods );
             UnknownBoxView = new( "Bounding Box", UnknownBoundingBoxes, false, null, () => new() );
+            NeckMorphView = new( "Neck Morph", NeckMorphs, false, null, () => new( this ) );
             BoneBoxView = new( "Bounding Box", BoneBoundingBoxes, false,
                 ( item, idx ) => string.IsNullOrEmpty( item.Name.Value ) ? $"Bounding Box {idx}" : item.Name.Value,
                 () => new() );
@@ -281,6 +293,10 @@ namespace VfxEditor.Formats.MdlFormat {
             using( var tab = ImRaii.TabItem( "Bounding Boxes" ) ) {
                 if( tab ) DrawBoxes();
             }
+
+            using( var tab = ImRaii.TabItem( "Neck Morphs" ) ) {
+                if( tab ) NeckMorphView.Draw();
+            }
         }
 
         private void DrawParameters() {
@@ -293,13 +309,13 @@ namespace VfxEditor.Formats.MdlFormat {
             Flags2.Draw(); // Not gonna handle if ExtraLoD is checked :/
             ModelClipOutDistance.Draw();
             ShadowClipOutDistance.Draw();
-            Unknown5.Draw();
+            Flags3.Draw();
             BgChangeMaterialIndex.Draw();
             BgCrestChangeMaterialIndex.Draw();
-            Unknown6.Draw();
-            Unknown7.Draw();
+            using( var _ = ImRaii.Disabled( Version == VERSION_6 ) ) {
+                BoneTableArrayCountTotal.Draw();
+            }
             Unknown8.Draw();
-            Unknown9.Draw();
         }
 
         private void DrawBoxes() {
@@ -376,13 +392,14 @@ namespace VfxEditor.Formats.MdlFormat {
             ShadowClipOutDistance.Write( writer );
             writer.Write( ( ushort )UnknownBoundingBoxes.Count );
             writer.Write( ( ushort )data.TerrainShadowSubmeshes.Count );
-            Unknown5.Write( writer );
+            Flags3.Write( writer );
             BgChangeMaterialIndex.Write( writer );
             BgCrestChangeMaterialIndex.Write( writer );
-            Unknown6.Write( writer );
-            Unknown7.Write( writer );
+            writer.Write( ( byte )NeckMorphs.Count );
+            var boneTableArrayCountTotalPosition = writer.BaseStream.Position;
+            BoneTableArrayCountTotal.Write( writer ); // fixed up below for v6
             Unknown8.Write( writer );
-            Unknown9.Write( writer );
+            writer.Write( ( ushort )( Patch72Data.Length / PATCH_72_ENTRY_SIZE ) );
             FileUtils.Pad( writer, 6 ); // Padding
 
             foreach( var item in Eids ) item.Write( writer, data );
@@ -397,7 +414,19 @@ namespace VfxEditor.Formats.MdlFormat {
             foreach( var item in data.StringTable.MaterialStrings ) writer.Write( data.StringToOffset[item] );
             foreach( var item in data.StringTable.BoneStrings ) writer.Write( data.StringToOffset[item] );
 
+            var boneTablesStart = writer.BaseStream.Position;
             BoneTables.Write( writer, data );
+
+            if( Version == VERSION_6 ) {
+                // Arrays start after the (offset, count) header of each table
+                var boneTablesEnd = writer.BaseStream.Position;
+                var arraysStart = boneTablesStart + ( BoneTables.Tables.Count * 4 );
+                BoneTableArrayCountTotal.Value = ( int )( ( boneTablesEnd - arraysStart ) / 2 );
+
+                writer.BaseStream.Position = boneTableArrayCountTotalPosition;
+                BoneTableArrayCountTotal.Write( writer );
+                writer.BaseStream.Position = boneTablesEnd;
+            }
 
             foreach( var item in data.Shapes ) item.Write( writer, data );
             foreach( var item in data.ShapesMeshes ) item.Write( writer, data );
@@ -407,6 +436,9 @@ namespace VfxEditor.Formats.MdlFormat {
             writer.Write( ( uint )data.SubmeshBoneMap.Count * 2 + boneMapPadding );
             foreach( var item in data.SubmeshBoneMap ) writer.Write( item );
             FileUtils.Pad( writer, boneMapPadding );
+
+            foreach( var item in NeckMorphs ) item.Write( writer );
+            writer.Write( Patch72Data );
 
             writer.Write( ( byte )Padding.Length );
             writer.Write( Padding );
@@ -460,7 +492,7 @@ namespace VfxEditor.Formats.MdlFormat {
                 writer.Write( 0 );
                 writer.Write( vertexOffsets[idx] + vertexSizes[idx] );
                 writer.Write( 0 );
-                writer.Write( 0 );
+                writer.Write( item.Unknown );
 
                 writer.Write( vertexSizes[idx] );
                 writer.Write( indexSizes[idx] );

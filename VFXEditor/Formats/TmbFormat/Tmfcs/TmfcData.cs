@@ -14,7 +14,7 @@ namespace VfxEditor.Formats.TmbFormat.Tmfcs {
         public readonly ParsedUInt Unk2 = new( "Unknown 2", size: 1 );
         public readonly ParsedUInt Unk3 = new( "Unknown 3", size: 1 );
         public readonly ParsedUInt Unk4 = new( "Unknown 4", size: 1 );
-        public readonly ParsedUInt Unk5 = new( "Unknown 5", size: 1 );
+        public readonly ParsedSByte Unk5 = new( "Unknown 5" );
         public readonly ParsedUInt Unk6 = new( "Unknown 6", size: 1 );
         public readonly ParsedUInt Unk7 = new( "Unknown 7", size: 1 );
         public readonly ParsedUInt Unk8 = new( "Unknown 8", size: 1 );

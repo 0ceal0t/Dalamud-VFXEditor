@@ -36,6 +36,7 @@ namespace VfxEditor.Formats.ScdFormat.Sound {
         Reverb = 0x0002,
         Fixed_Volume = 0x0004,
         Fixed_Position = 0x0008,
+        Unknown_1 = 0x0010,
         Music = 0x0020,
         Bypass_PLIIz = 0x0040,
         Use_External_Attr = 0x0080,

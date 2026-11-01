@@ -1,21 +1,9 @@
-using System;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.TmbFormat.Entries {
-    [Flags]
-    public enum SoundFlags {
-        Stop_on_Movement = 0x01,
-        Use_Bind_Position = 0x02,
-        Unknown_1 = 0x04,
-        Unknown_2 = 0x08,
-        Unknown_3 = 0x10,
-        Unknown_4 = 0x20,
-        Unknown_5 = 0x40,
-        Unknown_6 = 0x80,
-    }
-
     public class C053 : TmbEntry {
         public const string MAGIC = "C053";
         public const string DISPLAY_NAME = "Voiceline";
@@ -30,7 +18,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedShort BindId = new( "Bind Id" );
         private readonly ParsedShort SoundId = new( "Sound Id" );
         private readonly ParsedShort Unk3 = new( "Unknown 3" );
-        private readonly ParsedFlag<SoundFlags> Flags = new( "Flags", size: 2 );
+        private readonly ParsedFlag<SoundC053Flags> Flags = new( "Flags", size: 2 );
 
         public C053( TmbFile file ) : base( file ) { }
 

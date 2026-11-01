@@ -19,6 +19,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "2bk", "Book (ACN/SMN/SCH)" },
             { "2bw", "Bow (ARC/BRD)" },
             // { "2bs", "" }, //1703
+            { "2cb", "Crossbow (ZPH)" }, //3301, 3332
             { "2ff", "Nouliths (SGE)" },
             { "2gb", "Gunblade (GNB)" },
             { "2gl", "Globe (AST)" },
@@ -81,7 +82,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "fdr", "Consumable" }, //food and drink, but also includes sundering sword
             { "fha", "Gig (FSH)" },
             { "fl2", "Flute (Performance)" },
-            // { "flc", "" }, //1956
+            { "flc", "Falcon" }, //1956, occult falcon
             { "flt", "Flute (BRD Combat)" },
             { "frg", "Frog Summon (NIN)" },
             { "fry", "Knife (LTW) / Fry Pan (CUL)" },
@@ -100,8 +101,8 @@ namespace VfxEditor.Formats.AtchFormat {
             { "gsl", "Wrench" },
             { "gsr", "Opera Glasses" }, //also 1909, no model
             { "gun", "Gun" },
-            // { "hab", "" }, //1973
-            // { "hbg", "" }, //9209
+            { "hab", "Hardiboiled Motorycle" }, //1973
+            { "hbg", "Hardiboiled Gun" }, //9209
             // { "hel", "" },
             { "hmm", "Hammer (BSM/ARM)" },
             { "hrp", "Harp (BRD)" },
@@ -156,7 +157,7 @@ namespace VfxEditor.Formats.AtchFormat {
             { "swd", "Sword (GLD/PLD)" },
             { "sxs", "Greatsword (FFXVI)" },
             { "sxw", "Phoenix Wings (FFXVI)" },
-            { "syl", "Reference Book (Emote)" }, //and 1976, no model
+            { "syl", "Horn (BST) / Reference Book (Emote)" },
             { "syr", "Shovel / Scythe" },
             { "syu", "Shuriken (NIN)" },
             { "syw", "Job Summons (Dawntrail)" },

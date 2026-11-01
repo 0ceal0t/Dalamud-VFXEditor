@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
@@ -14,7 +15,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedEnum<ObjectControlPosition> ObjectPosition = new( "Object Position" );
+        private readonly ParsedEnum<AtchState> ObjectPosition = new( "Object Position" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
 
         public C014( TmbFile file ) : base( file ) { }

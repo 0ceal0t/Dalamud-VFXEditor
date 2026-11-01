@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Components;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
@@ -15,7 +16,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Shape = new( "Shape" );
+        private readonly ParsedEnum<TerrainShape> Shape = new( "Shape" );
         private readonly TmbOffsetFloat3 Scale = new( "Scale", defaultValue: new( 1 ) );
         private readonly TmbOffsetAngle3 Rotation = new( "Rotation" );
         private readonly TmbOffsetFloat3 Position = new( "Position" );

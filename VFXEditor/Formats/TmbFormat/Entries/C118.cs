@@ -1,28 +1,32 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
 namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C118 : TmbEntry {
+
         public const string MAGIC = "C118";
-        public const string DISPLAY_NAME = "Animation Transition";
+        public const string DISPLAY_NAME = "Disable Physics";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
         public override int Size => 0x18;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt TransitionTime = new( "Transition Time", value: 1 );
+        private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3", value: 100 );
+        private readonly ParsedEnum<PhysicsType> Type = new( "Type", size: 2 );
+        private readonly ParsedBool Unk3 = new( "Unknown 3", size: 2 );
 
         public C118( TmbFile file ) : base( file ) { }
 
         public C118( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => [
-            TransitionTime,
+            Duration,
             Unk2,
+            Type,
             Unk3
         ];
     }

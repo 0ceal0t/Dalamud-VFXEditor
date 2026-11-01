@@ -34,6 +34,48 @@ namespace VfxEditor.Data {
             }
         }
 
+        // ==== BGM ID ====
+
+        private static bool BgmIdInitialized = false;
+        public static readonly Dictionary<int, string> BgmId = [];
+
+        public static void InitBgmId() {
+            if( BgmIdInitialized ) return;
+            BgmIdInitialized = true;
+
+            foreach( var item in Dalamud.DataManager.GetExcelSheet<BGM>() ) {
+                BgmId[( int )item.RowId] = item.File.ToString();
+            }
+        }
+
+        // ==== NPC NAME ====
+
+        private static bool NpcNameInitialized = false;
+        public static readonly Dictionary<int, string> NpcName = [];
+
+        public static void InitNpcName() {
+            if( NpcNameInitialized ) return;
+            NpcNameInitialized = true;
+
+            foreach( var item in Dalamud.DataManager.GetExcelSheet<BNpcName>() ) {
+                NpcName[( int )item.RowId] = item.Singular.ToString();
+            }
+        }
+
+        // ==== SUBTITLES ====
+
+        private static bool SubtitleInitialized = false;
+        public static readonly Dictionary<int, string> Subtitle = [];
+
+        public static void InitSubtitle() {
+            if( SubtitleInitialized ) return;
+            SubtitleInitialized = true;
+
+            foreach( var item in Dalamud.DataManager.GetExcelSheet<InstanceContentTextData>() ) {
+                Subtitle[( int )item.RowId] = item.Text.ToString();
+            }
+        }
+
         // ==== MOTION TIMELINES ====
 
         private static bool MotionTimelinesInitialized = false;

@@ -30,6 +30,8 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
         private readonly ushort _VerticalFogMeshIndex;
         private readonly ushort _VerticalFogMeshCount;
 
+        public readonly uint Unknown; // Not always 0, e.g. 0x0A00 / 0x000A in face models
+
         private readonly List<MdlMesh> Meshes = [];
         private readonly UiDropdown<MdlMesh> MeshView;
 
@@ -64,7 +66,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             var edgeGeometrySize = reader.ReadUInt32();
             var edgeGeometryOffset = reader.ReadUInt32(); // equal to `vertexBufferOffset + vertexBufferSize` if `edgeGeometrySize = 0`
             var polygonCount = reader.ReadUInt32();
-            var unknown = reader.ReadUInt32();
+            Unknown = reader.ReadUInt32();
 
             reader.ReadUInt32(); // vertex buffer size, same as MdlFile
             reader.ReadUInt32(); // index buffer size
@@ -72,8 +74,8 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             reader.ReadUInt32(); // index data offset
 
             // https://github.com/xivdev/Xande/blob/8fc75ce5192edcdabc4d55ac93ca0199eee18bc9/Xande.GltfImporter/MdlFileBuilder.cs#L558
-            if( edgeGeometrySize != 0 || polygonCount != 0 || unknown != 0 ) {
-                Dalamud.Error( $"LoD: {edgeGeometrySize:X4} {edgeGeometryOffset:X4} {polygonCount:X4} {unknown:X4}" );
+            if( edgeGeometrySize != 0 || polygonCount != 0 ) {
+                Dalamud.Error( $"LoD: {edgeGeometrySize:X4} {edgeGeometryOffset:X4} {polygonCount:X4} {Unknown:X4}" );
             }
 
             // ========= VIEWS ==============
@@ -176,7 +178,7 @@ namespace VfxEditor.Formats.MdlFormat.Lod {
             writer.Write( 0 ); // Edge Geometry size
             writer.Write( 0 ); // Edge Geometry offset
             writer.Write( 0 ); // Polygon count
-            writer.Write( 0 ); // Unknown
+            writer.Write( Unknown );
 
             writer.Write( 0 ); // Vertex buffer size
             writer.Write( 0 ); // Index buffer size

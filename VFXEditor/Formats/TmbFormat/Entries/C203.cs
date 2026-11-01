@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
 
@@ -6,7 +7,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
 
     public class C203 : TmbEntry {
         public const string MAGIC = "C203";
-        public const string DISPLAY_NAME = "Summon Weapon Visibility";
+        public const string DISPLAY_NAME = "Object Duplication";
         public override string DisplayName => DISPLAY_NAME;
         public override string Magic => MAGIC;
 
@@ -16,7 +17,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt BindPointId = new( "Bind Point Id" );
-        private readonly ParsedInt Rotation = new( "Rotation" );
+        private readonly ParsedEnum<ObjectRotation> Rotation = new( "Rotation" );
         private readonly ParsedEnum<ObjectControl> ObjectControl = new( "Object Control" );
         private readonly ParsedBool NoFollow = new( "Disable Follow" );
         private readonly ParsedBool ScaleEnabled = new( "Scale Enabled", size: 2 );

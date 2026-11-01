@@ -70,6 +70,7 @@ namespace VfxEditor.Select {
             { "Blue Mage", "bt_rod_emp" },
             { "Pictomancer", "bt_brs_plt" },
             { "Viper", "bt_bld_bld" },
+            { "Beastmaster", "bt_axe_sld" },
         };
 
         public static readonly Dictionary<string, string> JobMovementOverride = new() {
