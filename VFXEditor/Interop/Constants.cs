@@ -2,9 +2,6 @@ using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace VfxEditor.Interop {
     public static class Constants {
-        public const string GetResourceSyncSig = "E8 ?? ?? ?? ?? 48 8B C8 8B C3 F0 0F C0 81";
-        public const string GetResourceAsyncSig = "E8 ?? ?? ?? 00 48 8B D8 EB ?? F0 FF 83 ?? ?? 00 00";
-
         public const string StaticVfxRunSig = "E8 ?? ?? ?? ?? B0 02 EB 02";
         public const string StaticVfxRemoveSig = "40 53 48 83 EC 20 48 8B D9 48 8B 89 ?? ?? ?? ?? 48 85 C9 74 28 33 D2 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9";
 
@@ -14,12 +11,6 @@ namespace VfxEditor.Interop {
         public const string CallTriggerSig = "E8 ?? ?? ?? ?? 0F B7 43 56";
 
         public const string GetMatrixSig = "E8 ?? ?? ?? ?? 48 8D 4C 24 ?? 48 89 4c 24 ?? 4C 8D 4D ?? 4C 8D 44 24 ??";
-
-        public const string ResourceManagerSig = "48 8B 0D ?? ?? ?? ?? 0F 5B F6";
-
-        // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Signatures.cs#L52
-
-        public const string PlayActionSig = "E8 ?? ?? ?? ?? 83 7F ?? ?? 75 ?? 0F B6 87 ?? ?? ?? ?? A8";
 
         // https://github.com/Ottermandias/Penumbra.GameData/blob/main/Offsets.cs
 

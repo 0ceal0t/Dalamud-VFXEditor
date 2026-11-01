@@ -1,10 +1,16 @@
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
+using FFXIVClientStructs.FFXIV.Client.System.Resource;
+using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
         public ResourceLoader() {
             Dalamud.Hooks.InitializeFromAttributes( this );
+
+            GetResourceSyncHook = Dalamud.Hooks.HookFromAddress<GetResourceSyncPrototype>( ResourceManager.Addresses.GetResourceSync.Value, GetResourceSyncDetour );
+            GetResourceAsyncHook = Dalamud.Hooks.HookFromAddress<GetResourceAsyncPrototype>( ResourceManager.Addresses.GetResourceAsync.Value, GetResourceAsyncDetour );
+            PlayActionHook = Dalamud.Hooks.HookFromAddress<PlayActionPrototype>( SchedulerTimeline.Addresses.LoadTimelineResources.Value, PlayActionDetour );
 
             var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( VfxObject.Addresses.Create.String );
             var actorVfxRemoveAddressTemp = Dalamud.SigScanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;

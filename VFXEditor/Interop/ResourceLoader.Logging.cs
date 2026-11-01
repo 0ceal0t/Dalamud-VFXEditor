@@ -1,5 +1,4 @@
 using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Resource;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using InteropGenerator.Runtime;
@@ -17,11 +16,10 @@ namespace VfxEditor.Interop {
         public delegate ResourceHandle* GetResourceAsyncPrototype( ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
             void* unknown, bool isUnknown, void* unkDebugPtr, uint unkDebugInt );
 
-        [Signature( Constants.GetResourceSyncSig, DetourName = nameof( GetResourceSyncDetour ) )]
-        public readonly Hook<GetResourceSyncPrototype> GetResourceSyncHook = null;
+        // Created from ClientStructs' ResourceManager addresses in the constructor
+        public readonly Hook<GetResourceSyncPrototype> GetResourceSyncHook;
 
-        [Signature( Constants.GetResourceAsyncSig, DetourName = nameof( GetResourceAsyncDetour ) )]
-        public readonly Hook<GetResourceAsyncPrototype> GetResourceAsyncHook = null;
+        public readonly Hook<GetResourceAsyncPrototype> GetResourceAsyncHook;
 
         private ResourceHandle* GetResourceSyncDetour(
             ResourceManager* resourceManager, ResourceCategory* category, uint* type, uint* hash, CStringPointer path,
