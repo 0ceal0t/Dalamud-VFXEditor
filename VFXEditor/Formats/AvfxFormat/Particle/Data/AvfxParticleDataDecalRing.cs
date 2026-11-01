@@ -6,7 +6,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WIDR" );
         public readonly AvfxFloat ScalingScale = new( "Scaling Scale", "SS" );
         public readonly AvfxFloat RingFan = new( "Ring Fan", "RF" );
-        public readonly AvfxInt DDTT = new( "DDTT", "DDTT" );
+        public readonly AvfxInt DDTT = new( "Terrain Type", "DDTT" );
 
         public AvfxParticleDataDecalRing() : base() {
             Parsed = [

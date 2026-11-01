@@ -1,22 +1,9 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.TmbFormat.Base;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
-    public enum SummonId
-    {
-        Summon_0 = 0,
-        Summon_1 = 1,
-    }
-    public enum C198AtchState {
-        Default = 0,
-        State_0 = 1,
-        State_1 = 2,
-        State_2 = 3,
-        State_3 = 4,
-        State_4 = 5,
-        State_5 = 6,
-    }
     public class C198 : TmbEntry {
         public const string MAGIC = "C198";
         public const string DISPLAY_NAME = "Lemure";

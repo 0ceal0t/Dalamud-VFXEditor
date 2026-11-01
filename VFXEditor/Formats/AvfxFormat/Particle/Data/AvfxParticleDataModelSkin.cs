@@ -6,16 +6,16 @@ namespace VfxEditor.AvfxFormat {
         // All-new to dawntrail
         public readonly AvfxEnum<FresnelType> FresnelType = new( "Fresnel Type", "FrsT" );
         public readonly AvfxFlag<AuraFilter> AuraTarget = new( "Aura Target", "AuTT" );
-        public readonly AvfxInt CM = new( "CM", "bCM" );
+        public readonly AvfxBool CM = new( "CM", "bCM" );
         public readonly AvfxCurve1Axis FresnelCurve = new( "Fresnel Curve", "FrC" );
         public readonly AvfxCurve1Axis FresnelCurveRandom = new( "Fresnel Curve Random", "FrCR" );
         public readonly AvfxCurve3Axis FresnelRotation = new( "Fresnel Rotation", "FrRt", CurveType.Angle );
         public readonly AvfxCurveColor ColorBegin;
         public readonly AvfxCurveColor ColorEnd;
-        public readonly AvfxCurve1Axis SEM = new( "SEM", "SEM" );
-        public readonly AvfxCurve1Axis SEMRandom = new( "SEM Random", "SEMR" );
-        public readonly AvfxCurve1Axis EEM = new( "EEM", "EEM" );
-        public readonly AvfxCurve1Axis EEMRandom = new( "EEM Random", "EEMR" );
+        public readonly AvfxCurve1Axis SEM = new( "Specular Mask", "SEM" );
+        public readonly AvfxCurve1Axis SEMRandom = new( "Specular Random", "SEMR" );
+        public readonly AvfxCurve1Axis EEM = new( "Emissive Mask", "EEM" );
+        public readonly AvfxCurve1Axis EEMRandom = new( "Emissive Random", "EEMR" );
         public readonly AvfxCurve3Axis UVPD = new( "UV Point Density", "UVPD" );
 
         public AvfxParticleDataModelSkin( AvfxFile file ) : base() {

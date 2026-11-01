@@ -315,12 +315,20 @@ namespace VfxEditor.AvfxFormat {
             Z_Y = 9
         }
 
+        public enum DissolveShape {
+            Auto = 0,
+            Rectangular_Prism = 1,
+            Sphere = 2,
+            Cylinder = 3,
+        }
+
         [Flags]
         public enum AuraFilter {
             Character = 0x01,
             Weapon = 0x02,
             Off_Hand = 0x04,
-            Summon = 0x08
+            Summon = 0x08,
+            BG_Unknown = 0x10
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Int;
+using VfxEditor.TmbFormat.Base;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -15,8 +15,11 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
-        private readonly ParsedInt Part = new( "Part" );
-        private readonly ParsedIntByte4 Unk2 = new( "Unknown 2" );
+        private readonly ParsedShort Part = new( "Part" );
+        private readonly ParsedBool Inverse = new( "Inverse", size: 2 );
+        private readonly ParsedEnum<C187ObjectControl> ObjectControl = new( "Object Control", size: 2 );
+        private readonly ParsedByteBool Unk2 = new( "Unknown 2" );
+        private readonly ParsedByteBool NoDelay = new( "No Delay" );
         private readonly ParsedInt Unk3 = new( "Unknown 3" );
 
         public C187( TmbFile file ) : base( file ) { }
@@ -27,7 +30,10 @@ namespace VfxEditor.TmbFormat.Entries {
             Duration,
             Unk1,
             Part,
+            Inverse,
+            ObjectControl,
             Unk2,
+            NoDelay,
             Unk3
         ];
     }

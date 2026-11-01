@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Sheets;
+using VfxEditor.TmbFormat.Base;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -13,7 +14,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x18;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration" );
+        private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedWeaponTimeline Animation = new( "Animation" );
         private readonly ParsedEnum<ObjectControl> TargetType = new( "Target Type", size: 2 );
@@ -23,7 +24,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public C031( TmbFile file, TmbReader reader ) : base( file, reader ) { }
 
         protected override List<ParsedBase> GetParsed() => [
-            Duration,
+            Enabled,
             Unk1,
             Animation,
             TargetType
