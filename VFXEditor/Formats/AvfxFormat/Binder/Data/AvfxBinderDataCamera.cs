@@ -7,10 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
         public readonly AvfxCurve1Axis DistanceRandom = new( "Distance Random", "DstR" );
 
         public AvfxBinderDataCamera() : base() {
-            Parsed = [
-                Distance,
-                DistanceRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( Distance );
             Tabs.Add( DistanceRandom );

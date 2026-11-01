@@ -8,10 +8,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxInt DDTT = new( "DDTT", "DDTT" );
 
         public AvfxParticleDataDecal() : base() {
-            Parsed = [
-                ScalingScale,
-                DDTT,
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( ScalingScale );
             ParameterTab.Add( DDTT );

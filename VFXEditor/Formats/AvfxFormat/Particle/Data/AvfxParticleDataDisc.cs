@@ -35,33 +35,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorEdgeInner = new( file, name: "Color Edge Inner", "CEI" );
             ColorEdgeOuter = new( file, name: "Color Edge Outer", "CEO" );
 
-            Parsed = [
-                PartsCount,
-                PartsCountU,
-                PartsCountV,
-                PointIntervalFactoryV,
-                Angle,
-                AngleRandom,
-                HeightBeginInner,
-                HeightBeginInnerRandom,
-                HeightEndInner,
-                HeightEndInnerRandom,
-                HeightBeginOuter,
-                HeightBeginOuterRandom,
-                HeightEndOuter,
-                HeightEndOuterRandom,
-                WidthBegin,
-                WidthBeginRandom,
-                WidthEnd,
-                WidthEndRandom,
-                RadiusBegin,
-                RadiusBeginRandom,
-                RadiusEnd,
-                RadiusEndRandom,
-                ColorEdgeInner,
-                ColorEdgeOuter,
-                SS
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( PartsCount );
             ParameterTab.Add( PartsCountU );

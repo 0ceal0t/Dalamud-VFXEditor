@@ -20,18 +20,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
 
 
         public AvfxEffectorDataChromaticAberration() : base() {
-            Parsed = [
-                RefractionStrength,
-                SeparationStrength,
-                EffectStrength,
-                Strength,
-                Gradation,
-                InnerRadius,
-                OuterRadius,
-                FadeStartDistance,
-                FadeEndDistance,
-                FadeBasePointType
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( FadeStartDistance );
             ParameterTab.Add( FadeEndDistance );

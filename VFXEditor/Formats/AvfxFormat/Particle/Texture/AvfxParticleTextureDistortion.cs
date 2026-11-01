@@ -29,19 +29,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
-                Enabled,
-                TargetUv1,
-                TargetUv2,
-                TargetUv3,
-                TargetUv4,
-                UvSetIdx,
-                TextureFilter,
-                TextureBorderU,
-                TextureBorderV,
-                TextureIdx,
-                DPow
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display.Add( Enabled );
             Display.Add( TargetUv1 );

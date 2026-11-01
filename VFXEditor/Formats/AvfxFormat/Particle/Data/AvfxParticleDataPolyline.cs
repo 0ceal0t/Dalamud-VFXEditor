@@ -52,43 +52,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorEdgeCenter = new( file, name: "Color Edge Center", "CoEC" );
             ColorEdgeEnd = new( file, name: "Color Edge End", "CoEE" );
 
-            Parsed = [
-                CreateLineType,
-                NotBillBoardBaseAxisType,
-                BindWeaponType,
-                PointCount,
-                PointCountCenter,
-                PointCountEndDistortion,
-                UseEdge,
-                NotBillboard,
-                BindWeapon,
-                ConnectTarget,
-                ConnectTargetReverse,
-                TagNumber,
-                IsSpline,
-                IsLocal,
-                CF,
-                CFR,
-                Width,
-                WidthRandom,
-                WidthBegin,
-                WidthBeginRandom,
-                WidthCenter,
-                WidthCenterRandom,
-                WidthEnd,
-                WidthEndRandom,
-                Length,
-                LengthRandom,
-                Softness,
-                SoftRandom,
-                PnDs,
-                ColorBegin,
-                ColorCenter,
-                ColorEnd,
-                ColorEdgeBegin,
-                ColorEdgeCenter,
-                ColorEdgeEnd
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( CreateLineType );
             ParameterTab.Add( NotBillBoardBaseAxisType );

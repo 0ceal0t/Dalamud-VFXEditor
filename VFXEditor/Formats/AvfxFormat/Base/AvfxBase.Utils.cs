@@ -1,12 +1,27 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace VfxEditor.Formats.AvfxFormat.Base {
 #pragma warning disable CS0675
     public unsafe partial class AvfxBase {
+        private static readonly ConcurrentDictionary<Type, FieldInfo[]> DeclaredFieldCache = new();
+
+        // Every AvfxBase field declared by this object's class (not its base classes), in declaration order.
+        // Items are read and written in this order, so only use it when the fields are declared in file order
+        protected List<T> GetFieldsInOrder<T>() where T : AvfxBase {
+            var fields = DeclaredFieldCache.GetOrAdd( GetType(), type => type
+                .GetFields( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly )
+                .Where( x => typeof( AvfxBase ).IsAssignableFrom( x.FieldType ) )
+                .OrderBy( x => x.MetadataToken ) // Declaration order, since GetFields() doesn't guarantee one
+                .ToArray() );
+            return fields.Select( x => ( T )x.GetValue( this )! ).ToList();
+        }
+
         public static int CalculatePadding( int size ) => size % 4 == 0 ? 0 : 4 - size % 4;
 
         public static void Peek( BinaryReader reader, AvfxBase item, int size ) => Peek( reader, [item], size );

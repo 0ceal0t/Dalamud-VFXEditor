@@ -33,12 +33,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve {
 
             KeyList = new( this );
 
-            Parsed = [
-                PreBehavior,
-                PostBehavior,
-                Random,
-                KeyList
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
         }
 
         public override void ReadContents( BinaryReader reader, int size ) => ReadNested( reader, Parsed, size );

@@ -13,13 +13,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
             Ambient = new( file, "Ambient", "Amb" );
             Color = new( file, "Color" );
 
-            Parsed = [
-                Ambient,
-                Color,
-                Power,
-                PowerRandom,
-                Rotation
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( Ambient );
             Tabs.Add( Color );

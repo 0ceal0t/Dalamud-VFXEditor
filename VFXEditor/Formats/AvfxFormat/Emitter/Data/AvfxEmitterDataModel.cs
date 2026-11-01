@@ -23,19 +23,7 @@ namespace VfxEditor.Formats.AvfxFormat.Emitter.Data {
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;
 
         public AvfxEmitterDataModel( AvfxEmitter emitter ) : base() {
-            Parsed = [
-                ModelIdx,
-                RotationOrderType,
-                GenerateMethodType,
-                AX,
-                AY,
-                AZ,
-                AXR,
-                AYR,
-                AZR,
-                InjectionSpeed,
-                InjectionSpeedRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( ModelSelect = new AvfxNodeSelect<AvfxModel>( emitter, "Model", emitter.NodeGroups.Models, ModelIdx ) );
             ParameterTab.Add( RotationOrderType );

@@ -7,10 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
         public readonly AvfxCurve1Axis SpringStrengthRandom = new( "Spring Strength Random", "SpSR" );
 
         public AvfxBinderDataPoint() : base() {
-            Parsed = [
-                SpringStrength,
-                SpringStrengthRandom,
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( SpringStrength );
             Tabs.Add( SpringStrengthRandom );

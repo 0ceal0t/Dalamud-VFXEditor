@@ -7,10 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
         public readonly AvfxCurve1Axis CarryOverFactorRandom = new( "Carry Over Factor Random", "COFR" );
 
         public AvfxBinderDataLinear() : base() {
-            Parsed = [
-                CarryOverFactor,
-                CarryOverFactorRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( CarryOverFactor );
             Tabs.Add( CarryOverFactorRandom );

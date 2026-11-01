@@ -7,9 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxEnum<WindmillUVType> WindmillUVType = new( "Windmill UV Type", "WUvT" );
 
         public AvfxParticleDataWindmill() : base() {
-            Parsed = [
-                WindmillUVType
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( WindmillUVType );
         }

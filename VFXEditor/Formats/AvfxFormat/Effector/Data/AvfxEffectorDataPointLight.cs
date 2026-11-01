@@ -22,19 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
         public AvfxEffectorDataPointLight( AvfxFile file ) : base() {
             Color = new( file, "Color" );
 
-            Parsed = [
-                Color,
-                DistanceScale,
-                Rotation,
-                Position,
-                PointLightAttenuationType,
-                EnableShadow,
-                EnableCharShadow,
-                EnableMapShadow,
-                EnableMoveShadow,
-                ShadowCreateDistanceNear,
-                ShadowCreateDistanceFar
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( PointLightAttenuationType );
             ParameterTab.Add( EnableShadow );

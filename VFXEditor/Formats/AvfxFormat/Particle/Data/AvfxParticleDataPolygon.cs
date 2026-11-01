@@ -7,10 +7,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public readonly AvfxCurve1Axis CountRandom = new( "Count Random", "CntR" );
 
         public AvfxParticleDataPolygon() : base() {
-            Parsed = [
-                Count,
-                CountRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( Count );
             Tabs.Add( CountRandom );

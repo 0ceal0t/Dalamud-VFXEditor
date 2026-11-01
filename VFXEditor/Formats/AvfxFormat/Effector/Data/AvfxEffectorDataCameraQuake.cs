@@ -13,16 +13,7 @@ namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
         public readonly AvfxCurve3Axis Position = new( "Position", "Pos" );
 
         public AvfxEffectorDataCameraQuake() : base() {
-            Parsed = [
-                Attenuation,
-                AttenuationRandom,
-                RadiusOut,
-                RadiusOutRandom,
-                RadiusIn,
-                RadiusInRandom,
-                Rotation,
-                Position
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( Attenuation );
             Tabs.Add( AttenuationRandom );

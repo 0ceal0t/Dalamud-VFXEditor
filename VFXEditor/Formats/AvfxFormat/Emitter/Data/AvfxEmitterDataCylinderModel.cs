@@ -22,22 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Emitter.Data {
         public readonly AvfxCurve1Axis InjectionSpeedRandom = new( "Injection Speed Random", "IjSR" );
 
         public AvfxEmitterDataCylinderModel() : base() {
-            Parsed = [
-                RotationOrderType,
-                GenerateMethodType,
-                DivideX,
-                DivideY,
-                Length,
-                Radius,
-                AX,
-                AY,
-                AZ,
-                AXR,
-                AYR,
-                AZR,
-                InjectionSpeed,
-                InjectionSpeedRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( RotationOrderType );
             ParameterTab.Add( GenerateMethodType );

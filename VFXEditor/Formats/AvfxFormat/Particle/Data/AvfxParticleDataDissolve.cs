@@ -22,18 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
         public AvfxParticleDataDissolve( AvfxFile file ) : base() {
             Color = new( file, "Color", "EdC" );
 
-            Parsed = [
-                Reverse,
-                BST,
-                NPT,
-                DissolveTarget,
-                EroR,
-                EndColorWidth,
-                Color,
-                MidColorWidth,
-                StartColorWidth,
-                Intensity
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( Reverse );
             ParameterTab.Add( BST );

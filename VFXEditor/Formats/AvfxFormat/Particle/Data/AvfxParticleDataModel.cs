@@ -33,24 +33,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorBegin = new( file, name: "Color Begin", "ColB" );
             ColorEnd = new( file, name: "Color End", "ColE" );
 
-            Parsed = [
-                ModelNumberRandomValue,
-                ModelNumberRandomType,
-                ModelNumberRandomInterval,
-                FresnelType,
-                DirectionalLightType,
-                PointLightType,
-                IsLightning,
-                IsMorph,
-                ModelIdx,
-                AnimationNumber,
-                Morph,
-                FresnelCurve,
-                FresnelCurveRandom,
-                FresnelRotation,
-                ColorBegin,
-                ColorEnd
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( ModelSelect = new AvfxNodeSelectList<AvfxModel>( particle, "Model", particle.NodeGroups.Models, ModelIdx, 8 ) );
             ParameterTab.Add( ModelNumberRandomValue );

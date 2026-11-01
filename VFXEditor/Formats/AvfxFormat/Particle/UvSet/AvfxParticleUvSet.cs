@@ -22,13 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.UvSet {
         private readonly List<IUiItem> Display;
 
         public AvfxParticleUvSet() : base( "UvSt" ) {
-            Parsed = [
-                CalculateUVType,
-                Scale,
-                Scroll,
-                Rot,
-                RotRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display = [
                 CalculateUVType

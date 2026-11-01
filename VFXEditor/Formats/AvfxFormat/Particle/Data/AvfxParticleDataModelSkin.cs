@@ -26,21 +26,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
             ColorBegin = new( file, name: "Color Begin", "ColB" );
             ColorEnd = new( file, name: "Color End", "ColE" );
 
-            Parsed = [
-                FresnelType,
-                AuraTarget,
-                CM,
-                FresnelCurve,
-                FresnelCurveRandom,
-                FresnelRotation,
-                ColorBegin,
-                ColorEnd,
-                SEM,
-                SEMRandom,
-                EEM,
-                EEMRandom,
-                UVPD
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( FresnelType );
             ParameterTab.Add( AuraTarget );

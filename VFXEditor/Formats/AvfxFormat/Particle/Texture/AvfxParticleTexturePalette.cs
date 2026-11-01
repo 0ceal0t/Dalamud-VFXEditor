@@ -20,19 +20,11 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true )
-        {
+        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
-                Enabled,
-                TextureFilter,
-                TextureBorder,
-                TextureIdx,
-                Offset,
-                OffsetRandom
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display.Add( Enabled );
             Display.Add( TextureFilter );

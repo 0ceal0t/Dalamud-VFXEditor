@@ -6,9 +6,7 @@ namespace VfxEditor.Formats.AvfxFormat.Binder.Data {
         public readonly AvfxCurve1Axis CarryOverFactor = new( "Carry Over Factor", "COF" );
 
         public AvfxBinderDataLinearAdjust() : base() {
-            Parsed = [
-                CarryOverFactor
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Tabs.Add( CarryOverFactor );
         }

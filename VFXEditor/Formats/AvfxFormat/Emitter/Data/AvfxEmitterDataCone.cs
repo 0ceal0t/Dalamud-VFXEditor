@@ -22,23 +22,7 @@ namespace VfxEditor.Formats.AvfxFormat.Emitter.Data {
         public readonly AvfxCurve1Axis InjectionAngleRandom = new( "Injection Angle Random", "IjAR", CurveType.Angle );
 
         public AvfxEmitterDataCone() : base() {
-            Parsed = [
-                RotationOrderType,
-                AX,
-                AY,
-                AZ,
-                AXR,
-                AYR,
-                AZR,
-                InnerSize,
-                InnerSizeRandom,
-                OuterSize,
-                OuterSizeRandom,
-                InjectionSpeed,
-                InjectionSpeedRandom,
-                InjectionAngle,
-                InjectionAngleRandom,
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             ParameterTab.Add( RotationOrderType );
 

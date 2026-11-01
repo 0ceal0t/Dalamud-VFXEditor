@@ -20,11 +20,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve {
         private readonly List<IUiItem> Display;
 
         public AvfxLife() : base( "Life", locked: true ) {
-            Parsed = [
-                Value,
-                ValRandom,
-                ValRandomType
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display = [
                 Value,

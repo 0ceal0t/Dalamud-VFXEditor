@@ -25,15 +25,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
-                Enabled,
-                UseScreenCopy,
-                TextureFilter,
-                TextureCalculateColorType,
-                TextureIdx,
-                Rate,
-                RPow
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display.Add( Enabled );
             Display.Add( UseScreenCopy );

@@ -38,13 +38,7 @@ namespace VfxEditor.Formats.AvfxFormat.Timeline {
         public AvfxTimeline( AvfxFile file, AvfxNodeGroupSet groupSet ) : base( file, NAME, AvfxNodeGroupSet.TimelineColor ) {
             NodeGroups = groupSet;
 
-            Parsed = [
-                LoopStart,
-                LoopEnd,
-                BinderIdx,
-                TimelineCount,
-                ClipCount
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display = [
                 LoopStart,

@@ -32,20 +32,7 @@ namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 
-            Parsed = [
-                Enabled,
-                ColorToAlpha,
-                UseScreenCopy,
-                PreviousFrameCopy,
-                UvSetIdx,
-                TextureFilter,
-                TextureBorderU,
-                TextureBorderV,
-                TextureCalculateColor,
-                TextureCalculateAlpha,
-                TextureIdx,
-                UOS
-            ];
+            Parsed = GetFieldsInOrder<AvfxBase>();
 
             Display.Add( Enabled );
             Display.Add( ColorToAlpha );
