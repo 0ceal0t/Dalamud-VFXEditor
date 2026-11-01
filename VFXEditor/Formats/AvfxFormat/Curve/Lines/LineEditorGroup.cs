@@ -260,12 +260,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                         var xs = _xs.ToArray();
                         var ys = _ys.ToArray();
 
-                        var lineColor = curve.GetAvfxName() switch {
-                            "X" or "RX" => new( 1, 0, 0, 1 ),
-                            "Y" or "RY" => new( 0, 1, 0, 1 ),
-                            "Z" or "RZ" => new( 0, 0, 1, 1 ),
-                            _ => LineColors[curveIdx % LineColors.Length],
-                        };
+                        var lineColor = GetLineColor( curve, curveIdx );
 
                         ImPlot.SetNextLineStyle( lineColor, Plugin.Configuration.CurveEditorLineWidth );
 
@@ -412,6 +407,14 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                 [.. ColorCurve.Keys.Select( x => (x.Time.Value, x.Color))]
             ] );
         }
+
+        private static Vector4 GetLineColor( AvfxCurveData curve, int curveIdx ) => curve.GetAvfxName() switch {
+            "X" or "XR" or "SclR" or "RanR" => new( 1, 0, 0, 1 ),
+            "Y" or "YR" or "SclG" or "RanG" => new( 0, 1, 0, 1 ),
+            "Z" or "ZR" or "SclB" or "RanB" => new( 0, 0, 1, 1 ),
+            "A" or "SclA" or "RanA" => new( 1, 1, 1, 1 ),
+            _ => LineColors[curveIdx % LineColors.Length],
+        };
 
         private static uint Invert( Vector3 color ) =>
             color.X * 0.299 + color.Y * 0.587 + color.Z * 0.114 > 0.73 ? ImGui.GetColorU32( new Vector4( 0, 0, 0, 1 ) ) : ImGui.GetColorU32( new Vector4( 1, 1, 1, 1 ) );
