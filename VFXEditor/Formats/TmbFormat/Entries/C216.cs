@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Data;
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Sheets;
 using VfxEditor.TmbFormat.Base;
@@ -17,8 +18,8 @@ namespace VfxEditor.TmbFormat.Entries {
         public readonly ParsedBool Enabled = new( "Enabled" );
         public readonly ParsedInt Unknown2 = new( "Unknown 2" );
         public readonly ParsedEnum<SubtitleType> Type = new( "Subtitle Type" );
-        public readonly ParsedSubtitle TextId = new( "Text" );
-        public readonly ParsedNpcName SpeakerId = new( "Speaker" );
+        public readonly ParsedSheetInt TextId = new( "Text", SheetData.Subtitle, SheetData.InitSubtitle );
+        public readonly ParsedSheetInt SpeakerId = new( "Speaker", SheetData.NpcName, SheetData.InitNpcName );
         public readonly ParsedFloat Duration = new( "Duration" );
         public readonly ParsedInt Unknown7 = new( "Unknown 7" );
         public readonly ParsedInt Unknown8 = new( "Unknown 8" );
