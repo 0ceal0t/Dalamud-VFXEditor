@@ -40,7 +40,7 @@ namespace VfxEditor.Interop.Penumbra {
             LastStatus = status;
             if( status == Status.Ok ) {
                 IsOpen = false;
-                PenumbraPreview.Sync();
+                PenumbraPreview.Recover();
             }
             else {
                 Show();

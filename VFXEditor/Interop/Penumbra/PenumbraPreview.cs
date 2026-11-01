@@ -110,6 +110,15 @@ namespace VfxEditor.Interop.Penumbra {
             if( player != null ) Plugin.PenumbraIpc.Redraw( player.ObjectIndex );
         }
 
+        // Penumbra came back (reloaded, or mods re-enabled). Temporary mods do not survive a Penumbra reload, so register again,
+        // and redraw so the player picks them up instead of keeping whatever was loaded while Penumbra was unavailable
+        public static void Recover() {
+            Invalidate();
+            if( !Sync() || RegisteredFiles == null ) return; // nothing to apply
+            var player = Plugin.PlayerObject;
+            if( player != null ) Plugin.PenumbraIpc.Redraw( player.ObjectIndex );
+        }
+
         // Picks up documents being disabled, removed, or workspaces loading
         public static void Tick() {
             if( DateTime.Now - LastSync < SyncInterval ) return;
