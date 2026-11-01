@@ -463,6 +463,15 @@ namespace VfxEditor.FileManager {
         private void DrawPreviewWarnings() {
             if( PenumbraPreview.IsUiPath( ReplacePath ) && !PenumbraPreview.UiPreviewAvailable ) PenumbraPreview.DrawUiCollectionWarning();
 
+            // Several documents (possibly in different windows) replacing the same file: only the first one is applied
+            if( File != null && !string.IsNullOrEmpty( ReplacePath ) ) {
+                var winner = PenumbraPreview.GetWinningDocument( ReplacePath );
+                if( winner != null && winner != this ) {
+                    using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW );
+                    ImGui.TextWrapped( "Another open document also replaces this file and is being used instead. Disable or close the other document to see these changes." );
+                }
+            }
+
             var warnings = GetPreviewWarnings();
             if( warnings.Count == 0 ) return;
 

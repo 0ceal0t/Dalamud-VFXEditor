@@ -3,6 +3,7 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Utils;
 
@@ -48,39 +49,57 @@ namespace VfxEditor.Interop.Penumbra {
             if( ImGui.Button( "Open Penumbra Collections" ) ) Plugin.PenumbraIpc.OpenCollectionsTab();
         }
 
+        // All open documents with an active replacement, across every window of every editor, in the order they are checked.
+        // When several documents replace the same game path, the first one wins (same as VFXEditor's previous GetReplacePath)
+        private static IEnumerable<(IFileDocument Document, string GamePath, string LocalPath)> GetActiveDocuments() {
+            foreach( var group in Plugin.Groups.Where( x => x != null ) ) {
+                foreach( var document in group.GetDocuments() ) {
+                    if( document.GetActiveReplacement( out var gamePath, out var localPath ) ) yield return (document, gamePath, localPath);
+                }
+            }
+        }
+
+        // The document whose changes are actually applied for this game path, or null if none is
+        public static IFileDocument GetWinningDocument( string gamePath ) {
+            if( string.IsNullOrEmpty( gamePath ) ) return null;
+            return GetActiveDocuments().FirstOrDefault( x => x.GamePath.Equals( gamePath, StringComparison.OrdinalIgnoreCase ) ).Document;
+        }
+
         private static void GetCurrent( out Dictionary<string, string> files, out string meta ) {
             files = [];
             meta = string.Empty;
             if( Plugin.State != WorkspaceState.None ) return;
 
-            // Custom (non-vanilla) paths keep resolving to their last local file, even after the document is closed,
-            // so files that reference them do not break
-            foreach( var (gamePath, localPath) in Plugin.CustomPathBackups ) AddFile( files, gamePath, localPath );
-
+            var fromDocuments = new HashSet<string>();
             var atchFiles = new List<(string, AtchFile)>();
-            foreach( var group in Plugin.Groups.Where( x => x != null ) ) {
-                foreach( var document in group.GetDocuments() ) {
-                    if( !document.GetActiveReplacement( out var gamePath, out var localPath ) ) continue;
-
-                    if( gamePath.EndsWith( ".atch", StringComparison.OrdinalIgnoreCase ) ) {
-                        if( document is AtchDocument atch && atch.File != null ) atchFiles.Add( (gamePath, atch.File) );
-                        continue;
-                    }
-
-                    AddFile( files, gamePath, localPath );
+            foreach( var (document, gamePath, localPath) in GetActiveDocuments() ) {
+                if( gamePath.EndsWith( ".atch", StringComparison.OrdinalIgnoreCase ) ) {
+                    if( document is AtchDocument atch && atch.File != null ) atchFiles.Add( (gamePath, atch.File) ); // duplicates resolved first-wins in PenumbraMeta
+                    continue;
                 }
+
+                var key = gamePath.ToLower();
+                if( fromDocuments.Contains( key ) ) continue; // first document wins
+                if( AddFile( files, key, localPath ) ) fromDocuments.Add( key );
+            }
+
+            // Custom (non-vanilla) paths keep resolving to their last local file, even after the document is closed,
+            // so files that reference them do not break. Open documents take priority
+            foreach( var (gamePath, localPath) in Plugin.CustomPathBackups ) {
+                if( !fromDocuments.Contains( gamePath.ToLower() ) ) AddFile( files, gamePath.ToLower(), localPath );
             }
 
             meta = PenumbraMeta.FromAtch( atchFiles );
         }
 
-        private static void AddFile( Dictionary<string, string> files, string gamePath, string localPath ) {
+        private static bool AddFile( Dictionary<string, string> files, string gamePath, string localPath ) {
             // Penumbra rejects the whole temporary mod if any path is invalid, so filter here
-            if( string.IsNullOrEmpty( gamePath ) || string.IsNullOrEmpty( localPath ) ) return;
-            if( gamePath.Length >= 260 || localPath.Length >= 260 ) return;
-            if( System.IO.Path.IsPathRooted( gamePath ) || !System.IO.Path.IsPathRooted( localPath ) ) return;
-            if( !System.IO.File.Exists( localPath ) ) return;
-            files[gamePath.ToLower()] = localPath; // later entries (open documents) win over custom path backups
+            if( string.IsNullOrEmpty( gamePath ) || string.IsNullOrEmpty( localPath ) ) return false;
+            if( gamePath.Length >= 260 || localPath.Length >= 260 ) return false;
+            if( System.IO.Path.IsPathRooted( gamePath ) || !System.IO.Path.IsPathRooted( localPath ) ) return false;
+            if( !System.IO.File.Exists( localPath ) ) return false;
+            files[gamePath] = localPath;
+            return true;
         }
 
         private static bool SameFiles( Dictionary<string, string> a, Dictionary<string, string> b ) =>
