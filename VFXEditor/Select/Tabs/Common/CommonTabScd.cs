@@ -12,8 +12,15 @@ namespace VfxEditor.Select.Tabs.Common {
             Items.AddRange( [
                 new( idx++, "sound/system/SE_UI.scd", "SE_UI", 0 ),
                 new( idx++, "sound/vfx/SE_VFX_common.scd", "SE_VFX_common", 0 ),
+                new( idx++, "sound/system/SE_EMJ.scd", "SE_EMJ", 0 ),
+                new( idx++, "sound/system/SE_10thMG.scd", "SE_10thMG", 0 ),
+                new( idx++, "sound/system/SE_GS.scd", "SE_GS", 0 ),
+                new( idx++, "sound/system/SE_KTG.scd", "SE_KTG", 0 ),
+                new( idx++, "sound/system/SE_TTriad.scd", "SE_TTriad", 0 ),
                 new( idx++, "sound/strm/gaya_fate_01.scd", "Gaya_Fate_01", 0 ),
                 new( idx++, "sound/strm/gaya_lestarea_01.scd", "Gaya_Lestarea_01", 0 ),
+                new( idx++, "sound/strm/gaya_nosound.scd", "Gaya_NoSound", 0 ),
+                new( idx++, "sound/strm/gaya_pvp_01.scd", "Gaya_PvP_01", 0 ),
                 new( idx++, "sound/strm/gaya_village_01.scd", "Gaya_Village_01", 0 ),
             ] );
 

@@ -14,7 +14,7 @@ namespace VfxEditor.TmbFormat.Entries {
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt Unk3 = new( "Unknown 3" );
+        private readonly ParsedInt Unk3 = new( "Unknown 3", value: 100 );
 
         public C006( TmbFile file ) : base( file ) { }
 

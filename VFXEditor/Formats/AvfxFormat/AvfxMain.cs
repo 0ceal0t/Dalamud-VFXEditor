@@ -75,7 +75,7 @@ namespace VfxEditor.AvfxFormat {
         public readonly AvfxBool GlobalFogEnabled = new( "Global Fog", "bGFE" );
         public readonly AvfxFloat GlobalFogInfluence = new( "Global Fog Influence", "GFIM" );
         public readonly AvfxBool LTSEnabled = new( "LTS Enabled", "bLTS" );
-        public readonly AvfxBool AGSEnabled = new( "AGS Enabled", "bAGS" );
+        public readonly AvfxBool AGSEnabled = new( "Adjust Global Scale", "bAGS" );
 
         // New to dawntrail
         public readonly AvfxInt APRi = new( "APri", "APri" );

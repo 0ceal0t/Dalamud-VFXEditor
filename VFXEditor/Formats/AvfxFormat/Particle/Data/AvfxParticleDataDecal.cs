@@ -1,7 +1,7 @@
 namespace VfxEditor.AvfxFormat {
     public class AvfxParticleDataDecal : AvfxDataWithParameters {
         public readonly AvfxFloat ScalingScale = new( "Scaling Scale", "SS" );
-        public readonly AvfxInt DDTT = new( "DDTT", "DDTT" );
+        public readonly AvfxInt DDTT = new( "Terrain Type", "DDTT" );
 
         public AvfxParticleDataDecal() : base() {
             Parsed = [

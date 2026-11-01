@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Data;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Sheets;
+using VfxEditor.TmbFormat.Base;
 using VfxEditor.TmbFormat.Utils;
 
 namespace VfxEditor.TmbFormat.Entries {
@@ -14,9 +17,9 @@ namespace VfxEditor.TmbFormat.Entries {
 
         public readonly ParsedBool Enabled = new( "Enabled" );
         public readonly ParsedInt Unknown2 = new( "Unknown 2" );
-        public readonly ParsedInt SubtitleType = new( "Subtitle Type" );
-        public readonly ParsedInt TextId = new( "Text Id" );
-        public readonly ParsedInt SpeakerId = new( "Speaker Id" );
+        public readonly ParsedEnum<SubtitleType> Type = new( "Subtitle Type" );
+        public readonly ParsedSheetInt TextId = new( "Text", SheetData.Subtitle, SheetData.InitSubtitle );
+        public readonly ParsedSheetInt SpeakerId = new( "Speaker", SheetData.NpcName, SheetData.InitNpcName );
         public readonly ParsedFloat Duration = new( "Duration" );
         public readonly ParsedInt Unknown7 = new( "Unknown 7" );
         public readonly ParsedInt Unknown8 = new( "Unknown 8" );
@@ -29,7 +32,7 @@ namespace VfxEditor.TmbFormat.Entries {
         protected override List<ParsedBase> GetParsed() => [
             Enabled,
             Unknown2,
-            SubtitleType,
+            Type,
             TextId,
             SpeakerId,
             Duration,

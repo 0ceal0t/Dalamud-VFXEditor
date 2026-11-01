@@ -12,9 +12,9 @@ namespace VfxEditor.TmbFormat.Entries {
         public override int Size => 0x18;
         public override int ExtraSize => 0;
 
-        private readonly ParsedInt Duration = new( "Duration", value: 1 );
+        private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
-        private readonly ParsedInt WaveType = new( "Wave Type", value: 100 );
+        private readonly ParsedInt WaveType = new( "Wave Type" );
 
         public C120( TmbFile file ) : base( file ) { }
 
