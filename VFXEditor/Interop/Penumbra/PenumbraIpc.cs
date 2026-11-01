@@ -11,15 +11,18 @@ using System.Text;
 namespace VfxEditor.Interop.Penumbra {
     public class PenumbraIpc {
         public bool PenumbraEnabled { get; private set; }
+        public bool ModsEnabled { get; private set; } = true;
 
         private readonly ApiVersion ApiVersionsSubscriber;
         private readonly GetModDirectory GetModDirectorySubscriber;
         private readonly GetModList GetModsSubscriber;
         private readonly ResolveDefaultPath ResolveDefaultPathSubscriber;
         private readonly GetPlayerMetaManipulations GetPlayerMetaManipulationsSubscriber;
+        private readonly GetEnabledState GetEnabledStateSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
+        private readonly EventSubscriber<bool> EnabledChangeSubscriber;
 
         public PenumbraIpc() {
             ApiVersionsSubscriber = new( Dalamud.PluginInterface );
@@ -27,18 +30,30 @@ namespace VfxEditor.Interop.Penumbra {
             GetModsSubscriber = new( Dalamud.PluginInterface );
             GetPlayerMetaManipulationsSubscriber = new( Dalamud.PluginInterface );
             ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
+            GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
+            EnabledChangeSubscriber = EnabledChange.Subscriber( Dalamud.PluginInterface, OnEnabledChange );
 
 
-            if( !Dalamud.PluginInterface.InstalledPlugins.Where( x => x.InternalName.Equals( "Penumbra" ) ).Any() ) return;
+            if( !Dalamud.PluginInterface.InstalledPlugins.Any( x => x.InternalName.Equals( "Penumbra" ) && x.IsLoaded ) ) return;
             try {
                 ApiVersionsSubscriber.Invoke();
             }
             catch( Exception ) { return; }
 
             PenumbraEnabled = true;
+            RefreshEnabledState();
+        }
+
+        private void RefreshEnabledState() {
+            try {
+                ModsEnabled = GetEnabledStateSubscriber.Invoke();
+            }
+            catch( Exception ) {
+                ModsEnabled = false;
+            }
         }
 
         public string ResolveDefaultPath( string path ) {
@@ -87,17 +102,25 @@ namespace VfxEditor.Interop.Penumbra {
             return false;
         }
 
+        private void OnEnabledChange( bool enabled ) {
+            ModsEnabled = enabled;
+        }
+
         private void EnablePenumbra() {
             PenumbraEnabled = true;
+            RefreshEnabledState();
+            PenumbraTempMod.Invalidate();
         }
 
         private void DisablePenumbra() {
             PenumbraEnabled = false;
+            PenumbraTempMod.Invalidate();
         }
 
         public void Dispose() {
             InitializedSubscriber?.Dispose();
             DisposedSubscriber?.Dispose();
+            EnabledChangeSubscriber?.Dispose();
         }
 
         // https://github.com/Ottermandias/OtterGui/blob/4673e93f5165108a7f5b91236406d527f16384a5/Functions.cs#L154

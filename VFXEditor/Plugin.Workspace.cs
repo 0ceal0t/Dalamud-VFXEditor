@@ -40,7 +40,7 @@ namespace VfxEditor {
         private static DateTime LastAutoSave = DateTime.Now;
 
         // Return true if it's loading and the UI needs to be hidden
-        private static bool CheckLoadState() {
+        private static bool CheckWorkspaceLoadState() {
             if( State == WorkspaceState.Cleanup ) {
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;

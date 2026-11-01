@@ -45,6 +45,7 @@ namespace VfxEditor {
         public static LibraryManager LibraryManager { get; private set; }
 
         public static PenumbraIpc PenumbraIpc { get; private set; }
+        public static PenumbraRequiredWindow PenumbraRequiredWindow { get; private set; }
         public static PenumbraDialog PenumbraExportDialog { get; private set; }
         public static PenumbraImportDialog PenumbraImportDialog { get; private set; }
 
@@ -143,6 +144,7 @@ namespace VfxEditor {
             TrackerManager = new();
             LibraryManager = new();
             PenumbraImportDialog = new();
+            PenumbraRequiredWindow = new();
 
             Dalamud.Framework.Update += FrameworkOnUpdate;
             Dalamud.PluginInterface.UiBuilder.Draw += Draw;
@@ -157,6 +159,7 @@ namespace VfxEditor {
 
         private void FrameworkOnUpdate( IFramework framework ) {
             VfxSpawn.Tick();
+            PenumbraTempMod.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
@@ -196,6 +199,7 @@ namespace VfxEditor {
             TmbSpawn.Dispose();
             FileBrowserManager.Dispose();
             ExportDialog.Reset();
+            PenumbraTempMod.Dispose();
         }
     }
 }

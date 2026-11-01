@@ -2,6 +2,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using VfxEditor.Utils;
+using static VfxEditor.Interop.Penumbra.PenumbraRequiredWindow;
 
 namespace VfxEditor.Ui {
     public abstract class DalamudWindow : Window {
@@ -83,6 +84,10 @@ namespace VfxEditor.Ui {
                 PositionCondition = ImGuiCond.Always;
                 OverrideFrames = 2;
             }
+        }
+
+        public override bool DrawConditions() { // Generally, nothing should be drawn if Penumbra isn't loaded
+            return Plugin.PenumbraRequiredWindow?.Status == PenumbraStatus.OK;
         }
     }
 }
