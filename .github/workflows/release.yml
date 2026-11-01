@@ -5,7 +5,8 @@ name: Create Release
 # (xivdev/Penumbra/.github/actions), written out here because VFXEditor's project folder (VFXEditor) differs
 # from its internal name (vfx-editor).
 #
-# The old VFXEditor-Beta entry in repo.json is kept but no longer updated.
+# Users install VFXEditor through Sea of Stars (https://github.com/Ottermandias/SeaOfStars), which reads the vfx-editor
+# entry from this repository's repo.json on main. The old VFXEditor-Beta entry is kept but no longer updated.
 
 on:
   push:
@@ -15,7 +16,7 @@ on:
 env:
   PLUGIN: vfx-editor           # InternalName, assembly name, manifest and zip name
   PROJECT_DIR: VFXEditor       # folder containing VFXEditor.csproj
-  REPO_BRANCH: evercold        # branch that holds repo.json
+  REPO_BRANCH: main            # branch that holds repo.json (read by Sea of Stars)
   HUSKY: 0
 
 jobs:

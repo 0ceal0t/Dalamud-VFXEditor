@@ -29,18 +29,26 @@ _VFX, animation, sound, and physics editing plugin for Dalamud_
 | `.mdl` | Meshes |
 
 ## Installation
+VFXEditor is distributed through [Sea of Stars](https://github.com/Ottermandias/SeaOfStars), a plugin repository for modding and customization plugins that also includes [Penumbra](https://github.com/xivdev/Penumbra), which VFXEditor needs for in-game previews.
+
 1. This plugin requires [XIV Quick Launcher](https://github.com/goatcorp/FFXIVQuickLauncher) to run
-2. In-game previews require [Penumbra](https://github.com/xivdev/Penumbra) to be installed and enabled. Editing and exporting work without it, but changes will not show up in-game
-3. Install the plugin from the `/xlplugins` menu
-4. Once installed, open with `/vfxedit`
-
-### Custom Repository
-VFXEditor (`vfx-editor`) is also published to this repository's own plugin listing. Add the following custom repository in `/xlsettings > Experimental`:
+2. Enter `/xlsettings` in the chat window and go to the **Experimental** tab
+3. Scroll past the DevPlugins section to **Custom Plugin Repositories**, and paste this into the first empty field:
 ```
-https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json
+https://raw.githubusercontent.com/Ottermandias/SeaOfStars/main/repo.json
 ```
+4. Click the **+** button, make sure the checkbox next to the new entry is ticked, then click the **Save** icon in the bottom right
+5. Open the plugin installer with `/xlplugins` and install **Penumbra** and **VFXEditor**
+6. Once installed, open VFXEditor with `/vfxedit`
 
-Releases are created by pushing a version tag (for example `2.0.0.0`), which builds the plugin and updates `repo.json` (see `.github/workflows/release.yml`). The old `[BETA] VFXEditor` entry is no longer updated; uninstall it and install VFXEditor instead.
+Editing and exporting work without Penumbra, but changes will only show up in-game while Penumbra is installed and enabled.
+
+### Coming from an older version
+- **VFXEditor from the main Dalamud repository**: this version is a separate plugin, so install it from Sea of Stars as above and disable or uninstall the old one. Settings are not carried over
+- **`[BETA] VFXEditor`**: the beta is no longer updated. Uninstall it, install VFXEditor from Sea of Stars, and remove `https://raw.githubusercontent.com/0ceal0t/Dalamud-VFXEditor/main/repo.json` from your custom repositories, since Sea of Stars already includes VFXEditor
+
+### Releases
+Pushing a version tag (for example `2.0.0.0`) builds the plugin, publishes `vfx-editor.zip` as a GitHub release, and updates `repo.json` in this repository (see `.github/workflows/release.yml`). Sea of Stars picks up new versions from that file automatically, within a few minutes.
 
 ## Usage
 1. Select a _"Loaded Vfx"_ (the new effect you want to use)
