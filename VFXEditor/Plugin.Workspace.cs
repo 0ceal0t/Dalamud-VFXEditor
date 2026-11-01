@@ -103,13 +103,7 @@ namespace VfxEditor {
             State = WorkspaceState.Loading;
             var mod = res.Mod;
 
-            var loadCount = 0;
-            foreach( var option in mod.SourceFiles ) {
-                foreach( var file in option.Value ) {
-                    loadCount++;
-                }
-            }
-            WorkspaceFileCount = loadCount;
+            WorkspaceFileCount = mod.SourceFiles.Sum( x => x.Value.Count );
             await Task.Run( () => {
                 if( res.Reset ) {
                     foreach( var manager in Groups.Where( x => x != null ) ) manager.Reset( false );

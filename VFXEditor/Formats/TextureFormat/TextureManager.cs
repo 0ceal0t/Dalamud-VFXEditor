@@ -199,13 +199,7 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         public void CleanupWraps() {
-            foreach( var wrap in WrapsToCleanup ) {
-                try {
-                    wrap?.Dispose();
-                }
-                catch( Exception ) { }
-            }
-            WrapsToCleanup.Clear();
+            WrapsToCleanup.DisposeAll();
         }
 
         // =======================
@@ -245,13 +239,11 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public WindowSystem GetWindowSystem() => WindowSystem;
 
-        public bool CanImport( string path )
-        {
+        public bool CanImport( string path ) {
             return path.EndsWith( "atex" );
         }
 
-        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile )
-        {
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) {
             ReplaceTexture( selectedFile.Path, replacedFile.Name );
         }
     }
