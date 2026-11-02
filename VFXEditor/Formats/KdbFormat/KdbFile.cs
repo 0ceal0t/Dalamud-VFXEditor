@@ -385,7 +385,10 @@ namespace VfxEditor.Formats.KdbFormat {
 
             var node = NodeGraph.Canvas.SelectedNodes.FirstOrDefault();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) NodeGraph.Canvas.RemoveNode( node );
+                if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {
+                    NodeGraph.Canvas.RemoveNode( node );
+                    return;
+                }
             }
             node.Draw( BoneList );
         }

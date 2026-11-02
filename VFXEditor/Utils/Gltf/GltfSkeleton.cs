@@ -56,39 +56,25 @@ namespace VfxEditor.Utils.Gltf {
 
                 var node = boneToNode[bone];
                 foreach( var child in node.VisualChildren ) {
-                    nodeToBone[child].Parent = bone;
+                    if( nodeToBone.TryGetValue( child, out var childBone ) ) childBone.Parent = bone;
                 }
             }
 
-            var finalBones = new List<SklbBone>();
+            var roots = newBones.Where( x => x.Parent == null ).OrderBy( x => x.Name.Value == "n_root" ? 0 : 1 ).ToList();
 
-            var root = newBones.Find( bone => bone.Name.Value == "n_root" );
-            var rootNode = boneToNode[root];
-            if( rootNode.VisualChildren.Any() ) {
-                Dictionary<int, List<SklbBone>> index = [];
-                PopulateIndex( index, rootNode, nodeToBone, 0 );
-                foreach( var i in index ) {
-                    foreach( var bone in i.Value ) {
-                        finalBones.Add( bone );
-                    }
-                }
-            }
-            else {
-                finalBones.Add( root );
-            }
+            Dictionary<int, List<SklbBone>> index = [];
+            foreach( var root in roots ) PopulateIndex( index, boneToNode[root], nodeToBone, 0 );
 
-            return [.. finalBones.Where( x => x != null )];
+            return [.. index.OrderBy( x => x.Key ).SelectMany( x => x.Value )];
         }
 
         private static void PopulateIndex( Dictionary<int, List<SklbBone>> index, Node node, Dictionary<Node, SklbBone> nodeToBone, int depth ) {
-            if( !index.TryGetValue( depth, out var value ) ) { value =  [] ; index.Add( depth, value ); }
+            if( !nodeToBone.TryGetValue( node, out var bone ) ) return;
+            if( !index.TryGetValue( depth, out var value ) ) { value = []; index.Add( depth, value ); }
 
-            value.Add( nodeToBone[node] );
-            if( node.VisualChildren.Any() ) {
-                foreach( var child in node.VisualChildren ) {
-                    PopulateIndex( index, child, nodeToBone, depth + 1 );
-                }
-
+            value.Add( bone );
+            foreach( var child in node.VisualChildren ) {
+                PopulateIndex( index, child, nodeToBone, depth + 1 );
             }
         }
 
