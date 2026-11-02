@@ -133,8 +133,8 @@ namespace VfxEditor.Interop.Penumbra {
         public (ImcIdentifier, ImcEntry)[] GetPlayerImcEntries() {
             if( !PenumbraEnabled ) return [];
             try {
-                var a = new ParsedPenumbraMeta( GetPlayerMetaManipulationsSubscriber.Invoke() );
-                return [];
+                var meta = new ParsedPenumbraMeta( GetPlayerMetaManipulationsSubscriber.Invoke() );
+                return [.. meta.Imc];
             }
             catch( Exception ) { return []; }
         }

@@ -76,6 +76,11 @@ namespace VfxEditor.Utils {
             => Read<byte>();
 
         [MethodImpl( MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization )]
+        public byte[] ReadBytes( int count ) {
+            return Read<byte>( count ).ToArray();
+        }
+
+        [MethodImpl( MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization )]
         public short ReadInt16()
             => Read<short>();
 
@@ -110,7 +115,7 @@ namespace VfxEditor.Utils {
         [MethodImpl( MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization )]
         public readonly SpanBinaryReader SliceFrom( int position, int count ) {
             if( position < 0 || count < 0 )
-                throw new ArgumentOutOfRangeException($"{position} {count}");
+                throw new ArgumentOutOfRangeException( $"{position} {count}" );
             if( position + count > Length )
                 throw new EndOfStreamException();
 
