@@ -136,7 +136,6 @@ namespace VfxEditor.FileManager {
         public void SetReplace( SelectResult result ) {
             Replace = result;
             ReplaceTextInput = "";
-            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
             PenumbraTempMod.MarkDirty();
         }
@@ -167,7 +166,6 @@ namespace VfxEditor.FileManager {
             var newWriteLocation = Manager.NewWriteLocation;
             WriteFile( newWriteLocation );
             WriteLocation = newWriteLocation;
-            Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
             PenumbraTempMod.MarkDirty();
         }

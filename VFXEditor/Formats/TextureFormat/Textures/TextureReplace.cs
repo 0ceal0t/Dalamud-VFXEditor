@@ -33,7 +33,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         public TextureReplace( string gamePath, string writeLocation ) : base( gamePath ) {
             WriteLocation = writeLocation;
-            Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
         }
 
         public bool GetActiveReplacement( out string gamePath, out string localPath ) {
@@ -267,7 +266,6 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
         protected override void OnReplace( string importPath ) { // since already replaced, need to refresh it
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
-            Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
             ImportFile( importPath );
             PenumbraTempMod.MarkDirty();
         }

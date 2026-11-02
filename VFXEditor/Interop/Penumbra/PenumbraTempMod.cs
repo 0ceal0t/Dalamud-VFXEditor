@@ -41,12 +41,6 @@ namespace VfxEditor.Interop.Penumbra {
                 if( resolvedPaths.Contains( key ) ) continue; // first document wins
                 if( AddFile( files, key, localPath ) ) resolvedPaths.Add( key );
             }
-
-            // Custom (non-vanilla) paths keep resolving to their last local file, even after the document is closed,
-            // so files that reference them do not break. Open documents take priority
-            foreach( var (gamePath, localPath) in Plugin.CustomPathBackups ) {
-                if( !resolvedPaths.Contains( gamePath.ToLower() ) ) AddFile( files, gamePath.ToLower(), localPath );
-            }
         }
 
         private static bool Update() {
