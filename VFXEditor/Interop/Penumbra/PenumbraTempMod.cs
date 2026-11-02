@@ -14,6 +14,9 @@ namespace VfxEditor.Interop.Penumbra {
         public const string Tag = "VFXEditor";
         public const int Priority = int.MaxValue;
         public static bool Available => Plugin.PenumbraIpc?.PenumbraEnabled == true;
+        // In order for UI stuff to be testable, there needs to be a collection assigned to "interface"
+        // this is set by default, but it's technically possible to disable it or delete the collection
+        public static bool UiAvailable => Available && Plugin.PenumbraIpc.InterfaceCollectionAssigned();
 
         private static IEnumerable<(IFileDocument Document, string GamePath, string LocalPath)> GetActiveDocuments() {
             foreach( var group in Plugin.Groups.Where( x => x != null ) ) {

@@ -14,6 +14,10 @@ namespace VfxEditor.Interop.Penumbra {
         public bool PenumbraEnabled { get; private set; }
         public bool ModsEnabled { get; private set; } = true;
 
+        // Whether a Penumbra collection is set up to handle interface stuff
+        private bool HasInterfaceCollection = true;
+        private DateTime InterfaceCollectionChecked = DateTime.MinValue;
+
         private readonly ApiVersion ApiVersionsSubscriber;
         private readonly GetModDirectory GetModDirectorySubscriber;
         private readonly GetModList GetModsSubscriber;
@@ -24,6 +28,7 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly RedrawObject RedrawObjectSubscriber;
         private readonly AddTemporaryModAll AddTemporaryModAllSubscriber;
         private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
+        private readonly GetCollection GetCollectionSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -40,6 +45,7 @@ namespace VfxEditor.Interop.Penumbra {
             AddTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RedrawObjectSubscriber = new( Dalamud.PluginInterface );
+            GetCollectionSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -54,6 +60,31 @@ namespace VfxEditor.Interop.Penumbra {
 
             PenumbraEnabled = true;
             RefreshEnabledState();
+        }
+
+        public bool InterfaceCollectionAssigned() {
+            if( !PenumbraEnabled ) return false;
+            if( ( DateTime.Now - InterfaceCollectionChecked ).TotalSeconds < 2 ) return HasInterfaceCollection;
+
+            InterfaceCollectionChecked = DateTime.Now;
+            try {
+                var collection = GetCollectionSubscriber.Invoke( ApiCollectionType.Interface );
+                HasInterfaceCollection = collection.HasValue && collection.Value.Id != Guid.Empty;
+            }
+            catch( Exception ) {
+                HasInterfaceCollection = false;
+            }
+            return HasInterfaceCollection;
+        }
+
+        public void OpenCollectionsTab() {
+            if( !PenumbraEnabled ) return;
+            try {
+                OpenMainWindowSubscriber.Invoke( TabType.Collections );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error opening Penumbra" );
+            }
         }
 
         public void OpenSettings() {
