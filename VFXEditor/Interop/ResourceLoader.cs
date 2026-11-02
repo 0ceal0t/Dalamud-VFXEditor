@@ -35,9 +35,9 @@ namespace VfxEditor.Interop {
             HumanSetupScalingHook = Dalamud.Hooks.HookFromAddress<CharacterBaseSetupScalingDelegate>( HumanVTable[58], SetupScaling );
             HumanCreateDeformerHook = Dalamud.Hooks.HookFromAddress<CharacterBaseCreateDeformerDelegate>( HumanVTable[101], CreateDeformer );
 
-            ReadSqpackHook.Enable();
-            GetResourceSyncHook.Enable();
-            GetResourceAsyncHook.Enable();
+            //ReadSqpackHook.Enable();
+            //GetResourceSyncHook.Enable();
+            //GetResourceAsyncHook.Enable();
 
             StaticVfxCreateHook.Enable();
             StaticVfxRemoveHook.Enable();

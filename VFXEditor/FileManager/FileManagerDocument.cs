@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
@@ -42,6 +43,12 @@ namespace VfxEditor.FileManager {
         public FileManagerDocument( FileManagerBase manager, string writeLocation ) {
             Manager = manager;
             WriteLocation = writeLocation;
+        }
+
+        public bool GetActiveReplacement( out string gamePath, out string localPath ) {
+            gamePath = ReplacePath;
+            localPath = WriteLocation;
+            return File != null && !string.IsNullOrEmpty( gamePath ) && !string.IsNullOrEmpty( localPath );
         }
 
         public bool GetReplacePath( string path, out string replacePath ) {
@@ -95,8 +102,8 @@ namespace VfxEditor.FileManager {
                 File = FileFromReader( reader, verify );
             }
             catch( Exception e ) {
-                Dalamud.Error( e, $"Error Reading File at {path}");
-                Dalamud.ErrorNotification( $"Error Reading File at {path}");
+                Dalamud.Error( e, $"Error Reading File at {path}" );
+                Dalamud.ErrorNotification( $"Error Reading File at {path}" );
             }
         }
 
@@ -154,11 +161,7 @@ namespace VfxEditor.FileManager {
             WriteLocation = newWriteLocation;
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
-            if( File != null && !ReplacePath.Contains( ".sklb" ) ) {
-                Plugin.ResourceLoader.ReloadPath( ReplacePath, WriteLocation, File.GetPapIds(), File.GetPapTypes() );
-            }
-
-            Plugin.ResourceLoader.ReRender();
+            PenumbraTempMod.UpdateAndRedraw();
         }
 
         // =======================

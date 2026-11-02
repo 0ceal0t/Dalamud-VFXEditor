@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +10,7 @@ using TeximpNet.Compression;
 using TeximpNet.DDS;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
@@ -33,6 +34,12 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         public TextureReplace( string gamePath, string writeLocation ) : base( gamePath ) {
             WriteLocation = writeLocation;
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
+        }
+
+        public bool GetActiveReplacement( out string gamePath, out string localPath ) {
+            gamePath = GamePath;
+            localPath = WriteLocation;
+            return !string.IsNullOrEmpty( gamePath ) && !string.IsNullOrEmpty( localPath );
         }
 
         public void ImportFile( string importPath ) {
@@ -262,6 +269,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
             ImportFile( importPath );
+            PenumbraTempMod.UpdateAndRedraw();
         }
 
         // ===========================

@@ -21,6 +21,9 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly GetPlayerMetaManipulations GetPlayerMetaManipulationsSubscriber;
         private readonly GetEnabledState GetEnabledStateSubscriber;
         private readonly OpenMainWindow OpenMainWindowSubscriber;
+        private readonly RedrawObject RedrawObjectSubscriber;
+        private readonly AddTemporaryModAll AddTemporaryModAllSubscriber;
+        private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -34,6 +37,9 @@ namespace VfxEditor.Interop.Penumbra {
             ResolveDefaultPathSubscriber = new( Dalamud.PluginInterface );
             GetEnabledStateSubscriber = new( Dalamud.PluginInterface );
             OpenMainWindowSubscriber = new( Dalamud.PluginInterface );
+            AddTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
+            RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
+            RedrawObjectSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -52,7 +58,41 @@ namespace VfxEditor.Interop.Penumbra {
 
         public void OpenSettings() {
             if( !PenumbraEnabled ) return;
-            OpenMainWindowSubscriber.Invoke( TabType.Settings );
+            try {
+                OpenMainWindowSubscriber.Invoke( TabType.Settings );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error opening Penumbra" );
+            }
+        }
+
+        public bool Redraw( int objectIndex ) {
+            if( !PenumbraEnabled ) return false;
+            try {
+                RedrawObjectSubscriber.Invoke( objectIndex, RedrawType.Redraw );
+                return true;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error redrawing with Penumbra" );
+                return false;
+            }
+        }
+
+        public bool SetTemporaryMod( string tag, Dictionary<string, string> paths, string meta, int priority ) {
+            if( !PenumbraEnabled ) return false;
+            try {
+                if( paths.Count == 0 && string.IsNullOrEmpty( meta ) ) {
+                    var removeResult = RemoveTemporaryModAllSubscriber.Invoke( tag, priority );
+                    return removeResult == PenumbraApiEc.Success || removeResult == PenumbraApiEc.NothingChanged;
+                }
+                var result = AddTemporaryModAllSubscriber.Invoke( tag, paths, meta ?? string.Empty, priority );
+                if( result != PenumbraApiEc.Success ) Dalamud.Error( $"Penumbra AddTemporaryModAll failed: {result}" );
+                return result == PenumbraApiEc.Success;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Error setting Penumbra temporary mod" );
+                return false;
+            }
         }
 
         private void RefreshEnabledState() {
@@ -117,12 +157,10 @@ namespace VfxEditor.Interop.Penumbra {
         private void EnablePenumbra() {
             PenumbraEnabled = true;
             RefreshEnabledState();
-            PenumbraTempMod.Invalidate();
         }
 
         private void DisablePenumbra() {
             PenumbraEnabled = false;
-            PenumbraTempMod.Invalidate();
         }
 
         public void Dispose() {

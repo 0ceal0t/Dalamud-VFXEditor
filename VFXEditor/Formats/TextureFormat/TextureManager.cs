@@ -9,6 +9,7 @@ using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.Textures;
 using VfxEditor.Formats.TextureFormat.Ui;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui;
 using VfxEditor.Ui.Export;
@@ -17,7 +18,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace VfxEditor.Formats.TextureFormat {
     public class TextureManager : DalamudWindow, IFileManagerGroup, IFileManagerSelect {
-        private static string WORKSPACE_KEY = "Tex";
+        private static readonly string WORKSPACE_KEY = "Tex";
 
         private int TEX_ID = 0;
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.atex" ).Replace( '\\', '/' );
@@ -54,12 +55,14 @@ namespace VfxEditor.Formats.TextureFormat {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
             replace.ImportFile( importPath );
             Textures.Add( replace );
+            PenumbraTempMod.UpdateAndRedraw();
         }
 
         public void RemoveReplace( TextureReplace replace ) {
             Textures.Remove( replace );
             View.ClearSelected();
             ExportDialog.RemoveDocument( replace );
+            PenumbraTempMod.UpdateAndRedraw();
         }
 
         public void Import( SelectResult result ) {
@@ -243,13 +246,11 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public WindowSystem GetWindowSystem() => WindowSystem;
 
-        public bool CanImport( string path )
-        {
+        public bool CanImport( string path ) {
             return path.EndsWith( "atex" );
         }
 
-        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile )
-        {
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) {
             ReplaceTexture( selectedFile.Path, replacedFile.Name );
         }
     }

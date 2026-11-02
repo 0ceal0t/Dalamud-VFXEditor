@@ -4,16 +4,18 @@ using VfxEditor.Ui.Export;
 
 namespace VfxEditor.FileManager.Interfaces {
     public interface IFileDocument {
-        public string GetExportSource();
+        bool GetActiveReplacement( out string gamePath, out string localPath );
 
-        public string GetExportReplace();
+        string GetExportSource();
 
-        public bool CanExport();
+        string GetExportReplace();
 
-        public void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset );
+        bool CanExport();
 
-        public void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut );
+        void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset );
 
-        public bool GetReplacePath( string path, out string replacePath );
+        void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut );
+
+        bool GetReplacePath( string path, out string replacePath );
     }
 }

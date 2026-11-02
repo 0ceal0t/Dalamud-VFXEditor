@@ -159,7 +159,6 @@ namespace VfxEditor {
 
         private void FrameworkOnUpdate( IFramework framework ) {
             VfxSpawn.Tick();
-            PenumbraTempMod.Tick();
             KeybindConfiguration.UpdateState();
             if( ClearKeyState ) Dalamud.KeyState.ClearAll();
             ClearKeyState = false;
