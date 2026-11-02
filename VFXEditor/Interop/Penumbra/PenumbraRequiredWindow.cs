@@ -61,10 +61,10 @@ namespace VfxEditor.Interop.Penumbra {
 
             var size = new Vector2( ( ImGui.GetContentRegionAvail().X - ( ImGui.GetStyle().ItemSpacing.X * 2 ) ) / 3f, 30f );
 
-            if( ImGui.Button( "Custom Repositories", size ) ) Dalamud.PluginInterface.OpenDalamudSettingsTo( SettingsOpenKind.Experimental );
+            if( ImGui.Button( "Plugin Installer", size ) ) Dalamud.PluginInterface.OpenPluginInstallerTo( PluginInstallerOpenKind.AllPlugins, "Penumbra" );
 
             ImGui.SameLine();
-            if( ImGui.Button( "Plugin Installer", size ) ) Dalamud.PluginInterface.OpenPluginInstallerTo( PluginInstallerOpenKind.AllPlugins, "Penumbra" );
+            if( ImGui.Button( "Penumbra Github", size ) ) UiUtils.OpenUrl( "https://github.com/xivdev/Penumbra" );
 
             ImGui.SameLine();
             using var disabled = ImRaii.Disabled( Status == PenumbraStatus.NOT_LOADED );

@@ -1,13 +1,9 @@
-using Newtonsoft.Json;
 using Penumbra.Api.Enums;
 using Penumbra.Api.Helpers;
 using Penumbra.Api.IpcSubscribers;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using VfxEditor.Interop.Penumbra.Meta;
 
 namespace VfxEditor.Interop.Penumbra {
@@ -133,7 +129,7 @@ namespace VfxEditor.Interop.Penumbra {
         public (ImcIdentifier, ImcEntry)[] GetPlayerImcEntries() {
             if( !PenumbraEnabled ) return [];
             try {
-                var meta = new ParsedPenumbraMeta( GetPlayerMetaManipulationsSubscriber.Invoke() );
+                var meta = new PenumbraMetaParser( GetPlayerMetaManipulationsSubscriber.Invoke() );
                 return [.. meta.Imc];
             }
             catch( Exception ) { return []; }

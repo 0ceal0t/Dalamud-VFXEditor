@@ -5,13 +5,13 @@ using System.IO.Compression;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Interop.Penumbra.Meta {
-    public class ParsedPenumbraMeta {
+    public class PenumbraMetaParser {
         // TODO: only need IMC for now
         public readonly List<(ImcIdentifier, ImcEntry)> Imc = [];
 
         public const uint ImcKey = ( ( uint )'I' << 24 ) | ( ( uint )'M' << 16 ) | ( ( uint )'C' << 8 );
 
-        public ParsedPenumbraMeta( string base64 ) {
+        public PenumbraMetaParser( string base64 ) {
             var bytes = Convert.FromBase64String( base64 );
             using var compressedStream = new MemoryStream( bytes );
             using var zipStream = new GZipStream( compressedStream, CompressionMode.Decompress );
