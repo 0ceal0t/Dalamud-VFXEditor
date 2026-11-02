@@ -36,7 +36,7 @@ namespace VfxEditor.FileManager {
             }
 
             if( ActiveDocument == null ) { // No documents, make it clear how to add a new one
-                ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( (ImGui.GetContentRegionAvail().X - 150f) / 2f, 25f) );
+                ImGui.SetCursorPos( ImGui.GetCursorPos() + new Vector2( ( ImGui.GetContentRegionAvail().X - 150f ) / 2f, 25f ) );
                 if( ImGui.Button( "NEW", new( 150, 35 ) ) ) AddDocument();
 
                 return;
@@ -61,7 +61,7 @@ namespace VfxEditor.FileManager {
             if( !Plugin.Configuration.ShowTabBar && ImGui.MenuItem( "Documents" ) ) DocumentWindow.Show();
 
             ImGui.Separator();
-            Plugin.DrawManagersMenu( this );
+            Plugin.DrawManagersMenu( Group );
 
             ImGui.EndMenuBar();
         }
@@ -135,7 +135,7 @@ namespace VfxEditor.FileManager {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.ArrowUpRightFromSquare.ToIconString() ) ) DocumentWindow.Show();
 
-                using( var buttonColor = ImRaii.PushColor( ImGuiCol.Text, WindowColor, UseWindowColor )) {
+                using( var buttonColor = ImRaii.PushColor( ImGuiCol.Text, WindowColor, UseWindowColor ) ) {
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString() ) ) ImGui.OpenPopup( "WindowColorPicker" );
                 }
@@ -173,7 +173,7 @@ namespace VfxEditor.FileManager {
             base.PreDraw();
 
             ImGui.PushStyleColor( ImGuiCol.TitleBg, UseWindowColor ? WindowColor :
-                ( Configuration.UseCustomWindowColor ? Configuration.TitleBg : *ImGui.GetStyleColorVec4(ImGuiCol.TitleBg) ) );
+                ( Configuration.UseCustomWindowColor ? Configuration.TitleBg : *ImGui.GetStyleColorVec4( ImGuiCol.TitleBg ) ) );
 
             ImGui.PushStyleColor( ImGuiCol.TitleBgActive, UseWindowColor ? WindowColor :
                 ( Configuration.UseCustomWindowColor ? Configuration.TitleBgActive : *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgActive ) ) );

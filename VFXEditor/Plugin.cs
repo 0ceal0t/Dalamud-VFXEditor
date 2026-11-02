@@ -35,7 +35,7 @@ using VfxEditor.Ui.Import;
 using VfxEditor.Ui.Tools;
 
 namespace VfxEditor {
-    public unsafe partial class Plugin : IDalamudPlugin {
+    public partial class Plugin : IDalamudPlugin {
         public static ResourceLoader ResourceLoader { get; private set; }
         public static DirectXManager DirectXManager { get; private set; }
         public static Configuration Configuration { get; private set; }

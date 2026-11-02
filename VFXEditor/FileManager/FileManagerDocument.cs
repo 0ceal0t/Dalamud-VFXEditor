@@ -226,12 +226,12 @@ namespace VfxEditor.FileManager {
                 return;
             }
 
-            var searchWidth = ImGui.GetContentRegionAvail().X - 160 - 125;
+            var searchWidth = ImGui.GetContentRegionAvail().X - 20 - 125;
 
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, new Vector2( 0 ) ) )
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
                 ImGui.Columns( 3, "Columns", false );
-                ImGui.SetColumnWidth( 0, 160 );
+                ImGui.SetColumnWidth( 0, 20 );
             }
             DrawInputTextColumn();
 
@@ -307,14 +307,6 @@ namespace VfxEditor.FileManager {
             }
 
             if( hovered ) UiUtils.Tooltip( "Toggle replacement", true );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"Loaded {Id}" );
-
-            ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 25 );
-            ImGui.Text( $"{Id} Being Replaced" );
         }
 
         private static float DegreesToRadians( float degrees ) => MathF.PI / 180 * degrees;
@@ -323,7 +315,7 @@ namespace VfxEditor.FileManager {
             var timesWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Times );
             var searchWidth = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Search );
             // 3 * 2 for spacing, 25 for some more padding
-            var inputWidth = ImGui.GetColumnWidth() - timesWidth - searchWidth - ( 3 * 2 ) - 20;
+            var inputWidth = Math.Min( 550, ImGui.GetColumnWidth() - timesWidth - searchWidth - ( 3 * 2 ) - 20 );
 
             DisplaySourceBar( inputWidth );
             DisplayReplaceBar( inputWidth );
@@ -342,12 +334,11 @@ namespace VfxEditor.FileManager {
 
             inputSize -= ( reloadWidth + replaceWidth + ( ImGui.GetStyle().FramePadding.X * 4 ) + 6 );
 
-            // Remove
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveSource();
+                if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
             }
 
-            if( DrawBar( inputSize, SourceDisplay, ref SourceTextInput, Source, Manager.SourceSelect.Focused, out var result ) ) SetSource( result );
+            if( DrawBar( inputSize, Source == null ? "SELECT A FILE TO USE" : SourceDisplay, ref SourceTextInput, Source, Manager.SourceSelect.Focused, out var result ) ) SetSource( result );
 
             // Local files
             using( var disabled = ImRaii.Disabled( !LocalSource ) )
@@ -364,29 +355,28 @@ namespace VfxEditor.FileManager {
                 }
             }
 
-            // Search
             ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowSource();
+                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveSource();
             }
+            UiUtils.Tooltip( "Clear", ImGui.IsItemHovered() );
         }
 
         protected void DisplayReplaceBar( float inputSize ) {
             using var _ = ImRaii.PushId( "Replace" );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 3, 4 ) );
 
-            // Remove
-            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveReplace();
-            }
-
-            if( DrawBar( inputSize, ReplaceDisplay, ref ReplaceTextInput, Replace, Manager.ReplaceSelect.Focused, out var result ) ) SetReplace( result );
-
-            // Search
-            ImGui.SameLine();
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Search.ToIconString() ) ) Manager.ShowReplace();
             }
+
+            if( DrawBar( inputSize, Replace == null ? "SELECT A FILE TO REPLACE" : ReplaceDisplay, ref ReplaceTextInput, Replace, Manager.ReplaceSelect.Focused, out var result ) ) SetReplace( result );
+
+            ImGui.SameLine();
+            using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                if( UiUtils.TransparentButton( FontAwesomeIcon.Times.ToIconString(), UiUtils.RED_COLOR ) ) RemoveReplace();
+            }
+            UiUtils.Tooltip( "Clear", ImGui.IsItemHovered() );
         }
 
         private bool DrawBar( float inputSize, string display, ref string inputText, SelectResult selectResult, bool highlight, out SelectResult result ) {

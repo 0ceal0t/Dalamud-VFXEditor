@@ -108,7 +108,7 @@ namespace VfxEditor {
             }
         }
 
-        public static void DrawManagersMenu( IFileManager currentManager ) {
+        public static void DrawManagersMenu( FileManagerGroupBase currentGroup ) {
             using var _ = ImRaii.PushId( "Menu" );
 
             // Manually specify the order since it's different than the load order
@@ -160,7 +160,7 @@ namespace VfxEditor {
                         }
                     }
 
-                    using var disabled = ImRaii.Disabled( manager == currentManager );
+                    using var disabled = ImRaii.Disabled( manager == currentGroup );
                     if( ImGui.MenuItem( manager.GetName() ) ) manager.Show();
 
                     managerIdx++;
