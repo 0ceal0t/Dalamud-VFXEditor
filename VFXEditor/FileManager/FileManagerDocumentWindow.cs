@@ -65,7 +65,10 @@ namespace VfxEditor.FileManager {
 
                 using var popup = ImRaii.Popup( "DocumentPopup" );
                 if( popup ) {
-                    if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) Manager.RemoveDocument( document );
+                    if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
+                        Manager.RemoveDocument( document );
+                        break;
+                    }
                     document.DrawRename();
                 }
             }
