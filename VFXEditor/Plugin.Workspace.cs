@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Ui.Import;
@@ -44,6 +45,7 @@ namespace VfxEditor {
             if( State == WorkspaceState.Cleanup ) {
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;
+                PenumbraTempMod.UpdateAndRedraw(); // Updates are skipped while loading, so sync once everything is in place
                 return true;
             }
 
@@ -137,7 +139,7 @@ namespace VfxEditor {
                     }
                 }
             } );
-            State = WorkspaceState.None;
+            State = WorkspaceState.Cleanup;
         }
 
         private static void OpenWorkspace( bool reset ) {

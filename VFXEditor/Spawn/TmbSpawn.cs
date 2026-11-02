@@ -1,6 +1,6 @@
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using VfxEditor.Interop.Structs.Animation;
 
 namespace VfxEditor.Spawn {
@@ -21,54 +21,52 @@ namespace VfxEditor.Spawn {
 
         public static void Reset() => ResetAnimationOverride( GetActor() );
 
-        public static bool ApplyAnimationOverride( ActorMemoryStruct* memory, ushort animationId, bool interrupt ) {
-            if( memory == null ) return false;
-            if( !memory->CanAnimate ) return false;
-            ActorToReset = new IntPtr( memory );
-            ApplyBaseAnimationInternal( memory, animationId, interrupt, CharacterModes.AnimLock, 0 );
+        public static bool ApplyAnimationOverride( Character* character, ushort animationId, bool interrupt ) {
+            if( character == null ) return false;
+            if( !CanAnimate( character ) ) return false;
+            ActorToReset = new IntPtr( character );
+            ApplyBaseAnimationInternal( character, animationId, interrupt, CharacterModes.AnimLock, 0 );
             return true;
         }
 
-        public static void ResetAnimationOverride( ActorMemoryStruct* memory ) {
-            if( memory == null ) return;
+        public static void ResetAnimationOverride( Character* character ) {
+            if( character == null ) return;
             ActorToReset = IntPtr.Zero;
-            ApplyBaseAnimationInternal( memory, 0, true, CharacterModes.Normal, 0 );
+            ApplyBaseAnimationInternal( character, 0, true, CharacterModes.Normal, 0 );
 
-            var animation = GetAnimation( memory );
-            animation->LipsOverride = 0;
+            character->Timeline.LipsOverride = 0;
 
             // LinkSpeeds = true
-            var speed = animation->Speeds[0];
-            for( var i = 0; i < 13; i++ ) {
-                animation->Speeds[i] = speed;
+            var speeds = character->Timeline.TimelineSequencer.TimelineSpeeds;
+            var speed = speeds[0];
+            for( var i = 0; i < speeds.Length; i++ ) {
+                speeds[i] = speed;
             }
 
-            animation->Speeds![( int )AnimationSlots.FullBody] = 1.0f;
+            speeds[( int )AnimationSlots.FullBody] = 1.0f;
         }
 
-        private static void ApplyBaseAnimationInternal( ActorMemoryStruct* memory, ushort animationId, bool interrupt, CharacterModes mode, byte modeInput ) {
-            var animation = GetAnimation( memory );
+        private static bool CanAnimate( Character* character ) => character->Mode == CharacterModes.Normal || character->Mode == CharacterModes.AnimLock;
 
-            if( animation->BaseOverride != animationId ) {
-                animation->BaseOverride = animationId;
+        private static void ApplyBaseAnimationInternal( Character* character, ushort animationId, bool interrupt, CharacterModes mode, byte modeParam ) {
+            if( character->Timeline.BaseOverride != animationId ) {
+                character->Timeline.BaseOverride = animationId;
             }
 
-            if( memory->CharacterModeInput != modeInput ) {
-                memory->CharacterModeInput = modeInput;
+            if( character->ModeParam != modeParam ) {
+                character->ModeParam = modeParam;
             }
 
-            if( ( CharacterModes )memory->CharacterMode != mode ) {
-                memory->CharacterMode = ( byte )mode;
+            if( character->Mode != mode ) {
+                character->Mode = mode;
             }
 
             if( interrupt ) {
-                animation->AnimationIds[( int )AnimationSlots.FullBody] = 0;
+                character->Timeline.TimelineSequencer.TimelineIds[( int )AnimationSlots.FullBody] = 0;
             }
         }
 
-        private static AnimationMemory* GetAnimation( ActorMemoryStruct* memory ) => ( AnimationMemory* )Unsafe.AsPointer( ref memory->Animation );
-
-        private static ActorMemoryStruct* GetActor() => ( ActorMemoryStruct* )Plugin.PlayerObject?.Address;
+        private static Character* GetActor() => ( Character* )Plugin.PlayerObject?.Address;
 
         public static uint GetIdFromTmbPath( string path ) {
             if( string.IsNullOrEmpty( path ) ) return 0;

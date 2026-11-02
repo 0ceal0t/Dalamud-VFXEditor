@@ -22,10 +22,6 @@ namespace VfxEditor.FileManager {
             Unsaved = false;
         }
 
-        public virtual List<string>? GetPapIds() => null;
-
-        public virtual List<short>? GetPapTypes() => null;
-
         public abstract void Write( BinaryWriter writer );
 
         public byte[] ToBytes() {

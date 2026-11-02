@@ -36,7 +36,6 @@ namespace VfxEditor.Interop.Penumbra {
         private static void GetCurrentFiles( out Dictionary<string, string> files, out string meta ) {
             files = [];
             meta = string.Empty;
-            if( Plugin.State != WorkspaceState.None ) return;
 
             var resolvedPaths = new HashSet<string>();
             foreach( var (_, gamePath, localPath) in GetActiveDocuments() ) {
@@ -54,6 +53,8 @@ namespace VfxEditor.Interop.Penumbra {
 
         public static bool Update() {
             if( !Available ) return false;
+            // Workspace loads/resets run on a background thread, the mod is updated once they finish
+            if( Plugin.State != WorkspaceState.None ) return false;
 
             GetCurrentFiles( out var files, out var meta );
 

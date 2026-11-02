@@ -1,10 +1,16 @@
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
+using FFXIVClientStructs.FFXIV.Client.System.Resource;
+using FFXIVClientStructs.FFXIV.Client.System.Scheduler.Base;
 using System.Runtime.InteropServices;
 
 namespace VfxEditor.Interop {
     public unsafe partial class ResourceLoader {
         public ResourceLoader() {
             Dalamud.Hooks.InitializeFromAttributes( this );
+
+            GetResourceSyncHook = Dalamud.Hooks.HookFromAddress<GetResourceSyncPrototype>( ResourceManager.Addresses.GetResourceSync.Value, GetResourceSyncDetour );
+            GetResourceAsyncHook = Dalamud.Hooks.HookFromAddress<GetResourceAsyncPrototype>( ResourceManager.Addresses.GetResourceAsync.Value, GetResourceAsyncDetour );
+            PlayActionHook = Dalamud.Hooks.HookFromAddress<PlayActionPrototype>( SchedulerTimeline.Addresses.LoadTimelineResources.Value, PlayActionDetour );
 
             var staticVfxCreateAddress = Dalamud.SigScanner.ScanText( VfxObject.Addresses.Create.String );
             var actorVfxRemoveAddressTemp = Dalamud.SigScanner.ScanText( Constants.ActorVfxRemoveSig ) + 7;
@@ -32,37 +38,20 @@ namespace VfxEditor.Interop {
             var mappedVtblOffset = Marshal.ReadInt32( mappedVtbl );
             HavokMapperVtbl = mappedVtbl + 4 + mappedVtblOffset;
 
-            HumanSetupScalingHook = Dalamud.Hooks.HookFromAddress<CharacterBaseSetupScalingDelegate>( HumanVTable[58], SetupScaling );
-            HumanCreateDeformerHook = Dalamud.Hooks.HookFromAddress<CharacterBaseCreateDeformerDelegate>( HumanVTable[101], CreateDeformer );
-
-            //ReadSqpackHook.Enable();
-            //GetResourceSyncHook.Enable();
-            //GetResourceAsyncHook.Enable();
+            GetResourceSyncHook.Enable();
+            GetResourceAsyncHook.Enable();
 
             StaticVfxCreateHook.Enable();
             StaticVfxRemoveHook.Enable();
             ActorVfxCreateHook.Enable();
             ActorVfxRemoveHook.Enable();
 
-            CheckFileStateHook.Enable();
-            LoadMdlFileExternHook.Enable();
-            TextureOnLoadHook.Enable();
-            SoundOnLoadHook.Enable();
-
             PlayActionHook.Enable();
             VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
-
-            HumanSetupScalingHook.Enable();
-            HumanCreateDeformerHook.Enable();
-
-            PathResolved += AddCrc;
         }
 
         public void Dispose() {
-            PathResolved -= AddCrc;
-
-            ReadSqpackHook.Dispose();
             GetResourceSyncHook.Dispose();
             GetResourceAsyncHook.Dispose();
 
@@ -71,17 +60,9 @@ namespace VfxEditor.Interop {
             ActorVfxCreateHook.Dispose();
             ActorVfxRemoveHook.Dispose();
 
-            CheckFileStateHook.Dispose();
-            LoadMdlFileExternHook.Dispose();
-            TextureOnLoadHook.Dispose();
-            SoundOnLoadHook.Dispose();
-
             PlayActionHook.Dispose();
             VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();
-
-            HumanSetupScalingHook.Dispose();
-            HumanCreateDeformerHook.Dispose();
         }
     }
 }
