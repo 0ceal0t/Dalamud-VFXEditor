@@ -8,15 +8,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using VfxEditor.Interop.Penumbra.Meta;
 
 namespace VfxEditor.Interop.Penumbra {
     public class PenumbraIpc {
         public bool PenumbraEnabled { get; private set; }
         public bool ModsEnabled { get; private set; } = true;
-
-        // Whether a Penumbra collection is set up to handle interface stuff
-        private bool HasInterfaceCollection = true;
-        private DateTime InterfaceCollectionChecked = DateTime.MinValue;
 
         private readonly ApiVersion ApiVersionsSubscriber;
         private readonly GetModDirectory GetModDirectorySubscriber;
@@ -28,7 +25,6 @@ namespace VfxEditor.Interop.Penumbra {
         private readonly RedrawObject RedrawObjectSubscriber;
         private readonly AddTemporaryModAll AddTemporaryModAllSubscriber;
         private readonly RemoveTemporaryModAll RemoveTemporaryModAllSubscriber;
-        private readonly GetCollection GetCollectionSubscriber;
 
         private readonly EventSubscriber InitializedSubscriber;
         private readonly EventSubscriber DisposedSubscriber;
@@ -45,7 +41,6 @@ namespace VfxEditor.Interop.Penumbra {
             AddTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RemoveTemporaryModAllSubscriber = new( Dalamud.PluginInterface );
             RedrawObjectSubscriber = new( Dalamud.PluginInterface );
-            GetCollectionSubscriber = new( Dalamud.PluginInterface );
 
             InitializedSubscriber = Initialized.Subscriber( Dalamud.PluginInterface, EnablePenumbra );
             DisposedSubscriber = Disposed.Subscriber( Dalamud.PluginInterface, DisablePenumbra );
@@ -60,31 +55,6 @@ namespace VfxEditor.Interop.Penumbra {
 
             PenumbraEnabled = true;
             RefreshEnabledState();
-        }
-
-        public bool InterfaceCollectionAssigned() {
-            if( !PenumbraEnabled ) return false;
-            if( ( DateTime.Now - InterfaceCollectionChecked ).TotalSeconds < 2 ) return HasInterfaceCollection;
-
-            InterfaceCollectionChecked = DateTime.Now;
-            try {
-                var collection = GetCollectionSubscriber.Invoke( ApiCollectionType.Interface );
-                HasInterfaceCollection = collection.HasValue && collection.Value.Id != Guid.Empty;
-            }
-            catch( Exception ) {
-                HasInterfaceCollection = false;
-            }
-            return HasInterfaceCollection;
-        }
-
-        public void OpenCollectionsTab() {
-            if( !PenumbraEnabled ) return;
-            try {
-                OpenMainWindowSubscriber.Invoke( TabType.Collections );
-            }
-            catch( Exception e ) {
-                Dalamud.Error( e, "Error opening Penumbra" );
-            }
         }
 
         public void OpenSettings() {
@@ -160,11 +130,11 @@ namespace VfxEditor.Interop.Penumbra {
             catch( Exception ) { return ""; }
         }
 
-        public MetaManipulation[] GetPlayerMetaManipulations() {
+        public (ImcIdentifier, ImcEntry)[] GetPlayerImcEntries() {
             if( !PenumbraEnabled ) return [];
             try {
-                FromCompressedBase64<MetaManipulation[]>( GetPlayerMetaManipulationsSubscriber.Invoke(), out var data );
-                return data ?? [];
+                var a = new ParsedPenumbraMeta( GetPlayerMetaManipulationsSubscriber.Invoke() );
+                return [];
             }
             catch( Exception ) { return []; }
         }
@@ -200,27 +170,5 @@ namespace VfxEditor.Interop.Penumbra {
             EnabledChangeSubscriber?.Dispose();
         }
 
-        // https://github.com/Ottermandias/OtterGui/blob/4673e93f5165108a7f5b91236406d527f16384a5/Functions.cs#L154
-#nullable enable
-        public static byte FromCompressedBase64<T>( string base64, out T? data ) {
-            var version = byte.MaxValue;
-            try {
-                var bytes = Convert.FromBase64String( base64 );
-                using var compressedStream = new MemoryStream( bytes );
-                using var zipStream = new GZipStream( compressedStream, CompressionMode.Decompress );
-                using var resultStream = new MemoryStream();
-                zipStream.CopyTo( resultStream );
-                bytes = resultStream.ToArray();
-                version = bytes[0];
-                var json = Encoding.UTF8.GetString( bytes, 1, bytes.Length - 1 );
-                data = JsonConvert.DeserializeObject<T>( json );
-            }
-            catch {
-                data = default;
-            }
-
-            return version;
-        }
-#nullable disable
     }
 }

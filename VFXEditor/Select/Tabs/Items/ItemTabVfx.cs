@@ -26,9 +26,9 @@ namespace VfxEditor.Select.Tabs.Items {
                 var file = Dalamud.DataManager.GetFile<ImcFile>( imcPath );
                 var ids = file.GetParts().Select( x => x.Variants[item.Variant - 1] ).Where( x => x.VfxId != 0 ).Select( x => ( int )x.VfxId ).ToList();
 
-                var manips = Plugin.PenumbraIpc.GetPlayerMetaManipulations();
-                foreach( var manip in manips.Where( x => x.ManipulationType == MetaManipulation.Type.Imc ).Select( x => ( ImcManipulation )x.Manipulation ) ) {
-                    if( manip.PrimaryId == item.Ids.Id && manip.Variant == item.Variant && $"{item.Type}" == $"{manip.EquipSlot}" ) ids.Add( manip.Entry.VfxId );
+                var manipulations = Plugin.PenumbraIpc.GetPlayerImcEntries();
+                foreach( var (identifier, entry) in manipulations ) {
+                    if( identifier.PrimaryId == item.Ids.Id && identifier.Variant == item.Variant && $"{item.Type}" == $"{identifier.EquipSlot}" ) ids.Add( entry.VfxId );
                 }
 
                 loaded = new() {
