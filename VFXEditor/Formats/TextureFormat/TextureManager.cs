@@ -55,14 +55,14 @@ namespace VfxEditor.Formats.TextureFormat {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
             replace.ImportFile( importPath );
             Textures.Add( replace );
-            PenumbraTempMod.UpdateAndRedraw();
+            PenumbraTempMod.MarkDirty();
         }
 
         public void RemoveReplace( TextureReplace replace ) {
             Textures.Remove( replace );
             View.ClearSelected();
             ExportDialog.RemoveDocument( replace );
-            PenumbraTempMod.UpdateAndRedraw();
+            PenumbraTempMod.MarkDirty();
         }
 
         public void Import( SelectResult result ) {

@@ -13,6 +13,7 @@ using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 using VfxEditor.FileManager;
 using static VfxEditor.Interop.Penumbra.PenumbraRequiredWindow;
+using VfxEditor.Interop.Penumbra;
 
 namespace VfxEditor {
     public unsafe partial class Plugin {
@@ -31,6 +32,9 @@ namespace VfxEditor {
             CheckWorkspaceKeybinds();
 
             PenumbraRequiredWindow.Tick();
+
+            PenumbraTempMod.Tick();
+
             WindowSystem.Draw();
             foreach( var group in Groups ) {
                 if( group is FileManagerGroupBase g ) g.Draw();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Utils;
 
@@ -55,6 +56,8 @@ namespace VfxEditor.FileManager {
             manager.Reset( false );
             Managers.Remove( manager );
             WindowSystem.RemoveWindow( manager );
+
+            PenumbraTempMod.MarkDirty();
         }
 
         public IEnumerable<IFileDocument> GetDocuments() => Managers.Select( x => x.GetDocuments() ).SelectMany( x => x );

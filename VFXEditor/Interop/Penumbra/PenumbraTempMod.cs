@@ -11,6 +11,7 @@ namespace VfxEditor.Interop.Penumbra {
         public const string Tag = "VFXEditor";
         public const int Priority = int.MaxValue;
         public static bool Available => Plugin.PenumbraIpc?.PenumbraEnabled == true;
+        private static bool Dirty = false;
 
         private static IEnumerable<(IFileDocument Document, string GamePath, string LocalPath)> GetActiveDocuments() {
             foreach( var group in Plugin.Groups.Where( x => x != null ) ) {
@@ -48,7 +49,7 @@ namespace VfxEditor.Interop.Penumbra {
             }
         }
 
-        public static bool Update() {
+        private static bool Update() {
             if( !Available ) return false;
             // Workspace loads/resets run on a background thread, the mod is updated once they finish
             if( Plugin.State != WorkspaceState.None ) return false;
@@ -64,10 +65,17 @@ namespace VfxEditor.Interop.Penumbra {
             return true;
         }
 
-        public static void UpdateAndRedraw() {
+        public static void Tick() {
+            if( !Dirty ) return;
             if( !Update() ) return;
+
+            Dirty = false;
             var player = Plugin.PlayerObject;
             if( player != null ) Plugin.PenumbraIpc.Redraw( player.ObjectIndex );
+        }
+
+        public static void MarkDirty() {
+            Dirty = true;
         }
 
         public static void Dispose() {

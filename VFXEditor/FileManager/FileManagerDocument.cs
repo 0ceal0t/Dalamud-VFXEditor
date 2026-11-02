@@ -120,6 +120,8 @@ namespace VfxEditor.FileManager {
             if( File != null ) {
                 WriteFile( WriteLocation );
             }
+
+            PenumbraTempMod.MarkDirty();
         }
 
         protected void RemoveSource() {
@@ -127,17 +129,23 @@ namespace VfxEditor.FileManager {
             File = null;
             Source = null;
             SourceTextInput = "";
+
+            PenumbraTempMod.MarkDirty();
         }
 
         public void SetReplace( SelectResult result ) {
             Replace = result;
             ReplaceTextInput = "";
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
+
+            PenumbraTempMod.MarkDirty();
         }
 
         protected void RemoveReplace() {
             Replace = null;
             ReplaceTextInput = "";
+
+            PenumbraTempMod.MarkDirty();
         }
 
         // =====================
@@ -161,7 +169,7 @@ namespace VfxEditor.FileManager {
             WriteLocation = newWriteLocation;
             Plugin.AddCustomBackupLocation( Replace, WriteLocation );
 
-            PenumbraTempMod.UpdateAndRedraw();
+            PenumbraTempMod.MarkDirty();
         }
 
         // =======================
@@ -280,7 +288,10 @@ namespace VfxEditor.FileManager {
                     ImGui.GetColorU32( ImGuiCol.TextDisabled )
                );
 
-            if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) Disabled = !Disabled;
+            if( hovered && ImGui.IsMouseClicked( ImGuiMouseButton.Left ) ) {
+                Disabled = !Disabled;
+                PenumbraTempMod.MarkDirty();
+            }
 
             var topLeftCurveCenter = new Vector2( topLeft.X + radius, topLeft.Y + radius );
             var bottomLeftCurveCenter = new Vector2( bottomLeft.X + radius, bottomLeft.Y - radius );

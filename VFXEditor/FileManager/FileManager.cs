@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
@@ -74,6 +75,8 @@ namespace VfxEditor.FileManager {
                 SourceSelect?.Hide();
                 ReplaceSelect?.Hide();
             }
+
+            PenumbraTempMod.MarkDirty();
         }
 
         public void MoveDocumentAfter( D document, D targetDocument ) {

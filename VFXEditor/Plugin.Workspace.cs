@@ -45,7 +45,7 @@ namespace VfxEditor {
             if( State == WorkspaceState.Cleanup ) {
                 LastAutoSave = DateTime.Now;
                 State = WorkspaceState.None;
-                PenumbraTempMod.UpdateAndRedraw(); // Updates are skipped while loading, so sync once everything is in place
+                PenumbraTempMod.MarkDirty();
                 return true;
             }
 

@@ -269,7 +269,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
             Plugin.AddCustomBackupLocation( GamePath, WriteLocation );
             ImportFile( importPath );
-            PenumbraTempMod.UpdateAndRedraw();
+            PenumbraTempMod.MarkDirty();
         }
 
         // ===========================
