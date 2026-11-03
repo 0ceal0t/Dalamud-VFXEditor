@@ -14,8 +14,10 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         public readonly MtrlTableBase Table;
         public readonly MtrlFile File;
 
-        public MtrlStain Stain { get; protected set; }
-        public StmDyeData StainTemplate { get; protected set; }
+        public MtrlStain Stain => Table.GetPreviewStain( DyeChannel );
+        public StmDyeDataBase StainTemplate { get; protected set; }
+
+        protected abstract int DyeChannel { get; }
 
         public MtrlColorRowBase( MtrlFile file, MtrlTableBase table ) {
             Table = table;
@@ -83,12 +85,11 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             //Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, Plugin.Configuration.DrawDirectXMaterial );
         }
 
-        public void SetPreviewStain( MtrlStain stain ) {
-            Stain = stain;
+        public void RefreshStainTemplate() {
             StainTemplate = GetStainTemplate();
         }
 
-        public abstract StmDyeData GetStainTemplate();
+        public abstract StmDyeDataBase GetStainTemplate();
 
         public abstract void UpdateRender();
     }

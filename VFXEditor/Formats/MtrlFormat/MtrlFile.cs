@@ -45,17 +45,19 @@ namespace VfxEditor.Formats.MtrlFormat {
         public readonly ModelDeferredInstance Instance = new();
 
         public readonly uint Version;
-        private readonly byte[] ExtraData;
+        private readonly byte[] AdditionalData;
 
         private readonly List<MtrlTexture> Textures = [];
         private readonly List<MtrlAttributeSet> UvSets = [];
         private readonly List<MtrlAttributeSet> ColorSets = [];
 
         public readonly ParsedString Shader;
-        private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 1 );
+        // https://github.com/Ottermandias/Penumbra.GameData/blob/e93093f/Files/Materials/TableFlags.cs
+        private readonly ParsedFlag<TableFlags> Flags = new( "Flags", 4 );
 
         public bool ColorTableEnabled => Flags.HasFlag( TableFlags.Has_Color_Table );
         public bool DyeTableEnabled => Flags.HasFlag( TableFlags.Dyeable );
+        public int TableDimensionLogs => ( Flags.IntValue >> 4 ) & 0xFF;
 
         private MtrlTableBase Table;
 
@@ -88,7 +90,7 @@ namespace VfxEditor.Formats.MtrlFormat {
             var textureCount = reader.ReadByte();
             var uvSetCount = reader.ReadByte();
             var colorSetCount = reader.ReadByte();
-            var extraDataSize = reader.ReadByte();
+            var additionalDataSize = reader.ReadByte();
 
             for( var i = 0; i < textureCount; i++ ) Textures.Add( new( reader ) );
             for( var i = 0; i < uvSetCount; i++ ) UvSets.Add( new( reader ) );
@@ -120,20 +122,13 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // ===============
 
-            // Otherwise, extra data is null
-            if( extraDataSize > 0 ) {
-                Flags.Read( reader );
-                ExtraData = reader.ReadBytes( extraDataSize - 1 );
-            }
+            AdditionalData = reader.ReadBytes( additionalDataSize );
+            var flagBytes = new byte[4];
+            Array.Copy( AdditionalData, flagBytes, Math.Min( 4, AdditionalData.Length ) );
+            Flags.Value = ( TableFlags )BitConverter.ToInt32( flagBytes );
 
             var dataEnd = reader.BaseStream.Position + dataSize;
-            var size = ( int )( dataEnd - reader.BaseStream.Position );
-            Table = ( !ColorTableEnabled || size < ( int )ColorTableSize.Legacy ) ?
-                null : // default
-                ( !( size >= ( int )ColorTableSize.Extended ) ?
-                    new MtrlTableLegacy( this, reader, dataEnd ) :
-                    new MtrlTable( this, reader, dataEnd )
-                );
+            Table = ReadTable( reader, dataEnd );
 
             reader.BaseStream.Position = dataEnd;
 
@@ -178,7 +173,8 @@ namespace VfxEditor.Formats.MtrlFormat {
             writer.Write( ( byte )UvSets.Count );
             writer.Write( ( byte )ColorSets.Count );
 
-            writer.Write( ( byte )( ExtraData == null ? 0 : ExtraData.Length + 1 ) ); // TODO maybe this is padding?
+            var additionalData = GetAdditionalData();
+            writer.Write( ( byte )additionalData.Length );
 
             var stringPositions = new Dictionary<long, string>(); // Mapping of placeholder positions to their string
             Textures.ForEach( x => x.Write( writer, stringPositions ) );
@@ -211,10 +207,7 @@ namespace VfxEditor.Formats.MtrlFormat {
 
             // =======================
 
-            if( ExtraData != null ) {
-                Flags.Write( writer );
-                writer.Write( ExtraData );
-            }
+            writer.Write( additionalData );
 
             var dataStart = writer.BaseStream.Position;
             Table?.Write( writer );
@@ -353,6 +346,36 @@ namespace VfxEditor.Formats.MtrlFormat {
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error reading shader {newPath}" );
             }
+        }
+
+        private MtrlTableBase ReadTable( BinaryReader reader, long dataEnd ) {
+            if( !ColorTableEnabled ) return null;
+            var size = ( int )( dataEnd - reader.BaseStream.Position );
+            var logs = TableDimensionLogs;
+
+            if( logs == 0 ) {
+                if( size >= ( int )ColorTableSize.Extended ) return new MtrlTable( this, reader, dataEnd );
+                if( size >= ( int )ColorTableSize.Legacy ) return new MtrlTableLegacy( this, reader, dataEnd );
+                return null;
+            }
+
+            if( logs == MtrlTable.DimensionLogs && size >= ( int )ColorTableSize.Extended ) return new MtrlTable( this, reader, dataEnd );
+            if( logs == MtrlTableLegacy.DimensionLogs && !DyeTableEnabled && size >= ( int )ColorTableSize.Legacy ) return new MtrlTableLegacy( this, reader, dataEnd );
+            return new MtrlTableOpaque( this, reader, dataEnd, logs );
+        }
+
+        private byte[] GetAdditionalData() {
+            var flags = ( uint )Flags.IntValue;
+
+            if( ColorTableEnabled && Table != null && !Table.IsValidDimensionLogs( TableDimensionLogs ) ) {
+                flags = ( flags & ~0xFF0u ) | ( ( uint )Table.DefaultDimensionLogs << 4 );
+            }
+
+            var required = flags == 0 ? 0 : flags <= 0xFF ? 1 : flags <= 0xFFFF ? 2 : flags <= 0xFFFFFF ? 3 : 4;
+            var ret = new byte[AdditionalData.Length >= required ? AdditionalData.Length : 4];
+            Array.Copy( AdditionalData, ret, AdditionalData.Length );
+            Array.Copy( BitConverter.GetBytes( flags ), ret, Math.Min( 4, ret.Length ) );
+            return ret;
         }
 
         private static uint Masked( uint flags ) => flags & ( ~0x11u );

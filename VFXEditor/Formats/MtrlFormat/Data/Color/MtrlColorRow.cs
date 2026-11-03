@@ -19,11 +19,11 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
         public readonly ParsedHalf Unknown2 = new( "Unknown 2", 1f );
 
         public readonly ParsedHalf3Color Emissive = new( "Emissive" );
-        public readonly ParsedHalf Unknown3 = new( "Unknown 3", 1f );
+        public readonly ParsedHalf Exposure = new( "Exposure", 1f );
 
         public readonly ParsedHalf SheenRate = new( "Sheen Rate", 0.1f );
         public readonly ParsedHalf SheenTint = new( "Sheen Tint", 0.2f );
-        public readonly ParsedHalf SheenAperature = new( "Sheen Aperature", 5f );
+        public readonly ParsedHalf SheenAperture = new( "Sheen Aperture", 5f );
         public readonly ParsedHalf Unknown4 = new( "Unknown 4" );
 
         public readonly ParsedHalf Roughness = new( "Roughness", 0.5f );
@@ -53,10 +53,10 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             Specular.Read( reader );
             Unknown2.Read( reader );
             Emissive.Read( reader );
-            Unknown3.Read( reader );
+            Exposure.Read( reader );
             SheenRate.Read( reader );
             SheenTint.Read( reader );
-            SheenAperature.Read( reader );
+            SheenAperture.Read( reader );
             Unknown4.Read( reader );
             Roughness.Read( reader );
             Unknown5.Read( reader );
@@ -81,10 +81,10 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             Specular.Write( writer );
             Unknown2.Write( writer );
             Emissive.Write( writer );
-            Unknown3.Write( writer );
+            Exposure.Write( writer );
             SheenRate.Write( writer );
             SheenTint.Write( writer );
-            SheenAperature.Write( writer );
+            SheenAperture.Write( writer );
             Unknown4.Write( writer );
             Roughness.Write( writer );
             Unknown5.Write( writer );
@@ -121,6 +121,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                     Diffuse.Draw();
                     Specular.Draw();
                     Emissive.Draw();
+                    Exposure.Draw();
                 }
             }
 
@@ -128,7 +129,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 if( tab ) {
                     SheenRate.Draw();
                     SheenTint.Draw();
-                    SheenAperature.Draw();
+                    SheenAperture.Draw();
                     Metalness.Draw();
                     Roughness.Draw();
                     Anisotropy.Draw();
@@ -149,7 +150,6 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
                 if( tab ) {
                     Unknown1.Draw();
                     Unknown2.Draw();
-                    Unknown3.Draw();
                     Unknown4.Draw();
                     Unknown5.Draw();
                     Unknown6.Draw();
@@ -161,7 +161,15 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
 
         // ===== PREVIEW =========
 
-        public override StmDyeData GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFile.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
+        protected override int DyeChannel => DyeRow.Channel.Value;
+
+        // Templates missing from the Dawntrail file fall back to the legacy one, same as Penumbra
+        public override StmDyeDataBase GetStainTemplate() {
+            if( Stain == null ) return null;
+            var template = DyeRow.Template.Value;
+            var stainId = ( int )Stain.Id;
+            return ( StmDyeDataBase )Plugin.MtrlManager.StmFile.GetDye( template, stainId ) ?? Plugin.MtrlManager.StmFileLegacy.GetDye( template, stainId );
+        }
 
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();

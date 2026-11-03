@@ -44,7 +44,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm.Entry {
             // Seems to be an unused 0xFF byte marker.
             // Necessary for correct offsets.
             br.ReadByte();
-            for( var i = 0; i < StmEntry.MAX; ++i ) {
+            for( var i = 0; i < StmEntry.MAX - 1; ++i ) {
                 Indexes[i] = br.ReadByte();
                 if( Indexes[i] > count ) Indexes[i] = 0;
             }

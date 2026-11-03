@@ -22,6 +22,12 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
             File = file;
         }
 
+        public abstract bool IsValidDimensionLogs( int logs );
+
+        public abstract int DefaultDimensionLogs { get; }
+
+        public virtual MtrlStain GetPreviewStain( int channel ) => null;
+
         public abstract void Write( BinaryWriter writer );
 
         public abstract void Draw();
@@ -31,9 +37,10 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
         public readonly List<T> Rows = [];
         public readonly MtrlColorRowSplitView<T> RowView;
 
-        protected MtrlStain Stain;
+        protected readonly MtrlStain[] Stains;
 
         protected MtrlTableBase( MtrlFile file ) : base( file ) {
+            Stains = new MtrlStain[GetDyeChannelCount()];
             for( var i = 0; i < GetRowCount(); i++ ) Rows.Add( GetNew() );
             RowView = new( Rows );
         }
@@ -47,12 +54,18 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
         }
 
         public override void Write( BinaryWriter writer ) {
-            if( File.ColorTableEnabled ) foreach( var row in Rows ) row.Write( writer );
+            if( !File.ColorTableEnabled ) return;
+            foreach( var row in Rows ) row.Write( writer );
             if( File.DyeTableEnabled ) foreach( var row in Rows ) row.WriteDye( writer );
         }
 
+        public override MtrlStain GetPreviewStain( int channel ) => channel >= 0 && channel < Stains.Length ? Stains[channel] : null;
+
         public override void Draw() {
-            DrawDyeCombo();
+            for( var i = 0; i < Stains.Length; i++ ) {
+                using var _ = ImRaii.PushId( i );
+                DrawDyeCombo( i );
+            }
             ImGui.Separator();
             RowView.Draw();
         }
@@ -63,22 +76,25 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
 
         protected abstract DyeTableSize GetDyeTableSize();
 
-        private void DrawDyeCombo() {
-            var v = Stain == null ? new( 0 ) : Stain.Color;
+        protected abstract int GetDyeChannelCount();
+
+        private void DrawDyeCombo( int channel ) {
+            var stain = Stains[channel];
+            var v = stain == null ? new( 0 ) : stain.Color;
             ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
             }
 
             ImGui.SetNextItemWidth( 200f );
-            using var combo = ImRaii.Combo( "Preview Dye", Stain == null ? "[NONE]" : Stain.Name );
+            using var combo = ImRaii.Combo( Stains.Length > 1 ? $"Preview Dye {channel + 1}" : "Preview Dye", stain == null ? "[NONE]" : stain.Name );
             if( !combo ) return;
 
-            DrawDyeComboRow( null, 0 );
-            foreach( var (item, idx) in Plugin.MtrlManager.Stains.WithIndex() ) DrawDyeComboRow( item, idx + 1 );
+            DrawDyeComboRow( channel, null, 0 );
+            foreach( var (item, idx) in Plugin.MtrlManager.Stains.WithIndex() ) DrawDyeComboRow( channel, item, idx + 1 );
         }
 
-        private void DrawDyeComboRow( MtrlStain stain, int idx ) {
+        private void DrawDyeComboRow( int channel, MtrlStain stain, int idx ) {
             using var _ = ImRaii.PushId( idx );
             using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing );
 
@@ -86,13 +102,13 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
             ImGui.ColorEdit3( "##Color", ref v, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();
-            if( ImGui.Selectable( stain == null ? "[NONE]" : stain.Name, Stain == stain ) ) {
-                Stain = stain;
-                //foreach( var item in Rows ) item.SetPreviewStain( stain );
-                //RowView.GetSelected()?.UpdateRender();
+            if( ImGui.Selectable( stain == null ? "[NONE]" : stain.Name, Stains[channel] == stain ) ) {
+                Stains[channel] = stain;
+                foreach( var item in Rows ) item.RefreshStainTemplate();
+                RowView.GetSelected()?.UpdateRender();
             }
 
-            if( Stain == stain ) ImGui.SetItemDefaultFocus();
+            if( Stains[channel] == stain ) ImGui.SetItemDefaultFocus();
         }
     }
 }

@@ -104,15 +104,16 @@ namespace VfxEditor.DirectX {
                 Skew = new( row.TileSkew.Value.X, row.TileSkew.Value.Y ),
             };
 
-            var applyDye = row.StainTemplate != null;
+            var dye = row.LegacyStainTemplate;
+            var applyDye = dye != null;
             var dyeRow = row.DyeRow;
 
             PSBufferData = PSBufferData with {
-                DiffuseColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? row.StainTemplate.Diffuse : row.Diffuse.Value,
-                EmissiveColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? row.StainTemplate.Emissive : row.Emissive.Value,
-                SpecularColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? row.StainTemplate.Specular : row.Specular.Value,
-                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular_Strength ) ? row.StainTemplate.Power : row.SpecularStrength.Value,
-                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Gloss ) ? row.StainTemplate.Gloss : row.GlossStrength.Value,
+                DiffuseColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? dye.Diffuse : row.Diffuse.Value,
+                EmissiveColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? dye.Emissive : row.Emissive.Value,
+                SpecularColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? dye.Specular : row.Specular.Value,
+                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular_Strength ) ? dye.Power : row.SpecularStrength.Value,
+                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Gloss ) ? dye.Gloss : row.GlossStrength.Value,
             };
 
             // Clear out the old

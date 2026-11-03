@@ -86,7 +86,11 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
 
         // ===== PREVIEW =========
 
-        public override StmDyeData GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFileLegacy.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
+        public StmDyeDataLegacy LegacyStainTemplate => StainTemplate as StmDyeDataLegacy;
+
+        protected override int DyeChannel => 0;
+
+        public override StmDyeDataBase GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFileLegacy.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
 
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();
