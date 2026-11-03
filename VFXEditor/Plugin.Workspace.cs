@@ -36,12 +36,14 @@ namespace VfxEditor {
         private static int BackupId = 0;
 
         private static int WorkspaceFileCount = 0;
+        private static int LoadingCount = 0;
         private static DateTime LastAutoSave = DateTime.Now;
 
         // Return true if it's loading and the UI needs to be hidden
         private static bool CheckWorkspaceLoadState() {
             if( State == WorkspaceState.Cleanup ) {
                 LastAutoSave = DateTime.Now;
+                LoadingCount = 0;
                 State = WorkspaceState.None;
                 PenumbraTempMod.MarkDirty();
                 return true;
@@ -209,7 +211,13 @@ namespace VfxEditor {
 
         private static void DrawLoadingDialog() {
             if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
-                var count = WorkspaceFileCount == 0 ? 0 : Groups.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
+                // Documents are being added on another thread, so the lists can change while counting
+                try {
+                    LoadingCount = WorkspaceFileCount == 0 ? 0 : Groups.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();
+                }
+                catch( InvalidOperationException ) { }
+
+                var count = LoadingCount;
                 ImGui.Text( $"{count} / {WorkspaceFileCount}" );
 
                 var pos = ImGui.GetCursorScreenPos();
@@ -224,9 +232,8 @@ namespace VfxEditor {
                 if( count > 0 ) {
                     drawList.AddRectFilled( pos, pos + new Vector2( filled, height ), ImGui.ColorConvertFloat4ToU32( UiUtils.PARSED_GREEN ), 5f );
                 }
-
-                ImGui.End();
             }
+            ImGui.End();
         }
 
         // =================================

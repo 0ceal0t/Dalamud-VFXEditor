@@ -120,12 +120,7 @@ namespace VfxEditor.FileManager {
 
         public virtual void Reset( bool pluginClosing ) {
             Dragging = null;
-            // Deliberately not resetting WindowId here: it's only ever used to make each window's
-            // ImGui id ("Title##N") unique for the session. Reusing an id lets ImGui's own window
-            // state (size/position/collapsed/scroll, tracked by id in its context, independent of
-            // our C# objects) leak from whatever window previously held that id onto the fresh one
-            // created below - e.g. a manually-resized huge window surviving a workspace load into
-            // the new default manager.
+            WindowId = 0;
             Managers.ForEach( x => x.Reset( pluginClosing ) );
             Managers.Clear();
             WindowSystem.RemoveAllWindows();
