@@ -243,7 +243,7 @@ namespace VfxEditor.FileManager {
                 ImGui.Columns( 3, "Columns", false );
                 ImGui.SetColumnWidth( 0, 20 );
             }
-            DrawInputTextColumn();
+            DrawArrowColumn();
 
             using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) ) ) {
                 ImGui.NextColumn();
@@ -262,7 +262,7 @@ namespace VfxEditor.FileManager {
             DrawBody();
         }
 
-        protected virtual void DrawInputTextColumn() {
+        protected virtual void DrawArrowColumn() {
             var pos = ImGui.GetCursorScreenPos() + new Vector2( 5, 0 );
             var height = ImGui.GetFrameHeight();
             var spacing = ImGui.GetStyle().ItemSpacing.Y;
@@ -309,7 +309,7 @@ namespace VfxEditor.FileManager {
             drawList.AddLine( bottomLeft + new Vector2( radius - 0.5f, -0.5f ), bottomRight + new Vector2( -4, -0.5f ), color, thickness );
 
             if( Disabled ) {
-                var crossCenter = bottomRight + new Vector2( -4, 0 );
+                var crossCenter = ( topLeft + ( bottomLeft - topLeft ) / 2 ) + new Vector2( -0.5f, 0f );
                 var crossHeight = arrowHeight / 2;
 
                 drawList.AddLine( crossCenter + new Vector2( crossHeight, crossHeight ), crossCenter + new Vector2( -crossHeight, -crossHeight ), color, thickness );

@@ -2,6 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VfxEditor.Structs.Vfx;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
@@ -36,7 +37,7 @@ namespace VfxEditor.Spawn {
     }
 
     public static unsafe class VfxSpawn {
-        public static readonly Dictionary<BaseVfx, VfxSpawnItem> Vfxs = [];
+        public static readonly Dictionary<nint, (BaseVfx Vfx, VfxSpawnItem Item)> Vfxs = [];
         public static readonly List<VfxLoopItem> ToLoop = [];
 
         public static bool IsActive => Vfxs.Count > 0;
@@ -54,21 +55,30 @@ namespace VfxEditor.Spawn {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
-            Vfxs.Add( new StaticVfx( path, playerObject.Position, playerObject.Rotation ), new( path, SpawnType.Ground, canLoop ) );
+            Add( new StaticVfx( path, playerObject.Position, playerObject.Rotation ), new( path, SpawnType.Ground, canLoop ) );
         }
 
         public static void OnSelf( string path, bool canLoop ) {
             var playerObject = Plugin.PlayerObject;
             if( playerObject == null ) return;
 
-            Vfxs.Add( new ActorVfx( playerObject, playerObject, path ), new( path, SpawnType.Self, canLoop ) );
+            Add( new ActorVfx( playerObject, playerObject, path ), new( path, SpawnType.Self, canLoop ) );
         }
 
         public static void OnTarget( string path, bool canLoop ) {
             var targetObject = Plugin.TargetObject;
             if( targetObject == null ) return;
 
-            Vfxs.Add( new ActorVfx( targetObject, targetObject, path ), new( path, SpawnType.Target, canLoop ) );
+            Add( new ActorVfx( targetObject, targetObject, path ), new( path, SpawnType.Target, canLoop ) );
+        }
+
+        private static void Add( BaseVfx vfx, VfxSpawnItem item ) {
+            var address = vfx.GetAddress();
+            if( address == IntPtr.Zero ) {
+                Dalamud.Error( $"Could not spawn {item.Path}" );
+                return;
+            }
+            Vfxs[address] = (vfx, item);
         }
 
         public static void Tick() {
@@ -86,23 +96,14 @@ namespace VfxEditor.Spawn {
         }
 
         public static void Clear() {
-            foreach( var vfx in Vfxs ) vfx.Key?.Remove(); // this also calls InteropRemoved()
+            foreach( var (vfx, _) in Vfxs.Values.ToList() ) vfx.Remove(); // this also calls InteropRemoved()
             Vfxs.Clear();
             ToLoop.Clear();
         }
 
-        public static void InteropRemoved( VfxObject* data ) {
-            if( !GetVfx( (nint)data, out var vfx ) ) return;
-            var item = Vfxs[vfx];
-
-            if( Plugin.Configuration.VfxSpawnLoop && item.CanLoop ) ToLoop.Add( new( item, DateTime.Now ) );
-            Vfxs.Remove( vfx );
-        }
-
-        public static bool GetVfx( IntPtr data, out BaseVfx vfx ) {
-            vfx = null;
-            if( data == IntPtr.Zero || Vfxs.Count == 0 ) return false;
-            return Vfxs.Keys.FindFirst( x => data == ( IntPtr )x.Vfx, out vfx );
+        public static void InteropRemoved( nint data ) {
+            if( data == IntPtr.Zero || !Vfxs.Remove( data, out var entry ) ) return;
+            if( Plugin.Configuration.VfxSpawnLoop && entry.Item.CanLoop ) ToLoop.Add( new( entry.Item, DateTime.Now ) );
         }
 
         public static void Dispose() => Clear();

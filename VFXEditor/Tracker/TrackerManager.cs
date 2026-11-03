@@ -62,7 +62,7 @@ namespace VfxEditor.Tracker {
             }
 
             var floatingItems = new List<TrackerItemWithPosition>();
-            var actorIdToItems = new Dictionary<int, HashSet<TrackerItem>>();
+            var actorIdToItems = new Dictionary<ulong, HashSet<TrackerItem>>();
             var addressToItems = new Dictionary<IntPtr, HashSet<TrackerItem>>();
 
             foreach( var tracker in EnabledTrackers ) {
@@ -99,7 +99,7 @@ namespace VfxEditor.Tracker {
 
                 var paths = new HashSet<TrackerItem>();
 
-                if( actorIdToItems.TryGetValue( ( int )actor.GameObjectId, out var _p1 ) ) {
+                if( actorIdToItems.TryGetValue( actor.GameObjectId, out var _p1 ) ) {
                     foreach( var p in _p1 ) paths.Add( p );
                 }
 

@@ -1,13 +1,22 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using System;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
+using System.Text;
 
 namespace VfxEditor.Structs.Vfx {
     public unsafe class ActorVfx : BaseVfx {
-        public ActorVfx( IGameObject caster, IGameObject target, string path ) : this( caster.Address, target.Address, path ) { }
+        public readonly VfxData* Vfx;
 
-        public ActorVfx( IntPtr caster, IntPtr target, string path ) : base( path ) {
-            Vfx = Plugin.ResourceLoader.ActorVfxCreate( path, caster, target, -1, ( char )0, 0, ( char )0 );
+        public ActorVfx( IGameObject caster, IGameObject target, string path ) : this( ( GameObject* )caster.Address, ( GameObject* )target.Address, path ) { }
+
+        public ActorVfx( GameObject* caster, GameObject* target, string path ) : base( path ) {
+            var pathBytes = Encoding.UTF8.GetBytes( path + '\0' );
+            fixed( byte* pathPtr = pathBytes ) {
+                Vfx = Plugin.ResourceLoader.ActorVfxCreate( pathPtr, caster, target, -1, ( char )0, 0, ( char )0 );
+            }
         }
+
+        public override nint GetAddress() => ( nint )Vfx;
 
         public override void Remove() {
             Plugin.ResourceLoader.ActorVfxRemove( Vfx, ( char )1 );

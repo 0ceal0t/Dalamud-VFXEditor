@@ -1,4 +1,5 @@
 using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
+using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,38 +8,47 @@ using System.Numerics;
 
 namespace VfxEditor.Tracker {
     public unsafe class VfxTracker : Tracker {
-        private class VfxData {
-            public bool IsStatic = false;
-            public string Path;
+        private class VfxTrackedInstanceActor : VfxTrackedInstanceBase {
+            public VfxData* Vfx;
+            public ulong TargetId;
+            public ulong CasterId;
+            public override ulong GetActorId() => TargetId > 0 ? TargetId : CasterId;
+        }
+
+        private class VfxTrackedInstanceStatic : VfxTrackedInstanceBase {
             public VfxObject* Vfx;
+            public override ulong GetActorId() => ( ulong )( Vfx->StaticTarget > 0 ? Vfx->StaticTarget : ( Vfx->StaticCaster > 0 ? Vfx->StaticCaster : 0 ) );
+        }
+
+        private abstract class VfxTrackedInstanceBase {
+            public string Path;
             public bool Removed = false;
             public DateTime RemovedTime;
-
-            public int ActorId => IsStatic ? ChooseId( Vfx->StaticCaster, Vfx->StaticTarget ) :
-                ChooseId( Vfx->ActorCaster, Vfx->ActorTarget );
 
             public TrackerItem ToItem() => new() {
                 Path = Path,
                 Removed = Removed
             };
 
-            private static int ChooseId( int caster, int target ) => target > 0 ? target : ( caster > 0 ? caster : -1 );
+            public abstract ulong GetActorId();
         }
 
-        private readonly ConcurrentDictionary<IntPtr, VfxData> ActorVfxs = new();
-        private readonly ConcurrentDictionary<IntPtr, VfxData> StaticVfxs = new();
+        private readonly ConcurrentDictionary<IntPtr, VfxTrackedInstanceActor> ActorVfxs = new();
+        private readonly ConcurrentDictionary<IntPtr, VfxTrackedInstanceStatic> StaticVfxs = new();
 
         public VfxTracker() { }
 
-        public void AddActor( VfxObject* vfx, string path ) {
+        public void AddActor( VfxData* vfx, string path, ulong targetId, ulong casterId ) {
             if( !Enabled ) return;
-            ActorVfxs.TryAdd( new IntPtr( vfx ), new VfxData() {
+            ActorVfxs.TryAdd( new IntPtr( vfx ), new VfxTrackedInstanceActor() {
                 Path = path,
-                Vfx = vfx
+                Vfx = vfx,
+                TargetId = targetId,
+                CasterId = casterId
             } );
         }
 
-        public void RemoveActor( VfxObject* vfx ) {
+        public void RemoveActor( VfxData* vfx ) {
             if( !Enabled ) return;
             if( ActorVfxs.TryGetValue( new IntPtr( vfx ), out var item ) ) {
                 item.Removed = true;
@@ -48,8 +58,7 @@ namespace VfxEditor.Tracker {
 
         public void AddStatic( VfxObject* vfx, string path ) {
             if( !Enabled ) return;
-            StaticVfxs.TryAdd( new IntPtr( vfx ), new VfxData() {
-                IsStatic = true,
+            StaticVfxs.TryAdd( new IntPtr( vfx ), new VfxTrackedInstanceStatic() {
                 Path = path,
                 Vfx = vfx
             } );
@@ -68,12 +77,12 @@ namespace VfxEditor.Tracker {
             foreach( var item in ActorVfxs ) displayItems.Add( item.Value.ToItem() );
         }
 
-        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems ) {
+        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<ulong, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems ) {
             // Static
             foreach( var item in StaticVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
 
-                var actorId = item.Value.ActorId;
+                var actorId = item.Value.GetActorId();
                 if( actorId > 0 ) {
                     if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = [];
                     actorToItems[actorId].Add( item.Value.ToItem() );
@@ -91,7 +100,7 @@ namespace VfxEditor.Tracker {
             foreach( var item in ActorVfxs ) {
                 if( item.Key == IntPtr.Zero ) continue;
 
-                var actorId = item.Value.ActorId;
+                var actorId = item.Value.GetActorId();
                 if( actorId <= 0 ) continue;
 
                 if( !actorToItems.ContainsKey( actorId ) ) actorToItems[actorId] = [];

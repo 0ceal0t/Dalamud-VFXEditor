@@ -17,7 +17,6 @@ namespace VfxEditor.Interop {
             var actorVfxRemoveAddress = Marshal.ReadIntPtr( actorVfxRemoveAddressTemp + Marshal.ReadInt32( actorVfxRemoveAddressTemp ) + 4 );
 
             ActorVfxRemove = Marshal.GetDelegateForFunctionPointer<ActorVfxRemoveDelegate>( actorVfxRemoveAddress );
-            StaticVfxCreate = Marshal.GetDelegateForFunctionPointer<VfxObject.Delegates.Create>( staticVfxCreateAddress );
 
             StaticVfxCreateHook = Dalamud.Hooks.HookFromAddress<VfxObject.Delegates.Create>( staticVfxCreateAddress, StaticVfxNewDetour );
             ActorVfxRemoveHook = Dalamud.Hooks.HookFromAddress<ActorVfxRemoveDelegate>( actorVfxRemoveAddress, ActorVfxRemoveDetour );
@@ -47,7 +46,6 @@ namespace VfxEditor.Interop {
             ActorVfxRemoveHook.Enable();
 
             PlayActionHook.Enable();
-            VfxUseTriggerHook.Enable();
             InitSoundHook.Enable();
         }
 
@@ -61,7 +59,6 @@ namespace VfxEditor.Interop {
             ActorVfxRemoveHook.Dispose();
 
             PlayActionHook.Dispose();
-            VfxUseTriggerHook.Dispose();
             InitSoundHook.Dispose();
         }
     }

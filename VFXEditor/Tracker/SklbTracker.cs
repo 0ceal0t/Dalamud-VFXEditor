@@ -15,18 +15,18 @@ namespace VfxEditor.Tracker {
             }
         }
 
-        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<int, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems ) {
+        public override void Populate( List<TrackerItemWithPosition> floatingItems, Dictionary<ulong, HashSet<TrackerItem>> actorToItems, Dictionary<IntPtr, HashSet<TrackerItem>> addressToItems ) {
             foreach( var item in Dalamud.Objects ) {
                 var paths = new HashSet<TrackerItem>();
                 PopulateSklbs( ( GameObject* )item.Address, paths );
 
                 if( paths.Count == 0 ) continue;
 
-                var id = new IntPtr( item.Address );
-                if( !addressToItems.ContainsKey( id ) ) addressToItems[id] = [];
+                var address = new IntPtr( item.Address );
+                if( !addressToItems.ContainsKey( address ) ) addressToItems[address] = [];
 
                 foreach( var path in paths ) {
-                    addressToItems[id].Add( path );
+                    addressToItems[address].Add( path );
                 }
             }
         }
