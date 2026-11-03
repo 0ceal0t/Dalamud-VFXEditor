@@ -55,11 +55,13 @@ namespace VfxEditor.Interop.Penumbra.Meta {
 
         // Dedup by multiple changes trying to target the same thing
         private static List<AtchChange> GetAllChanges( List<(string GamePath, AtchFile File)> files ) =>
-            [.. files.SelectMany( x => GetChanges( x.GamePath, x.File ) ).GroupBy( x => (x.TypeName, x.GenderRace, x.Index) ).Select( x => x.First() )];
+            [.. files.SelectMany( x => GetChanges( x.GamePath, x.File, true ) ).GroupBy( x => (x.TypeName, x.GenderRace, x.Index) ).Select( x => x.First() )];
 
-        public static List<AtchChange> GetChanges( string gamePath, AtchFile file ) {
+        public static List<AtchChange> GetChanges( string gamePath, AtchFile file, bool filterByVanilla ) {
             var ret = new List<AtchChange>();
             if( file == null || !TryGetGenderRace( gamePath, out var genderRace ) ) return ret;
+
+            var vanilla = filterByVanilla ? file.UpdateVanilla( gamePath ) : null;
 
             foreach( var entry in file.Entries ) {
                 var name = entry.Name.Value;
@@ -114,7 +116,7 @@ namespace VfxEditor.Interop.Penumbra.Meta {
 
         public static List<object> ToJson( string gamePath, AtchFile file ) {
             var ret = new List<object>();
-            foreach( var change in GetChanges( gamePath, file ) ) {
+            foreach( var change in GetChanges( gamePath, file, true ) ) {
                 var race = change.GenderRace / 100;
                 ret.Add( new JObject {
                     ["Type"] = "Atch",

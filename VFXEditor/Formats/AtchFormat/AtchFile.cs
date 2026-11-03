@@ -1,5 +1,6 @@
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Dalamud.Bindings.ImGui;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Common.Lua;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AtchFormat.Entry;
+using VfxEditor.Interop.Penumbra.Meta;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat {
@@ -191,6 +193,8 @@ namespace VfxEditor.Formats.AtchFormat {
         public readonly List<AtchEntry> Entries = [];
         private readonly AtchEntrySplitView EntryView;
 
+        public (string GamePath, List<AtchChange> Changes)? Vanilla { get; private set; } = null; // Penumbra only uses ATCH diffs, so need to highlight which ones are actually changed
+
         public unsafe AtchFile( BinaryReader reader ) : base() {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
 
@@ -247,6 +251,32 @@ namespace VfxEditor.Formats.AtchFormat {
             ImGui.Separator();
 
             EntryView.Draw();
+        }
+
+        public List<AtchChange> UpdateVanilla( string gamePath ) {
+            if( Vanilla?.GamePath == gamePath ) { // already have them
+                return Vanilla.Value.Changes;
+            }
+
+            try {
+                var data = Dalamud.DataManager.GetFile( gamePath )?.Data;
+                if( data != null ) {
+                    using var reader = new BinaryReader( new MemoryStream( data ) );
+                    var file = new AtchFile( reader );
+                    var changes = PenumbraMetaWriter.GetChanges( gamePath, file, false );
+                    Vanilla = (gamePath, changes);
+                    return changes;
+                }
+                else {
+                    Dalamud.Error( $"Path {gamePath} not found" );
+                }
+            }
+            catch( Exception ex ) {
+                Dalamud.Error( ex, "Failed to get vanilla ATCH changes" );
+                return null;
+            }
+
+            return null;
         }
 
         private unsafe void DrawCurrentWeapons() {
