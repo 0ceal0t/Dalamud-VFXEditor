@@ -48,8 +48,9 @@ namespace VfxEditor.Formats.ScdFormat.Utils {
             var pos = 0;
             var currentBlockStart = 0;
 
-            while( pos + blockSize <= data.Length ) {
-                for( var i = 0; i < blockSize; i++ ) {
+            // XOR is symmetric, so this is also used for encoding
+            while( pos < data.Length ) {
+                for( var i = 0; i < blockSize && pos + i < data.Length; i++ ) {
                     var tableIdx = ( seed + i + currentBlockStart + v47 ) & 0xFF;
                     var value = data[pos + i];
                     writer.Write( ( byte )( value ^ XORTABLE[tableIdx] ^ v48 ) ); // write decoded

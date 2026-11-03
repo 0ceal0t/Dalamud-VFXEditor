@@ -21,56 +21,69 @@ namespace VfxEditor.ScdFormat.Music.Data {
          */
 
         private readonly byte[] StreamData; // Decoded
-        private readonly byte[] RawData; // What will be written, can be the same if there's no encryption
+        private readonly byte[] RawData; // What will be written (header + encrypted frames)
 
+        // 0x18 bytes of extra data, followed by the HCA header and frames
+        private readonly byte Version = 0x02;
+        private readonly byte ExtraSize = 0x18;
         private readonly short HeaderSize = 0x60;
-        private readonly int BlockSize;
-        private readonly bool PlainText = true;
+        private readonly short BlockSize;
+        private readonly short LoopStartBlock = 0; // always 0, the 32-bit ones are used instead
+        private readonly short LoopEndBlock = 0;
+        private readonly short InsertSamples; // same as the HCA fmt chunk
+        private readonly byte UseMixer = 0;
+        private readonly byte Encryption = 0; // always 0 in game files, even though the frames are XOR'd
+        private readonly short Reserved = 0;
+        // loop start + loop end, same as the entry
 
         private readonly DecodeParams DecodeParams = DecodeParams.Default;
         private readonly HcaInfo HcaInfo;
         private uint SamplesPerBlock => 0x80 * 8; // fixed 1024 samples/block, independent of channel count
 
-        private readonly byte[] Unk1 = [0x20, 0x18];
-        private readonly byte[] Unk2 = [0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00];
-        private readonly byte[] Unk3 = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
-
         public ScdHca( byte[] data, HcaInfo info, ScdAudioEntry entry ) : base( entry ) {
-            StreamData = data;
-            RawData = data;
+            HeaderSize = GetHeaderSize( data );
+            BlockSize = ( short )info.BlockSize;
+            InsertSamples = GetInsertSamples( data );
             HcaInfo = info;
-            BlockSize = ( int )info.BlockSize;
-            Entry.DataLength = data.Length;
+
+            var frames = data[HeaderSize..];
+            Entry.DataLength = frames.Length;
+
+            StreamData = data;
+            RawData = [.. data[..HeaderSize], .. ScdUtils.XorDecodeFromTableHca( frames, BlockSize, frames.Length, HeaderSize )];
         }
 
         public ScdHca( BinaryReader reader, ScdAudioEntry entry ) : base( entry ) {
-            Unk1 = reader.ReadBytes( 2 ); // TODO
+            Version = reader.ReadByte();
+            ExtraSize = reader.ReadByte();
             HeaderSize = reader.ReadInt16();
             BlockSize = reader.ReadInt16();
-            Unk2 = reader.ReadBytes( 7 ); // TODO
-            PlainText = reader.ReadBoolean();
-            Unk3 = reader.ReadBytes( 10 ); // TODO
-
-            using var streamMs = new MemoryStream();
-            using var streamWriter = new BinaryWriter( streamMs );
-
-            using var rawMs = new MemoryStream();
-            using var rawWriter = new BinaryWriter( rawMs );
+            LoopStartBlock = reader.ReadInt16();
+            LoopEndBlock = reader.ReadInt16();
+            InsertSamples = reader.ReadInt16();
+            UseMixer = reader.ReadByte();
+            Encryption = reader.ReadByte();
+            Reserved = reader.ReadInt16();
+            reader.ReadInt32(); // loop start
+            reader.ReadInt32(); // loop end
 
             var header = reader.ReadBytes( HeaderSize );
             var data = reader.ReadBytes( entry.DataLength );
 
-            if( !PlainText ) {
-                streamWriter.Write( header );
-                streamWriter.Write( ScdUtils.XorDecodeFromTableHca( data, BlockSize, entry.DataLength, HeaderSize ) );
-                streamWriter.BaseStream.Position = 0;
+            if( Encryption != 0 ) {
+                Encryption = 0;
+                Version = 0x02;
+                InsertSamples = GetInsertSamples( header );
+                data = data[..Math.Min( data.Length, ( int )( GetBlockCount( header ) * BlockSize ) )];
+                Entry.DataLength = data.Length;
+
+                StreamData = [.. header, .. data];
+                RawData = [.. header, .. ScdUtils.XorDecodeFromTableHca( data, BlockSize, data.Length, HeaderSize )];
             }
-
-            rawWriter.Write( header );
-            rawWriter.Write( data );
-
-            RawData = rawMs.ToArray();
-            StreamData = PlainText ? RawData : streamMs.ToArray();
+            else {
+                RawData = [.. header, .. data];
+                StreamData = [.. header, .. ScdUtils.XorDecodeFromTableHca( data, BlockSize, entry.DataLength, HeaderSize )];
+            }
 
             using var hcaMs = new MemoryStream( StreamData );
             using var decoder = new HcaDecoder( hcaMs, DecodeParams );
@@ -80,12 +93,18 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public override WaveStream GetStream() => new WaveFileReader( new HcaAudioStream( new MemoryStream( StreamData ), DecodeParams ) );
 
         public override void Write( BinaryWriter writer ) {
-            writer.Write( Unk1 );
+            writer.Write( Version );
+            writer.Write( ExtraSize );
             writer.Write( HeaderSize );
-            writer.Write( ( short )BlockSize );
-            writer.Write( Unk2 );
-            writer.Write( PlainText );
-            writer.Write( Unk3 );
+            writer.Write( BlockSize );
+            writer.Write( LoopStartBlock );
+            writer.Write( LoopEndBlock );
+            writer.Write( InsertSamples );
+            writer.Write( UseMixer );
+            writer.Write( Encryption );
+            writer.Write( Reserved );
+            writer.Write( Entry.LoopStart );
+            writer.Write( Entry.LoopEnd );
 
             writer.Write( RawData );
         }
@@ -117,6 +136,15 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public override byte[] GetDefaultExtensionData() => StreamData;
 
         // ====================
+
+        private static ushort ReadUInt16BE( byte[] data, int offset ) => ( ushort )( ( data[offset] << 8 ) | data[offset + 1] );
+
+        private static short GetHeaderSize( byte[] header ) => ( short )ReadUInt16BE( header, 0x06 );
+
+        // "fmt" chunk always comes right after the "HCA" chunk
+        private static uint GetBlockCount( byte[] header ) => ( ( uint )ReadUInt16BE( header, 0x10 ) << 16 ) | ReadUInt16BE( header, 0x12 );
+
+        private static short GetInsertSamples( byte[] header ) => ( short )ReadUInt16BE( header, 0x14 );
 
         public static ScdAudioEntry ImportWav( string path, ScdAudioEntry oldEntry ) {
             using var waveReader = new WaveFileReader( path );
