@@ -142,7 +142,7 @@ namespace VfxEditor.Utils {
 
         public static void WikiButton( string url ) {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), ACCENT_COLOR ) ) OpenUrl( url );
+                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), DALAMUD_YELLOW ) ) OpenUrl( url );
             }
             Tooltip( "Click to view more information on the VFXEditor wiki" );
         }
@@ -152,7 +152,7 @@ namespace VfxEditor.Utils {
                 VerifiedStatus.VERIFIED or VerifiedStatus.PARTIAL => GREEN_COLOR,
                 VerifiedStatus.ERROR => RED_COLOR,
                 VerifiedStatus.WORKSPACE => new Vector4( 0.7f, 0.7f, 0.7f, 1.0f ),
-                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => DALAMUD_ORANGE,
+                VerifiedStatus.UNKNOWN or VerifiedStatus.UNSUPPORTED => DALAMUD_YELLOW,
                 _ => new Vector4( 1 )
             };
 

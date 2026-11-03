@@ -47,7 +47,7 @@ namespace VfxEditor.Interop.Penumbra {
             using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 var iconSize = UiUtils.GetIconSize( FontAwesomeIcon.ExclamationTriangle );
                 ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( ImGui.GetContentRegionAvail().X - iconSize.X ) / 2f );
-                ImGui.TextColored( UiUtils.ACCENT_COLOR, FontAwesomeIcon.ExclamationTriangle.ToIconString() );
+                ImGui.TextColored( UiUtils.DALAMUD_YELLOW, FontAwesomeIcon.ExclamationTriangle.ToIconString() );
             }
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5f );

@@ -265,6 +265,7 @@ namespace VfxEditor.Formats.AtchFormat {
                     var file = new AtchFile( reader );
                     var changes = PenumbraMetaWriter.GetChanges( gamePath, file, false );
                     Vanilla = (gamePath, changes);
+                    file.Dispose();
                     return changes;
                 }
                 else {
