@@ -16,7 +16,7 @@ namespace VfxEditor.DirectX {
         public readonly ModelPreview ModelRenderer;
         public readonly BonePreview<ModelInstance> BoneRenderer;
         public readonly BoneNamePreview BoneNameRenderer;
-        public readonly MaterialPreviewLegacy MaterialRenderer;
+        public readonly MaterialPreview MaterialRenderer;
         public readonly MeshPreview MeshRenderer;
 
         public readonly List<RenderInstance> Instances = [];

@@ -198,8 +198,33 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             };
         }
 
+        private MtrlResolvedRow ResolvePreview() {
+            var resolved = Resolve( true );
+            if( Table is not MtrlTable table || table.PairBlend <= 0f ) return resolved;
+
+            var idx = table.Rows.IndexOf( this );
+            var pairIdx = idx ^ 1;
+            if( idx < 0 || pairIdx >= table.Rows.Count ) return resolved;
+
+            var pair = table.Rows[pairIdx];
+            pair.RefreshStainTemplate();
+            return MtrlResolvedRow.Lerp( resolved, pair.Resolve( true ), table.PairBlend );
+        }
+
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();
+            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, ResolvePreview(), false );
+        }
+
+        protected override void DrawRender() => Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, DrawRenderPopup );
+
+        private void DrawRenderPopup() {
+            Plugin.Configuration.DrawDirectXMaterial();
+            if( Table is not MtrlTable table ) return;
+
+            ImGui.Separator();
+            var idx = table.Rows.IndexOf( this );
+            if( ImGui.SliderFloat( $"Blend with #{idx ^ 1}", ref table.PairBlend, 0f, 1f ) ) UpdateRender();
         }
     }
 }

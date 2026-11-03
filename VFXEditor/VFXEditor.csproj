@@ -180,6 +180,12 @@
         <Content Include="Shaders\MaterialLegacyGBuffer.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+        <Content Include="Shaders\MaterialGBuffer.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Shaders\MaterialUtils.fx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Shaders\PhongUtils.fx">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>

@@ -2,12 +2,14 @@ using HelixToolkit.Geometry;
 using HelixToolkit.Maths;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using System;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.Formats.MtrlFormat.Data.Color;
 using VfxEditor.DirectX.Model;
+using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
@@ -51,37 +53,54 @@ namespace VfxEditor.DirectX {
         public Matrix4x4 InvProjectionMatrix;
     }
 
-    public class MaterialPreviewLegacy : ModelDeferredRenderer<ModelDeferredInstance> {
+    [StructLayout( LayoutKind.Sequential, Size = 0x30 )]
+    public struct PSMaterialParamsBuffer {
+        public float TileIndex; // 0x00
+        public float TileAlpha; // 0x04
+        public float SphereIndex; // 0x08
+        public float SphereMask; // 0x0C
+
+        public float Metalness; // 0x10
+        public float Anisotropy; // 0x14
+        public float SheenRate; // 0x18
+        public float SheenTint; // 0x1C
+
+        public float SheenAperture; // 0x20
+    }
+
+
+    public class MaterialPreview : ModelDeferredRenderer<ModelDeferredInstance> {
+        private readonly D3dDrawable LegacyModel;
         private readonly D3dDrawable Model;
 
         protected Buffer MaterialPixelShaderBuffer;
         protected PSMaterialBuffer PSBufferData;
         protected Buffer MaterialVertexShaderBuffer;
         protected VSMaterialBuffer VSBufferData;
+        protected Buffer MaterialParamsBuffer;
+        protected PSMaterialParamsBuffer ParamsBufferData;
 
-        protected ShaderResourceView DiffuseView;
-        protected ShaderResourceView NormalView;
-        protected Texture2D DiffuseTexture;
-        protected Texture2D NormalTexture;
+        // Loaded once, rows only change the layer index
+        protected ShaderResourceView TileDiffuseView;
+        protected ShaderResourceView TileNormalView;
+        protected ShaderResourceView SphereView;
+        protected Texture2D TileDiffuseTexture;
+        protected Texture2D TileNormalTexture;
+        protected Texture2D SphereTexture;
 
-        private bool SkipDraw => DiffuseTexture == null || NormalTexture == null || DiffuseTexture.IsDisposed || NormalTexture.IsDisposed;
+        private bool Legacy = true;
+        private bool HasRow = false;
 
-        public MaterialPreviewLegacy( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
+        private bool SkipDraw => !HasRow || TileDiffuseView == null || TileNormalView == null || SphereView == null;
+
+        public MaterialPreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {
             MaterialPixelShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<PSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
             MaterialVertexShaderBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<VSMaterialBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+            MaterialParamsBuffer = new Buffer( Device, SharpDX.Utilities.SizeOf<PSMaterialParamsBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 
             PSBufferData = new() { };
             VSBufferData = new() { };
-
-            Model = new( 5, false,
-                [
-                    new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
-                    new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
-                    new( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
-                    new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
-                    new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
-                ] );
-            Model.AddPass( Device, PassType.GBuffer, Path.Combine( shaderPath, "MaterialLegacyGBuffer.fx" ), ShaderPassFlags.Pixel );
+            ParamsBufferData = new() { };
 
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
@@ -97,15 +116,47 @@ namespace VfxEditor.DirectX {
                 data[i + 3] = data[i + 3] with { X = data[i + 3].X * 2 };
             }
 
-            Model.SetVertexes( Device, data, count );
+            LegacyModel = CreateSphere( Path.Combine( shaderPath, "MaterialLegacyGBuffer.fx" ), data, count );
+            Model = CreateSphere( Path.Combine( shaderPath, "MaterialGBuffer.fx" ), data, count );
 
             // ===== QUAD =========
 
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlResolvedRow row ) {
+        private D3dDrawable CreateSphere( string shader, Vector4[] data, int count ) {
+            var model = new D3dDrawable( 5, false,
+                [
+                    new( "POSITION", 0, Format.R32G32B32A32_Float, 0, 0 ),
+                    new( "TANGENT", 0, Format.R32G32B32A32_Float, 16, 0 ),
+                    new( "BITANGENT", 0, Format.R32G32B32A32_Float, 32, 0 ),
+                    new( "UV", 0, Format.R32G32B32A32_Float, 48, 0 ),
+                    new( "NORMAL", 0, Format.R32G32B32A32_Float, 64, 0 )
+                ] );
+            model.AddPass( Device, PassType.GBuffer, shader, ShaderPassFlags.Pixel );
+            model.SetVertexes( Device, data, count );
+            return model;
+        }
+
+        private void LoadTextures() {
+            if( TileDiffuseView != null ) return;
+
+            var diffuse = Plugin.MtrlManager.TileDiffuseFile;
+            var normal = Plugin.MtrlManager.TileNormalFile;
+            var sphere = Plugin.MtrlManager.SphereFile;
+            if( diffuse == null || normal == null || sphere == null ) return;
+
+            TileDiffuseView = GetTextureArray( diffuse.Layers, diffuse.Header.Height, diffuse.Header.Width, out TileDiffuseTexture );
+            TileNormalView = GetTextureArray( normal.Layers, normal.Header.Height, normal.Header.Width, out TileNormalTexture );
+            SphereView = GetTextureArray( sphere.Layers, sphere.Header.Height, sphere.Header.Width, out SphereTexture );
+        }
+
+        public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlResolvedRow row, bool legacy ) {
             OnUpdate( renderId, instance );
+            LoadTextures();
+
+            Legacy = legacy;
+            HasRow = true;
 
             VSBufferData = VSBufferData with {
                 Repeat = new( row.TileTransform.X, row.TileTransform.W ),
@@ -120,18 +171,20 @@ namespace VfxEditor.DirectX {
                 Roughness = row.Roughness,
             };
 
-            // Clear out the old
-            DiffuseView?.Dispose();
-            DiffuseTexture?.Dispose();
-            NormalView?.Dispose();
-            NormalTexture?.Dispose();
+            var tileCount = Plugin.MtrlManager.TileDiffuseFile?.Layers.Count ?? 1;
+            var sphereCount = Plugin.MtrlManager.SphereFile?.Layers.Count ?? 1;
 
-            var tileIdx = row.TileIndex;
-            var diffuse = Plugin.MtrlManager.TileDiffuseFile;
-            var normal = Plugin.MtrlManager.TileNormalFile;
-
-            DiffuseView = GetTexture( diffuse.Layers[tileIdx], diffuse.Header.Height, diffuse.Header.Width, out DiffuseTexture );
-            NormalView = GetTexture( normal.Layers[tileIdx], normal.Header.Height, normal.Header.Width, out NormalTexture );
+            ParamsBufferData = new() {
+                TileIndex = Math.Clamp( row.TileIndex, 0, tileCount - 1 ),
+                TileAlpha = row.TileAlpha,
+                SphereIndex = Math.Clamp( row.SphereIndex, 0, sphereCount - 1 ),
+                SphereMask = row.SphereMask,
+                Metalness = row.Metalness,
+                Anisotropy = row.Anisotropy,
+                SheenRate = row.SheenRate,
+                SheenTint = row.SheenTint,
+                SheenAperture = row.SheenAperture,
+            };
         }
 
         protected override void OnRenderUpdate( ModelDeferredInstance instance ) {
@@ -147,19 +200,24 @@ namespace VfxEditor.DirectX {
             };
 
             var vsBuffer = VSBufferData;
+            var paramsBuffer = ParamsBufferData;
 
             Ctx.UpdateSubresource( ref psBuffer, MaterialPixelShaderBuffer );
             Ctx.UpdateSubresource( ref vsBuffer, MaterialVertexShaderBuffer );
+            Ctx.UpdateSubresource( ref paramsBuffer, MaterialParamsBuffer );
         }
 
         protected override void GBufferPass( ModelDeferredInstance instance ) {
-            Ctx.PixelShader.SetShaderResource( 0, DiffuseView );
-            Ctx.PixelShader.SetShaderResource( 1, NormalView );
+            if( SkipDraw ) return;
 
-            Model.Draw(
+            Ctx.PixelShader.SetShaderResource( 0, TileDiffuseView );
+            Ctx.PixelShader.SetShaderResource( 1, TileNormalView );
+            Ctx.PixelShader.SetShaderResource( 2, SphereView );
+
+            ( Legacy ? LegacyModel : Model ).Draw(
                 Ctx, PassType.GBuffer,
                 [VertexShaderBuffer, MaterialVertexShaderBuffer],
-                [PixelShaderBuffer, MaterialPixelShaderBuffer] );
+                [PixelShaderBuffer, MaterialPixelShaderBuffer, MaterialParamsBuffer] );
         }
 
         protected override void QuadPass( ModelDeferredInstance instance ) {
@@ -171,14 +229,18 @@ namespace VfxEditor.DirectX {
 
         public override void Dispose() {
             base.Dispose();
+            LegacyModel?.Dispose();
             Model?.Dispose();
             MaterialVertexShaderBuffer?.Dispose();
             MaterialPixelShaderBuffer?.Dispose();
+            MaterialParamsBuffer?.Dispose();
 
-            DiffuseView?.Dispose();
-            DiffuseTexture?.Dispose();
-            NormalView?.Dispose();
-            NormalTexture?.Dispose();
+            TileDiffuseView?.Dispose();
+            TileDiffuseTexture?.Dispose();
+            TileNormalView?.Dispose();
+            TileNormalTexture?.Dispose();
+            SphereView?.Dispose();
+            SphereTexture?.Dispose();
         }
     }
 }

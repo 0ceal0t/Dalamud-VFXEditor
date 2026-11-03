@@ -114,7 +114,7 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
 
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();
-            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, Resolve( true ) );
+            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, Resolve( true ), true );
         }
 
         protected override void DrawRender() => Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, Plugin.Configuration.DrawDirectXMaterial );

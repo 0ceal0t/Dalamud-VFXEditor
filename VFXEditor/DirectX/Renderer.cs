@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using System.Collections.Generic;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -56,6 +57,30 @@ namespace VfxEditor.DirectX {
             } );
 
             Ctx.UpdateSubresource( data, texture, 0, width * 4 );
+
+            var view = new ShaderResourceView( Device, texture );
+            Ctx.GenerateMips( view );
+            return view;
+        }
+
+        public ShaderResourceView GetTextureArray( List<byte[]> layers, int height, int width, out Texture2D texture ) {
+            texture = new( Device, new() {
+                Width = width,
+                Height = height,
+                ArraySize = layers.Count,
+                BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
+                Usage = ResourceUsage.Default,
+                CpuAccessFlags = CpuAccessFlags.None,
+                Format = Format.R8G8B8A8_UNorm,
+                MipLevels = 0,
+                OptionFlags = ResourceOptionFlags.GenerateMipMaps,
+                SampleDescription = new SampleDescription( 1, 0 ),
+            } );
+
+            var mipLevels = texture.Description.MipLevels;
+            for( var i = 0; i < layers.Count; i++ ) {
+                Ctx.UpdateSubresource( layers[i], texture, SharpDX.Direct3D11.Resource.CalculateSubResourceIndex( 0, i, mipLevels ), width * 4 );
+            }
 
             var view = new ShaderResourceView( Device, texture );
             Ctx.GenerateMips( view );

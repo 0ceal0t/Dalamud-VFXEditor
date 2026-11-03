@@ -6,6 +6,8 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Table {
         // 8 vec4s wide, 32 rows tall
         public const int DimensionLogs = 0x53;
 
+        public float PairBlend = 0f;
+
         public MtrlTable( MtrlFile file ) : base( file ) { }
 
         public MtrlTable( MtrlFile file, BinaryReader reader, long dataEnd ) : base( file, reader, dataEnd ) { }

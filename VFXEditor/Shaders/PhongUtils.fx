@@ -102,17 +102,19 @@ float3 sampleStudio(float3 dir, float blur)
     return color;
 }
 
-float3 computeReflection(float3 worldPos, float3 N, float3 geometryN)
+float3 computeReflectionF0(float3 worldPos, float3 N, float3 geometryN, float3 F0, float roughness)
 {
     float3 V = normalize(EyePosition - worldPos);
     float3 R = reflect(-V, N);
-    float roughness = Roughness;
 
     // Schlick, damped for rough surfaces so they don't get a bright rim
-    // Legacy specular is a highlight tint rather than a real F0, so scale it down
-    float3 F0 = saturate(SpecularColor * SpecularIntensity) * 0.5f;
     float NdotV = saturate(dot(geometryN, V));
     float3 F = F0 + (max(1.0f - roughness, F0) - F0) * pow(1.0f - NdotV, 5.0f);
 
     return sampleStudio(R, roughness) * F;
+}
+
+float3 computeReflection(float3 worldPos, float3 N, float3 geometryN)
+{
+    return computeReflectionF0(worldPos, N, geometryN, saturate(SpecularColor * SpecularIntensity) * 0.5f, Roughness);
 }
