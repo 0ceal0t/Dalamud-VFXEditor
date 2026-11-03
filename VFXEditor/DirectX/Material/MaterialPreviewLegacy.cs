@@ -7,7 +7,6 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.Formats.MtrlFormat.Data.Color;
-using VfxEditor.Formats.MtrlFormat.Data.Dye;
 using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
@@ -41,7 +40,7 @@ namespace VfxEditor.DirectX {
         public Vector3 AmbientColor; // 0x34
 
         public Vector3 EyePosition; // 0x40
-        public float _Pad3; // 0x4C
+        public float Roughness; // 0x4C
 
         // ----- 0x50 ------
 
@@ -105,26 +104,20 @@ namespace VfxEditor.DirectX {
             Quad.AddPass( Device, PassType.Final, Path.Combine( shaderPath, "SsaoQuad.fx" ), ShaderPassFlags.Pixel );
         }
 
-        public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlColorRowLegacy row ) {
+        public void SetColorRow( int renderId, ModelDeferredInstance instance, MtrlResolvedRow row ) {
             OnUpdate( renderId, instance );
 
-            if( row == null ) return;
-
             VSBufferData = VSBufferData with {
-                Repeat = new( row.TileRepeatX.Value, row.TileRepeatY.Value ),
-                Skew = new( row.TileSkew.Value.X, row.TileSkew.Value.Y ),
+                Repeat = new( row.TileTransform.X, row.TileTransform.W ),
+                Skew = new( row.TileTransform.Y, row.TileTransform.Z ),
             };
 
-            var dye = row.LegacyStainTemplate;
-            var applyDye = dye != null;
-            var dyeRow = row.DyeRow;
-
             PSBufferData = PSBufferData with {
-                DiffuseColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Diffuse ) ? dye.Diffuse : row.Diffuse.Value,
-                EmissiveColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Emissive ) ? dye.Emissive : row.Emissive.Value,
-                SpecularColor = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular ) ? dye.Specular : row.Specular.Value,
-                SpecularIntensity = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Specular_Strength ) ? dye.Power : row.SpecularStrength.Value,
-                SpecularPower = applyDye && dyeRow.Flags.HasFlag( DyeRowFlags_Legacy.Gloss ) ? dye.Gloss : row.GlossStrength.Value,
+                DiffuseColor = row.Diffuse,
+                EmissiveColor = row.Emissive * row.Exposure,
+                SpecularColor = row.Specular,
+                SpecularIntensity = 1f,
+                Roughness = row.Roughness,
             };
 
             // Clear out the old
@@ -133,7 +126,7 @@ namespace VfxEditor.DirectX {
             NormalView?.Dispose();
             NormalTexture?.Dispose();
 
-            var tileIdx = row.TileMaterial.Value;
+            var tileIdx = row.TileIndex;
             var diffuse = Plugin.MtrlManager.TileDiffuseFile;
             var normal = Plugin.MtrlManager.TileNormalFile;
 

@@ -86,15 +86,35 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
 
         // ===== PREVIEW =========
 
-        public StmDyeDataLegacy LegacyStainTemplate => StainTemplate as StmDyeDataLegacy;
-
         protected override int DyeChannel => 0;
 
         public override StmDyeDataBase GetStainTemplate() => Stain == null ? null : Plugin.MtrlManager.StmFileLegacy.GetDye( DyeRow.Template.Value, ( int )Stain.Id );
 
+        public override MtrlResolvedRow Resolve( bool applyDye ) {
+            var dye = applyDye ? StainTemplate as StmDyeDataLegacy : null;
+            var flags = DyeRow.Flags.Value;
+            bool Dyed( DyeRowFlags_Legacy flag ) => dye != null && flags.HasFlag( flag );
+
+            var specular = Dyed( DyeRowFlags_Legacy.Specular ) ? dye.Specular : Specular.Value;
+            var specularStrength = Dyed( DyeRowFlags_Legacy.Specular_Strength ) ? dye.Power : SpecularStrength.Value;
+            var gloss = Dyed( DyeRowFlags_Legacy.Gloss ) ? dye.Gloss : GlossStrength.Value;
+
+            return new() {
+                Diffuse = Dyed( DyeRowFlags_Legacy.Diffuse ) ? dye.Diffuse : Diffuse.Value,
+                Specular = specular * specularStrength,
+                Emissive = Dyed( DyeRowFlags_Legacy.Emissive ) ? dye.Emissive : Emissive.Value,
+                Exposure = 1f,
+                Roughness = MtrlResolvedRow.RoughnessFromGloss( gloss ),
+                TileIndex = TileMaterial.Value,
+                TileAlpha = 1f,
+                TileTransform = new( TileRepeatX.Value, TileSkew.Value.X, TileSkew.Value.Y, TileRepeatY.Value ),
+                Dyed = dye != null && flags != 0,
+            };
+        }
+
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();
-            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, this );
+            Plugin.DirectXManager.MaterialRenderer.SetColorRow( RenderId, File.Instance, Resolve( true ) );
         }
 
         protected override void DrawRender() => Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, Plugin.Configuration.DrawDirectXMaterial );

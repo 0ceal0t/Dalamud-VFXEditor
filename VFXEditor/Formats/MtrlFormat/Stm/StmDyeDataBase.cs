@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
 
 namespace VfxEditor.Formats.MtrlFormat.Stm {
@@ -8,6 +9,8 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public Vector3 Emissive = new();
 
         public void Draw() {
+            using var disabled = ImRaii.Disabled();
+
             ImGui.ColorEdit3( "##Diffuse", ref Diffuse, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.DisplayRgb | ImGuiColorEditFlags.InputRgb | ImGuiColorEditFlags.NoTooltip );
 
             ImGui.SameLine();

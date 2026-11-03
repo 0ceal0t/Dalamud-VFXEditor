@@ -24,6 +24,7 @@ cbuffer PSMaterialConstants : register(b1)
     float3 AmbientColor;
     
     float3 EyePosition;
+    float Roughness;
     LightData Light1;
     LightData Light2;
     
@@ -83,11 +84,6 @@ float3 computeHemisphereAmbient(float3 N)
     return AmbientColor * lerp(0.25f, 1.75f, N.y * 0.5f + 0.5f);
 }
 
-float glossToRoughness()
-{
-    return sqrt(2.0f / (SpecularPower * 10.0f + 2.0f));
-}
-
 float softbox(float3 dir, float3 boxDir, float size, float blur)
 {
     float edge = 0.01f + blur * 0.3f;
@@ -110,7 +106,7 @@ float3 computeReflection(float3 worldPos, float3 N, float3 geometryN)
 {
     float3 V = normalize(EyePosition - worldPos);
     float3 R = reflect(-V, N);
-    float roughness = glossToRoughness();
+    float roughness = Roughness;
 
     // Schlick, damped for rough surfaces so they don't get a bright rim
     // Legacy specular is a highlight tint rather than a real F0, so scale it down

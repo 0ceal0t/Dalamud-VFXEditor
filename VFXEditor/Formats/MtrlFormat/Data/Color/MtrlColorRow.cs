@@ -171,6 +171,33 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
             return ( StmDyeDataBase )Plugin.MtrlManager.StmFile.GetDye( template, stainId ) ?? Plugin.MtrlManager.StmFileLegacy.GetDye( template, stainId );
         }
 
+        public override MtrlResolvedRow Resolve( bool applyDye ) {
+            var dye = applyDye ? StainTemplate as StmDyeData : null;
+            var flags = DyeRow.Flags.Value;
+            bool Dyed( DyeRowFlags flag ) => dye != null && flags.HasFlag( flag );
+
+            return new() {
+                Diffuse = Dyed( DyeRowFlags.Diffuse ) ? dye.Diffuse : Diffuse.Value,
+                // Same as Penumbra, a black specular in the template means it isn't dyed
+                Specular = Dyed( DyeRowFlags.Specular ) && dye.Specular != Vector3.Zero ? dye.Specular : Specular.Value,
+                Emissive = Dyed( DyeRowFlags.Emissive ) ? dye.Emissive : Emissive.Value,
+                Exposure = Dyed( DyeRowFlags.Exposure ) ? dye.Exposure : Exposure.Value,
+                Roughness = Dyed( DyeRowFlags.Roughness ) ? dye.Roughness : Roughness.Value,
+                Metalness = Dyed( DyeRowFlags.Metalness ) ? dye.Metalness : Metalness.Value,
+                Anisotropy = Dyed( DyeRowFlags.Anisotropy ) ? dye.Anisotropy : Anisotropy.Value,
+                SheenRate = Dyed( DyeRowFlags.Sheen_Rate ) ? dye.SheenRate : SheenRate.Value,
+                SheenTint = Dyed( DyeRowFlags.Sheen_Tint_Rate ) ? dye.SheenTintRate : SheenTint.Value,
+                SheenAperture = Dyed( DyeRowFlags.Sheen_Aperture ) ? dye.SheenAperture : SheenAperture.Value,
+                SphereIndex = Dyed( DyeRowFlags.Sphere_Map_Index ) ? dye.SphereMapIndex : Sphere.Value,
+                SphereMask = Dyed( DyeRowFlags.Sphere_Map_Mask ) ? dye.SphereMapMask : SphereMask.Value,
+                ShaderId = Shader.Value,
+                TileIndex = TileMaterial.Value,
+                TileAlpha = TileAlpha.Value,
+                TileTransform = TileMatrix.Value,
+                Dyed = dye != null && flags != 0,
+            };
+        }
+
         public override void UpdateRender() {
             StainTemplate = GetStainTemplate();
         }

@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 
 namespace VfxEditor.Formats.MtrlFormat.Stm {
     // https://github.com/Ottermandias/Penumbra.GameData/blob/e93093f/Files/StainMapStructs/DyePack.cs
@@ -15,18 +16,23 @@ namespace VfxEditor.Formats.MtrlFormat.Stm {
         public float SphereMapMask = 0;
 
         protected override void DrawScalars() {
-            ImGui.SameLine();
-            ImGui.TextDisabled( $"Exposure: {Exposure:0.##}  Metalness: {Metalness:0.##}  Roughness: {Roughness:0.##}" );
-            if( !ImGui.IsItemHovered() ) return;
+            using var disabled = ImRaii.Disabled();
+            var hovered = false;
 
-            ImGui.BeginTooltip();
-            ImGui.Text( $"Sheen Rate: {SheenRate:0.###}" );
-            ImGui.Text( $"Sheen Tint Rate: {SheenTintRate:0.###}" );
-            ImGui.Text( $"Sheen Aperture: {SheenAperture:0.###}" );
-            ImGui.Text( $"Anisotropy: {Anisotropy:0.###}" );
-            ImGui.Text( $"Sphere Map: {SphereMapIndex}" );
-            ImGui.Text( $"Sphere Map Mask: {SphereMapMask:0.###}" );
-            ImGui.EndTooltip();
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 125 );
+            ImGui.InputFloat( "##Exposure", ref Exposure, 0, 0, $"Exposure: %.1f", ImGuiInputTextFlags.ReadOnly );
+            hovered |= ImGui.IsItemHovered();
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 125 );
+            ImGui.InputFloat( "##Metalness", ref Metalness, 0, 0, $"Metalness: %.1f", ImGuiInputTextFlags.ReadOnly );
+            hovered |= ImGui.IsItemHovered();
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth( 125 );
+            ImGui.InputFloat( "##Roughness", ref Roughness, 0, 0, $"Roughness: %.1f", ImGuiInputTextFlags.ReadOnly );
+            hovered |= ImGui.IsItemHovered();
         }
     }
 }
