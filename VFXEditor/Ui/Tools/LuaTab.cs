@@ -121,41 +121,29 @@ namespace VfxEditor.Ui.Tools {
         // 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 20 44 8B 0D ? ? ? ? 48 8B F9 65 48 8B 04 25 ? ? ? ? 49 8B F0
 
         private static uint GetVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
-            if( objectAddress == IntPtr.Zero ) return Plugin.ResourceLoader.GetLuaVariable( manager, value );
-
-            return value switch {
-                0x10000013 or
-                0x10000025 or
-                0x10000026 or
-                0x10000027 or
-                0x10000028 or
-                0x10000029 or
-                0x10000033 or
-                0x10000034 or
-                0x10000039 or
-                0x1000003A or
-                0x1000003C or
-                0x1000003B or
-                0x1000003D
-                => GetActorVariableValue( value, manager, objectAddress ),
-                _ => Plugin.ResourceLoader.GetLuaVariable( manager, value )
-            };
-        }
-
-        private static uint GetActorVariableValue( uint value, IntPtr manager, IntPtr objectAddress ) {
-            var pos = Plugin.ResourceLoader.LuaActorVariables;
-
-            for( var i = 0; i < 30; i++ ) {
-                var posValue = Marshal.ReadIntPtr( pos );
-                if( posValue == value ) {
-                    var funcLocation = Marshal.ReadIntPtr( pos + 8 );
-                    var actorFunc = Marshal.GetDelegateForFunctionPointer<LuaActorVariableDelegate>( funcLocation );
-                    return actorFunc( objectAddress );
-                }
-                pos += 8;
+            if( objectAddress != IntPtr.Zero && TryGetActorVariableGetter( value, out var getter ) ) {
+                var actorFunc = Marshal.GetDelegateForFunctionPointer<LuaActorVariableDelegate>( getter );
+                return actorFunc( objectAddress );
             }
 
             return Plugin.ResourceLoader.GetLuaVariable( manager, value );
+        }
+
+        private static bool TryGetActorVariableGetter( uint value, out IntPtr getter ) {
+            getter = IntPtr.Zero;
+
+            var table = Plugin.ResourceLoader.LuaActorVariables;
+            if( table == IntPtr.Zero ) return false;
+
+            for( var i = 0; i < Plugin.ResourceLoader.LuaActorVariableCount; i++ ) {
+                var entry = table + i * LuaActorVariableStride;
+                if( ( uint )Marshal.ReadInt32( entry ) != value ) continue;
+
+                getter = Marshal.ReadIntPtr( entry + 8 );
+                return getter != IntPtr.Zero;
+            }
+
+            return false;
         }
     }
 }

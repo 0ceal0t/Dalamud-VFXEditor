@@ -15,6 +15,10 @@ namespace VfxEditor.Interop {
 
         public IntPtr LuaActorVariables { get; private set; }
 
+        public int LuaActorVariableCount { get; private set; }
+
+        public const int LuaActorVariableStride = 16;
+
         [Signature( Constants.LuaGetVariableSig )]
         public readonly LuaVariableDelegate GetLuaVariable = null;
 

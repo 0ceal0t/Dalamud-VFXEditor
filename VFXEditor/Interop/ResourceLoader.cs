@@ -28,6 +28,8 @@ namespace VfxEditor.Interop {
             var luaActorVariableStart = Dalamud.SigScanner.ScanText( Constants.LuaActorVariableSig ) + 3;
             var luaActorVariableOffset = Marshal.ReadInt32( luaActorVariableStart );
             LuaActorVariables = luaActorVariableStart + 4 + luaActorVariableOffset;
+            var luaActorVariableCount = Marshal.ReadInt32( luaActorVariableStart + 5 );
+            LuaActorVariableCount = luaActorVariableCount is > 0 and <= 256 ? luaActorVariableCount : 32;
 
             var interleavedVtbl = Dalamud.SigScanner.ScanText( Constants.HavokInterleavedVtblSig ) - 4;
             var interleavedVtblOffset = Marshal.ReadInt32( interleavedVtbl );
