@@ -27,6 +27,7 @@ struct GBUFFER
     float4 Normal : SV_Target1;
     float4 Color : SV_Target2;
     float4 UV : SV_Target3;
+    float4 Ambient : SV_Target4;
 };
 
 PS_IN VS(VS_IN input)
@@ -68,11 +69,11 @@ GBUFFER PS(PS_IN input)
     float4 finalColor = float4(color, 1);
     
     GBUFFER result = (GBUFFER) 0;
-    result.Position.xy = input.Position.xy;
-    result.Position.z = input.Position.z / input.Position.w;
+    result.Position = float4(input.WorldPos, 1);
     result.Normal = (float4(N, 1) + 1.0f) / 2.0f;
     result.Color = finalColor;
     result.UV = float4(input.TexCoords, 0, 0);
+    result.Ambient = float4(DiffuseColor * input.Color * computeHemisphereAmbient(N), 1);
 
     return result;
 }

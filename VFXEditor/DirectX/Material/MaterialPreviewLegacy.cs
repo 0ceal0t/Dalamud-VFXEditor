@@ -87,6 +87,17 @@ namespace VfxEditor.DirectX {
             var builder = new MeshBuilder( true, true, true );
             builder.AddSphere( new Vector3( 0, 0, 0 ), 0.5f, 500, 500 );
             var data = FromMeshBuilder( builder, null, true, true, true, out var count );
+
+            // The sphere's poles are along Z, which faces the camera, so rotate them to Y.
+            // U also wraps around the full circumference, so double it to keep tiles square like they are on gear
+            for( var i = 0; i < data.Length; i += 5 ) {
+                foreach( var offset in new[] { 0, 1, 2, 4 } ) {
+                    var v = data[i + offset];
+                    data[i + offset] = new( v.X, v.Z, -v.Y, v.W );
+                }
+                data[i + 3] = data[i + 3] with { X = data[i + 3].X * 2 };
+            }
+
             Model.SetVertexes( Device, data, count );
 
             // ===== QUAD =========

@@ -81,9 +81,10 @@ namespace VfxEditor.Formats.MtrlFormat.Data.Color {
 
             if( edited ) UpdateRender();
 
-            // TODO
-            //Plugin.DirectXManager.MaterialRenderer.DrawTexture( RenderId, File.Instance, UpdateRender, Plugin.Configuration.DrawDirectXMaterial );
+            DrawRender();
         }
+
+        protected virtual void DrawRender() { }
 
         public void RefreshStainTemplate() {
             StainTemplate = GetStainTemplate();

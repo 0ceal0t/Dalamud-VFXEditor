@@ -11,6 +11,7 @@ namespace VfxEditor.DirectX.Model {
         public readonly DeferredTexture Normal = new();
         public readonly DeferredTexture Color = new();
         public readonly DeferredTexture UV = new();
+        public readonly DeferredTexture Ambient = new();
 
         public readonly List<DeferredTexture> DeferredTextures = [];
 
@@ -26,7 +27,8 @@ namespace VfxEditor.DirectX.Model {
                     Position,
                     Normal,
                     Color,
-                    UV
+                    UV,
+                    Ambient
                 ] );
             }
 

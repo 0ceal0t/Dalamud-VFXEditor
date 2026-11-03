@@ -40,23 +40,26 @@ namespace VfxEditor.DirectX {
             LoadedInstance = null;
         }
 
+        // Data is RGBA, mips are generated so that tiled textures don't alias
         public ShaderResourceView GetTexture( byte[] data, int height, int width, out Texture2D texture ) {
-            var stream = DataStream.Create( data, true, true );
-            var rect = new DataRectangle( stream.DataPointer, width * 4 );
             texture = new( Device, new() {
                 Width = width,
                 Height = height,
                 ArraySize = 1,
-                BindFlags = BindFlags.ShaderResource,
+                BindFlags = BindFlags.ShaderResource | BindFlags.RenderTarget,
                 Usage = ResourceUsage.Default,
                 CpuAccessFlags = CpuAccessFlags.None,
-                Format = Format.B8G8R8A8_UNorm,
-                MipLevels = 1,
-                OptionFlags = ResourceOptionFlags.None,
+                Format = Format.R8G8B8A8_UNorm,
+                MipLevels = 0,
+                OptionFlags = ResourceOptionFlags.GenerateMipMaps,
                 SampleDescription = new SampleDescription( 1, 0 ),
-            }, rect );
+            } );
 
-            return new ShaderResourceView( Device, texture );
+            Ctx.UpdateSubresource( data, texture, 0, width * 4 );
+
+            var view = new ShaderResourceView( Device, texture );
+            Ctx.GenerateMips( view );
+            return view;
         }
     }
 }

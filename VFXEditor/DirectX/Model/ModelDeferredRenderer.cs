@@ -46,6 +46,7 @@ namespace VfxEditor.DirectX.Model {
             instance.Normal.Clear( Ctx, new( 0 ) );
             instance.Color.Clear( Ctx, Plugin.Configuration.RendererBackground );
             instance.UV.Clear( Ctx, new( 0 ) );
+            instance.Ambient.Clear( Ctx, new( 0 ) );
 
             OnRenderUpdate( instance );
 

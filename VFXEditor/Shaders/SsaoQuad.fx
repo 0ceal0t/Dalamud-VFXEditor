@@ -19,6 +19,7 @@ Texture2D<float4> PositionTexture : register(t1);
 Texture2D<float4> NormalTexture : register(t2);
 Texture2D<float4> ColorTexture : register(t3);
 Texture2D<float4> UVTexture : register(t4);
+Texture2D<float4> AmbientTexture : register(t5);
 
 PS_IN VS(VS_IN input)
 {
@@ -53,25 +54,12 @@ static float2 poissonDisk[16] =
     float2(-0.687256f, 0.6711345f)
 };
 
-float4 getPositionFromDepth(float u, float v, float depth)
+float doAmbientOcclusion(int2 pixel, float3 pos, float3 norm)
 {
-    float4 H = float4((u) * 2 - 1, (1 - v) * 2 - 1, depth, 1.0);
-    float4 D = mul(InvProjectionMatrix, H);
-    float4 INworldPosition = mul(InvViewMatrix, (D / D.w));
-    return INworldPosition;
-}
+    float4 samplePos = PositionTexture.Load(int3(pixel, 0));
+    if (samplePos.w == 0.0f) return 0.0f; // Background
 
-float getDepth(float2 coords)
-{
-    return PositionTexture.Sample(Sampler, coords).z;
-}
-
-float doAmbientOcclusion(float2 tcoord, float2 uv, float3 pos, float3 norm)
-{
-    float depth = getDepth(tcoord + uv);
-    
-    float3 diff = getPositionFromDepth(tcoord.x + uv.x, tcoord.y + uv.y, depth).xyz - pos;
-    
+    float3 diff = samplePos.xyz - pos;
     const float3 v = normalize(diff);
     const float d = length(diff) * 2.0f;
     return max(0.0, dot(norm, v) - 0.2f) * (1.0f / (1.0f + d)) * 1.5f;
@@ -79,30 +67,31 @@ float doAmbientOcclusion(float2 tcoord, float2 uv, float3 pos, float3 norm)
 
 float4 PS(PS_IN input) : SV_Target
 {
-    float2 coords = input.Position.xy / Size;
-    float4 normal = NormalTexture.Sample(Sampler, coords);
-    float3 color = ColorTexture.Sample(Sampler, coords).xyz;
+    int2 pixel = int2(input.Position.xy);
+    float4 normal = NormalTexture.Load(int3(pixel, 0));
+    float3 color = ColorTexture.Load(int3(pixel, 0)).xyz;
     
     if (normal.w > 0.0f)
     {
-        float depth = PositionTexture.Sample(Sampler, coords).z;
-        float3 position = getPositionFromDepth(coords.r, coords.g, depth);
+        float3 position = PositionTexture.Load(int3(pixel, 0)).xyz;
+        float3 N = normalize(mad(2.0f, normal.xyz, -1.0f));
 
         float ao = 0.0f;
         
         int sampleCount = DISK_SAMPLE_COUNT;
-        int sampleRadius = 8.0f;
+        float sampleRadius = 8.0f;
+        int2 maxPixel = int2(Size) - 1;
         
         for (int i = 0; i < DISK_SAMPLE_COUNT; i++)
         {
-            float2 pos = (poissonDisk[i].xy / Size) * sampleRadius;
-            ao = ao + doAmbientOcclusion(coords, pos, position, normalize(normal.xyz));
+            int2 samplePixel = clamp(pixel + int2(poissonDisk[i] * sampleRadius), int2(0, 0), maxPixel);
+            ao = ao + doAmbientOcclusion(samplePixel, position, N);
         }
 
         ao = 1.0f - abs(ao / float(sampleCount));
         ao = saturate(pow(ao, 6.0f));
         
-        color += AmbientColor * ao;
+        color += AmbientTexture.Load(int3(pixel, 0)).xyz * ao;
     }
     
     color = toGamma(color);

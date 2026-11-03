@@ -26,6 +26,7 @@ struct GBUFFER
     float4 Normal : SV_Target1;
     float4 Color : SV_Target2;
     float4 UV : SV_Target3;
+    float4 Ambient : SV_Target4;
 };
 
 SamplerState Sampler : register(s0);
@@ -54,33 +55,34 @@ PS_IN VS(VS_IN input)
 
 GBUFFER PS(PS_IN input)
 {
-    float3 tangent = normalize(input.Tangent);
-    float3 bumpMap = NormalTexture.Sample(Sampler, input.TexCoords).xyz;
     float3 N = normalize(input.Normal);
+    float3 tangent = normalize(input.Tangent - dot(input.Tangent, N) * N);
+    float3 biTangent = normalize(input.Bitangent - dot(input.Bitangent, N) * N);
+
+    // Tile normals only store XY, so Z is reconstructed
+    float2 bumpXY = mad(2.0f, NormalTexture.Sample(Sampler, input.TexCoords).xy, -1.0f);
+    float bumpZ = sqrt(saturate(1.0f - dot(bumpXY, bumpXY)));
+    N = normalize(bumpXY.x * tangent + bumpXY.y * biTangent + bumpZ * N);
     
-    float3 biTangent = normalize(cross(N, tangent));
-    bumpMap = mad(2.0f, bumpMap, -1.0f);
-    N -= mad(bumpMap.z, tangent, bumpMap.y * biTangent);
-    N = normalize(N);
-    
-    float3 specular = computeSpecular(Light1, input.WorldPos, N) + computeSpecular(Light2, input.WorldPos, N);
-    
+    // Only the key light is used for diffuse, highlights come from its softbox in the environment
     float3 sampledDiffuse = DiffuseTexture.Sample(Sampler, input.TexCoords).xyz;
-    float3 diffuse = computeDiffuse(Light1, input.WorldPos, N) + computeDiffuse(Light2, input.WorldPos, N);
+    float3 diffuse = computeDiffuse(Light1, input.WorldPos, N);
+    
+    float3 albedo = DiffuseColor * sampledDiffuse;
     
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
-    color += DiffuseColor * sampledDiffuse * diffuse * 0.6f;
-    color += SpecularColor * specular * 0.5f;
+    color += albedo * diffuse * 0.6f;
+    color += computeReflection(input.WorldPos, N);
 
     float4 finalColor = float4(color, 1);
     
     GBUFFER result = (GBUFFER) 0;
-    result.Position.xy = input.Position.xy;
-    result.Position.z = input.Position.z / input.Position.w;
+    result.Position = float4(input.WorldPos, 1);
     result.Normal = ( float4(N, 1) + 1.0f ) / 2.0f;
     result.Color = finalColor;
     result.UV = float4(input.TexCoords, 0, 0);
+    result.Ambient = float4(albedo * computeHemisphereAmbient(N), 1);
 
     return result;
 }
