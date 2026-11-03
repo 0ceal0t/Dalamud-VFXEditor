@@ -31,9 +31,9 @@ namespace VfxEditor.ScdFormat.Music.Data {
         private readonly HcaInfo HcaInfo;
         private uint SamplesPerBlock => 0x80 * 8; // fixed 1024 samples/block, independent of channel count
 
-        private readonly byte[] Unk1 = [ 0x20, 0x18 ];
-        private readonly byte[] Unk2 = [ 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 ];
-        private readonly byte[] Unk3 = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 ];
+        private readonly byte[] Unk1 = [0x20, 0x18];
+        private readonly byte[] Unk2 = [0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00];
+        private readonly byte[] Unk3 = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
         public ScdHca( byte[] data, HcaInfo info, ScdAudioEntry entry ) : base( entry ) {
             StreamData = data;
@@ -44,7 +44,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         }
 
         public ScdHca( BinaryReader reader, ScdAudioEntry entry ) : base( entry ) {
-            Unk1 = reader.ReadBytes(2); // TODO
+            Unk1 = reader.ReadBytes( 2 ); // TODO
             HeaderSize = reader.ReadInt16();
             BlockSize = reader.ReadInt16();
             Unk2 = reader.ReadBytes( 7 ); // TODO
@@ -82,7 +82,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
         public override void Write( BinaryWriter writer ) {
             writer.Write( Unk1 );
             writer.Write( HeaderSize );
-            writer.Write( (short) BlockSize );
+            writer.Write( ( short )BlockSize );
             writer.Write( Unk2 );
             writer.Write( PlainText );
             writer.Write( Unk3 );
@@ -126,7 +126,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 WaveFileWriter.CreateWaveFile( ScdManagerGroup.ConvertWav, reader ); // converted to pcm
             }
             else {
-                File.Copy( path, ScdManagerGroup.ConvertWav ); // already good
+                File.Delete( ScdManagerGroup.ConvertWav );
+                File.Copy( path, ScdManagerGroup.ConvertWav );
             }
 
             ScdUtils.ConvertToHca( ScdManagerGroup.ConvertWav );
@@ -143,8 +144,8 @@ namespace VfxEditor.ScdFormat.Music.Data {
             var entry = new ScdAudioEntry(
                 oldEntry,
                 0, // data length is a placeholder
-                (int) decoder.HcaInfo.ChannelCount,
-                (int) decoder.HcaInfo.SamplingRate,
+                ( int )decoder.HcaInfo.ChannelCount,
+                ( int )decoder.HcaInfo.SamplingRate,
                 SscfWaveFormat.HCA
             );
 

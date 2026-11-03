@@ -1,8 +1,9 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Configuration;
 using Dalamud.Interface;
+using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -164,6 +165,8 @@ namespace VfxEditor {
 
         public string CustomPathPrefix = "vfx/custom/";
 
+        public Vector4 AccentColor = StyleModel.GetFromCurrent().BuiltInColors.DPSRed.Value;
+
         [NonSerialized]
         public bool WriteLocationError = false;
 
@@ -323,6 +326,7 @@ namespace VfxEditor {
 
             if( ImGui.CollapsingHeader( "UI", ImGuiTreeNodeFlags.DefaultOpen ) ) {
                 using var _ = ImRaii.PushIndent( 10f );
+                if( ImGui.ColorEdit4( "Accent Color", ref AccentColor ) ) Save();
                 if( ImGui.Checkbox( "Hide with Game UI", ref HideWithUI ) ) Save();
                 if( ImGui.Checkbox( "Show Tab Bar", ref ShowTabBar ) ) Save();
                 if( ImGui.Checkbox( "Lock Main Windows", ref LockMainWindows ) ) Save();

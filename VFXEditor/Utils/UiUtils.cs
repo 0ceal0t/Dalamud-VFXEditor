@@ -44,7 +44,7 @@ namespace VfxEditor.Utils {
 
         public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
 
-        public static Vector4 ACCENT_COLOR => StyleModel.GetFromCurrent().BuiltInColors.DPSRed.Value;
+        public static Vector4 ACCENT_COLOR => Plugin.Configuration?.AccentColor ?? StyleModel.GetFromCurrent().BuiltInColors.DPSRed.Value;
 
         public static readonly string HIGH_PRECISION_FORMAT = "%.7f";
 
