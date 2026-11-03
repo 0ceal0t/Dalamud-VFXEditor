@@ -27,7 +27,7 @@ namespace VfxEditor.Ui.Export.Categories {
 
             ImGui.SameLine();
             var selectedCount = GetItemsToExport().Count();
-            var totalCount = Group.GetDocuments().Where( x => x.CanExport() ).Count();
+            var totalCount = Group.GetDocuments().Count( x => x.CanExport() );
             using var color = ImRaii.PushColor( ImGuiCol.Text, selectedCount == totalCount ? UiUtils.PARSED_GREEN : UiUtils.DALAMUD_ORANGE, selectedCount > 0 );
             if( ImGui.CollapsingHeader( $"{id} [{selectedCount}/{totalCount}]###{id}" ) ) {
                 color.Pop();

@@ -68,7 +68,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
 
             if( Penumbra ) {
                 ImGui.SameLine();
-                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_ORANGE );
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.ACCENT_COLOR );
                 ImGui.Text( "[Penumbra]" );
             }
 

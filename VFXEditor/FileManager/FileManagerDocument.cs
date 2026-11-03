@@ -1,5 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
+using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
 using VfxEditor.Ui.Export;
+using VfxEditor.Ui.Import;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
@@ -280,7 +282,7 @@ namespace VfxEditor.FileManager {
             var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && ImGui.IsMouseHoveringRect( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ) );
 
             var color = hovered ?
-                ImGui.ColorConvertFloat4ToU32( UiUtils.DALAMUD_ORANGE ) :
+                ImGui.ColorConvertFloat4ToU32( UiUtils.ACCENT_COLOR ) :
                 ( Disabled ?
                     ImGui.ColorConvertFloat4ToU32( UiUtils.RED_COLOR ) :
                     ImGui.GetColorU32( ImGuiCol.TextDisabled )
@@ -395,14 +397,14 @@ namespace VfxEditor.FileManager {
 
         private bool DrawBar( float inputSize, string display, ref string inputText, SelectResult selectResult, bool highlight, out SelectResult result ) {
             using var border = ImRaii.PushStyle( ImGuiStyleVar.FrameBorderSize, 2f, highlight );
-            using var borderColor = ImRaii.PushColor( ImGuiCol.Border, UiUtils.DALAMUD_YELLOW, highlight );
+            using var borderColor = ImRaii.PushColor( ImGuiCol.Border, UiUtils.ACCENT_COLOR, highlight );
 
             var edited = false;
             result = null;
 
             ImGui.SameLine();
             ImGui.SetNextItemWidth( inputSize );
-            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, UiUtils.DALAMUD_YELLOW, selectResult != null ) ) {
+            using( var color = ImRaii.PushColor( ImGuiCol.TextDisabled, StyleModel.GetFromCurrent().BuiltInColors.DalamudGrey.Value, selectResult != null ) ) {
                 if( ImGui.InputTextWithHint( "", display, ref inputText, 255, ImGuiInputTextFlags.EnterReturnsTrue ) ) {
                     var cleanedPath = inputText.Trim().Replace( "\\", "/" );
                     result = new SelectResult( SelectResultType.GamePath, cleanedPath, $"[GAME] {cleanedPath}", cleanedPath );
@@ -429,16 +431,29 @@ namespace VfxEditor.FileManager {
         // ==========================
 
         protected virtual void DisplayFileControls() {
-            if( UiUtils.OkButton( "UPDATE" ) ) Update();
+            using( ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 20, ImGui.GetStyle().FramePadding.Y ) ) )
+            using( ImRaii.PushColor( ImGuiCol.Button, UiUtils.ACCENT_COLOR ) ) {
+                if( ImGui.Button( "UPDATE" ) ) Update();
+            }
+            UiUtils.Tooltip( "Update the game to reflect the changes you have made" );
 
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
             }
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.Download.ToIconString() ) ) ExportRawDialog();
+                if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) ImGui.OpenPopup( "SaveButtonPopup" );
             }
-            UiUtils.Tooltip( "Export as a raw file" );
+            UiUtils.Tooltip( "Export your changes" );
+
+            using( var popup = ImRaii.Popup( "SaveButtonPopup" ) ) {
+                if( popup ) {
+                    if( ImGui.Selectable( "Penumbra Mod" ) ) Plugin.PenumbraExportDialog.Show();
+                    if( ImGui.Selectable( "TexTools Mod" ) ) Plugin.TexToolsExportDialog.Show();
+                    ImGui.Separator();
+                    if( ImGui.Selectable( "Export just this file" ) ) ExportRawDialog();
+                }
+            }
 
             ImGui.SameLine();
             UiUtils.ShowVerifiedStatus( Verified );

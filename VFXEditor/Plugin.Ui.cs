@@ -9,10 +9,8 @@ using System.IO;
 using System.Linq;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Ui.Components;
-using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 using VfxEditor.FileManager;
-using static VfxEditor.Interop.Penumbra.PenumbraRequiredWindow;
 using VfxEditor.Interop.Penumbra;
 
 namespace VfxEditor {
@@ -102,12 +100,6 @@ namespace VfxEditor {
                     ImGui.EndMenu();
                 }
 
-                ImGui.EndMenu();
-            }
-
-            if( ImGui.BeginMenu( "Export" ) ) {
-                if( ImGui.MenuItem( "Penumbra" ) ) PenumbraExportDialog.Show();
-                if( ImGui.MenuItem( "TexTools" ) ) TexToolsExportDialog.Show();
                 ImGui.EndMenu();
             }
         }

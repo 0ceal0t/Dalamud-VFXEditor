@@ -44,6 +44,8 @@ namespace VfxEditor.Utils {
 
         public static Vector4 PARSED_GREEN => StyleModel.GetFromCurrent().BuiltInColors.ParsedGreen.Value;
 
+        public static Vector4 ACCENT_COLOR => StyleModel.GetFromCurrent().BuiltInColors.DPSRed.Value;
+
         public static readonly string HIGH_PRECISION_FORMAT = "%.7f";
 
         public static string GetArticle( string input ) => "aeiouAEIOU".Contains( input[0] ) ? "an" : "a";
@@ -140,7 +142,7 @@ namespace VfxEditor.Utils {
 
         public static void WikiButton( string url ) {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), DALAMUD_ORANGE ) ) OpenUrl( url );
+                if( TransparentButton( FontAwesomeIcon.InfoCircle.ToIconString(), ACCENT_COLOR ) ) OpenUrl( url );
             }
             Tooltip( "Click to view more information on the VFXEditor wiki" );
         }
@@ -164,10 +166,10 @@ namespace VfxEditor.Utils {
             };
 
             var text = verified switch {
-                VerifiedStatus.VERIFIED => "Verified",
-                VerifiedStatus.PARTIAL => "Partially Verified",
+                VerifiedStatus.VERIFIED => "File Verified",
+                VerifiedStatus.PARTIAL => "File Partially Verified",
                 VerifiedStatus.ERROR => "Parsing Issues",
-                VerifiedStatus.WORKSPACE => "Workspace",
+                VerifiedStatus.WORKSPACE => "Workspace Loaded",
                 VerifiedStatus.UNKNOWN => "Unknown",
                 VerifiedStatus.UNSUPPORTED => "Unsupported",
                 _ => "[OTHER]"
@@ -177,8 +179,10 @@ namespace VfxEditor.Utils {
                 ImGui.TextColored( color, icon );
             }
 
-            ImGui.SameLine();
-            ImGui.TextColored( color, text );
+            using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 0 ) ) ) {
+                ImGui.SameLine();
+                ImGui.TextColored( color, text );
+            }
 
             if( verified == VerifiedStatus.UNSUPPORTED ) Tooltip( "Verification is not supported for this file or file type" );
 
