@@ -124,7 +124,7 @@ namespace VfxEditor {
         public List<FileBrowserSidebarItem> FileBrowserFavorites = [];
 
         public Vector4 RendererBackground = new( 0.272f, 0.273f, 0.320f, 1.0f );
-        public Vector3 MaterialAmbientColor = new( 0.0392f, 0.0156f, 0.04313f );
+        public Vector3 MaterialAmbientColor = new( 0.1f, 0.095f, 0.11f );
         public LightConfiguration Light1 = new( new( 2, 2, 2 ), new( 0.9153226f, 0.8648891f, 0.76768994f ), 10f, 0.1f );
         public LightConfiguration Light2 = new( new( -2, -2, -2 ), new( 0.39516127f, 0.28755587f, 0.2692833f ), 10f, 0.1f );
 

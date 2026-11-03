@@ -56,11 +56,11 @@ PS_IN VS(VS_IN input)
 GBUFFER PS(PS_IN input)
 {
     float3 N = normalize(input.Normal);
+    float3 geometryN = N;
     float3 tangent = normalize(input.Tangent - dot(input.Tangent, N) * N);
     float3 biTangent = normalize(input.Bitangent - dot(input.Bitangent, N) * N);
 
-    // Tile normals only store XY, so Z is reconstructed
-    float2 bumpXY = mad(2.0f, NormalTexture.Sample(Sampler, input.TexCoords).xy, -1.0f);
+    float2 bumpXY = mad(2.0f, NormalTexture.Sample(Sampler, input.TexCoords).xy, -1.0f) * float2(1.0f, -1.0f);
     float bumpZ = sqrt(saturate(1.0f - dot(bumpXY, bumpXY)));
     N = normalize(bumpXY.x * tangent + bumpXY.y * biTangent + bumpZ * N);
     
@@ -73,7 +73,7 @@ GBUFFER PS(PS_IN input)
     float3 color = float3(0, 0, 0);
     color += EmissiveColor;
     color += albedo * diffuse * 0.6f;
-    color += computeReflection(input.WorldPos, N);
+    color += computeReflection(input.WorldPos, N, geometryN);
 
     float4 finalColor = float4(color, 1);
     
