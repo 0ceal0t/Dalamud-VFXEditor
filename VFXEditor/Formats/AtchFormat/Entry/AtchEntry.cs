@@ -37,6 +37,10 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         public void Draw() => Draw( null );
 
         public void Draw( List<AtchEntryState> validStates ) {
+            using( ImRaii.Disabled() ) {
+                ImGui.TextWrapped( "Penumbra only recognizes metadata changes, so only the state edits in green will be recognized by Penumbra" );
+            }
+
             Name.Draw( 3, Name.Name, 0, ImGuiInputTextFlags.None );
             Accessory.Draw();
 

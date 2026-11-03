@@ -53,7 +53,8 @@ namespace VfxEditor.Ui.Export.Penumbra {
             Name = Name,
             Priority = Priority,
             Layout = GetLayout(),
-            Files = CategorySet.Export( modFolder, $"{group}/{Name}" )
+            Files = CategorySet.Export( modFolder, $"{group}/{Name}" ),
+            Manipulations = CategorySet.ExportManipulations()
         };
 
         public PenumbraOptionStruct WorkspaceExport() => new() {

@@ -14,6 +14,8 @@ namespace VfxEditor.FileManager.Interfaces {
 
         void TextoolsExport( BinaryWriter writer, List<TTMPL_Simple> simplePartsOut, ref int modOffset );
 
+        void PenumbraExportManipulations( List<object> manipulationsOut );
+
         void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut );
 
         bool GetReplacePath( string path, out string replacePath );

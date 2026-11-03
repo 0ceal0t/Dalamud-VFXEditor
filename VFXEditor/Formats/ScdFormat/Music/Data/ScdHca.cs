@@ -154,8 +154,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
                 WaveFileWriter.CreateWaveFile( ScdManagerGroup.ConvertWav, reader ); // converted to pcm
             }
             else {
-                File.Delete( ScdManagerGroup.ConvertWav );
-                File.Copy( path, ScdManagerGroup.ConvertWav );
+                File.Copy( path, ScdManagerGroup.ConvertWav, true );
             }
 
             ScdUtils.ConvertToHca( ScdManagerGroup.ConvertWav );

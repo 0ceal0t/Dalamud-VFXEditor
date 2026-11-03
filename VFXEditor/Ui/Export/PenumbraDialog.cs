@@ -250,7 +250,7 @@ namespace VfxEditor.Ui.Export {
                     Version = meta.Version,
                     Website = meta.Website,
                     ModTags = meta.ModTags,
-                    DefaultData = new() { Files = DefaultMod.Export( tempDir, "" ) },
+                    DefaultData = new() { Files = DefaultMod.Export( tempDir, "" ), Manipulations = DefaultMod.ExportManipulations() },
                     Groups = [.. Groups.Select( x => x.Export( tempDir ) )]
                 };
 

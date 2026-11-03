@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.IO;
 using VfxEditor.FileManager;
+using VfxEditor.Interop.Penumbra.Meta;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AtchFormat {
@@ -16,6 +18,14 @@ namespace VfxEditor.Formats.AtchFormat {
         protected override void RemoveReplace() {
             base.RemoveReplace();
             File?.ResetVanilla();
+        }
+
+        // Penumbra never loads .atch files from mods, edits have to be stored as ATCH meta manipulations instead
+        public override void PenumbraExport( string modFolder, string groupOption, Dictionary<string, string> filesOut ) { }
+
+        public override void PenumbraExportManipulations( List<object> manipulationsOut ) {
+            if( File == null || string.IsNullOrEmpty( ReplacePath ) ) return;
+            manipulationsOut.AddRange( PenumbraMetaWriter.ToJson( ReplacePath, File ) );
         }
     }
 }

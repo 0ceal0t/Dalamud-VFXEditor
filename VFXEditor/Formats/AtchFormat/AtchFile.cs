@@ -194,7 +194,7 @@ namespace VfxEditor.Formats.AtchFormat {
         private readonly AtchEntrySplitView EntryView;
 
         public (string GamePath, List<AtchEntry> Entries)? Vanilla { get; private set; } = null; // Penumbra only uses ATCH diffs, so need to highlight which ones are actually changed
-        public readonly HashSet<String> SeenNames = [];
+        public readonly HashSet<string> SeenNames = [];
 
         public unsafe AtchFile( BinaryReader reader ) : base() {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
