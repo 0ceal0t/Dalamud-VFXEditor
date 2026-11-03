@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Formats.AtchFormat.Entry;
+using VfxEditor.TmbFormat.Base;
 
 namespace VfxEditor.Interop.Penumbra.Meta {
     public readonly record struct AtchChange( string TypeName, ushort GenderRace, ushort Index, string Bone, float Scale, Vector3 Offset, Vector3 Rotation );
@@ -55,27 +57,52 @@ namespace VfxEditor.Interop.Penumbra.Meta {
 
         // Dedup by multiple changes trying to target the same thing
         private static List<AtchChange> GetAllChanges( List<(string GamePath, AtchFile File)> files ) =>
-            [.. files.SelectMany( x => GetChanges( x.GamePath, x.File, true ) ).GroupBy( x => (x.TypeName, x.GenderRace, x.Index) ).Select( x => x.First() )];
+            [.. files.SelectMany( x => GetChanges( x.GamePath, x.File ) ).GroupBy( x => (x.TypeName, x.GenderRace, x.Index) ).Select( x => x.First() )];
 
-        public static List<AtchChange> GetChanges( string gamePath, AtchFile file, bool filterByVanilla ) {
+        public static List<AtchChange> GetChanges( string gamePath, AtchFile file ) {
             var ret = new List<AtchChange>();
-            if( file == null || !TryGetGenderRace( gamePath, out var genderRace ) ) return ret;
+            if( file == null || !TryGetGenderRace( gamePath, out var genderRace ) ) {
+                file.ResetVanilla(); // could not get data from gamePath
+                return ret;
+            }
 
-            var vanilla = filterByVanilla ? file.UpdateVanilla( gamePath ) : null;
+            var vanilla = file.UpdateVanilla( gamePath );
+            var seenNames = new HashSet<string>();
 
             foreach( var entry in file.Entries ) {
-                var name = entry.Name.Value;
-                if( string.IsNullOrEmpty( name ) || name.Length > 4 ) continue;
-
-                for( var index = 0; index < entry.States.Count; index++ ) {
-                    var state = entry.States[index];
-                    var bone = state.Bone.Value ?? "";
-                    if( bone.Length == 0 || bone.Length > MaxBoneNameLength ) continue;
-
-                    ret.Add( new( name, genderRace, ( ushort )index, bone, state.Scale.Value, state.Offset.Value, state.Rotation.Value ) );
-                }
+                var diffs = GetUpdatedStates( vanilla, entry, seenNames, genderRace );
+                ret.AddRange( diffs.Select( x => x.Change ) );
 
             }
+            return ret;
+        }
+
+        public static List<(AtchEntryState State, AtchChange Change)> GetUpdatedStates( List<AtchEntry> vanilla, AtchEntry entry, HashSet<string> seenNames, ushort genderRace ) {
+            var ret = new List<(AtchEntryState, AtchChange)>();
+
+            var name = entry.Name.Value;
+            if( string.IsNullOrEmpty( name ) || name.Length > 4 ) return ret;
+            if( !seenNames.Add( name ) ) return ret;
+
+            if( vanilla == null ) return ret;
+            var vanillaEntry = vanilla?.FirstOrDefault( x => x.Name.Value == name );
+            if( vanilla != null && vanillaEntry == null ) return ret; // new point, Penumbra cannot add these
+
+            for( var index = 0; index < entry.States.Count; index++ ) {
+                var state = entry.States[index];
+                var bone = state.Bone.Value ?? "";
+                if( bone.Length == 0 || bone.Length > MaxBoneNameLength ) continue;
+
+                if( vanillaEntry != null ) {
+                    if( index >= vanillaEntry.States.Count ) continue;
+                    var original = vanillaEntry.States[index];
+                    if( original.Bone.Value == bone && original.Scale.Value == state.Scale.Value &&
+                        original.Offset.Value == state.Offset.Value && original.Rotation.Value == state.Rotation.Value ) continue;
+                }
+
+                ret.Add( (state, new( name, genderRace, ( ushort )index, bone, state.Scale.Value, state.Offset.Value, state.Rotation.Value )) );
+            }
+
             return ret;
         }
 
@@ -116,7 +143,7 @@ namespace VfxEditor.Interop.Penumbra.Meta {
 
         public static List<object> ToJson( string gamePath, AtchFile file ) {
             var ret = new List<object>();
-            foreach( var change in GetChanges( gamePath, file, true ) ) {
+            foreach( var change in GetChanges( gamePath, file ) ) {
                 var race = change.GenderRace / 100;
                 ret.Add( new JObject {
                     ["Type"] = "Atch",

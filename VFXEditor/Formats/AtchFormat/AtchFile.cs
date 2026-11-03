@@ -193,7 +193,8 @@ namespace VfxEditor.Formats.AtchFormat {
         public readonly List<AtchEntry> Entries = [];
         private readonly AtchEntrySplitView EntryView;
 
-        public (string GamePath, List<AtchChange> Changes)? Vanilla { get; private set; } = null; // Penumbra only uses ATCH diffs, so need to highlight which ones are actually changed
+        public (string GamePath, List<AtchEntry> Entries)? Vanilla { get; private set; } = null; // Penumbra only uses ATCH diffs, so need to highlight which ones are actually changed
+        public readonly HashSet<String> SeenNames = [];
 
         public unsafe AtchFile( BinaryReader reader ) : base() {
             Verified = VerifiedStatus.UNSUPPORTED; // verifying these is fucked. The format is pretty simple though, so it's not a big deal
@@ -216,7 +217,7 @@ namespace VfxEditor.Formats.AtchFormat {
             }
 
             Entries.ForEach( x => x.ReadBody( reader, NumStates ) );
-            EntryView = new( Entries );
+            EntryView = new( this, Entries );
         }
 
         public override void Write( BinaryWriter writer ) {
@@ -250,12 +251,21 @@ namespace VfxEditor.Formats.AtchFormat {
 
             ImGui.Separator();
 
+            SeenNames.Clear();
             EntryView.Draw();
         }
 
-        public List<AtchChange> UpdateVanilla( string gamePath ) {
+        public void ResetVanilla() {
+            Vanilla = null;
+        }
+
+        public List<AtchEntry> UpdateVanilla( string gamePath ) {
+            if( string.IsNullOrEmpty( gamePath ) ) {
+                ResetVanilla();
+                return null;
+            }
             if( Vanilla?.GamePath == gamePath ) { // already have them
-                return Vanilla.Value.Changes;
+                return Vanilla.Value.Entries;
             }
 
             try {
@@ -263,20 +273,22 @@ namespace VfxEditor.Formats.AtchFormat {
                 if( data != null ) {
                     using var reader = new BinaryReader( new MemoryStream( data ) );
                     var file = new AtchFile( reader );
-                    var changes = PenumbraMetaWriter.GetChanges( gamePath, file, false );
-                    Vanilla = (gamePath, changes);
+                    Vanilla = (gamePath, [.. file.Entries]);
+                    // Make sure this is clear to be cleaned up
+                    file.Entries.Clear();
                     file.Dispose();
-                    return changes;
+
+                    return Vanilla?.Entries;
                 }
                 else {
                     Dalamud.Error( $"Path {gamePath} not found" );
                 }
             }
             catch( Exception ex ) {
-                Dalamud.Error( ex, "Failed to get vanilla ATCH changes" );
-                return null;
+                Dalamud.Error( ex, $"Failed to get vanilla ATCH changes for {gamePath}" );
             }
 
+            ResetVanilla();
             return null;
         }
 

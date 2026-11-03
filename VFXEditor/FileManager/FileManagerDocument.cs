@@ -142,7 +142,7 @@ namespace VfxEditor.FileManager {
             PenumbraTempMod.MarkDirty();
         }
 
-        protected void RemoveReplace() {
+        protected virtual void RemoveReplace() {
             Replace = null;
             ReplaceTextInput = "";
 

@@ -1,7 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Formats.AtchFormat;
+using VfxEditor.Interop.Penumbra.Meta;
+using VfxEditor.Ui.Export;
 
 namespace VfxEditor.Interop.Penumbra {
     public class PenumbraTempMod {
@@ -34,13 +39,23 @@ namespace VfxEditor.Interop.Penumbra {
         private static void GetCurrentFiles( out Dictionary<string, string> files, out string meta ) {
             files = [];
             meta = string.Empty;
+            if( Plugin.State != WorkspaceState.None ) return;
 
             var resolvedPaths = new HashSet<string>();
-            foreach( var (_, gamePath, localPath) in GetActiveDocuments() ) {
+            var atchFiles = new List<(string, AtchFile)>();
+
+            foreach( var (document, gamePath, localPath) in GetActiveDocuments() ) {
+                if( gamePath.EndsWith( ".atch", StringComparison.OrdinalIgnoreCase ) ) {
+                    if( document is AtchDocument atch && atch.File != null ) atchFiles.Add( (gamePath, atch.File) );
+                    continue;
+                }
+
                 var key = gamePath.ToLower();
                 if( resolvedPaths.Contains( key ) ) continue; // first document wins
                 if( AddFile( files, key, localPath ) ) resolvedPaths.Add( key );
             }
+
+            meta = PenumbraMetaWriter.ToBase64( atchFiles );
         }
 
         private static bool Update() {

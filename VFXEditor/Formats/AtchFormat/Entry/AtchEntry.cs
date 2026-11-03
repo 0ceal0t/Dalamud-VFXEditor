@@ -34,13 +34,18 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
             States.ForEach( x => x.Write( writer, stringStartPos, stringWriter, stringPos ) );
         }
 
-        public void Draw() {
+        public void Draw() => Draw( null );
+
+        public void Draw( List<AtchEntryState> validStates ) {
             Name.Draw( 3, Name.Name, 0, ImGuiInputTextFlags.None );
             Accessory.Draw();
 
             for( var idx = 0; idx < States.Count; idx++ ) {
                 var state = States[idx];
+                using var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, validStates != null && validStates.Contains( state ) );
                 if( ImGui.CollapsingHeader( $"State {idx} ({state.Bone.Value})###{idx}" ) ) {
+                    color.Pop();
+
                     using var _ = ImRaii.PushId( idx );
                     using var indent = ImRaii.PushIndent();
 
