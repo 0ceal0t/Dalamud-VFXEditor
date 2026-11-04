@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.FileBrowser;
 using VfxEditor.Ui.Components;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AvfxFormat.Texture {
     public class ImportMissingTexturesModal : Modal {

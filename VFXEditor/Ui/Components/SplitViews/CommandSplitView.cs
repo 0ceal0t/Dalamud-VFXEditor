@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.Interfaces;
 

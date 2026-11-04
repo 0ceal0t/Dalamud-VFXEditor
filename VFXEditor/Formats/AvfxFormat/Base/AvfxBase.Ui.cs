@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public partial class AvfxBase {
         private static bool UnassignPopup( string name ) {
             if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( $"Unassign/{name}" );

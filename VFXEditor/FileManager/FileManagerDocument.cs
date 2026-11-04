@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Select;
@@ -57,7 +58,7 @@ namespace VfxEditor.FileManager {
             replacePath = null;
             if( File == null ) return false;
 
-            replacePath = ReplacePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;
+            replacePath = string.Equals( ReplacePath, path, StringComparison.OrdinalIgnoreCase ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
 
@@ -69,15 +70,14 @@ namespace VfxEditor.FileManager {
                 return;
             }
 
-            if( !path.EndsWith( $".{Extension}" ) ) {
+            if( !path.EndsWith( $".{Extension}", StringComparison.Ordinal ) ) {
                 Dalamud.Error( $"{path} is the wrong file type" );
                 return;
             }
 
             try {
-                using var reader = new BinaryReader( System.IO.File.Open( path, FileMode.Open ) );
-                File?.Dispose();
-                File = FileFromReader( reader, verify );
+                using var reader = new BinaryReader( System.IO.File.OpenRead( path ) );
+                SwapFile( FileFromReader( reader, verify ) );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error reading file: {path}" );
@@ -91,7 +91,7 @@ namespace VfxEditor.FileManager {
                 return;
             }
 
-            if( !path.EndsWith( $".{Extension}" ) ) {
+            if( !path.EndsWith( $".{Extension}", StringComparison.Ordinal ) ) {
                 Dalamud.Error( $"{path} is the wrong file type" );
                 return;
             }
@@ -100,13 +100,18 @@ namespace VfxEditor.FileManager {
                 var file = Dalamud.DataManager.GetFile( path );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
-                File?.Dispose();
-                File = FileFromReader( reader, verify );
+                SwapFile( FileFromReader( reader, verify ) );
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error Reading File at {path}" );
                 Dalamud.ErrorNotification( $"Error Reading File at {path}" );
             }
+        }
+
+        private void SwapFile( R newFile ) {
+            var oldFile = File;
+            File = newFile;
+            oldFile?.Dispose();
         }
 
         // =================
@@ -344,7 +349,7 @@ namespace VfxEditor.FileManager {
 
             if( LocalSource ) {
                 var reloadWidth = UiUtils.GetIconSize( FontAwesomeIcon.Sync ).X;
-                var replaceWidth = UiUtils.GetIconSize( FontAwesomeIcon.Upload ).Y;
+                var replaceWidth = UiUtils.GetIconSize( FontAwesomeIcon.Upload ).X;
                 inputSize -= ( reloadWidth + replaceWidth + ( ImGui.GetStyle().FramePadding.X * 4 ) + 6 );
             }
 
@@ -364,7 +369,7 @@ namespace VfxEditor.FileManager {
                 }
                 UiUtils.Tooltip( "Reload the source file from disk" );
                 ImGui.SameLine();
-                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
+                if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) && File != null ) {
                     System.IO.File.WriteAllBytes( Source.Path, File.ToBytes() );
                     Dalamud.OkNotification( "Exported to " + Source.Path );
                 }
@@ -521,7 +526,7 @@ namespace VfxEditor.FileManager {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 15 );
 
             var availWidth = ImGui.GetContentRegionMax().X;
-            var width = availWidth > 500 ? 500 : availWidth; // cap out at 300
+            var width = Math.Min( availWidth, 500 );
             ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( availWidth - width ) / 2 );
             using var child = ImRaii.Child( "HelpTextChild", new Vector2( width, -1 ) );
 

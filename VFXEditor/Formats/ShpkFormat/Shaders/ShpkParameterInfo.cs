@@ -2,6 +2,8 @@ using Lumina.Misc;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 using static VfxEditor.Utils.ShaderUtils;
 
@@ -17,7 +19,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
 
 
 
-        public readonly ParsedShort IsTexture = new( "Is Texture");
+        public readonly ParsedShort IsTexture = new( "Is Texture" );
         public readonly ParsedShort Slot = new( "Slot" );
         public readonly ParsedShort Size = new( "Registers" );
 
@@ -47,7 +49,7 @@ namespace VfxEditor.Formats.ShpkFormat.Shaders {
             writer.Write( 0 ); // placeholder
             writer.Write( ( ushort )Value.Value.Length );
 
-            
+
             IsTexture.Write( writer );
             Slot.Write( writer );
             Size.Write( writer );

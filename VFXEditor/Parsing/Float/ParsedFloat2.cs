@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Float {
     public class ParsedFloat2 : ParsedSimpleBase<Vector2> {
         public bool HighPrecision = true;
         public ParsedFloat2( string name, Vector2 value ) : base( name, value ) { }

@@ -3,8 +3,10 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.UldFormat.PartList;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     public enum GridPartsType : int {
         Divide = 0x0,
         Compose = 0x1,

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,10 +22,10 @@ namespace VfxEditor.FileBrowser.Filter {
         public bool HasExtension( IEnumerable<string> extensions ) => extensions.Any( HasExtension );
 
         public bool HasExtension( string extension ) =>
-             Filter != null && Filter.ToLower().Equals( $".{extension.ToLower()}" ) ||
+             Filter != null && string.Equals( Filter, $".{extension}", StringComparison.OrdinalIgnoreCase ) ||
             (
                 CollectionFilters != null &&
-                CollectionFilters.Any( x => x.ToLower().Equals( $".{extension.ToLower()}" ) )
+                CollectionFilters.Any( x => string.Equals( x, $".{extension}", StringComparison.OrdinalIgnoreCase ) )
             );
     }
 }

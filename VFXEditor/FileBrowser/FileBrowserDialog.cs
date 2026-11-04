@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.FileBrowser.Filter;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.FileBrowser.Preview;

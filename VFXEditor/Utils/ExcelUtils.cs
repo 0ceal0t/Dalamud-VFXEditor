@@ -35,7 +35,7 @@ namespace VfxEditor.Utils {
                 ExcelColumnDataType.PackedBool5 => page.ReadPackedBool( column.Offset + offset, 5 ),
                 ExcelColumnDataType.PackedBool6 => page.ReadPackedBool( column.Offset + offset, 6 ),
                 ExcelColumnDataType.PackedBool7 => page.ReadPackedBool( column.Offset + offset, 7 ),
-                _ => throw new Exception( $"Unknown type: {column.Type}" )
+                _ => throw new NotSupportedException( $"Unknown type: {column.Type}" )
             };
         }
     }

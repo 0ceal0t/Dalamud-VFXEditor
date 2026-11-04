@@ -3,7 +3,7 @@ using Dalamud.Bindings.ImGui;
 using System;
 using System.IO;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Flag {
     public class ParsedFlag<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
         private readonly bool ShowIntField;

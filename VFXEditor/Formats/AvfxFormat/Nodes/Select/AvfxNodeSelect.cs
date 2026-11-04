@@ -1,12 +1,15 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using System;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes.Select {
     public abstract class AvfxNodeSelect : IUiItem {
         public readonly AvfxFile File;
         public readonly AvfxNode Node;
@@ -198,7 +201,7 @@ namespace VfxEditor.AvfxFormat {
 
             UiUtils.Tooltip( "Navigate to selected node" );
 
-            if( !Name.StartsWith( "##" ) ) {
+            if( !Name.StartsWith( "##", StringComparison.Ordinal ) ) {
                 ImGui.SameLine();
                 ImGui.Text( Name );
             }

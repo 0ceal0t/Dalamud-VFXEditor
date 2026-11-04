@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Formats.MdlFormat.Element {
+namespace VfxEditor.Formats.MdlFormat.Eid {
     public class MdlEid : IUiItem {
         public readonly ParsedUInt ElementId = new( "Bind Point Id" );
         public readonly ParsedString ParentBone = new( "Parent Bone" ); // chara/weapon/w2366/obj/body/b0001/model/w2366b0001.mdl

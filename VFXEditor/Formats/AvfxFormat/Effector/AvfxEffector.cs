@@ -1,11 +1,17 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Components.UiComponents;
+using VfxEditor.Formats.AvfxFormat.Effector.Data;
 using VfxEditor.Formats.AvfxFormat.Nodes;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Effector {
     public class AvfxEffector : AvfxNodeWithData<EffectorType> {
         public const string NAME = "Efct";
 

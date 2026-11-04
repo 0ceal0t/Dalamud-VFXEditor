@@ -6,6 +6,7 @@ using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
 using InteropGenerator.Runtime;
 using System;
 using System.Runtime.InteropServices;
+using VfxEditor.Data;
 using VfxEditor.Spawn;
 
 namespace VfxEditor.Interop {

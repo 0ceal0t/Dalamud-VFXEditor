@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabVfx : SelectTab<CommonRow> {
@@ -35,7 +36,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
             var idx = 0;
             foreach( var line in File.ReadLines( SelectDataUtils.CommonVfxPath ).Where( x => !string.IsNullOrEmpty( x ) ) ) {
-                Items.Add( new CommonRow( idx++, line, line.Replace( "bgcommon/", "" ).Replace( "vfx/lockon/eff/", "" ).Replace( "vfx/monster/c0", "c0").Replace( "vfx/monster/c1", "c1").Replace( "vfx/omen/eff/", "" ).Replace( "vfx/channeling/eff/", "" ).Replace( "world/common/", "").Replace( "hou/common/", "" ).Replace( ".avfx", "" ), 0 ) );
+                Items.Add( new CommonRow( idx++, line, line.Replace( "bgcommon/", "" ).Replace( "vfx/lockon/eff/", "" ).Replace( "vfx/monster/c0", "c0" ).Replace( "vfx/monster/c1", "c1" ).Replace( "vfx/omen/eff/", "" ).Replace( "vfx/channeling/eff/", "" ).Replace( "world/common/", "" ).Replace( "hou/common/", "" ).Replace( ".avfx", "" ), 0 ) );
             }
         }
 

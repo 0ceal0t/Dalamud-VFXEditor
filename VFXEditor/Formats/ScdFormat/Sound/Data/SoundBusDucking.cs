@@ -3,9 +3,12 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat.Sound.Data {
+namespace VfxEditor.Formats.ScdFormat.Sound.Data {
     [Flags]
     public enum BusOverride {
         Override_1 = 0x01,

@@ -13,20 +13,20 @@ namespace VfxEditor.Formats.TextureFormat {
 
             var meta = header.ToTexMeta();
             if( meta.Format == DXGIFormat.Unknown )
-                throw new Exception( $"Could not convert format {header.Format} to DXGI Format." );
+                throw new InvalidDataException( $"Could not convert format {header.Format} to DXGI Format." );
 
             if( meta.Dimension == TexDimension.Unknown && !isArray )
-                throw new Exception( $"Could not obtain dimensionality from {header.Type} / {header.Format}." );
+                throw new InvalidDataException( $"Could not obtain dimensionality from {header.Type} / {header.Format}." );
 
             meta.MipLevels = CountMipLevels( data, in meta, in header );
             if( meta.MipLevels == 0 )
-                throw new Exception( "Could not load file. Image is corrupted and does not contain enough data for its size." );
+                throw new InvalidDataException( "Could not load file. Image is corrupted and does not contain enough data for its size." );
 
             if( isArray ) {
                 // https://github.com/nadlabka/DX11Renderer/blob/abe3e89ad3b8f0ac8ba8fa42ef1bc6c69d4033aa/Engine/DXRenderer/Managers/TexturesManager.cpp#L119
                 var scratch = ScratchImage.Initialize2D( meta.Format, header.Width, header.Height, header.ArraySize, 1 );
                 // TODO: fix this
-                for( var i = 0; i < header.ArraySize; i++) {
+                for( var i = 0; i < header.ArraySize; i++ ) {
                     var image = scratch.GetImage( 0, i, 0 );
                     CopyData( image.Span, reader );
                 }
@@ -130,7 +130,7 @@ namespace VfxEditor.Formats.TextureFormat {
                 var span = new Span<byte>( ptr, bytes.Length );
                 var readBytes = r.Read( span );
                 if( readBytes < bytes.Length )
-                    throw new Exception( $"Invalid data length {readBytes} < {bytes.Length}." );
+                    throw new InvalidDataException( $"Invalid data length {readBytes} < {bytes.Length}." );
             }
         }
 

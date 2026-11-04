@@ -1,11 +1,15 @@
 using Dalamud.Interface;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Spawn;
-using VfxEditor.TmbFormat.Base;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C012 : TmbEntry {
         public const string MAGIC = "C012";
         public const string DISPLAY_NAME = "VFX";

@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
 using VfxEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Utils;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VFXEditor.Formats.AvfxFormat.Curve {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public enum CurveType {
         Color,
         Angle,

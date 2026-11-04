@@ -1,6 +1,7 @@
 using System.IO;
 using VfxEditor.Formats.ShpkFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.ShpkFormat.Nodes {
@@ -11,7 +12,7 @@ namespace VfxEditor.Formats.ShpkFormat.Nodes {
         public readonly ParsedInt Unknown1 = new( "Unknown1" );
         public readonly ParsedInt Unknown2 = new( "Unknown2" );
         public readonly ParsedInt Unknown3 = new( "Unknown3" );
-        
+
         public ShpkPass() { }
 
         public ShpkPass( BinaryReader reader ) {

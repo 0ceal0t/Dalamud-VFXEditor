@@ -2,6 +2,7 @@ using System.IO;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh.TerrainShadow {
     public class MdlTerrainShadowSubmesh : MdlSubmeshData<MdlTerrainShadowMesh> {

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Dye {

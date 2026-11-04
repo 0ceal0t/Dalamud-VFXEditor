@@ -1,8 +1,10 @@
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Sound.Data;
 using VfxEditor.Parsing;
-using VfxEditor.ScdFormat.Sound.Data;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Float;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackFilterData : ScdTrackData {
         public readonly ParsedEnum<FilterType> Type = new( "Type" );
         public readonly ParsedFloat Frequency = new( "Frequency" );

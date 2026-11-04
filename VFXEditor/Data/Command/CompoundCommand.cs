@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VfxEditor {
+namespace VfxEditor.Data.Command {
     public class CompoundCommand : ICommand {
         private readonly Action OnChangeAction;
         private readonly List<ICommand> Commands = [];

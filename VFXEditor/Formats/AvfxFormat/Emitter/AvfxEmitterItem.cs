@@ -2,10 +2,18 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Particle;
+using VfxEditor.Formats.AvfxFormat.Workspace;
 using VfxEditor.Ui.Interfaces;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Emitter {
     public class AvfxEmitterItem : GenericWorkspaceItem {
         private int? SavedCreateProbability = null;
         private int? SavedCreateCount = null;

@@ -4,14 +4,15 @@ using HelixToolkit.Geometry;
 using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.EidFormat.BindPoint;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.EidFormat.BindPoint;
 using VfxEditor.Formats.EidFormat.Skeleton;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 using VfxEditor.Utils;
-using VfxEditor.DirectX.Bone;
 
-namespace VfxEditor.EidFormat {
+namespace VfxEditor.Formats.EidFormat {
     public class EidFile : FileManagerFile {
         public readonly List<EidBindPoint> BindPoints = [];
         public readonly CommandDropdown<EidBindPoint> Dropdown;
@@ -30,7 +31,7 @@ namespace VfxEditor.EidFormat {
         public EidFile( BinaryReader reader, string sourcePath, bool verify ) : base() {
             reader.ReadInt32(); // magic 00656964
             Version1 = reader.ReadInt16();
-            Version2 = reader.ReadInt16(); 
+            Version2 = reader.ReadInt16();
             var count = reader.ReadInt32();
             Unk1 = reader.ReadUInt32();
 

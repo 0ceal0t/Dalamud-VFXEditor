@@ -1,10 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Attribute {
     [Flags]
     public enum ConditionType1st {
         Attribute = 0x01,

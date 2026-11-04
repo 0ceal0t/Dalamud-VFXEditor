@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Utils;
 
 namespace VfxEditor.FileManager {
-    public abstract class FileManagerFile {
+    public abstract class FileManagerFile : IDisposable {
         public readonly CommandManager Command;
         public VerifiedStatus Verified = VerifiedStatus.WORKSPACE;
         public bool Unsaved { get; protected set; } = false;

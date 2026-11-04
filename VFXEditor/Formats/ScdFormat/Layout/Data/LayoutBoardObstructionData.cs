@@ -1,7 +1,11 @@
 using System;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     [Flags]
     public enum ObstructionFlags {
         Use_HiCut_FAC = 0x08

@@ -1,6 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
+using VfxEditor.Formats.AvfxFormat.Items;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Assign {
     public abstract class AvfxOptional : AvfxItem {
         public readonly bool Locked;
 

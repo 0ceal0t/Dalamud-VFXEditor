@@ -1,10 +1,13 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
-using Lumina.Misc;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using Lumina.Misc;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.ShpkFormat.Utils {
@@ -49,7 +52,7 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
 
                 UiUtils.Tooltip( "Manually enter a string value to be converted to Crc32" );
 
-                if( !Name.StartsWith( "##" ) ) {
+                if( !Name.StartsWith( "##", StringComparison.Ordinal ) ) {
                     ImGui.SameLine();
                     ImGui.Text( Name );
                 }
@@ -73,7 +76,7 @@ namespace VfxEditor.Formats.ShpkFormat.Utils {
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) ManualEntry = false;
                 }
 
-                if( !Name.StartsWith( "##" ) ) {
+                if( !Name.StartsWith( "##", StringComparison.Ordinal ) ) {
                     ImGui.SameLine();
                     ImGui.Text( Name );
                 }

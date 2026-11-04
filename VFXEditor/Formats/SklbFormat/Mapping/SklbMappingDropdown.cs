@@ -1,7 +1,9 @@
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Types;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
 using VfxEditor.Interop;
@@ -9,8 +11,9 @@ using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Structs;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 
-namespace VfxEditor.SklbFormat.Mapping {
+namespace VfxEditor.Formats.SklbFormat.Mapping {
     public class SklbMappingDropdown : Dropdown<SklbMapping> {
         private readonly SklbFile File;
 
@@ -27,7 +30,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                 if( !ok ) return;
 
                 var hkxPath = res;
-                if( res.EndsWith( ".sklb" ) ) {
+                if( res.EndsWith( ".sklb", StringComparison.Ordinal ) ) {
                     SimpleSklb.LoadFromLocal( res ).SaveHavokData( SklbMapping.TempMappingHkx );
                     hkxPath = SklbMapping.TempMappingHkx;
                 }

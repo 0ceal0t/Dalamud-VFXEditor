@@ -9,7 +9,7 @@ using System.Text;
 using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Formats.ScdFormat.Utils;
 
-namespace VfxEditor.ScdFormat.Music.Data {
+namespace VfxEditor.Formats.ScdFormat.Music.Data {
     public class ScdVorbis : ScdAudioData {
         public readonly bool LegacyImported = false; // old scds
 
@@ -55,7 +55,7 @@ namespace VfxEditor.ScdFormat.Music.Data {
             var seekTableSize = reader.ReadInt32();
 
             // ====== LEGACY SCD STUFF =======
-            if( Encoding.ASCII.GetString( BitConverter.GetBytes( seekTableSize ) ).EndsWith( "vor" ) ) {
+            if( Encoding.ASCII.GetString( BitConverter.GetBytes( seekTableSize ) ).EndsWith( "vor", StringComparison.Ordinal ) ) {
                 LegacyImported = true;
 
                 EncodeMode = 0;

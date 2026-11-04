@@ -1,17 +1,17 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using HelixToolkit.SharpDX.Animations;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.PhybFormat.Collision.Capsule;
-using VfxEditor.PhybFormat.Collision.Ellipsoid;
-using VfxEditor.PhybFormat.Collision.NormalPlane;
-using VfxEditor.PhybFormat.Collision.Sphere;
-using VfxEditor.PhybFormat.Collision.ThreePointPlane;
+using VfxEditor.Formats.PhybFormat.Collision.Capsule;
+using VfxEditor.Formats.PhybFormat.Collision.Ellipsoid;
+using VfxEditor.Formats.PhybFormat.Collision.NormalPlane;
+using VfxEditor.Formats.PhybFormat.Collision.Sphere;
+using VfxEditor.Formats.PhybFormat.Collision.ThreePointPlane;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PhybFormat.Collision {
+namespace VfxEditor.Formats.PhybFormat.Collision {
     public class PhybCollision : IPhysicsObject {
         public readonly PhybFile File;
 

@@ -1,10 +1,12 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Formats.AvfxFormat.Assign;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views {
     public class AvfxDisplaySplitView<T> : ItemSplitView<T> where T : AvfxItem {
         public AvfxDisplaySplitView( string id, List<T> items ) : base( id, items ) { }
 

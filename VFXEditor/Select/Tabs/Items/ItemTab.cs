@@ -1,4 +1,5 @@
 using System;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Items {
     [Flags]

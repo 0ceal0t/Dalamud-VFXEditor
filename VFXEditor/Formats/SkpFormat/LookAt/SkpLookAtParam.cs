@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 

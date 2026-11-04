@@ -1,10 +1,13 @@
 using Dalamud.Interface;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Base;
-using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C063 : TmbEntry {
         public const string MAGIC = "C063";
         public const string DISPLAY_NAME = "Sound";

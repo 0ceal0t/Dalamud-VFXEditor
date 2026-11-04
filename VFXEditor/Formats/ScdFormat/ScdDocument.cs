@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat {
     public class ScdDocument : FileManagerBasicDocument<ScdFile> {
         public override string Id => "Scd";
         public override string Extension => "scd";

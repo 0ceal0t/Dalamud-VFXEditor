@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.UldFormat.Headers {
+namespace VfxEditor.Formats.UldFormat.Headers {
     public class UldAtkHeader : UldGenericHeader {
         public readonly uint AssetOffset;
         public readonly uint PartOffset;

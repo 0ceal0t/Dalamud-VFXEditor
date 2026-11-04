@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.UldFormat.Headers {
+namespace VfxEditor.Formats.UldFormat.Headers {
     public class UldGenericHeader {
         public readonly char[] Identifier;
         public readonly char[] Version;

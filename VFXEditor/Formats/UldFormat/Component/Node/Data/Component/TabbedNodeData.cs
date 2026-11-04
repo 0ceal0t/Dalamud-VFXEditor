@@ -1,6 +1,7 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Node.Data.Component {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data.Component {
     public class TabbedNodeData : UldNodeComponentData {
         public TabbedNodeData() : base() {
             Parsed.AddRange( [

@@ -2,6 +2,8 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Interop.Penumbra;
@@ -79,10 +81,20 @@ namespace VfxEditor.FileManager {
             PenumbraTempMod.MarkDirty();
         }
 
-        public void MoveDocumentAfter( D document, D targetDocument ) {
-            if( !Documents.Contains( targetDocument ) ) return;
-            Documents.Remove( document );
-            Documents.Insert( Documents.IndexOf( targetDocument ), document );
+        public void MoveDocumentTo( D document, D targetDocument ) {
+            if( document == targetDocument ) return;
+            var targetIdx = Documents.IndexOf( targetDocument );
+            if( targetIdx == -1 ) return;
+
+            var sourceIdx = Documents.IndexOf( document );
+            if( sourceIdx == -1 ) {
+                Documents.Insert( targetIdx + 1, document );
+                ActiveDocument = document;
+                return;
+            }
+
+            Documents.RemoveAt( sourceIdx );
+            Documents.Insert( targetIdx, document );
         }
 
         public void InsertDocument( D document, int idx ) {
@@ -117,7 +129,7 @@ namespace VfxEditor.FileManager {
             DocumentWindow.Reset();
         }
 
-        public bool CanImport( string path ) => path.EndsWith( Extension );
+        public bool CanImport( string path ) => path.EndsWith( $".{Extension}", System.StringComparison.OrdinalIgnoreCase );
 
         public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) {
             SetSource( selectedFile );

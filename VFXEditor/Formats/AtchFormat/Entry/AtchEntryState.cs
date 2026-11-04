@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.AtchFormat.Entry {
@@ -26,13 +29,14 @@ namespace VfxEditor.Formats.AtchFormat.Entry {
         }
 
         public void Write( BinaryWriter writer, int stringStartPos, BinaryWriter stringWriter, Dictionary<string, int> stringPos ) {
-            if( !stringPos.ContainsKey( Bone.Value ) ) {
+            if( !stringPos.TryGetValue( Bone.Value, out var namePos ) ) {
                 // Name not written yet
-                stringPos[Bone.Value] = stringStartPos + ( int )stringWriter.BaseStream.Position;
+                namePos = stringStartPos + ( int )stringWriter.BaseStream.Position;
+                stringPos[Bone.Value] = namePos;
                 Bone.Write( stringWriter );
             }
 
-            writer.Write( stringPos[Bone.Value] );
+            writer.Write( namePos );
             Scale.Write( writer );
             Offset.Write( writer );
             Rotation.Write( writer );

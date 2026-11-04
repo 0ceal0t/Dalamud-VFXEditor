@@ -1,13 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 using VfxEditor.Select.Base;
 
-namespace VfxEditor.Select {
+namespace VfxEditor.Select.Base {
     public abstract class SelectTab {
         protected readonly SelectDialog Dialog;
         protected readonly string Name;
@@ -221,9 +222,17 @@ namespace VfxEditor.Select {
 
         private async void LoadItemAsync( T item ) {
             Loaded = null;
-            await Task.Run( () => {
-                LoadSelection( item, out Loaded );
-            } );
+            try {
+                var loaded = await Task.Run( () => {
+                    LoadSelection( item, out var result );
+                    return result;
+                } );
+                // A newer selection may have been made while this one was loading
+                if( ReferenceEquals( Selected, item ) ) Loaded = loaded;
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, $"Error loading selection: {item?.GetName()}" );
+            }
         }
 
         public abstract void LoadSelection( T item, out S loaded );

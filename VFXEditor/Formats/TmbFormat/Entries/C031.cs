@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using VfxEditor.Data;
+using VfxEditor.Formats.TmbFormat.Base;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Parsing.Sheets;
-using VfxEditor.TmbFormat.Base;
-using VfxEditor.TmbFormat.Utils;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C031 : TmbEntry {
         public const string MAGIC = "C031";
         public const string DISPLAY_NAME = "Summon Animation";

@@ -1,6 +1,7 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class DropDownComponentData : UldGenericData {
         public DropDownComponentData() {
             Parsed.AddRange( [

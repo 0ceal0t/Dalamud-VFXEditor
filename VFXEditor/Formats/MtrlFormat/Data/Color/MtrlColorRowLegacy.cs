@@ -1,8 +1,9 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Formats.MtrlFormat.Data.Dye;
 using VfxEditor.Formats.MtrlFormat.Data.Table;
 using VfxEditor.Formats.MtrlFormat.Stm;

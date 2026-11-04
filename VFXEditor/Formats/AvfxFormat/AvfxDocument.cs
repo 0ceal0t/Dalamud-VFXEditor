@@ -1,16 +1,17 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.Formats.AvfxFormat.Texture;
 using VfxEditor.Select;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat {
     public class AvfxDocument : FileManagerRenamedDocument<AvfxFile> {
         public override string Id => "Vfx";
         public override string Extension => "avfx";

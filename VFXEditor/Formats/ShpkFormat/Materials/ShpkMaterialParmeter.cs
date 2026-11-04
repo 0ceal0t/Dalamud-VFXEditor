@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 

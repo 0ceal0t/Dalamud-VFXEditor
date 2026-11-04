@@ -48,7 +48,7 @@ namespace VfxEditor.Select.Tabs.Actions {
             return ( ActionRowType )timeline?.ActionTimelineIDMode switch {
                 ActionRowType.Normal => $"bt_common/{key}.pap",
                 ActionRowType.Action => $"bt_common/resident/action.pap",
-                ActionRowType.WeaponSkill => key.StartsWith( "ws" ) ? $"{key.Split( '/' )[1]}/{key}.pap" : "",
+                ActionRowType.WeaponSkill => key.StartsWith( "ws", System.StringComparison.Ordinal ) ? $"{key.Split( '/' )[1]}/{key}.pap" : "",
                 _ => ""
             };
         }

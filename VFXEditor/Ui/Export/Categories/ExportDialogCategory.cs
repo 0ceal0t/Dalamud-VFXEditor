@@ -83,8 +83,14 @@ namespace VfxEditor.Ui.Export.Categories {
         public void WorkspaceImport( Dictionary<string, string> files, Dictionary<IFileManagerGroup, int> offsets ) {
             if( !files.TryGetValue( Group.GetId(), out var data ) ) return;
             var indexes = JsonConvert.DeserializeObject<int[]>( data );
+            if( indexes == null ) return;
             var documents = Group.GetDocuments().ToList();
-            foreach( var index in indexes ) ToExport[documents[index + ( offsets.TryGetValue( Group, out var offset ) ? offset : 0 )]] = true;
+            var offset = offsets.TryGetValue( Group, out var groupOffset ) ? groupOffset : 0;
+            foreach( var index in indexes ) {
+                // Documents whose files failed to load are skipped, so an index may no longer exist
+                var documentIdx = index + offset;
+                if( documentIdx >= 0 && documentIdx < documents.Count ) ToExport[documents[documentIdx]] = true;
+            }
         }
 
         public void WorkspaceExport( Dictionary<string, string> files ) {

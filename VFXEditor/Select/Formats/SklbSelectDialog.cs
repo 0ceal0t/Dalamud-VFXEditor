@@ -1,6 +1,6 @@
+using VfxEditor.Formats.SklbFormat;
 using VfxEditor.Select.Tabs.Character;
 using VfxEditor.Select.Tabs.Skeleton;
-using VfxEditor.SklbFormat;
 
 namespace VfxEditor.Select.Formats {
     public class SklbSelectDialog : SelectDialog {

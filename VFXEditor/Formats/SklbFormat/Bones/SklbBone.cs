@@ -1,16 +1,20 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Animation.Rig;
 using FFXIVClientStructs.Havok.Common.Base.Container.String;
 using FFXIVClientStructs.Havok.Common.Base.Math.QsTransform;
 using FFXIVClientStructs.Havok.Common.Base.Math.Quaternion;
 using FFXIVClientStructs.Havok.Common.Base.Math.Vector;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 
-namespace VfxEditor.SklbFormat.Bones {
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public unsafe class SklbBone {
         public SklbBone Parent;
 

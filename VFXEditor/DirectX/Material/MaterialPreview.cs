@@ -6,13 +6,14 @@ using System;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.Formats.MtrlFormat.Data.Color;
 using VfxEditor.DirectX.Model;
+using VfxEditor.Formats.MtrlFormat.Data.Color;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
+namespace VfxEditor.DirectX.Material {
     // https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
     // "Additionally, HLSL packs data so that it does not cross a 16-byte boundary"
     // I want to die

@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace VfxEditor.Structs {
+namespace VfxEditor.Interop.Structs {
     [StructLayout( LayoutKind.Sequential )]
     public struct Quat {
         public float X;

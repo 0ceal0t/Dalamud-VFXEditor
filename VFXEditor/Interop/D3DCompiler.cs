@@ -48,7 +48,7 @@ namespace VfxEditor.Interop {
         }
 
         [PreserveSig]
-        [DllImport( "D3DCompiler_47.dll" )]
+        [DllImport( "D3DCompiler_47.dll", CharSet = CharSet.Ansi, BestFitMapping = false, ThrowOnUnmappableChar = true )]
         private static extern unsafe int D3DDisassemble(
             [In] byte* pSrcData,
             [In] UIntPtr srcDataSize,

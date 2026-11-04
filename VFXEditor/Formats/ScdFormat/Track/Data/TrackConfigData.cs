@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public enum TrackCmdConfigType {
         IntervalType,
         IntervalTypeFloat = 1

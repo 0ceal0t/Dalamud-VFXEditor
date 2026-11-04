@@ -2,8 +2,10 @@ using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.PhybFormat.Simulator.Connector {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Connector {
     public class PhybConnector : PhybData, IPhysicsObject {
         public readonly PhybSimulator Simulator;
 

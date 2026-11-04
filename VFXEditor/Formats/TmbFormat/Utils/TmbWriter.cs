@@ -5,7 +5,7 @@ using System.Numerics;
 using VfxEditor.Parsing.Utils;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat.Utils {
+namespace VfxEditor.Formats.TmbFormat.Utils {
     public class TmbWriter : ParsingWriter {
         public const int BaseSize = 0x10;
         public int BodySize;

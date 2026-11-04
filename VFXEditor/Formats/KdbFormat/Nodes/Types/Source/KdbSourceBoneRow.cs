@@ -1,5 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Double;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 

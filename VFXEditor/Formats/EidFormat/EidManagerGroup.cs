@@ -1,4 +1,3 @@
-using VfxEditor.EidFormat;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 

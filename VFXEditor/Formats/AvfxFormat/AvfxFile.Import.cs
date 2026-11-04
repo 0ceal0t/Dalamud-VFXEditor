@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Views.Nodes;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat {
     public partial class AvfxFile {
         private struct NodePosition {
             public long Position;

@@ -43,7 +43,7 @@ namespace VfxEditor.Interop.Penumbra {
             EnabledChangeSubscriber = EnabledChange.Subscriber( Dalamud.PluginInterface, OnEnabledChange );
 
 
-            if( !Dalamud.PluginInterface.InstalledPlugins.Any( x => x.InternalName.Equals( "Penumbra" ) && x.IsLoaded ) ) return;
+            if( !Dalamud.PluginInterface.InstalledPlugins.Any( x => x.InternalName.Equals( "Penumbra", StringComparison.Ordinal ) && x.IsLoaded ) ) return;
             try {
                 ApiVersionsSubscriber.Invoke();
             }
@@ -142,7 +142,7 @@ namespace VfxEditor.Interop.Penumbra {
             }
 
             localPath = ResolveDefaultPath( path );
-            if( path.Equals( localPath ) ) return false;
+            if( path.Equals( localPath, StringComparison.Ordinal ) ) return false;
             if( !string.IsNullOrEmpty( localPath ) ) return true;
             return false;
         }

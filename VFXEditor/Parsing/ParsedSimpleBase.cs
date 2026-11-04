@@ -1,12 +1,13 @@
 using Dalamud.Interface.Utility.Raii;
 using System;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
 
 namespace VfxEditor.Parsing {
     public abstract class ParsedSimpleBase<T> : ParsedBase {
         public readonly string Name;
 
-        protected bool InTable => Name.StartsWith( "##" );
+        protected bool InTable => Name.StartsWith( "##", StringComparison.Ordinal );
 
         public T Value = default;
         public Action OnChangeAction;

@@ -1,10 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Utils;
-using VFXEditor.Formats.AvfxFormat.Curve;
 
 namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
     public unsafe class LineEditor : AvfxItem {

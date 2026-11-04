@@ -1,7 +1,7 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat;
 using VfxEditor.Select.Tabs.Actions;
 using VfxEditor.Select.Tabs.Common;
 using VfxEditor.Select.Tabs.Cutscenes;

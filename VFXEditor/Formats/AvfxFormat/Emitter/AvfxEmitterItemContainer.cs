@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Emitter {
     public class AvfxEmitterItemContainer : AvfxBase {
         public readonly bool IsParticle;
         public readonly AvfxEmitter Emitter;

@@ -1,4 +1,4 @@
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public abstract class BaseVfx {
         public string Path;
 

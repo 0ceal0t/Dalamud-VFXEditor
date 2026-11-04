@@ -4,6 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Select.Base;
 using VfxEditor.Ui.DragDrop;
 using VfxEditor.Utils;
@@ -89,7 +90,7 @@ namespace VfxEditor.Select.Favorite {
                 ImGui.Text( string.IsNullOrEmpty( result.Name ) ? result.DisplayString.Split( "]" )[^1] : result.Name );
 
                 ImGui.TableNextColumn();
-                ImGui.TextDisabled( "[" + result.Type.ToString().ToUpper().Replace( "GAME", "" ) + "]" );
+                ImGui.TextDisabled( "[" + result.Type.ToString().ToUpperInvariant().Replace( "GAME", "" ) + "]" );
             }
             else {
                 ImGui.TableNextColumn();

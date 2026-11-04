@@ -1,9 +1,11 @@
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.IntList {
     public class AvfxIntList : AvfxDrawable {
         public readonly string Name;
         private int Size;

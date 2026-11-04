@@ -6,7 +6,7 @@ using System.Numerics;
 using VfxEditor.Formats.ScdFormat;
 using VfxEditor.Formats.ScdFormat.Utils;
 
-namespace VfxEditor.ScdFormat.Music.Data {
+namespace VfxEditor.Formats.ScdFormat.Music.Data {
     public class ScdAdpcm : ScdAudioData {
         public readonly WaveFormat Format;
         public readonly byte[] WaveHeader;

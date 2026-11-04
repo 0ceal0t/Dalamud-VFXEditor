@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Ui.Interfaces {
     public interface IIndexUiItem : INamedUiItem {

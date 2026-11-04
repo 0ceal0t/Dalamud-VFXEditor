@@ -1,4 +1,4 @@
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Int {
     public class ParsedShort : ParsedInt {
         public ParsedShort( string name, int value ) : base( name, value, 2 ) { }
 

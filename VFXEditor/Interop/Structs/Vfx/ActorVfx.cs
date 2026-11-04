@@ -3,7 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
 using System.Text;
 
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public unsafe class ActorVfx : BaseVfx {
         public readonly VfxData* Vfx;
 

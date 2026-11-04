@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.NpcID {
     public struct NpcFilesStruct {
@@ -37,7 +38,7 @@ namespace VfxEditor.Select.Tabs.NpcID {
         public override void LoadData() {
             NpcFiles = JsonConvert.DeserializeObject<Dictionary<string, NpcFilesStruct>>( File.ReadAllText( SelectDataUtils.NpcFilesPath ) );
 
-            foreach( var item in NpcFiles.OrderBy( r => r.Key ) ){
+            foreach( var item in NpcFiles.OrderBy( r => r.Key ) ) {
                 Items.Add( new NpcRow( item.Key ) );
             }
         }

@@ -27,7 +27,7 @@ namespace VfxEditor.Formats.MtrlFormat.Stm.Entry {
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public T this[int index] => index >= 0 && index < Count ? Value : throw new IndexOutOfRangeException();
+        public T this[int index] => index >= 0 && index < Count ? Value : throw new ArgumentOutOfRangeException( nameof( index ) );
     }
 
     public class IndexedList<T> : IReadOnlyList<T> {

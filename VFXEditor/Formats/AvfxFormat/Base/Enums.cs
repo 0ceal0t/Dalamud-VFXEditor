@@ -1,6 +1,6 @@
 using System;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public class Enums {
         [Flags]
         public enum DrawLayer {
@@ -129,13 +129,11 @@ namespace VfxEditor.AvfxFormat {
             Camera = 0,
             Caster = 1
         }
-        public enum DepthOffsetType
-        {
+        public enum DepthOffsetType {
             Legacy = 0,
             FixedIntervalNDC = 1
         }
-        public enum RandomType
-        {
+        public enum RandomType {
             FirstPlusMinus = 0,
             FirstPlus = 1,
             FirstMinus = 2,

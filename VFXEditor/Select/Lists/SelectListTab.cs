@@ -43,7 +43,7 @@ namespace VfxEditor.Select.Lists {
             if( Dialog.DrawFavorite( item ) ) return true;
 
             ImGui.TableNextColumn();
-            ImGui.TextDisabled( "[" + item.Type.ToString().ToUpper().Replace( "GAME", "" ) + "]" );
+            ImGui.TextDisabled( "[" + item.Type.ToString().ToUpperInvariant().Replace( "GAME", "" ) + "]" );
 
             ImGui.TableNextColumn();
             ImGui.Selectable( string.IsNullOrEmpty( item.Name ) ? item.DisplayString.Split( "]" )[^1] : item.Name, false, ImGuiSelectableFlags.SpanAllColumns );

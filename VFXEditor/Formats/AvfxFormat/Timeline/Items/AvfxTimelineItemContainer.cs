@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Items {
     public class AvfxTimelineItemContainer : AvfxBase {
         public readonly AvfxTimeline Timeline;
         public readonly List<AvfxTimelineItem> Items = [];

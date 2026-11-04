@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Double;
+using VfxEditor.Parsing.Enums;
 
 namespace VfxEditor.Formats.KdbFormat.Nodes.Types.Effector {
     public enum ParamLinkTangent {

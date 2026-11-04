@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Select.Base;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabShader : SelectTab<CommonRow> {

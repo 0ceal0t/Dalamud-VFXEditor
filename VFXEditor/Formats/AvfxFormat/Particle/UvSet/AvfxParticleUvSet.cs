@@ -1,12 +1,15 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Ui.Interfaces;
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.UvSet {
     public class AvfxParticleUvSet : AvfxSelectableItem {
         public readonly AvfxEnum<TextureCalculateUV> CalculateUVType = new( "Calculate UV", "CUvT" );
         public readonly AvfxCurve2Axis Scale = new( "Scale", "Scl" );

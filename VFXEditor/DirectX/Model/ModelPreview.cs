@@ -6,12 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Model;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
+namespace VfxEditor.DirectX.Model {
     public class ModelPreview : ModelRenderer<ModelInstance> {
         public enum RenderMode {
             Color,
@@ -60,7 +62,7 @@ namespace VfxEditor.DirectX {
             Emitters.SetVertexes( Device, data, emitterCount );
         }
 
-        public void SetModel( int renderId, ModelInstance instance, AvfxModel model, RenderMode mode ) => 
+        public void SetModel( int renderId, ModelInstance instance, AvfxModel model, RenderMode mode ) =>
             SetModel( renderId, instance, model.Indexes.Indexes, model.Vertexes.Vertexes, model.AllEmitVertexes, mode );
 
         public void SetModel( int renderId, ModelInstance instance, List<AvfxIndex> modelIndexes, List<AvfxVertex> modelVertexes, List<UiEmitVertex> modelEmitters, RenderMode mode ) {

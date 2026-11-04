@@ -1,3 +1,4 @@
+using System;
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace VfxEditor.Select.Tabs.Emotes {
             return type switch {
                 EmoteRowType.Normal => (key, actionTimelineIdMode == 2 ? EmoteRowType.PerJob : EmoteRowType.Normal),
                 EmoteRowType.PerJob => (key, type),
-                EmoteRowType.Facial => key.StartsWith( "facial/pose/" ) ?
+                EmoteRowType.Facial => key.StartsWith( "facial/pose/", StringComparison.Ordinal ) ?
                     (key.Replace( "facial/pose/", "" ), EmoteRowType.Facial) :
                     (key, EmoteRowType.Normal),
                 _ => (null, 0)

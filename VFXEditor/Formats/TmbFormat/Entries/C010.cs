@@ -1,11 +1,16 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Base;
-using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C010 : TmbEntry {
         public const string MAGIC = "C010";
         public const string DISPLAY_NAME = "Animation";
@@ -18,8 +23,8 @@ namespace VfxEditor.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );
         private readonly ParsedBool TimeControl = new( "Use Time Control", size: 1 );
-        private readonly ParsedFlag<C010Unk2Flags> Unk3 = new ( "Unknown 3", size: 2 );
-        private readonly ParsedFlag<C010Unk3Flags> Unk4 = new ( "Unknown 4", size: 1 ); //cfxf
+        private readonly ParsedFlag<C010Unk2Flags> Unk3 = new( "Unknown 3", size: 2 );
+        private readonly ParsedFlag<C010Unk3Flags> Unk4 = new( "Unknown 4", size: 1 ); //cfxf
         private readonly ParsedFloat AnimationStart = new( "Animation Start Frame" );
         private readonly ParsedFloat AnimationEnd = new( "Animation End Frame" );
         private readonly TmbOffsetString Path = new( "Path" );

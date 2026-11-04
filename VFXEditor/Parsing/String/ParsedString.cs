@@ -8,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.String {
     public class ParsedStringIcon {
         public Func<FontAwesomeIcon> Icon;
         public bool Remove;
@@ -70,7 +70,7 @@ namespace VfxEditor.Parsing {
             }
             else if( Editing && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
                 Editing = false;
-                Update( StateBeforeEdit, ForceLowerCase ? Value.ToLower() : Value );
+                Update( StateBeforeEdit, ForceLowerCase ? Value.ToLowerInvariant() : Value );
             }
         }
 

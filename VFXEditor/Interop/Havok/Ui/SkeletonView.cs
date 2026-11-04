@@ -1,13 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.DirectX;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok.SkeletonBuilder;
 using VfxEditor.Utils;
-using VfxEditor.DirectX.Bone;
 
 namespace VfxEditor.Interop.Havok.Ui {
     public abstract class SkeletonView {

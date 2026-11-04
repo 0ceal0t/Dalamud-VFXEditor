@@ -1,3 +1,5 @@
+using VfxEditor.Data.Command;
+
 namespace VfxEditor.Ui.Assignable {
     public class AssignableCommand<T> : ICommand {
         public readonly IAssignable Item;

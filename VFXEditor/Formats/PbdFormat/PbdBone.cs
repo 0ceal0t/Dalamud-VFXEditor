@@ -2,6 +2,9 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.PbdFormat {

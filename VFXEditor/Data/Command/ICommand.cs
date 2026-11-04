@@ -1,4 +1,4 @@
-namespace VfxEditor {
+namespace VfxEditor.Data.Command {
     public interface ICommand {
         public void Undo();
 

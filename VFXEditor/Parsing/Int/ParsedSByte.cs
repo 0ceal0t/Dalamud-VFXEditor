@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Int {
     public class ParsedSByte : ParsedSimpleBase<sbyte> {
         public ParsedSByte( string name, sbyte value ) : base( name, value ) { }
 
@@ -25,4 +25,3 @@ namespace VfxEditor.Parsing {
         }
     }
 }
-

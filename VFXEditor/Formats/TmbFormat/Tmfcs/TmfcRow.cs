@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.TmbFormat.Tmfcs {
+namespace VfxEditor.Formats.TmbFormat.Tmfcs {
     public class TmfcRow {
         public const int Size = 0x18;
 

@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Emotes {
     public abstract class EmoteTab<T> : SelectTab<EmoteRow, T> where T : class {

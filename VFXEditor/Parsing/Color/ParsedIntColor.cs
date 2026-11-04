@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Numerics;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Color {
     public class ParsedIntColor : ParsedSimpleBase<Vector4> {
         private bool Editing = false;
         private DateTime LastEditTime = DateTime.Now;

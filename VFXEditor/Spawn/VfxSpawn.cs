@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using VfxEditor.Structs.Vfx;
+using VfxEditor.Data;
+using VfxEditor.Interop.Structs.Vfx;
 
 namespace VfxEditor.Spawn {
     public enum SpawnType {

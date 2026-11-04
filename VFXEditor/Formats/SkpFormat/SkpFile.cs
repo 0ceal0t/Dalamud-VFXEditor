@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using VfxEditor.FileManager;
+using VfxEditor.Formats.SklbFormat.Layers;
 using VfxEditor.Formats.SkpFormat.LookAt;
 using VfxEditor.Formats.SkpFormat.Slope;
 using VfxEditor.Parsing;
-using VfxEditor.SklbFormat.Layers;
+using VfxEditor.Parsing.Flag;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SkpFormat {

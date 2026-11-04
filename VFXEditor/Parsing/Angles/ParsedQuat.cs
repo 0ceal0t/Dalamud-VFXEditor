@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Angles {
     public class ParsedQuat : ParsedSimpleBase<(Quaternion, Vector3)> { // value is (Quat, Euler)
         public Vector3 Euler {
             get => Value.Item2;

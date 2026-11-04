@@ -1,7 +1,10 @@
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Attribute {
     public enum SelfCommand {
         None,
         FadeIn,

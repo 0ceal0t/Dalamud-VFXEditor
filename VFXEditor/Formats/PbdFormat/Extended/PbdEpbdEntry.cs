@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.PbdFormat.Extended {

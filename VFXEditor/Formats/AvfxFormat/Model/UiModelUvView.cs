@@ -7,7 +7,7 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class UiModelUvView : IUiItem {
         private static readonly Vector4 LINE_COLOR = new( 0, 0.1f, 1, 1 );
 

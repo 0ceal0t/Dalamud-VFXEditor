@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 
-namespace VfxEditor.SklbFormat.Bones {
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public class SklbBonesImportCommand : ICommand {
         public readonly SklbBones Bones;
         public readonly List<SklbBone> State;

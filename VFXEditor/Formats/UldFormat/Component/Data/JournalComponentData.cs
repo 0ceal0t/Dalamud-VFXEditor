@@ -1,6 +1,8 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class JournalComponentData : UldGenericData {
         public JournalComponentData() {
             AddUnknown( 38, "Unknown Node Id" ); //added six for 7.2, TBD if this varies

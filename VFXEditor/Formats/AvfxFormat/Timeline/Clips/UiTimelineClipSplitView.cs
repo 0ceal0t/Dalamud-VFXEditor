@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.AvfxFormat.Views.Items;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline.Clips {
     public class UiTimelineClipSplitView : AvfxItemSplitView<AvfxTimelineClip> {
         public readonly AvfxTimeline Timeline;
 

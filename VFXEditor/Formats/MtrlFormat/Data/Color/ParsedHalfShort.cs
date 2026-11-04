@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     // Color table rows are stored as arrays of Half; small integer fields (shader/sphere index)

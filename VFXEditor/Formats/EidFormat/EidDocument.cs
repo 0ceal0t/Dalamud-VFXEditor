@@ -2,7 +2,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.EidFormat {
+namespace VfxEditor.Formats.EidFormat {
     public class EidDocument : FileManagerBasicDocument<EidFile> {
         public override string Id => "Eid";
         public override string Extension => "eid";

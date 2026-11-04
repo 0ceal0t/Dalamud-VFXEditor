@@ -1,9 +1,10 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser;
 using VfxEditor.Utils;
 

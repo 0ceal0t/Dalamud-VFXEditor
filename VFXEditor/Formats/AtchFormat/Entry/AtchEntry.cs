@@ -3,6 +3,8 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 

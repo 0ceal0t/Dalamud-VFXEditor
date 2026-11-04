@@ -2,12 +2,15 @@ using Dalamud.Bindings.ImGui;
 using HelixToolkit.Maths;
 using System.IO;
 using System.Numerics;
-using VfxEditor.EidFormat.BindPoint;
+using VfxEditor.Data;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Parsing.String;
 using VfxEditor.Utils;
 
-namespace VfxEditor.EidFormat {
+namespace VfxEditor.Formats.EidFormat.BindPoint {
     public class EidBindPointOld : EidBindPoint {
         public int BindPointId => Id.Value;
 

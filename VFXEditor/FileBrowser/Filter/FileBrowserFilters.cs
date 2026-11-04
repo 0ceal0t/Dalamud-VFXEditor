@@ -3,6 +3,7 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using VfxEditor.Utils;
 
 namespace VfxEditor.FileBrowser.Filter {
     public partial class FileBrowserFilters {
@@ -66,7 +67,7 @@ namespace VfxEditor.FileBrowser.Filter {
         public bool FilterOut( string extension ) {
             if( string.IsNullOrEmpty( extension ) ) return false;
             if( Selected == null ) return false;
-            if( Filters.Count > 0 && !Selected.Empty() && !Selected.Matches( extension.ToLower() ) && Selected.Filter != ".*" ) return true;
+            if( Filters.Count > 0 && !Selected.Empty() && !Selected.Matches( extension.ToLowerInvariant() ) && Selected.Filter != ".*" ) return true;
             return false;
         }
 

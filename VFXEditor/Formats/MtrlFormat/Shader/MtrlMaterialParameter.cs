@@ -1,10 +1,11 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.ShpkFormat.Materials;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;

@@ -12,10 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using VfxEditor.Formats.PapFormat.Motion;
 using VfxEditor.Interop;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Havok.Structs;
-using VfxEditor.PapFormat.Motion;
 
 namespace VfxEditor.Utils.Gltf {
     public class AnimationKeys {

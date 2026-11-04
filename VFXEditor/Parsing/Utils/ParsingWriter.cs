@@ -1,7 +1,8 @@
+using System;
 using System.IO;
 
 namespace VfxEditor.Parsing.Utils {
-    public class ParsingWriter {
+    public class ParsingWriter : IDisposable {
         public readonly BinaryWriter Writer;
         public readonly MemoryStream WriterMs;
 

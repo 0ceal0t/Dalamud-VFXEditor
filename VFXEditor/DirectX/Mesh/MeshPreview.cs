@@ -3,9 +3,11 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 using VfxEditor.DirectX.Drawable;
-using VfxEditor.Formats.MdlFormat.Mesh.Base;
+using VfxEditor.DirectX.Material;
 using VfxEditor.DirectX.Model;
+using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX.Mesh {

@@ -1,5 +1,5 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +9,8 @@ using VfxEditor.Formats.MdlFormat.Mesh.Shape;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Formats.MdlFormat.Vertex;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Components.SplitViews;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {

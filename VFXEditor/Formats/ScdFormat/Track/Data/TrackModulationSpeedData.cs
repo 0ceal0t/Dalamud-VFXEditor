@@ -1,7 +1,8 @@
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackModulationSpeedData : ScdTrackData {
         public readonly ParsedInt Carrier = new( "Carrier" );
         public readonly ParsedInt Speed = new( "Speed" );

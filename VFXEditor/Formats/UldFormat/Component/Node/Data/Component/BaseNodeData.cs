@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 
-namespace VfxEditor.UldFormat.Component.Node.Data.Component {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data.Component {
     public class BaseNodeData : UldNodeComponentData {
         private byte[] Data;
 

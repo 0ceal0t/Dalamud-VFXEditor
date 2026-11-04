@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;

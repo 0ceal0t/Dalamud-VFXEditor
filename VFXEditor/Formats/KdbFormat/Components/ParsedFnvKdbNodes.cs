@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.KdbFormat.Components {
     public class ParsedFnvKdbNodes : ParsedFnvHash {

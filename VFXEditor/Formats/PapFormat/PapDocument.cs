@@ -3,7 +3,7 @@ using System.IO;
 using VfxEditor.FileManager;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
     public partial class PapDocument : FileManagerHavokDocument<PapFile> {
         public override string Id => "Pap";
         public override string Extension => "pap";

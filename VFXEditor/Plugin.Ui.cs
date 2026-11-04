@@ -1,17 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Data;
+using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Interop.Penumbra;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
-using VfxEditor.FileManager;
-using VfxEditor.Interop.Penumbra;
 
 namespace VfxEditor {
     public unsafe partial class Plugin {

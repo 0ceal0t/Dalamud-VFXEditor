@@ -1,7 +1,11 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
     public class AvfxEffectorDataPointLight : AvfxDataWithParameters {
         public readonly AvfxCurveColor Color;
         public readonly AvfxCurve1Axis DistanceScale = new( "Distance Scale", "DstS" );

@@ -1,4 +1,5 @@
 using Dalamud.Interface.Windowing;
+using VfxEditor.Data;
 using VfxEditor.Data.Copy;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Select;

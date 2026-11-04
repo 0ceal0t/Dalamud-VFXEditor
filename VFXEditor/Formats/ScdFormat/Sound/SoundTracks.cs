@@ -2,10 +2,11 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components.Tables;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Sound {
     public class SoundTracks {
         public readonly List<SoundTrackInfo> Entries = [];
         private readonly CommandTable<SoundTrackInfo> EntryTable;

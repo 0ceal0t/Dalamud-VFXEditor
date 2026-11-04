@@ -1,6 +1,8 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class SliderComponentData : UldGenericData {
         public SliderComponentData() {
             Parsed.AddRange( [

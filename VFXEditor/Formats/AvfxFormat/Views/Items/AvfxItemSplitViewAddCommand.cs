@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Items {
     public class AvfxItemSplitViewAddCommand<T> : ICommand where T : class, IIndexUiItem {
         private readonly AvfxItemSplitView<T> View;
         private readonly List<T> Group;

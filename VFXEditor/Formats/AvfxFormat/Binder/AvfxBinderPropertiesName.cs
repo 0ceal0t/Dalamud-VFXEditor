@@ -1,5 +1,5 @@
 using System.IO;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Components.String;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.AvfxFormat.Binder {

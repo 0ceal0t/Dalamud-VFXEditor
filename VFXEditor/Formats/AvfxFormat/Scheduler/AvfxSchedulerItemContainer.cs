@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Scheduler {
     public class AvfxSchedulerItemContainer : AvfxBase {
         public readonly AvfxScheduler Scheduler;
         public readonly List<AvfxSchedulerItem> Items = [];

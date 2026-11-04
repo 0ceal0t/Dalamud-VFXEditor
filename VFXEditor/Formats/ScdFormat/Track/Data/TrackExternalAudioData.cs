@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackExternalAudioData : ScdTrackData {
         public ParsedShort BankNumber = new( "Bank Number" );
         private short Index = 0;

@@ -1,3 +1,4 @@
+using System;
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using SharpDX;
@@ -6,7 +7,7 @@ using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace VfxEditor.DirectX {
-    public abstract class Renderer {
+    public abstract class Renderer : IDisposable {
         public bool NeedsUpdate { get; set; } = false;
 
         protected RenderInstance LoadedInstance;

@@ -2,7 +2,6 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
-using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SklbFormat.Bones {

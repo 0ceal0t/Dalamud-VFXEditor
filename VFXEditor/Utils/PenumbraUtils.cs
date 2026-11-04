@@ -15,7 +15,7 @@ namespace VfxEditor.Utils {
 
     public static class PenumbraUtils {
         public static void WriteBytes( byte[] data, string modRootFolder, string groupOption, string gamePath, Dictionary<string, string> files ) {
-            var filePath = string.IsNullOrEmpty( groupOption ) ? gamePath : Path.Combine( groupOption.ToLower(), gamePath );
+            var filePath = string.IsNullOrEmpty( groupOption ) ? gamePath : Path.Combine( groupOption.ToLowerInvariant(), gamePath );
             var path = Path.Combine( modRootFolder, filePath );
             Directory.CreateDirectory( Path.GetDirectoryName( path ) );
             File.WriteAllBytes( path, data );
@@ -24,7 +24,7 @@ namespace VfxEditor.Utils {
         }
 
         public static void CopyFile( string localPath, string modRootFolder, string groupOption, string gamePath, Dictionary<string, string> files ) {
-            var filePath = string.IsNullOrEmpty( groupOption ) ? gamePath : Path.Combine( groupOption.ToLower(), gamePath );
+            var filePath = string.IsNullOrEmpty( groupOption ) ? gamePath : Path.Combine( groupOption.ToLowerInvariant(), gamePath );
             var path = Path.Combine( modRootFolder, filePath );
             Directory.CreateDirectory( Path.GetDirectoryName( path ) );
             File.Copy( localPath, path, true );
@@ -48,7 +48,7 @@ namespace VfxEditor.Utils {
                 if( fileVersion <= 3 ) {
                     // Legacy format: meta.json + separate default_mod.json/group_*.json files
                     loaded.Meta = JsonConvert.DeserializeObject<PenumbraMeta>( metaText );
-                    var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json" ) && !x.EndsWith( "meta.json" ) );
+                    var modFiles = Directory.GetFiles( modPath ).Where( x => x.EndsWith( ".json", StringComparison.Ordinal ) && !x.EndsWith( "meta.json", StringComparison.Ordinal ) );
                     foreach( var modFile in modFiles ) {
                         try {
                             var modFileName = Path.GetFileName( modFile ).Replace( ".json", "" );

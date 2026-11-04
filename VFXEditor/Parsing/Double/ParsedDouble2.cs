@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Double {
     public struct Double2 {
         public double X;
         public double Y;

@@ -3,7 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 using FFXIVClientStructs.FFXIV.Client.Graphics.Vfx;
 using System.Numerics;
 
-namespace VfxEditor.Structs.Vfx {
+namespace VfxEditor.Interop.Structs.Vfx {
     public unsafe class StaticVfx : BaseVfx {
         public readonly VfxObject* Vfx;
 

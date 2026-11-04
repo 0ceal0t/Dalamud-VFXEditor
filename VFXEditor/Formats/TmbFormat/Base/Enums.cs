@@ -1,6 +1,6 @@
 using System;
 
-namespace VfxEditor.TmbFormat.Base {
+namespace VfxEditor.Formats.TmbFormat.Base {
     [Flags]
     public enum C010Unk2Flags {
         Unknown_1A = 0x01,
@@ -98,7 +98,7 @@ namespace VfxEditor.TmbFormat.Base {
         Chest, //j_mune
         Unknown_2 //unused
     }
-    
+
     public enum FreezePositionType {
         Target_FixedDirection,
         Target_UserFacingDirection,

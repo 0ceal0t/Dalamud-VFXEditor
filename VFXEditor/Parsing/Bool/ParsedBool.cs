@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Bool {
     public class ParsedBool : ParsedSimpleBase<bool> {
         private int Size;
         private int IntValue => Value ? 1 : 0;

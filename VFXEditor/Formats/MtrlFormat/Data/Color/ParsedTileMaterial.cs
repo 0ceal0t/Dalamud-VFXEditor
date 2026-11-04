@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
 namespace VfxEditor.Formats.MtrlFormat.Data.Color {
     public class ParsedTileMaterial : ParsedInt {

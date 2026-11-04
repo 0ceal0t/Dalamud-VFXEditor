@@ -1,7 +1,8 @@
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track.Data {
     public class TrackShortData : ScdTrackData {
         public readonly ParsedShort Value = new( "Value" );
 

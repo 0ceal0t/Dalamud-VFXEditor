@@ -1,5 +1,4 @@
 using VfxEditor.FileManager;
-using VfxEditor.PhybFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PhybFormat {

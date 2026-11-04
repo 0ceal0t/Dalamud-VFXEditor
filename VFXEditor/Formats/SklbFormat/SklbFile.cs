@@ -1,16 +1,16 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using VfxEditor.FileManager;
-using VfxEditor.SklbFormat.Bones;
-using VfxEditor.SklbFormat.Data;
-using VfxEditor.SklbFormat.Layers;
-using VfxEditor.Utils;
 using VfxEditor.DirectX.Bone;
+using VfxEditor.FileManager;
+using VfxEditor.Formats.SklbFormat.Bones;
+using VfxEditor.Formats.SklbFormat.Data;
+using VfxEditor.Formats.SklbFormat.Layers;
+using VfxEditor.Utils;
 
-namespace VfxEditor.SklbFormat {
+namespace VfxEditor.Formats.SklbFormat {
     public class SklbFile : FileManagerFile {
         private readonly string HkxTempLocation;
 

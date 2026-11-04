@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Parsing;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.SklbFormat.Layers {
+namespace VfxEditor.Formats.SklbFormat.Layers {
     public class SklbLayer : IUiItem {
         public readonly SklbFile File;
 

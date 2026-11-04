@@ -3,15 +3,15 @@ using SharpDX.Direct3D11;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.DirectX.Bone;
 using VfxEditor.DirectX.Drawable;
 using VfxEditor.FileManager;
-using VfxEditor.SklbFormat;
-using VfxEditor.DirectX.Bone;
+using VfxEditor.Formats.SklbFormat;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using BoneStruct = HelixToolkit.SharpDX.Animations.Bone;
 
-namespace VfxEditor.DirectX {
+namespace VfxEditor.DirectX.Bone {
     public class BoneNamePreview : BonePreview<BoneNameInstance> {
         private int NumWireframe = 0;
         private Buffer WireframeVertices;

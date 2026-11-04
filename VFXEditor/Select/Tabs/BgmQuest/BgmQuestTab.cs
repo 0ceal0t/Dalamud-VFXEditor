@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.BgmQuest {
     public struct BgmSituationStruct {

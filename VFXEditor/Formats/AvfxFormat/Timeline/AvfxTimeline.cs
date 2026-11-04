@@ -1,10 +1,18 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Binder;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Timeline.Clips;
+using VfxEditor.Formats.AvfxFormat.Timeline.Items;
+using VfxEditor.Formats.AvfxFormat.Timeline.Sequencer;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Timeline {
     public class AvfxTimeline : AvfxNode {
         public const string NAME = "TmLn";
 

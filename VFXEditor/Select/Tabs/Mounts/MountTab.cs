@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Mounts {
     public abstract class MountTab<T> : SelectTab<MountRow, T> where T : class {

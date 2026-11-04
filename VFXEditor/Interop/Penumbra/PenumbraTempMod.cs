@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
+using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Interop.Penumbra.Meta;
@@ -50,7 +50,7 @@ namespace VfxEditor.Interop.Penumbra {
                     continue;
                 }
 
-                var key = gamePath.ToLower();
+                var key = gamePath.ToLowerInvariant();
                 if( resolvedPaths.Contains( key ) ) continue; // first document wins
                 if( AddFile( files, key, localPath ) ) resolvedPaths.Add( key );
             }

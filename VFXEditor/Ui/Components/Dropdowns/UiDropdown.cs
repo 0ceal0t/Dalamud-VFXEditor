@@ -2,7 +2,7 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Ui.Components {
+namespace VfxEditor.Ui.Components.Dropdowns {
     public class UiDropdown<T> : Dropdown<T> where T : class, IUiItem {
         public UiDropdown( string id, List<T> items ) : base( id, items ) { }
 

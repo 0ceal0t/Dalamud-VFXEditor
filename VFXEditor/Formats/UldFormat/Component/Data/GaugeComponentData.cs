@@ -1,6 +1,9 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class GaugeComponentData : UldGenericData {
         public GaugeComponentData() {
             Parsed.AddRange( [

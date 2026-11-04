@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.Ui.Components {
+namespace VfxEditor.Ui.Components.Dropdowns {
     public class CommandDropdown<T> : UiDropdown<T> where T : class, IUiItem {
         protected readonly Func<T, int, string> GetTextAction;
         protected readonly Func<T> NewAction;

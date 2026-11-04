@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Reserve {
     public class ParsedReserve : ParsedBase {
         private readonly int Size = 0;
         private byte[] Data;

@@ -1,5 +1,6 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
+using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 
 namespace VfxEditor.Ui.Export {

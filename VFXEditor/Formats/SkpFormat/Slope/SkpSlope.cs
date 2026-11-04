@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.Formats.SkpFormat.Slope {

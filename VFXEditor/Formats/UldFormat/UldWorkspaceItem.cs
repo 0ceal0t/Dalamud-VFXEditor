@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.UldFormat {
+namespace VfxEditor.Formats.UldFormat {
     public abstract class UldWorkspaceItem : IWorkspaceUiItem {
         public readonly ParsedUInt Id = new( "Id", 1, size: 4 );
         public string Renamed = "";

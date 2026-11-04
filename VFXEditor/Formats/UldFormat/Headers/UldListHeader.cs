@@ -2,8 +2,9 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Headers {
+namespace VfxEditor.Formats.UldFormat.Headers {
     public class UldListHeader : UldGenericHeader {
         public readonly uint ElementCount = 0;
         private readonly ParsedInt Unk1 = new( "Unknown 1" );

@@ -1,13 +1,15 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Formats.AvfxFormat.Assign;
 using VfxEditor.Formats.AvfxFormat.Components;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.String {
     public class AvfxString : AvfxLiteral<ParsedString, string> {
         private readonly bool Pad;
 

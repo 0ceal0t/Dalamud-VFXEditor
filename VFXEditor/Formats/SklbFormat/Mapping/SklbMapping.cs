@@ -1,19 +1,26 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Animation.Rig;
-using Dalamud.Bindings.ImGui;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Formats.SklbFormat.Mapping;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Interop.Structs.Animation;
 using VfxEditor.Parsing;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Parsing.Angles;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.String;
+using VfxEditor.Utils;
 
-namespace VfxEditor.SklbFormat.Mapping {
+namespace VfxEditor.Formats.SklbFormat.Mapping {
     public unsafe class SklbMapping {
         public static string TempMappingHkx => Path.Combine( Plugin.Configuration.WriteLocation, "temp_hkx_mapping.hkx" ).Replace( '\\', '/' );
 
@@ -111,7 +118,7 @@ namespace VfxEditor.SklbFormat.Mapping {
                     if( !ok ) return;
 
                     var hkxPath = res;
-                    if( res.EndsWith( ".sklb" ) ) {
+                    if( res.EndsWith( ".sklb", StringComparison.Ordinal ) ) {
                         SimpleSklb.LoadFromLocal( res ).SaveHavokData( TempMappingHkx );
                         hkxPath = TempMappingHkx;
                     }

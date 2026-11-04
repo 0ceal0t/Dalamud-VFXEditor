@@ -282,6 +282,7 @@ namespace VfxEditor.Ui.Export {
         public void WorkspaceImport( JObject meta, Dictionary<IFileManagerGroup, int> offsets ) {
             if( !meta.ContainsKey( "penumbra" ) ) return;
             var data = JsonConvert.DeserializeObject<PenumbraWorkspace>( meta["penumbra"].ToString() );
+            if( data?.Meta == null ) return;
 
             ModName = data.Meta.Name;
             Author = data.Meta.Author;

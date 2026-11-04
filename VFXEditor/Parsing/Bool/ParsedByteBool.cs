@@ -1,4 +1,4 @@
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Bool {
     public class ParsedByteBool : ParsedBool {
         public ParsedByteBool( string name, bool value ) : base( name, value, 1 ) { }
 

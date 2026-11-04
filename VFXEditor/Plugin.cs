@@ -3,8 +3,10 @@ using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
+using System;
 using System.Collections.Generic;
 using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.DirectX;
 using VfxEditor.FileBrowser;
 using VfxEditor.FileManager.Interfaces;
@@ -33,6 +35,7 @@ using VfxEditor.Tracker;
 using VfxEditor.Ui.Export;
 using VfxEditor.Ui.Import;
 using VfxEditor.Ui.Tools;
+using VfxEditor.Utils;
 
 namespace VfxEditor {
     public partial class Plugin : IDalamudPlugin {
@@ -171,7 +174,7 @@ namespace VfxEditor {
                 AvfxManager?.Show();
                 return;
             }
-            if( Groups.FindFirst( x => rawArgs.ToLower().Equals( x.GetId().ToLower() ), out var manager ) ) manager.Show();
+            if( Groups.FindFirst( x => string.Equals( rawArgs.Trim(), x.GetId(), StringComparison.OrdinalIgnoreCase ), out var manager ) ) manager.Show();
         }
 
         public void Dispose() {

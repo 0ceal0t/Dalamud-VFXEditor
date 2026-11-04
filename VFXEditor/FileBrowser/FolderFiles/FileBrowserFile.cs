@@ -1,9 +1,10 @@
-using Dalamud.Interface;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileBrowser.FolderFiles {
     public enum FilePickerFileType {
@@ -157,7 +158,7 @@ namespace VfxEditor.FileBrowser.FolderFiles {
                 AddToIconMap( ["csv"], FontAwesomeIcon.FileCsv, FilePickerFileColor.Misc );
             }
 
-            return ICON_MAP.TryGetValue( ext.ToLower(), out result );
+            return ICON_MAP.TryGetValue( ext.ToLowerInvariant(), out result );
         }
 
         private static void AddToIconMap( string[] extensions, FontAwesomeIcon icon, FilePickerFileColor color ) {
@@ -199,39 +200,39 @@ namespace VfxEditor.FileBrowser.FolderFiles {
         // ======== SORTING ===========
 
         public static int SortByFileNameDesc( FileBrowserFile a, FileBrowserFile b ) {
-            if( a.FileName[0] == '.' && b.FileName[0] != '.' ) return 1;
-            if( a.FileName[0] != '.' && b.FileName[0] == '.' ) return -1;
-            if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
+            if( a.FileName.StartsWith( '.' ) && !b.FileName.StartsWith( '.' ) ) return 1;
+            if( !a.FileName.StartsWith( '.' ) && b.FileName.StartsWith( '.' ) ) return -1;
+            if( a.FileName.StartsWith( '.' ) && b.FileName.StartsWith( '.' ) ) {
                 if( a.FileName.Length == 1 ) return -1;
                 if( b.FileName.Length == 1 ) return 1;
-                return -1 * string.Compare( a.FileName[1..], b.FileName[1..] );
+                return -1 * string.Compare( a.FileName[1..], b.FileName[1..], StringComparison.OrdinalIgnoreCase );
             }
 
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ? 1 : -1 );
-            return -1 * string.Compare( a.FileName, b.FileName );
+            return -1 * string.Compare( a.FileName, b.FileName, StringComparison.OrdinalIgnoreCase );
         }
 
         public static int SortByFileNameAsc( FileBrowserFile a, FileBrowserFile b ) {
-            if( a.FileName[0] == '.' && b.FileName[0] != '.' ) return -1;
-            if( a.FileName[0] != '.' && b.FileName[0] == '.' ) return 1;
-            if( a.FileName[0] == '.' && b.FileName[0] == '.' ) {
+            if( a.FileName.StartsWith( '.' ) && !b.FileName.StartsWith( '.' ) ) return -1;
+            if( !a.FileName.StartsWith( '.' ) && b.FileName.StartsWith( '.' ) ) return 1;
+            if( a.FileName.StartsWith( '.' ) && b.FileName.StartsWith( '.' ) ) {
                 if( a.FileName.Length == 1 ) return 1;
                 if( b.FileName.Length == 1 ) return -1;
-                return string.Compare( a.FileName[1..], b.FileName[1..] );
+                return string.Compare( a.FileName[1..], b.FileName[1..], StringComparison.OrdinalIgnoreCase );
             }
 
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ? -1 : 1 );
-            return string.Compare( a.FileName, b.FileName );
+            return string.Compare( a.FileName, b.FileName, StringComparison.OrdinalIgnoreCase );
         }
 
         public static int SortByTypeDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? 1 : -1;
-            return string.Compare( a.Ext, b.Ext );
+            return string.Compare( a.Ext, b.Ext, StringComparison.OrdinalIgnoreCase );
         }
 
         public static int SortByTypeAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? -1 : 1;
-            return -1 * string.Compare( a.Ext, b.Ext );
+            return -1 * string.Compare( a.Ext, b.Ext, StringComparison.OrdinalIgnoreCase );
         }
 
         public static int SortBySizeDesc( FileBrowserFile a, FileBrowserFile b ) {
@@ -246,12 +247,12 @@ namespace VfxEditor.FileBrowser.FolderFiles {
 
         public static int SortByDateDesc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? 1 : -1;
-            return string.Compare( a.FileModifiedDate, b.FileModifiedDate );
+            return string.Compare( a.FileModifiedDate, b.FileModifiedDate, StringComparison.Ordinal );
         }
 
         public static int SortByDateAsc( FileBrowserFile a, FileBrowserFile b ) {
             if( a.Type != b.Type ) return ( a.Type == FilePickerFileType.Directory ) ? -1 : 1;
-            return -1 * string.Compare( a.FileModifiedDate, b.FileModifiedDate );
+            return -1 * string.Compare( a.FileModifiedDate, b.FileModifiedDate, StringComparison.Ordinal );
         }
     }
 }

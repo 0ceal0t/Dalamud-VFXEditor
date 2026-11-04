@@ -1,11 +1,13 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 using FFXIVClientStructs.Havok.Animation.Rig;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.SklbFormat.Bones {
+namespace VfxEditor.Formats.SklbFormat.Bones {
     public unsafe class ParsedBoneIndex : ParsedShort {
         public ParsedBoneIndex( string name ) : base( name ) { }
 

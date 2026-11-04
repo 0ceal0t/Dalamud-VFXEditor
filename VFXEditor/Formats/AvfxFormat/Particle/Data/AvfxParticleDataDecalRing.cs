@@ -1,6 +1,9 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Curve;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
     public class AvfxParticleDataDecalRing : AvfxDataWithParameters {
         public readonly AvfxCurve1Axis Width = new( "Width", "WID" );
         public readonly AvfxCurve1Axis WidthRandom = new( "Width Random", "WIDR" );

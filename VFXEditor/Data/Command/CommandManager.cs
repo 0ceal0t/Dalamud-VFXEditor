@@ -9,7 +9,7 @@ using VfxEditor.FileManager;
 using VfxEditor.Utils;
 using VfxEditor.Utils.Stacks;
 
-namespace VfxEditor {
+namespace VfxEditor.Data.Command {
     public class CommandManager {
         public static CommandManager? Current => Stack.Count == 0 ? null : Stack.Peek();
         private static readonly Stack<CommandManager> Stack = new();

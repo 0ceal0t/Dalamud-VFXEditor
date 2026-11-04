@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model {
     public class AvfxIndexes : AvfxBase {
         public readonly List<AvfxIndex> Indexes = [];
 

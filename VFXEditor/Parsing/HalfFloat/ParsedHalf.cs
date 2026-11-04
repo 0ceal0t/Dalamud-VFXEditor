@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using VfxEditor.Parsing.Float;
 
 namespace VfxEditor.Parsing.HalfFloat {
     public class ParsedHalf : ParsedFloat {

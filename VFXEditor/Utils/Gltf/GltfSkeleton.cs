@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using VfxEditor.SklbFormat.Bones;
+using VfxEditor.Formats.SklbFormat.Bones;
 
 namespace VfxEditor.Utils.Gltf {
     public static class GltfSkeleton {

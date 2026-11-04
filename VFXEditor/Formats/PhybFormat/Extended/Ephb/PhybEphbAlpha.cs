@@ -1,12 +1,14 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Assignable;
 using VfxEditor.Ui.Components.SplitViews;
 using VfxEditor.Ui.Interfaces;
-using VfxEditor.Flatbuffer;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
     public class PhybEphbAlpha : IUiItem {

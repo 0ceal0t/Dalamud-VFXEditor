@@ -1,11 +1,12 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Formats.MdlFormat.Mesh.Base;
 using VfxEditor.Formats.MdlFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Components;
 
 namespace VfxEditor.Formats.MdlFormat.Mesh {

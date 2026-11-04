@@ -16,7 +16,7 @@ namespace VfxEditor.DirectX.Drawable {
         Pixel,
     }
 
-    public class D3dPass {
+    public class D3dPass : IDisposable {
         public readonly ShaderPassFlags Flags;
         public readonly PrimitiveTopology Topology;
 

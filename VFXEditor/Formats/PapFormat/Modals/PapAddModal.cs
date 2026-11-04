@@ -1,11 +1,14 @@
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
+using VfxEditor.Formats.PapFormat.Commands;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Ui.Components;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat.Modals {
     public unsafe class PapAddModal : Modal {
         public static string TempHkx => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.hkx" ).Replace( '\\', '/' );
 

@@ -4,6 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using InteropGenerator.Runtime;
 using Penumbra.String;
 using Penumbra.String.Classes;
+using VfxEditor.Data;
 using VfxEditor.Select;
 
 namespace VfxEditor.Interop {

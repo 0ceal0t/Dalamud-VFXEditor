@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Entries;
 using VfxEditor.Ui.Components;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Track {
     public class ScdTrackEntry : ScdEntry, IUiItem {
         public readonly List<ScdTrackItem> Items = [];
         private readonly CollapsingHeaders<ScdTrackItem> TrackView;

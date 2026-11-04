@@ -1,16 +1,15 @@
 using System;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Node.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Node.Data {
     [Flags]
     public enum NodeComponentFlags {
         RepeatUp = 0x80,
         RepeatDown = 0x40,
         RepeatLeft = 0x20,
-        RepeatRight = 0x10,
-        Unknown_1 = 0x20,
-        Unknown_2 = 0x40,
-        Unknown_3 = 0x80
+        RepeatRight = 0x10
     }
 
     public class UldNodeComponentData : UldGenericData {

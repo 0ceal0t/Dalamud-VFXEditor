@@ -5,7 +5,7 @@ using VfxEditor.Select.Formats;
 using VfxEditor.Spawn;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat {
     public partial class TmbManager : FileManager<TmbDocument, TmbFile, WorkspaceMetaBasic> {
         public TmbManager( TmbManagerGroup group ) : base( group ) {
             SourceSelect = new TmbSelectDialog( "Tmb Select [LOADED]", this, true );

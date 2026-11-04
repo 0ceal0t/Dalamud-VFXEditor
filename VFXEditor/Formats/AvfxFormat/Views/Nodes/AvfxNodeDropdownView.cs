@@ -1,12 +1,13 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.AvfxFormat.Nodes;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Nodes {
     public abstract class AvfxNodeDropdownView<T> : IUiItem, IUiNodeView<T> where T : AvfxNode {
         public readonly AvfxFile File;
         public readonly NodeGroup<T> Group;

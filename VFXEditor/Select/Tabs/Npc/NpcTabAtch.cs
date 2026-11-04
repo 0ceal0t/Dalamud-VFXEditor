@@ -2,6 +2,7 @@ using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Npc {
     public class NpcTabAtch : SelectTab<NpcRow> {

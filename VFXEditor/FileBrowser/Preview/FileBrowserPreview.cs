@@ -9,6 +9,7 @@ using System.IO;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 using VfxEditor.FileBrowser.FolderFiles;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Utils;
@@ -91,13 +92,13 @@ namespace VfxEditor.FileBrowser.Preview {
             Dispose();
 
             if( !Plugin.Configuration.FileBrowserImagePreview ) return;
-            if( !ImageExtensions.Contains( file.Ext.ToLower() ) ) return;
+            if( !ImageExtensions.Contains( file.Ext.ToLowerInvariant() ) ) return;
 
             Task.Run( async () => {
                 if( !await Lock.WaitAsync( 1000 ) ) return;
 
                 var path = Path.Combine( file.FilePath, file.FileName );
-                var extension = file.Ext.ToLower();
+                var extension = file.Ext.ToLowerInvariant();
 
                 try {
                     var newTexture = extension switch {
@@ -143,7 +144,7 @@ namespace VfxEditor.FileBrowser.Preview {
         }
 
         private static IDalamudTextureWrap LoadImage( string path, out string format, out int mips ) {
-            format = path.Split( "." )[^1].ToUpper();
+            format = path.Split( "." )[^1].ToUpperInvariant();
             mips = 1;
             return Dalamud.TextureProvider.GetFromFile( path ).RentAsync().Result;
         }

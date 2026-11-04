@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
-using VfxEditor.TmbFormat.Entries;
+using VfxEditor.Formats.TmbFormat.Entries;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 
-namespace VfxEditor.TmbFormat.Tmfcs {
+namespace VfxEditor.Formats.TmbFormat.Tmfcs {
     public class TmfcDropdown : Dropdown<Tmfc> {
         public readonly TmbFile File;
 

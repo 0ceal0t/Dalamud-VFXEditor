@@ -1,9 +1,11 @@
 using Dalamud.Bindings.ImGui;
+using VfxEditor.Data.Command;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
-namespace VfxEditor.TmbFormat {
+namespace VfxEditor.Formats.TmbFormat {
     public abstract class TmbItem {
         public readonly TmbFile File;
 

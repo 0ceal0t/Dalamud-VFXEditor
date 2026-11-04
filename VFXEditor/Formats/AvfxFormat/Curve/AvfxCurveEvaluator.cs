@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VFXEditor.Formats.AvfxFormat.Curve {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     /*
      * - The interpolation of the segment between key k and key k+1 is decided by the type of key k+1 (the key the segment ends on)
      * - Linear: straight line. Step: holds the value of key k, then jumps to key k+1 once its frame is reached

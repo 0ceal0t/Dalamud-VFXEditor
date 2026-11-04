@@ -6,7 +6,8 @@ using SharpGLTF.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using VfxEditor.AvfxFormat;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Model.Emit;
 
 namespace VfxEditor.Utils.Gltf {
     public static class GltfModel {
@@ -80,7 +81,7 @@ namespace VfxEditor.Utils.Gltf {
             return ret;
         }
 
-        public static bool ImportEmitterModel( string localPath, out List<AvfxEmitVertex> vertexesOut , out List<AvfxVertexNumber> numbersOut ) {
+        public static bool ImportEmitterModel( string localPath, out List<AvfxEmitVertex> vertexesOut, out List<AvfxVertexNumber> numbersOut ) {
             numbersOut = [];
             vertexesOut = [];
             var model = SharpGLTF.Schema2.ModelRoot.Load( localPath );

@@ -1,15 +1,17 @@
-using HelixToolkit.SharpDX.Animations;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
+using HelixToolkit.SharpDX.Animations;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Formats.PhybFormat.Simulator.CollisionData;
+using VfxEditor.Formats.PhybFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.PhybFormat.Simulator.CollisionData;
-using VfxEditor.PhybFormat.Utils;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.PhybFormat.Simulator.Chain {
+namespace VfxEditor.Formats.PhybFormat.Simulator.Chain {
     public enum ChainType {
         Sphere,
         Capsule
@@ -104,7 +106,7 @@ namespace VfxEditor.PhybFormat.Simulator.Chain {
 
             if( Collisions.Count == 0 ) writer.Write( 0 );
             else {
-                writer.Write( (int)writer.ChainCollisionData.Dequeue() - 4 );
+                writer.Write( ( int )writer.ChainCollisionData.Dequeue() - 4 );
             }
 
             if( Nodes.Count == 0 ) writer.Write( 0 );

@@ -1,7 +1,12 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Emitter.Data {
     public class AvfxEmitterDataModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MdNo", value: -1 );
         public readonly AvfxEnum<RotationOrder> RotationOrderType = new( "Rotation Order", "ROT" );

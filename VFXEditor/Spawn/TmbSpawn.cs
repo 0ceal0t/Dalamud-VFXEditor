@@ -79,10 +79,10 @@ namespace VfxEditor.Spawn {
                 var key = item.Key.ToString();
                 if( monster && key.Contains( "[SKL_ID]" ) ) {
                     var split = key.Split( "[SKL_ID]" )[1];
-                    if( trimmed.EndsWith( split ) ) return item.RowId;
+                    if( trimmed.EndsWith( split, StringComparison.Ordinal ) ) return item.RowId;
                 }
                 else {
-                    if( trimmed.EndsWith( key ) ) return item.RowId;
+                    if( trimmed.EndsWith( key, StringComparison.Ordinal ) ) return item.RowId;
                 }
             }
             return 0;

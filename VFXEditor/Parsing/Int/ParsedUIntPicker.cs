@@ -3,6 +3,7 @@ using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Parsing.Int {
     public class ParsedUIntPicker<T> : ParsedUIntHex where T : class {

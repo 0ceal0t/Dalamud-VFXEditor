@@ -2,8 +2,11 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.ScdFormat.Sound.Data {
+namespace VfxEditor.Formats.ScdFormat.Sound.Data {
     [Flags]
     public enum SoundExtraFilter {
         Unknown_2 = 0x01,

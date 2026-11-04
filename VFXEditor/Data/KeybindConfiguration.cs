@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using VfxEditor.Utils;
 
-namespace VfxEditor {
+namespace VfxEditor.Data {
     [Serializable]
     public class KeybindConfiguration {
         public enum KeybindModifierKeys {

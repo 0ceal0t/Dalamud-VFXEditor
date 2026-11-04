@@ -1,7 +1,7 @@
 using Dalamud.Bindings.ImGui;
 using System.IO;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Int {
     public class ParsedInt : ParsedSimpleBase<int> {
         private int Size;
 

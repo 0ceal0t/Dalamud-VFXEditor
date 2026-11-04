@@ -1,6 +1,10 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     public class LayoutBoxObstructionData : ScdLayoutData {
         public readonly ParsedFloat4 Position1 = new( "Position 1" );
         public readonly ParsedFloat4 Position2 = new( "Position 2" );

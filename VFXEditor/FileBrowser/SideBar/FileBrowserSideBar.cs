@@ -1,6 +1,6 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using System.IO;
 using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
+using VfxEditor.Data;
 
 namespace VfxEditor.FileBrowser.SideBar {
     public class FileBrowserSideBar {
@@ -48,7 +49,7 @@ namespace VfxEditor.FileBrowser.SideBar {
             await Task.Run( () => {
                 var personal = Path.GetDirectoryName( Environment.GetFolderPath( Environment.SpecialFolder.Personal ) );
                 if( string.IsNullOrEmpty( personal ) ) return;
-                if( personal.EndsWith( "OneDrive" ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
+                if( personal.EndsWith( "OneDrive", StringComparison.Ordinal ) ) personal = personal.Replace( "OneDrive", "" ); // >:(
 
                 QuickAccess.Enqueue( new FileBrowserSidebarItem {
                     Icon = FontAwesomeIcon.Desktop,
@@ -166,7 +167,7 @@ namespace VfxEditor.FileBrowser.SideBar {
                 var obj = shellAppType.InvokeMember( "NameSpace", BindingFlags.InvokeMethod, null, shell,
                 [
                 "shell:::{679f85cb-0220-4080-b29b-5540cc05aab6}",
-                ] );
+                ], null, System.Globalization.CultureInfo.InvariantCulture, null );
                 if( obj == null ) return false;
 
                 foreach( var item in ( ( dynamic )obj ).Items() ) {

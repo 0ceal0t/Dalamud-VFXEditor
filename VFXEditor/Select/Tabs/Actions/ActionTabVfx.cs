@@ -1,8 +1,9 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Actions {
     public class ActionTabVfx : SelectTab<ActionRowVfx, ParsedPaths> {

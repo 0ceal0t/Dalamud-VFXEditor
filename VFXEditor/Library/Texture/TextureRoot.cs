@@ -8,7 +8,7 @@ using VfxEditor.Library.Components;
 using VfxEditor.Library.Texture;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Library.Node {
+namespace VfxEditor.Library.Texture {
     public class TextureRoot : LibraryRoot {
         private string AddPath = "";
 

@@ -1,9 +1,9 @@
 using System.IO;
+using VfxEditor.Formats.PhybFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.PhybFormat.Utils;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.PhybFormat {
+namespace VfxEditor.Formats.PhybFormat {
     public abstract class PhybData : ParsedData, IUiItem {
         protected readonly PhybFile File;
 

@@ -1,7 +1,10 @@
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Effector.Data {
     public class AvfxEffectorDataChromaticAberration : AvfxDataWithParameters {
 
         public readonly AvfxCurve1Axis RefractionStrength = new( "Refraction Strength", "CSR" );

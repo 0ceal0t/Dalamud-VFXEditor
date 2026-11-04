@@ -1,16 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data;
 using VfxEditor.FileManager;
 using VfxEditor.FileManager.Interfaces;
+using VfxEditor.Select.Base;
+using VfxEditor.Select.Favorite;
 using VfxEditor.Select.Lists;
 using VfxEditor.Select.Penumbra;
 using VfxEditor.Ui;
 using VfxEditor.Utils;
-using VfxEditor.Select.Favorite;
 
 namespace VfxEditor.Select {
     public abstract partial class SelectDialog : DalamudWindow {

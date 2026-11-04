@@ -1,9 +1,10 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Ui.NodeGraphViewer.Canvas;
 using VfxEditor.Ui.NodeGraphViewer.Nodes;
 using VfxEditor.Ui.NodeGraphViewer.Utils;

@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.PhybFormat.Simulator {
+namespace VfxEditor.Formats.PhybFormat.Simulator {
     [Flags]
     public enum SimulatorFlags {
         Simulating = 0x01,

@@ -3,6 +3,8 @@ using System.IO;
 using VfxEditor.Formats.KdbFormat.Components;
 using VfxEditor.Formats.KdbFormat.Nodes;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Double;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.KdbFormat.UnknownB {

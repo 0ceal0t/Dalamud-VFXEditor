@@ -1,18 +1,25 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Data;
+using VfxEditor.Data.Command;
 using VfxEditor.FileBrowser;
+using VfxEditor.Formats.PapFormat.Commands;
+using VfxEditor.Formats.TmbFormat;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Parsing.String;
-using VfxEditor.TmbFormat;
 using VfxEditor.Utils;
 
-namespace VfxEditor.PapFormat {
+namespace VfxEditor.Formats.PapFormat {
+    // Tmb shares the parent PapFile's CommandManager and holds no other resources, so PapFile owns its lifetime
+#pragma warning disable CA1001
     public class PapAnimation {
+#pragma warning restore CA1001
         private readonly List<string> Prefixes = [
             "cbfp",
             "cbfa",

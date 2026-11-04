@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using TeximpNet;
 using TeximpNet.Compression;
 using TeximpNet.DDS;
+using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
 using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
 using VfxEditor.Interop.Penumbra;
@@ -45,7 +46,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             Preview = null;
 
             try {
-                var importFileExtension = Path.GetExtension( importPath ).ToLower();
+                var importFileExtension = Path.GetExtension( importPath ).ToLowerInvariant();
 
                 if( importFileExtension == ".dds" ) {
                     using var container = DDSFile.Read( importPath );
@@ -70,7 +71,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     if( compFormat == CompressionFormat.ETC1 ) return;
 
                     // Ui elements are required to only have 1 mip level
-                    var maxMips = ( ushort )( GamePath.StartsWith( "ui/" ) ? 1 : Plugin.Configuration.PngMips );
+                    var maxMips = ( ushort )( GamePath.StartsWith( "ui/", StringComparison.Ordinal ) ? 1 : Plugin.Configuration.PngMips );
                     compressor.Input.SetMipmapGeneration( true, maxMips );
                     compressor.Input.SetData( surface );
                     compressor.Compression.Format = compFormat;
@@ -102,7 +103,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                     container.Dispose();
                 }
                 else {
-                    throw new Exception( $"Invalid extension {importFileExtension}" );
+                    throw new NotSupportedException( $"Invalid extension {importFileExtension}" );
                 }
 
                 Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), false, GamePath );
@@ -212,7 +213,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         public bool GetReplacePath( string path, out string replacePath ) {
-            replacePath = GamePath.ToLower().Equals( path.ToLower() ) ? WriteLocation : null;
+            replacePath = string.Equals( GamePath, path, StringComparison.OrdinalIgnoreCase ) ? WriteLocation : null;
             return !string.IsNullOrEmpty( replacePath );
         }
 
@@ -227,7 +228,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             if( string.IsNullOrEmpty( WriteLocation ) || string.IsNullOrEmpty( GamePath ) ) return;
 
             byte[] modData;
-            if( GamePath.EndsWith( ".atex" ) ) {
+            if( GamePath.EndsWith( ".atex", StringComparison.Ordinal ) ) {
                 // Makes Type 2 Data from .atex header + DDS data
                 modData = TexToolsUtils.CreateType2Data( File.ReadAllBytes( WriteLocation ) );
             }

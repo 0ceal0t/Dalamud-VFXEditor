@@ -1,6 +1,6 @@
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Base {
     public abstract class AvfxDrawable : AvfxBase, IUiItem {
         public AvfxDrawable( string avfxName ) : base( avfxName ) { }
 

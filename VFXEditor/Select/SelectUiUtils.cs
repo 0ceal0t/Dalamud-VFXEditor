@@ -8,7 +8,7 @@ using VfxEditor.Utils;
 namespace VfxEditor.Select {
     public class SelectUiUtils {
         public static SelectResult GetSelectResult( string path, SelectResultType resultType, string resultName ) {
-            var resultPrefix = resultType.ToString().ToUpper().Replace( "GAME", "" );
+            var resultPrefix = resultType.ToString().ToUpperInvariant().Replace( "GAME", "" );
             return new SelectResult( resultType, resultName, $"[{resultPrefix}] {resultName}", path );
         }
 

@@ -19,7 +19,7 @@ namespace VfxEditor.FileManager {
         private (M, D)? Dragging = null;
 
         public FileManagerGroup( string title, string formatName ) :
-            this( title, formatName, formatName.ToLower(), formatName, formatName ) { }
+            this( title, formatName, formatName.ToLowerInvariant(), formatName, formatName ) { }
 
         public FileManagerGroup( string title, string formatName, string extension, string workspaceKey, string workspacePath ) :
             base( title, formatName, extension, workspaceKey, workspacePath ) {
@@ -52,9 +52,9 @@ namespace VfxEditor.FileManager {
 
         public void RemoveManager( M manager ) {
             if( Managers.Count == 1 ) return; // can't remove the last manager
-            if( LastFocusedManager == manager ) LastFocusedManager = null;
             manager.Reset( false );
             Managers.Remove( manager );
+            if( LastFocusedManager == manager ) LastFocusedManager = Managers[0];
             WindowSystem.RemoveWindow( manager );
 
             PenumbraTempMod.MarkDirty();
@@ -163,7 +163,7 @@ namespace VfxEditor.FileManager {
 
                         if( sourceDocument != targetDocument ) {
                             if( sourceManager == targetManager && targetDocument != null ) { // Re-ordering
-                                targetManager.MoveDocumentAfter( sourceDocument, targetDocument );
+                                targetManager.MoveDocumentTo( sourceDocument, targetDocument );
                             }
                             else { // Moving it to another manager
                                 sourceManager.RemoveDocument( sourceDocument, dispose: false );
@@ -171,12 +171,13 @@ namespace VfxEditor.FileManager {
                                     targetManager.InsertDocument( sourceDocument );
                                 }
                                 else {
-                                    targetManager.MoveDocumentAfter( sourceDocument, targetDocument );
+                                    targetManager.MoveDocumentTo( sourceDocument, targetDocument );
                                 }
                             }
                         }
 
                         Dragging = null;
+                        ImGui.EndDragDropTarget();
                         return true;
                     }
                     ImGui.EndDragDropTarget();
@@ -185,12 +186,10 @@ namespace VfxEditor.FileManager {
             return false;
         }
 
-        public bool CanImport( string path ) {
-            return LastFocusedManager.CanImport( path );
-        }
+        private M ImportManager => LastFocusedManager ?? Managers[0];
 
-        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) {
-            LastFocusedManager.PenumbraImport( selectedFile, replacedFile );
-        }
+        public bool CanImport( string path ) => ImportManager.CanImport( path );
+
+        public void PenumbraImport( SelectResult selectedFile, SelectResult replacedFile ) => ImportManager.PenumbraImport( selectedFile, replacedFile );
     }
 }

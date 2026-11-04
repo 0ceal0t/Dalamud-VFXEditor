@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Character {
     public abstract class CharacterTab : SelectTab<CharacterRow> {

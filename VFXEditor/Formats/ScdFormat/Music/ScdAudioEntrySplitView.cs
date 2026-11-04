@@ -3,7 +3,7 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using VfxEditor.Ui.Components.SplitViews;
 
-namespace VfxEditor.ScdFormat.Music {
+namespace VfxEditor.Formats.ScdFormat.Music {
     public class ScdAudioEntrySplitView : CommandSplitView<ScdAudioEntry> {
         public ScdAudioEntrySplitView( ScdFile file, List<ScdAudioEntry> items ) : base( "Audio", items, false, null, () => ScdAudioEntry.Default( file ) ) { }
 

@@ -7,6 +7,7 @@ using SharpDX.DXGI;
 using System;
 using System.Numerics;
 using VfxEditor;
+using VfxEditor.Data;
 using VfxEditor.Utils;
 
 namespace VfxEditor.DirectX.Model {

@@ -1,6 +1,6 @@
-using static VfxEditor.AvfxFormat.Enums;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.Formats.AvfxFormat.Curve.Editor {
+namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
     public struct LineEditorState {
         public LineEditorKeyState[] Points;
     }

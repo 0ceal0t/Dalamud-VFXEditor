@@ -10,8 +10,8 @@ using VfxEditor.DirectX.Drawable;
 using VfxEditor.DirectX.Model;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace VfxEditor.DirectX {
-    public  class BonePreview<T> : ModelRenderer<T> where T : ModelInstance {
+namespace VfxEditor.DirectX.Bone {
+    public class BonePreview<T> : ModelRenderer<T> where T : ModelInstance {
         protected D3dDrawable Model;
 
         public BonePreview( Device device, DeviceContext ctx, string shaderPath ) : base( device, ctx, shaderPath ) {

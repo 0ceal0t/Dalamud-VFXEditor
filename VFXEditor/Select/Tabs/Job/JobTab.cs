@@ -1,6 +1,7 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Job {
     public class SelectedJob {

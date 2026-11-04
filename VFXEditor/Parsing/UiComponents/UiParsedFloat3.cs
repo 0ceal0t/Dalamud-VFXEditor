@@ -1,11 +1,13 @@
 using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.UiComponents {
     public class UiParsedFloat3 : IUiItem {
         public readonly string Name;
         public readonly ParsedFloat P1;

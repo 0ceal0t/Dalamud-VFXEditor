@@ -5,7 +5,6 @@ using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using VfxEditor.Structs;
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using CommunityToolkit.Common;
 using Dalamud.Utility;

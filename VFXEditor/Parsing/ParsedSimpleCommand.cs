@@ -1,4 +1,5 @@
 using System;
+using VfxEditor.Data.Command;
 
 namespace VfxEditor.Parsing {
     public class ParsedSimpleCommand<S> : ICommand {

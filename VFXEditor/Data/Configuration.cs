@@ -11,14 +11,14 @@ using System.Linq;
 using System.Numerics;
 using VfxEditor.DirectX.Lights;
 using VfxEditor.FileBrowser.SideBar;
+using VfxEditor.Formats.SklbFormat.Bones;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Library;
 using VfxEditor.Select;
 using VfxEditor.Select.Favorite;
-using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Utils.Gltf;
 
-namespace VfxEditor {
+namespace VfxEditor.Data {
     [Serializable]
     public unsafe class ManagerConfiguration {
         public List<SelectResult> RecentItems = [];

@@ -1,7 +1,7 @@
 using Dalamud.Interface.Utility.Raii;
 using VfxEditor.Formats.AvfxFormat.Curve.Lines;
 
-namespace VFXEditor.Formats.AvfxFormat.Curve {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurve1Axis : AvfxCurveData {
         private readonly LineEditor LineEditor;
 

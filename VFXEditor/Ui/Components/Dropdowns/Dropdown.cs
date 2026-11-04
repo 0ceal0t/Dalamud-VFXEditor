@@ -7,7 +7,7 @@ using System.Numerics;
 using VfxEditor.Ui.Components.Base;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Ui.Components {
+namespace VfxEditor.Ui.Components.Dropdowns {
     public abstract class Dropdown<T> : SelectView<T> where T : class {
         public Dropdown( string id, List<T> items ) : base( id, items ) { }
 
@@ -91,7 +91,7 @@ namespace VfxEditor.Ui.Components {
             DrawDeleteControl( onDelete );
         }
 
-        protected void DrawNewControl( Action onNew) {
+        protected void DrawNewControl( Action onNew ) {
             if( onNew != null ) {
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 ImGui.SameLine();

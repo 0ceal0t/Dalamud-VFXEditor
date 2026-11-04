@@ -1,16 +1,18 @@
+using Dalamud.Bindings.ImGui;
 using FFXIVClientStructs.Havok.Animation.Animation;
 using FFXIVClientStructs.Havok.Animation.Playback;
 using FFXIVClientStructs.Havok.Animation.Playback.Control;
 using FFXIVClientStructs.Havok.Animation.Rig;
 using FFXIVClientStructs.Havok.Common.Base.Container.String;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using VfxEditor.Formats.PapFormat.Motion.Preview;
 using VfxEditor.Interop.Havok;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.String;
 
-namespace VfxEditor.PapFormat.Motion {
+namespace VfxEditor.Formats.PapFormat.Motion {
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaInterleavedUncompressedAnimation.cs#L7
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaPredictiveCompressedAnimation.cs
     // https://github.com/soulsmods/DSMapStudio/blob/360245a095eb5db9dc821a213bc41b2b3ff3db0d/HKX2/Autogen/hkaQuantizedAnimation.cs

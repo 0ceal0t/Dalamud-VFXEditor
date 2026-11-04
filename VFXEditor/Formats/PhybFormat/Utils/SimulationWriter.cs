@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using VfxEditor.Formats.PhybFormat.Simulator;
+using VfxEditor.Formats.PhybFormat.Simulator.PostAlignment;
 using VfxEditor.Parsing.Utils;
-using VfxEditor.PhybFormat.Simulator;
-using VfxEditor.PhybFormat.Simulator.PostAlignment;
 
-namespace VfxEditor.PhybFormat.Utils {
+namespace VfxEditor.Formats.PhybFormat.Utils {
     public class SimulationWriter : ParsingWriter {
         private struct OffsetStruct {
             public long PlaceholderPos; // in Writer
@@ -26,7 +26,7 @@ namespace VfxEditor.PhybFormat.Utils {
             SimulatorOffset = simulatorOffset;
         }
 
-        public void Write(List<PhybSimulator> simulators ) {
+        public void Write( List<PhybSimulator> simulators ) {
             Write( simulators.Count );
 
             var placeholders = simulators.Select( x => x.WriteHeader( this ) ).ToList();
@@ -89,6 +89,7 @@ namespace VfxEditor.PhybFormat.Utils {
         }
 
         public override void Dispose() {
+            base.Dispose();
             ExtraWriter.Close();
             ExtraMs.Close();
         }

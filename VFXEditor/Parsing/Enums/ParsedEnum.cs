@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Enums {
     public class ParsedEnum<T> : ParsedSimpleBase<T> where T : Enum {
         private readonly int Size;
 

@@ -1,10 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat.Particle.Texture;
-using VFXEditor.Formats.AvfxFormat.Curve;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
     public class AvfxParticleTexturePalette : AvfxParticleAttribute {
         public readonly AvfxBool Enabled = new( "Enabled", "bEna" );
         public readonly AvfxEnum<TextureFilterType> TextureFilter = new( "Texture Filter", "TFT" );
@@ -15,8 +20,7 @@ namespace VfxEditor.AvfxFormat {
 
         private readonly List<AvfxBase> Parsed;
 
-        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true )
-        {
+        public AvfxParticleTexturePalette( AvfxParticle particle ) : base( "TP", particle, locked: true ) {
             InitNodeSelects();
             Display.Add( new TextureNodeSelectDraw( NodeSelects ) );
 

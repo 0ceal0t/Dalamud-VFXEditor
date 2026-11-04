@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 
-namespace VfxEditor.ScdFormat.Music.Data {
+namespace VfxEditor.Formats.ScdFormat.Music.Data {
     public abstract class ScdAudioData {
         public readonly ScdAudioEntry Entry;
 

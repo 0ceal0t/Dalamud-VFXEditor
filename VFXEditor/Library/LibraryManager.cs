@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using VfxEditor.Data;
 using VfxEditor.Library.Components;
 using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;

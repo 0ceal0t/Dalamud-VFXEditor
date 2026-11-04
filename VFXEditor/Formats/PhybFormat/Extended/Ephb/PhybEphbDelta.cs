@@ -1,5 +1,7 @@
 using VfxEditor.Flatbuffer;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
@@ -13,7 +15,7 @@ namespace VfxEditor.Formats.PhybFormat.Extended.Ephb {
         public PhybEphbDelta( EphbDelta delta ) : this() {
             Unknown1.Value = delta.Unknown1;
             Unknown2.Value = delta.Unknown2;
-            Unknown3.Value = new(delta.Unknown3.X, delta.Unknown3.Y, delta.Unknown3.Z );
+            Unknown3.Value = new( delta.Unknown3.X, delta.Unknown3.Y, delta.Unknown3.Z );
         }
 
         public void Draw() {

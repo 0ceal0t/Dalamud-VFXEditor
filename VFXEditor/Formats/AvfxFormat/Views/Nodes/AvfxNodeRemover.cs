@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Formats.AvfxFormat.Nodes;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Views.Nodes {
     public class AvfxNodeRemover<T> where T : AvfxNode {
         private readonly NodeGroup<T> Group;
         private readonly IUiNodeView<T> View;

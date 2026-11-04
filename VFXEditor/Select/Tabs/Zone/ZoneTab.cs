@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Zone {
     public abstract class ZoneTab<T> : SelectTab<ZoneRow, T> where T : class {

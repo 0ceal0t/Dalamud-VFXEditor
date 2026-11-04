@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Data.Excel;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Data {
     public class RacialData {
@@ -26,8 +27,8 @@ namespace VfxEditor.Select.Data {
             var charaRow = Dalamud.DataManager.GetExcelSheet<CharaMakeType>( name: "CharaMakeType" ).GetRow( row );
 
             var faceTypes = data.GetMenuForCustomize( CustomizeIndex.FaceType );
-            if(faceTypes != null ) {
-                foreach( var (param, idx) in faceTypes.SubParams.WithIndex() ) FaceToIcon[idx + 1] = ( uint )param ;
+            if( faceTypes != null ) {
+                foreach( var (param, idx) in faceTypes.SubParams.WithIndex() ) FaceToIcon[idx + 1] = ( uint )param;
             }
 
             var featureTypes = data.GetMenuForCustomize( CustomizeIndex.RaceFeatureType );
@@ -35,14 +36,14 @@ namespace VfxEditor.Select.Data {
                 foreach( var (param, idx) in featureTypes.SubParams.WithIndex() ) FeatureToIcon[idx + 1] = ( uint )param;
             }
 
-            var hairStyles = HairMakeType.GetHairStyles( ( uint )charaRow.Gender , charaRow.Race.RowId, charaRow.Tribe.RowId );
+            var hairStyles = HairMakeType.GetHairStyles( ( uint )charaRow.Gender, charaRow.Race.RowId, charaRow.Tribe.RowId );
             if( hairStyles != null ) {
-                foreach( var hair in  hairStyles ) HairToIcon[hair.FeatureID] = hair.Icon;
+                foreach( var hair in hairStyles ) HairToIcon[hair.FeatureID] = hair.Icon;
             }
 
             foreach( var line in File.ReadAllLines( SelectDataUtils.CommonRacialPath ) ) {
                 var split = line.Split( "/" );
-                if( !Id.Equals( split[2] ) ) continue; // c0804
+                if( !Id.Equals( split[2], StringComparison.Ordinal ) ) continue; // c0804
 
                 ( split[4] switch {
                     "face" => FaceOptions,

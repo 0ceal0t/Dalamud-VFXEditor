@@ -1,11 +1,11 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using VfxEditor.TmbFormat.Root;
+using VfxEditor.Formats.TmbFormat.Track;
 using static VfxEditor.Interop.ResourceLoader;
 
 namespace VfxEditor.Ui.Tools {

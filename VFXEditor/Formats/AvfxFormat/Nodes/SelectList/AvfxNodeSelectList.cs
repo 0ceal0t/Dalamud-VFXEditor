@@ -1,12 +1,15 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.Linq;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Copy;
+using VfxEditor.Formats.AvfxFormat.Components.IntList;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
 using VfxEditor.Utils;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Nodes.SelectList {
     public class AvfxNodeSelectList<T> : AvfxNodeSelect where T : AvfxNode {
         public List<T> Selected = [];
         public readonly AvfxIntList Literal;

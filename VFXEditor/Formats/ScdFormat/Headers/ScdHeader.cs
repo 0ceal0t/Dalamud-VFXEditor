@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Headers {
     public class ScdHeader {
         public int Magic;
         public int SectionType;

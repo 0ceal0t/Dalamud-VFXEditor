@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Flag;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Interfaces;
 using VfxEditor.Utils;
 

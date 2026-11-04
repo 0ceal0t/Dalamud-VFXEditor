@@ -2,9 +2,11 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Items;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Components.UiComponents {
     public class UiDisplayList : AvfxItem {
         public readonly string Name;
         private readonly List<IUiItem> Display;

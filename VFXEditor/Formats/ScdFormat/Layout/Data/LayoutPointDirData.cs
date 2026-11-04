@@ -1,6 +1,8 @@
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Reserve;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout.Data {
     public class LayoutPointDirData : ScdLayoutData {
         public readonly ParsedFloat4 Position = new( "Position" );
         public readonly ParsedFloat4 Direction = new( "Direction" );

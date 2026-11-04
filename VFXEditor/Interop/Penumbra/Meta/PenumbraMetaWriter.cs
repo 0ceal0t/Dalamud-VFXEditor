@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using VfxEditor.Formats.AtchFormat;
 using VfxEditor.Formats.AtchFormat.Entry;
-using VfxEditor.TmbFormat.Base;
 
 namespace VfxEditor.Interop.Penumbra.Meta {
     public readonly record struct AtchChange( string TypeName, ushort GenderRace, ushort Index, string Bone, float Scale, Vector3 Offset, Vector3 Rotation );

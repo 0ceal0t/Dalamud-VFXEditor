@@ -1,7 +1,8 @@
 using System.Numerics;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Angles {
     public class ParsedRadians3 : ParsedFloat3 {
         public ParsedRadians3( string name ) : base( name ) { }
 

@@ -2,6 +2,8 @@ using Dalamud.Bindings.ImGui;
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Double;
+using VfxEditor.Parsing.String;
 using VfxEditor.Ui.Components;
 using VfxEditor.Utils;
 

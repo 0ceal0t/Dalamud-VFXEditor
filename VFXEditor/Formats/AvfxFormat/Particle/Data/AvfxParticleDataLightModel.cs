@@ -1,4 +1,9 @@
-namespace VfxEditor.AvfxFormat {
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+
+namespace VfxEditor.Formats.AvfxFormat.Particle.Data {
     public class AvfxParticleDataLightModel : AvfxDataWithParameters {
         public readonly AvfxInt ModelIdx = new( "Model Index", "MNO", size: 1 );
         public readonly AvfxNodeSelect<AvfxModel> ModelSelect;

@@ -1,10 +1,13 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
 using VfxEditor.Formats.ShpkFormat.Shaders;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
+using VfxEditor.Parsing.Float;
 using VfxEditor.Parsing.Int;
+using VfxEditor.Parsing.Reserve;
 using VfxEditor.Ui.Interfaces;
 
 namespace VfxEditor.Formats.MtrlFormat.Shader {

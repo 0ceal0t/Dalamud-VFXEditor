@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace VfxEditor.TmbFormat.Root {
+namespace VfxEditor.Formats.TmbFormat.Track {
     public class LuaPool {
         public readonly int Id;
         public readonly int Size;

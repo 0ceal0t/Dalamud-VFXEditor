@@ -2,7 +2,7 @@ using Dalamud.Bindings.ImGui;
 using System.IO;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Parsing {
+namespace VfxEditor.Parsing.Float {
     public class ParsedFloat : ParsedSimpleBase<float> {
         public bool HighPrecision = true;
         public ParsedFloat( string name, float value ) : base( name, value ) { }

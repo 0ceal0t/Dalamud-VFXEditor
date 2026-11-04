@@ -1,9 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
-using VfxEditor.AvfxFormat.Particle.Texture;
-using static VfxEditor.AvfxFormat.Enums;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Enums;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
+using VfxEditor.Formats.AvfxFormat.Texture;
+using static VfxEditor.Formats.AvfxFormat.Base.Enums;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Texture {
     public class AvfxParticleTextureColor2 : AvfxParticleAttribute {
         public readonly string Name;
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using VfxEditor.Formats.PhybFormat.Simulator;
-using VfxEditor.PhybFormat.Utils;
+using VfxEditor.Formats.PhybFormat.Utils;
 
-namespace VfxEditor.PhybFormat.Simulator {
+namespace VfxEditor.Formats.PhybFormat.Simulator {
     public class PhybSimulation : IPhysicsObject {
         public readonly PhybFile File;
 

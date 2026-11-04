@@ -4,11 +4,11 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Data.Command;
 using VfxEditor.Data.Command.ListCommands;
 using VfxEditor.FileBrowser;
-using VfxEditor.PhybFormat;
-using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.Ui.Components;
+using VfxEditor.Ui.Components.Dropdowns;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PhybFormat.Simulator {
@@ -49,8 +49,9 @@ namespace VfxEditor.Formats.PhybFormat.Simulator {
                 ImGui.SameLine();
                 using var disabled = ImRaii.Disabled( Selected == null );
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
+                    var selected = Selected;
                     FileBrowserManager.SaveFileDialog( "Select a Save Location", ".phybsim,.*", "ExportedSimulator", "phybsim", ( ok, res ) => {
-                        if( ok ) System.IO.File.WriteAllBytes( res, Selected.ToBytes() );
+                        if( ok && selected != null ) System.IO.File.WriteAllBytes( res, selected.ToBytes() );
                     } );
                 }
                 UiUtils.Tooltip( "Export simulator" );

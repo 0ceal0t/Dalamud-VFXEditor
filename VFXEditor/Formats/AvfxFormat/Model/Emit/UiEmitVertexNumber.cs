@@ -3,7 +3,7 @@ using System.Numerics;
 using VfxEditor.Data.Command;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Model.Emit {
     public class UiVertexNumber : IUiItem {
         public readonly AvfxVertexNumber Number;
 

@@ -1,7 +1,6 @@
 using System;
 using VfxEditor.FileManager;
 using VfxEditor.Interop.Havok;
-using VfxEditor.SklbFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.SklbFormat {
@@ -26,7 +25,7 @@ namespace VfxEditor.Formats.SklbFormat {
             // Matches a skeleton currently being edited in this tool
             foreach( var document in Documents ) {
                 if( document.File == null ) continue;
-                if( !document.ReplacePath.ToLower().Equals( path.ToLower() ) ) continue;
+                if( !string.Equals( document.ReplacePath, path, StringComparison.OrdinalIgnoreCase ) ) continue;
                 if( TryLoadSklb( () => SimpleSklb.LoadFromLocal( document.WriteLocation ), document.WriteLocation, out skeleton ) ) {
                     source = SklbSource.Document;
                     return true;

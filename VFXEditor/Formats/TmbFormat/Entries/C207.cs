@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Components;
+using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
-using VfxEditor.TmbFormat.Utils;
+using VfxEditor.Parsing.Bool;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.TmbFormat.Entries {
+namespace VfxEditor.Formats.TmbFormat.Entries {
     public class C207 : TmbEntry {
         public const string MAGIC = "C207";
         public const string DISPLAY_NAME = "Lightning";
@@ -10,7 +13,7 @@ namespace VfxEditor.TmbFormat.Entries {
         public override string Magic => MAGIC;
 
         public override int Size => 0x2C;
-        public override int ExtraSize => 4 * (4 + 3);
+        public override int ExtraSize => 4 * ( 4 + 3 );
 
         private readonly ParsedBool Enabled = new( "Enabled" );
         private readonly ParsedInt Unk1 = new( "Unknown 1" );

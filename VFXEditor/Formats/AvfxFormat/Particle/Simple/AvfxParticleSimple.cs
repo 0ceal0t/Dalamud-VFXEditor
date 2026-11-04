@@ -1,7 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.AvfxFormat.Base;
+using VfxEditor.Formats.AvfxFormat.Components.Bool;
+using VfxEditor.Formats.AvfxFormat.Components.Float;
+using VfxEditor.Formats.AvfxFormat.Components.Int;
+using VfxEditor.Formats.AvfxFormat.Components.UiComponents;
+using VfxEditor.Formats.AvfxFormat.Model;
+using VfxEditor.Formats.AvfxFormat.Nodes.Select;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Particle.Simple {
     public class AvfxParticleSimple : AvfxParticleAttribute {
         public readonly AvfxInt InjectionPositionType = new( "Injection Position Type", "SIPT" );
         public readonly AvfxInt InjectionDirectionType = new( "Injection Direction Type", "SIDT" );

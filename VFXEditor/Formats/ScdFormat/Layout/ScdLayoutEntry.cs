@@ -1,13 +1,18 @@
-using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using VfxEditor.Formats.ScdFormat.Entries;
+using VfxEditor.Formats.ScdFormat.Layout.Data;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing.Enums.Data;
+using VfxEditor.Parsing.Flag;
+using VfxEditor.Parsing.Float;
+using VfxEditor.Parsing.Int;
 using VfxEditor.Ui.Interfaces;
 
-namespace VfxEditor.ScdFormat {
+namespace VfxEditor.Formats.ScdFormat.Layout {
     public enum SoundObjectType {
         Null,
         Ambient,

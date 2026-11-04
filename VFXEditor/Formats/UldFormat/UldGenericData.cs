@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using VfxEditor.Parsing;
-using VfxEditor.Parsing.Data;
+using VfxEditor.Parsing.Enums.Data;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat {
+namespace VfxEditor.Formats.UldFormat {
     public abstract class UldGenericData : IData {
         protected List<ParsedBase> Parsed = [];
 

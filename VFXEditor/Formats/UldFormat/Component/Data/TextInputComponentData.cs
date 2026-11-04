@@ -1,7 +1,8 @@
 using VfxEditor.Parsing;
 using VfxEditor.Parsing.Color;
+using VfxEditor.Parsing.Int;
 
-namespace VfxEditor.UldFormat.Component.Data {
+namespace VfxEditor.Formats.UldFormat.Component.Data {
     public class TextInputComponentData : UldGenericData {
         public TextInputComponentData() {
             AddUnknown( 16, "Unknown Node Id" );

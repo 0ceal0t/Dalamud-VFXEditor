@@ -1,5 +1,4 @@
 using VfxEditor.FileManager;
-using VfxEditor.PapFormat;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PapFormat {

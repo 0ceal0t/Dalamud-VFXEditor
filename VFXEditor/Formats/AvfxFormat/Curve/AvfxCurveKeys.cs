@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using VFXEditor.Formats.AvfxFormat.Curve;
+using VfxEditor.Formats.AvfxFormat.Base;
 
-namespace VfxEditor.AvfxFormat {
+namespace VfxEditor.Formats.AvfxFormat.Curve {
     public class AvfxCurveKeys : AvfxBase {
         private readonly AvfxCurveData Curve;
         public readonly List<AvfxCurveKey> Keys = [];

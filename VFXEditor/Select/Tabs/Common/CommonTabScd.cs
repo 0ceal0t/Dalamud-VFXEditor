@@ -1,5 +1,6 @@
 using Lumina.Excel.Sheets;
 using System.Linq;
+using VfxEditor.Select.Base;
 
 namespace VfxEditor.Select.Tabs.Common {
     public class CommonTabScd : SelectTab<CommonRow> {
@@ -26,7 +27,7 @@ namespace VfxEditor.Select.Tabs.Common {
 
             foreach( var line in Dalamud.DataManager.GetExcelSheet<Jingle>().Where( x => !string.IsNullOrEmpty( x.Name.ExtractText() ) ) ) {
                 var name = line.Name.ToString();
-                var path = name.StartsWith( '/' ) ? $"sound{line.Name.ToString().ToLower()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLower()}.scd";
+                var path = name.StartsWith( '/' ) ? $"sound{line.Name.ToString().ToLowerInvariant()}.scd" : $"sound/zingle/zingle_{line.Name.ToString().ToLowerInvariant()}.scd";
                 Items.Add( new( idx++, path, name, 0 ) );
             }
         }
