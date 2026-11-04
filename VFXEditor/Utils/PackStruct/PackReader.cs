@@ -7,6 +7,7 @@ namespace VfxEditor.Utils.PackStruct {
     public unsafe ref struct PackReader {
         private ReadOnlySpan<byte> _baseData;
         private PackFooter _packFooter;
+        private long _footerPos;
 
         public readonly ulong PackLength => _packFooter.TotalSize;
 
@@ -20,6 +21,7 @@ namespace VfxEditor.Utils.PackStruct {
                 return;
             }
 
+            _footerPos = reader.BaseStream.Length - sizeof( PackFooter );
             reader.BaseStream.Position = reader.BaseStream.Length - ( long )_packFooter.TotalSize;
             StartPos = reader.BaseStream.Position;
 
@@ -37,6 +39,13 @@ namespace VfxEditor.Utils.PackStruct {
             // The pack header is usually located exactly at StartPos, but some files insert
             // alignment padding beforehand, so fall back to checking the next 16-byte boundary
             if( TryReadHeader( _baseData, type, out prior ) ) return true;
+
+            var priorPos = _footerPos + _packFooter.Header.PriorOffset;
+            var priorOffset = priorPos - StartPos;
+            if( priorOffset > 0 && priorOffset < _baseData.Length && TryReadHeader( _baseData[( int )priorOffset..], type, out prior ) ) {
+                StartPos = priorPos;
+                return true;
+            }
 
             var pad = ( int )FileUtils.NumberToPad( StartPos, 16 );
             if( pad > 0 && pad < _baseData.Length && TryReadHeader( _baseData[pad..], type, out prior ) ) {

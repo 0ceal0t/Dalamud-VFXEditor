@@ -453,8 +453,8 @@ namespace VfxEditor.FileManager {
 
             using( var popup = ImRaii.Popup( "SaveButtonPopup" ) ) {
                 if( popup ) {
-                    if( ImGui.Selectable( "Penumbra Mod" ) ) Plugin.PenumbraExportDialog.Show();
-                    if( ImGui.Selectable( "TexTools Mod" ) ) Plugin.TexToolsExportDialog.Show();
+                    if( ImGui.Selectable( "Penumbra mod" ) ) Plugin.PenumbraExportDialog.Show();
+                    if( ImGui.Selectable( "TexTools mod" ) ) Plugin.TexToolsExportDialog.Show();
                     ImGui.Separator();
                     if( ImGui.Selectable( "Export just this file" ) ) ExportRawDialog();
                 }
