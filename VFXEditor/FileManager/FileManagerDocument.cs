@@ -362,11 +362,13 @@ namespace VfxEditor.FileManager {
                     Manager.SetSource( Source );
                     Dalamud.OkNotification( "Reloaded " + Source.Path );
                 }
+                UiUtils.Tooltip( "Reload the source file from disk" );
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
                     System.IO.File.WriteAllBytes( Source.Path, File.ToBytes() );
                     Dalamud.OkNotification( "Exported to " + Source.Path );
                 }
+                UiUtils.Tooltip( "Overwrite the source file on disk with your changes" );
             }
 
             ImGui.SameLine();

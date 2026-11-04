@@ -12,6 +12,7 @@ using VfxEditor.Ui.Components.Base;
 using VfxEditor.UldFormat.Component.Node.Data;
 using VfxEditor.UldFormat.Component.Node.Data.Component;
 using VfxEditor.UldFormat.Timeline;
+using VfxEditor.Utils;
 
 namespace VfxEditor.UldFormat.Component.Node {
     public enum NodeType : int {
@@ -260,6 +261,7 @@ namespace VfxEditor.UldFormat.Component.Node {
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) CommandManager.Add( new UldNodeDataCommand( this ) );
                 }
+                UiUtils.Tooltip( "Apply component type" );
                 ImGui.SameLine();
                 ImGui.Text( "Component Type" );
             }

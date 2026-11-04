@@ -139,6 +139,7 @@ namespace VfxEditor.Utils {
 
         public static void Tooltip( string text, bool hovered = false ) {
             if( hovered || ImGui.IsItemHovered( ImGuiHoveredFlags.AllowWhenDisabled ) ) {
+                using var font = ImRaii.PushFont( UiBuilder.DefaultFont, IsIconFontPushed() );
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
                 ImGui.TextUnformatted( text );
@@ -146,6 +147,8 @@ namespace VfxEditor.Utils {
                 ImGui.EndTooltip();
             }
         }
+
+        public static unsafe bool IsIconFontPushed() => ImGui.GetFont().Handle == UiBuilder.IconFont.Handle;
 
         public static void WikiButton( string url ) {
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {

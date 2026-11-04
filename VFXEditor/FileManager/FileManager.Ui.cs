@@ -133,6 +133,7 @@ namespace VfxEditor.FileManager {
             using( var transparentButtonStyle = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Bars.ToIconString() ) ) DocumentWindow.Show();
+                UiUtils.Tooltip( "Open document list" );
 
                 drawlist.AddLine( new Vector2( prePopoutPos.X, preDropdownPos.Y ), new Vector2( prePopoutPos.X + popupSize, preDropdownPos.Y ), color, 1 );
             }

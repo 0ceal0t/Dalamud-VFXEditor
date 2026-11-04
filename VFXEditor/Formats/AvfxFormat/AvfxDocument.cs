@@ -88,18 +88,17 @@ namespace VfxEditor.AvfxFormat {
 
         protected override void DrawExtraControls() {
             using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                using var disabled = ImRaii.Disabled( SpawnDisabled );
-                if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
-            }
-            UiUtils.Tooltip( "Spawn the selected VFX into the world (both a source and replace VFX must be selected)" );
+                using( ImRaii.Disabled( SpawnDisabled ) ) {
+                    if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
+                }
+                UiUtils.Tooltip( "Spawn the selected VFX into the world (both a source and replace VFX must be selected)" );
 
-            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 5f, 0f ) ) ) {
                     ImGui.SameLine();
                 }
                 if( ImGui.Button( FontAwesomeIcon.Book.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
+                UiUtils.Tooltip( "Open library of VFX components and textures" );
             }
-            UiUtils.Tooltip( "Open library of VFX components and textures" );
 
             if( !SpawnDisabled ) VfxSpawn.DrawPopup( SpawnPath, true );
         }

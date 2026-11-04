@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using VfxEditor.Select.Tabs.BgmQuest;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select {
     public partial class SelectDialog {
@@ -171,6 +172,7 @@ namespace VfxEditor.Select {
 
             ImGui.TableNextColumn(); // Controls
             if( ImGui.Button( FontAwesomeIcon.Check.ToIconString() ) ) Invoke( SelectUiUtils.GetSelectResult( path, resultType, resultName ) );
+            UiUtils.Tooltip( "Select this file" );
             ImGui.SameLine();
             SelectUiUtils.Copy( path );
 

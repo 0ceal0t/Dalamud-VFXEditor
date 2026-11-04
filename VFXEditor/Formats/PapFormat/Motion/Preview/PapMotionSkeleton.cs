@@ -51,6 +51,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 ImGui.SameLine();
                 using var dimmed = ImRaii.PushStyle( ImGuiStyleVar.Alpha, 0.5f, !Looping );
                 if( ImGui.Button( FontAwesomeIcon.Sync.ToIconString() ) ) Looping = !Looping;
+                UiUtils.Tooltip( Looping ? "Looping (click to disable)" : "Not looping (click to enable)" );
             }
 
             var lastFrame = Frame;
@@ -67,7 +68,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
             if( Data == null ) return;
 
             if( MismatchWarning ) {
-                using var _ = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR);
+                using var _ = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR );
                 ImGui.TextWrapped( "This animation references more bones than the loaded skeleton has. Sampling it would corrupt memory and crash the game. Load the matching skeleton (.sklb) via the selector above." );
                 return;
             }

@@ -50,12 +50,14 @@ namespace VfxEditor.TmbFormat.Entries {
                     if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
                         SaveDialog();
                     }
+                    UiUtils.Tooltip( "Export entry" );
 
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.Copy.ToIconString() ) ) {
                         track.DuplicateEntry( this );
                         return true;
                     }
+                    UiUtils.Tooltip( "Duplicate entry" );
                 }
 
                 DrawBody();

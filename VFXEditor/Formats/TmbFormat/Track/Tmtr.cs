@@ -184,6 +184,7 @@ namespace VfxEditor.TmbFormat {
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) ImportDialog();
+                UiUtils.Tooltip( "Import entry" );
             }
 
             var resetScroll = false;

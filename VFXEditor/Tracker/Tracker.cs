@@ -4,6 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Tracker {
     public abstract class Tracker {
@@ -28,6 +29,7 @@ namespace VfxEditor.Tracker {
                 Toggle();
                 Dalamud.PluginInterface.UiBuilder.DisableCutsceneUiHide = Plugin.TrackerManager.AnyEnabled;
             }
+            UiUtils.Tooltip( Enabled ? "Hide tracker overlay" : "Show tracker overlay" );
         }
     }
 }

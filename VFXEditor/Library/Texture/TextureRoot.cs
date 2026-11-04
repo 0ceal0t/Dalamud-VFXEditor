@@ -32,6 +32,7 @@ namespace VfxEditor.Library.Node {
                         library.ExportTextures( res );
                     } );
                 }
+                UiUtils.Tooltip( "Export texture list" );
 
                 ImGui.SameLine();
                 if( ImGui.Button( FontAwesomeIcon.Upload.ToIconString() ) ) {
@@ -40,6 +41,7 @@ namespace VfxEditor.Library.Node {
                         library.ImportTextures( res );
                     } );
                 }
+                UiUtils.Tooltip( "Import texture list" );
             }
 
             ImGui.Separator();

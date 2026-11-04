@@ -73,20 +73,20 @@ namespace VfxEditor {
         }
 
         public void DrawButtons() {
-            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                    ImGui.SameLine();
-                }
-                using var disabled = ImRaii.Disabled( !CanUndo );
+            using var font = ImRaii.PushFont( UiBuilder.IconFont );
+
+            using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+            using( ImRaii.Disabled( !CanUndo ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Undo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) UndoInternal();
             }
             UiUtils.Tooltip( "Undo" );
 
-            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
-                    ImGui.SameLine();
-                }
-                using var disabled = ImRaii.Disabled( !CanRedo );
+            using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
+                ImGui.SameLine();
+            }
+            using( ImRaii.Disabled( !CanRedo ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Redo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) RedoInternal();
             }
             UiUtils.Tooltip( "Redo" );

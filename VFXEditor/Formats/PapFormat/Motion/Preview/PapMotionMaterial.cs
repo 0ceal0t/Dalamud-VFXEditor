@@ -96,6 +96,7 @@ namespace VfxEditor.Formats.PapFormat.Motion.Preview {
                 ImGui.SameLine();
                 using var font = ImRaii.PushFont( UiBuilder.IconFont );
                 if( ImGui.Button( FontAwesomeIcon.ArrowsLeftRightToLine.ToIconString() ) ) ImPlot.SetNextAxesToFit();
+                UiUtils.Tooltip( "Fit view to data" );
             }
 
             // ====================

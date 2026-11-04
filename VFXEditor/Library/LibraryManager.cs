@@ -129,6 +129,7 @@ namespace VfxEditor.Library {
                     TextureRoot.AddTexture( currentPath, currentPath );
                     Save();
                 }
+                UiUtils.Tooltip( "Add the current path to the texture library" );
             }
 
             using var child = ImRaii.Child( "Child", new Vector2( ImGui.GetWindowContentRegionMax().X - ImGui.GetWindowContentRegionMin().X, 300 ), true );

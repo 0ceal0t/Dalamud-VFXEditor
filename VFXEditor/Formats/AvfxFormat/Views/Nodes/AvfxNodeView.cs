@@ -39,16 +39,13 @@ namespace VfxEditor.AvfxFormat {
                     if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) {
                         file.ShowExportDialog( selected );
                     }
+                    UiUtils.Tooltip( "Export node" );
 
                     ImGui.SameLine();
                     if( ImGui.Button( FontAwesomeIcon.BookBookmark.ToIconString() ) ) {
                         AvfxFile.AddToNodeLibrary( selected );
                     }
-
-                    // Tooltip
-                    ImGui.PopFont();
                     UiUtils.Tooltip( "Add to node library" );
-                    ImGui.PushFont( UiBuilder.IconFont );
 
                     ImGui.SameLine();
                     if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {

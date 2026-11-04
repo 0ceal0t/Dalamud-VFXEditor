@@ -67,6 +67,7 @@ namespace VfxEditor.Library.Components {
                     library.Save();
                     listModified = true;
                 }
+                UiUtils.Tooltip( "Save changes" );
             }
 
             DrawEditing();

@@ -52,6 +52,7 @@ namespace VfxEditor.Parsing.Int {
                     View.SetSelected( Selected );
                     UiUtils.ForceOpenTabs.Add( typeof( T ) );
                 }
+                UiUtils.Tooltip( "Navigate to selected item" );
             }
 
             ImGui.SameLine();

@@ -34,6 +34,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
                     }
                 } );
             }
+            UiUtils.Tooltip( "Import track" );
 
             using var disabled = ImRaii.Disabled( Selected == null );
 
@@ -43,6 +44,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
                     if( ok ) System.IO.File.WriteAllBytes( res, Selected.ToBytes() );
                 } );
             }
+            UiUtils.Tooltip( "Export track" );
 
             ImGui.SameLine();
             if( UiUtils.RemoveButton( FontAwesomeIcon.Trash.ToIconString() ) ) {

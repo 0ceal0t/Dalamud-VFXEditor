@@ -6,6 +6,7 @@ using TeximpNet;
 using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.Ui;
 using Surface = TeximpNet.Surface;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
     public abstract class TextureDrawable {
@@ -49,6 +50,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.SameLine();
                 using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                     if( ImGui.Button( FontAwesomeIcon.Edit.ToIconString() ) ) ImGui.OpenPopup( "Edit" );
+                    UiUtils.Tooltip( "Edit texture" );
                 }
 
                 DrawSettingsCog();
@@ -123,6 +125,7 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             ImGui.SameLine();
             using var font = ImRaii.PushFont( UiBuilder.IconFont );
             if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString() ) ) ImGui.OpenPopup( "Settings" );
+            UiUtils.Tooltip( "Texture settings" );
         }
 
         protected static void DrawSettingsPopup() {

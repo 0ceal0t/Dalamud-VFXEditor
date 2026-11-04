@@ -130,6 +130,7 @@ namespace VfxEditor.FileBrowser {
                 }
                 CreatingFolder = false;
             }
+            UiUtils.Tooltip( "Create folder" );
 
             ImGui.SameLine();
             if( UiUtils.RemoveButton( FontAwesomeIcon.Times.ToIconString() ) ) {

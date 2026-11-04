@@ -24,9 +24,9 @@ namespace VfxEditor.AvfxFormat {
         private Vector3 ColorBeforeEdit;
         private Vector3 BackupColor;
 
-        public readonly ParsedEnum<KeyType> Type = new( "Type", 2 );
-        public readonly ParsedShort Time = new( "Time" );
-        public readonly ParsedFloat3 Data = new( "Data" );
+        public readonly ParsedEnum<KeyType> Type = new( "##Type", 2 );
+        public readonly ParsedShort Time = new( "##Time" );
+        public readonly ParsedFloat3 Data = new( "##Data" );
 
         public Vector3 Converted => new( Data.Value.X, Data.Value.Y, ( float )Curve.ToDegrees( Data.Value.Z ) );
         public Vector3 Color => Data.Value;
@@ -107,6 +107,7 @@ namespace VfxEditor.AvfxFormat {
                     CommandManager.Add( new ListRemoveCommand<AvfxCurveKey>( Curve.Keys, this, ( _, _ ) => editor.OnUpdate() ) );
                     return;
                 }
+                UiUtils.Tooltip( "Delete" );
 
                 // Duplicate
                 ImGui.SameLine();
@@ -114,54 +115,129 @@ namespace VfxEditor.AvfxFormat {
                     var newKey = new AvfxCurveKey( Curve, Type.Value, Time.Value + 1, Data.Value.X, Data.Value.Y, Data.Value.Z );
                     CommandManager.Add( new ListAddCommand<AvfxCurveKey>( Curve.Keys, newKey, Curve.Keys.IndexOf( this ) + 1, ( _, _ ) => editor.OnUpdate() ) );
                 }
+                UiUtils.Tooltip( "Duplicate" );
 
                 // Shift left/right
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowLeft.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[0] == this ) ) ) {
                     CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) - 1], _ => editor.OnUpdate() ) );
                 }
+                UiUtils.Tooltip( "Shift left" );
+
                 ImGui.SameLine();
                 if( UiUtils.DisabledButton( FontAwesomeIcon.ArrowRight.ToIconString(), !( Curve.Keys.Count == 0 || Curve.Keys[^1] == this ) ) ) {
                     CommandManager.Add( new ListMoveCommand<AvfxCurveKey>( Curve.Keys, this, Curve.Keys[Curve.Keys.IndexOf( this ) + 1], _ => editor.OnUpdate() ) );
                 }
+                UiUtils.Tooltip( "Shift right" );
             }
 
-            Time.Draw();
+            using var table = ImRaii.Table( "PointEdit", IsColor ? 3 : 5, ImGuiTableFlags.NoSavedSettings );
+            if( !table ) return;
+
+            if( IsColor ) {
+                ImGui.TableSetupColumn( "Time" );
+                ImGui.TableSetupColumn( "Type" );
+                ImGui.TableSetupColumn( "Color" );
+                ImGui.TableHeadersRow();
+
+                ImGui.TableNextRow();
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                Time.Draw();
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                Type.Draw();
+
+                ImGui.TableNextColumn();
+                DrawColorInput( editor );
+            }
+            else {
+                ImGui.TableSetupColumn( "Time" );
+                ImGui.TableSetupColumn( "Type" );
+                ImGui.TableSetupColumn( "In Weight" );
+                ImGui.TableSetupColumn( "Out Weight" );
+                ImGui.TableSetupColumn( "Value" );
+                ImGui.TableHeadersRow();
+
+                ImGui.TableNextRow();
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                Time.Draw();
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                Type.Draw();
+
+                var converted = Converted;
+                var inWeight = converted.X;
+                var outWeight = converted.Y;
+                var value = converted.Z;
+
+                var edited = false;
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                edited |= ImGui.InputFloat( "##InWeight", ref inWeight );
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                edited |= ImGui.InputFloat( "##OutWeight", ref outWeight );
+
+                ImGui.TableNextColumn();
+                ImGui.SetNextItemWidth( -1 );
+                edited |= ImGui.InputFloat( "##Value", ref value );
+                if( edited ) {
+                    CommandManager.Add( new CompoundCommand( [
+                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( converted.X, converted.Y, (float)Curve.ToRadians( converted.Z ) )  )
+                    ], onChangeAction: editor.OnUpdate ) );
+                }
+            }
+
+            /*Time.Draw();
             Type.Draw();
 
             if( IsColor ) DrawColor( editor );
             else {
-                var data = Converted;
-                if( ImGui.InputFloat3( "Value", ref data ) ) {
+                var converted = Converted;
+                var inWeight = converted.X;
+                var outWeight = converted.Y;
+                var value = converted.Z;
+
+                var edited = false;
+                edited |= ImGui.InputFloat( "In Weight", ref inWeight );
+                edited |= ImGui.InputFloat( "Out Weight", ref outWeight );
+                edited |= ImGui.InputFloat( "Value", ref value );
+                if( edited ) {
                     CommandManager.Add( new CompoundCommand( [
-                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( data.X, data.Y,(float)Curve.ToRadians( data.Z ) )  )
+                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( converted.X, converted.Y, (float)Curve.ToRadians( converted.Z ) )  )
                     ], onChangeAction: editor.OnUpdate ) );
                 }
-            }
+            }*/
         }
 
         // ======== DRAW COLOR ============
 
-        private void DrawColor( LineEditorGroup editor ) {
+        private void DrawColorInput( LineEditorGroup editor ) {
             var changed = false;
             var color = Color;
             var prevColor = Color;
 
             var imguiStyle = ImGui.GetStyle();
             using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( imguiStyle.ItemInnerSpacing.X, imguiStyle.ItemSpacing.Y ) ) ) {
-                ImGui.SetNextItemWidth( ImGui.GetWindowSize().X * 0.65f - imguiStyle.ItemInnerSpacing.X - ImGui.GetFrameHeight() );
-                if( ImGui.ColorEdit3( "##ColorInput", ref color, ImGuiColorEditFlags.NoAlpha | ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview | ImGuiColorEditFlags.Float ) ) {
-                    changed = true;
-                    Data.Value = color;
-                }
-                ImGui.SameLine();
                 if( ImGui.ColorButton( "##ColorButton", new Vector4( color, 1 ) ) ) {
                     BackupColor = color;
                     ImGui.OpenPopup( "PalettePopup" );
                 }
-
                 ImGui.SameLine();
-                ImGui.Text( "Color" );
+
+                ImGui.SetNextItemWidth( -1 );
+                if( ImGui.ColorEdit3( "##ColorInput", ref color, ImGuiColorEditFlags.NoAlpha | ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.NoSmallPreview | ImGuiColorEditFlags.Float ) ) {
+                    changed = true;
+                    Data.Value = color;
+                }
             }
 
             if( DrawPalettePopup( color, BackupColor, out var popupColor ) ) {

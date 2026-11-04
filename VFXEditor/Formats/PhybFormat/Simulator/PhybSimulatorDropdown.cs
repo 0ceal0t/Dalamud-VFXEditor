@@ -9,6 +9,7 @@ using VfxEditor.FileBrowser;
 using VfxEditor.PhybFormat;
 using VfxEditor.PhybFormat.Simulator;
 using VfxEditor.Ui.Components;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.PhybFormat.Simulator {
     public class PhybSimulatorDropdown : CommandDropdown<PhybSimulator> {
@@ -43,6 +44,7 @@ namespace VfxEditor.Formats.PhybFormat.Simulator {
                         }
                     } );
                 }
+                UiUtils.Tooltip( "Import simulator" );
 
                 ImGui.SameLine();
                 using var disabled = ImRaii.Disabled( Selected == null );
@@ -51,6 +53,7 @@ namespace VfxEditor.Formats.PhybFormat.Simulator {
                         if( ok ) System.IO.File.WriteAllBytes( res, Selected.ToBytes() );
                     } );
                 }
+                UiUtils.Tooltip( "Export simulator" );
             }
 
             DrawDeleteControl( OnDelete );

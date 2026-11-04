@@ -106,6 +106,7 @@ namespace VfxEditor.ScdFormat {
                     if( IsWav ) SaveWaveDialog(); // can only save as .wav
                     else ImGui.OpenPopup( "SavePopup" );
                 }
+                UiUtils.Tooltip( "Export audio" );
             }
 
             using( var popup = ImRaii.Popup( "SavePopup" ) ) {
