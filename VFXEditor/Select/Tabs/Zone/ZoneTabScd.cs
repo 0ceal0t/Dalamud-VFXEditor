@@ -15,13 +15,15 @@ namespace VfxEditor.Select.Tabs.Zone {
         // ===== LOADING =====
 
         public override void LoadSelection( ZoneRow item, out SelectedScd loaded ) {
-            if( item.BgmId <= 50000 ) {
+            if( BgmQuestTab.IsBgmSwitch( item.BgmId ) ) {
                 loaded = new() {
-                    Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
+                    Quests = BgmQuestTab.GetBgmSwitch( item.BgmId )
                 };
             }
             else {
-                loaded = new(); // TODO: BgmId > 50000 maps to quest-linked BGM switches, not yet resolved
+                loaded = new() {
+                    Situation = BgmQuestTab.GetBgmSituation( item.BgmId )
+                };
             }
         }
 

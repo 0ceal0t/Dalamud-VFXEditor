@@ -52,7 +52,7 @@ public unsafe struct CharaMakeType( ExcelPage page, uint offset, uint row ) : IE
 
         private static uint SubMenuParamCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt32( offset + 12 + i * 4 );
         private static uint Unknown0Ctor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt32( offset + 412 + i * 4 );
-        private static byte SubMenuGraphicCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt8( offset + 416 + i );
+        private static byte SubMenuGraphicCtor( ExcelPage page, uint parentOffset, uint offset, uint i ) => page.ReadUInt8( offset + 440 + i );
     }
 
     public readonly struct FacialFeatureOptionStruct {

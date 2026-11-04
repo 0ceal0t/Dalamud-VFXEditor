@@ -25,7 +25,7 @@ namespace VfxEditor.Select.Tabs.Npc {
             foreach( var entry in baseToName ) {
                 if( !nameToString.TryGetValue( entry.Value, out var name ) ) continue;
 
-                var bnpcRow = battleNpcSheet.GetRow( uint.Parse( entry.Key ) );
+                if( !battleNpcSheet.TryGetRow( uint.Parse( entry.Key ), out var bnpcRow ) ) continue;
                 if( !NpcTab.BnpcValid( bnpcRow ) ) continue;
 
                 var modelChara = bnpcRow.ModelChara.Value;

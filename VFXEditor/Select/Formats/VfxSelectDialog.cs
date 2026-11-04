@@ -16,6 +16,7 @@ using VfxEditor.Select.Tabs.NpcID;
 using VfxEditor.Select.Tabs.Statuses;
 using VfxEditor.Select.Tabs.Zone;
 using VfxEditor.Spawn;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Formats {
     public class VfxSelectDialog : SelectDialog {
@@ -50,6 +51,7 @@ namespace VfxEditor.Select.Formats {
             else {
                 if( ImGui.Button( FontAwesomeIcon.Play.ToIconString() ) ) VfxSpawn.OnSelf( path, false );
             }
+            UiUtils.Tooltip( "Spawn VFX" );
         }
 
         public override void PlayPopupItems( string path ) {
