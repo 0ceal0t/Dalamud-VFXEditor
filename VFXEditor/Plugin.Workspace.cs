@@ -210,7 +210,7 @@ namespace VfxEditor {
         }
 
         private static void DrawLoadingDialog() {
-            if( ImGui.Begin( "Loading Workspace...", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
+            if( ImGui.Begin( UiUtils.WindowId( "Loading Workspace..." ), ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking ) ) {
                 // Documents are being added on another thread, so the lists can change while counting
                 try {
                     LoadingCount = WorkspaceFileCount == 0 ? 0 : Groups.Where( x => x != null ).Select( x => x.GetDocuments().Count() ).Sum();

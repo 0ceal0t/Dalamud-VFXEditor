@@ -30,6 +30,13 @@ namespace VfxEditor.Utils {
     };
 
     public static class UiUtils {
+        public static string WindowId( string name ) =>
+#if BETA
+            name + ( name.Contains( "##" ) ? "-BETA" : "##BETA" );
+#else
+            name;
+#endif
+
         public static readonly Vector4 RED_COLOR = new( 0.89098039216f, 0.30549019608f, 0.28980392157f, 1.0f );
 
         public static readonly Vector4 GREEN_COLOR = new( 0.36078431373f, 0.72156862745f, 0.36078431373f, 1.0f );

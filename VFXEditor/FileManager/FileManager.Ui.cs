@@ -19,14 +19,14 @@ namespace VfxEditor.FileManager {
             CheckKeybinds();
 
             WindowSystem.Draw();
-            WindowName =
+            WindowName = UiUtils.WindowId(
 #if BETA
                 $"[BETA] {Title}"
 #else
                 Title
 #endif
                 + ( string.IsNullOrEmpty( Plugin.CurrentWorkspaceName ) ? "" : $" [{Plugin.CurrentWorkspaceName}]" )
-                + $"###{Title}-{WindowId}";
+                + $"###{Title}-{WindowId}" );
 
             using var _ = ImRaii.PushId( $"{FormatName}-{WindowId}" );
             DrawMenu();

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using VfxEditor.Utils;
 
 namespace VfxEditor.Tracker {
     public struct TrackerItem {
@@ -148,7 +149,7 @@ namespace VfxEditor.Tracker {
             ImGui.SetNextWindowBgAlpha( 0.5f );
             ImGuiHelpers.ForceNextWindowMainViewport();
 
-            if( ImGui.Begin( $"TrackerWindow{idx}",
+            if( ImGui.Begin( UiUtils.WindowId( $"TrackerWindow{idx}" ),
                 ImGuiWindowFlags.NoDecoration |
                 ImGuiWindowFlags.AlwaysAutoResize |
                 ImGuiWindowFlags.NoSavedSettings |

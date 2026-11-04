@@ -25,7 +25,7 @@ namespace VfxEditor.Ui.Components {
             using var command = new CommandRaii( Command );
 
             var open = true;
-            if( ImGui.BeginPopupModal( Title, ref open, ImGuiWindowFlags.AlwaysAutoResize ) ) {
+            if( ImGui.BeginPopupModal( UiUtils.WindowId( Title ), ref open, ImGuiWindowFlags.AlwaysAutoResize ) ) {
                 using( ImRaii.PushId( "Modal" ) ) {
                     DrawBody();
                     ImGui.Separator();

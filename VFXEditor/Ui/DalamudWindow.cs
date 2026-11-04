@@ -19,7 +19,7 @@ namespace VfxEditor.Ui {
         private int OverrideFrames = 0;
 
         public DalamudWindow( string name, bool menuBar, Vector2 size, WindowSystem windowSystem, bool isMainWindow = false ) :
-            base( name, ( menuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) {
+            base( UiUtils.WindowId( name ), ( menuBar ? ImGuiWindowFlags.MenuBar : ImGuiWindowFlags.None ) | ImGuiWindowFlags.NoDocking ) {
 
             Size = size;
             SizeCondition = ImGuiCond.FirstUseEver;
