@@ -54,9 +54,8 @@ namespace VfxEditor.Select.Favorite {
         }
 
         protected bool DrawRow( SelectFavoriteItem row, SelectFavoriteItem parent ) {
-            // TODO: search input
-
             if( !row.IsFolder && row.Result.Type == SelectResultType.Local && !Dialog.ShowLocal ) return false;
+            if( !row.Matches( SearchInput ) ) return false;
 
             using var _ = ImRaii.PushId( row.Id );
             ImGui.TableNextRow();
@@ -84,7 +83,7 @@ namespace VfxEditor.Select.Favorite {
                     }
                 }
 
-                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 20, 5 ) ) ) {
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 15, 5 ) ) ) {
                     ImGui.SameLine();
                 }
                 ImGui.Text( string.IsNullOrEmpty( result.Name ) ? result.DisplayString.Split( "]" )[^1] : result.Name );
@@ -108,7 +107,7 @@ namespace VfxEditor.Select.Favorite {
                     ImGui.Text( FontAwesomeIcon.Folder.ToIconString() );
                 }
 
-                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 20, 5 ) ) ) {
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 15, 5 ) ) ) {
                     ImGui.SameLine();
                 }
                 ImGui.Text( row.FolderName );

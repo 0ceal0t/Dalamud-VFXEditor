@@ -4,7 +4,6 @@ using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +16,6 @@ using VfxEditor.Library;
 using VfxEditor.Select;
 using VfxEditor.Select.Favorite;
 using VfxEditor.SklbFormat.Bones;
-using VfxEditor.Ui;
 using VfxEditor.Utils.Gltf;
 
 namespace VfxEditor {
@@ -187,6 +185,8 @@ namespace VfxEditor {
             if( CurveEditorPalette.Count == 0 ) {
                 CurveEditorPalette.AddRange( ImGuiHelpers.DefaultColorPalette( 56 ) );
             }
+
+            MigrateFavorites();
         }
 
         public ManagerConfiguration GetManagerConfig( string id ) {
@@ -194,6 +194,27 @@ namespace VfxEditor {
             var newConfig = new ManagerConfiguration();
             ManagerConfigs.Add( id, newConfig );
             return newConfig;
+        }
+
+        private void MigrateFavorites() {
+            var migrated = false;
+            foreach( var (id, config) in ManagerConfigs ) {
+                config.FavoritedItems ??= [];
+
+                if( config.Favorites?.Count > 0 ) {
+                    var count = config.Favorites.Count;
+                    config.FavoritedItems.AddRange( config.Favorites
+                        .Where( x => x != null )
+                        .Select( x => new SelectFavoriteItem() {
+                            IsFolder = false,
+                            Result = x
+                        } ) );
+                    config.Favorites.Clear();
+                    Dalamud.Log( $"Migrated {count} favorited items from {id}" );
+                    migrated = true;
+                }
+            }
+            if( migrated ) Save();
         }
 
         public void AddRecent( List<SelectResult> recentList, SelectResult result ) {

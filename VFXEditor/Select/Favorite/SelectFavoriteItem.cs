@@ -13,5 +13,13 @@ namespace VfxEditor.Select.Favorite {
         public bool IsFolder = false;
         public string FolderName = "New Folder";
         public List<SelectFavoriteItem> Items = [];
+
+        public bool Matches( string searchInput ) {
+            if( string.IsNullOrEmpty( searchInput ) ) return true;
+            if( IsFolder ) return true;
+            if( Result.Path.Contains( searchInput, StringComparison.CurrentCultureIgnoreCase ) ) return true;
+            if( ( string.IsNullOrEmpty( Result.Name ) ? Result.DisplayString : Result.Name ).Contains( searchInput, StringComparison.CurrentCultureIgnoreCase ) ) return true;
+            return false;
+        }
     }
 }
