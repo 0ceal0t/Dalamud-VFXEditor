@@ -24,7 +24,9 @@ namespace VfxEditor.TmbFormat.Tmfcs {
         public readonly List<TmfcData> Data = [];
         private readonly UiSplitView<TmfcData> DataSplitView;
 
-        public Tmfc( TmbFile file ) : base( file ) { }
+        public Tmfc( TmbFile file ) : base( file ) {
+            DataSplitView = new( "Entry", Data, false );
+        }
 
         public Tmfc( TmbFile file, TmbReader reader ) : base( file, reader ) {
             var startOffset = reader.ReadInt32();
@@ -52,7 +54,11 @@ namespace VfxEditor.TmbFormat.Tmfcs {
             base.Write( writer );
 
             var offset = writer.WriteExtra( bw => {
-                foreach( var data in Data ) data.Write( bw );
+                var rowPosition = TmfcData.HeaderSize * Data.Count;
+                for( var idx = 0; idx < Data.Count; idx++ ) {
+                    Data[idx].Write( bw, rowPosition - ( TmfcData.HeaderSize * idx ) );
+                    rowPosition += TmfcRow.Size * Data[idx].Rows.Count;
+                }
 
                 foreach( var data in Data ) data.WriteRows( bw );
             }, modifyOffset: 4 );
