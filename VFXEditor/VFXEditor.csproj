@@ -36,14 +36,14 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
-        <PackageReference Include="NAudio" Version="3.0.0-preview.20" />
-        <PackageReference Include="NAudio.SoundFile" Version="3.0.0-preview.20" />
-        <PackageReference Include="NAudio.Wasapi" Version="3.0.0-preview.20" />
-        <PackageReference Include="NAudio.WinMM" Version="3.0.0-preview.20" />
+        <PackageReference Include="NAudio" Version="3.4.0-preview.1" />
+        <PackageReference Include="NAudio.SoundFile" Version="3.4.0-preview.1" />
+        <PackageReference Include="NAudio.Wasapi" Version="3.4.0-preview.1" />
+        <PackageReference Include="NAudio.WinMM" Version="3.4.0-preview.1" />
         <PackageReference Include="NVorbis" Version="1.0.0-rc.2" />
-        <PackageReference Include="Penumbra.Api" Version="5.15.1" />
+        <PackageReference Include="Penumbra.Api" Version="5.19.2" />
         <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.6" />
+        <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.7" />
         <PackageReference Include="TeximpNet" Version="1.4.3" />
     </ItemGroup>
 
@@ -211,5 +211,9 @@
     <ItemGroup>
         <FlatSharpSchema Include="Flatbuffer\Schemas\epbd_schema.fbs" />
         <FlatSharpSchema Include="Flatbuffer\Schemas\ephb_schema.fbs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="DotNet.ReproducibleBuilds" Version="2.0.5" />
     </ItemGroup>
 </Project>

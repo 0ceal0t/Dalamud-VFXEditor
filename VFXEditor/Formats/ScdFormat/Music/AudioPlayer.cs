@@ -2,6 +2,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.IO;
 using System.Numerics;
@@ -212,7 +213,7 @@ namespace VfxEditor.ScdFormat {
                 LeftRightCombined.ConnectInputToOutput( 1, 1 );
 
                 if( format.Encoding == WaveFormatEncoding.IeeeFloat ) {
-                    var floatVolume = new WaveFloatTo16Provider( LeftRightCombined ) {
+                    var floatVolume = new SampleToWaveProvider16( LeftRightCombined.ToSampleProvider() ) {
                         Volume = Plugin.Configuration.ScdVolume
                     };
                     Volume = floatVolume;
@@ -240,7 +241,7 @@ namespace VfxEditor.ScdFormat {
 
         public void UpdateVolume() {
             if( Volume == null ) return;
-            if( Volume is WaveFloatTo16Provider floatVolume ) {
+            if( Volume is SampleToWaveProvider16 floatVolume ) {
                 floatVolume.Volume = Plugin.Configuration.ScdVolume;
             }
             else if( Volume is VolumeWaveProvider16 pcmVolume ) {
