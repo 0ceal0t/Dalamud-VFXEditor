@@ -35,7 +35,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedEnum<BindType> BindType1 = new( "Bind Point 1 Type", size: 1 );
         private readonly ParsedShort BindId1 = new( "Bind Point 1", value: -1 );
         private readonly ParsedBool Visibility = new( "Override Battle FX Setting" );
-        private readonly ParsedInt Limit = new( "Limit" );
+        private readonly ParsedInt Limit = new( "Instance Limit (1-8)" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using VfxEditor.Formats.TmbFormat.Base;
 using VfxEditor.Formats.TmbFormat.Utils;
 using VfxEditor.Parsing;
+using VfxEditor.Parsing.Enums;
 using VfxEditor.Parsing.Int;
 using VfxEditor.Utils;
 
@@ -18,7 +20,9 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         private readonly ParsedInt Duration = new( "Duration" );
         private readonly ParsedInt Unk2 = new( "Unknown 2" );
         private readonly ParsedInt TmfcId = new( "F-Curve Id" );
-        private readonly ParsedIntByte4 Unk4 = new( "Unknown 4" );
+        private readonly ParsedByte CameraMode = new( "Camera Mode" );
+        private readonly ParsedEnum<C176Activation> Activation = new( "Activation", size: 1 );
+        private readonly ParsedShort Unk4 = new( "Unknown 4" );
         private readonly ParsedInt Unk5 = new( "Unknown 5" );
         private readonly ParsedInt Unk6 = new( "Unknown 6" );
         private readonly ParsedInt Unk7 = new( "Unknown 7" );
@@ -31,6 +35,8 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
             Duration,
             Unk2,
             TmfcId,
+            CameraMode,
+            Activation,
             Unk4,
             Unk5,
             Unk6,

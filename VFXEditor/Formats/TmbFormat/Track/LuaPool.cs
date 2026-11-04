@@ -36,6 +36,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
             { 0x3C, "Skeleton ID" },
             { 0x3D, "Mount Flying" },
             { 0x39, "GPose" },
+            { 0x3B, "Model Chara Unknown (0x14)" },
         } );
 
         public static readonly LuaPool Pool2 = new( 2, 32, [] );

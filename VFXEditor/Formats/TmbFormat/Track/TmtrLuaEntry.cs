@@ -119,7 +119,7 @@ namespace VfxEditor.Formats.TmbFormat.Track {
             LuaOperation.Tanh => "math.tanh",
             LuaOperation.Tan => "math.tan",
             // ===============
-            LuaOperation.Int_Value => $"{Value.Value}",
+            LuaOperation.Int_Value => $"{( int )Value.Value}",
             LuaOperation.Float_Value => $"{FloatValue.Value}",
             LuaOperation.Variable => GetVariableText( VariablePool, VariableIndex ),
             LuaOperation.Open_Parens => new string( '(', ( int )Math.Clamp( Value.Value, 0, 99 ) ),
@@ -198,6 +198,14 @@ namespace VfxEditor.Formats.TmbFormat.Track {
 
             Operation.Draw();
 
+            // The game does not run these through Lua. It rebuilds the expression as text and evaluates it with an
+            // integer-only parser that only understands integers, variables, true/false, parentheses and the operators.
+            if( IsUnsupported ) {
+                ImGui.TextColored( UiUtils.RED_COLOR, Operation.Value == LuaOperation.Float_Value ?
+                    "The game truncates float values to integers" :
+                    "Not supported by the game's evaluator, may crash" );
+            }
+
             if( Operation.Value == LuaOperation.Variable ) DrawVariablePopup();
             else {
                 Value.Draw();
@@ -227,6 +235,8 @@ namespace VfxEditor.Formats.TmbFormat.Track {
                 CommandManager.Add( new ParsedSimpleCommand<uint>( Value, newValue ) );
             }
         }
+
+        private bool IsUnsupported => Operation.Value == LuaOperation.Float_Value || Operation.Value >= LuaOperation.Abs;
 
         private int VariablePool => ( int )( Value.Value >> 28 );
         private int VariableIndex => ( int )( Value.Value & 0x0FFFFFFF );

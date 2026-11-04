@@ -1,6 +1,38 @@
 using System;
 
 namespace VfxEditor.Formats.TmbFormat.Base {
+    public enum C202WeaponPart {
+        None = 0,
+        Parts_A = 1,
+        Parts_B = 2,
+        Parts_C = 3,
+        Parts_D = 4,
+        Parts_Rod = 5,
+    }
+
+    public enum C212WeaponSlot {
+        Main_Hand = 0,
+        Off_Hand = 1,
+        None = 2,
+    }
+
+    public enum C176Activation {
+        Always = 0,
+        If_Camera_Not_Overridden = 1,
+    }
+
+    [Flags]
+    public enum C168Flags {
+        Invert_Roll = 0x01,
+        Skip_When_Weight_Low = 0x02,
+        Unknown_3 = 0x04,
+        Unknown_4 = 0x08,
+        Unknown_5 = 0x10,
+        Unknown_6 = 0x20,
+        Unknown_7 = 0x40,
+        Unknown_8 = 0x80,
+    }
+
     [Flags]
     public enum C010Unk2Flags {
         Unknown_1A = 0x01,
