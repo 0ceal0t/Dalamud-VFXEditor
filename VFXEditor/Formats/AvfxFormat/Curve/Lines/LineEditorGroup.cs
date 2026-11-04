@@ -303,23 +303,19 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
                                 draggingAnyPoint = true;
                             }
                         }
-
-                        // ======================
-
-                        if( Editing && !draggingAnyPoint && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
-                            Editing = false;
-                            var commands = new List<ICommand>();
-                            Selected.ForEach( x => x.Item2.StopDragging( commands ) );
-                            CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
-                        }
-
-                        // Selecting point [Left Click]
-                        // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
-                        var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
-                        if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) SingleSelect();
-
-                        // TODO: box select and right click
                     }
+
+                    if( Editing && !draggingAnyPoint && ( DateTime.Now - LastEditTime ).TotalMilliseconds > 200 ) {
+                        Editing = false;
+                        var commands = new List<ICommand>();
+                        Selected.ForEach( x => x.Item2.StopDragging( commands ) );
+                        CommandManager.Add( new CompoundCommand( commands, OnUpdate ) );
+                    }
+
+                    // Selecting point [Left Click]
+                    // want to ignore if going to drag points around, so only process if click+release is less than 200 ms
+                    var processClick = !clickState && PrevClickState && ( DateTime.Now - PrevClickTime ).TotalMilliseconds < 200;
+                    if( !draggingAnyPoint && processClick && !ImGui.GetIO().KeyCtrl && IsHovering() && !ImGui.IsAnyItemActive() && ImGui.IsWindowFocused() ) SingleSelect();
 
                     // Inserting point [Ctrl + Left Click]
                     if( ImGui.IsMouseClicked( ImGuiMouseButton.Left ) && ImGui.GetIO().KeyCtrl && IsHovering() && ImGui.IsWindowFocused() ) NewPoint();

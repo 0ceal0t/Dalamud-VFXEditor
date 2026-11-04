@@ -78,7 +78,7 @@ namespace VfxEditor {
                     ImGui.SameLine();
                 }
                 using var disabled = ImRaii.Disabled( !CanUndo );
-                if( ImGui.Button( FontAwesomeIcon.Undo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) ImGui.OpenPopup( "SpawnPopup" );
+                if( ImGui.Button( FontAwesomeIcon.Undo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) UndoInternal();
             }
             UiUtils.Tooltip( "Undo" );
 
@@ -87,7 +87,7 @@ namespace VfxEditor {
                     ImGui.SameLine();
                 }
                 using var disabled = ImRaii.Disabled( !CanRedo );
-                if( ImGui.Button( FontAwesomeIcon.Redo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
+                if( ImGui.Button( FontAwesomeIcon.Redo.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) RedoInternal();
             }
             UiUtils.Tooltip( "Redo" );
         }
