@@ -432,17 +432,18 @@ namespace VfxEditor.FileManager {
 
         // ==========================
 
-        protected virtual void DisplayFileControls() {
+        protected virtual void DrawControls() {
             using( ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 20, ImGui.GetStyle().FramePadding.Y ) ) )
             using( ImRaii.PushColor( ImGuiCol.Button, UiUtils.ACCENT_COLOR ) ) {
                 if( ImGui.Button( "UPDATE" ) ) Update();
             }
             UiUtils.Tooltip( "Update the game to reflect the changes you have made" );
 
+            File.Command.DrawButtons();
+
             using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                 ImGui.SameLine();
             }
-            using( var style = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, ImGui.GetStyle().FramePadding + new Vector2( 0, 1 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
                 if( ImGui.Button( FontAwesomeIcon.Save.ToIconString() ) ) ImGui.OpenPopup( "SaveButtonPopup" );
             }
@@ -471,6 +472,10 @@ namespace VfxEditor.FileManager {
             }
         }
 
+        protected virtual float GetExtraControlsWidth() => 0;
+
+        protected virtual void DrawExtraControls() { }
+
         protected virtual string GetWarningText() => "";
 
         protected virtual void DrawBody() {
@@ -483,7 +488,14 @@ namespace VfxEditor.FileManager {
                 return;
             }
 
-            DisplayFileControls();
+            DrawControls();
+
+            if( GetExtraControlsWidth() > 0 ) {
+                var space = ImGui.GetContentRegionAvail();
+                ImGui.SameLine( space.X - GetExtraControlsWidth() + ImGui.GetStyle().ItemSpacing.X );
+                DrawExtraControls();
+            }
+
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
 
             using var _ = ImRaii.PushId( "Body" );
@@ -493,7 +505,7 @@ namespace VfxEditor.FileManager {
         public void DrawRename() {
             Name ??= "";
             using var _ = ImRaii.PushId( "Rename" );
-            ImGui.InputTextWithHint( "", ReplaceDisplay, ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
+            ImGui.InputTextWithHint( "", $"Rename: {ReplaceDisplay}", ref Name, 64, ImGuiInputTextFlags.AutoSelectAll );
         }
 
         public virtual void Dispose() {

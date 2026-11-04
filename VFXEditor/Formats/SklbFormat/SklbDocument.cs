@@ -16,8 +16,9 @@ namespace VfxEditor.SklbFormat {
         protected override SklbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 
         protected override void DrawExtraColumn() {
-            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + 126 - 28 - ImGui.GetStyle().FramePadding.X );
-            Plugin.TrackerManager.Sklb.DrawEye( new Vector2( 28, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
+            var space = ImGui.GetContentRegionAvail();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( space.X - 30 ) );
+            Plugin.TrackerManager.Sklb.DrawEye( new Vector2( 30, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
         }
     }
 }

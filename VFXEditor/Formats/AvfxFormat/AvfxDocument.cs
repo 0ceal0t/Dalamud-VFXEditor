@@ -54,54 +54,19 @@ namespace VfxEditor.AvfxFormat {
         // ========= DRAWING =============
 
         protected override void DrawExtraColumn() {
-            using var padding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );
-            using( var group = ImRaii.Group() ) {
-                if( VfxSpawn.IsActive ) {
-                    if( ImGui.Button( "Remove", new Vector2( 60, ImGui.GetFrameHeight() ) ) ) VfxSpawn.Clear();
-                }
-                else {
-                    using var style = ImRaii.PushStyle( ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * 0.5f, SpawnDisabled );
-                    if( ImGui.Button( "Spawn", new Vector2( 60, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
-                }
-
-                using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 2, 4 ) ) ) {
-                    ImGui.SameLine();
-                }
-
-                using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                    if( ImGui.Button( FontAwesomeIcon.Cog.ToIconString(), new Vector2( 28, ImGui.GetFrameHeight() ) ) ) ImGui.OpenPopup( "SettingsPopup" );
-                }
-
-                if( ImGui.Button( "Library", new Vector2( 90, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
-            }
-
-            var height = ImGui.GetItemRectSize().Y;
-
-            using( var _ = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( ImGui.GetStyle().ItemSpacing.Y, 4 ) ) ) {
-                ImGui.SameLine();
-            }
-            Plugin.TrackerManager.Vfx.DrawEye( new Vector2( 28, height ) );
-
-            padding.Pop(); // so it doesn't mess with the popups
-
-            VfxSpawn.DrawPopup( SpawnPath, true );
-
-            if( ImGui.BeginPopup( "SettingsPopup" ) ) {
-                if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
-                ImGui.SetNextItemWidth( 150 );
-                if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
-                ImGui.EndPopup();
-            }
+            var space = ImGui.GetContentRegionAvail();
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + ( space.X - 30 ) );
+            Plugin.TrackerManager.Vfx.DrawEye( new Vector2( 30, ImGui.GetFrameHeight() * 2 + ImGui.GetStyle().ItemSpacing.Y ) );
         }
 
         protected override string GetWarningText() {
-            var invalidTimeline = File.TimelineView.Group.Items.Where( timeline => timeline.Items.Any( item => !item.HasValue ) ).FirstOrDefault();
+            var invalidTimeline = File.TimelineView.Group.Items.FirstOrDefault( timeline => timeline.Items.Any( item => !item.HasValue ) );
             if( invalidTimeline == null ) return "";
             return $"Timeline [{invalidTimeline.GetText()}] is Missing a Value";
         }
 
-        protected override void DisplayFileControls() {
-            base.DisplayFileControls();
+        protected override void DrawControls() {
+            base.DrawControls();
 
             if( File.TextureView.Group.Items.Where( x => !x.FileExists() ).Any() ) {
                 ImGui.SameLine();
@@ -117,6 +82,26 @@ namespace VfxEditor.AvfxFormat {
                 }
                 UiUtils.Tooltip( "Import missing textures" );
             }
+        }
+
+        protected override float GetExtraControlsWidth() => 60 + 5;
+
+        protected override void DrawExtraControls() {
+            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using var disabled = ImRaii.Disabled( SpawnDisabled );
+                if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) && !SpawnDisabled ) ImGui.OpenPopup( "SpawnPopup" );
+            }
+            UiUtils.Tooltip( "Spawn the selected VFX into the world (both a source and replace VFX must be selected)" );
+
+            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 5f, 0f ) ) ) {
+                    ImGui.SameLine();
+                }
+                if( ImGui.Button( FontAwesomeIcon.Book.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) Plugin.LibraryManager.Show();
+            }
+            UiUtils.Tooltip( "Open library of VFX components and textures" );
+
+            if( !SpawnDisabled ) VfxSpawn.DrawPopup( SpawnPath, true );
         }
     }
 }

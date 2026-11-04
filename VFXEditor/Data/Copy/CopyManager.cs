@@ -22,7 +22,7 @@ namespace VfxEditor.Data.Copy {
 
         public static void Pop() => Stack.Pop();
 
-        public static void Draw() => Current?.DrawInternal();
+        public static void Draw() => Current?.DrawMenuItemsInternal();
 
         public static void Copy() => Current?.CopyInternal();
 
@@ -75,7 +75,7 @@ namespace VfxEditor.Data.Copy {
             return false;
         }
 
-        protected void DrawInternal() {
+        protected void DrawMenuItemsInternal() {
             if( ImGui.MenuItem( "Copy" ) ) CopyInternal();
             if( ImGui.MenuItem( "Paste" ) ) PasteInternal();
         }

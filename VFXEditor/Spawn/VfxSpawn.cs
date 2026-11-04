@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VfxEditor.Structs.Vfx;
-using FFXIVClientStructs.FFXIV.Client.Graphics.Scene;
 
 namespace VfxEditor.Spawn {
     public enum SpawnType {
@@ -36,7 +35,7 @@ namespace VfxEditor.Spawn {
         }
     }
 
-    public static unsafe class VfxSpawn {
+    public static class VfxSpawn {
         public static readonly Dictionary<nint, (BaseVfx Vfx, VfxSpawnItem Item)> Vfxs = [];
         public static readonly List<VfxLoopItem> ToLoop = [];
 
@@ -49,6 +48,12 @@ namespace VfxEditor.Spawn {
             if( ImGui.Selectable( "Self" ) ) OnSelf( path, loop );
             if( ImGui.Selectable( "Ground" ) ) OnGround( path, loop );
             if( ImGui.Selectable( "Target" ) ) OnTarget( path, loop );
+
+            ImGui.Separator();
+
+            if( ImGui.Checkbox( "Loop", ref Plugin.Configuration.VfxSpawnLoop ) ) Plugin.Configuration.Save();
+            ImGui.SetNextItemWidth( 150 );
+            if( ImGui.InputFloat( "Delay", ref Plugin.Configuration.VfxSpawnDelay ) ) Plugin.Configuration.Save();
         }
 
         public static void OnGround( string path, bool canLoop ) {

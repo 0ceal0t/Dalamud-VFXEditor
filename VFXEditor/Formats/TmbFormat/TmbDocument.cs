@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using System.IO;
 using System.Numerics;
@@ -38,6 +39,24 @@ namespace VfxEditor.TmbFormat {
                 ImGui.SameLine();
             }
             Plugin.TrackerManager.Tmb.DrawEye( new Vector2( 28, height ) );
+        }
+
+        protected override float GetExtraControlsWidth() => 60 + 5;
+
+        protected override void DrawExtraControls() {
+            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using var disabled = ImRaii.Disabled( AnimationDisabled );
+                if( ImGui.Button( FontAwesomeIcon.Play.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) && !AnimationDisabled ) TmbSpawn.Apply( AnimationId );
+            }
+            UiUtils.Tooltip( "Force your character to play the currently selected animation (both source and replaced TMB must be selected)" );
+
+            using( ImRaii.PushFont( UiBuilder.IconFont ) ) {
+                using( var spacing = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 5f, 0f ) ) ) {
+                    ImGui.SameLine();
+                }
+                if( ImGui.Button( FontAwesomeIcon.Stop.ToIconString(), new Vector2( 30, ImGui.GetFrameHeight() ) ) ) TmbSpawn.Reset();
+            }
+            UiUtils.Tooltip( "Reset the currently playing animation" );
         }
 
         protected override void DrawBody() {

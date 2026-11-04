@@ -52,7 +52,6 @@ namespace VfxEditor.FileManager {
             Plugin.DrawFileMenu( this, Group );
 
             if( ImGui.BeginMenu( "Edit" ) ) {
-                CommandManager.Draw();
                 CopyManager.Draw();
                 DrawEditMenuItems();
                 ImGui.EndMenu();
@@ -83,7 +82,7 @@ namespace VfxEditor.FileManager {
             using var _ = ImRaii.PushId( "Tabs" );
 
             var size = ImGui.GetContentRegionAvail().X;
-            var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.ArrowUpRightFromSquare ) + UiUtils.GetPaddedIconSize( FontAwesomeIcon.PaintBrush );
+            var popupSize = UiUtils.GetPaddedIconSize( FontAwesomeIcon.Bars );
 
             using( var child = ImRaii.Child( "Child", new Vector2( size - popupSize, ImGui.GetFrameHeightWithSpacing() ) ) ) {
                 using var tabs = ImRaii.TabBar( "TabBar", ImGuiTabBarFlags.NoCloseWithMiddleMouseButton );
@@ -133,23 +132,12 @@ namespace VfxEditor.FileManager {
             var prePopoutPos = ImGui.GetCursorScreenPos();
             using( var transparentButtonStyle = ImRaii.PushColor( ImGuiCol.Button, new Vector4( 0 ) ) )
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) ) {
-                if( ImGui.Button( FontAwesomeIcon.ArrowUpRightFromSquare.ToIconString() ) ) DocumentWindow.Show();
-
-                using( var buttonColor = ImRaii.PushColor( ImGuiCol.Text, WindowColor, UseWindowColor ) ) {
-                    ImGui.SameLine();
-                    if( ImGui.Button( FontAwesomeIcon.PaintBrush.ToIconString() ) ) ImGui.OpenPopup( "WindowColorPicker" );
-                }
+                if( ImGui.Button( FontAwesomeIcon.Bars.ToIconString() ) ) DocumentWindow.Show();
 
                 drawlist.AddLine( new Vector2( prePopoutPos.X, preDropdownPos.Y ), new Vector2( prePopoutPos.X + popupSize, preDropdownPos.Y ), color, 1 );
             }
 
             smallItemSpacing.Pop();
-
-            using var windowPopup = ImRaii.Popup( "WindowColorPicker" );
-            if( windowPopup ) {
-                ImGui.Checkbox( "Use Custom Window Color", ref UseWindowColor );
-                ImGui.ColorPicker4( "##Color", ref WindowColor, ImGuiColorEditFlags.NoSidePreview | ImGuiColorEditFlags.AlphaBar );
-            }
         }
 
         private void DrawTabsDropdown() {

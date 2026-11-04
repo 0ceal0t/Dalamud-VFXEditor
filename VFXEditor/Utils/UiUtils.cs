@@ -131,7 +131,7 @@ namespace VfxEditor.Utils {
         }
 
         public static void Tooltip( string text, bool hovered = false ) {
-            if( hovered || ImGui.IsItemHovered() ) {
+            if( hovered || ImGui.IsItemHovered( ImGuiHoveredFlags.AllowWhenDisabled ) ) {
                 ImGui.BeginTooltip();
                 ImGui.PushTextWrapPos( ImGui.GetFontSize() * 35.0f );
                 ImGui.TextUnformatted( text );
