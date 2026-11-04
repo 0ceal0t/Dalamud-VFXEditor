@@ -1,13 +1,14 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 using VfxEditor.Select.Base;
-using VfxEditor.Select.Favorite;
 using VfxEditor.Ui.DragDrop;
 using VfxEditor.Utils;
 
-namespace VfxEditor.Select.Lists {
+namespace VfxEditor.Select.Favorite {
     public class SelectFavoriteTab : SelectTabBase {
         protected readonly List<SelectFavoriteItem> Items;
         protected readonly SelectFavoriteItem Root;
@@ -40,11 +41,20 @@ namespace VfxEditor.Select.Lists {
             foreach( var item in Items ) {
                 if( DrawRow( item, Root ) ) break;
             }
+
+            // Move into root
+            ImGui.TableNextRow();
+            ImGui.TableSetBgColor( ImGuiTableBgTarget.RowBg0, 0 );
+            ImGui.TableNextColumn();
+            const float inset = 4f;
+            ImGui.SetCursorPosX( ImGui.GetCursorPosX() + inset );
+            var height = ImGui.GetContentRegionAvail().Y - ImGui.GetStyle().CellPadding.Y * 2;
+            ImGui.Dummy( new Vector2( ImGui.GetContentRegionAvail().X - inset, Math.Max( height, ImGui.GetFrameHeight() ) ) );
+            DragDropManager.DropTarget( Root, null, false );
         }
 
         protected bool DrawRow( SelectFavoriteItem row, SelectFavoriteItem parent ) {
             // TODO: search input
-            // TODO: drag and drop <---- need to finish up
 
             if( !row.IsFolder && row.Result.Type == SelectResultType.Local && !Dialog.ShowLocal ) return false;
 
@@ -74,7 +84,9 @@ namespace VfxEditor.Select.Lists {
                     }
                 }
 
-                ImGui.SameLine();
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 20, 5 ) ) ) {
+                    ImGui.SameLine();
+                }
                 ImGui.Text( string.IsNullOrEmpty( result.Name ) ? result.DisplayString.Split( "]" )[^1] : result.Name );
 
                 ImGui.TableNextColumn();
@@ -82,11 +94,13 @@ namespace VfxEditor.Select.Lists {
             }
             else {
                 ImGui.TableNextColumn();
+
+                var listModified = false;
+
+                if( DragDropManager.DrawDropTarget( row, parent, true, "BeforeFolder" ) ) listModified = true;
+
                 var open = ImGui.TreeNodeEx( $"##Folder", ImGuiTreeNodeFlags.SpanFullWidth );
-                if( DragDropManager.DragDrop( row, parent ) ) {
-                    if( open ) ImGui.TreePop();
-                    return true;
-                }
+                if( DragDropManager.DragDrop( row, parent ) ) listModified = true;
                 var rightClicked = ImGui.IsItemClicked( ImGuiMouseButton.Right );
 
                 ImGui.SameLine();
@@ -94,7 +108,9 @@ namespace VfxEditor.Select.Lists {
                     ImGui.Text( FontAwesomeIcon.Folder.ToIconString() );
                 }
 
-                ImGui.SameLine();
+                using( ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 20, 5 ) ) ) {
+                    ImGui.SameLine();
+                }
                 ImGui.Text( row.FolderName );
 
                 ImGui.TableNextColumn();
@@ -102,10 +118,9 @@ namespace VfxEditor.Select.Lists {
 
                 if( open ) {
                     foreach( var item in row.Items ) {
-                        // TODO
                         if( DrawRow( item, row ) ) {
-                            ImGui.TreePop();
-                            return true;
+                            listModified = true;
+                            break;
                         }
                     }
 
@@ -113,6 +128,8 @@ namespace VfxEditor.Select.Lists {
                 }
 
                 if( rightClicked ) ImGui.OpenPopup( "EditPopup" );
+
+                if( listModified ) return true;
             }
 
             using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );

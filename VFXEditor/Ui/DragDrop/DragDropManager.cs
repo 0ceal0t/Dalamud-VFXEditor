@@ -66,12 +66,14 @@ namespace VfxEditor.Ui.DragDrop {
             ImGui.BeginChild( childId, new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
             ImGui.EndChild();
 
+            return DropTarget( target, targetParent, overridePosition );
+        }
+
+        public bool DropTarget( T target, T targetParent, bool overridePosition ) {
             using var dragDrop = ImRaii.DragDropTarget();
             if( !dragDrop ) return false;
 
-            if( StopDragging( target, targetParent, overridePosition ) ) return true;
-
-            return false;
+            return StopDragging( target, targetParent, overridePosition );
         }
 
         public unsafe bool StopDragging( T destination, T destinationParent, bool overridePosition = false ) {
