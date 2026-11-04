@@ -4,6 +4,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +15,7 @@ using VfxEditor.FileBrowser.SideBar;
 using VfxEditor.Formats.TextureFormat;
 using VfxEditor.Library;
 using VfxEditor.Select;
+using VfxEditor.Select.Favorite;
 using VfxEditor.SklbFormat.Bones;
 using VfxEditor.Ui;
 using VfxEditor.Utils.Gltf;
@@ -23,6 +25,8 @@ namespace VfxEditor {
     public unsafe class ManagerConfiguration {
         public List<SelectResult> RecentItems = [];
         public List<SelectResult> Favorites = [];
+        public List<SelectFavoriteItem> FavoritedItems = [];
+
         public bool UseCustomWindowColor = false;
         public Vector4 TitleBg = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBg );
         public Vector4 TitleBgActive = *ImGui.GetStyleColorVec4( ImGuiCol.TitleBgActive );
