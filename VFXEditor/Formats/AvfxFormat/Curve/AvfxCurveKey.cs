@@ -195,27 +195,6 @@ namespace VfxEditor.AvfxFormat {
                     ], onChangeAction: editor.OnUpdate ) );
                 }
             }
-
-            /*Time.Draw();
-            Type.Draw();
-
-            if( IsColor ) DrawColor( editor );
-            else {
-                var converted = Converted;
-                var inWeight = converted.X;
-                var outWeight = converted.Y;
-                var value = converted.Z;
-
-                var edited = false;
-                edited |= ImGui.InputFloat( "In Weight", ref inWeight );
-                edited |= ImGui.InputFloat( "Out Weight", ref outWeight );
-                edited |= ImGui.InputFloat( "Value", ref value );
-                if( edited ) {
-                    CommandManager.Add( new CompoundCommand( [
-                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( converted.X, converted.Y, (float)Curve.ToRadians( converted.Z ) )  )
-                    ], onChangeAction: editor.OnUpdate ) );
-                }
-            }*/
         }
 
         // ======== DRAW COLOR ============

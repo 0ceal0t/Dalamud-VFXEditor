@@ -417,12 +417,10 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             _ => LineColors[curveIdx % LineColors.Length],
         };
 
-        private static void PlotLine( string label, List<double> xs, List<double> ys, Vector4 color ) {
-            if( xs.Count == 0 ) return;
-            var xArray = xs.ToArray();
-            var yArray = ys.ToArray();
+        private static void PlotLine( string label, double[] xs, double[] ys, Vector4 color ) {
+            if( xs.Length == 0 ) return;
             ImPlot.SetNextLineStyle( color, Plugin.Configuration.CurveEditorLineWidth );
-            ImPlot.PlotLine( label, ref xArray[0], ref yArray[0], xArray.Length );
+            ImPlot.PlotLine( label, ref xs[0], ref ys[0], xs.Length );
         }
 
         private static uint Invert( Vector3 color ) =>

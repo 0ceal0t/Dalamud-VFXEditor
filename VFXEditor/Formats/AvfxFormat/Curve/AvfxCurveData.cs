@@ -78,6 +78,48 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
 
         // ======== EVALUATION ===========
 
+        private bool HasCache = false;
+        private int CacheHash;
+        private List<AvfxCurveEvaluator.Key> RawKeys = [];
+        private List<AvfxCurveEvaluator.Key> DisplayKeys = [];
+        private double[] LineXs = [];
+        private double[] LineYs = [];
+
+        // Pre / post behavior also depends on the visible range
+        private bool HasBehaviorCache = false;
+        private (int, double, double) BehaviorCacheKey;
+        private double[] PreXs = [];
+        private double[] PreYs = [];
+        private double[] PostXs = [];
+        private double[] PostYs = [];
+
+        private int ComputeHash() {
+            var hash = new HashCode();
+            hash.Add( Keys.Count );
+            hash.Add( PreBehavior.Value );
+            hash.Add( PostBehavior.Value );
+            hash.Add( Type == CurveType.Angle && Plugin.Configuration.UseDegreesForAngles );
+            foreach( var key in Keys ) {
+                hash.Add( key.Time.Value );
+                hash.Add( key.Type.Value );
+                hash.Add( key.Data.Value );
+            }
+            return hash.ToHashCode();
+        }
+
+        private void UpdateCache() {
+            var hash = ComputeHash();
+            if( HasCache && hash == CacheHash ) return;
+
+            HasCache = true;
+            CacheHash = hash;
+            HasBehaviorCache = false;
+
+            RawKeys = GetEvaluatorKeys( false );
+            DisplayKeys = GetEvaluatorKeys( true );
+            BuildLine( DisplayKeys, out LineXs, out LineYs );
+        }
+
         private List<AvfxCurveEvaluator.Key> GetEvaluatorKeys( bool display ) => [.. Keys.Select( key => new AvfxCurveEvaluator.Key(
             key.Time.Value,
             key.Type.Value,
@@ -86,23 +128,38 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
             key.Data.Value.Y
         ) )];
 
-        public double Evaluate( double frame ) => AvfxCurveEvaluator.Evaluate( GetEvaluatorKeys( false ), PreBehavior.Value, PostBehavior.Value, frame );
+        public double Evaluate( double frame ) {
+            UpdateCache();
+            return AvfxCurveEvaluator.Evaluate( RawKeys, PreBehavior.Value, PostBehavior.Value, frame );
+        }
 
         private const int MaxBehaviorLoops = 200;
 
-        public void GetDrawLine( double minX, double maxX, out List<double> xs, out List<double> ys, out List<double> preXs, out List<double> preYs, out List<double> postXs, out List<double> postYs ) {
-            xs = [];
-            ys = [];
-            preXs = [];
-            preYs = [];
-            postXs = [];
-            postYs = [];
-            if( Keys.Count == 0 ) return;
+        public void GetDrawLine( double minX, double maxX, out double[] xs, out double[] ys, out double[] preXs, out double[] preYs, out double[] postXs, out double[] postYs ) {
+            UpdateCache();
 
-            var keys = GetEvaluatorKeys( true );
+            var behaviorKey = (CacheHash, minX, maxX);
+            if( !HasBehaviorCache || behaviorKey != BehaviorCacheKey ) {
+                HasBehaviorCache = true;
+                BehaviorCacheKey = behaviorKey;
+                BuildBehaviorLines( DisplayKeys, LineXs, LineYs, minX, maxX, out PreXs, out PreYs, out PostXs, out PostYs );
+            }
 
-            xs.Add( keys[0].Time );
-            ys.Add( keys[0].Value );
+            xs = LineXs;
+            ys = LineYs;
+            preXs = PreXs;
+            preYs = PreYs;
+            postXs = PostXs;
+            postYs = PostYs;
+        }
+
+        private void BuildLine( List<AvfxCurveEvaluator.Key> keys, out double[] lineXs, out double[] lineYs ) {
+            lineXs = [];
+            lineYs = [];
+            if( keys.Count == 0 ) return;
+
+            var xs = new List<double> { keys[0].Time };
+            var ys = new List<double> { keys[0].Value };
 
             for( var idx = 0; idx < keys.Count - 1; idx++ ) {
                 var k0 = keys[idx];
@@ -128,7 +185,22 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
                 }
             }
 
+            lineXs = [.. xs];
+            lineYs = [.. ys];
+        }
+
+        private void BuildBehaviorLines( List<AvfxCurveEvaluator.Key> keys, double[] xs, double[] ys, double minX, double maxX,
+            out double[] outPreXs, out double[] outPreYs, out double[] outPostXs, out double[] outPostYs ) {
+            outPreXs = [];
+            outPreYs = [];
+            outPostXs = [];
+            outPostYs = [];
             if( IsColor || keys.Count < 2 ) return;
+
+            var preXs = new List<double>();
+            var preYs = new List<double>();
+            var postXs = new List<double>();
+            var postYs = new List<double>();
 
             var first = keys[0];
             var last = keys[^1];
@@ -147,7 +219,7 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
                     var loops = Math.Min( ( int )Math.Ceiling( ( first.Time - minX ) / length ), MaxBehaviorLoops );
                     for( var loop = loops; loop >= 1; loop-- ) {
                         var yOffset = pre == CurveBehavior.Add ? -offset * loop : 0;
-                        for( var i = 0; i < xs.Count; i++ ) {
+                        for( var i = 0; i < xs.Length; i++ ) {
                             preXs.Add( xs[i] - ( loop * length ) );
                             preYs.Add( ys[i] + yOffset );
                         }
@@ -172,13 +244,18 @@ namespace VFXEditor.Formats.AvfxFormat.Curve {
                     var loops = Math.Min( ( int )Math.Ceiling( ( maxX - last.Time ) / length ), MaxBehaviorLoops );
                     for( var loop = 1; loop <= loops; loop++ ) {
                         var yOffset = post == CurveBehavior.Add ? offset * loop : 0;
-                        for( var i = 0; i < xs.Count; i++ ) {
+                        for( var i = 0; i < xs.Length; i++ ) {
                             postXs.Add( xs[i] + ( loop * length ) );
                             postYs.Add( ys[i] + yOffset );
                         }
                     }
                 }
             }
+
+            outPreXs = [.. preXs];
+            outPreYs = [.. preYs];
+            outPostXs = [.. postXs];
+            outPostYs = [.. postYs];
         }
     }
 }
