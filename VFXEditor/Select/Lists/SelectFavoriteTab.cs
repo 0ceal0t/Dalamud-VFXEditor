@@ -4,14 +4,29 @@ using Dalamud.Interface.Utility.Raii;
 using System.Collections.Generic;
 using VfxEditor.Select.Base;
 using VfxEditor.Select.Favorite;
+using VfxEditor.Ui.DragDrop;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Select.Lists {
     public class SelectFavoriteTab : SelectTabBase {
         protected readonly List<SelectFavoriteItem> Items;
+        protected readonly SelectFavoriteItem Root;
+
+        public readonly DragDropManager<SelectFavoriteItem> DragDropManager;
 
         public SelectFavoriteTab( SelectDialog dialog, string name, List<SelectFavoriteItem> items ) : base( dialog, name ) {
             Items = items;
+            Root = new SelectFavoriteItem() {
+                IsFolder = true,
+                Items = Items
+            };
+
+            DragDropManager = new( $"{Name}_FAVORITE",
+                x => x.IsFolder,
+                x => x.IsFolder ? x.Items : null,
+                Plugin.Configuration.Save,
+                x => x.DragDropName
+            );
         }
 
         protected override int NumColumns() => 2;
@@ -23,13 +38,13 @@ namespace VfxEditor.Select.Lists {
             if( Items == null ) return;
 
             foreach( var item in Items ) {
-                if( DrawRow( item, Items ) ) break;
+                if( DrawRow( item, Root ) ) break;
             }
         }
 
-        protected bool DrawRow( SelectFavoriteItem row, List<SelectFavoriteItem> parent ) {
+        protected bool DrawRow( SelectFavoriteItem row, SelectFavoriteItem parent ) {
             // TODO: search input
-            // TODO: drag and drop
+            // TODO: drag and drop <---- need to finish up
 
             if( !row.IsFolder && row.Result.Type == SelectResultType.Local && !Dialog.ShowLocal ) return false;
 
@@ -40,6 +55,7 @@ namespace VfxEditor.Select.Lists {
                 var result = row.Result;
                 ImGui.TableNextColumn();
                 ImGui.TreeNodeEx( $"##Folder", ImGuiTreeNodeFlags.SpanFullWidth | ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.AllowItemOverlap );
+                if( DragDropManager.DragDrop( row, parent ) ) return true;
                 if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "EditPopup" );
                 if( ImGui.IsMouseDoubleClicked( ImGuiMouseButton.Left ) && ImGui.IsItemHovered() ) {
                     Dialog.Invoke( result );
@@ -52,7 +68,7 @@ namespace VfxEditor.Select.Lists {
                     ImGui.Text( FontAwesomeIcon.Star.ToIconString() );
 
                     if( ImGui.IsItemClicked() ) {
-                        parent.Remove( row );
+                        parent.Items.Remove( row );
                         Plugin.Configuration.Save();
                         return true;
                     }
@@ -67,6 +83,10 @@ namespace VfxEditor.Select.Lists {
             else {
                 ImGui.TableNextColumn();
                 var open = ImGui.TreeNodeEx( $"##Folder", ImGuiTreeNodeFlags.SpanFullWidth );
+                if( DragDropManager.DragDrop( row, parent ) ) {
+                    if( open ) ImGui.TreePop();
+                    return true;
+                }
                 var rightClicked = ImGui.IsItemClicked( ImGuiMouseButton.Right );
 
                 ImGui.SameLine();
@@ -83,7 +103,7 @@ namespace VfxEditor.Select.Lists {
                 if( open ) {
                     foreach( var item in row.Items ) {
                         // TODO
-                        if( DrawRow( item, row.Items ) ) {
+                        if( DrawRow( item, row ) ) {
                             ImGui.TreePop();
                             return true;
                         }
@@ -110,7 +130,7 @@ namespace VfxEditor.Select.Lists {
                 }
 
                 if( UiUtils.IconSelectable( FontAwesomeIcon.Trash, "Delete" ) ) {
-                    parent.Remove( row );
+                    parent.Items.Remove( row );
                     Plugin.Configuration.Save();
                     return true;
                 }
@@ -130,39 +150,5 @@ namespace VfxEditor.Select.Lists {
                 Plugin.Configuration.Save();
             }
         }
-
-        /*
-        private SelectResult DraggingItem;
-
-        public SelectFavoriteTab( SelectDialog dialog, string name, List<SelectResult> items ) : base( dialog, name, items ) { }
-
-        protected override bool PostRow( SelectResult item, int idx ) {
-            if( UiUtils.DrawDragDrop( Items, item, item?.DisplayString ?? string.Empty, ref DraggingItem, $"{Name}-FAVORITE", false ) ) {
-                Plugin.Configuration.Save();
-                return true;
-            }
-
-            if( base.PostRow( item, idx ) ) return true;
-
-            // ======== POPUP ============
-
-            using var _ = ImRaii.PushId( idx );
-
-            if( ImGui.IsItemClicked( ImGuiMouseButton.Right ) ) ImGui.OpenPopup( "FavoritePopup" );
-
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.WindowPadding, DefaultWindowPadding );
-            if( ImGui.BeginPopup( "FavoritePopup" ) ) {
-                var name = string.IsNullOrEmpty( item.Name ) ? item.DisplayString.Split( "]" )[^1] : item.Name;
-                if( ImGui.InputText( "##Rename", ref name, 128, ImGuiInputTextFlags.AutoSelectAll ) ) {
-                    item.Name = name;
-                    Plugin.Configuration.Save();
-                }
-
-                if( item.Type != SelectResultType.Local ) Dialog.PlayPopupItems( item.Path );
-                ImGui.EndPopup();
-            }
-
-            return false;
-        }*/
     }
 }

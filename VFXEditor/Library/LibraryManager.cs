@@ -9,6 +9,7 @@ using VfxEditor.Library.Components;
 using VfxEditor.Library.Node;
 using VfxEditor.Library.Texture;
 using VfxEditor.Ui;
+using VfxEditor.Ui.DragDrop;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Library {
@@ -18,15 +19,24 @@ namespace VfxEditor.Library {
         private readonly string RootPath;
 
         private string SearchInput = string.Empty;
-        private LibraryGeneric DraggingItem = null;
         private LibraryRoot LastDrawnRoot;
 
         private string ComboSearchInput = string.Empty;
+
+        public readonly DragDropManager<LibraryGeneric> DragDropManager;
 
         public LibraryManager() : base( "Library", false, new( 500, 750 ), Plugin.WindowSystem ) {
             NodeRoot = new( Plugin.Configuration.VFXNodeLibraryItems );
             TextureRoot = new( Plugin.Configuration.VfxTextureLibraryItems );
             RootPath = Plugin.Configuration.WriteLocation;
+
+            DragDropManager = new( "NODE_LIBRARY",
+                x => x is LibraryFolder,
+                x => ( x is LibraryFolder folder ) ? folder.Children : null,
+                Save,
+                x => x.Name,
+                ( item, parent ) => item.Parent = parent as LibraryFolder
+            );
 
             if( !Plugin.Configuration.VfxTextureDefaultLoaded ) {
                 ImportTextures( Path.Combine( Plugin.RootLocation, "Files", "useful_textures.txt" ) );
@@ -69,40 +79,6 @@ namespace VfxEditor.Library {
             NodeRoot.Save();
             TextureRoot.Save();
             Plugin.Configuration.Save();
-        }
-
-        public void StartDragging( LibraryGeneric item ) {
-            ImGui.SetDragDropPayload( "NODE_LIBRARY", null, 0 );
-            DraggingItem = item;
-        }
-
-        public unsafe bool StopDragging( LibraryGeneric destination, bool overridePosition = false ) {
-            if( DraggingItem == null ) return false;
-            var payload = ImGui.AcceptDragDropPayload( "NODE_LIBRARY" );
-            if( payload.Handle == null ) return false;
-
-            // Move them here
-            if( DraggingItem != destination ) {
-                if( DraggingItem is LibraryFolder folderCheck && folderCheck.Contains( destination ) ) {
-                    Dalamud.Log( "Tried to put folder into itself" );
-                }
-                else {
-                    if( destination is LibraryFolder folder && !overridePosition ) { // Just add it at the end
-                        DraggingItem.Parent?.Remove( DraggingItem );
-                        folder.Add( DraggingItem );
-                    }
-                    else {
-                        var idx = destination.Parent.Children.IndexOf( destination );
-                        DraggingItem.Parent?.Remove( DraggingItem );
-                        DraggingItem.Parent = destination.Parent;
-                        destination.Parent.Children.Insert( idx, DraggingItem );
-                    }
-                    Save();
-                }
-            }
-
-            DraggingItem = null;
-            return true;
         }
 
         // ========= NODES ===============

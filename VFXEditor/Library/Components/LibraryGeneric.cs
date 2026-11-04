@@ -3,7 +3,7 @@ using Dalamud.Bindings.ImGui;
 namespace VfxEditor.Library.Components {
     public abstract class LibraryGeneric {
         public LibraryFolder Parent;
-        protected string Name;
+        public string Name;
         protected readonly string Id;
 
         public LibraryGeneric( LibraryFolder parent, string name, string id ) {
@@ -21,18 +21,5 @@ namespace VfxEditor.Library.Components {
         public abstract LibraryProps ToProps();
 
         public abstract bool Contains( LibraryGeneric item );
-
-        protected void DragDrop( LibraryManager library, string text, ref bool listModified ) {
-            if( ImGui.BeginDragDropSource( ImGuiDragDropFlags.None ) ) {
-                library.StartDragging( this );
-                ImGui.Text( text );
-                ImGui.EndDragDropSource();
-            }
-
-            if( ImGui.BeginDragDropTarget() ) {
-                if( library.StopDragging( this ) ) listModified = true;
-                ImGui.EndDragDropTarget();
-            }
-        }
     }
 }

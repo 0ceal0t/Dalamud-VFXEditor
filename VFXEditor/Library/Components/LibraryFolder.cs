@@ -46,8 +46,7 @@ namespace VfxEditor.Library.Components {
 
             if( !IsRoot ) {
                 // So that you can drag an item BEFORE a folder, rather than only inside of it
-
-                if( DrawDragDrop( library, true, "Child" ) ) listModified = true;
+                if( library.DragDropManager.DrawDropTarget( this, Parent, true, "Child" ) ) listModified = true;
 
                 // Main folder item
 
@@ -58,7 +57,7 @@ namespace VfxEditor.Library.Components {
                         ImGuiTreeNodeFlags.Framed
                     );
                 }
-                DragDrop( library, Name, ref listModified );
+                if( library.DragDropManager.DragDrop( this, Parent ) ) listModified = true;
 
                 if( DrawPopup( library ) ) listModified = true;
 
@@ -83,28 +82,13 @@ namespace VfxEditor.Library.Components {
                 }
             }
 
-            if( DrawDragDrop( library, false, "EndChild" ) ) listModified = true;
+            if( library.DragDropManager.DrawDropTarget( this, Parent, false, "EndChild" ) ) listModified = true;
 
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 2 );
 
             if( !IsRoot ) ImGui.TreePop();
 
             return listModified;
-        }
-
-        private bool DrawDragDrop( LibraryManager library, bool overridePosition, string name ) {
-            using var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, new Vector2( 0 ) );
-            style.Push( ImGuiStyleVar.FramePadding, new Vector2( 0 ) );
-
-            ImGui.BeginChild( name, new Vector2( ImGui.GetContentRegionAvail().X, 1 ), false );
-            ImGui.EndChild();
-
-            using var dragDrop = ImRaii.DragDropTarget();
-            if( !dragDrop ) return false;
-
-            if( library.StopDragging( this, overridePosition ) ) return true;
-
-            return false;
         }
 
         private bool DrawPopup( LibraryManager library ) {
