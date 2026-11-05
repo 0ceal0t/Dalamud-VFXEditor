@@ -103,7 +103,7 @@ namespace VfxEditor.Select {
             var isFavorite = IsFavorite( selectResult );
 
             using( var font = ImRaii.PushFont( UiBuilder.IconFont ) )
-            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW, isFavorite ) ) {
+            using( var color = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_ACCENT, isFavorite ) ) {
                 ImGui.Text( FontAwesomeIcon.Star.ToIconString() );
 
                 if( ImGui.IsItemClicked() ) {

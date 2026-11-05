@@ -289,7 +289,7 @@ namespace VfxEditor.FileManager {
             var hovered = ImGui.IsWindowFocused( ImGuiFocusedFlags.RootWindow ) && ImGui.IsMouseHoveringRect( topLeft - new Vector2( 5, 5 ), bottomRight + new Vector2( 5, 5 ) );
 
             var color = hovered ?
-                ImGui.ColorConvertFloat4ToU32( UiUtils.DALAMUD_YELLOW ) :
+                ImGui.ColorConvertFloat4ToU32( UiUtils.YELLOW_ACCENT ) :
                 ( Disabled ?
                     ImGui.ColorConvertFloat4ToU32( UiUtils.RED_COLOR ) :
                     ImGui.GetColorU32( ImGuiCol.TextDisabled )
@@ -406,7 +406,7 @@ namespace VfxEditor.FileManager {
 
         private bool DrawBar( float inputSize, string display, ref string inputText, SelectResult selectResult, bool highlight, out SelectResult result ) {
             using var border = ImRaii.PushStyle( ImGuiStyleVar.FrameBorderSize, 2f, highlight );
-            using var borderColor = ImRaii.PushColor( ImGuiCol.Border, UiUtils.DALAMUD_YELLOW, highlight );
+            using var borderColor = ImRaii.PushColor( ImGuiCol.Border, UiUtils.YELLOW_ACCENT, highlight );
 
             var edited = false;
             result = null;

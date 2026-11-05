@@ -110,7 +110,7 @@ namespace VfxEditor.Formats.TmbFormat.Entries {
         public static bool DoColor( DangerLevel level, out Vector4 color ) {
             color = new( 1 );
             if( level < DangerLevel.Yellow ) return false;
-            else if( level == DangerLevel.Yellow ) color = UiUtils.DALAMUD_YELLOW;
+            else if( level == DangerLevel.Yellow ) color = UiUtils.YELLOW_ACCENT;
             else color = UiUtils.RED_COLOR;
 
             return true;

@@ -13,7 +13,7 @@ namespace VfxEditor.Select {
         }
 
         public static void DisplayNoVfx() {
-            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW ) ) {
+            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_ACCENT ) ) {
                 ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );
                 ImGui.TextWrapped( $"This item does not have a VFX. See the link below for information on adding one" );
             }
@@ -28,7 +28,7 @@ namespace VfxEditor.Select {
         }
 
         public static void DisplayPathWarning( string path, string warning ) {
-            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW ) ) {
+            using( var style = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_ACCENT ) ) {
                 ImGui.TextWrapped( path );
             }
             UiUtils.Tooltip( warning );

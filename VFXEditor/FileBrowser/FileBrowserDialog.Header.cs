@@ -91,7 +91,7 @@ namespace VfxEditor.FileBrowser {
 
                 ImGui.SameLine();
                 var isFavorite = Plugin.Configuration.IsFileBrowserFavorite( CurrentPath );
-                using var star = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW, isFavorite );
+                using var star = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_ACCENT, isFavorite );
                 if( ImGui.Button( FontAwesomeIcon.Star.ToIconString() ) ) {
                     if( isFavorite ) Plugin.Configuration.RemoveFileBrowserFavorite( CurrentPath );
                     else Plugin.Configuration.AddFileBrowserFavorite( CurrentPath );

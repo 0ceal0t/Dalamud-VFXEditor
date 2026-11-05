@@ -37,7 +37,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve.Lines {
             foreach( var group in Groups ) {
                 using var style = ImRaii.PushColor( ImGuiCol.Text, group.Assigned switch {
                     LinesAssigned.All => UiUtils.PARSED_GREEN,
-                    LinesAssigned.Some => UiUtils.DALAMUD_YELLOW,
+                    LinesAssigned.Some => UiUtils.YELLOW_ACCENT,
                     LinesAssigned.None => UiUtils.DALAMUD_RED,
                     _ => *ImGui.GetStyleColorVec4( ImGuiCol.Text )
                 } );
