@@ -32,9 +32,28 @@ namespace VfxEditor.Select.Tabs.Character {
             var idlePath = item.GetPap( "resident/idle" );
             var movePathA = item.GetPap( "resident/move_a" );
             var movePathB = item.GetPap( "resident/move_b" );
+            var deadPath = item.GetPap( "resident/original" );
+
+            var swimOverIdlePath = item.GetPap( "resident/swo_idle" );
+            var swimOverPathA = item.GetPap( "resident/swo_move_a" );
+            var swimOverPathB = item.GetPap( "resident/swo_move_b" );
+            var swimUnderIdlePath = item.GetPap( "resident/swu_idle" );
+            var swimUnderPathA = item.GetPap( "resident/swu_move_a" );
+            var swimUnderPathB = item.GetPap( "resident/swu_move_b" );
+            var swimDeadPath = item.GetPap( "resident/swim_original" );
+
             if( Dalamud.DataManager.FileExists( idlePath ) ) general.Add( "Idle", idlePath );
             if( Dalamud.DataManager.FileExists( movePathA ) ) general.Add( "Move A", movePathA );
             if( Dalamud.DataManager.FileExists( movePathB ) ) general.Add( "Move B", movePathB );
+            if( Dalamud.DataManager.FileExists( deadPath ) ) general.Add( "Dead", deadPath );
+
+            if( Dalamud.DataManager.FileExists( swimOverIdlePath ) ) general.Add( "Idle (Swim)", swimOverIdlePath );
+            if( Dalamud.DataManager.FileExists( swimOverPathA ) ) general.Add( "Swim A", swimOverPathA );
+            if( Dalamud.DataManager.FileExists( swimOverPathB ) ) general.Add( "Swim B", swimOverPathB );
+            if( Dalamud.DataManager.FileExists( swimUnderIdlePath ) ) general.Add( "Idle (Underwater)", swimUnderIdlePath );
+            if( Dalamud.DataManager.FileExists( swimUnderPathA ) ) general.Add( "Underwater A", swimUnderPathA );
+            if( Dalamud.DataManager.FileExists( swimUnderPathA ) ) general.Add( "Underwater B", swimUnderPathA );
+            if( Dalamud.DataManager.FileExists( swimDeadPath ) ) general.Add( "Dead (Underwater)", swimDeadPath );
 
             var poses = new Dictionary<string, Dictionary<string, string>>();
             for( var i = 1; i <= SelectDataUtils.MaxChangePoses; i++ ) {
@@ -93,7 +112,7 @@ namespace VfxEditor.Select.Tabs.Character {
             var pack = item.GetOrnamentResidentPap( "ot_m6008/resident/ornament" );
             var torch = item.GetOrnamentResidentPap( "ot_m6011/resident/ornament" ); //shared by lantern
             var gatling = item.GetOrnamentResidentPap( "ot_m6016/resident/ornament" );
-            var gatlingIdle = item.GetOrnamentResidentPap( "bt_common/ornament_sp/m6016/onm_pose01_loop.pap" );
+            var gatlingIdle = item.GetOrnamentResidentPap( "bt_common/ornament_sp/m6016/onm_pose01_loop" );
             var shovel = item.GetOrnamentResidentPap( "ot_m6017/resident/ornament" );
 
             var facePaths = item.Data.FaceOptions
