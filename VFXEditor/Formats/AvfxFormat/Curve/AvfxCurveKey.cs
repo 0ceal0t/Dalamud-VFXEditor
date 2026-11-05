@@ -196,7 +196,7 @@ namespace VfxEditor.Formats.AvfxFormat.Curve {
                 edited |= ImGui.InputFloat( "##Value", ref value );
                 if( edited ) {
                     CommandManager.Add( new CompoundCommand( [
-                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( converted.X, converted.Y, (float)Curve.ToRadians( converted.Z ) )  )
+                        new ParsedSimpleCommand<Vector3>( Data, new Vector3( inWeight, outWeight, (float)Curve.ToRadians( value ) )  )
                     ], onChangeAction: editor.OnUpdate ) );
                 }
             }
