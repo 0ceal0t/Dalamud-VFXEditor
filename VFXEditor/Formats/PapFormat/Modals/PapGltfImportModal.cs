@@ -22,7 +22,9 @@ namespace VfxEditor.Formats.PapFormat.Modals {
         private bool SkipOriginal = false;
         private int AnimationIndex = 0;
         private readonly List<string> AnimationNames = [];
-        private readonly List<string> NodeNames = [];
+        private readonly ModelRoot Model;
+        private readonly string LoadError;
+        private readonly List<string> BoneNames = [];
 
         private bool Exclude = false;
         private ExcludedBonesConfiguration SelectedExcludeList;
@@ -32,36 +34,51 @@ namespace VfxEditor.Formats.PapFormat.Modals {
             HavokIndex = index;
             ImportPath = importPath;
 
-            var model = ModelRoot.Load( importPath );
-
-            var boneNames = new List<string>();
             for( var i = 0; i < motion.Skeleton->Bones.Length; i++ ) {
-                boneNames.Add( motion.Skeleton->Bones[i].Name.String );
+                BoneNames.Add( motion.Skeleton->Bones[i].Name.String );
             }
 
-            foreach( var node in model.LogicalNodes ) {
-                if( string.IsNullOrEmpty( node.Name ) ||
-                    node.Name.Contains( "mesh", StringComparison.CurrentCultureIgnoreCase ) ||
-                    node.Name.Contains( "armature", StringComparison.CurrentCultureIgnoreCase )
-                ) continue;
-                if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated ) continue;
-                NodeNames.Add( node.Name );
+            try {
+                Model = ModelRoot.Load( importPath );
+                foreach( var animation in Model.LogicalAnimations ) {
+                    AnimationNames.Add( animation.Name );
+                }
             }
-
-            foreach( var animation in model.LogicalAnimations ) {
-                AnimationNames.Add( animation.Name );
+            catch( Exception e ) {
+                Dalamud.Error( e, $"Failed to load {importPath}" );
+                LoadError = e.Message;
             }
         }
+
+        private List<string> GetExcludeBones() =>
+            ( !Exclude || SelectedExcludeList == null ) ? [] : [.. SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) )];
 
         protected override void DrawBody() {
             if( UiUtils.IconButton( FontAwesomeIcon.InfoCircle, "Wiki" ) ) UiUtils.OpenUrl( "https://github.com/0ceal0t/Dalamud-VFXEditor/wiki/Using-Blender-to-Edit-Skeletons-and-Animations" );
 
-            using var nodes = ImRaii.TreeNode( "Nodes Being Imported" );
-            if( nodes ) {
-                using var child = ImRaii.Child( "Child", new( ImGui.GetContentRegionAvail().X, 300 ) );
-                using var _ = ImRaii.PushIndent();
-                foreach( var nodeName in NodeNames ) {
-                    ImGui.Text( nodeName );
+            if( Model == null ) {
+                ImGui.TextColored( UiUtils.RED_COLOR, $"Could not load file: {LoadError}" );
+                return;
+            }
+
+            if( AnimationNames.Count == 0 ) {
+                ImGui.TextColored( UiUtils.RED_COLOR, "File has no animations" );
+                return;
+            }
+
+            using( var nodes = ImRaii.TreeNode( "Nodes Being Imported" ) ) {
+                if( nodes ) {
+                    var tracks = new List<string>();
+                    var skipped = new List<string>();
+                    GltfAnimation.GetImportTracks(
+                        Model.LogicalAnimations[AnimationIndex], BoneNames,
+                        GltfAnimation.GetSkipBones( Motion, BoneNames, SkipOriginal, GetExcludeBones() ), tracks, skipped );
+
+                    using var child = ImRaii.Child( "Child", new( ImGui.GetContentRegionAvail().X, 300 ) );
+                    using var _ = ImRaii.PushIndent();
+                    foreach( var nodeName in tracks ) ImGui.Text( nodeName );
+                    using var color = ImRaii.PushColor( ImGuiCol.Text, ImGui.GetColorU32( ImGuiCol.TextDisabled ) );
+                    foreach( var nodeName in skipped ) ImGui.Text( $"{nodeName} (skipped)" );
                 }
             }
 
@@ -145,8 +162,11 @@ namespace VfxEditor.Formats.PapFormat.Modals {
 
         protected override void OnOk() {
             Plugin.Configuration.Save();
-            Command.AddAndExecute( new PapHavokCommand( Motion.File, () => {
-                GltfAnimation.ImportAnimation(
+            if( Model == null || AnimationNames.Count == 0 ) return;
+
+            GltfImportResult result = null;
+            var command = new PapHavokCommand( Motion.File, () => {
+                result = GltfAnimation.ImportAnimation(
                     Motion.File.Handles,
                     Motion.File.MotionData.Skeleton,
                     Motion,
@@ -154,10 +174,26 @@ namespace VfxEditor.Formats.PapFormat.Modals {
                     AnimationIndex,
                     Compress,
                     SkipOriginal,
-                    ( !Exclude || SelectedExcludeList == null ) ? [] : [.. SelectedExcludeList.Bones.Select( x => x.BoneName ).Where( x => !string.IsNullOrEmpty( x ) )],
+                    GetExcludeBones(),
                     ImportPath );
-            } ) );
-            Dalamud.OkNotification( "Havok data imported" );
+            } );
+
+            if( result == null || !result.Success ) {
+                // Nothing was changed, so don't add an empty command to the undo stack
+                Dalamud.ErrorNotification( $"Havok import failed: {result?.Error ?? "unknown error"}" );
+                return;
+            }
+
+            Command.AddAndExecute( command );
+
+            var total = result.Bound.Count + result.Skipped.Count;
+            if( result.Skipped.Count > 0 ) {
+                var list = string.Join( ", ", result.Skipped.Take( 10 ) ) + ( result.Skipped.Count > 10 ? ", ..." : "" );
+                Dalamud.WarningNotification( $"Havok data imported: bound {result.Bound.Count} of {total} bones. Skipped: {list}" );
+            }
+            else {
+                Dalamud.OkNotification( $"Havok data imported: bound {result.Bound.Count} of {total} bones" );
+            }
         }
     }
 }

@@ -123,7 +123,10 @@ namespace VfxEditor.Interop.Havok {
 
             nint arr = 0;
 
-            if( data != null ) {
+            // Empty arrays must have a null data pointer, matching what the Havok loader produces.
+            // Some Havok code checks the pointer rather than the size (e.g. a binding's partition indices),
+            // so a non-null empty array changes how the animation is sampled
+            if( count > 0 ) {
                 arr = Marshal.AllocHGlobal( size * data.Count + 1 );
                 handles.Add( arr );
                 var _arr = ( T* )arr;

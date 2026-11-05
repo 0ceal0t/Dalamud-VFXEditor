@@ -24,6 +24,13 @@ namespace VfxEditor.Utils.Gltf {
         public readonly Dictionary<float, Vector3> TranslationKeys = [];
     }
 
+    public class GltfImportResult {
+        public bool Success;
+        public string Error;
+        public readonly List<string> Bound = [];
+        public readonly List<string> Skipped = [];
+    }
+
     // There's something weird going on with the direct roots (n_hara, n_throw)
 
     public static unsafe class GltfAnimation {
@@ -77,7 +84,7 @@ namespace VfxEditor.Utils.Gltf {
                 }
 
                 var animation = model.UseAnimation( animationName );
-                var totalFrames = Math.Max( 1, ( int )MathF.Round( motion.Duration * 30f ) + 1 );
+                var totalFrames = motion.TotalFrames;
                 for( var frame = 0; frame < totalFrames; frame++ ) {
                     ExportKeys( nameToKeys, names, motion, frame * ( 1 / 30f ) );
                 }
@@ -143,8 +150,49 @@ namespace VfxEditor.Utils.Gltf {
 
         // Lord have mercy
         // https://github.com/0ceal0t/BlenderAssist/blob/main/BlenderAssist/pack_anim.cpp#L13
+        // https://github.com/Etheirys/XAT/blob/main/Havok/Source/Conversion/FbxToHavok.cpp
 
-        public static void ImportAnimation(
+        public static List<string> GetSkipBones( PapMotion motion, List<string> boneNames, bool skipUnanimated, List<string> excludeBones ) {
+            var skipBones = new List<string>( excludeBones );
+            if( skipUnanimated ) {
+                skipBones.AddRange( motion.GetUnanimatedBones().Select( x => boneNames[x] ) );
+            }
+            return skipBones;
+        }
+
+        /// Determine which bones become transform tracks for one specific glTF animation.
+        public static void GetImportTracks(
+            SharpGLTF.Schema2.Animation animation,
+            List<string> boneNames,
+            ICollection<string> skipBones,
+            List<string> tracks,
+            List<string> skipped
+        ) {
+            var seen = new HashSet<string>();
+            foreach( var channel in animation.Channels ) {
+                var name = channel.TargetNode?.Name;
+                if( string.IsNullOrEmpty( name ) || !seen.Add( name ) ) continue;
+                if( !boneNames.Contains( name ) || skipBones.Contains( name ) ) {
+                    skipped.Add( name );
+                    continue;
+                }
+                tracks.Add( name );
+            }
+
+            // Keep tracks in skeleton order
+            tracks.Sort( ( a, b ) => boneNames.IndexOf( a ).CompareTo( boneNames.IndexOf( b ) ) );
+        }
+
+        private static T* AllocZeroed<T>( HashSet<nint> handles ) where T : unmanaged {
+            // Use AllocHGlobal (not NativeMemory) since handles are released with FreeHGlobal
+            var size = Marshal.SizeOf<T>();
+            var ptr = Marshal.AllocHGlobal( size );
+            NativeMemory.Clear( ( void* )ptr, ( nuint )size );
+            handles.Add( ptr );
+            return ( T* )ptr;
+        }
+
+        public static GltfImportResult ImportAnimation(
             HashSet<nint> handles,
             hkaSkeleton* skeleton,
             PapMotion motion,
@@ -155,9 +203,27 @@ namespace VfxEditor.Utils.Gltf {
             List<string> excludeBones,
             string path
          ) {
-            var model = ModelRoot.Load( path );
-            var nodes = model.LogicalNodes;
+            var result = new GltfImportResult();
+
+            ModelRoot model;
+            try {
+                model = ModelRoot.Load( path );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, $"Failed to load {path}" );
+                result.Error = $"Could not load glTF: {e.Message}";
+                return result;
+            }
+
             var animations = model.LogicalAnimations;
+            if( animations.Count == 0 ) {
+                result.Error = "File has no animations";
+                return result;
+            }
+            if( gltfAnimationIndex < 0 || gltfAnimationIndex >= animations.Count ) {
+                result.Error = $"Invalid animation index {gltfAnimationIndex}";
+                return result;
+            }
 
             var boneNames = new List<string>();
             var boneNameToIdx = new Dictionary<string, int>();
@@ -169,37 +235,24 @@ namespace VfxEditor.Utils.Gltf {
                 refPoses[name] = skeleton->ReferencePose[i];
             }
 
-            var skipBones = new List<string>();
-            skipBones.AddRange( excludeBones );
-            if( skipUnanimated ) {
-                skipBones.AddRange( motion.GetUnanimatedBones().Select( x => boneNames[x] ) );
-            }
-
-            var tracks = new List<string>();
-            foreach( var node in nodes ) {
-                if( string.IsNullOrEmpty( node.Name ) ) continue;
-                if( !boneNames.Contains( node.Name ) || !node.IsTransformAnimated || skipBones.Contains( node.Name ) ) {
-                    Dalamud.Log( $"Skipped gLTF node: {node.Name}" );
-                    continue;
-                }
-
-                tracks.Add( node.Name );
-            }
-
-            if( animations.Count == 0 ) {
-                Dalamud.Error( "File has no animations" );
-                return;
-            }
-
             var animation = animations[gltfAnimationIndex];
-            var transforms = new List<hkQsTransformf>(); // final length will be numberOfFrames * tracks.Count
+            var skipBones = GetSkipBones( motion, boneNames, skipUnanimated, excludeBones );
+            var tracks = result.Bound;
+            GetImportTracks( animation, boneNames, skipBones, tracks, result.Skipped );
+            foreach( var name in result.Skipped ) Dalamud.Log( $"Skipped gLTF node: {name}" );
+
+            if( tracks.Count == 0 ) {
+                result.Error = $"Animation \"{animation.Name}\" does not animate any bones in the skeleton";
+                return result;
+            }
 
             var posSamplers = new Dictionary<string, ICurveSampler<Vector3>>();
             var rotSamplers = new Dictionary<string, ICurveSampler<Quaternion>>();
             var sclSamplers = new Dictionary<string, ICurveSampler<Vector3>>();
 
             foreach( var channel in animation.Channels ) {
-                var name = channel.TargetNode.Name;
+                var name = channel.TargetNode?.Name;
+                if( string.IsNullOrEmpty( name ) ) continue;
                 var pos = channel.GetTranslationSampler()?.CreateCurveSampler();
                 var rot = channel.GetRotationSampler()?.CreateCurveSampler();
                 var scl = channel.GetScaleSampler()?.CreateCurveSampler();
@@ -209,12 +262,20 @@ namespace VfxEditor.Utils.Gltf {
                 if( scl != null ) sclSamplers[name] = scl;
             }
 
-            var numberOfFrames = ( int )MathF.Round( animation.Duration * 30f ) + 1;
-            for( var frame = 0; frame < numberOfFrames; frame++ ) {
-                var time = frame * ( 1 / 30f );
+            // Uncompressed animations assume frames are evenly spread across the duration,
+            // so the duration has to be an exact multiple of the frame time.
+            // Always use at least 2 frames so the duration is never 0 (the compressor and time-to-frame divide by it)
+            var numberOfFrames = Math.Max( 2, ( int )MathF.Round( animation.Duration * 30f ) + 1 );
+            var duration = ( numberOfFrames - 1 ) / 30f;
 
-                foreach( var track in tracks ) {
-                    // TODO: or is this supposed to be identity matrix?
+            var transforms = new List<hkQsTransformf>( numberOfFrames * tracks.Count ); // frame-major, track-minor
+            var prevRotations = new Quaternion?[tracks.Count];
+
+            for( var frame = 0; frame < numberOfFrames; frame++ ) {
+                var time = Math.Min( frame / 30f, animation.Duration );
+
+                for( var trackIdx = 0; trackIdx < tracks.Count; trackIdx++ ) {
+                    var track = tracks[trackIdx];
                     var refPose = refPoses[track];
                     var pos = refPose.Translation;
                     var rot = refPose.Rotation;
@@ -225,70 +286,66 @@ namespace VfxEditor.Utils.Gltf {
 
                     if( posSamplers.TryGetValue( track, out var posSampler ) ) {
                         var _pos = posSampler.GetPoint( time );
-                        pos = new() {
-                            X = _pos.X,
-                            Y = _pos.Y,
-                            Z = _pos.Z,
-                            W = 1
-                        };
+                        pos = new() { X = _pos.X, Y = _pos.Y, Z = _pos.Z, W = 1 };
                     }
+
+                    var q = new Quaternion( rot.X, rot.Y, rot.Z, rot.W );
                     if( rotSamplers.TryGetValue( track, out var rotSampler ) ) {
                         var _rot = rotSampler.GetPoint( time );
-                        rot = new() {
-                            X = GltfSkeleton.Cleanup( _rot.X ),
-                            Y = GltfSkeleton.Cleanup( _rot.Y ),
-                            Z = GltfSkeleton.Cleanup( _rot.Z ),
-                            W = GltfSkeleton.Cleanup( _rot.W )
-                        };
+                        q = new(
+                            GltfSkeleton.Cleanup( _rot.X ),
+                            GltfSkeleton.Cleanup( _rot.Y ),
+                            GltfSkeleton.Cleanup( _rot.Z ),
+                            GltfSkeleton.Cleanup( _rot.W )
+                        );
                     }
+
+                    q = q.LengthSquared() > 1e-12f ? Quaternion.Normalize( q ) : Quaternion.Identity;
+
+                    if( prevRotations[trackIdx] is Quaternion prev && Quaternion.Dot( q, prev ) < 0 ) {
+                        q = Quaternion.Negate( q );
+                    }
+                    prevRotations[trackIdx] = q;
+                    rot = new() { X = q.X, Y = q.Y, Z = q.Z, W = q.W };
 
                     if( sclSamplers.TryGetValue( track, out var sclSampler ) ) {
                         var _scl = sclSampler.GetPoint( time );
-                        scl = new() {
-                            X = _scl.X,
-                            Y = _scl.Y,
-                            Z = _scl.Z,
-                            W = 1
-                        };
+                        scl = new() { X = _scl.X, Y = _scl.Y, Z = _scl.Z, W = 1 };
                     }
 
-                    var transform = new hkQsTransformf() {
+                    transforms.Add( new hkQsTransformf() {
                         Translation = pos,
                         Rotation = rot,
                         Scale = scl
-                    };
-
-                    transforms.Add( transform );
+                    } );
                 }
             }
 
             var currentBinding = motion.AnimationControl->Binding;
             var currentAnim = currentBinding.ptr->Animation;
 
-            var anim = ( HkaInterleavedUncompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf<HkaInterleavedUncompressedAnimation>() );
-            handles.Add( ( nint )anim );
-
+            var anim = AllocZeroed<HkaInterleavedUncompressedAnimation>( handles );
             ( ( HkBaseObject* )anim )->vfptr = ( HkBaseObject.HkBaseObjectVtbl* )ResourceLoader.HavokInterleavedAnimationVtbl;
+            if( currentAnim.ptr != null ) anim->Animation.MemSizeAndRefCount = currentAnim.ptr->MemSizeAndRefCount;
 
-            var binding = ( hkaAnimationBinding* )Marshal.AllocHGlobal( Marshal.SizeOf<hkaAnimationBinding>() );
-            handles.Add( ( nint )binding );
-
+            var binding = AllocZeroed<hkaAnimationBinding>( handles );
             ( ( HkBaseObject* )binding )->vfptr = ( ( HkBaseObject* )currentBinding.ptr )->vfptr;
+            binding->MemSizeAndRefCount = currentBinding.ptr->MemSizeAndRefCount;
 
             // Set up binding
             binding->OriginalSkeletonName = currentBinding.ptr->OriginalSkeletonName;
             binding->BlendHint = currentBinding.ptr->BlendHint;
-            binding->PartitionIndices = currentBinding.ptr->PartitionIndices;
 
             var flags = currentBinding.ptr->TransformTrackToBoneIndices.Flags;
 
+            binding->PartitionIndices = HavokData.CreateArray( handles, currentBinding.ptr->PartitionIndices, [] );
             binding->FloatTrackToFloatSlotIndices = HavokData.CreateArray( handles, currentBinding.ptr->FloatTrackToFloatSlotIndices, [] );
             binding->TransformTrackToBoneIndices = HavokData.CreateArray(
                 handles, currentBinding.ptr->TransformTrackToBoneIndices, [.. tracks.Select( x => ( short )boneNameToIdx[x] )] );
 
             // Set up animation
             anim->Animation.Type = hkaAnimation.AnimationType.InterleavedAnimation;
-            anim->Animation.Duration = animation.Duration;
+            anim->Animation.Duration = duration;
             anim->Animation.NumberOfTransformTracks = tracks.Count;
             anim->Animation.NumberOfFloatTracks = 0;
             anim->Animation.ExtractedMotion = new hkRefPtr<hkaAnimatedReferenceFrame> { ptr = null };
@@ -301,8 +358,7 @@ namespace VfxEditor.Utils.Gltf {
             if( compress ) {
                 Dalamud.Log( "Compressing animation..." );
 
-                var spline = ( HkaSplineCompressedAnimation* )Marshal.AllocHGlobal( Marshal.SizeOf<HkaSplineCompressedAnimation>() );
-                handles.Add( ( nint )spline );
+                var spline = AllocZeroed<HkaSplineCompressedAnimation>( handles );
                 Plugin.ResourceLoader.HavokSplineCtor( spline, anim );
                 finalAnim = ( hkaAnimation* )spline;
             }
@@ -320,7 +376,9 @@ namespace VfxEditor.Utils.Gltf {
             container->Animations = HavokData.CreateArray( handles, ( uint )container->Animations.Flags, anims, sizeof( nint ) );
             container->Bindings = HavokData.CreateArray( handles, ( uint )container->Bindings.Flags, bindings, sizeof( nint ) );
 
-            container->Animations[havokIndex] = animPtr;
+            Dalamud.Log( $"Imported \"{animation.Name}\": bound {tracks.Count} of {tracks.Count + result.Skipped.Count} animated nodes, {numberOfFrames} frames, {duration}s" );
+            result.Success = true;
+            return result;
         }
     }
 }

@@ -421,7 +421,7 @@ namespace VfxEditor.Formats.ShpkFormat {
                     using var disabled = ImRaii.Disabled( parameter == null || slot != parameter.StartSlot );
                     using var none = ImRaii.PushColor( ImGuiCol.Text, UiUtils.RED_COLOR, parameter == null );
                     using var selected = ImRaii.PushColor( ImGuiCol.Text, UiUtils.PARSED_GREEN, parameter != null && parameter == MaterialParameterView.GetSelected() );
-                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.DALAMUD_YELLOW, parameters.Count > 1 );
+                    using var multiple = ImRaii.PushColor( ImGuiCol.Text, UiUtils.YELLOW_ACCENT, parameters.Count > 1 );
 
                     if( ImGui.Selectable( parameter == null ? "[NONE]" : $"Parameter {MaterialParameters.IndexOf( parameter )}" ) && parameter != null ) {
                         MaterialParameterView.SetSelected( parameter );

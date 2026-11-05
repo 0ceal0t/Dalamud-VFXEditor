@@ -125,7 +125,7 @@ namespace VfxEditor.Formats.PapFormat.Motion {
 
             // temporarily remove out-of-range track indices so the serialized animation cannot
             // write past the end of the skeleton's bone/float arrays when the game samples it
-            Motions.ForEach( x => x.ClampTrackIndices() );
+            Motions.ForEach( x => x.ClampTrackIndices( handles ) );
             WriteHavok();
             Motions.ForEach( x => x.UnclampTrackIndices() );
         }
