@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.PhybFormat {
 
         public PhybDocument( PhybManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override PhybFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
+        protected override PhybFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
     }
 }

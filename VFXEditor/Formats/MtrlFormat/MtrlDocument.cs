@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.MtrlFormat {
 
         public MtrlDocument( MtrlManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override MtrlFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override MtrlFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }

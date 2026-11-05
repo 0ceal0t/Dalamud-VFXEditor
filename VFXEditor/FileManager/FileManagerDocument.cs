@@ -61,14 +61,14 @@ namespace VfxEditor.FileManager {
             return !string.IsNullOrEmpty( replacePath );
         }
 
-        protected abstract R FileFromReader( BinaryReader reader, bool verify );
+        protected abstract R FileFromReader( BinaryReader reader, string sourcePath, bool verify );
 
         private static void LoadError( string message ) {
             Dalamud.Error( message );
             Dalamud.ErrorNotification( message );
         }
 
-        protected bool LoadLocal( string path, bool verify ) {
+        protected bool LoadLocal( string path, string sourcePath, bool verify ) {
             if( !System.IO.File.Exists( path ) ) {
                 LoadError( $"Local file does not exist: {path}" );
                 return false;
@@ -81,7 +81,7 @@ namespace VfxEditor.FileManager {
 
             try {
                 using var reader = new BinaryReader( System.IO.File.OpenRead( path ) );
-                SwapFile( FileFromReader( reader, verify ) );
+                SwapFile( FileFromReader( reader, sourcePath, verify ) );
                 return true;
             }
             catch( Exception e ) {
@@ -91,7 +91,7 @@ namespace VfxEditor.FileManager {
             }
         }
 
-        protected bool LoadGame( string path, bool verify ) {
+        protected bool LoadGame( string path, string sourcePath, bool verify ) {
             if( !Dalamud.DataManager.FileExists( path ) ) {
                 LoadError( $"Game file does not exist: {path}" );
                 return false;
@@ -106,7 +106,7 @@ namespace VfxEditor.FileManager {
                 var file = Dalamud.DataManager.GetFile( path );
                 using var ms = new MemoryStream( file.Data );
                 using var reader = new BinaryReader( ms );
-                SwapFile( FileFromReader( reader, verify ) );
+                SwapFile( FileFromReader( reader, sourcePath, verify ) );
                 return true;
             }
             catch( Exception e ) {
@@ -128,7 +128,7 @@ namespace VfxEditor.FileManager {
         public bool SetSource( SelectResult result ) {
             if( result == null ) return false;
 
-            var loaded = result.Type == SelectResultType.Local ? LoadLocal( result.Path, true ) : LoadGame( result.Path, true );
+            var loaded = result.Type == SelectResultType.Local ? LoadLocal( result.Path, result.Path, true ) : LoadGame( result.Path, result.Path, true );
             if( !loaded ) return false;
 
             Source = result;
@@ -195,7 +195,7 @@ namespace VfxEditor.FileManager {
             SourceTextInput = "";
             ReplaceTextInput = "";
 
-            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), false );
+            LoadLocal( WorkspaceUtils.ResolveWorkspacePath( relativeLocation, localPath ), source?.Path, false );
             File?.Verified = VerifiedStatus.WORKSPACE;
             WriteFile( WriteLocation );
         }

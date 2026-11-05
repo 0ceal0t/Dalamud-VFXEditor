@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.AtchFormat {
 
         public AtchDocument( AtchManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override AtchFile FileFromReader( BinaryReader reader, bool verify ) => new( reader );
+        protected override AtchFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader );
 
         protected override void RemoveReplace() {
             base.RemoveReplace();

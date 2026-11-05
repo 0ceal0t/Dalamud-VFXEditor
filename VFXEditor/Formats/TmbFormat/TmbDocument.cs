@@ -21,7 +21,7 @@ namespace VfxEditor.Formats.TmbFormat {
             AnimationId = TmbSpawn.GetIdFromTmbPath( ReplacePath );
         }
 
-        protected override TmbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override TmbFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
 
         protected override void DrawExtraColumn() {
             using var framePadding = ImRaii.PushStyle( ImGuiStyleVar.FramePadding, new Vector2( 4, 3 ) );

@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.KdbFormat {
 
         public KdbDocument( KdbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override KdbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
+        protected override KdbFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
     }
 }

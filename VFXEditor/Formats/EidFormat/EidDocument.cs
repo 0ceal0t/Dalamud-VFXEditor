@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.EidFormat {
 
         public EidDocument( EidManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override EidFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, verify );
+        protected override EidFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, verify );
     }
 }
