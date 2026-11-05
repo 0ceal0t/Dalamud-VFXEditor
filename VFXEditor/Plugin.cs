@@ -187,6 +187,8 @@ namespace VfxEditor {
             Dalamud.CommandManager.RemoveHandler( CommandName );
             PenumbraIpc?.Dispose();
 
+            VfxSpawn.Dispose();
+
             ResourceLoader?.Dispose();
             ResourceLoader = null;
 
@@ -197,7 +199,6 @@ namespace VfxEditor {
             WindowSystem.RemoveAllWindows();
             Modals.Clear();
 
-            VfxSpawn.Dispose();
             TmbSpawn.Dispose();
             FileBrowserManager.Dispose();
             ExportDialog.Reset();

@@ -19,6 +19,7 @@ namespace VfxEditor.Interop.Structs.Vfx {
         public override nint GetAddress() => ( nint )Vfx;
 
         public override void Remove() {
+            if( Vfx == null || Plugin.ResourceLoader == null ) return;
             Plugin.ResourceLoader.ActorVfxRemove( Vfx, ( char )1 );
         }
     }

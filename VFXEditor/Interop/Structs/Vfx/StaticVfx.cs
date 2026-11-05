@@ -53,6 +53,9 @@ namespace VfxEditor.Interop.Structs.Vfx {
 
         public override nint GetAddress() => ( nint )Vfx;
 
-        public override void Remove() => Plugin.ResourceLoader.StaticVfxRemove( Vfx );
+        public override void Remove() {
+            if( Vfx == null || Plugin.ResourceLoader == null ) return;
+            Plugin.ResourceLoader.StaticVfxRemove( Vfx );
+        }
     }
 }

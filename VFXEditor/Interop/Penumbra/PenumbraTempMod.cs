@@ -18,6 +18,8 @@ namespace VfxEditor.Interop.Penumbra {
         public static bool Available => Plugin.PenumbraIpc?.PenumbraEnabled == true;
         private static bool Dirty = false;
 
+        private static Dictionary<string, string> ActiveFiles = [];
+
         private static IEnumerable<(IFileDocument Document, string GamePath, string LocalPath)> GetActiveDocuments() {
             foreach( var group in Plugin.Groups.Where( x => x != null ) ) {
                 foreach( var document in group.GetDocuments() ) {
@@ -65,7 +67,11 @@ namespace VfxEditor.Interop.Penumbra {
 
             GetCurrentFiles( out var files, out var meta );
 
-            if( !Plugin.PenumbraIpc.SetTemporaryMod( Tag, files, meta, Priority ) ) return false;
+            if( !Plugin.PenumbraIpc.SetTemporaryMod( Tag, files, meta, Priority ) ) {
+                ActiveFiles = [];
+                return false;
+            }
+            ActiveFiles = files;
 
             if( Plugin.Configuration?.LogDebug == true ) {
                 Dalamud.Log( $"[PenumbraTempMod] {files.Count} files, meta: {( string.IsNullOrEmpty( meta ) ? "none" : "atch" )}" );
@@ -83,11 +89,26 @@ namespace VfxEditor.Interop.Penumbra {
             if( player != null ) Plugin.PenumbraIpc.Redraw( player.ObjectIndex );
         }
 
+        // Push pending changes right away, without redrawing
+        public static void Flush() {
+            if( !Dirty ) return;
+            if( Update() ) Dirty = false;
+        }
+
+        // Whether Penumbra is currently redirecting this game path to an existing local file
+        public static bool IsRedirected( string gamePath ) {
+            if( !Available || Plugin.PenumbraIpc?.ModsEnabled != true || string.IsNullOrEmpty( gamePath ) ) return false;
+            Flush();
+            if( Dirty ) return false;
+            return ActiveFiles.TryGetValue( gamePath.ToLowerInvariant(), out var localPath ) && File.Exists( localPath );
+        }
+
         public static void MarkDirty() {
             Dirty = true;
         }
 
         public static void Dispose() {
+            ActiveFiles = [];
             if( Available ) Plugin.PenumbraIpc.SetTemporaryMod( Tag, [], string.Empty, Priority );
         }
     }

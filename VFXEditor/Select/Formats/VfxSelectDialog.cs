@@ -56,7 +56,15 @@ namespace VfxEditor.Select.Formats {
 
         public override void PlayPopupItems( string path ) {
             ImGui.Separator();
-            if( ImGui.Selectable( "Spawn" ) ) VfxSpawn.OnSelf( path, false );
+
+            using( ImRaii.Disabled( !VfxSpawn.IsActive ) ) {
+                if( ImGui.Selectable( "De-Spawn" ) ) VfxSpawn.Clear();
+            }
+            using( ImRaii.Disabled( VfxSpawn.IsActive ) ) {
+                if( ImGui.Selectable( "Self" ) ) VfxSpawn.OnSelf( path, false );
+                if( ImGui.Selectable( "Ground" ) ) VfxSpawn.OnGround( path, false );
+                if( ImGui.Selectable( "Target" ) ) VfxSpawn.OnTarget( path, false );
+            }
         }
     }
 }
