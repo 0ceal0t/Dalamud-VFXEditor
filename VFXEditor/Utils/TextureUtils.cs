@@ -1,56 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
+using Lumina.Data.Files;
+using OtterTex;
 using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
     public static class TextureUtils {
-        public static byte[] CreateTextureHeader( TextureFormat format, int width, int height, int mipLevels ) {
-            var header = new TextureDataFile.TexHeader() {
-                Type = Formats.TextureFormat.Attribute.TextureType2D,
-                Format = format,
-                Width = ( ushort )width,
-                Height = ( ushort )height,
-                Depth = 1,
-                MipLevelsCount = ( byte )mipLevels,
-                LodOffset = [0, 1, 2],
-                OffsetToSurface = new uint[13]
-            };
-            Array.Clear( header.OffsetToSurface, 0, 13 );
-
-            var mipSize = format switch {
-                TextureFormat.R4G4B4A4 or TextureFormat.R5G5B5A1 => ( width * height ) * 2,
-                TextureFormat.DXT1 => ( width * height ) / 2,
-                TextureFormat.DXT5 or TextureFormat.A8 => width * height,
-                _ => ( width * height ) * 4,
-            };
-
-            var combinedLength = 80;
-            for( var i = 0; i < mipLevels; i++ ) {
-                header.OffsetToSurface[i] = ( uint )combinedLength;
-                combinedLength += mipSize;
-                if( mipSize > 16 ) mipSize /= 4;
-                else mipSize = 16;
-            }
-
-            // Struct to bytes
-            var size = Marshal.SizeOf( header );
-            var buffer = new byte[size];
-            var handle = Marshal.AllocHGlobal( size );
-            Marshal.StructureToPtr( header, handle, true );
-            Marshal.Copy( handle, buffer, 0, size );
-            Marshal.FreeHGlobal( handle );
-
-            return buffer;
+        // Actual byte size of one mip surface, including block padding for compressed formats
+        public static int GetMipSize( TextureFormat format, int width, int height, int mip ) {
+            width = Math.Max( width >> mip, 1 );
+            height = Math.Max( height >> mip, 1 );
+            var dxgi = ( ( TexFile.TextureFormat )format ).ToDXGI();
+            if( dxgi == DXGIFormat.Unknown ) throw new NotSupportedException( $"Unsupported texture format {format}" );
+            return dxgi.ComputePitch( width, height ).Item2;
         }
-
-        public static int GetMipSize( TextureFormat format, int width, int height ) => format switch {
-            TextureFormat.DXT1 => ( width * height ) / 2,
-            TextureFormat.DXT5 or TextureFormat.A8 => width * height,
-            TextureFormat.R5G5B5A1 or TextureFormat.R4G4B4A4 => width * height * 2,
-            _ => width * height * 4
-        };
 
         public static void GetDdsInfo( byte[] data, TextureFormat format, int width, int height, int mipCount, out byte[] compressedOut, out List<short> mipPartOffsets, out List<short> mipPartCounts ) {
             using var dataMs = new MemoryStream( data );
@@ -61,36 +25,22 @@ namespace VfxEditor.Utils {
             mipPartOffsets = [];
             mipPartCounts = [];
 
-            var mipLength = GetMipSize( format, width, height );
-
             // already skipped the DDS header
 
             for( var i = 0; i < mipCount; i++ ) {
-                var mipParts = ( int )Math.Ceiling( mipLength / 16000f );
+                var mipLength = GetMipSize( format, width, height, i );
+                var mipParts = ( mipLength + 15999 ) / 16000;
                 mipPartCounts.Add( ( short )mipParts );
 
-                if( mipParts > 1 ) {
-                    for( var j = 0; j < mipParts; j++ ) {
-                        GetMipPartOffset( writer, reader, mipPartOffsets, mipLength, j == mipParts - 1 );
-                    }
-                }
-                else {
-                    GetMipPartOffset( writer, reader, mipPartOffsets, mipLength, mipLength != 16000 );
-                }
-
-                if( mipLength > 32 ) {
-                    mipLength /= 4;
-                }
-                else {
-                    mipLength = 8;
+                for( var j = 0; j < mipParts; j++ ) {
+                    GetMipPartOffset( writer, reader, mipPartOffsets, Math.Min( 16000, mipLength - j * 16000 ) );
                 }
             }
 
             compressedOut = compressedMs.ToArray();
         }
 
-        private static void GetMipPartOffset( BinaryWriter writer, BinaryReader reader, List<short> mipPartOffsets, int mipLength, bool i ) {
-            var uncompLength = i ? mipLength % 16000 : 16000;
+        private static void GetMipPartOffset( BinaryWriter writer, BinaryReader reader, List<short> mipPartOffsets, int uncompLength ) {
             var uncompBytes = reader.ReadBytes( uncompLength );
             var compressed = TexToolsUtils.Compressor( uncompBytes );
 
@@ -124,7 +74,6 @@ namespace VfxEditor.Utils {
             writer.Write( 0 );
             writer.Write( mipCount );
 
-            var uncompMipSize = GetMipSize( format, width, height );
             var partIndex = 0;
             var mipOffsetIndex = 80;
 
@@ -137,9 +86,7 @@ namespace VfxEditor.Utils {
                 }
 
                 writer.Write( paddedSize );
-                writer.Write( uncompMipSize > 16 ? uncompMipSize : 16 );
-
-                uncompMipSize /= 4;
+                writer.Write( GetMipSize( format, width, height, i ) );
 
                 writer.Write( partIndex );
                 writer.Write( ( int )mipPartCount[i] );
@@ -153,130 +100,5 @@ namespace VfxEditor.Utils {
 
             return ms.ToArray();
         }
-
-        public enum DXGI_FORMAT : uint {
-            DXGI_FORMAT_UNKNOWN,
-            DXGI_FORMAT_R32G32B32A32_TYPELESS,
-            DXGI_FORMAT_R32G32B32A32_FLOAT,
-            DXGI_FORMAT_R32G32B32A32_UINT,
-            DXGI_FORMAT_R32G32B32A32_SINT,
-            DXGI_FORMAT_R32G32B32_TYPELESS,
-            DXGI_FORMAT_R32G32B32_FLOAT,
-            DXGI_FORMAT_R32G32B32_UINT,
-            DXGI_FORMAT_R32G32B32_SINT,
-            DXGI_FORMAT_R16G16B16A16_TYPELESS,
-            DXGI_FORMAT_R16G16B16A16_FLOAT,
-            DXGI_FORMAT_R16G16B16A16_UNORM,
-            DXGI_FORMAT_R16G16B16A16_UINT,
-            DXGI_FORMAT_R16G16B16A16_SNORM,
-            DXGI_FORMAT_R16G16B16A16_SINT,
-            DXGI_FORMAT_R32G32_TYPELESS,
-            DXGI_FORMAT_R32G32_FLOAT,
-            DXGI_FORMAT_R32G32_UINT,
-            DXGI_FORMAT_R32G32_SINT,
-            DXGI_FORMAT_R32G8X24_TYPELESS,
-            DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
-            DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
-            DXGI_FORMAT_X32_TYPELESS_G8X24_UINT,
-            DXGI_FORMAT_R10G10B10A2_TYPELESS,
-            DXGI_FORMAT_R10G10B10A2_UNORM,
-            DXGI_FORMAT_R10G10B10A2_UINT,
-            DXGI_FORMAT_R11G11B10_FLOAT,
-            DXGI_FORMAT_R8G8B8A8_TYPELESS,
-            DXGI_FORMAT_R8G8B8A8_UNORM,
-            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-            DXGI_FORMAT_R8G8B8A8_UINT,
-            DXGI_FORMAT_R8G8B8A8_SNORM,
-            DXGI_FORMAT_R8G8B8A8_SINT,
-            DXGI_FORMAT_R16G16_TYPELESS,
-            DXGI_FORMAT_R16G16_FLOAT,
-            DXGI_FORMAT_R16G16_UNORM,
-            DXGI_FORMAT_R16G16_UINT,
-            DXGI_FORMAT_R16G16_SNORM,
-            DXGI_FORMAT_R16G16_SINT,
-            DXGI_FORMAT_R32_TYPELESS,
-            DXGI_FORMAT_D32_FLOAT,
-            DXGI_FORMAT_R32_FLOAT,
-            DXGI_FORMAT_R32_UINT,
-            DXGI_FORMAT_R32_SINT,
-            DXGI_FORMAT_R24G8_TYPELESS,
-            DXGI_FORMAT_D24_UNORM_S8_UINT,
-            DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
-            DXGI_FORMAT_X24_TYPELESS_G8_UINT,
-            DXGI_FORMAT_R8G8_TYPELESS,
-            DXGI_FORMAT_R8G8_UNORM,
-            DXGI_FORMAT_R8G8_UINT,
-            DXGI_FORMAT_R8G8_SNORM,
-            DXGI_FORMAT_R8G8_SINT,
-            DXGI_FORMAT_R16_TYPELESS,
-            DXGI_FORMAT_R16_FLOAT,
-            DXGI_FORMAT_D16_UNORM,
-            DXGI_FORMAT_R16_UNORM,
-            DXGI_FORMAT_R16_UINT,
-            DXGI_FORMAT_R16_SNORM,
-            DXGI_FORMAT_R16_SINT,
-            DXGI_FORMAT_R8_TYPELESS,
-            DXGI_FORMAT_R8_UNORM,
-            DXGI_FORMAT_R8_UINT,
-            DXGI_FORMAT_R8_SNORM,
-            DXGI_FORMAT_R8_SINT,
-            DXGI_FORMAT_A8_UNORM,
-            DXGI_FORMAT_R1_UNORM,
-            DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
-            DXGI_FORMAT_R8G8_B8G8_UNORM,
-            DXGI_FORMAT_G8R8_G8B8_UNORM,
-            DXGI_FORMAT_BC1_TYPELESS,
-            DXGI_FORMAT_BC1_UNORM,
-            DXGI_FORMAT_BC1_UNORM_SRGB,
-            DXGI_FORMAT_BC2_TYPELESS,
-            DXGI_FORMAT_BC2_UNORM,
-            DXGI_FORMAT_BC2_UNORM_SRGB,
-            DXGI_FORMAT_BC3_TYPELESS,
-            DXGI_FORMAT_BC3_UNORM,
-            DXGI_FORMAT_BC3_UNORM_SRGB,
-            DXGI_FORMAT_BC4_TYPELESS,
-            DXGI_FORMAT_BC4_UNORM,
-            DXGI_FORMAT_BC4_SNORM,
-            DXGI_FORMAT_BC5_TYPELESS,
-            DXGI_FORMAT_BC5_UNORM,
-            DXGI_FORMAT_BC5_SNORM,
-            DXGI_FORMAT_B5G6R5_UNORM,
-            DXGI_FORMAT_B5G5R5A1_UNORM,
-            DXGI_FORMAT_B8G8R8A8_UNORM,
-            DXGI_FORMAT_B8G8R8X8_UNORM,
-            DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM,
-            DXGI_FORMAT_B8G8R8A8_TYPELESS,
-            DXGI_FORMAT_B8G8R8A8_UNORM_SRGB,
-            DXGI_FORMAT_B8G8R8X8_TYPELESS,
-            DXGI_FORMAT_B8G8R8X8_UNORM_SRGB,
-            DXGI_FORMAT_BC6H_TYPELESS,
-            DXGI_FORMAT_BC6H_UF16,
-            DXGI_FORMAT_BC6H_SF16,
-            DXGI_FORMAT_BC7_TYPELESS,
-            DXGI_FORMAT_BC7_UNORM,
-            DXGI_FORMAT_BC7_UNORM_SRGB,
-            DXGI_FORMAT_AYUV,
-            DXGI_FORMAT_Y410,
-            DXGI_FORMAT_Y416,
-            DXGI_FORMAT_NV12,
-            DXGI_FORMAT_P010,
-            DXGI_FORMAT_P016,
-            DXGI_FORMAT_420_OPAQUE,
-            DXGI_FORMAT_YUY2,
-            DXGI_FORMAT_Y210,
-            DXGI_FORMAT_Y216,
-            DXGI_FORMAT_NV11,
-            DXGI_FORMAT_AI44,
-            DXGI_FORMAT_IA44,
-            DXGI_FORMAT_P8,
-            DXGI_FORMAT_A8P8,
-            DXGI_FORMAT_B4G4R4A4_UNORM,
-            DXGI_FORMAT_P208,
-            DXGI_FORMAT_V208,
-            DXGI_FORMAT_V408,
-            DXGI_FORMAT_SAMPLER_FEEDBACK_MIN_MIP_OPAQUE,
-            DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE,
-            DXGI_FORMAT_FORCE_UINT
-        };
     }
 }

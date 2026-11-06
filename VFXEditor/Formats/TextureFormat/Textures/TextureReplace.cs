@@ -1,28 +1,19 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
+using Lumina.Data.Files;
+using OtterTex;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using TeximpNet;
-using TeximpNet.Compression;
-using TeximpNet.DDS;
 using VfxEditor.Data;
 using VfxEditor.FileManager.Interfaces;
-using VfxEditor.Formats.TextureFormat.CustomTeximpNet;
 using VfxEditor.Interop.Penumbra;
 using VfxEditor.Ui.Export;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
-    public enum PostConversion {
-        None,
-        A8,
-        R4444,
-        R5551,
-    }
-
     public class TextureReplace : TextureDrawable, IFileDocument {
         private string Name = "";
         private string WriteLocation;
@@ -42,76 +33,77 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             return !string.IsNullOrEmpty( gamePath ) && !string.IsNullOrEmpty( localPath );
         }
 
-        public void ImportFile( string importPath ) {
+        public bool ImportFile( string importPath ) {
             Preview = null;
 
             try {
                 var importFileExtension = Path.GetExtension( importPath ).ToLowerInvariant();
 
-                if( importFileExtension == ".dds" ) {
-                    using var container = DDSFile.Read( importPath );
-                    var format = TextureDataFile.DXGItoTextureFormat( container.Format );
-                    if( format == TextureFormat.Null ) return;
+                if( importFileExtension == ".dds" ) ImportDds( importPath );
+                else if( importFileExtension == ".atex" || importFileExtension == ".tex" ) File.Copy( importPath, WriteLocation, true );
+                else if( importFileExtension == ".png" ) ImportPng( importPath );
+                else throw new NotSupportedException( $"Invalid extension {importFileExtension}" );
 
-                    using var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) );
-                    DdsToAtex( format, container, File.ReadAllBytes( importPath ), writer );
-                }
-                else if( importFileExtension == ".atex" || importFileExtension == ".tex" ) {
-                    File.Copy( importPath, WriteLocation, true );
-                }
-                else if( importFileExtension == ".png" ) {
-                    var pngFormat = Plugin.Configuration.PngFormat;
-
-                    using var surface = Surface.LoadFromFile( importPath );
-                    surface.FlipVertically();
-
-                    using var compressor = new Compressor();
-                    var compFormat = TextureDataFile.TextureToCompressionFormat( pngFormat );
-                    // use ETC1 to signify "NULL" because I'm not going to be using it
-                    if( compFormat == CompressionFormat.ETC1 ) return;
-
-                    // Ui elements are required to only have 1 mip level
-                    var maxMips = ( ushort )( GamePath.StartsWith( "ui/", StringComparison.Ordinal ) ? 1 : Plugin.Configuration.PngMips );
-                    compressor.Input.SetMipmapGeneration( true, maxMips );
-                    compressor.Input.SetData( surface );
-                    compressor.Compression.Format = compFormat;
-                    compressor.Compression.SetBGRAPixelFormat();
-                    compressor.Process( out var container );
-
-                    if( container == null ) {
-                        Dalamud.Error( $"Error compressing png to {compFormat}" );
-                        return;
-                    }
-
-                    using var ms = new MemoryStream();
-
-                    // lord have mercy
-                    CustomDDSFile.Write( ms, container.MipChains, container.Format, container.Dimension );
-
-                    var ddsData = ms.ToArray();
-
-                    using( var writer = new BinaryWriter( File.Open( WriteLocation, FileMode.Create ) ) ) {
-                        var postConversion = pngFormat switch {
-                            TextureFormat.A8 => PostConversion.A8,
-                            TextureFormat.R4G4B4A4 => PostConversion.R4444,
-                            TextureFormat.R5G5B5A1 => PostConversion.R5551,
-                            _ => PostConversion.None
-                        };
-
-                        DdsToAtex( pngFormat, container, ddsData, writer, postConversion );
-                    }
-                    container.Dispose();
-                }
-                else {
-                    throw new NotSupportedException( $"Invalid extension {importFileExtension}" );
-                }
-
-                Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), false, GamePath );
+                Preview = new TexturePreview( TextureDataFile.LoadFromLocal( WriteLocation ), WriteLocation, false, GamePath );
+                return true;
             }
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error importing {importPath} into {GamePath}" );
+                return false;
             }
         }
+
+        private void ImportDds( string importPath ) {
+            using var dds = ScratchImage.LoadDDS( importPath );
+            if( dds.Meta.Format.ToTexFormat() != TexFile.TextureFormat.Unknown ) {
+                TexFileParser.SaveTex( dds, WriteLocation );
+                return;
+            }
+
+            // Formats the game can't read (R8G8B8A8, sRGB variants, ...) are stored as plain B8G8R8A8
+            Dalamud.Log( $"DDS format {dds.Meta.Format} has no .tex equivalent, converting to B8G8R8A8" );
+            using var converted = dds.Meta.Format.IsCompressed() ?
+                dds.Decompress( DXGIFormat.B8G8R8A8UNorm ) :
+                dds.Convert( DXGIFormat.B8G8R8A8UNorm );
+            TexFileParser.SaveTex( converted, WriteLocation );
+        }
+
+        private void ImportPng( string importPath ) {
+            var pngFormat = Plugin.Configuration.PngFormat;
+            var target = ToDxgiFormat( pngFormat );
+            if( target == DXGIFormat.Unknown ) throw new NotSupportedException( $"Unsupported .png import format {pngFormat}" );
+
+            using var png = ScratchImage.LoadWIC( File.ReadAllBytes( importPath ), WICParseFlags.IgnoreSRGB );
+            using var bgra = png.Meta.Format == DXGIFormat.B8G8R8A8UNorm ? null : png.Convert( DXGIFormat.B8G8R8A8UNorm );
+            var source = bgra ?? png;
+
+            // Ui elements are required to only have 1 mip level
+            var mips = GamePath.StartsWith( "ui/", StringComparison.Ordinal ) ? 1 :
+                Math.Clamp( Plugin.Configuration.PngMips, 1, TexFileParser.MaxMipLevels( source.Meta.Width, source.Meta.Height, target ) );
+
+            using var mipped = mips > 1 ? source.GenerateMipMaps( mips, FilterFlags.ForceNonWIC | FilterFlags.SeparateAlpha ) : null;
+            source = mipped ?? source;
+
+            using var final =
+                target.IsCompressed() ? source.Compress( target, CompressFlags.Parallel | ( target == DXGIFormat.BC7UNorm ? CompressFlags.BC7Quick : 0 ) ) :
+                target != DXGIFormat.B8G8R8A8UNorm ? source.Convert( target ) :
+                null;
+
+            TexFileParser.SaveTex( final ?? source, WriteLocation );
+        }
+
+        private static DXGIFormat ToDxgiFormat( TextureFormat format ) => format switch {
+            TextureFormat.DXT1 => DXGIFormat.BC1UNorm,
+            TextureFormat.DXT3 => DXGIFormat.BC2UNorm,
+            TextureFormat.DXT5 => DXGIFormat.BC3UNorm,
+            TextureFormat.BC5 => DXGIFormat.BC5UNorm,
+            TextureFormat.BC7 => DXGIFormat.BC7UNorm,
+            TextureFormat.A8R8G8B8 => DXGIFormat.B8G8R8A8UNorm,
+            TextureFormat.R4G4B4A4 => DXGIFormat.B4G4R4A4UNorm,
+            TextureFormat.R5G5B5A1 => DXGIFormat.B5G5R5A1UNorm,
+            TextureFormat.A8 => DXGIFormat.A8UNorm,
+            _ => DXGIFormat.Unknown
+        };
 
         public WorkspaceMetaTex WorkspaceExport( string rootPath, int idx ) {
             var extension = Path.GetExtension( WriteLocation );
@@ -268,33 +260,16 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
         }
 
         protected override void OnReplace( string importPath ) { // since already replaced, need to refresh it
+            var oldLocation = WriteLocation;
+            var oldPreview = Preview;
             WriteLocation = Plugin.TextureManager.GetNewWriteLocation( GamePath );
-            ImportFile( importPath );
+            if( !ImportFile( importPath ) ) {
+                // Keep the existing replacement instead of pointing at a file that was never written
+                WriteLocation = oldLocation;
+                Preview = oldPreview;
+                return;
+            }
             PenumbraTempMod.MarkDirty();
-        }
-
-        // ===========================
-
-        private static void DdsToAtex( TextureFormat format, DDSContainer container, byte[] ddsData, BinaryWriter writer, PostConversion post = PostConversion.None ) {
-            // Get DDS info
-            using var ms = new MemoryStream( ddsData );
-            using var reader = new BinaryReader( ms );
-            reader.BaseStream.Position = 0x54;
-            var headerSize = ( reader.ReadUInt32() == 0x30315844 ) ? 148 : 128;
-            reader.BaseStream.Position = headerSize;
-            var data = reader.ReadBytes( ( int )ms.Length - headerSize );
-
-            writer.Write( TextureUtils.CreateTextureHeader(
-                format,
-                container.MipChains[0][0].Width,
-                container.MipChains[0][0].Height,
-                container.MipChains[0].Count
-            ) );
-
-            // Need to convert from R8G8B8A8
-            if( post == PostConversion.A8 ) data = TextureDataFile.CompressA8( data );
-
-            writer.Write( data );
         }
     }
 }

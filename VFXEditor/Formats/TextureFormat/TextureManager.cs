@@ -53,7 +53,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         public void ReplaceTexture( string importPath, string gamePath ) {
             var replace = new TextureReplace( gamePath, GetNewWriteLocation( gamePath ) );
-            replace.ImportFile( importPath );
+            if( !replace.ImportFile( importPath ) ) return;
             Textures.Add( replace );
             PenumbraTempMod.MarkDirty();
         }
@@ -106,19 +106,17 @@ namespace VfxEditor.Formats.TextureFormat {
             if( !gameFileExists && !penumbraFileExits ) return new TextureMissing( gamePath );
 
             try {
-                var data = penumbraFileExits ?
-                    ( Path.IsPathRooted( penumbraPath ) ?
-                        TextureDataFile.LoadFromLocal( penumbraPath ) :
-                        Dalamud.DataManager.GetFile<TextureDataFile>( penumbraPath )
-                    ) :
-                    Dalamud.DataManager.GetFile<TextureDataFile>( gamePath );
+                var sourcePath = penumbraFileExits ? penumbraPath : gamePath;
+                var data = Path.IsPathRooted( sourcePath ) ?
+                    TextureDataFile.LoadFromLocal( sourcePath ) :
+                    Dalamud.DataManager.GetFile<TextureDataFile>( sourcePath );
 
                 if( !data.ValidFormat ) {
                     Dalamud.Error( $"Invalid format: {data.Header.Format} {gamePath}" );
                     FailedPreviews.Add( gamePath );
                     return null;
                 }
-                var newPreview = new TexturePreview( data, penumbraFileExits, gamePath );
+                var newPreview = new TexturePreview( data, sourcePath, penumbraFileExits, gamePath );
                 Previews[gamePath] = newPreview;
                 return newPreview;
             }
@@ -216,36 +214,20 @@ namespace VfxEditor.Formats.TextureFormat {
         // =======================
 
         public static void LoadLibrary() {
-            // Set paths manually since TexImpNet can be dumb sometimes
-            // Using the 32-bit version in all cases because net6, I guess
-            var runtimeRoot = Path.Combine( Plugin.RootLocation, "runtimes" );
-
+            // FreeImage (via TeximpNet) is only used for .png export and the texture edit tools.
+            // Import, compression and .dds handling go through OtterTex / DirectXTex.
+            // Set the path manually since TeximpNet doesn't find it on its own
+            var freeImagePath = Path.Combine( Plugin.RootLocation, "runtimes", "win-x64", "native", "FreeImage.dll" );
             var freeImgLib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
-            var _32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "FreeImage.dll" );
-            var _64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "FreeImage.dll" );
-            freeImgLib.Resolver.SetOverrideLibraryName32( _32bitPath );
-            freeImgLib.Resolver.SetOverrideLibraryName64( _32bitPath );
-            Dalamud.Log( $"FreeImage TeximpNet paths: {_32bitPath} / {_64bitPath}" );
-            Dalamud.Log( $"FreeImage Default name: {freeImgLib.DefaultLibraryName} Library loaded: {freeImgLib.IsLibraryLoaded}" );
+            freeImgLib.Resolver.SetOverrideLibraryName32( freeImagePath );
+            freeImgLib.Resolver.SetOverrideLibraryName64( freeImagePath );
             freeImgLib.LoadLibrary();
             Dalamud.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
-
-            var nvtLib = TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance;
-            var nv_32bitPath = Path.Combine( runtimeRoot, "win-x64", "native", "nvtt.dll" );
-            var nv_64bitPath = Path.Combine( runtimeRoot, "win-x86", "native", "nvtt.dll" );
-            nvtLib.Resolver.SetOverrideLibraryName32( nv_32bitPath );
-            nvtLib.Resolver.SetOverrideLibraryName64( nv_32bitPath );
-            Dalamud.Log( $"NVT TeximpNet paths: {nv_32bitPath} / {nv_64bitPath}" );
-            Dalamud.Log( $"NVT Default name: {nvtLib.DefaultLibraryName} Library loaded: {nvtLib.IsLibraryLoaded}" );
-            nvtLib.LoadLibrary();
-            Dalamud.Log( $"NVT Library path: {nvtLib.LibraryPath} Library loaded: {nvtLib.IsLibraryLoaded}" );
         }
 
         public static void FreeLibrary() {
             TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
-            TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.FreeLibrary();
             Dalamud.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
-            Dalamud.Log( $"NVTT Library loaded: {TeximpNet.Unmanaged.NvTextureToolsLibrary.Instance.IsLibraryLoaded}" );
         }
 
         public WindowSystem GetWindowSystem() => WindowSystem;

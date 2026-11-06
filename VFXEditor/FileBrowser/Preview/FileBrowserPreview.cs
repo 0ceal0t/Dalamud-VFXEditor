@@ -121,12 +121,13 @@ namespace VfxEditor.FileBrowser.Preview {
         }
 
         private static IDalamudTextureWrap? LoadDds( string path, out string format, out int mips ) {
-            var dds = OtterTex.ScratchImage.LoadDDS( path );
-            dds.GetRGBA( out var rgba );
+            using var dds = OtterTex.ScratchImage.LoadDDS( path );
+            dds.GetRGBA( out var rgba ).ThrowIfError();
+            using var _ = rgba;
             var image = rgba.Images[0];
 
-            mips = rgba.ToTexHeader().MipCount;
-            format = $"{image.Format}";
+            mips = dds.Meta.MipLevels;
+            format = $"{dds.Meta.Format}";
 
             return Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( image.Width, image.Height ), image.Span[..( image.Width * image.Height * 4 )] );
         }

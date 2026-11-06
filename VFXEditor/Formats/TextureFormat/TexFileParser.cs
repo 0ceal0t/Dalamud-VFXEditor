@@ -43,17 +43,16 @@ namespace VfxEditor.Formats.TextureFormat {
         private static unsafe int CountMipLevels( Stream data, in TexMeta meta, in TexFile.TexHeader header ) {
             var width = meta.Width;
             var height = meta.Height;
-            var bits = meta.Format.BitsPerPixel();
+            var depth = meta.Depth;
 
             var lastOffset = 0L;
             var lastSize = 80L;
-            var minSize = meta.Format.IsCompressed() ? 4 : 1;
             for( var i = 0; i < 13; ++i ) {
                 var offset = header.OffsetToSurface[i];
                 if( offset == 0 )
                     return i;
 
-                var Size = width * height * bits / 8;
+                var Size = ( long )meta.Format.ComputePitch( width, height ).Item2 * depth;
                 if( offset + Size > data.Length )
                     return i;
 
@@ -61,8 +60,9 @@ namespace VfxEditor.Formats.TextureFormat {
                 if( diff != lastSize )
                     return i;
 
-                width = Math.Max( width / 2, minSize );
-                height = Math.Max( height / 2, minSize );
+                width = Math.Max( width / 2, 1 );
+                height = Math.Max( height / 2, 1 );
+                depth = Math.Max( depth / 2, 1 );
                 lastOffset = offset;
                 lastSize = Size;
             }
@@ -151,7 +151,9 @@ namespace VfxEditor.Formats.TextureFormat {
             }
         }
 
-        public static TexFile.TexHeader ToTexHeader( this ScratchImage scratch ) {
+        public static TexFile.TexHeader ToTexHeader( this ScratchImage scratch ) => scratch.ToTexHeader( out _ );
+
+        public static TexFile.TexHeader ToTexHeader( this ScratchImage scratch, out int dataLength ) {
             var meta = scratch.Meta;
             var ret = new TexFile.TexHeader() {
                 Height = ( ushort )meta.Height,
@@ -168,26 +170,61 @@ namespace VfxEditor.Formats.TextureFormat {
                 },
             };
 
-            ret.FillSurfaceOffsets( scratch );
+            ret.FillSurfaceOffsets( scratch, out dataLength );
 
             return ret;
         }
 
-        private static unsafe void FillSurfaceOffsets( this ref TexFile.TexHeader header, ScratchImage scratch ) {
-            var idx = 0;
+        private static unsafe void FillSurfaceOffsets( this ref TexFile.TexHeader header, ScratchImage scratch, out int dataLength ) {
+            var meta = scratch.Meta;
+            var mipCount = Math.Min( meta.MipLevels, 13 );
+            var images = scratch.Images;
+            dataLength = scratch.Pixels.Length;
+
             fixed( byte* ptr = scratch.Pixels ) {
-                foreach( var image in scratch.Images ) {
-                    var offset = ( byte* )image.Pixels - ptr;
-                    header.OffsetToSurface[idx++] = ( uint )( 80 + offset );
+                for( var mip = 0; mip < mipCount; mip++ ) {
+                    var image = images[meta.ComputeIndex( mip, 0, 0 )];
+                    header.OffsetToSurface[mip] = ( uint )( 80 + ( ( byte* )image.Pixels - ptr ) );
                 }
+
+                // Drop data for any mips past the 13 the header can describe
+                if( meta.MipLevels > 13 ) dataLength = ( int )( ( byte* )images[meta.ComputeIndex( 13, 0, 0 )].Pixels - ptr );
             }
 
-            for( ; idx < 13; ++idx )
+            for( var idx = mipCount; idx < 13; ++idx )
                 header.OffsetToSurface[idx] = 0;
 
             header.LodOffset[0] = 0;
-            header.LodOffset[1] = 1;
-            header.LodOffset[2] = 2;
+            header.LodOffset[1] = ( byte )Math.Min( 1, mipCount - 1 );
+            header.LodOffset[2] = ( byte )Math.Min( 2, mipCount - 1 );
+        }
+
+        public static int MaxMipLevels( int width, int height, DXGIFormat format ) {
+            var minSize = format.IsCompressed() ? 4 : 1;
+            var count = 1;
+            while( count < 13 && ( width > minSize || height > minSize ) ) {
+                width = Math.Max( width / 2, 1 );
+                height = Math.Max( height / 2, 1 );
+                count++;
+            }
+            return count;
+        }
+
+        public static void SaveTex( ScratchImage scratch, string path ) {
+            var meta = scratch.Meta;
+            if( meta.IsCubeMap || meta.ArraySize > 1 )
+                throw new NotSupportedException( "Cube map and texture array import is not supported" );
+
+            var header = scratch.ToTexHeader( out var dataLength );
+            if( header.Format == TexFile.TextureFormat.Unknown )
+                throw new NotSupportedException( $"Format {meta.Format} cannot be stored in a .tex file" );
+
+            using var stream = File.Open( path, FileMode.Create );
+            using var writer = new BinaryWriter( stream );
+            header.Write( writer );
+            writer.Write( scratch.Pixels[..dataLength] );
+            // The span is only valid while the scratch image is alive
+            GC.KeepAlive( scratch );
         }
 
 
