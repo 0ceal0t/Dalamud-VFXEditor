@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.UldFormat {
 
         public UldDocument( UldManager manager, string writeLocation, string localPath, WorkspaceMetaRenamed data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override UldFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override UldFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }

@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.SkpFormat {
 
         public SkpDocument( SkpManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override SkpFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override SkpFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }

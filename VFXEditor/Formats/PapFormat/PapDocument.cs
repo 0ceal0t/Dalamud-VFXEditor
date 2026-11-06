@@ -12,7 +12,7 @@ namespace VfxEditor.Formats.PapFormat {
 
         public PapDocument( PapManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override PapFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, Source.Path, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
+        protected override PapFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, sourcePath, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 
         protected override void DrawBody() {
             ImGui.SetCursorPosY( ImGui.GetCursorPosY() + 5 );

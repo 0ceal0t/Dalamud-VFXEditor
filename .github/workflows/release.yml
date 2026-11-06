@@ -6,7 +6,66 @@ on:
       - testing_*
 
 jobs:
+  npc-list:
+    runs-on: ubuntu-latest
+    env:
+      # ResLogger2 export (https://rl2.perchbird.dev/Downloads)
+      RESLOG_PATHLIST_URL: https://rl2.perchbird.dev/download/CurrentPathList.zip
+      # BNpcBase -> BNpcName index
+      BNPC_INDEX_URL: https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download source files
+        working-directory: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          mkdir -p reslog && cd reslog
+
+          fetch() { # fetch <url> <output name> [file inside zip], unpacking .gz / .zip if needed
+            curl -fsSL --retry 3 "$1" -o download.tmp
+            if gzip -t download.tmp 2>/dev/null; then
+              gunzip -c download.tmp > "$2"
+            elif unzip -tq download.tmp >/dev/null 2>&1; then
+              unzip -p download.tmp ${3:+"$3"} > "$2"
+            else
+              mv download.tmp "$2"
+            fi
+            rm -f download.tmp
+          }
+
+          fetch "$RESLOG_PATHLIST_URL" CurrentPathList CurrentPathList.txt
+          test -s CurrentPathList
+          echo "CurrentPathList: $(wc -l < CurrentPathList) paths"
+          fetch "$BNPC_INDEX_URL" bnpc-download.json
+      - name: Format bnpc.json
+        working-directory: ${{ runner.temp }}/reslog
+        run: |
+          python - <<'PY'
+          import json
+          data = json.load(open("bnpc-download.json"))
+          assert isinstance(data, dict) and len(data) > 10000, f"unexpected bnpc index ({len(data)} entries)"
+          with open("bnpc.json", "w") as f:
+              json.dump(data, f, indent=4)
+          print(f"bnpc.json: {len(data)} entries")
+          PY
+      - name: Run reslog_process.py
+        working-directory: ${{ runner.temp }}/reslog
+        run: python "$GITHUB_WORKSPACE/scripts/reslog_process.py"
+      - name: Upload npc data
+        uses: actions/upload-artifact@v4
+        with:
+          name: npc-list
+          path: |
+            ${{ runner.temp }}/reslog/npc_files.json
+            ${{ runner.temp }}/reslog/bnpc.json
+
   build:
+    needs: npc-list
+    # still release even if the npc list couldn't be generated
+    if: ${{ !cancelled() }}
     runs-on: windows-latest
     env:
       HUSKY: 0
@@ -20,6 +79,17 @@ jobs:
           dotnet-version: |
               10.x.x
               9.x.x
+      - name: Download npc list
+        if: ${{ needs.npc-list.result == 'success' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: npc-list
+          path: npc-list
+      - name: Update npc_files.json and bnpc.json
+        if: ${{ needs.npc-list.result == 'success' }}
+        run: |
+          Copy-Item npc-list/npc_files.json VFXEditor/Files/npc_files.json -Force
+          Copy-Item npc-list/bnpc.json VFXEditor/Files/bnpc.json -Force
       - name: Restore dependencies
         run: dotnet restore
       - name: Download Dalamud
@@ -86,6 +156,6 @@ jobs:
           git fetch origin main
           git branch -f main ${{ github.sha }}
           git checkout main
-          git add repo.json
-          git commit -m "[CI] Updating repo.json for ${{ github.ref_name }}" || true
+          git add repo.json VFXEditor/Files/npc_files.json VFXEditor/Files/bnpc.json
+          git commit -m "[CI] Updating repo.json and npc list for ${{ github.ref_name }}" || true
           git push origin main

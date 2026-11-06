@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.MdlFormat {
 
         public MdlDocument( MdlManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override MdlFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override MdlFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }

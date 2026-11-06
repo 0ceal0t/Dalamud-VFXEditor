@@ -1,6 +1,6 @@
 import sqlite3
-import pandas as pd
 import json
+import os
 import re
 
 npc_output = {}
@@ -8,8 +8,7 @@ npc_output = {}
 pattern = re.compile("^[md]([0-9]){4}$")
 
 # csv comes from https://rl2.perchbird.dev/Downloads
-# bnpc.json comes from https://gubal.hasura.app/api/rest/bnpc
-# or https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
+# bnpc.json comes from https://raw.githubusercontent.com/ffxiv-teamcraft/ffxiv-teamcraft/staging/libs/data/src/lib/json/gubal-bnpcs-index.json
 
 # ======= RESLOGGER =========
 
@@ -48,87 +47,91 @@ with open("CurrentPathList") as f:
 
 # ====== DB ============
 
-db = sqlite3.connect('hashlist.db')
-db.text_factory = bytes
-cursor = db.cursor()
+# hashlist.db is from https://github.com/goaaats/ffxiv-explorer-fork
+# optional
+if os.path.exists('hashlist.db'):
 
-folderdict = {}
-filedict = {}
-_fullPaths = []
+    db = sqlite3.connect('hashlist.db')
+    db.text_factory = bytes
+    cursor = db.cursor()
 
-cursor.execute("select id, text from folders;")
-folders = cursor.fetchall()
-for folders in folders:
-    folder_hash = folders[0]
-    folder_path = folders[1]
-    folderdict[folder_hash] = folder_path
+    folderdict = {}
+    filedict = {}
+    _fullPaths = []
 
-cursor.execute("select id, text from filenames;")
-filenames = cursor.fetchall()
-for filename in filenames:
-    file_hash = filename[0]
-    file_path = filename[1]
-    if isinstance(file_path, int):
-        continue
-    filedict[file_hash] = file_path
+    cursor.execute("select id, text from folders;")
+    folders = cursor.fetchall()
+    for folders in folders:
+        folder_hash = folders[0]
+        folder_path = folders[1]
+        folderdict[folder_hash] = folder_path
 
-cursor.execute("select folder, file from fullpaths;")
-fullpaths = cursor.fetchall()
-for fullpath in fullpaths:
-    _f1 = fullpath[0]
-    _f2 = fullpath[1]
-    if (_f1 in folderdict) and (_f2 in filedict):
-        f = ""
-        if b'/' in filedict[_f2]:
-            f = filedict[_f2] # already has a path for some reason
+    cursor.execute("select id, text from filenames;")
+    filenames = cursor.fetchall()
+    for filename in filenames:
+        file_hash = filename[0]
+        file_path = filename[1]
+        if isinstance(file_path, int):
+            continue
+        filedict[file_hash] = file_path
+
+    cursor.execute("select folder, file from fullpaths;")
+    fullpaths = cursor.fetchall()
+    for fullpath in fullpaths:
+        _f1 = fullpath[0]
+        _f2 = fullpath[1]
+        if (_f1 in folderdict) and (_f2 in filedict):
+            f = ""
+            if b'/' in filedict[_f2]:
+                f = filedict[_f2] # already has a path for some reason
+            else:
+                f = folderdict[_f1] + b'/' + filedict[_f2]
+            _fullPaths.append(f)
+
+
+    for fullpath in _fullPaths:
+        _id = "" # d1024 or something
+        _type = "" # vfx, tmp, pap
+
+        path = fullpath.decode("ascii")
+
+        if (not path.startswith('vfx/')) and (not path.startswith('chara/')):
+            continue
+
+        if ('monster' in path or 'demihuman' in path) and '.avfx' in path:
+            _id = path.split("/")[2]
+            _type = "vfx"
+        elif ('monster' in path or 'demihuman' in path) and '.pap' in path:
+            _id = path.split("/")[2]
+            _type = "pap"
+        elif 'mon_sp' in path and '.tmb' in path:
+            _id = path.split("/")[3]
+            _type = "tmb"
         else:
-            f = folderdict[_f1] + b'/' + filedict[_f2]
-        _fullPaths.append(f)
+            continue
 
-delta = []
+        if not pattern.match(_id):
+            continue
 
-for fullpath in _fullPaths:
-    _id = "" # d1024 or something
-    _type = "" # vfx, tmp, pap
+        if _id not in npc_output:
+            npc_output[_id] = { # default for row
+                "vfx": [],
+                "tmb": [],
+                "pap": []
+            }
 
-    path = fullpath.decode("ascii")
+        if path not in npc_output[_id][_type]:
+            npc_output[_id][_type].append(path)
 
-    if (not path.startswith('vfx/')) and (not path.startswith('chara/')):
-        continue
-
-    if ('monster' in path or 'demihuman' in path) and '.avfx' in path:
-        _id = path.split("/")[2]
-        _type = "vfx"
-    elif ('monster' in path or 'demihuman' in path) and '.pap' in path:
-        _id = path.split("/")[2]
-        _type = "pap"
-    elif 'mon_sp' in path and '.tmb' in path:
-        _id = path.split("/")[3]
-        _type = "tmb"
-    else:
-        continue
-
-    if not pattern.match(_id):
-        continue
-
-    if _id not in npc_output:
-        npc_output[_id] = { # default for row
-            "vfx": [],
-            "tmb": [],
-            "pap": []
-        }
-
-    if path not in npc_output[_id][_type]:
-        delta.append(path + "\n")
-        npc_output[_id][_type].append(path)
-
-cursor.close()
-db.close()
+    cursor.close()
+    db.close()
 
 # ======= OUTPUT ==========
 
-with open("npc_files.json", "w") as outfile: 
-    json.dump(npc_output, outfile)
+for _id in npc_output:
+    for _type in npc_output[_id]:
+        npc_output[_id][_type].sort()
 
-with open("delta.txt", "w") as outfile: 
-    outfile.writelines(delta)
+# sorted + indented so that regenerating the file produces small, readable diffs
+with open("npc_files.json", "w") as outfile:
+    json.dump(npc_output, outfile, indent=4, sort_keys=True)

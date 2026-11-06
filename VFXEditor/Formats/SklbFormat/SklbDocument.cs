@@ -13,7 +13,7 @@ namespace VfxEditor.Formats.SklbFormat {
 
         public SklbDocument( SklbManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override SklbFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
+        protected override SklbFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, HkxTemp, Plugin.State != WorkspaceState.Loading, verify );
 
         protected override void DrawExtraColumn() {
             var space = ImGui.GetContentRegionAvail();

@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.ScdFormat {
 
         public ScdDocument( ScdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override ScdFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override ScdFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }

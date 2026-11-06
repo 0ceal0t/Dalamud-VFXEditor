@@ -4,8 +4,8 @@
         <Company></Company>
         <Product>VFXEditor</Product>
         <Copyright>Copyright © 2020</Copyright>
-        <FileVersion>2.0.0.1</FileVersion>
-        <AssemblyVersion>2.0.0.1</AssemblyVersion>
+        <FileVersion>2.0.0.3</FileVersion>
+        <AssemblyVersion>2.0.0.3</AssemblyVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -31,10 +31,6 @@
         <PackageReference Include="HelixToolkit" Version="3.1.2" />
         <PackageReference Include="HelixToolkit.Maths" Version="3.1.2" />
         <PackageReference Include="HelixToolkit.SharpDX" Version="3.1.2" />
-        <PackageReference Include="JsonPoke.MSBuild" Version="1.0.9">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="mgholam.fastCSV" Version="2.0.9" />
         <PackageReference Include="NAudio" Version="3.4.0-preview.1" />
         <PackageReference Include="NAudio.SoundFile" Version="3.4.0-preview.1" />

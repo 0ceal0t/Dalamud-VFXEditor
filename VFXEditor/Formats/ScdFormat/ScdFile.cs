@@ -211,11 +211,12 @@ namespace VfxEditor.Formats.ScdFormat {
         }
 
         public void Replace( ScdAudioEntry entry, ScdAudioEntry newEntry ) {
-            var index = Audio.IndexOf( entry );
-            if( index == -1 || entry == newEntry || entry == null || newEntry == null ) return;
-            Audio.Remove( entry );
-            Audio.Insert( index, newEntry );
-            entry.Player.Dispose();
+            if( entry == null || newEntry == null || entry == newEntry ) return;
+            if( !Audio.Contains( entry ) ) {
+                Dalamud.ErrorNotification( "Could not replace audio, the original entry no longer exists" );
+                return;
+            }
+            Command.AddAndExecute( new ScdAudioReplaceCommand( this, entry, newEntry ) );
         }
 
         public override void Dispose() {
@@ -227,7 +228,9 @@ namespace VfxEditor.Formats.ScdFormat {
             try {
                 var newEntry = await Task.Run( () => {
                     if( !entry.Data.GetImportActions().TryGetValue( Path.GetExtension( path ).Replace( ".", "" ), out var importFunc ) ) return null;
-                    return importFunc( path, entry );
+                    var result = importFunc( path, entry );
+                    if( result != null ) SetDefaultLoop( entry, result );
+                    return result;
                 } );
                 // Audio is read by the UI every frame, so only modify it on the main thread
                 if( newEntry != null ) await Dalamud.Framework.RunOnFrameworkThread( () => Replace( entry, newEntry ) );
@@ -235,6 +238,21 @@ namespace VfxEditor.Formats.ScdFormat {
             catch( Exception e ) {
                 Dalamud.Error( e, $"Error importing audio: {path}" );
                 Dalamud.ErrorNotification( "Error importing audio" );
+            }
+        }
+
+        private static void SetDefaultLoop( ScdAudioEntry oldEntry, ScdAudioEntry newEntry ) {
+            if( oldEntry.LoopStart == 0 && oldEntry.LoopEnd == 0 ) return;
+            if( newEntry.LoopStart != 0 || newEntry.LoopEnd != 0 ) return;
+
+            try {
+                using var stream = newEntry.Data.GetStream();
+                var duration = ( float )stream.TotalTime.TotalSeconds;
+                if( duration <= 0 ) return;
+                newEntry.LoopTime = new( duration * 0.1f, duration * 0.9f );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, "Could not set default loop points" );
             }
         }
 

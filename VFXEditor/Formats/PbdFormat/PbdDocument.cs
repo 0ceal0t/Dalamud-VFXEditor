@@ -11,6 +11,6 @@ namespace VfxEditor.Formats.PbdFormat {
 
         public PbdDocument( PbdManager manager, string writeLocation, string localPath, WorkspaceMetaBasic data ) : base( manager, writeLocation, localPath, data ) { }
 
-        protected override PbdFile FileFromReader( BinaryReader reader, bool verify ) => new( reader, verify );
+        protected override PbdFile FileFromReader( BinaryReader reader, string sourcePath, bool verify ) => new( reader, verify );
     }
 }
