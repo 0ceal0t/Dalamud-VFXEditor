@@ -1,12 +1,32 @@
+using Dalamud.Interface.Textures;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Lumina.Data.Files;
 using OtterTex;
 using VfxEditor.Formats.TextureFormat;
 
 namespace VfxEditor.Utils {
     public static class TextureUtils {
+        public static async Task SavePngAsync( byte[] rgba, int width, int height, string path ) {
+            try {
+                var png = Dalamud.TextureReadbackProvider.GetSupportedImageEncoderInfos().FirstOrDefault( codec =>
+                    codec.Extensions.Any( ext => string.Equals( ext, ".png", StringComparison.OrdinalIgnoreCase ) ) ||
+                    codec.MimeTypes.Any( mime => string.Equals( mime, "image/png", StringComparison.OrdinalIgnoreCase ) ) )
+                    ?? throw new NotSupportedException( "No PNG encoder is available" );
+
+                var wrap = Dalamud.TextureProvider.CreateFromRaw( RawImageSpecification.Rgba32( width, height ), rgba );
+                await Dalamud.TextureReadbackProvider.SaveToFileAsync( wrap, png.ContainerGuid, path );
+                Dalamud.Log( $"Saved {path}" );
+            }
+            catch( Exception e ) {
+                Dalamud.Error( e, $"Could not save {path}" );
+                Dalamud.ErrorNotification( $"Could not save {Path.GetFileName( path )}" );
+            }
+        }
+
         // Actual byte size of one mip surface, including block padding for compressed formats
         public static int GetMipSize( TextureFormat format, int width, int height, int mip ) {
             width = Math.Max( width >> mip, 1 );

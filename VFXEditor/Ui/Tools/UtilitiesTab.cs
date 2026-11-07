@@ -49,7 +49,7 @@ namespace VfxEditor.Ui.Tools {
                 FileBrowserManager.OpenFileDialog( "Select a File", ".atex,.*", ( ok, res ) => {
                     if( !ok ) return;
                     var texFile = TextureDataFile.LoadFromLocal( res );
-                    texFile.SaveAsPng( res + ".png" );
+                    texFile.SaveAsPngAsync( res + ".png" ); // Fire and forget, see TextureUtils.SavePngAsync
                 } );
             }
 

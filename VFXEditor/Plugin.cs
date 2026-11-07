@@ -118,7 +118,6 @@ namespace VfxEditor {
             Configuration.Setup();
             ConfigWindow = new( Configuration );
 
-            TextureManager.LoadLibrary();
             TextureManager = new();
             TmbManager = new();
             AvfxManager = new();
@@ -192,7 +191,6 @@ namespace VfxEditor {
             ResourceLoader?.Dispose();
             ResourceLoader = null;
 
-            TextureManager.FreeLibrary();
             Groups.ForEach( x => x?.Reset( true ) );
             DirectXManager?.Dispose();
 

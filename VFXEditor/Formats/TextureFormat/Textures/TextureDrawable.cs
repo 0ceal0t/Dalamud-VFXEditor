@@ -1,11 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
+using OtterTex;
 using System;
-using TeximpNet;
 using VfxEditor.FileBrowser;
 using VfxEditor.Formats.TextureFormat.Ui;
-using Surface = TeximpNet.Surface;
 using VfxEditor.Utils;
 
 namespace VfxEditor.Formats.TextureFormat.Textures {
@@ -70,29 +69,30 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
                 ImGui.InputInt( "##Resize", ResizeInput );
                 using( var style = ImRaii.PushStyle( ImGuiStyleVar.ItemSpacing, ImGui.GetStyle().ItemInnerSpacing ) ) {
                     ImGui.SameLine();
-                    if( ImGui.Button( "Resize" ) ) {
-                        ApplyEdit( surface => surface.Resize( ResizeInput[0], ResizeInput[1], ImageFilter.Box ) );
+                    if( ImGui.Button( "Resize" ) && ResizeInput[0] > 0 && ResizeInput[1] > 0 ) {
+                        ApplyEdit( image => image.Resize( ResizeInput[0], ResizeInput[1], FilterFlags.Cubic | FilterFlags.ForceNonWIC ) );
                     }
                 }
 
                 if( ImGui.Selectable( "Grayscale" ) ) {
-                    ApplyEdit( surface => surface.ConvertTo( ImageConversion.ToGreyscale ) );
+                    ApplyEdit( Grayscale );
                 }
 
                 if( ImGui.Selectable( "Flip Horizontally" ) ) {
-                    ApplyEdit( surface => surface.FlipHorizontally() );
+                    ApplyEdit( image => image.FlipRotate( FlipRotateFlags.FlipHorizontal ) );
                 }
 
                 if( ImGui.Selectable( "Flip Vertically" ) ) {
-                    ApplyEdit( surface => surface.FlipVertically() );
+                    ApplyEdit( image => image.FlipRotate( FlipRotateFlags.FlipVertical ) );
                 }
 
+                // DirectXTex rotates clockwise
                 if( ImGui.Selectable( "Rotate Left" ) ) {
-                    ApplyEdit( surface => surface.Rotate( 90 ) );
+                    ApplyEdit( image => image.FlipRotate( FlipRotateFlags.Rotate270 ) );
                 }
 
                 if( ImGui.Selectable( "Rotate Right" ) ) {
-                    ApplyEdit( surface => surface.Rotate( -90 ) );
+                    ApplyEdit( image => image.FlipRotate( FlipRotateFlags.Rotate90 ) );
                 }
 
                 ImGui.EndPopup();
@@ -101,24 +101,27 @@ namespace VfxEditor.Formats.TextureFormat.Textures {
             DrawSettingsPopup();
         }
 
-        private void ApplyEdit( Action<Surface> edit ) {
+        private void ApplyEdit( Func<ScratchImage, ScratchImage> edit ) {
             try {
                 var file = GetRawData();
                 if( file == null ) return;
-                var surface = file.GetPngData( out var pin );
-                if( surface == null ) return;
 
-                edit( surface );
-
-                surface.SaveToFile( ImageFormat.PNG, TextureManager.TempPng );
-                surface.Dispose();
-                MemoryHelper.UnpinObject( pin );
-
-                OnReplace( TextureManager.TempPng );
+                // Keeps the texture's original format and mip count
+                file.SaveEdited( TextureManager.TempEdit, edit );
+                OnReplace( TextureManager.TempEdit );
             }
             catch( Exception ex ) {
                 Dalamud.Error( ex, "Could not edit image" );
             }
+        }
+
+        private static ScratchImage Grayscale( ScratchImage image ) {
+            var rgba = image.Pixels.ToArray();
+            for( var i = 0; i < rgba.Length; i += 4 ) {
+                var luma = ( byte )Math.Round( 0.2126 * rgba[i] + 0.7152 * rgba[i + 1] + 0.0722 * rgba[i + 2] );
+                rgba[i] = rgba[i + 1] = rgba[i + 2] = luma;
+            }
+            return ScratchImage.FromRGBA( rgba, image.Meta.Width, image.Meta.Height );
         }
 
         protected static void DrawSettingsCog() {

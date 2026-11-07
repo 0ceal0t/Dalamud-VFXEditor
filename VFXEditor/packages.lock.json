@@ -2,15 +2,6 @@
   "version": 1,
   "dependencies": {
     "net10.0-windows7.0": {
-      "BCnEncoder.Net": {
-        "type": "Direct",
-        "requested": "[2.3.0, )",
-        "resolved": "2.3.0",
-        "contentHash": "DJhHJiBJKXUXxlkkrv74ckzJb3wYxqIAZHjXD9G76kpsD0YyJOmqtNufHWEuJe0eH0tB1tCZn80/3JV2UVP7yQ==",
-        "dependencies": {
-          "CommunityToolkit.HighPerformance": "8.4.0"
-        }
-      },
       "DalamudPackager": {
         "type": "Direct",
         "requested": "[15.0.0, )",
@@ -169,15 +160,6 @@
           "SharpGLTF.Runtime": "1.0.7"
         }
       },
-      "TeximpNet": {
-        "type": "Direct",
-        "requested": "[1.4.3, )",
-        "resolved": "1.4.3",
-        "contentHash": "uNjTMP4Cv5jI/a/f5iqLpxaQ/aNAE7XKm9S08EEB6W3UMW82/qmcoLRkYjm+2bxBQJ3C5RU9VLu7/pRxavuYJQ==",
-        "dependencies": {
-          "NETStandard.Library": "1.6.1"
-        }
-      },
       "CommunityToolkit.Common": {
         "type": "Transitive",
         "resolved": "8.3.2",
@@ -187,11 +169,6 @@
         "type": "Transitive",
         "resolved": "8.3.2",
         "contentHash": "YyMsBE9lT0pJg2bEDzlfEWdlk6xHExW6jr1dxC7+YUqqVmOGL5nZROpxbXQRTe5TrfIs7BvkVsGULv/hq6tGIA=="
-      },
-      "CommunityToolkit.HighPerformance": {
-        "type": "Transitive",
-        "resolved": "8.4.0",
-        "contentHash": "flxspiBs0G/0GMp7IK2J2ijV9bTG6hEwFc/z6ekHqB6nwRJ4Ry2yLdx+TkbCUYFCl4XhABkAwomeKbT6zM2Zlg=="
       },
       "CommunityToolkit.Mvvm": {
         "type": "Transitive",

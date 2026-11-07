@@ -21,7 +21,7 @@ namespace VfxEditor.Formats.TextureFormat {
 
         private int TEX_ID = 0;
         public static string TempAtex => Path.Combine( Plugin.Configuration.WriteLocation, "temp_convert.atex" ).Replace( '\\', '/' );
-        public static string TempPng => Path.Combine( Plugin.Configuration.WriteLocation, "temp_png.png" ).Replace( '\\', '/' );
+        public static string TempEdit => Path.Combine( Plugin.Configuration.WriteLocation, "temp_edit.atex" ).Replace( '\\', '/' );
 
         public readonly WindowSystem WindowSystem = new();
 
@@ -212,23 +212,6 @@ namespace VfxEditor.Formats.TextureFormat {
         }
 
         // =======================
-
-        public static void LoadLibrary() {
-            // FreeImage (via TeximpNet) is only used for .png export and the texture edit tools.
-            // Import, compression and .dds handling go through OtterTex / DirectXTex.
-            // Set the path manually since TeximpNet doesn't find it on its own
-            var freeImagePath = Path.Combine( Plugin.RootLocation, "runtimes", "win-x64", "native", "FreeImage.dll" );
-            var freeImgLib = TeximpNet.Unmanaged.FreeImageLibrary.Instance;
-            freeImgLib.Resolver.SetOverrideLibraryName32( freeImagePath );
-            freeImgLib.Resolver.SetOverrideLibraryName64( freeImagePath );
-            freeImgLib.LoadLibrary();
-            Dalamud.Log( $"FreeImage Library path: {freeImgLib.LibraryPath} Library loaded: {freeImgLib.IsLibraryLoaded}" );
-        }
-
-        public static void FreeLibrary() {
-            TeximpNet.Unmanaged.FreeImageLibrary.Instance.FreeLibrary();
-            Dalamud.Log( $"FreeImage Library loaded: {TeximpNet.Unmanaged.FreeImageLibrary.Instance.IsLibraryLoaded}" );
-        }
 
         public WindowSystem GetWindowSystem() => WindowSystem;
 
