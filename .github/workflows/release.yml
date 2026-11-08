@@ -90,6 +90,18 @@ jobs:
         run: |
           Copy-Item npc-list/npc_files.json VFXEditor/Files/npc_files.json -Force
           Copy-Item npc-list/bnpc.json VFXEditor/Files/bnpc.json -Force
+      - name: Update orchestrion.csv
+        # still release with the existing orchestrion.csv if the sheet can't be downloaded
+        continue-on-error: true
+        run: |
+          $url = 'https://docs.google.com/spreadsheets/d/1s-xJjxqp6pwS7oewNy1aOQnr3gaJbewvIBbyYchZ6No/gviz/tq?tqx=out:csv&sheet=en'
+          Invoke-WebRequest -Uri $url -OutFile data.csv -MaximumRetryCount 3
+          $lines = Get-Content data.csv
+          if ($lines[0] -notmatch '^"ID","Title"' -or $lines.Count -lt 1000) {
+            throw "unexpected orchestrion sheet ($($lines.Count) lines, header: $($lines[0]))"
+          }
+          Copy-Item data.csv VFXEditor/Files/orchestrion.csv -Force
+          Write-Host "orchestrion.csv: $($lines.Count) lines"
       - name: Restore dependencies
         run: dotnet restore
       - name: Download Dalamud
@@ -156,6 +168,6 @@ jobs:
           git fetch origin main
           git branch -f main ${{ github.sha }}
           git checkout main
-          git add repo.json VFXEditor/Files/npc_files.json VFXEditor/Files/bnpc.json
-          git commit -m "[CI] Updating repo.json and npc list for ${{ github.ref_name }}" || true
+          git add repo.json VFXEditor/Files/npc_files.json VFXEditor/Files/bnpc.json VFXEditor/Files/orchestrion.csv
+          git commit -m "[CI] Updating repo.json, npc list and orchestrion list for ${{ github.ref_name }}" || true
           git push origin main

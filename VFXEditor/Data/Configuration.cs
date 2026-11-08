@@ -33,6 +33,8 @@ namespace VfxEditor.Data {
 
     [Serializable]
     public class Configuration : IPluginConfiguration {
+        public bool ConfigMigrated = false; // whether settings have been pulled from the old plugin
+
         public int Version { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
